@@ -48,19 +48,7 @@ if arrsize('sparrvol') > 0:
 		if sparrvol[cumarrtemp] < 0: sexnutrition += sparrvol[cumarrtemp] & sparrvol[cumarrtemp] = 0
 	end}
 	if sparrvol[cumarrtemp] > 0:
-		ctemp += sparrvol[cumarrtemp]
-		if sparrloc[cumarrtemp] = 0: ctemp[1] += sparrvol[cumarrtemp]
-		if sparrloc[cumarrtemp] = 3: ctemp[2] += sparrvol[cumarrtemp]
 		sparrtmpv = arrsize('$cumarrnam')
-		if dirtyplay = 1 and sparrloc[cumarrtemp] = 13 and sparrage[cumarrtemp] < 5:
-			if ((4+sparrage[cumarrtemp]*4)*(40/sparrvol[cumarrtemp])) > 0:cumarrcpt[cumarrtemp] = cumarrppt[cumarrtemp]/((4+sparrage[cumarrtemp]*4)*(40/sparrvol[cumarrtemp]))
-			cumarrppt[sparrtmpv] = sparrppt[cumarrtemp]
-			$cumarrnam[sparrtmpv] = $sparrnam[cumarrtemp]
-			cumarrage[sparrtmpv] = sparrage[cumarrtemp]
-			cumarrdel[sparrtmpv] = 4
-			cumarrkno[sparrtmpv] = 0
-			cumarrcon[sparrtmpv] = 0
-		end
 		if sparrloc[cumarrtemp] = 17:
 			sparrtmpv = arrpos('$cumarrnam',$sparrnam[cumarrtemp])
 			if sparrage[cumarrtemp] < 4:
@@ -75,7 +63,7 @@ if arrsize('sparrvol') > 0:
 			elseif sparrage[cumarrtemp] < 10:
 				cumarrcpt[sparrtmpv] += sparrppt[cumarrtemp]/60
 			end
-		elseif sparrslc[cumarrtemp] = 1 and sparrage[cumarrtemp] < 5:
+		elseif sparrslc[cumarrtemp] = 1 and sparrage < 5:
 			if sparrloc[cumarrtemp] = 1:
 				cumarrcpt[sparrtmpv] = sparrppt[cumarrtemp]/1000*sparrage[cumarrtemp]/sparrvol[cumarrtemp]
 				cumarrppt[sparrtmpv] = sparrppt[cumarrtemp]
@@ -85,7 +73,7 @@ if arrsize('sparrvol') > 0:
 				cumarrkno[sparrtmpv] = 0
 				cumarrcon[sparrtmpv] = 0
 			end
-		elseif sparrslc[cumarrtemp] = 3 and sparrage[cumarrtemp] < 5:
+		elseif sparrslc[cumarrtemp] = 3 and sparrage < 5:
 			if sparrloc[cumarrtemp] = 2:
 				cumarrcpt[sparrtmpv] = sparrppt[cumarrtemp]/1000*sparrage[cumarrtemp]/sparrvol[cumarrtemp]
 				cumarrppt[sparrtmpv] = sparrppt[cumarrtemp]
@@ -103,7 +91,7 @@ if arrsize('sparrvol') > 0:
 				cumarrkno[sparrtmpv] = 0
 				cumarrcon[sparrtmpv] = 0
 			end
-		elseif sparrslc[cumarrtemp] = 5 and sparrage[cumarrtemp] < 5:
+		elseif sparrslc[cumarrtemp] = 5 and sparrage < 5:
 			if sparrloc[cumarrtemp] = 3:
 				cumarrcpt[sparrtmpv] = sparrppt[cumarrtemp]/1000*sparrage[cumarrtemp]/sparrvol[cumarrtemp]
 				cumarrppt[sparrtmpv] = sparrppt[cumarrtemp]
@@ -131,6 +119,7 @@ if arrsize('sparrvol') > 0:
 			end
 		end
 	else
+		KILLVAR 'spafinloc',cumarrtemp
 		KILLVAR 'sparrage',cumarrtemp
 		KILLVAR 'sparrloc',cumarrtemp
 		KILLVAR '$sparrnam',cumarrtemp
@@ -138,18 +127,12 @@ if arrsize('sparrvol') > 0:
 		KILLVAR 'sparridt',cumarrtemp
 		KILLVAR 'sparrvol',cumarrtemp
 		KILLVAR 'sparrslc',cumarrtemp
+		
 	end
-	if sparrloc[cumarrtemp] = 0 or sparrloc[cumarrtemp] = 3 or sparrloc[cumarrtemp] = 12: sparrvol[cumarrtemp] -= sparrage[cumarrtemp]/2
-	if sparrloc[cumarrtemp] = 0 and cumsumvag > 60 and sparrslc < 1:
-	   sparrslc = 1
-	elseif sparrloc[cumarrtemp] = 0 and sparrslc > 0 and sparrage < 9:
-	   sparrslc += 1
-	end
-	if sparrloc[cumarrtemp] = 3 and cumsumass > 60 and sparrslc < 1:
-	   sparrslc = 1
-	elseif sparrloc[cumarrtemp] = 3 and sparrslc > 0 and sparrage < 9:
-	   sparrslc += 1
-	end
+	if sparrloc[cumarrtemp] = 0 or sparrloc[cumarrtemp] = 3 or sparrloc[cumarrtemp] = 12:
+	sparrvol[cumarrtemp] -= sparrage[cumarrtemp]/2
+	if sparrloc[cumarrtemp] = 0 and cumsumvag > 60: sparrslc = 1
+	if sparrloc[cumarrtemp] = 3 and cumsumass > 60: sparrslc = 1
 	if sparrloc[cumarrtemp] = 17 and sparrage[cumarrtemp] > 48:
 		cumcondslip = 1
 		health -= 3
@@ -158,20 +141,22 @@ if arrsize('sparrvol') > 0:
 	else
 		cumcondslip = 0
 	end
+	cumsumbod = ctemp
+	cumsumvag = ctemp[1]
+	cumsumass = ctemp[2]
 	if sparrloc[cumarrtemp] ! 0 and sparrloc[cumarrtemp] ! 3 and sparrloc[cumarrtemp] ! 12 and isprok = 0 and sparrage < 5: sparrslc[cumarrtemp] += 1
 	sparrage[cumarrtemp] += 1
 	cumarrtemp += 1
 	if cumarrtemp < arrsize('sparrvol'): jump 'cumspaloop'
-	cumsumbod = ctemp
-	cumsumvag = ctemp[1]
-	cumsumass = ctemp[2]
-	dirtyplay = 0
+	ctemp += sparrvol[cumarrtemp]
+	if sparrloc[cumarrtemp] = 0: ctemp[1] += sparrvol[cumarrtemp]
+	if sparrloc[cumarrtemp] = 3: ctemp[2] += sparrvol[cumarrtemp]
 end
 
 if lactate > 0:
 	if lactatemv <= 0:
 		lactatemv = 0
-		if lactatemm < titK*4 and milkgrowday < daystart:
+		if lactatemm < titK*4 & milkgrowday < daystart:
 			lactatemm += 1
 			lactatemv += 1
 			bgrowday = daystart
@@ -249,9 +234,9 @@ elseif cycle = 2:
 					$wombpotfath[0] = 'Unknown'
 					FathpotAdd = 1
 					Fathpotcheck = 0
-					:potfathaddLoop
 					arrmodtmp = arrsize('$cumarrnam')
-					if arrmodtmp < Fathpotcheck:
+					:potfathaddLoop
+					if arrmodtmp > Fathpotcheck:
 						if cumarrkno[Fathpotcheck] = 1:
 							$wombpotfath[Fathpotadd] = $cumarrnam[Fathpotcheck]
 							Fathpotadd += 1
@@ -382,7 +367,6 @@ elseif cycle = 3:
 			else
 				mesec = 72
 			end
-			if Enable_autotampon = 1 :isprok = 1
 		end
 	else
 		if preg = 1:PregChem += 1
@@ -417,33 +401,32 @@ elseif cycle = 5:
 		'A sharp pain pierces your abdomen, and you feel something flow down your legs. Your water has broken!'
 		$cycreport_txt = 'In Labor.'
 		:babyfinalpreploop
-		!if $wombthfath ! 'unknown':
-			!arrmodtmp = arrpos('$ChildThFath''Unknown')
-			! if arrmodtmp >= 0:
-				! $ChildThFath[arrmodtmp] = $wombthfath
-				! jump 'babyfinalpreploop'
-			! end
-		!end
+		arrmodtmp = arrpos('daykid'0)
+		if arrmodtmp >= 0 and daykid[arrmodtmp] = 0:
+			daykid[arrmodtmp] = 42
+			$ChildThFath[arrmodtmp] = $wombthfath
+			jump 'babyfinalpreploop'
+		end
 		KILLVAR '$wombpotfath'
 		KILLVAR '$wombthfath'
 		preg = 2
-			if babyembryo > 1:
-				'Your babies are coming...'
-			else
-				'Your baby is coming...'
-			if PregChem < 4032:
-				'Way too early!'
-			elseif PregChem < 5376:
-				'Very early!'
-			elseif PregChem < 6216:
-				'Early.'
-			elseif PregChem > 7056:
-				'Late.'
-			elseif PregChem > 7392:
-				'Very Late!'
-			end
-			'You need to get to a clinic.'
+		if babyembryo > 1:
+			'Your babies are coming...'
+		else
+			'Your baby is coming...'
 		end
+		if PregChem < 4032:
+			'Way too early!'
+		elseif PregChem < 5376:
+			'Very early!'
+		elseif PregChem < 6216:
+			'Early.'
+		elseif PregChem > 7056:
+			'Late.'
+		elseif PregChem > 7392:
+			'Very Late!'
+		end
+		'You need to get to a clinic.'
 	end
 	if PregChem > 4034:
 		if lactate <= 0:
@@ -455,16 +438,16 @@ elseif cycle = 5:
 			if lactate < 1: lactate = 1
 		end
 	end
-	!if PregChem > 2350:
-		! if pregchem > 3000 or kid > 0:
-			! if rand(0,7) = 0: dynamic $d_pregmovement
-		! else
-			! if rand(0,500) = 0: dynamic $d_pregmovement
-		! end
-	!end
+	if PregChem > 2350:
+		if pregchem > 3000 or kid > 0:
+			if rand(0,7) = 0: dynamic $d_pregmovement
+		else
+			if rand(0,500) = 0: dynamic $d_pregmovement
+		end
+	end
 end
 
-!dynamic $d_cycreport_update
+dynamic $d_cycreport_update
 
 --- femcyc ---------------------------------
 
