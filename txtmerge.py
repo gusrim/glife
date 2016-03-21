@@ -36,7 +36,7 @@ for location in root.iter('Location'):
         ofile.write(text)
         ifile.close()
     except IOError:
-        print "WARNING: missing location %s" % iname
+        print("WARNING: missing location %s" % iname)
         pass
 
 ofile.close()

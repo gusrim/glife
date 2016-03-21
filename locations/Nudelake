@@ -2,26 +2,26 @@
 gs 'stat'
 '<center><b>nudist beach</b></center>'
 '<center><img src="images/img/Lake/Nudelake.jpg"></center>'
-'Here you can walk naked and no one will blame you.'
+'The nudist beach - clothing optional.'
 
 if hour >= 6 and hour <= 20:
-	'Here you can <a href="exec:gt ''Nudelake'', ''zagarat''">tanning</a> and <a href="exec:gt ''Nudelake'', ''swim''">swim</a>'
-	'And, you can play <a href="exec:gt ''Nudelake'', ''voleybol''">beach volleyball</a>'
+	'Here you can <a href="exec:gt ''Nudelake'', ''zagarat''">sunbathe</a> and <a href="exec:gt ''Nudelake'', ''swim''">swim</a>'
+	'Also, you can play <a href="exec:gt ''Nudelake'', ''voleybol''">beach volleyball</a>'
 end
 
-act 'Go to the main beach':gt 'lake', 'start'
+act 'Return to the main beach':gt 'lake', 'start'
 
-if katday ! day and kat >= 1:
-	'You see at the beach Cat.'
+if katday ! daystart and kat >= 1:
+	'You see Kat on the beach.'
 
-	act 'Approach the Cat':gt 'Katlake', 'kat'
+	act 'Approach Kat':gt 'Katlake', 'kat'
 end
 
 if $ARGS[0] = 'voleybol':
 	cls
-	set minut += 1
+	minut += 1
 	'<center><img src="images/img/Lake/voleybol.jpg"></center>'
-	'You came to the volleyball court.'
+	'You go to the volleyball court.'
 
 	act 'Watch':gt 'Nudelake', 'smotr'
 	act 'Leave':gt 'Nudelake'
@@ -29,42 +29,40 @@ if $ARGS[0] = 'voleybol':
 	act 'Play':
 		cla
 		*clr
-		set agil += 1
-		set react += 1
-		set speed += 1
-		set minut += 30
+		agil += 1
+		react += 1
+		speed += 1
+		minut += 30
 		'<center><img src="images/img/Lake/voleybol.jpg"></center>'
-		'You go up to the players and ask whether it is possible to join, you will be happy to take the team.'
+		'You go up to the players and ask whether it is possible to join in, they are happy to put you on a team.'
 
 		act 'Finish':gt 'Nudelake'
 	end
 end
 
 if $ARGS[0] = 'zagarat':
-	set minut += 30
 	cls
+	minut += 30
+	sweat += 1
+	manna += 5
 	gs 'stat'
 	'<center><img src="images/img/Lake/nudezagarat.jpg"></center>'
-	set sweat += 1
-	set manna += 5
 
 	if krem = 0:
-		set tan += 1
-		'You went to the beach to sunbathe.'
+		tan += 1
+		'You go to the beach and sunbathe.'
+	else
+		krem -= 1
+		tan += 3
+		'You smear sunblock on your body and sunbathe.'
 	end
 
-	if krem > 0:
-		set krem -= 1
-		set tan += 3
-		'You smeared body sunblock and went to sunbathe.'
-	end
+	nzagrand = rand(0, 100)
 
-	set nzagrand = rand(0, 100)
-
-	if kat > 30 and katkey = 0 and nzagrand >= 60 and nzagrand < 70:gt 'Katlake', 'key'
+	if nzagrand >= 60 and nzagrand < 70 and kat > 30 and katkey = 0:gt 'Katlake', 'key'
+	if nzagrand >= 70 and nzagrand < 80 and kat = 0 and katday ! daystart:gt 'Katlake'
 	if nzagrand >= 80 and nzagrand < 90:gt 'Vnlake1'
 	if nzagrand >= 90:gt 'Vnlake2'
-	if katday ! day and kat = 0 and nzagrand >= 70 and nzagrand < 80:gt 'Katlake'
 
 	act 'Finish':gt 'Nudelake'
 end
@@ -72,33 +70,30 @@ end
 if $ARGS[0] = 'swim':
 	cla
 	*clr
-	set cumpussy = 0
-	set cumbelly = 0
-	set cumass = 0
-	set cumlip = 0
-	set cumface = 0
-	set cumfrot = 0
-	set minut += 60
-	set sweat = -3
-	set manna += 5
-	set willpower += 5
+	cumspclnt = 4
+	gs 'cum_cleanup'
+	minut += 60
+	sweat = -3
+	manna += 5
+	willpower += 5
 
-	if stren < 30:set stren += 1
+	if stren < 30:stren += 1
 
 	'<center><img src="images/img/Lake/nudeswim.jpg"></center>'
-	'You went for a swim.'
+	'You go for a swim.'
 
 	act 'Finish':gt 'Nudelake'
 end
 
 if $ARGS[0] = 'smotr':
-	set minut += 30
 	cls
+	minut += 30
 	gs 'stat'
 	'<center><img src="images/img/Lake/voleybol.jpg"></center>'
-	'You see how others play.'
+	'You watch the others play.'
 
 	act 'Leave':gt 'Nudelake'
 end
 
 --- Nudelake ---------------------------------
+

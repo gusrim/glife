@@ -8,8 +8,8 @@ $locM = $CURLOC
 saunaYouRoom = 1
 '<center><b><font color="maroon">Room</font></b></center>'
 '<center><img src="images/etogame/saunaroom.jpg"></center>'
-'The room is barely removed <a href="exec:sec += 30 & gt ''saunabed''">bed</a> and <a href="exec:gt ''loker'', ''start''">cabinet</a>.'
-'Hanging on the wall <a href="exec:gt ''mirror'', ''start''">mirror</a>'
+'The room has a thread bare <a href="exec:sec += 30 & gt ''saunabed''">bed</a> and a cheap <a href="exec:gt ''clothing'', ''view_clothing_list'', ''wardrobe''">wardrobe</a>.'
+'Hanging on the wall is a dirty <a href="exec:gt ''mirror'', ''start''">mirror</a>'
 
 if money > 0 and workDolg > 0:workDolg -= money & money = 0
 if workDolg > 0:'Your debt is <<workDolg>> rubles'
@@ -17,17 +17,17 @@ if workDolg > 0:'Your debt is <<workDolg>> rubles'
 act 'Go to the sauna':gt 'saunawork'
 
 if workDolg > 0:
-	act 'There are in debt (0:05)':
+	act 'Drink tea with cookies (0:05)':
 		cla
 		*clr
 		minut += 5
 		workDolg += 50
-		set health += 30
-		set manna += 100
+		health += 30
+		manna += 100
 		energy = 20
 		water = 20
 		fat += 50
-		salo += 1
+		! salo += 1
 		frost = 0
 		gs 'stat'
 		'<center><img src="images/pics/food.jpg"></center>'
@@ -38,7 +38,7 @@ if workDolg > 0:
 
 	act 'Borrow cosmetics':
 		workDolg += 1000
-		set kosmetica += 25
+		kosmetica += 25
 		gt $curloc
 	end
 end
@@ -46,12 +46,16 @@ end
 if water < 20:
 	act 'Drink':
 		cla
-		set minut += 5
+		minut += 5
 
-		if water >= 20:'Water in you no longer climbs.'
-		if water < 20:
-			'You gladly drank a glass of water.'
-			set water += 20
+		if water >= 20:
+			'You don''t need any more water.'
+		elseif water < 20:
+			water += 20
+			cumspclnt = 2
+			gs 'cum_cleanup'
+			fbreath = 0
+			'You gladly drink a glass of water.'
 		end
 
 		act 'Get up from the table':gt $curloc
@@ -59,3 +63,4 @@ if water < 20:
 end
 
 --- saunaroom ---------------------------------
+

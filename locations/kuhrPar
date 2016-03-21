@@ -1,53 +1,53 @@
 # kuhrPar
-act 'Leave the room':gt 'korrPar'
+CLOSE ALL
+act 'Return to the hallway':gt 'korrPar'
 
 $metkaM = $ARGS[0]
 $locM = $CURLOC
 $metka = $ARGS[0]
 $loc = $CURLOC
-
-'<center><b><font color="maroon">Kitchen</font></b></center>'
-'<center><img src="images/qwest/alter/<<$loc>>.jpg"></center>'
 clr
-set minut += 1
+minut += 1
 gs 'stat'
 fcolor = rgb(0, 0, 0)
 bcolor = rgb(255, 255, 255)
 lcolor = rgb(106, 90, 205)
-'The kitchen is next to the stove sink. Large refrigerator in the corner and kitchen table with chairs is against the wall.'
+'<center><b><font color="maroon">Kitchen</font></b></center>'
+'<center><img src="images/qwest/alter/kuhrPar.jpg"></center>'
+'The kitchen is not very impressive, but it has everything your family needs. Since everyone has the habit of eating at different times, Mom usually pre-cooks the meals and stores them in the fridge. Of course, you could also just have a snack if you''re not that hungry.'
 gs 'family'
 
-act 'Eat (0:30)':
+act 'Eat a meal (0:30)':
 	cla
 	*clr
 	gs 'stat'
 	frost = 0
+	minut += 30
+	health += 10
+	manna += 20
 	'<center><img src="images/pics/food.jpg"></center>'
-	set minut += 30
-	set health += 10
-	set manna += 20
 
 	if energy >= 30:
-		set fat += 5
-		'You can no longer have.'
+		fat += 5
+		'You try to eat, but are too full to enjoy the meal and can''t finish it.'
+	elseif energy >= 20 and energy < 30:
+		fat += 3
+		energy += 10
+		'You''re not all that hungry, but have a meal anyway. Half-way through, you''re starting to regret it but feel bad throwing it out so you finish it anyway.'
+	elseif energy < 20:
+		energy += 20
+		!!fat += 1
+		'The food tastes good, you quietly thank your mother for always keeping the fridge stocked with these tasty meals.'
 	end
 
-	if energy >= 20 and energy < 30:
-		set fat += 3
-		set energy += 10
-		'You pushed through the power of a meal.'
-	end
-
-	if energy < 20:
-		set energy += 20
-		!!set fat += 1
-		'You gladly ate cooked food.'
-	end
-
-	if water >= 20:'Tea in you no longer climbs.'
-	if water < 20:
-		'You gladly drank a mug of tea.'
-		set water += 20
+	if water >= 20:
+		'You don''t need any more tea.'
+	else
+		water += 20
+		cumspclnt = 2
+		gs 'cum_cleanup'
+		fbreath = 0
+		'You have a cup of tea, quenching your thirst.'
 	end
 
 	gs 'stat'
@@ -60,32 +60,32 @@ act 'Have a snack (0:15)':
 	*clr
 	gs 'stat'
 	frost = 0
+	minut += 15
+	health += 10
+	manna += 20
 	'<center><img src="images/pics/food.jpg"></center>'
-	set minut += 15
-	set health += 10
-	set manna += 20
 
 	if energy >= 30:
-		set fat += 3
-		'You can no longer have.'
+		fat += 3
+		'You try to enjoy the snack, but are too full to even finish it.'
+	elseif energy >= 20 and energy < 30:
+		fat += 1
+		energy += 5
+		'You have a snack even though you''re not all that hungry, and half-way through start to regret it.'
+	elseif energy < 20:
+		energy += 10
+		!!fat += 1
+		'Even though it''s not good for you, the snack tastes great.'
 	end
 
-	if energy >= 20 and energy < 30:
-		set fat += 1
-		set energy += 5
-		'You pushed through the power of a meal.'
-	end
-
-	if energy < 20:
-		set energy += 10
-		!!set fat += 1
-		'You gladly ate cooked food.'
-	end
-
-	if water >= 20:'Tea in you no longer climbs.'
-	if water < 20:
-		'You gladly drank a mug of tea.'
-		set water += 20
+	if water >= 20:
+		'You don''t need any more tea.'
+	else
+		water += 20
+		cumspclnt = 2
+		gs 'cum_cleanup'
+		fbreath = 0
+		'You have a cup of tea, quenching your thirst.'
 	end
 
 	gs 'stat'
@@ -93,13 +93,17 @@ act 'Have a snack (0:15)':
 	act 'Get up from the table':gt $locM, $metkaM
 end
 
-act 'Drink':
+act 'Have a cup of tea (0:05)':
 	cls
-
-	if water >= 20:'Tea in you no longer climbs.'
-	if water < 20:
-		'You gladly drank a mug of tea.'
-		set water += 20
+	minut += 5
+	if water >= 20:
+		'You don''t need any more tea.'
+	else
+		water += 20
+		cumspclnt = 2
+		gs 'cum_cleanup'
+		fbreath = 0
+		'You have a cup of tea, quenching your thirst.'
 	end
 
 	gs 'stat'
@@ -108,22 +112,25 @@ act 'Drink':
 end
 
 if pranik > 0:
-	'Cookies will suffice for <<pranik>> time.'
+	'You have <<pranik>> cookies.'
 
 	act 'Drink tea with cookies (0:05)':
 		cla
 		*clr
 		minut += 5
 		pranik -= 1
-		set health += 30
-		set manna += 100
+		health += 30
+		manna += 100
 		energy += 20
 		water += 20
+		cumspclnt = 2
+		gs 'cum_cleanup'
+		fbreath = 0
 		fat += 50
 		frost = 0
 		gs 'stat'
 		'<center><img src="images/pics/food.jpg"></center>'
-		'You drank tea with cookies, sweet and very bad for the figure, but so nice.'
+		'You drank tea and enjoyed the cookies. You know they''re too sweet and can''t be good for your figure, but they taste so good!'
 
 		act 'Get up from the table':gt $curloc
 	end
@@ -134,28 +141,29 @@ if edaD > 0:
 		cla
 		*clr
 		frost = 0
+		minut += 30
+		health += 10
+		manna += 20
+		edaD -= 1
 		'<center><img src="images/pics/food.jpg"></center>'
-		set minut += 30
-		set health += 10
-		set manna += 20
-		set edaD -= 1
-
-		if energy >= 30:'You can no longer have.'
-		if energy >= 20 and energy < 30:
-			set energy += 10
-			'You pushed through the power of a meal.'
+		if energy >= 30:
+			'You prepare a diet meal and try to eat it, but you're really not hungry at all. You can't finish the meal.'
+		elseif energy >= 20 and energy < 30:
+			energy += 10
+			'You try to enjoy the diet meal, but half-way in you realize you weren''t all that hungry yet. You manage to finish the meal, but feel like it was kind of wasted.'
+		elseif energy < 20:
+			energy += 20
+			'The diet meal is tasty, and you enjoy eating it.'
 		end
 
-		if energy < 20:
-			set energy += 20
-			'You gladly ate cooked food.'
-		end
-
-		if water >= 20:'Tea in you no longer climbs.'
-
-		if water < 20:
-			'You gladly drank a cup of tea.'
-			set water += 20
+		if water >= 20:
+			'You don''t need any more tea.'
+		else
+			water += 20
+			cumspclnt = 2
+			gs 'cum_cleanup'
+			fbreath = 0
+			'You have a cup of tea, quenching your thirst.'
 		end
 
 		act 'Get up from the table':gt $curloc
@@ -168,58 +176,49 @@ if fatdel > 0:
 		*clr
 		if fat > salo:fat = salo
 
-		set fatdel -= 1
-		set fat -= 25
+		fatdel -= 1
+		fat -= 25
 
 		if fat < 0:fat = 0
 
-		'You drank fat burning capsule. These capsules are gradually and results will be seen at once.'
+		'You throw the capsule of fat burners in a glass, add some water and drink it. You''re amazed at how fast the capsule works, feeling your body slim down almost immediately.'
 
 		act 'Get up from the table':gt $curloc
 	end
 end
 
 if lekarstvo > 0:
-	'you <<lekarstvo>> tablets.'
+	'You have <<lekarstvo>> tablet(s).'
 
-	if sick > 0 and lekarday ! day:
+	if sick > 0 and lekarday ! daystart:
 		act 'Take a pill (0:05)':
 			cla
 			*clr
-			set minut += 5
-			lekarday = day
+			minut += 5
+			lekarday = daystart
 			lekarstvo -= 1
 			sick -= sick * 20 / 100
-			set lekrand = rand(0, 8)
+			lekrand = rand(1, 9)
+			'<center><img src="images/inBed/lekr<<picrand>>.jpg"></center>'
+			'You swallow the pill, and shortly after you feel a bit better.'
 
-			if lekrand = 0:'<center><img src="images/inBed/lekr1.jpg"></center>'
-			if lekrand = 1:'<center><img src="images/inBed/lekr2.jpg"></center>'
-			if lekrand = 2:'<center><img src="images/inBed/lekr3.jpg"></center>'
-			if lekrand = 3:'<center><img src="images/inBed/lekr4.jpg"></center>'
-			if lekrand = 4:'<center><img src="images/inBed/lekr5.jpg"></center>'
-			if lekrand = 5:'<center><img src="images/inBed/lekr6.jpg"></center>'
-			if lekrand = 6:'<center><img src="images/inBed/lekr7.jpg"></center>'
-			if lekrand = 7:'<center><img src="images/inBed/lekr8.jpg"></center>'
-			if lekrand = 8:'<center><img src="images/inBed/lekr9.jpg"></center>'
-
-			'You swallowed the pill'
-
-			act 'move away':gt $curloc
+			act 'Continue':gt $curloc
 		end
 	end
 end
 
 if vitamin > 0:
-	'you <<vitamin>> vitaminok.'
+	'You have <<vitamin>> vitamin pills.'
 
-	if vitaminday ! day:
-		act 'Drink Vitamins (0:05)':
+	if vitaminday ! daystart:
+		act 'Take vitamins (0:05)':
 			cla
 			*clr
+
 			if fat > salo:fat = salo
 
-			set minut += 5
-			vitaminday = day
+			minut += 5
+			vitaminday = daystart
 			vitamin -= 1
 			frost = 0
 
@@ -227,15 +226,16 @@ if vitamin > 0:
 			if GerpesOnce = 1:Gerpes -= 2
 			if SifacOnce = 1 and Sifilis >= 10:Sifilis -= rand(0, 1)
 
-			set skinvan += 1
+			skinvan += 1
 
-			if skinvan = 20:set skinvan = 0 & set skin += 1
+			if skinvan = 20:skinvan = 0 & skin += 1
 
-			'You drank Vitams'
+			'You take some vitamins to stay healthy.'
 
-			act 'Move away':gt $curloc
+			act 'Continue':gt $curloc
 		end
 	end
 end
 
 --- kuhrPar ---------------------------------
+

@@ -3,14 +3,14 @@ if $ARGS[0] = 'start':
 	cla
 	clr
 	gs 'stat'
-	'Oddments drawer.'
+	'Bric-a-brac drawer.'
 
-	if prezik > 0:'Packing condoms, it <<prezik>> pc.'
+	if prezik > 0:'Condoms, you have <<prezik>> remaining.'
 	if tabletki > 0:'Birth control pills <<tabletki>> pc.'
-	if lubri > 0:'Lubricant, enough for <<lubri>> time.'
-	if krem > 0:'Sunblock <<krem>>'
-	if abonement > 0:'Subscription is valid for <<abonement>> Occupation'
-	if dildo > 0:'Realistic Dildo'
+	if lubri > 0:'Lubricant, enough for <<lubri>> time(s).'
+	if krem > 0:'Sunblock, enough for <<krem>> more application(s).'
+	if abonement > 0:'Fitness center subscription, valid for <<abonement>> more visit(s)'
+	if dildo > 0:'Realistic Dildo.'
 
 	act 'Close the drawer':
 		cla
@@ -18,31 +18,31 @@ if $ARGS[0] = 'start':
 	end
 
 	if money > 0:
-		act 'Put your money in the drawer':
+		act 'Put some money in the drawer':
 			cla
 			stolIN = input ("How much money you want to put in the desk drawer? (Your purse contains <<money>> rubles.)")
 
 			if stolIN <= 0 or stolIN > money:
 				!!'Not correct operation.'
 			else
-				set stolmoney += stolIN
-				set money -= stolIN
+				stolmoney += stolIN
+				money -= stolIN
 			end
 
-			gt 'stol', 'start'
+			gt 'stol', 'fin'
 		end
 	end
 
 	if stolmoney > 0:
-		act 'Take money from the desk.':
+		act 'Take some money from the desk.':
 			cla
-			stolOUT = input ("How much money do you want place in your purse? (There is <<stolmoney>> rubles here.)")
+			stolOUT = input ("How much money do you want to put in your purse? (There is <<stolmoney>> rubles here.)")
 
 			if stolOUT <= 0 or stolOUT > stolmoney:
 				!!'Not correct operation.'
 			else
-				set stolmoney -= stolOUT
-				set money += stolOUT
+				stolmoney -= stolOUT
+				money += stolOUT
 				!!'You debited <<kartaOUT>> rubles, now on your account <<karta>> rubles.'
 			end
 
@@ -55,10 +55,37 @@ if $ARGS[0] = 'fin':
 	cla
 	gt $locM, $metkaM
 
-	!'if housr = 1 and housrA = 1:
-	set housrA = 0
-	gt 'sitr'
-	end'!
+end
+
+if $ARGS[0] = 'stolPar':
+	gs'stat'
+
+	'<center><img src="images/pics/stol.jpg"></center>'
+	'You sat down at his desk.'
+
+	act 'Get up from the table':gt $locM, $metkaM
+
+	if lernHome > 0:
+		act 'Learning lessons':
+			cls
+
+			if lernHome <= 2:
+				minut += 60*lernHome
+				lernHome = 0
+				lern += 1
+				gs'stat'
+			elseif lernHome > 2:
+				minut += 60*2
+				lernHome = 0
+				gs'stat'
+			end
+			'<center><img src="images/pic/homework.jpg"></center>'
+			'Sitting for a long time you learned yet they were able to learn.'
+
+		act 'Get up from the table':gt $locM, $metkaM
+		end
+	end
 end
 
 --- stol ---------------------------------
+

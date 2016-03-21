@@ -1,37 +1,33 @@
 # andrey
-'<b><center><font size="4"><font color="purple">Manager Andrew M. Sobulyagin</font></center></b>'
-*nl
-*nl
+'<b><center><font size="4">Manager Andrew M. Sobulyagin</center></b>'
 
 if hour >= 18:
-	msg '<b><center>Andrew M. Sobulyagin goodbye and leaves. His work day ended</center></b>'
+	msg '<center>Andrew M. Sobulyagin says goodbye and leaves. His work day has ended</center>'
 	gt 'young_shop'
 end
 
 if young_shop_work = 0:
-	'<b>I knock on the door and walk into a room to the manager. He sits at a table and reading some papers.</b>'
+	'You knock on the door and open it. Inside, you see the stores manager sitting at a table reading some papers.'
 
 	act 'Talk about work':
 		cla
 		minut += 5
-		'The manager tells me that the store needs a girl consultant to work in the evening. Salary small but stable.'
-		'Begin work on the next working day after employment.'
-		'<b>Details</b>need to work 5 days a week (Monday-Friday) at 2:00. Salary - 800 rubles per day. Work need to come in 15 hours. Salary paid every week on Friday according to hours worked. 3 for truancy fired from his job.'
+		'The manager tells me that the store needs a female consultant to work in the evening. The salary is low but stable.'
+		'You''ll start working the next day after your employment is finalised.'
+		'<b>Details:</b> Your working hours are 15:00 to 17:15, Monday through Friday. The salary is 800 rubles per day. Your salary will be paid out every Friday in accordance with hours worked. If you miss work three times in total, you will be fired.'
 
-		act '<b>Mull conditions and arrive at a different time</b>':gt 'young_shop'
+		act 'Consider the conditions and come at another time':gt 'young_shop'
 
-		if work = 0 and hour < 15:
-			'If operating conditions suit me, I can now fill in the blanks and sign documents.'
-			*nl
+		if ((work = 0 and young_shop_work = 0 and cheatWork = 0) or (young_shop_work = 0 and cheatWork = 1)) and hour < 15:
+			'If the conditions suit me, I can fill in the blanks and sign the documents.'
 
-			act 'Get a job':
+			act 'Take the job':
 				work = 1
-				set young_shop_work = 1
+				young_shop_work = 1
+				minut += 5
+				if week >= 1 and week <= 4:msg '<b><center>You got a job in the youth clothing store ''Kies pussy''. Starting TODAY at 15:00!!!</center></b>'
+				if week = 5:msg '<b><center>You got a job in the youth clothing store ''Kies pussy''. Your first workday is on Monday at 15:00.</center></b>'
 
-				if week >= 1 and week <= 4:msg '<b><center>I get a job in youth clothing store '' '' Kies pussy. Starting tomorrow</center></b>'
-				if week = 5:msg '<b><center>I get a job in youth clothing store '' '' Kies pussy. Starting on Monday</center></b>'
-
-				minut+= 5
 				gt 'young_shop'
 			end
 		end
@@ -40,212 +36,239 @@ if young_shop_work = 0:
 	act 'Leave':gt 'young_shop'
 end
 
-if young_shop_work = 1:
-	'<b>I knock on the door and walk into a room to the manager. Andrew M. Sobulyagin normally picks papers, incidentally examining pictures of naked girls in the monitor.</b>' & *nl
+elseif young_shop_work = 1:
+	'You knock on the door and open it. Inside, you see the stores manager Andrew M. Sobulyagin. Normally he''d be reading some papers, but you notice he''s currently looking at pictures of naked girls on his monitor.'
 
-	if week = 5 and young_shop_salary > 0:
-		'<b>- Hello <<$char_name>>. For salary come from?</b>' & *nl
+	if week = 5 and young_shop_salary > 0 and young_shop_miss < 3:
+		'- Hello <<$name>>. Have you come for your salary?'
 
-		act 'Get salary':
+		act 'Get salary and leave':
 			minut += 15
-			!'if char_responsible < 400 and young_shop_bonus >= 1:
-				'<b><<$char_name>>, you are very irresponsible work, I have to deprive you of some bonuses! Try better.</b>'
-				*nl
-				set young_shop_bonus -= 2
 
-				if young_shop_bonus < 0:set young_shop_bonus = 0
+			!'
+			if char_responsible < 400 and young_shop_bonus >= 1:
+				young_shop_bonus -= 2
 
-				set bonus_mood -= 100
+				if young_shop_bonus < 0:young_shop_bonus = 0
+				bonus_mood -= 100
+				'<<$name>>, you''re very irresponsible at work. Unfortunately, I have to deprive you of some bonuses! You need to work harder.'
+			elseif char_responsible >= 600:
+				'<<$name>>, you are a very responsible person! Keep up the good work. Oh yeah, you also relies nadbavochka.'
+				young_shop_bonus += 2
+				bonus_mood += 100
+			end
+			'!
+
+			money += young_shop_salary * 800 + young_shop_bonus * 200
+
+
+			msg '<center>I''ve worked <b><<young_shop_salary>></b> days and got paid <b><<young_shop_salary * 800>></b> rubles, with a bonus of <b><<young_shop_bonus * 200>></b> rubles. Total income is <b><<young_shop_salary * 800 + young_shop_bonus * 200>></b> rubles</center>'
+			'The manager counts out <b><<young_shop_salary * 800 + young_shop_bonus * 200>></b> rubles and, after having received my signature, puts his nose back in the papers.'
+
+			! reset money,young_shop_salary,young_shop_bonus to zero for a new week
+
+			young_shop_salary = 0
+			young_shop_bonus = 0
+			money += young_shop_salary * 800 + young_shop_bonus * 200
+			
+			gt 'young_shop'
+			
 			end
 
-			if char_responsible >= 600:
-				'<b><<$char_name>>, you are a very responsible person! Keep up the good work. Oh yeah, you also relies nadbavochka.</b>'
-				*nl
-				set young_shop_bonus += 2
-				set bonus_mood += 100
-			end'!
-
-			set money += young_shop_salary * 800 + young_shop_bonus * 200
-			msg '<center>I worked <b><<young_shop_salary>></b> days and get paid <b><<young_shop_salary*800>></b> rubles and bonus <b><<young_shop_bonus*200>></b> rubles. Total <b><<young_shop_salary*800 + young_shop_bonus*200>></b> RR</center>'
-			'<b>The manager counts I <b><<young_shop_salary*800 + young_shop_bonus*200>></b> rubles and received my signature again puts his nose in the paper.</b>'
-			*nl
-			set young_shop_salary = 0
-			set young_shop_bonus = 0
-
-			act 'Leave':gt 'young_shop'
 		end
+			
+	end
 
-		exit
+	if young_shop_miss < 3 and young_shop_work = 1:
+
+		act 'Resign':
+			cla
+			'- "I would like to resign" You say as you walk up to the managers table.'
+			'- "Are you sure? If you''re sure I can arrange everything right away." Andrew M. scratches his head - "But why so suddenly?"'
+
+			act 'Change your mind':
+				'- "You know, I should think about it some more" You say as you''re moving back towards the door. - "I''ll come back some other time."'
+				'- "Right, is there something else you wanted?"'
+
+				act 'Leave':gt 'young_shop'
+			end
+
+			act 'Resign, get paid out and leave':
+				young_shop_work = 3
+				young_shop_miss = 0
+				work = 0
+				'- "No, I already thought about it very thoroughly!" You say'
+				'"Okay", Andrew M. says and starts filling out several forms before handing them over to you for signatures.'
+
+				if young_shop_salary > 0 or young_shop_bonus > 0:
+					money += young_shop_salary * 800 + young_shop_bonus * 200
+
+					msg '<center>For working <b><<young_shop_salary>></b> days I got paid <b><<young_shop_salary * 800>></b> rubles, with a bonus of <b><<young_shop_bonus * 200>></b> rubles. Total income is <b><<young_shop_salary * 800 + young_shop_bonus * 200>></b> rubles</center>'
+					'Andrew M. counts out <b><<young_shop_salary * 800 + young_shop_bonus * 200>></b> rubles.'
+
+					! reset money,young_shop_salary,young_shop_bonus to zero for a new week
+					young_shop_salary = 0
+					young_shop_bonus = 0
+					money += young_shop_salary * 800 + young_shop_bonus * 200
+			
+					gt 'young_shop'
+				end
+
+				act 'Leave':gt 'young_shop'
+			end
+		end
 	end
 
 	if young_shop_miss >= 3:
 		cla
-		'- What kind of people! - Andrew M. leans back in his studio. - Where have you been? We agreed truancy 3 - dismissal.'
-		*nl
+		'- What a piece of work you are! - Andrew M. leans back in his chair. - Where have you been? We agreed that missing work three times are terms for immediate dismissal.'
 
-		act '<font color="green">Agree to dismissal</font>':
+		act 'Agree your dismissal, get paid out and leave':
 			cla
-			'- Well, I did not get to go to work every day - I sigh.'
-			'Manager pulls paper and begins to fill the blanks. A few minutes later he hands me some papers and I put a signature.'
-			'More I do not work in the store.'
-			*nl
-			set young_shop_work = 2
-			set young_shop_miss = 0
-			set char_honest += 5
+			young_shop_work = 2
+			young_shop_miss = 0
+			char_honest += 5
 			work = 0
-			set bonus_mood -= 100
+			bonus_mood -= 100
+			minut +=15
+			'"You''re right, I''ve skipped work a couple times now", you sigh.'
+			'The manager pulls out a document from his desk drawer and begins to fill in the blanks. A few minutes later he hands you some papers and you sign them without a word.'
+			'You are no longer employed at this store.'
 
 			if young_shop_salary > 0 or young_shop_bonus > 0:
-				set money += young_shop_salary * 800 + young_shop_bonus * 200
-				msg 'For <b><<young_shop_salary>></b> days I get paid <b><<young_shop_salary*800>></b> and a bonus rubles <b><<young_shop_bonus*200>></b> rubles. Total <b><<young_shop_salary*800 + young_shop_bonus*200>></b> rubles'
-				'<b>Andrew M. counts I <b><<young_shop_salary*800 + young_shop_bonus*200>></b> rubles.</b>'
-				*nl
-				set young_shop_salary = 0
-				set young_shop_bonus = 0
+				money += young_shop_salary * 800 + young_shop_bonus * 200
+
+				msg 'For working <b><<young_shop_salary>></b> days you get paid <b><<young_shop_salary * 800>></b>, with a bonus of <b><<young_shop_bonus * 200>></b> rubles. Total income is <b><<young_shop_salary * 800 + young_shop_bonus * 200>></b> rubles'
+				'Andrew M. counts out <b><<young_shop_salary * 800 + young_shop_bonus * 200>></b> rubles.'
+
+				! reset money,young_shop_salary,young_shop_bonus to zero for a new week
+				young_shop_salary = 0
+				young_shop_bonus = 0
+				money += young_shop_salary * 800 + young_shop_bonus * 200
+			
+				gt 'young_shop'
 			end
 
-			minut += 15
-
-			act 'Leave':gt 'young_shop'
 		end
 
-		act '<font color="navy">leave a Beg</font>':
+		act 'Beg to get not fired':
 			cla
-			'- But I can not lose my job! It is very necessary to me - I have already in tears. - Please do not fire me.'
-			'- Then you have only one option:lock the door and show how your lips are able to convince - Andrew M. rises to his feet and taken the right hand for balls.'
-			*nl
+			'- "Please, I can''t lose my job! It''s very important to me, please don''t fire me!" As you say this, tears begin rolling down your cheeks.'
+			'- "Then you have only one option; lock the door and show me how good your lips are at convincing me" Andrew M. rises to his feet and cups his balls with his right hand.'
 
-			act '<b>Escape</b>':
+			act 'Escape':
 				minut += 2
 				gt 'young_shop'
 			end
 
-			act '<font color="green">Lock the door and get on your knees</font>':
+			act 'Lock the door and get on your knees':
 				cla
-				'"It´s for work, go home and do nothing bad will happen" - I try to calm myself while lock the door. I turned to see how Sobulyagin unzips his pants and throws Mighty 18 centimeter penis. I go over and get up on his knees, his eyes closed.'
-				'- What is stuck? Let´s start! - Andrew grins.'
-				'I open my eyes and take a dick in both hands. From a distance of 5 centimeters, he seems to be simply overwhelming. I slightly open mouth and his tongue. First I lick the head, then the whole barrel member. A few minutes later I put my dick in your mouth and start doing translational movements of the head, the head is constantly licking tongue. I have a feeling that it grows in my mouth.'
-				'I am very fond of their occupation and do not notice as a member starts hitting streaks of sperm into my throat and into the airways. Struggling, I try not to stay and keep coughing, but I have enough on just 15 seconds. Clearing his throat, I open my eyes and see the manager buttons fly and goes to leave.'
-				'- And you did so! Such a valuable employee I can not dismiss. Spis absenteeism and you´ll write the last award for his efforts. And you go home to work today you can not go out, have worked! Only to any more truancy was not! - With these words he comes out of the office, and I´m starting to put itself in order.'
-				*nl
 				minut += 15
 
 				if sobulaginsex = 0:sobulaginsex = 1 & guy += 1
 
 				bj += 1
 				swallow += 1
-				cumlip += 1
-				set young_shop_miss = 2
-				set young_shop_salary = 1
-				set young_shop_bonus = 2
+				spafinloc = 12
+gs 'cum_manage'
+				young_shop_miss = 2
+				young_shop_salary = 1
+				young_shop_bonus = 2
+				'"I have to do this to keep my job, if I go home and do nothing I''ll be in big trouble" You think, trying to calm yourself while locking the door.'
+				'After locking the door, you turn around to see how Sobulyagin unzips his pants and pulls out his mighty 18 centimeter cock. You slowly walk over to him and kneel down on your knees, closing your eyes.'
+				'"Please make this quick", you think.'
+				'- "What''s the matter? Let''s start!" Andrew grins.'
+				'You open your eyes and take his dick in both hands. Looking at it this closely, it looks enormous. You open your mouth slightly and stick out your tongue.'
+				'You start off by gently licking the head, and then move on to licking up and down the entire shaft. After a few minutes you put his cock in your mouth and start moving your head back and forth, your tongue constantly rolling over the head of his shaft. You feel his dick growing and stiffening as you caress it with your mouth and tongue.'
+				'Soon you start enjoying to suck, and you don''t immediately notice as his dick starts spurting streaks of sperm into your throat and airways. Struggling to swallow and breath, you try to keep the cock in your mouth, and within just 15 seconds the stream of cum slows down. Clearing his throat, the manager starts buttoning up his pants as you open your eyes.'
+				'- "You did very well! I can''t fire such a valuable employee. I''ll remove one count of skipping work from your records, and you''re free to go home for today since you''ve already done some work! Just make sure to not miss work anymore!" - With those words he walks out of the office, leaving you to put yourself in order.'
 
 				act 'Leave':gt 'young_shop'
 			end
 		end
-	end
 
-	if young_shop_miss < 3:
-		act '<font color="maroon">dismissed</font>':
-			cla
-			'- I would like to resign - I come to the table manager.'
-			'- Are you sure? Of course, I can arrange everything right Wait - Andrew M. scratching his head. - But then suddenly, ?'
-			*nl
-
-			act '<b>Change of heart</b>':
-				'- You know, I should still think about it - I''m moving back to the door. - Come on, I''ll come next time.'
-				'- Right, something else may like?'
-				*nl
-
-				act 'Leave':gt 'young_shop'
+		if cheatWork = 1:
+			act 'Reset counter truancy (Cheat)':
+				young_shop_miss = 0
+				gt 'young_shop'
 			end
 
-			act '<font color="maroon">dismissed</font>':
-				'- No, I already thought about it very thoroughly!'
-				'Okay, owner - a gentleman! - Manager fills several forms and gave me lictochki signature.'
-				*nl
-
-				if young_shop_salary > 0 or young_shop_bonus > 0:
-					set money += young_shop_salary * 800 + young_shop_bonus * 200
-					msg '<center>For <b><<young_shop_salary>></b> days I get paid <b><<young_shop_salary*800>></b> rubles and bonus <b><<young_shop_bonus*200>></b> rubles. Total <b><<young_shop_salary*800 + young_shop_bonus*200>></b> RR</center>'
-					'<b>Andrew M. counts I <b><<young_shop_salary*800 + young_shop_bonus*200>></b> rubles.</b>'
-					*nl
-					set young_shop_salary = 0
-					set young_shop_bonus = 0
+			if cheatWorkKiskis = 0:
+				act 'Disable counter truancy (Cheat)':
+					cheatWorkKiskis = 1
+					young_shop_miss = 0
+					gt 'young_shop'
 				end
 
-				set young_shop_work = 3
-				set young_shop_miss = 0
-				work = 0
-
-				act 'Leave':gt 'young_shop'
+			elseif cheatWorkKiskis = 1:
+				act 'Enable counter truancy (Cheat)':
+					cheatWorkKiskis = 0
+					gt 'young_shop'
+				end
 			end
 		end
+
+		
 	end
 
-	act 'Leave':gt 'young_shop'
-end
 
-if young_shop_work = 2 and work = 0:
+elseif (work = 0 and young_shop_work = 2 and cheatWork = 0) or (young_shop_work = 2 and cheatWork = 1):
 	act 'Beg to return to work':
 		cla
-		'- I do not even know - Andrei Mikhailovich obviously do not want to hire progulschitsu.'
-		'- Oh, please! I´ll do anything, I really need this job! - I do not even know how to convince him ..'
-		'- Anything? Ha! I know what you could do - open the eyes of the manager begins to evaluate my body. - Frankly, I fuck you in the ass, and then you and I still otsosesh. Hand?'
-		*nl
+		'- "I don''t know" - Andrew Mikhailovich obviously does not want to re-hire irresponsible workers.'
+		'- "Oh please! I''ll do anything you want, I really need this job!" You say, trying your absolute best to convince him.'
+		'- "Anything? Ha! I know what you could do!" The manager says, as his eyes begin to wander all over your body. - "To be blunt, I''ll fuck you in the ass, and then you give me a blowjob. Deal?"'
 
-		act '<b>Never</b>':
+		act 'Tell him you would never do this':
 			cla
-			'Paint rushed to my face. I´m even a little stunned by what he heard:'
-			'- Do you want me to do anal sex, and then I´ll have to lick all the juices from your penis? - It does not even fit in my head. - I will not do it!'
-			'- Do you want, how you want! - Andrew M. clearly upset.'
-			*nl
+			'Your face immediately turns beet-red as you try to understand what he just told you.'
+			'- "You want to have anal sex with me, and then you want me to lick all the juices from your penis?" You don''t understand quite what the hell he''s thinking. - "No way I''ll do that!"'
+			'- "Fine, have it your way then!" Andrew M. is clearly upset with your answer.'
 
 			act 'Leave':gt 'young_shop'
 		end
 
-		act '<font color="green">Agree</font>':
-			'That´s not fair! You know how I need this job - I want to try to convince Andrew Sobulyagina.'
-			'- I only give you a chance. Actually, according to the rules, I should have told you categorically refuse! So I´m doing pretty good deed - the manager rises from his chair. - Decide.'
-			'- Okay, I agree - it seems that this is the best way out. - Thank you.'
-			'Andrew goes to the door and locks it, and I undress before the goal.'
-			'- And you have me shalunishka! - He comes up behind me and hugged starts to finger her nipples.'
-			'I´m getting more comfortable in and lean forward. Spreading buttocks with both hands and close my eyes.'
-			'- Okay, we can do without foreplay - Sobulyagin immediately swing plants with cock right up my ass and I turbid in the head from a sharp tearing pain.'
-			'Coming to myself I only when Andrew puts me naked on the couch in his office:'
-			'- I got so carried away your hole that did not manage to take out time and finished in your anus - the manager scratching his head. - Then I saw you some strange:glass eyes, to touch or words not react. You do not worry, everything was perfect! So get dressed and go home, I´ll work now decorated.'
-			'I got up and slowly begin to dress. Hands some cotton and listen hard, and anus just lit. Dressing, I wipe his aching ass palm and fingers is dirty brown sperm.'
-			'- Thank you very much! - I´m trying to smile on his face.'
-			*nl
-			set young_shop_work = 1
+		act 'Agree':
+			young_shop_work = 1
 			work = 1
-
-			if week >= 1 and week <= 4:msg '<b><center>I get a job in youth clothing store '' '' Kies pussy. Starting tomorrow</center></b>'
-			if week = 5:msg '<b><center>I get a job in youth clothing store '' '' Kies pussy. Starting on Monday</center></b>'
-
 			minut += 60
+			'"That''s not fair! You know how much I need this job" You say, trying to convince Andrew to let you come back without doing this.'
+			'- "I''m only giving you a chance. Actually, according to the rules I should have categorically refused, so I''m doing a pretty good deed" The manager stands up from his chair. - "It''s time to decide."'
+			'- "Okay, fine. I agree" It seems that this is the only way out. - "Thank you."'
+			'Andrew walks over to the door and locks it, while you stand close to his desk and undress.'
+			'- "And you have me shalunishka!" He walks up behind you, embraces you and starts massaging your breasts and pulling on your nipples.'
+			'As Andrew fondles your breasts, you get a little more comfortable. Deciding you''d rather be done with it quickly, you lean forward slightly, using your hands to spread your buttcheeks and closing your eyes.'
+			'- "Okay, we don''t need any foreplay." With that, Andrew lines his cock up with your anus and with a hard thrust shoves it deep inside you. The pain from having his big dick pierce you so suddenly and forcefully causes you to lose consciousness.'
+			'When you regain your senses, Andrew is gently putting you down on the couch in his office.'
+			'- "I got so carried away by your sexy body and tight hole that I didn''t manage to pull out in time and finished in your anus" The manager scratches his head. - "Then I saw you looked really strange - glassy eyes, not responding to touch or words. But don''t you worry, everything was great! So get dressed and go home, I have some work to do now."'
+			'You slowly stand up, still a little disoriented. Your anus hurts <i>a lot</i>, and as you''re dressing you gently touch your anus with a finger. It stings, and looking at your finger you notice it''s now covered in disgusting brown sperm.'
+			'- "Thank you very much!" You say, trying and failing to keep a smile on your face.'
+
+			if week >= 1 and week <= 4 and hour <=15:msg '<b><center>You got a job in the youth clothing store ''Kies pussy''. Starting TODAY at 15:00!!!</center></b>'
+			if week >= 1 and week <= 4 and hour >15:msg '<b><center>You got a job in the youth clothing store ''Kies pussy''. Starting tomorrow at 15:00</center></b>'
+			if week = 5:msg '<b><center>You got a job in the youth clothing store ''Kies pussy''. Starting on Monday</center></b>'
 
 			act 'Leave':gt 'young_shop'
 		end
 	end
 
 	act 'Leave':gt 'young_shop'
-end
 
-if young_shop_work = 3:
-	'<b>The manager is not against me again take on the job, so I quit on their own, and was not fired for absenteeism.</b>'
 
-	act 'Back to work':
+elseif young_shop_work = 3:
+	'The manager is not against you coming back to work, since you quit yourself and were not fired due to skipping work.'
+
+	act 'Accept your previous work':
 		cla
-		'- And we are waiting for you! - Andrew M. gave me forms. - I even argued with Valera from the male department, that you come back to us!'
-		'I fill forms and return them to the manager.'
-		*nl
 		work = 1
-		set young_shop_work = 1
-
-		if week >= 1 and week <= 4:msg '<b><center>I get a job in youth clothing store '' '' Kies pussy. Starting tomorrow</center></b>'
-		if week = 5:msg '<b><center>I get a job in youth clothing store '' '' Kies pussy. Starting on Monday</center></b>'
-
+		young_shop_work = 1
 		minut += 15
+		'- "We''ve been waiting for you to come back!" Andrew M. gives you a few forms. - "I even told Valera from the male department that you''d come back to us!"'
+		'You fill out the forms and return them to the manager.'
+
+		if week >= 1 and week <= 4 and hour <=15:msg '<b><center>You got a job in the youth clothing store ''Kies pussy''. Starting TODAY at 15:00!!!</center></b>'
+		if week >= 1 and week <= 4 and hour >15:msg '<b><center>You got a job in the youth clothing store ''Kies pussy''. Starting tomorrow at 15:00</center></b>'
+		if week = 5:msg '<b><center>You got a job in the youth clothing store ''Kies pussy''. Your first workday is on Monday</center></b>'
 
 		act 'Leave':gt 'young_shop'
 	end
@@ -254,3 +277,4 @@ if young_shop_work = 3:
 end
 
 --- andrey ---------------------------------
+

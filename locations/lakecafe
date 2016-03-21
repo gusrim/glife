@@ -2,14 +2,11 @@
 if $ARGS[0] = 'main':
 	cla
 	*clr
+	barrnd = rand(1, 3)
+	gs 'stat'
 	fcolor = rgb(0, 0, 0)
 	bcolor = rgb(255, 255, 255)
-	gs 'stat'
-	set barrnd = rand(1, 3)
-	!!LCWorkRand = rand(1, 6)
 	'<center><img src="images/LakeCafe/LakeCafe.jpg"></center>'
-	*nl
-	*nl
 	'Naiobyknovenneyshaya barbecue, of which there are many in the vast country.'
 	'The cost of lunch - 75 rubles'
 	'Opening hours cafe - 14:00 to 04:00'
@@ -20,112 +17,103 @@ if $ARGS[0] = 'main':
 			if barrnd = 1:'Over the bar stands smiling <a href="exec:gt ''lakecafe'', ''barmensha''">barmaid</a> and polishes glasses'
 			if barrnd = 2:'Over the bar stands smiling <a href="exec:gt ''lakecafe'', ''barmensha''">barmaid</a> and wipes the table'
 			if barrnd = 3:'Over the bar stands smiling <a href="exec:gt ''lakecafe'', ''barmensha''">barmaid</a> and something mixes'
-		end
-
-		if barmenshameet = 1:
-			if barrnd = 1:'Over the bar stands <a href="exec:gt ''lakecafe'', ''barmensha''">Gene</a> and polishes glasses'
-			if barrnd = 2:'Over the bar stands <a href="exec:gt ''lakecafe'', ''barmensha''">Gene</a> table and rubs'
-			if barrnd = 3:'Over the bar stands <a href="exec:gt ''lakecafe'', ''barmensha''">Gene</a> and something mixes'
+		elseif barmenshameet = 1:
+			if barrnd = 1:'Over the bar stands <a href="exec:gt ''lakecafe'', ''barmensha''">Eugene</a> and polishes glasses'
+			if barrnd = 2:'Over the bar stands <a href="exec:gt ''lakecafe'', ''barmensha''">Eugene</a> table and rubs'
+			if barrnd = 3:'Over the bar stands <a href="exec:gt ''lakecafe'', ''barmensha''">Eugene</a> and something mixes'
 		end
 
 		if week = 1 and hour = 22:
+			LCWorkRand = rand(1,6)
+
 			if LCWorkRand = 1:
 				randguycafe = rand(3, 6)
 
 				if LCwork = 0:'One of the tables sits a group of men and drinks, talking loudly and laughing.'
 				if LCwork = 1:'One of the tables sitting <a href="exec:gt ''LCwork'', ''start1''"><<randguycafe>> men</a> and drinks, talking loudly and laughing.'
-			end
-
-			if LCWorkRand = 2:
+			elseif LCWorkRand = 2:
 				if LCwork = 0:'One of the tables sits an older man and eating barbecue.'
 				if LCwork = 1:'One of the tables sitting <a href="exec:gt ''LCwork'', ''start2''">an older man</a> and eating barbecue.'
-			end
-
-			if LCWorkRand = 3:
+			elseif LCWorkRand = 3:
 				if LCwork = 0:'One of the tables sit two men and a drink.'
 				if LCwork = 1:'One of the tables sit <a href="exec:gt ''LCwork'', ''start3''">two men</a> and drink.'
-			end
-
-			if LCWorkRand = 4:
+			elseif LCWorkRand = 4:
 				if LCwork = 0:'One of the tables sit a guy with a girl and talk about something.'
 				if LCwork = 1:'One of the tables sit <a href="exec:gt ''LCwork'', ''start4''">boy and girl</a> and talk about something.'
-			end
-
-			if LCWorkRand = 5:
+			elseif LCWorkRand = 5:
 				if LCwork = 0:'One of the tables sits a girl, and dining.'
 				if LCwork = 1:'One of the tables sitting <a href="exec:gt ''LCwork'', ''start5''">girl</a>, and dining.'
-			end
-
-			if LCWorkRand = 6:
+			elseif LCWorkRand = 6:
 				if LCwork = 0:'One of the tables sits a fat man and talking on the phone.'
 				if LCwork = 1:'One of the tables sitting <a href="exec:gt ''LCwork'', ''start6''">fat man</a> and talking on the phone.'
 			end
 		end
 
-		*nl
+		if hour => 23:'For a small table, in a corner of the room sat a few <a href="exec:GT ''lakecafe'',''bandits''">Men</a> questionable appearance'   
+
 		'- <a href="exec:gt ''laketoilet'', ''main''">Toilet</a>'
 
 		if money >= 75:
 			act 'Eat 75 rubles':
 				cla
 				*clr
-
-				act 'Get up from the table':set minut += 20 & gt 'lakecafe', 'main'
-
+				minut += 30
+				health += 10
+				money -= 75
+				manna += 5
+				willpower += 5
 				'<center><img src="images/pics/food.jpg"></center>'
-				set minut += 30
-				set health += 10
-				set money -= 75
-				set manna += 5
-				set willpower += 5
 
 				if energy >= 30:
-						set fat += 5
-						'You can no longer have.'
-				end
-
-				if energy >= 20 and energy < 30:
-					set fat += 3
-					set energy += 10
+						fat += 5
+						'You can no longer eat.'
+				elseif energy >= 20 and energy < 30:
+					fat += 3
+					energy += 10
 					'You pushed through the power of a meal.'
-				end
-
-				if energy < 20:
-					set energy += 20
-					set fat += 1
+				elseif energy < 20:
+					energy += 20
+					fat += 1
 					'You gladly ate the food.'
 				end
 
-				if water >= 20:'Tea in you no longer climbs.'
-
-				if water < 20:
+				if water >= 20:
+					'You don''t need any more tea.'
+				elseif water < 20:
+					water += 20
+					cumspclnt = 2
+					gs 'cum_cleanup'
 					'You gladly drank a mug of tea.'
-					set water += 20
 				end
+
+				act 'Get up from the table':minut += 20 & gt 'lakecafe', 'main'
 			end
 		end
 	end
 
-	if LCwork2 >= 1 and LCwork2day ! day and hour = 18:
+	if LCwork2 >= 1 and LCwork2day ! daystart and hour = 18:
 		act 'Help in the kitchen':gt 'LCwork', 'Kitchen'
 	end
 
-	act 'Leave':set minut += 2 & gt 'nord'
+	act 'Leave':minut += 2 & gt 'nord'
 end
 
 if $ARGS[0] = 'barmensha':
 	cls
 	gs 'stat'
+	'<center><B><font color=maroon>Barmaid Eugene</font></B></center>'
 	'<center><img src="images/LakeCafe/LakeBarmensha.jpg"></center>'
-	*nl
-	*nl
+	if JenyaLC<20:'You have a bad relationship with Eugene.'
+	if JenyaLC>=20 and JenyaLC<40:'You have cold relations with Eugene.'
+	if JenyaLC>=40 and JenyaLC<60:'You have a normal relationship with Eugene.'
+	if JenyaLC>=60 and JenyaLC<80:'You have a good relationship with Eugene.'
+	if JenyaLC>=80:'You have an excellent relationship with Eugene.'
+	''
 
 	if barmenshameet = 0:
 		'The bartender looked at your eyes and, with a smile, asked:'
 		'-Would that something?'
-	end
-
-	if barmenshameet = 1:
+	elseif barmenshameet = 1:
 		'Eugene smiled, when you come to it'
 		'Hi! - She said with a smile'
 	end
@@ -135,9 +123,9 @@ if $ARGS[0] = 'barmensha':
 			act 'Chat':
 				cla
 				*clr
-				set barmenshameet = 1
-				set JenyaLC = 10
-				set minut += 30
+				barmenshameet = 1
+				JenyaLC = 10
+				minut += 30
 				gs 'stat'
 				'<center><img src="images/LakeCafe/LakeBarmensha.jpg"></center>'
 				'You chatted with bartender. During the conversation, you found out that her name is Eugene and it works here with his girlfriend, Angela, in which a cook on the barbecue.'
@@ -151,12 +139,12 @@ if $ARGS[0] = 'barmensha':
 				cla
 				*clr
 
-				if JenyaLC < 60:set JenyaLC += 3
+				if JenyaLC < 60:JenyaLC += 3
 
-				set minut += 30
+				minut += 30
 				gs 'stat'
 				'<center><img src="images/LakeCafe/LakeBarmensha.jpg"></center>'
-				'You talk about the affairs of Zhenya, work, life and all sorts of trivia.'
+				'You talk about the affairs of Eugene, work, life and all sorts of trivia.'
 
 				act '...':gt 'lakecafe', 'barmensha'
 			end
@@ -166,7 +154,7 @@ if $ARGS[0] = 'barmensha':
 			act 'Flirt':
 				cla
 				*clr
-				set minut += 10
+				minut += 10
 				gs 'stat'
 				'<center><img src="images/LakeCafe/LakeBarmensha.jpg"></center>'
 				'You chat with Eugene, making it ambiguous hints. Eugene seems to understand you and invites you to go for it. You agree to abide with her to the kitchen.'
@@ -186,18 +174,18 @@ if $ARGS[0] = 'barmensha':
 
 				if LCworkwork2 < 1:
 					'You ask about the work of Eugene. She tells you that her sister needed help in the kitchen, come in 18 hours you need to work half an hour, during which you will be paid 175 rubles.'
-					set LCworkwork2 = 1
-					set LCwork2 = 1
+					LCworkwork2 = 1
+					LCwork2 = 1
 
 					act '...':
-						set minut += 4
+						minut += 4
 						gt 'lakecafe', 'barmensha'
 					end
 				else
 					'You ask about the work of Eugene. It reminds you that her sister needed help in the kitchen, come in 18 hours you need to work half an hour, get paid 175 rubles.'
 
 					act '...':
-						set minut += 4
+						minut += 4
 						gt 'lakecafe', 'barmensha'
 					end
 				end
@@ -211,21 +199,19 @@ if $ARGS[0] = 'barmensha':
 				'<center><img src="images/LakeCafe/LakeBarmensha.jpg"></center>'
 
 				if LCworkwork = 0:
-					'You ask Zhenyu about the "special" work. It tells you that on Monday, at 22 o´clock, in the cafe visitors who need quality "service." Pay from 500 to 2, 000 rubles.'
+					'You ask Eugene about the "special" work. It tells you that on Monday, at 22 c''clock, in the cafe visitors who need quality "service." Pay from 500 to 2, 000 rubles.'
 
 					act '...':
-						set LCworkwork = 1
-						set LCwork = 1
-						set minut += 4
+						LCworkwork = 1
+						LCwork = 1
+						minut += 4
 						gt 'lakecafe', 'barmensha'
 					end
-				end
-
-				if LCworkwork = 1:
-					'You ask about the work of Eugene. It reminds you of conditions:on Mondays, at 22 o´clock, you will need to "serve" certain visitors. Paid for it from 500 to 2000 rubles.'
+				elseif LCworkwork = 1:
+					'You ask about the work of Eugene. It reminds you of conditions:on Mondays, at 22 c''clock, you will need to "serve" certain visitors. Paid for it from 500 to 2000 rubles.'
 
 					act '...':
-						set minut += 3
+						minut += 3
 						gt 'lakecafe', 'barmensha'
 					end
 				end
@@ -236,4 +222,116 @@ if $ARGS[0] = 'barmensha':
 	act 'Move away':gt 'lakecafe', 'main'
 end
 
+if $ARGS[0] = 'bandits':
+	cls
+	gs'stat'
+	'<center><B><font color=maroon>Mob</font></B></center>'
+	'<center><img src="images/LakeCafe/bandits.jpg"></center>'
+	'Men, clearly not similar to regular visitors. Their faces clearly give them "profession", they - mob.'
+	''
+	if workDolg > 0:
+		'- Shallow, you know, that sticks us <B><<workDolg>></B> rubles?'
+	else
+		'- Che untill, EPT?'
+	end
+	
+	act '<B>Move away</B>':gt'lakecafe', 'main'
+	
+	act 'Ask to borrow money':
+		intinp = input ("How much money you want to borrow?")
+			if intinp <= 0:
+				'- You will need to loot or you decided povyebyvatsya?'
+			elseif intinp > 2000000:
+				'- Not mnogova-then, and?'
+			elseif intinp > 0 and intinp <= 2000000:
+				cla
+				money += intinp
+				workDolg += intinp + (intinp/100)*20
+				workDolgDay = 7
+
+				'- Shallow, you <<workDolgDay>> days, to return <<intinp>> rubles, plus interest <<(intinp/100)*20>>.'
+				act '<B>Move away</B>':gt'lakecafe', 'main'
+			end
+	end
+	if workDolg > 0:
+		cla
+		act '<B>Move away</B>':gt'lakecafe', 'main'
+		act 'I will give everything, I swear':
+			'- I will give everything, I swear! - you say.'
+			'- Will you give, you give. Where are you getting around? You left <<workDolgDay>> days, do not forget.'
+		end
+	end
+	if workDolg > 0 and money >= workDolg:
+		act 'Give duty':
+			cla
+			minut += 5
+			workDisk = 0
+			money -= workDolg
+			workDolg = 0
+			gs'stat'
+
+			'You gave the money owed.'
+
+			act '<B>Move away</B>':gt'lakecafe', 'main'
+		end
+	end
+	
+	if workDolgDay <= 0 and workDolg > 0:
+		cls
+		gs'stat'
+		gs'time'
+		workDisk = 0
+
+		'<center><img src="images/sauna/bug.jpg"></center>'
+		'To you we approached by two bull who you notice guns. They look at you with indifference. "It`s time to give debt."'
+
+		if money >= workDolg:
+			money -= workDolg
+			workDolg = 0
+
+			'You gave money Bugay, they counted them, and departed.'
+
+			act 'Escape':gt'lakecafe', 'main'
+			exit
+		else
+			if money+stolmoney+karta >= workDolg:
+				money += stolmoney+karta
+				stolmoney = 0
+				karta = 0
+				money -= workDolg
+				workDolg = 0
+
+				'When afford such sums have not appeared and the Bug went with you to the apartment. You have to pay them, and they left.'
+
+				act 'Escape':gt'korr'
+				exit
+			else
+				money += stolmoney+karta
+				stolmoney = 0
+				karta = 0
+				workDolg -= money
+				money = 0
+				workDolg += 10000
+
+				'The money to cover a debt you do not. The big man dragged you into your apartment and began to search.'
+				'Brutes took everything that you had and said,. In short, with you for a long time <<workDolg>>. The debt grows by another 10 pcs, and since you can not pay off, we`ll help you. Brutes have dragged into a car and thrown into the back seat. The car moved and you went somewhere.'
+
+				act 'Get out of the car':
+					cls
+					minut += 30
+					gs'stat'
+
+					'You`ve come to the sauna. Bandits have been dragged into what that room and started to explain. "You will live here and work, until not pay off your debts. All clear? Or try to escape the buzz, all, we`ll put a bullet in the head off and bury you in the woods, truncated?"'
+					'You nodded fearfully, realizing that they were not kidding.'
+
+					act 'Look around':gt'saunaroom'
+				end
+			end
+		end
+
+		exit
+	end
+end
+
 --- lakecafe ---------------------------------
+

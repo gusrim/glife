@@ -1,82 +1,64 @@
 # gargazel
+CLOSE ALL
 $metka = $ARGS[0]
 $loc = $CURLOC
-'<center><h4>garage</h4></center>'
+fatherdrunk=0
+clr
+gs 'stat'
+'<center><h4>Garage</h4></center>'
 
 if father_go = 1 and hour >= 16 and hour < 21:
 	'<center><img src="images/pic/gargazel.jpg"></center>'
-	'Large garage in which to store the gazelle stepfather.'
+	'A large garage that belongs to your stepfather. He spends time in there working on his beloved Gazelle pickup truck whenever he can in the late afternoons and evenings. You can tell the door is not locked, he''s probably in there now.'
 else
 	'<center><img src="images/pic/gargazel_empty.jpg"></center>'
-	'Large garage in which to store the gazelle stepfather. Now the garage is closed on the lock.'
+	'A large garage that belongs to your stepfather. He spends time in there working on his beloved Gazelle pickup truck whenever he can in the late afternoons and evenings. Right now the garage is closed, and the door is locked with a large padlock.'
 end
 
-clr
-gs 'stat'
+act 'Leave the garage':minut += 5 & gt 'garmassiv'
 
-act 'Leave':minut += 5 & gt 'garmassiv'
+if father_go = 1 and hour >= 16 and hour < 20:
+	'Your <a href="exec:GT ''garfather''">stepfather</a> is in the garage, working on his Gazelle pickup truck.'
+end
 
-if father_go = 1 and hour >= 16 and hour < 21:
-	'Now stepfather in the garage, car repairs.'
-
-	act 'Help':
-		cls
-		minut += 15
-		father += rand(1, 3)
-		gs 'stat'
-		'You became stepfather to help repair the car, handing him the keys and bolts.'
-
-		act 'further':gt $curloc
-
-		if father >= 80 and hour = 20:
-			'Stepfather took from a drawer a bottle of vodka and a jar of pickles. "I probably drink after work."'
-
-			act 'further':
-				cls
-				minut += 60
-				father += rand(1, 3)
-				gs 'stat'
-				'Stepfather poured himself a glass of vodka and drank. You began to talk with him about everything.'
-
-				act 'further':gt $curloc
-			end
-		end
-	end
+if father_go=1 and hour>=20 and hour<21:
+	'Your <a href="exec:GT ''garfather''">stepfather and uncle Misha</a> are in the garage, drinking vodka.'
+	set fatherdrunk=1
 end
 
 if YouCanGar > 0:
-	'In the garage there is stored <<GarTorgItem>> One unit of product, with a total capacity 100 One_unit. To, that would be able to sell the product out of the garage, you have to transfer it to your room.'
+	'You have stored <<GarTorgItem>> trinkets in the garage currently. Your stepfather allowed you to store some things in his garage but doesn''t want you taking up all his space, he has allowed you to store up to 100 trinkets here. The garage is not very easily accessible; if you want to sell the trinkets at the station, you will have to bring them back home first.'
 
-	if tovarL >= 30:'Home and so all culled product, transfer nowhere.'
-
-	if tovarL < 30:
+	if tovarL >= 30:
+		'You already have too much stored at home and do not have any more space.'
+	elseif tovarL < 30:
 		perenGarTov = 30-tovarL
-		'I could move out of the garage <<perenGarTov>> One unit of the goods in the room.'
+		'You can bring <<perenGarTov>> trinkets home and store them somewhere, until you have time to collect and sell them at the train station.'
 
 		if GarTorgItem > 0:
 			if GarTorgItem >= perenGarTov:
-				act 'move <<perenGarTov>> One unit of product':
+				act 'Move <<perenGarTov>> trinkets to your home':
 					cls
 					minut += 60
 					tovarL += perenGarTov
 					GarTorgItem -= perenGarTov
 					gs 'stat'
-					'You hour dealt with the goods .'
+					'You spend an hour gathering your trinkets from various places, bringing them home and hiding them there.'
 
-					act 'further':gt $curloc
+					act 'Continue':gt $curloc
 				end
 			end
 
 			if GarTorgItem < perenGarTov:
-				act 'move <<GarTorgItem>> One unit of product':
+				act 'Collect <<GarTorgItem>> trinkets to take with you':
 					cls
-					minut += 60
+					minut += 30
 					tovarL += GarTorgItem
 					GarTorgItem = 0
 					gs 'stat'
-					'You hour dealt with the goods .'
+					'You spend half an hour gathering your trinkets from various places in the garage, putting them in a bag so you can go sell them at the station.'
 
-					act 'further':gt $curloc
+					act 'Continue':gt $curloc
 				end
 			end
 		end
@@ -84,3 +66,4 @@ if YouCanGar > 0:
 end
 
 --- gargazel ---------------------------------
+

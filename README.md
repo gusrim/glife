@@ -10,6 +10,10 @@ Girl Life (ЭТО) [English Community Version] - github edition
 * commit your changes
 * push and/or send a pull request
 
+## Quick start (for Windows machines)
+* Double click the MakeQSP.bat
+* Enjoy :)
+
 ## What exactly is all this?
 In an effort to make editing the text of Girl Life easier, I set up this repo. This is based on the english community version. There are two branches: `master` and `releases`. On the `master` branch I will keep my version of the game as I make edits, merge pull requests, etc. while the `releases` is where you'd get things that you expect to actually work.
 

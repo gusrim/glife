@@ -1,55 +1,35 @@
 # sell_young_clothes
-set mag = 1
 $metka = $ARGS[0]
 $loc = $CURLOC
-$metkaM = $ARGS[0]
-$locM = $CURLOC
-'<b><center><font size="4">Women´s Clothing</font></center></b>'
-*nl
+cls
+gs'stat'
 
-act '<font color="navy">Go</font>':
-	minut += 1
+act 'Return':
+	cla
+	minut += 5
 	gt 'young_shop'
 end
 
-if odekis[1] = 0:
-	act '<font color="navy">See the first variant of clothes</font>':set numdres = 1 & payclo = 10000 & gt 'loker', 'odekis'
-end
+	i = Clothingstock + 1
 
-if odekis[2] = 0:
-	act '<font color="navy">Display a second embodiment of clothing</font>':set numdres = 2 & payclo = 10000 & gt 'loker', 'odekis'
-end
+	if Clothingstock - 12 >= 0:i -= 12
 
-if odekis[3] = 0:
-	act '<font color="navy">See the third variant of clothes</font>':set numdres = 3 & payclo = 10000 & gt 'loker', 'odekis'
-end
+:loopaverage
+if average[i] = 0:*p '<a href="exec: i = <<i>> & dynamic $yshopclo"><div style="width:100%; max-width:250px; max-height:250px;"><img src="images/Clothing/2average/Average<<i>>.jpg" 	height="250" /></div></a>'
+i += 12
+if i <= 125:jump 'loopaverage'
 
-if odekis[4] = 0:
-	act '<font color="navy">See the fourth variant of clothes</font>':set numdres = 4 & payclo = 10000 & gt 'loker', 'odekis'
-end
 
-if odekis[5] = 0:
-	act '<font color="navy">See the fifth variant of clothes</font>':set numdres = 5 & payclo = 10000 & gt 'loker', 'odekis'
-end
+$yshopclo = {
+	cla
+	
+	if average[i] ! 0:
+		msg 'You already own these clothes.'
+		gt 'sell_young_clothes'
+	end
 
-if odekis[6] = 0:
-	act '<font color="navy">See the sixth variant of clothes</font>':set numdres = 6 & payclo = 10000 & gt 'loker', 'odekis'
-end
-
-if odekis[7] = 0:
-	act '<font color="navy">See the seventh variant of clothes</font>':set numdres = 7 & payclo = 10000 & gt 'loker', 'odekis'
-end
-
-if odekis[8] = 0:
-	act '<font color="navy">See the eighth embodiment of clothing</font>':set numdres = 8 & payclo = 10000 & gt 'loker', 'odekis'
-end
-
-if odekis[9] = 0:
-	act '<font color="navy">See the ninth variant of clothes</font>':set numdres = 9 & payclo = 10000 & gt 'loker', 'odekis'
-end
-
-if odekis[10] = 0:
-	act '<font color="navy">See a tenth embodiment of clothing</font>':set numdres = 10 & payclo = 10000 & gt 'loker', 'odekis'
-end
+	gt 'clothing', 'view_clothing_item', 'shop', 'average',i, 7500
+}
 
 --- sell_young_clothes ---------------------------------
+

@@ -1,120 +1,130 @@
 # bed2
-if $ARGS[0] = 'dosip':
-	dosip = 1
+gs 'stat'
+cla
+
+if $clothingworntype ! 'nude':
+	'<center><img src="images/pics/bed.jpg"></center>'
 else
-	dosip = 0
+	'<center><img src="images/pics/son.jpg"></center>'
 end
 
-set nude = 1
-set odedosna = numdress
-set numdress = 0
-'<center><img src="images/pics/son.jpg" ></center>'
+dynamic $budilnikOn
 
-if analplugIN = 1:set analplugIN = 0 & 'Before going to bed you remove a butt plug.'
-if vibratorIN = 1:set vibratorIN = 0 & 'Before going to bed .'
-if mop > 1:set mop = 0 & set vidageday = vidageday - 1 & 'Makeup smeared on the face, you think, that looks bad for sleeping with makeup, skin aging faster from this.'
+if mop ! 1:'<b><font color="red">You need to wash off your makeup before going to bed.</font></b>'
 
-set health += 5
-set hapri = 0
-InSleep = 1
-set slep = rand(0, 10)
+if son > 17:
+	'You are not tired.'
+elseif son < 17:
+	act 'Undress and go to sleep':
 
-if StoryLine = 0:slep = 0
-if slep = 0:set $slep = 'do not dream'
-if slep = 1:set $slep = 'dreaming of what it is not clear images from the past'
-if slep = 2:set $slep = 'dreaming moon looking at the world with his one bloody eye'
-if slep = 3:set $slep = 'dream that you are a man again'
-if slep = 4:set $slep = 'do not dream'
-if slep = 5:set $slep = 'do not dream'
-if slep = 6:set $slep = 'do not dream'
-if slep = 7:set $slep = 'do not dream'
-if slep = 8:set $slep = 'do not dream'
-if slep = 9:set $slep = 'do not dream'
-if slep = 10:set $slep = 'do not dream'
+		if disable_autosave = 0:
+			if StoryLine = 0:
+				savegame 'autosave.sav'
+			else
+				savegame 'autosave_alt.sav'
+			end
+		end
 
-'You sleep and you <<$slep>>.'
-:loopson
-set minut += 1
-set stime += 1
+		gs 'clothing', 'strip'
 
-if stime = 60:set stime = 0&set son = son + 3
+		clr
+		cls
+		'<center><img src="images/pics/son.jpg"></center>'
 
-clr
-gs'stat'
+		hapri = 0
+		InSleep = 1
+		cloth_vid = 0
 
-if hour = timer and minut = timerM:
-	'alarm goes off'
-	set manna = manna - 10
+		if analplugIN = 1 and bedanal = 0:analplugIN = 0 & 'Before going to bed you remove your butt plug.'
+		if vibratorIN = 1:vibratorIN = 0 & 'Before going to bed you remove your vibrator'
+		if mop > 1:mop = 0 & vidageday = vidageday - 1 & 'Makeup smears your face, you think that it looks bad sleeping in makeup, and your skin will age faster from this.'
+		if fat > 5 and stringimplant = 1:silicone += 1 & fat -= 5
 
-	if daystart < 10 and StoryLine = 0:'My first thought was how you woke up, "Damn. This is not a dream, I do now baba."'
-	if daystart >= 10 and daystart < 30 and StoryLine = 0:'You sleepy little surprised popyalitsya its female body.'
+		if storyline = 0:
+			temp = rand(1, 10)
+			if temp = 1:
+				'You have hazy dreams about your past.'
+			elseif temp = 2:
+				'You dreamed of the moon looking at the world with his one bloody eye.'
+			elseif temp = 3:
+				'You dream that you are a man again.'
+			else
+				'You sleep without dreaming.'
+			end
+		else
+			'You sleep without dreaming.'
+		end
 
-	act 'Get out of bed and get dressed (0:15)':
-		cla
-		set numdress = odedosna
-		set InSleep = 0
-		set minut += 15
-		set tanga = 1
-		set nude = 0
-		gt 'bed', 'fin'
+		:loopson
+		minut += 1
+		stime += 1
+		health += 5
+
+		if stime = 60:stime = 0 & son += 3
+
+		gs 'stat'
+
+		if budilnikOn = 1 and hour = timer and minut = timerM:
+			manna -= 10
+			'Your alarm goes off.'
+
+			if daystart < 10 and StoryLine = 0:'The first thing you think as you wake up is, "Damn! It''s is not a dream, I really am a woman now."'
+			if daystart >= 10 and daystart < 30 and StoryLine = 0:'Looking at your female body, you are still a little surprised it''s actually you.'
+
+			if kanikuli = 0 and SchoolAtestat = 0 and week < 6 and hour >= 4 and hour < 9:
+				act 'Get up out of bed and get dressed for school (0:15)':
+					gs 'clothing', 'wear', 'sforma'
+					minut += 15
+					dynamic $wakepar
+				end
+			end
+
+			act 'Get out of bed and get dressed (0:15)':
+				gs 'clothing', 'wear_last_worn'
+				minut += 15
+				dynamic $wakepar
+			end
+
+			act 'Get out of bed (0:10)':
+				minut += 10
+				dynamic $wakepar
+			end
+
+		elseif son > 24:
+			manna -= 10
+			'You wake up, no longer tired.'
+
+			if daystart < 10 and StoryLine = 0:'The first thing you think as you wake up is, "Damn! It''s is not a dream, I really am a woman now."'
+			if daystart >= 10 and daystart < 30 and StoryLine = 0:'Looking at your female body, you are still a little surprised it''s actually you.'
+
+			if kanikuli = 0 and SchoolAtestat = 0 and week < 6 and hour >= 4 and hour < 9:
+				act 'Get up out of bed and get dressed for school (0:15)':
+					gs 'clothing', 'wear', 'sforma'
+					minut += 15
+					dynamic $wakepar
+				end
+			end
+
+			act 'Get out of bed and get dressed (0:15)':
+				gs 'clothing', 'wear_last_worn'
+				minut += 15
+				dynamic $wakepar
+			end
+
+			act 'Get out of bed (0:10)':
+				minut += 10
+				dynamic $wakepar
+			end
+
+		else
+			jump 'loopson'
+		end
 	end
-
-	act 'Get out of bed':
-		cla
-		InSleep = 0
-		gt 'bed', 'fin'
-	end
-
-	act 'Try to sleep':gt 'bed2', 'dosip'
-elseif son > 23 and dosip = 0:
-	set manna -= 10
-	'You slept'
-
-	if daystart < 10 and StoryLine = 0:'My first thought was how you wake up "Damn. This is not a dream, I really now a woman."'
-	if daystart >= 10 and daystart < 30 and StoryLine = 0:'With a little surprised prosoni you stare at her female body.'
-
-	act 'Get out of bed and get dressed (0:15)':
-		cla
-		set numdress = odedosna
-		InSleep = 0
-		set minut += 15
-		set tanga = 1
-		set nude = 0
-		gt 'bed', 'fin'
-	end
-
-	act 'Get out of bed':
-		cla
-		InSleep = 0
-		gt 'bed', 'fin'
-	end
-
-	act 'Try to sleep':gt 'bed2', 'dosip'
-elseif son > 47 and dosip = 1:
-	set manna -= 10
-	set dosip = 0
-	set son -= 24
-	'You slept.'
-
-	act 'Get out of bed and get dressed (0:15)':
-		cla
-		set numdress = odedosna
-		set InSleep = 0
-		set minut += 15
-		set tanga = 1
-		set nude = 0
-		gt 'bed', 'fin'
-	end
-
-	act 'Get out of bed':
-		cla
-		InSleep = 0
-		gt 'bed','fin'
-	end
-
-	act 'try to sleep':gt'bed2','dosip'
-else
-	jump 'loopson'
 end
+
+act 'Options':dynamic $sopts
+
+act 'Get out of bed':gt $locM, $metkaM
 
 --- bed2 ---------------------------------
+
