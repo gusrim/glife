@@ -26,7 +26,12 @@ if $ARGS[0] = 'start':
 
 	'A small village creek flowing just off Gadyukino.'
 	temp = RAND(0,20)
-	if temp = 0 and hour >= 6 and hour < 22 and month >= 5 and month <= 9 and sunWeather = 1:'On the banks spread their fishing rods <a href="exec: gt ''Gadriver'', ''fishers'' ">local fishermen</a>.'
+	if temp = 0 and hour >= 6 and hour < 21 and month >= 5 and month <= 9 and sunWeather = 1:
+		fishers = daystart
+		'On the banks spread their fishing rods local <a href="exec:gt ''Gadriver'', ''fishers''">fishermen</a>.'
+	elseif fishers = daystart and hour < 21 and sunWeather = 1:
+		'On the banks spread their fishing rods local <a href="exec:gt ''Gadriver'', ''fishers''">fishermen</a>.'
+	end
 	if temp = 1 and hour < 5 and month >= 5 and month <= 9 and miragopQW >= 20:'Right next to the path leading to the river, is completely naked <a href="exec: gt ''Gadriver'', ''mirapunish'' ">Mira</a>, crucified between two trees...'
 
 
@@ -167,6 +172,9 @@ if $ARGS[0] = 'Gadbitch':
 	end
 
 	'A small country beach, where you can sunbathe and swim.'
+
+	act 'Get changed':gt 'changingroom', 'view_swim_list'
+	
 	if sunWeather = 1:
 		if mirainriver = 1 and RAND(0,20) < 10:
 			'On the beach sunning razomlevshie<a href="exec:sun = 1 & gt ''Gadriver'', ''Mira'' ">Mira</a>.'
@@ -178,7 +186,7 @@ if $ARGS[0] = 'Gadbitch':
 
 	if temper >= 20 and month >= 5 and month <= 9:
 
-		if bikini > 0:
+		if $clothingworntype = 'swimwear':
 			act 'Bathe':
 				cla
 				*clr
@@ -321,7 +329,7 @@ if $ARGS[0] = 'Gadbitch':
 			end
 		end
 		if hour >= 8 and hour < 20 and sunWeather = 1:
-			if bikini > 0:
+			if $clothingworntype = 'swimwear':
 				act 'Sunbathing (1:00)':
 					cla
 					*clr
@@ -473,7 +481,16 @@ if $ARGS[0] = 'Gadbitch':
 		end
 	end
 
-	act 'Leave':minut += 5 & gt 'gadriver', 'start'
+	act'Leave':
+		if $clothingworntype = 'swimwear':
+			cla
+			'You need to get dressed in regular clothing first.'
+			act'Return':gt'Gadriver', 'Gadbitch'
+		else
+			minut += 5
+			gt 'Gadriver'
+		end
+	end
 end
 
 if $ARGS[0] = 'Mira':
@@ -518,16 +535,6 @@ if $ARGS[0] = 'Mira':
 		'You are chatting with Mira about trivial things.'
 		act 'Leave':minut += 5 & gt 'Gadriver', 'Gadbitch'
 	end
-end
-
-if $ARGS[0] = 'fishers':
-	cls
-	minut += 2
-	gs 'stat'
-
-	'<center><img src="images/qwest/gadukino/River/GadRiverFishers.jpg"></center>'
-
-	act 'Leave':minut += 5 & gt 'Gadriver', 'Gadbitch'
 end
 
 if $ARGS[0] = 'mirapunish':
@@ -766,6 +773,244 @@ if $ARGS[0] = 'GuysRiver':
 	end	
 	if dom > 0:
 		act 'Escape':minut += 5 & gt'Gadriver', 'Gadbitch'
+	end
+end
+
+if $ARGS[0] = 'fishers':
+	cls
+	minut += 2
+	gs 'stat'
+
+	'<center><img src="images/qwest/gadukino/River/GadRiverFishers.jpg"></center>'
+
+	act 'Leave':minut += 5 & gt 'Gadriver', 'Gadbitch'
+	
+	if fishersday ! daystart:
+		act 'Greet':
+			cla
+			*clr
+			fishersday = daystart
+			minut += 3
+			if fishersQW < 3:fishersQW += 1
+			gs 'stat'
+			
+			'<center><img src="images/qwest/gadukino/River/HiFishers.jpg"></center>'
+			'You politely greet the fishermen, but those are totally focused on fishing, but because one of them just vaguely waving a hand in response.'
+			
+			if fishersQW >= 3:
+				act 'Chat':
+					cla
+					*clr
+					minut += 10
+					if fishersQW = 3:fishersQW = 4
+					gs 'stat'
+					
+					'<center><img src="images/qwest/gadukino/River/TalkFishers.jpg"></center>'
+					'You keep watching these fishermen throw their bite, and one of them with obvious trophy turns to you. You two chat about the fish and local bites.'
+				
+					act 'Escape':minut += 5 & gt 'Gadriver', 'Gadbitch'
+				end
+			end
+			if fishersQW = 4:
+				act 'Ask to borrow a fishrod':
+					cla
+					*clr
+					minut += 10
+					fishersQW = 5
+					gs 'stat'
+					
+					'<center><img src="images/qwest/gadukino/River/TalkFishers.jpg"></center>'
+					'You decide to try fishing and ask the fishermen if they could lend you a fishing rod. Already familiar to you, Uncle Stepan willingly hands you one of his spare rods.'
+				
+					act 'Fishing':gt 'Gadriver', 'fishing'
+				end
+			end
+			if fishersQW = 5:
+				act 'Fishing with them':
+					cla
+					*clr
+					minut += 10
+					gs 'stat'
+					
+					'<center><img src="images/qwest/gadukino/River/TalkFishers.jpg"></center>'
+					'You decide to join your new friends, and Uncle Stepan is willing to give you one of their rods, this oil eyes not forgetting to walk along your body.'
+				
+					act 'Fishing':gt 'Gadriver', 'fishing'
+				end
+			end
+			act 'Escape':minut += 5 & gt 'Gadriver', 'Gadbitch'
+		end
+		
+		act 'Escape':minut += 5 & gt 'Gadriver', 'Gadbitch'
+	else
+		act 'Escape':minut += 5 & gt 'Gadriver', 'Gadbitch'
+	end
+	
+end
+
+if $ARGS[0] = 'fishing':
+	cla
+	*clr
+	'<center><img src="images/qwest/gadukino/River/Gadriver.jpg"></center>'
+	'The stream quietly splashing water, pleasantly tickling the ears of the village peace and tranquility.'
+	'You caught <<fish>> fish.'
+	if hour < 22:
+		act 'Throw the bait':
+			cls
+			minut += RAND(5,10)
+			if hour < 12:
+				temp = RAND(5,20)
+			elseif hour >= 12 and hour < 18:
+				temp = RAND(0,20)
+			else
+				temp = RAND(10,20)
+			end
+			gs 'stat'
+			
+			'<center><img src="images/qwest/gadukino/River/fishingriver.jpg"></center>'
+			'You throw the bait, carefully watching the float.'
+			
+			if temp > RAND(15,19):
+				cla
+				*clr
+				minut += 1
+				gs 'stat'
+				
+				'<center><img src="images/qwest/gadukino/River/nofishingriver.jpg"></center>'
+				'Suddenly the bobber dives under the water dramatically.'
+				
+				act 'Pull':
+					cla
+					*clr
+					minut += 1
+					temp = RAND(0,120)
+					if temp < 50:react += 1
+					gs 'stat'
+					
+					if react > temp:
+						manna += mannamax/RAND(10,20)
+						minut += 1
+						react += 1
+						fish += 1
+						gs 'stat'
+						'<center><img src="images/qwest/gadukino/River/fishyes.jpg"></center>'
+						'You deftly strike, feeling the straining on rod, and after a moment, excitedly pull out a small fish.'
+					else
+						manna -= mannamax/RAND(10,20)
+						minut += 1
+						gs 'stat'
+						'<center><img src="images/qwest/gadukino/River/Gadriver.jpg"></center>'
+						'You reel, but it`s too late, fish already escape from the hook'
+						
+					end
+					act 'Throw another bait':gt 'Gadriver', 'fishing'
+				end
+			else
+				'But it remains perfectly still and you decide to change the bait.'
+				act 'Retrieve bait':gt 'Gadriver', 'fishing'
+			end
+		end
+		act 'Finish':
+			cla
+			*clr
+			minut += 5
+			gs 'stat'
+			
+			'<center><img src="images/qwest/gadukino/River/TalkFishers.jpg"></center>'
+			'You are tired, so you return uncle Stepa his fishing rod.'
+			if fish > 0:
+				act 'Release your catch':
+					cla
+					*clr
+					minut += 5
+					fish = 0
+					gs 'stat'
+					
+					'<center><img src="images/qwest/gadukino/River/TalkFishers.jpg"></center>'
+					'You decide to release all the fish, other fishman shake heads disapprovingly, throwing sidelong glances at the clean pair of heels to the depth of the fish.'
+					
+					act 'Escape':minut += 5 & gt 'Gadriver', 'Gadbitch'
+				end
+				act 'Give to Uncle Stepa':
+					cla
+					*clr
+					minut += 5
+					fish = 0
+					gs 'stat'
+					
+					'<center><img src="images/qwest/gadukino/River/TalkFishers.jpg"></center>'
+					'You give all alonenow fish uncle Stepa and he feigned reluctance takes then, though you can see he is quite happy with this arrangement.'
+					
+					act 'Escape':minut += 5 & gt 'Gadriver', 'Gadbitch'
+				end
+				act 'Attributed To Boniface':
+					cla
+					*clr
+					minut += 5
+					fish = 0
+					manna += mannamax/RAND(2,5)
+					gs 'stat'
+					
+					'<center><img src="images/qwest/gadukino/villcat2.jpg"></center>'
+					'As soon as you enter the house, how furry beast immediately gets under your feet, feeling the smell of fresh fish. You treats Boniface fish and that`s pretty rumbly, rattling bones.'
+					
+					act 'Finish':minut += 2 & gt 'Gadhouse'
+				end
+			else
+				act 'Escape':minut += 5 & gt 'Gadriver', 'Gadbitch'
+			end
+		end
+	else
+		cla
+		*clr
+		minut += 5
+		manna -= mannamax/RAND(10,15)
+		gs 'stat'
+		
+		'<center><img src="images/qwest/gadukino/River/TalkFishers.jpg"></center>'
+		'Uncle Steve says, It`s time to go home, so you reluctantly return his fishing rod, knowing that`s all for today.'
+		
+		if fish > 0:
+			act 'Release your catch':
+				cla
+				*clr
+				minut += 5
+				fish = 0
+				gs 'stat'
+				
+				'<center><img src="images/qwest/gadukino/River/TalkFishers.jpg"></center>'
+				'You decide to release all the fish, other fishman shake heads disapprovingly, throwing sidelong glances at the clean pair of heels to the depth of the fish.'
+				
+				act 'Escape':minut += 5 & gt 'Gadriver', 'Gadbitch'
+			end
+			act 'Give to Uncle Stepa':
+				cla
+				*clr
+				minut += 5
+				fish = 0
+				gs 'stat'
+				
+				'<center><img src="images/qwest/gadukino/River/TalkFishers.jpg"></center>'
+				'You give all alonenow fish uncle Stepa and he feigned reluctance takes then, though you can see he is quite happy with this arrangement.'
+				
+				act 'Escape':minut += 5 & gt 'Gadriver', 'Gadbitch'
+			end
+			act 'Attributed To Boniface':
+				cla
+				*clr
+				minut += 5
+				fish = 0
+				manna += mannamax/RAND(2,5)
+				gs 'stat'
+				
+				'<center><img src="images/qwest/gadukino/villcat2.jpg"></center>'
+				'As soon as you enter the house, how furry beast immediately gets under your feet, feeling the smell of fresh fish. You treats Boniface fish and that`s pretty rumbly, rattling bones.'
+				
+				act 'Finish':minut += 2 & gt 'Gadhouse'
+			end
+		else
+			act 'Escape':minut += 5 & gt 'Gadriver', 'Gadbitch'
+		end
 	end
 end
 
