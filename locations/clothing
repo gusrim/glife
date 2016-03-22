@@ -1,30 +1,30 @@
 # clothing
 
 $clothing_list_line = {
-   !! a single line in a clothing list (wardrobe, etc)
-   !! ARGS 0 - action type (wardrobe, sell)
-   !! ARGS 1 - clothing type
-   !! ARGS 2 - clothing index
+	!! a single line in a clothing list (wardrobe, etc)
+	!! ARGS 0 - action type (wardrobe, sell)
+	!! ARGS 1 - clothing type
+	!! ARGS 2 - clothing index
 
-   !$RESULT = FUNC('$short_description', $ARGS[1])
-   !$RESULT += '<<ARGS[2]>>'
-   $RESULT = '<TR><TD><<FUNC(''$short_description'', $ARGS[1])>> <<ARGS[2]>></TD>'
-   if $ARGS[1] ! 'school' and $ARGS[1] ! 'ero' and $ARGS[1] ! 'sforma':
-      !$RESULT += ' (strength ' + dyneval '$RESULT += <<$ARGS[1]>>H[<<ARGS[2]>>]'
-      $RESULT += '<TD>' + dyneval '$RESULT += <<$ARGS[1]>>H[<<ARGS[2]>>]' + '</TD>'
+	!$RESULT = FUNC('$short_description', $ARGS[1])
+	!$RESULT += '<<ARGS[2]>>'
+	$RESULT = '<TR><TD><<FUNC(''$short_description'', $ARGS[1])>> <<ARGS[2]>></TD>'
+	if $ARGS[1] ! 'school' or ARGS[2] ! 6:
+		!$RESULT += ' (strength ' + dyneval '$RESULT += <<$ARGS[1]>>H[<<ARGS[2]>>]'
+		$RESULT += '<TD>' + dyneval '$RESULT += <<$ARGS[1]>>H[<<ARGS[2]>>]' + '</TD>'
 
-      if $ARGS[1] ! 'exercise' and $ARGS[1] ! 'coat' and CloStyle ! 5:
-         !$RESULT += ', hip size ' + dyneval '$RESULT += <<$ARGS[1]>>B[<<ARGS[2]>>]'
-         $RESULT += '<TD>' + dyneval '$RESULT += <<$ARGS[1]>>B[<<ARGS[2]>>]' + '</TD>'
-      else
-         $RESULT += '<TD></TD>'
-      end
+		if $ARGS[1] ! 'exercise' and $ARGS[1] ! 'coat' and CloStyle ! 5:
+			!$RESULT += ', hip size ' + dyneval '$RESULT += <<$ARGS[1]>>B[<<ARGS[2]>>]'
+			$RESULT += '<TD>' + dyneval '$RESULT += <<$ARGS[1]>>B[<<ARGS[2]>>]' + '</TD>'
+		else
+			$RESULT += '<TD></TD>'
+		end
 
-      !$RESULT += ')'
-   else
-      $RESULT += '<TD td colspan="2"></TD>'
-   end
-   $RESULT += '<TD><a href="exec:gt ''clothing'', ''view_clothing_item'', ''<<$ARGS[0]>>'', ''<<$ARGS[1]>>'', <<ARGS[2]>>">View</a></TD>'
+		!$RESULT += ')'
+	else
+		$RESULT += '<TD td colspan="2"></TD>'
+	end
+	$RESULT += '<TD><a href="exec:gt ''clothing'', ''view_clothing_item'', ''<<$ARGS[0]>>'', ''<<$ARGS[1]>>'', <<ARGS[2]>>">View</a></TD>'
 }
 
 if $ARGS[0] = 'view_clothing_list':
@@ -187,7 +187,7 @@ if $ARGS[0] = 'view_clothing_item':
 	elseif $ARGS[1] = 'wardrobe':
 		act 'Leave in closet':gt 'clothing', 'view_clothing_list', $ARGS[1]
 
-		if $ARGS[2] ! 'vatnik' and ($ARGS[2] ! 'school' and $ARGS[3] ! 6):
+		if $ARGS[1] ! 'school' or ARGS[2] ! 6:
 			!! if the clothing is worn out
 			if dyneval('RESULT = <<$ARGS[2]>>H[<<ARGS[3]>>]') <= 0:
 				'This item is worn and is not suitable for further wear.'
