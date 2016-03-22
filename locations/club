@@ -26,29 +26,37 @@ if $ARGS[0] = 'start':
 			'You tell the bouncer you are here to work for Erik'
 			'He looks you over.'
 			wait 250
-			if mop > 1 and sweat < 2 and (ski = 1 or glamur = 1):
+			if mop > 1 and sweat < 2 and (PCloSkirt > 2 or PCloPants > 4 or $clothingworntype = 'exhibit'):
 				minut += 5
 				'He nods and says something into his walkie-talkie. A couple of minutes later you meet Erik in the foyer.'
 				act 'Talk to him':gt 'club', 'work'
+			elseif $clothingworntype = 'naughty':
+				'He shakes his head, if you''re looking for paying clients, try the road by the park this is not a brothel.'
+				act 'Continue':gt 'club', 'start'
 			else
-				'He tells you you don''t look the part and will need to smarten yourself up if you want to work.' 
-				act 'Contiue':gt 'club', 'start'
+				'He tells you you are over-dressed and will need to wear something shorter and if you want to work.'
+				act 'Continue':gt 'club', 'start'
 			end
 		end
 	end
 
-	if money >= 250 and mop > 1 and sweat < 2 and (ski = 1 or glamur = 1):
-		'You can feel his eyes all over your body, but eventually he nods and lets you inside.'
-
+	if money >= 250:
 		act 'Enter the club (250 rubles)':
-			cla
-			minut += 5
-			money -= 250
-			frost = 0
-			gt 'club', 'inside'
+			if mop > 1 and sweat < 2 and (PCloSkirt > 2 or PCloPants > 4 or $clothingworntype = 'exhibit'):
+			'You can feel his eyes all over your body, but eventually he nods and lets you inside.'
+				cla
+				minut += 5
+				money -= 250
+				frost = 0
+				gt 'club', 'inside'
+			end
+		elseif $clothingworntype = 'naughty':
+			'He shakes his head, if you''re looking for paying clients, try the road by the park this is not a brothel.'
+			act 'Continue':gt 'club', 'start'
+		else
+			'The bouncer shakes his head. He tells he won''t let you in and you you are not sure why. All the girls waiting in the line are wearing short skirts or shorts and atleast normal makeup.'
+			act 'Continue':gt 'club', 'start'
 		end
-	else
-		'The bouncer shakes his head. He tells he won''t let you in and you you are not sure why. Everyone else waiting in the line is wearing a skirt and wearing atleast normal makeup.'
 	end
 end
 
