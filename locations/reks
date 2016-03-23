@@ -136,13 +136,28 @@ if $ARGS[0] = 'skver':
 				'You have wandered and reached the market. Walking through the market on one of the shelves you see "Closeout", beautiful dress hung on a hanger for 1500 rubles. Rex saw how you look at this dress.'
 				if dom > 5:
 					act 'To persuade Rex to buy a dress':
+						cla
 						minut += 20
-						!{
-						newclo[132] = 1
-						newcloH[132] = 50
-						newcloB[132] = bedra
-						}
-						'Rex bought to you by dress, you wandered a little more and parted.'
+						if expensive[8] = 0:
+							expensive[8] = 1
+							expensiveH[8] = 50
+							expensiveB[8] = bedra
+							'Rex buys you the dress.'
+						else
+							'You already have this dress, so Rex buys you something else.'
+							:markbuycloreks
+							numrand = rand(1, 125)
+
+							if average[numrand] = 0:
+								average[numrand] = 1
+								averageH[numrand] = 50
+								averageB[numrand] = bedra
+								'<center><img src="images/Clothing/3expensive/Expensive<<numrand>>.jpg"></center>'
+							else
+								jump 'markbuycloreks'
+							end
+						end
+						'You wandered around the shops a little more before going home.'
 						act 'In town':gt 'gorodok'
 					end
 				else
@@ -153,50 +168,40 @@ if $ARGS[0] = 'skver':
 						'Rex saw your eyes smiling:'
 						'- Light, if you want to, we can buy this dress. But with you a few shots in it. Goes?'
 						act 'Takeout':
+							cla
 							minut += 20
 							'- Cost.'
 							'You wandered a little more and parted.'
 							act 'In town':gt 'gorodok'
 						end
 						act 'Agree':
+							cla
+							*clr
 							minut += 30
-							!{
-							newclo[132] = 1
-							newcloH[132] = 50
-							newcloB[132] = bedra
-							}
+							if expensive[8] = 0:
+								expensive[8] = 1
+								expensiveH[8] = 50
+								expensiveB[8] = bedra
+							else
+								'You already have this dress, so Rex buys you something else.'
+								:markbuycloreks
+								numrand = rand(1, 125)
+
+								if average[numrand] = 0:
+									average[numrand] = 1
+									averageH[numrand] = 50
+									averageB[numrand] = bedra
+									'<center><img src="images/Clothing/3expensive/Expensive<<numrand>>.jpg"></center>'
+								else
+									jump 'markbuycloreks'
+								end
+							end
 							rex += 1
 							gs 'stat'
-							'Rex bought to you by dress, you went home and changed clothes.'
+							'Rex wants to see you in the dress, so you go home and change in to it.'
 							act 'Further':
 								cls
-								! Monz: Unsure how the new clothing system works, for now you dont get your dress.
-								!{
-								numdres = 132
-								numdress = numdres
-								odetjeans = 0
-								odetyoga = 0
-								odetsarafan = 0
-								odetshort = 0
-								odetskirt = 0
-								odetdress = 0
-								odetprofi = 0
-								odetpants = 0
-								odetlatex = 0
-								odethooker = 0
-								odetkis = 0
-								odetnewclo = 1
-								odetero = 0
-								vatnik = 0
-								glamur = 1
-								sport = 0
-								ski = 1
-								Sforma = 0
-								hook = 0
-								ofclo = 0
-								sexual = 1
-								odevnesh = 5
-								}
+								gs 'clothing', 'wear', 'expensive', 8
 								minut += 5
 								gs 'stat'
 								'<center><img src="images/qwest/alter/Reks/Rex foto/Svet/fpr4.jpg"></center>'
