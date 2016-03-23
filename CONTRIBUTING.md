@@ -16,3 +16,20 @@
     - emoji cheat sheet: http://www.emoji-cheat-sheet.com/
 - Commit **often** and in **small** chunks. 
     - If revert is needed we dont loose much.
+
+## Instructions
+
+### SSH Keys
+
+#### Windows:
+
+To generate you SSH Key you may use **puttygen** (http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html)  to generate them.
+
+Open the program and follow:
+
+- Make sure the middle option (SSH-2 RSA) in the bottom is marked.
+- Make sure the number of bits in a generated key is 2048 (just below those options).
+- Click generate and follow instructions.
+- Copy the content in the big rectangle here in the SSH Key field.
+- Save the public key in a file.
+- Save the private file.
