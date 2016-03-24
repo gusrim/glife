@@ -30,6 +30,7 @@ Open the program and follow:
 - Make sure the middle option (SSH-2 RSA) in the bottom is marked.
 - Make sure the number of bits in a generated key is 2048 (just below those options).
 - Click generate and follow instructions.
-- Copy the content in the big rectangle here in the SSH Key field.
+- Copy the content in the big rectangle there.
+- Go to your profile >> profile settings >> ssh keys and paste it in the key field (another big rectangle).
 - Save the public key in a file.
 - Save the private file.
