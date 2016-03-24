@@ -15,7 +15,7 @@
     - You can use emojis like: :wrench:, :recycle:, :new:, :x:, :shower:. Just dont overload :smile:
     - emoji cheat sheet: http://www.emoji-cheat-sheet.com/
 - Commit **often** and in **small** chunks. 
-    - If revert is needed we dont loose much.
+    - If revert is needed we dont lose much.
 
 ## Instructions
 
