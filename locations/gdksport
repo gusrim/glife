@@ -6,9 +6,9 @@ removed dynamic call from 'Wash in shower'
 reduced dance skill gain to 0-2 per lesson
 capped dance skill at 75 for lessons
 reduced dance skill requirement for Albina quest to 75
-added alternate starts to Albina quest based on relationship level
+added alternate starts to Albona quest based on relationship level
 moved content of 'volley' to 'gdksport','volley'
-fixed missing ShowerIvan = 1 variable }
+fixed missing ShowerIvan = 1 and ShowerIvan = 2 variables }
 
 if $ARGS[0] = 'start':
 	CLOSE ALL
@@ -22,12 +22,12 @@ if $ARGS[0] = 'start':
 	lcolor = rgb(106, 90, 205)
 	'<center><b><font color="maroon">community center</font></b></center>'
 	'<center><img src="images/qwest/alter/gdksport.jpg"></center>'
-	'The community center gym offers lessons for <a href="exec: gt ''gdksport'',''racing1''">Racing</a>, <a href="exec:gt ''gdksport'',''dance1''">Dance</a> and <a href="exec:gt ''gdksport'',''vball1''">Volleyball</a>.'
-	
+	'The community center sports club offers lessons for <a href="exec: gt ''gdksport'',''racing1''">Racing</a>, <a href="exec:gt ''gdksport'',''dance1''">Dance</a> and <a href="exec:gt ''gdksport'',''vball1''">Volleyball</a>.'
+
 	if kotovLoveQW > 0 and hour = 16:
-		'You see <a href="exec:minut += 3 & gt ''kotovEv''">Vitek Kotov</a> with a large sports bag enter the gym.'
+		'You see <a href="exec:minut += 3 & gt ''kotovEv''">Vitek Kotov</a> with a large sports bag enter the sports club.'
 	elseif grupNPC[3] >= 80 and hour = 17 and ivansportday ! daystart:
-		'You see <a href="exec:minut += 3 & gt ''IvanEv''">Ivan Prokhorov</a> with a large sports bag enter the gym.'
+		'You see <a href="exec:minut += 3 & gt ''IvanEv''">Ivan Prokhorov</a> with a large sports bag enter the sports club.'
 	end
 	
 	! WD: Uninitialised ~ 'UNSTARTER' allways false
@@ -35,6 +35,8 @@ if $ARGS[0] = 'start':
 	!!event does not start as it is incomplete, needs home location and cinema location!!
 	
 	act 'Go outside': 
+		if lariskaQwestStart = daystart: gt 'LariskaStart', 'start'
+		if lariskaQwestDay = daystart: gt 'LariskaStart', 'end'
 		if $clothingworntype ! 'nude':
 			gt 'gdk'
 		else
@@ -45,28 +47,28 @@ if $ARGS[0] = 'start':
 	if albinaQWdance > 0 or gsAboDance > 0 or gsAboBeg > 0 or gsAboVolley > 0:
 		act 'Change clothes in the locker room':gt 'clothing', 'view_clothing_list', 'wardrobe'
 	end	
-	if  $clothingworntype ! 'exercise' and (albinaQWdance > 0 or gsAboDance > 0 or gsAboBeg > 0 or gsAboVolley > 0):'You are not dressed in sports clothes.'
+	if  sport = 0 and (albinaQWdance > 0 or gsAboDance > 0 or gsAboBeg > 0 or gsAboVolley > 0):'You are not dressed in sports clothes.'
 	if sweat >= 0:
 		act 'Wash in the shower':gt 'gdksport', 'shower'
 	end
 	if hour < 16 or hour > 20: exit
-	if gsAboDance > 0 and $clothingworntype = 'exercise': 
+	if gsAboDance > 0 and sport = 1 and albinaQWdance = 0: 
 		act 'Go to dance lesson, you have <<gsAboDance>> lessons remaining':gt 'gdksport', 'dance2'
 	end
-	if albinaQWdance > 0 and AlbinaBlokDance = 0 and ZvezdEnd = 0 and $clothingworntype = 'exercise':
+	if albinaQWdance > 0 and AlbinaBlokDance = 0 and ZvezdEnd = 0 and sport = 1:
 		act 'Train with Starlets':gt 'gdksport', 'starlets'
 	end
-	if gsAboBeg > 0 and $clothingworntype = 'exercise':
+	if gsAboBeg > 0 and sport = 1:
 		act 'Go to track lesson, you have <<gsAboBeg>> lessons remaining':gt 'gdksport', 'racing2'
 	end
-	if gsAboVolley > 0 and volleysostav = 0 and $clothingworntype = 'exercise':
+	if gsAboVolley > 0 and volleysostav = 0 and sport = 1:
 		if week ! 5:
 			act 'Go to volleyball lesson, you have <<gsAboVolley>> lessons remaining':gt 'gdksport', 'vball2'
 		else
 			act 'Go to volleyball lesson, you have <<gsAboVolley>> lessons remaining':gt 'gdksport', 'vball3'
 		end
 	end
-	if volleysostav > 0 and $clothingworntype = 'exercise':
+	if volleysostav > 0 and sport = 1:
 		if week ! 6 and volkomday ! daystart:
 			act 'To engage with the team':gt 'gdksport', 'vball4'
 		elseif week = 6 and sorevday ! daystart:
@@ -171,7 +173,9 @@ if $ARGS[0] = 'dance2':
 		elseif albinaQWdance = 0 and StoryLine ! 0 and grupNPC[23] > 20 and grupNPC <= 60: gt 'gdksport', 'albina2'
 		elseif albinaQWdance = 0 and StoryLine ! 0 and grupNPC[23] >= 60: gt 'gdksport', 'albina3'
 		end
+		act 'Leave':gt 'gdksport', 'start'
 	end
+	act 'Leave':gt 'gdksport', 'start'
 end
 			
 if $ARGS[0] = 'albina1':
@@ -400,8 +404,10 @@ if $ARGS[0] = 'starlets':
 			end
 
 			if DanceWhoreT > 0: DanceWhoreT = 0
-			if AlbFather = 0 and DanceWhore > rand (1, 20): AlbFather = 1
-			'Albina after training beckoned you to her. "Good work, <<$name>>. The clients were satisfied and you were very discrete. You''re doing fine, doing excellent, in fact. Stick with me and you will have all the money, cars and apartments you could want."'
+			if AlbFather = 0 and DanceWhore > rand (1, 20): 
+				AlbFather = 1
+				'Albina after training beckoned you to her. "Good work, <<$name>>. The clients were satisfied and you were very discrete. You''re doing fine, doing excellent, in fact. Stick with me and you will have all the money, cars and apartments you could want."'
+			end
 		else
 			stardance = 0
 			albpayrand = rand(1, 5)
@@ -518,6 +524,20 @@ if $ARGS[0] = 'starlets':
 		act 'Leave':gt 'gdksport', 'start'
 end
 
+if $ARGS[0] = 'cab_home':
+	cls
+	minut += 15
+	gs 'stat'
+	'You called a taxi and it brought you back to town.'
+	if spafinloc = 11:
+		cumspclnt = 11
+		gs 'cum_cleanup' 
+		'Along the way you wiped the sperm from your face.'
+	end
+
+	act 'Leave':gt 'gorodok'
+end
+
 if $ARGS[0] = 'racing2':
 	cla
 	*clr
@@ -612,7 +632,7 @@ if $ARGS[0] = 'vball3':
 				if andGevknow = 0:$nameAndGev = 'some guy'
 				if andGevknow > 0:$nameAndGev = 'Andrei'
 
-				'During the game you got pushed by <a href="exec:gt ''volAndGev''"><<$nameAndGev>></a>.'
+				'During the game you got pushed by <a href="exec:gt ''volAndGev'', ''start''"><<$nameAndGev>></a>.'
 			end
 		end
 	else
@@ -640,8 +660,8 @@ if $ARGS[0] = 'vball4':
 	dom += 1
 	gs 'stat'
 	'<center><img src="images/qwest/alter/gdksport.jpg"></center>'
-	'Number of games <<volsesongame>>, Win - <<volsesonwin>>, lesions - <<volsesonloss>>, draws - <<volsesondraw>>.'
-	'At the beginning of the workout you ran a few laps around the room. After you press the jog and do abdominal exercises. Then began to practice reception and feeding the ball. At the end of the workout you had a game.'
+	'Number of games <<volsesongame>>, Win - <<volsesonwin>>, lesions - <<volsesonloss>>.'
+	'At the beginning of the workout you ran a few laps around the room. Afterwards the coach has you do push-ups and crunches. Then you practiced receiving and setting up plays and serving the ball. At the end of the workout you had a practice game.'
 		act 'Leave':gt 'gdksport', 'start'
 	if tanga = 0 and rand(0,1) = 1 and (volleytanga = 1 or VoltrenerVoyeur >= 5): 
 		act 'Correct clothing':  
@@ -649,9 +669,9 @@ if $ARGS[0] = 'vball4':
 			TrenerLust += 3
 			Voltrenersee += 1 & ! setcheck on gg without panties 
 			'<center><img src="images/qwest/alter/volley/game'+rand(1,2)+'.jpg"></center>'
-			'It seems the coach noticed your manipulation and your young pussy, his eyes lit up and he said turning away: "<<$surname>> Will you come to me after training. I need to show you UH  ... a few things" '
-			act 'Escape':gs'stat'& gt'gdksport' 
-			act 'To come to the door coaching':gt'Voltrenersex', 'start'
+			'It seems the coach noticed your manipulation and your young pussy, his eyes lit up and he said turning away: "<<$surname>>. Come see me after training. I need to show you UH  ... a few things" '
+			act 'Escape':gs'stat'& gt 'gdksport', 'start' 
+			act 'Go to the coach''s office':gt 'Voltrenersex', 'start'
 		end
 	else
 		act 'Go to coaching':gt 'Voltrener', 'start'
@@ -678,7 +698,7 @@ if $ARGS[0] = 'vball5':
 	trenerepa += 2
 	gs 'stat'
 	'<center><img src="images/qwest/alter/gdksport.jpg"></center>'
-	'You gathered their things together with other the rest of the team and got on a bus that took you to a place where there will be a match.'
+	'You gathered your things together with the rest of the team and got on a bus that took you to a place where there will be a match.'
 		act 'Play':gt 'gdksport', 'volley'
 	end
 end
@@ -803,20 +823,18 @@ if $ARGS[0] = 'volley':
 	elseif volltime = 3:
 		*clr
 		cla
-		'Final whistle.'
 		volsesongame += 1
 		if rand (1, 100) < 3:
 			if volpointv = 2:
-				volpoint = 2
-				volpointv = 0
-				'Despite your teams poor performance.'
-			elseif volpoint = 2:
 				volpoint = 0
 				volpointv = 2
-				'Even though your team clearly played better, your luck was out.'
+			elseif volpoint = 2:
+				volpoint = 2
+				volpointv = 0
 			end
 		end
 
+		'Final whistle.'
 		seealko = 0
 		if volpoint > volpointv:
 			volsesonwin += 1
@@ -857,34 +875,44 @@ if $ARGS[0] = 'shower':
 	'<center><img src="images/pics/dush.jpg"></center>'
 
 	if IvanShowerYes = 1 and rand(0,3) = 1:
-		'You enter the women''s shower and turning the water on begin to lather your body with a washcloth. Suddenly the door creaks and you remember that you agreed not to close it for Ivan. You look around and see, that threshold is Ivan Prokhorov considers you. "Hello <<$nickname>>. In the men`s shower all, so I`m back to you." Ivan smiled after these words.'
+		if ShowerIvan = 1: ShowerIvan = 2
+		'You entered the women''s shower and turning the water on you began to lather your body with a washcloth. Suddenly, you hear the door creak as it opened and you remember that you agreed not to lock it for Ivan. You looked around and see Ivan Prokhorov stand there looking at you. "Hello <<$nickname>>. The men''s shower is full, so I thought I would join you instead." Ivan smiled after these words.'
 		act 'Further':gt 'gdksport', 'ShowerWithIvan'
 	elseif kotovVSprohorov = 1:
 		kotovVSprohorov = 2
-		'You enter the women''s shower and turning the water on begin to lather your body with a washcloth. Suddenly, the door creaked and you remember that you forgot to close it. You looked back and saw that standing in the doorway Ivan Prokhorov and treat you. "Hi <<$name>>. Can I join? And then the men''s shower place." Ivan smiled after these words.'
-		act 'expel Ivan':
+		'You enter the women''s shower and turning the water on begin to lather your body with a washcloth. Suddenly, you hear the door creak as it opened and you remember that you forgot to lock it. You looked around and saw Ivan Prokhorov standing in the doorway looking at you. "Hi <<$name>>. Can I join you? The men''s shower is full." Ivan smiled after these words.'
+		act 'Throw Ivan out':
 			cls
 			IvanShowerQW = 1
 			gs 'stat'
-			'<center><img src="images/qwest/alter/Ev/shower1.jpg"></center>'
-			'You covered the chest hand and the other hand launched a washcloth in Ivan. He easily dodged the flying sponges and laughter came out of the shower. You locked the door and quickly domylis shower.'
+			'<center><img src="images/qwest/alter/ev/Shower1.jpg"></center>'
+			'You covered your chest with one hand and hurled your washcloth at Ivan. He easily dodged the flying cloth and laughed as he exited the shower room. You locked the door and quickly finished your shower.'
 				act 'Get out of the shower':gt 'gdksport', 'start'
 		end
 
 		act 'Uh, what?':
 			cls
 			gs 'stat'
-			'<center><img src="images/qwest/alter/Ev/shower2.jpg"></center>'
-			'Were you surprised like, and your insecurities Ivan regarded as consent. He went into the shower and closed the door behind him.'
+			'<center><img src="images/qwest/alter/ev/Shower2.jpg"></center>'
+			'Completely surprised and confused by Ivan''s sudden appearance, you are struck speachless. Ivan regarded your inaction and silence as consent. He came into the shower room and closed the door behind him.'
 
-		act 'Escape from the shower':IvanShowerQW = 1 & gt 'gdksport', 'start'
+			act 'Escape from the shower':
+				IvanShowerQW = 1 
+				cls
+				IvanShowerQW = 1
+				gs 'stat'
+				'<center><img src="images/qwest/alter/ev/Shower1.jpg"></center>'
+				'You cover your breasts with one hand as you quickly grab your towel and escape from the shower. As you ran into the changing room, you could hear Ivan laughing.'
+				gt 'gdksport', 'start'
+			end
 		act 'Wash together':
 			IvanShowerYes = 0
+			if ShowerIvan = 0: ShowerIvan = 1
 			gt 'gdksport', 'ShowerWithIvan'
 		end
 	end
 	else
-		'You enter the women''s shower and turning the water on begin to lather your body with a washcloth. After washed soap and washed her hair with shampoo. Rinse the shampoo you become completely clean.'
+		'You entered the women''s shower and turning the water on began to lather your body with a washcloth. After you rinsed off the soap, you washed your hair with shampoo. You rinsed out the shampoo and became completely clean.'
 		if (trenerlust >= 40 or trenersex = 1) and rand(0,3) = 0:
 			if VoltrenerVoyeur = 0:
 				gt 'VoltrenerSexShower', '0'
@@ -894,7 +922,7 @@ if $ARGS[0] = 'shower':
 				gt 'VoltrenerSexShower', '2'
 			end
 		end
-			'After a shower, you comb your hair and dressed.'
+			'After your shower, you combed your hair and dressed.'
 		act 'Get out of the shower':gt 'gdksport', 'start'
 	end
 end
@@ -903,11 +931,10 @@ if $ARGS[0] = 'ShowerWithIvan':
 	cls
 	minut += 5
 	horny += 10
-	ShowerIvan = 1
 	gs'stat'
 
 	'<center><img src="images/pics/dush.jpg"></center>'
-	'Ivan took off his boxer shorts and went under a jet shower. His muscular body was very close to yours. You tried not to look at him but his eyes involuntarily dropped to his groin where hung thick cock. Ivan winked "Want to soap?"'
+	'Ivan took off his boxer shorts and wet himself under the shower. His muscular body was very close to yours. You tried not to look at him but your eyes involuntarily dropped to his groin where hung his thick cock. Ivan winked, "Want to wash me?"'
 
 	act 'lather Ivan':
 		cls
@@ -915,7 +942,7 @@ if $ARGS[0] = 'ShowerWithIvan':
 		horny += 20
 		gs 'stat'
 		'<center><img src="images/qwest/alter/Ev/shower.jpg"></center>'
-		'You took a washcloth and began to lather body of Ivan. His cock began to get up and touched your thigh. Ivan began to hug you and caress your body with your hands.'
+		'You took a washcloth and began to lather Ivan''s body. His cock began to rise up and touched your thigh. Ivan began to hug you and caress your body with his hands.'
 
 		act 'Give blowjob':
 			cls
@@ -927,18 +954,18 @@ if $ARGS[0] = 'ShowerWithIvan':
 
 			gs 'stat'
 			'<center><img src="images/qwest/alter/Ev/shover.jpg"></center>'
-			'You slowly sank to his knees in front of Ivan and his cock was in front of your face. Ivan spent impatiently you head lips mouth open and you let his cock. Your lips tightly wraps solid rod Ivan and you sucked in the shower under the streams of water. Suddenly Ivan took a member of your mouth and taking you by the hand raised to his feet, he dug his lips to your breast and began to suck. You swept bliss. Ivan turned your back to him and pushed you back.'
-			act 'To allow him to continue': 
+			'You slowly sank to your knees in front of Ivan and his cock was in front of your face. Ivan probed impatiently with the head of his cock against your lips. Your mouth opened almost against your will and you let his cock slide in. Your lips tightly wrapped around Ivan''s solid rod and you sucked him as the streams of warm water wash over you. Suddenly Ivan pulled his member out of your mouth and, taking you by the hand, raised you to your feet. He brought his lips to your breast and began to suck. Bliss swept over you as he suckled your stiff nipple. Releasing your nipple with a wet pop, Ivan pushed you back onto your knees and beent you backwards as he staddled your face, once again sliding his hot cock into your mouth. He began pushing it deeper into your throat.'
+			act 'Allow him to continue': 
 				cla & *clr
 				if throat<15: 
-					'<center><img src="images/qwest/alter/Ev/shower6.gif"></center>'
-					'Penetrating further and further into his mouth, then in the throat, member has blocked you breath and started to cause a gag reflex, hardly restrain himself, freeing her mouth from his dick and wiping my tears, you screamed at Vanya: "For me there is not a black hole, where are you shoving your Drin", - Vanya taking a guilty look, he began to kiss you, and caress your Breasts and ass, again you rosalea, turning to his back and pushing you on your back bent you to his ass.'
+					'<center><img src="images/qwest/alter/ev/shower6.gif"></center>'
+					'Penetrating further and further into your mouth, then into your throat, his member blocked you breath and started to cause a gag reflex, nearly causing you to vomit. Freeing your mouth from his dick and wiping your tears, you screamed at Ivan, "This isn''t some bottomless hole for you to shove your dick into, you know!" Ivan gave you a guilty look then he began to kiss you and caress your breasts and ass until you began to moan with desire. He turned you around then bent you over with your ass towards him.'
 				else 
-					'<center><img src="images/qwest/alter/Ev/shower7.gif"></center>'
-					'Penetrating further and further into his mouth, then in the throat, member is placed there without any problems, without causing you discomfort, and bringing Ivan  "heavenly delight", in any case, his groans and moans were talking about it. Feeling that a little-a little and a classmate will flood your throat with my seed, you pulled it out of his mouth, turned to van ass and leaned, you also wanted to get satisfaction.'
+					'<center><img src="images/qwest/alter/ev/shower7.gif"></center>'
+					'Penetrating further and further into your mouth, then into your throat, you take his member to the root without any problems and without causing you discomfort, and bringing Ivan "heavenly delight", if his groans and moans were any indication. Feeling that your classmate would flood your throat with his seed at any moment, you pulled your mouth off of his cock and turned and bent over, presenting your ass to Ivan. You also wanted some satisfaction.'
 				end
 
-				act 'stand cancer':
+				act 'stand doggy-style':
 					cls
 					IvanShowerQW = 10
 					minut += 5
@@ -948,14 +975,14 @@ if $ARGS[0] = 'ShowerWithIvan':
 					lubonus = 2
 					gs 'stat'
 					'<center><img src="images/qwest/alter/Ev/shover2.jpg"></center>'
-					'You bent over and felt the hand of Ivan stroking your ass and anus.'
+					'You bent over and felt Ivan''s hand stroking your ass and anus.'
 					dynamic $analsex
 					cumspclnt = 1
 					gs 'cum_cleanup'
 					if VoltrenerVoyeur = 3:gt 'VoltrenerSexShower', '3'
 					if VoltrenerVoyeur = 4:gt 'VoltrenerSexShower', '4'
 					if VoltrenerVoyeur = 5:gt 'VoltrenerSexShower', '5'				
-					'Ivan pulls a member of your buttocks and you feel like you are on the back and buttocks land warm trickle of sperm.'
+					'Ivan pulls his member out of your ass and you feel the warm splatter of sperm on your back and ass cheeks.'
 
 					act 'Get out of the shower':gt 'gdksport', 'start'
 				end
@@ -972,7 +999,8 @@ if $ARGS[0] = 'fedor_date':
 	'<center><b><font color="maroon"><<$npcName[numnpc]>> <<$npcSurName[numnpc]>></font></b></center>'
 	! WD: Remove Dupe Images ~ '<center><img src="images/qwest/alter/npc<<numnpc>>.jpg"></center>'
 	'<center><img src="images/qwest/alter/npc/<<numnpc>>.jpg"></center>'
-	'The club you unexpectedly met Fedor Kozlov in your class. He smiled affably you "Hello <<$name>>. Hmm ... Here is the deal ... I have an extra ticket to the movies. Let''s go together."'
+	'You unexpectedly met Fedor Kozlov from your class as you entered the sports club. He smiled affably at you.' 
+	'"Hello <<$name>>. Hmm ... Here is the deal ... I have an extra ticket to the movies. Let''s go together."'
 
 	act 'Refuse':
 		cls
@@ -981,7 +1009,7 @@ if $ARGS[0] = 'fedor_date':
 		'<center><b><font color="maroon"><<$npcName[numnpc]>> <<$npcSurName[numnpc]>></font></b></center>'
 		! WD: Remove Dupe Images ~ '<center><img src="images/qwest/alter/npc<<numnpc>>.jpg"></center>'
 		'<center><img src="images/qwest/alter/npc/<<numnpc>>.jpg"></center>'
-		'You refused to Fedor referring to employment. Fedor frowned. "Okay. Whereas some other time."'
+		'You told Fedor that you have too much to do and don''t have the time. Fedor frowned. "Okay. Maybe some other time."'
 
 		act 'Leave':gt 'gdksport', 'start'
 	end
@@ -995,7 +1023,7 @@ if $ARGS[0] = 'fedor_date':
 		'<center><b><font color="maroon"><<$npcName[numnpc]>> <<$npcSurName[numnpc]>></font></b></center>'
 		! WD: Remove Dupe Images ~ '<center><img src="images/qwest/alter/npc<<numnpc>>.jpg"></center>'
 		'<center><img src="images/qwest/alter/npc/<<numnpc>>.jpg"></center>'
-		'You agreed and delighted Fedor took you to a movie theater located in the park.'
+		'You agreed and Fedor was delighted. He took you to the movie theater located in the park.'
 
 		act 'Watch a movie':
 			cls
@@ -1005,7 +1033,7 @@ if $ARGS[0] = 'fedor_date':
 			'<center><b><font color="maroon"><<$npcName[numnpc]>> <<$npcSurName[numnpc]>></font></b></center>'
 			! WD: Remove Dupe Images ~ '<center><img src="images/qwest/alter/npc<<numnpc>>.jpg"></center>'
 			'<center><img src="images/qwest/alter/npc/<<numnpc>>.jpg"></center>'
-			'Fedor gave tickets at the entrance and you went into the hall. Soon the lights went out and started the movie. Fedor sat motionless and only occasionally glancing at you. Movie was quite interesting and you watched it with pleasure. When the movie ended, the hall lights were turned on and Fedor became accompany you. "<<$name>>. I like you. Maybe we could meet?"'
+			'Fedor presented the tickets at the entrance and you went into the theatre. Soon the lights went out and started the movie. Fedor sat motionless and only occasionally glancing at you. Movie was quite interesting and you watched it with pleasure. When the movie ended, the lights were turned on and Fedor walked you out. "<<$name>>. I like you. Maybe we could go out together?"'
 
 			act 'Refuse':
 				cls
@@ -1016,7 +1044,7 @@ if $ARGS[0] = 'fedor_date':
 				'<center><b><font color="maroon"><<$npcName[numnpc]>> <<$npcSurName[numnpc]>></font></b></center>'
 				! WD: Remove Dupe Images ~ '<center><img src="images/qwest/alter/npc<<numnpc>>.jpg"></center>'
 				'<center><img src="images/qwest/alter/npc/<<numnpc>>.jpg"></center>'
-				'You refused to meet with him to Fedor and was invited to stay friends. Fedor visibly upand silently carried you home.'
+				'You refused to go out with him and said you wanted to just stay friends. Fedor was visibly upset and silently walked you home.'
 
 				act 'Leave':gt 'gorodok'
 			end
