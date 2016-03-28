@@ -1,54 +1,35 @@
 # kotovdom
 !new from 1.2.3 fix2
-$din_kotov_provod ={
-     cls
-     minut += 5
-     kotov_bj_times = 0
-     anal_no = 0
-     gs'stat'
-     '<center><b><font color = maroon><<$npcName[9]>> <<$npcSurName[9]>></font></b></center>'
-     i = rand(1,2)
-     if i = 1:'<center><img src="images/qwest/alter/ev/Kotovsexsyst/kotovpr.jpg"></center>'
-     if i = 2:'<center><img src="images/qwest/alter/ev/Kotovsexsyst/kotovpr.gif"></center>'
-     ''
-     'You walk home together, climbed to second floor and stopped next to your apartment.
-He kissed you goodbye, Lapa tight and squeezing your buns.
--While,<<$name[2]>>, will meet again, do not be sad without me.'
-     act 'Escape':gt'pod_ezd','etaj_2'
-}
+if $ARGS[0] = 'walk':
+	cls
+	minut += 5
+	kotov_bj_times = 0
+	anal_no = 0
+	gs'stat'
+	'<center><b><font color = maroon><<$npcName[9]>> <<$npcSurName[9]>></font></b></center>'
+	i = rand(1,2)
+	if i = 1:'<center><img src="images/qwest/alter/ev/Kotovsexsyst/kotovpr.jpg"></center>'
+	if i = 2:'<center><img src="images/qwest/alter/ev/Kotovsexsyst/kotovpr.gif"></center>'
+	''
+	'You walk home together, climb to second floor and stop next to your apartment.'
+	'He kisses you goodbye, hugging you tight and squeezing your butt.'
+	'"Well, <<$nickname>>. Until next time, do not be sad without me."'
+	act 'Escape':gt'pod_ezd','etaj_2'
+end
 
-$din_kotov_vann ={
-     cls
-     minut += 5
-     cumpussy = 0
-	 cumbelly = 0
-	 cumass = 0
-	 cumlip = 0
-	 cumface = 0
-	 cumanus = 0
-	 cumfrot = 0
-	 sweat = -3
-     gs'stat'
-     '<center><b><font color = maroon>Bathroom</font></b></center>'
-     '<center><img src="images/pics/wash5.jpg"></center>'
-     ''
-     'You carefully washed sperm in the bathroom.'
-     act 'Move away': gt 'kotovdom','vann'
-}
+if $ARGS[0] = 'kotov_kom':
+	cls
+	minut += 5
+	gs'stat'
+	'<center><b><font color = maroon><<$npcName[9]>> <<$npcSurName[9]>></font></b></center>'
+	'<center><img src="images/qwest/alter/ev/Kotovsexsyst/kotovdom/vann.jpg"></center>'
+	''
+	if sweat >= 1:'"Go wash your face <<$name>>, get out there and shower."'
+	if sweat < 1:'"Well, are you ready? Come on, I`ll take you home."'
 
-$din_kotov_kom ={
-     cls
-     minut += 5
-     gs'stat'
-     '<center><b><font color = maroon><<$npcName[9]>> <<$npcSurName[9]>></font></b></center>'
-     '<center><img src="images/qwest/alter/ev/Kotovsexsyst/kotovdom/vann.jpg"></center>'
-     ''
-     if sweat >= 1:'Go wash your face <<$name[2]>>, get out there and shower.'
-     if sweat < 1:'Well, are you ready? Then we go, I`ll take you home.'
-     
-     if sweat < 1: act 'Going home': dynamic $din_kotov_provod
-     if sweat >= 1: act 'Move away':gt 'kotovdom','kotovkom'
-}
+	if sweat < 1: act 'Go home': gt 'kotovdom', 'walk'
+	if sweat >= 1: act 'Move away':gt 'kotovdom', 'kotovkom'
+end
 
 if $ARGS[0] = 'vann':
 	$metkaM = $ARGS[0]
@@ -59,8 +40,23 @@ if $ARGS[0] = 'vann':
 	'<center><b><font color = maroon>Bathroom</font></b></center>'
 	'<center><img src="images/qwest/alter/ev/Kotovsexsyst/kotovdom/vann.jpg"></center>'
 	''
-	'Old bathroom. Here you can<a href="exec:dynamic $din_kotov_vann">wash</a> and to freshen up.'
-	act 'Logout':gt 'kotovdom','kor'
+	'Old bathroom. Here you can freshen up.'
+
+	act 'Wash in the shower (0:15)':
+		cla
+		*clr
+		minut += 15
+		horny += 1
+		hapri = 0
+		mop = 1
+		sweat = -3
+
+		dynamic $showerdin
+		if frost > 0:frost = 0
+
+		'<center><img src="images/pics/dush.jpg"></center>'
+
+	act 'Return to the hallway':gt 'kotovdom','kor'
 end
 
 if $ARGS[0] = 'kor':
@@ -72,7 +68,7 @@ if $ARGS[0] = 'kor':
 	'<center><b><font color = maroon>Hallway</font></b></center>'
 	'<center><img src="images/qwest/alter/ev/Kotovsexsyst/kotovdom/kor.jpg"></center>'
 	''
-	act 'Bathroom Vic': gt 'kotovdom','kotovkom'
+	act 'Vitek''s bedroom': gt 'kotovdom','kotovkom'
 	act 'Bathroom': gt 'kotovdom','vann'
 	act 'Kitchen': gt 'kotovdom','kuh'
 end
@@ -83,11 +79,11 @@ if $ARGS[0] = 'kotovkom':
 	cls
 	minut += 5
 	gs'stat'
-	'<center><b><font color = maroon>Bathroom Vic</font></b></center>'
+	'<center><b><font color = maroon>Vitek''s bedroom</font></b></center>'
 	'<center><img src="images/qwest/alter/ev/Kotovsexsyst/kotovdom/kotovkom.jpg"></center>'
 	''
-	'<a href="exec:dynamic $din_kotov_kom">Vitek</a> lying in bed and watching TV.'
-	act 'Logout':gt 'kotovdom','kor'
+	'<a href="exec:gt ''kotovdom'', ''kotov_kom''">Vitek</a> is lying on his bed, watching TV.'
+	act 'Return to the hallway':gt 'kotovdom','kor'
 end
 
 if $ARGS[0] = 'kuh':
@@ -99,7 +95,7 @@ if $ARGS[0] = 'kuh':
 	'<center><b><font color = maroon>Kitchen</font></b></center>'
 	'<center><img src="images/qwest/alter/ev/Kotovsexsyst/kotovdom/kuh.jpg"></center>'
 	''
-	act 'Logout':gt 'kotovdom','kor'
+	act 'Return to the hallway':gt 'kotovdom','kor'
 end
 
 --- kotovdom ---------------------------------

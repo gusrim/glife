@@ -138,7 +138,7 @@ if $ARGS[0] = 'view_clothing_item':
 	
 	if $ARGS[2] = 'naughty' and CloQuality < 4:'This outfit can be used for prostitution.'
 
-	if $ARGS[1] ! 'shop' and $ARGS[2] ! 'vatnik' and ($ARGS[2] ! 'school' and $ARGS[3] ! 6):
+	if $ARGS[1] ! 'shop' and ($ARGS[2] ! 'school' or $ARGS[3] ! 6):
 		$RESULT = '(strength '
 		dynamic '$RESULT += <<$ARGS[2]>>H[<<ARGS[3]>>]'
 		if $ARGS[2] ! 'exercise' and $ARGS[2] ! 'coat' and CloStyle ! 5:
@@ -153,35 +153,39 @@ if $ARGS[0] = 'view_clothing_item':
 		if dyneval('RESULT = <<$ARGS[2]>>[<<ARGS[3]>>]') = 1:
 			'You already own this item.'
 		else
-			'Price: <<ARGS[4]>>'
+			price = <<ARGS[4]>> * ((5 * CloQuality) + 100) / 100
+			'Price: <<price>>'
 			act 'Leave': gt $loc, $metka
-			if money >= ARGS[4]:
+			if money >= Price:
 				act 'Buy':
 					h = 0
-					if CloStyle = 2:h = 25
-					if CloStyle = 5:h = 100
+					if CloStyle = 2:h = 10
+					if CloStyle = 5:h = 20
+					h += 3 * CloQuality
 					money -= ARGS[4]
 					dynamic $ARGS[2] + '[<<ARGS[3]>>] = 1'
 					if $ARGS[2] = 'cheap' or $ARGS[2] = 'office':
-						dynamic $ARGS[2] + 'H[<<ARGS[3]>>] = 75 + <<h>>'
+						dynamic $ARGS[2] + 'H[<<ARGS[3]>>] = 70 + <<h>>'
 					elseif $ARGS[2] = 'average':
-						dynamic $ARGS[2] + 'H[<<ARGS[3]>>] = 100 + <<h>>'
+						dynamic $ARGS[2] + 'H[<<ARGS[3]>>] = 90 + <<h>>'
 					elseif $ARGS[2] = 'formal':
-						dynamic $ARGS[2] + 'H[<<ARGS[3]>>] = 25 + <<h>>'
+						dynamic $ARGS[2] + 'H[<<ARGS[3]>>] = 15 + <<h>>'
 					elseif $ARGS[2] = 'naughty' or $ARGS[2] = 'exhibit':
-						dynamic $ARGS[2] + 'H[<<ARGS[3]>>] = 40 + <<h>>'
+						dynamic $ARGS[2] + 'H[<<ARGS[3]>>] = 35 + <<h>>'
 					elseif $ARGS[2] = 'school' or $ARGS[2] = 'uniform':
-						dynamic $ARGS[2] + 'H[<<ARGS[3]>>] = 150 + <<h>>'
+						dynamic $ARGS[2] + 'H[<<ARGS[3]>>] = 120 + <<h>>'
 					elseif $ARGS[2] = 'exercise':
-						dynamic $ARGS[2] + 'H[<<ARGS[3]>>] = 125 + <<h>>'
+						dynamic $ARGS[2] + 'H[<<ARGS[3]>>] = 100 + <<h>>'
 					elseif $ARGS[2] = 'coat':
 						dynamic $ARGS[2] + 'H[<<ARGS[3]>>] = 250 + <<h>>'
 					else
-						dynamic $ARGS[2] + 'H[<<ARGS[3]>>] = 50 + <<h>>'
+						dynamic $ARGS[2] + 'H[<<ARGS[3]>>] = 60 + <<h>>'
 					end
 					dynamic $ARGS[2] + 'B[<<ARGS[3]>>] = bedra'
 					gt $loc, $metka
 				end
+			else
+				'You cannot afford this outfit.'
 			end
 		end
 	elseif $ARGS[1] = 'wardrobe':
