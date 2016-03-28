@@ -25,19 +25,15 @@ if $ARGS[0] = 'start':
 	if BDSMtaxi = 1 and BDSMmeet = 0:
 		'The taxi brings you in a gated community outside of town and drops you off at the closed wrought iron gate. From the booth comes a guard, you show him the business card. Without saying anything, he opens the gate and points you in the direction. You walk to a marble tiled walkway past the neatly clipped shrubs and flower beds. An other guard meets you, and leads you into the mansion through an inconspicuous side door.'
 		act 'Enter club':gt 'BDSM_Club', 'in'
-	elseif BDSMClubIn = 1 and $BDSMrole = 's':
-		if BDSMpayDay < daystart - 30:
-			act 'Enter the club': gt 'BSDM_Club', 's_start'
+	elseif BDSMClubIn = 1 and BDSMday ! daystart:
+		if BDSMpayDay < daystart - 30 and $BDSMrole = 's':
+			act 'Enter the club':'BSDM_Club', 's_start'
+		elseif BDSMpayDay < daystart - 30 and $BDSMrole = 'd':
+			act 'Enter the club':gt 'BSDM_Club', 'd_start'
 		else
-			act 'Enter the club': gt 'MHall', 'foyer'
+			act 'Enter the club':BDSMday = daystart & gt 'MHall', 'foyer'
 		end
-	elseif BDSMClubIn = 1 and $BDSMrole = 'd':
-		if BDSMpayDay < daystart - 30:
-			act 'Enter the club': gt 'BSDM_Club', 'd_start'
-		else
-			act 'Enter the club': gt 'MHall', 'foyer'
-		end
-	elseif BDSMmeet = 1:
+	elseif BDSMmeet = 1 and BDSMday ! daystart:
 		if money < 10000 and $clothingtype = 'uniform':
 			'You go to the Club entrance but don''t have enough money, you try to negotiate a deal to pay later, but the staff, realising you are not going to pay, call security. You are walked back to the gate.'
 		else
@@ -47,7 +43,7 @@ if $ARGS[0] = 'start':
 				gt 'BDSM_training', 'd_start'
 			end
 		end
-	elseif BDSMmeet < 4:
+	elseif BDSMmeet < 4 and BDSMday ! daystart:
 		if BDSMpayDay >= daystart - 30 or money >= 10000:
 			gt 'BDSM_training', 'start'
 		else
@@ -70,7 +66,7 @@ if $ARGS[0] = 'in':
 		minut += 10
 		$BDSMrole = ''
 		gs 'stat'
-		'<center><img src="images/BDSM_Club/<<BDSMmeet>>_1.jpg"></center>'
+		'<center><img src="images/BDSM_Club/r_1.jpg"></center>'
 		'You''re standing in an office, at a table in front of you sits a woman in a strict business suit. Her strict gaze as looks right through you. You show her the card, she briefly says.'
 		'"Candidate? Passport."'
 		'Your hand trembles as you reach out your passport.'
@@ -94,7 +90,7 @@ if $ARGS[0] = 'in':
 			sub += 1
 			$BDSMrole = 's'
 			gs 'stat'
-			'<center><img src="images/BDSM_Club/<<$BDSMrole>><<BDSMmeet>>_2.jpg"></center>'
+			'<center><img src="images/BDSM_Club/r<<BDSMmeet>>_2.jpg"></center>'
 			'The woman''s eyes light up. She stands up behind the desk and orders you.'
 			'"Stand up!"'
 			'You jump, than understand, why you did. The imperious voice of this Lady holds you in awe.'
@@ -145,9 +141,10 @@ if $ARGS[0] = 's_start':
 	'You enter the club and Mistress Elektra is sitting at her desk overseeing admissions.'
 	if money > 10000:
 		BDSMpayDay = daystart
+		BDSMday = daystart
 		money -= 10000
 		'You pay for another 30 days access to the club.'
-		act 'Leave':gt 'MHall', 'foyer'
+		act 'Enter the club':gt 'MHall', 'foyer'
 	else
 		'You cannot afford the 10,000 rubes required to extend your club membership.'
 		act 'Leave':gt 'BDSM_club', 'start'
@@ -162,9 +159,10 @@ if $ARGS[0] = 'd_start':
 	'Elektra is sitting at the admissions desk and greets you informally.'
 	if money > 10000:
 		BDSMpayDay = daystart
+		BDSMday = daystart
 		money -= 10000
 		'You pay for another 30 days access to the club'
-		act 'Leave':gt 'MHall', 'foyer'
+		act 'Enter the club':gt 'MHall', 'foyer'
 	else
 		'You cannot afford the 10,000 rubes required to extend your club membership.'
 		act 'Leave':gt 'BDSM_club', 'start'
