@@ -1,53 +1,67 @@
 # bed2
-gs 'stat'
-cla
+if $args[0] = '':
+	gs 'stat'
+	cla
 
-if $clothingworntype ! 'nude':
-	'<center><img src="images/pics/bed.jpg"></center>'
-else
-	'<center><img src="images/pics/son.jpg"></center>'
+	if $clothingworntype ! 'nude':
+		'<center><img src="images/pics/bed.jpg"></center>'
+	else
+		'<center><img src="images/pics/son.jpg"></center>'
+	end
+
+	dynamic $budilnikOn
+
+	if mop ! 1:'<b><font color="red">You need to wash off your makeup before going to bed.</font></b>'
+
+	if son > 17:
+		'You are not tired.'
+	elseif son < 17:
+		act 'Undress and go to sleep':
+
+			if disable_autosave = 0:
+				if StoryLine = 0:
+					savegame 'autosave.sav'
+				else
+					savegame 'autosave_alt.sav'
+				end
+			end
+
+			gs 'clothing', 'strip'
+
+			gt 'bed2', 'sleep'
+		end
+	end
 end
 
-dynamic $budilnikOn
+if $args[0] = 'sleep':
+	cls
+	'<center><img src="images/pics/son.jpg"></center>'
 
-if mop ! 1:'<b><font color="red">You need to wash off your makeup before going to bed.</font></b>'
+	hapri = 0
+	InSleep = 1
+	cloth_vid = 0
 
-if son > 17:
-	'You are not tired.'
-elseif son < 17:
-	act 'Undress and go to sleep':
+	if analplugIN = 1 and bedanal = 0:analplugIN = 0 & 'Before going to bed you remove your butt plug.'
+	if vibratorIN = 1 and bedvibrator = 0:vibratorIN = 0 & 'Before going to bed you remove your vibrator'
+	if mop > 1:mop = 0 & vidageday = vidageday - 1 & 'Makeup smears your face, you think that it looks bad sleeping in makeup, and your skin will age faster from this.'
+	if fat > 5 and stringimplant = 1:silicone += 1 & fat -= 5
 
-		if disable_autosave = 0:
-			if StoryLine = 0:
-				savegame 'autosave.sav'
-			else
-				savegame 'autosave_alt.sav'
-			end
+	wait 450
+	*clr
+	gs 'dreams', 'start'
+
+	:loopson
+	minut += 1
+	stime += 1
+	health += 5
+
+	if vibratorIn = 1:
+		vtime += 1
+		if vtime >= 5:
+			horny +=1
+			vtime = 0
 		end
 
-		gs 'clothing', 'strip'
-
-		clr
-		cls
-		'<center><img src="images/pics/son.jpg"></center>'
-
-		hapri = 0
-		InSleep = 1
-		cloth_vid = 0
-
-		if analplugIN = 1 and bedanal = 0:analplugIN = 0 & 'Before going to bed you remove your butt plug.'
-		if vibratorIN = 1 and bedvibrator = 0:vibratorIN = 0 & 'Before going to bed you remove your vibrator'
-		if mop > 1:mop = 0 & vidageday = vidageday - 1 & 'Makeup smears your face, you think that it looks bad sleeping in makeup, and your skin will age faster from this.'
-		if fat > 5 and stringimplant = 1:silicone += 1 & fat -= 5
-
-		gs 'dreams', 'start'
-
-		:loopson
-		minut += 1
-		stime += 1
-		health += 5
-
-		if vibratorIn = 1 & stime = 5|10|15|20|25|30|35|40|45|50|55|60:horny +=1
 		if horny = 100:
 			*clr
 			cla
@@ -60,80 +74,78 @@ elseif son < 17:
 			act 'Go back to sleep':
 				*clr
 				cla
-				'<center><img src="images/pics/son.jpg"></center>'
-				gs 'dreams', 'start'
-				jump 'loopson'
+				gt 'bed2', 'sleep'
 			end
 
 			act 'Get out of bed (0:10)':
 				minut += 10
 				dynamic $wakepar
 			end
-
 		end
-		if stime = 60:stime = 0 & son += 3
+	end
 
-		gs 'stat'
+	if stime = 60:stime = 0 & son += 3
 
-		if budilnikOn = 1 and hour = timer and minut = timerM:
-			manna -= 10
-			'Your alarm goes off.'
+	gs 'stat'
 
-			if daystart < 10 and StoryLine = 0:'The first thing you think as you wake up is, "Damn! It''s is not a dream, I really am a woman now."'
-			if daystart >= 10 and daystart < 30 and StoryLine = 0:'Looking at your female body, you are still a little surprised it''s actually you.'
+	if budilnikOn = 1 and hour = timer and minut = timerM:
+		manna -= 10
+		'Your alarm goes off.'
 
-			if kanikuli = 0 and SchoolAtestat = 0 and week < 6 and hour >= 4 and hour < 9:
-				act 'Get up out of bed and get dressed for school (0:15)':
-					if schtype = 0:schtype = 6
-					if schoolH[schtype] = 0:schtype = 6
-					gs 'clothing', 'wear', 'school', schtype
-					minut += 15
-					dynamic $wakepar
-				end
-			end
+		if daystart < 10 and StoryLine = 0:'The first thing you think as you wake up is, "Damn! It''s is not a dream, I really am a woman now."'
+		if daystart >= 10 and daystart < 30 and StoryLine = 0:'Looking at your female body, you are still a little surprised it''s actually you.'
 
-			act 'Get out of bed and get dressed (0:15)':
-				gs 'clothing', 'wear_last_worn'
+		if kanikuli = 0 and SchoolAtestat = 0 and week < 6 and hour >= 4 and hour < 9:
+			act 'Get up out of bed and get dressed for school (0:15)':
+				if schtype = 0:schtype = 6
+				if schoolH[schtype] = 0:schtype = 6
+				gs 'clothing', 'wear', 'school', schtype
 				minut += 15
 				dynamic $wakepar
 			end
+		end
 
-			act 'Get out of bed (0:10)':
-				minut += 10
-				dynamic $wakepar
-			end
+		act 'Get out of bed and get dressed (0:15)':
+			gs 'clothing', 'wear_last_worn'
+			minut += 15
+			dynamic $wakepar
+		end
 
-		elseif son > 24:
-			manna -= 10
-			'You wake up, no longer tired.'
+		act 'Get out of bed (0:10)':
+			minut += 10
+			dynamic $wakepar
+		end
 
-			if daystart < 10 and StoryLine = 0:'The first thing you think as you wake up is, "Damn! It''s is not a dream, I really am a woman now."'
-			if daystart >= 10 and daystart < 30 and StoryLine = 0:'Looking at your female body, you are still a little surprised it''s actually you.'
+	elseif son > 24:
+		manna -= 10
+		'You wake up, no longer tired.'
 
-			if kanikuli = 0 and SchoolAtestat = 0 and week < 6 and hour >= 4 and hour < 9:
-				act 'Get up out of bed and get dressed for school (0:15)':
-					if schtype = 0:schtype = 6
-					if schoolH[schtype] = 0:schtype = 6
-					gs 'clothing', 'wear', 'school', schtype
-					minut += 15
-					dynamic $wakepar
-				end
-			end
+		if daystart < 10 and StoryLine = 0:'The first thing you think as you wake up is, "Damn! It''s is not a dream, I really am a woman now."'
+		if daystart >= 10 and daystart < 30 and StoryLine = 0:'Looking at your female body, you are still a little surprised it''s actually you.'
 
-			act 'Get out of bed and get dressed (0:15)':
-				gs 'clothing', 'wear_last_worn'
+		if kanikuli = 0 and SchoolAtestat = 0 and week < 6 and hour >= 4 and hour < 9:
+			act 'Get up out of bed and get dressed for school (0:15)':
+				if schtype = 0:schtype = 6
+				if schoolH[schtype] = 0:schtype = 6
+				gs 'clothing', 'wear', 'school', schtype
 				minut += 15
 				dynamic $wakepar
 			end
-
-			act 'Get out of bed (0:10)':
-				minut += 10
-				dynamic $wakepar
-			end
-
-		else
-			jump 'loopson'
 		end
+
+		act 'Get out of bed and get dressed (0:15)':
+			gs 'clothing', 'wear_last_worn'
+			minut += 15
+			dynamic $wakepar
+		end
+
+		act 'Get out of bed (0:10)':
+			minut += 10
+			dynamic $wakepar
+		end
+
+	else
+		jump 'loopson'
 	end
 end
 
