@@ -520,6 +520,7 @@ $dinalkowin2 = {
 $din_Switch_Condom_Menu = {
 	dynamic $din_Update_Condom_Counts
 	clr
+	i = 0
 	pl 'You have <<iif(preziktype < 2, prezik+prezikcount, prezikcount)>> normal, <<iif(preziktype = 2, prezik+preziksabo, preziksabo)>> sabotaged condoms.'
 	nl
 	if preziktype > 0:
@@ -536,6 +537,28 @@ $din_Switch_Condom_Menu = {
 	end
 	NL
 	PL '<a href="exec:gs ''stat''">Return</a>'
+}
+
+$din_Table_Condom_Menu = {
+	dynamic $din_Update_Condom_Counts
+	*clr
+	i = 1
+	'You have <<iif(preziktype < 2, prezik+prezikcount, prezikcount)>> normal, <<iif(preziktype = 2, prezik+preziksabo, preziksabo)>> sabotaged condoms.'
+	nl
+	if preziktype > 0:
+		'<a href="exec:dynamic $din_Do_Condom_Counts, 1">Switch to Normal Condoms</a>.'
+	end
+	if preziktype ! 1:
+		'<a href="exec:dynamic $din_Do_Condom_Counts, 2">Stop using Condoms</a>.'
+	end
+	if preziktype ! 2:
+		'<a href="exec:dynamic $din_Do_Condom_Counts, 3">Switch to Sabotaged Condoms</a>.'
+	end
+	if prezikcount > 0 or preziktype = 0:
+		'<a href="exec:dynamic $din_Do_Condom_Counts, 4">Sabotage a condom</a>.'
+	end
+	NL
+	'<a href="exec:gt ''stol'', ''bc''">Return</a>'
 }
 
 $din_Do_Condom_Counts = {
@@ -572,7 +595,11 @@ $din_Do_Condom_Counts = {
 			'You do not have any condoms to sabotage.'
 		end
 	end
-	dynamic $din_Switch_Condom_Menu
+	if i = 0:
+		dynamic $din_Switch_Condom_Menu
+	else
+		dynamic $din_Table_Condom_Menu
+	end
 }
    
 $din_Update_Condom_Counts = {
@@ -614,6 +641,7 @@ $din_Update_Condom_Counts = {
 
 $d_tabletkied = {
 	clr
+	i = 0
 	if tabletkiday < daystart: pl '<a href="exec:dynamic $d_tabletkieda, 1">Take a pill now.</b></a>'
 	if tabletkicheck = 0:
 		pl '<a href="exec:dynamic $d_tabletkieda, 2">Automatically take your pills.</b></a>'
@@ -623,6 +651,20 @@ $d_tabletkied = {
 	pl '<a href="exec:dynamic $d_tabletkieda, 4">Examine the birth control pills.</b></a>'
 	if tabletkioddk = 1: pl '<a href="exec:dynamic $d_tabletkieda, 5">Dump the strange pills.</b></a>'
 	PL '<a href="exec:gs ''stat''">Return</a>'
+}
+
+$d_tabletkiedt = {
+	*clr
+	i = 1
+	if tabletkiday < daystart: '<a href="exec:dynamic $d_tabletkieda, 1">Take a pill now.</b></a>'
+	if tabletkicheck = 0:
+		'<a href="exec:dynamic $d_tabletkieda, 2">Automatically take your pills.</b></a>'
+	elseif tabletkicheck = 1:
+		'<a href="exec:dynamic $d_tabletkieda, 3">Stop automatically taking your pills.</b></a>'
+	end
+	'<a href="exec:dynamic $d_tabletkieda, 4">Examine the birth control pills.</b></a>'
+	if tabletkioddk = 1: pl '<a href="exec:dynamic $d_tabletkieda, 5">Dump the strange pills.</b></a>'
+	'<a href="exec:gt ''stol'', ''bc''">Return</a>'
 }
 
 $d_tabletkiedA = {
@@ -660,8 +702,12 @@ $d_tabletkiedA = {
 				'There is something unusual about some of your pills. They do not look normal.'
 			end
 			tabletkioddk = 1
-			gs 'stat'
-			dynamic$d_tabletkied
+			gs 'stat'	
+			if i = 0:
+				dynamic $d_tabletkied
+			else
+				dynamic $d_tabletkiedt
+			end
 		end
 	elseif ARGS[0] = 5:
 		'You get rid of the strange pills.'
@@ -673,7 +719,12 @@ $d_tabletkiedA = {
 		end
 		gs 'stat'
 	end
-	dynamic $d_tabletkied
+	
+	if i = 0:
+		dynamic $d_tabletkied
+	else
+		dynamic $d_tabletkiedt
+	end
 }
 
 $d_cycreport_choice = {
