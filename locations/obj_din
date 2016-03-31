@@ -347,7 +347,7 @@ $objstatistika = {
    
    if film > 0:
       $pfilmhistory = ''
-      gs 'pornohist'
+      gs 'pornhist'
       $retired=''
       if pfilmSTOP = 1:$retired='retired after '
       pl '<hr>'
@@ -518,22 +518,19 @@ $objclothes = {
 	elseif $clothingworntype = 'nude' and tanga = 0:
 		view 'images/clothes/nude1.jpg'
 		pl'You are completely naked.'
-	elseif cloth_vid = 1:
-		view 'images/etogame/bimboView.jpg'
+	elseif PClobimbo = 1:
+		view FUNC('$clothing_image', $clothingworntype, clothingwornnumber)
 		pl 'You are dressed like a bimbo.'
 	else
 		view FUNC('$clothing_image', $clothingworntype, clothingwornnumber)
 		pl 'You are wearing ' + FUNC('$short_description', $clothingworntype) + '<<clothingwornnumber>>''.'
 
-		if $ARGS[2] ! 'exercise' and $ARGS[2] ! 'coat' and CloStyle ! 5:
-			$RESULT = '(strength '
-			dynamic '$RESULT += <<$clothingworntype>>H[<<clothingwornnumber>>]'
-			if $clothingworntype ! 'yoga' and $clothingworntype ! 'sarafan':
-				$RESULT += ', hip size '
-				dynamic '$RESULT += <<$clothingworntype>>B[<<clothingwornnumber>>]'
-			end
-			$RESULT += ')'
-			'<<$RESULT>>'
+		if $clothingworntype ! 'coat' and $clothingworntype ! 'swimwear':
+			gs 'clothing_attributes', $clothingworntype, clothingwornnumber
+			gs 'clothing_descriptions'
+			pl '<<$description>>'
+		else
+			FUNC('$clothing_name', $clothingworntype, clothingwornnumber)
 		end
 	end
 }
