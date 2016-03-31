@@ -1,12 +1,15 @@
 # stol
+!{change log
+31 March, 2016
+Added birth control control options to desk in Pavlovsk and "Bric-a-Brac drawer"
+}
 if $ARGS[0] = 'start':
 	cla
 	clr
 	gs 'stat'
 	'Bric-a-brac drawer.'
 
-	if prezik > 0:'Condoms, you have <<prezik>> remaining.'
-	if tabletki > 0:'Birth control pills <<tabletki>> pc.'
+	act 'Check birth control': gt 'stol', 'bc'
 	if lubri > 0:'Lubricant, enough for <<lubri>> time(s).'
 	if krem > 0:'Sunblock, enough for <<krem>> more application(s).'
 	if abonement > 0:'Fitness center subscription, valid for <<abonement>> more visit(s)'
@@ -62,7 +65,7 @@ if $ARGS[0] = 'stolPar':
 
 	'<center><img src="images/pics/stol.jpg"></center>'
 	'You sat down at his desk.'
-
+	act 'Check birth control': gt 'stol', 'bc'
 	act 'Get up from the table':gt $locM, $metkaM
 
 	if lernHome > 0:
@@ -85,6 +88,30 @@ if $ARGS[0] = 'stolPar':
 		act 'Get up from the table':gt $locM, $metkaM
 		end
 	end
+end
+
+if $ARGS[0] = 'bc':
+	cls 
+	cla
+	gs 'stat'
+	gs 'din_bad'
+	'In the drawer of your desk, you store your birth control.'
+	if prezik + prezikcount + preziksabo > 0:
+		if preziktype = 2 or preziksabo > 0:
+			P 'You have <<iif(preziktype = 2, prezikcount, prezikcount+prezik)>> normal, and <<iif(preziktype = 2, prezik+preziksabo, preziksabo)>> sabotaged <a href="exec:dynamic $din_Switch_Condom_Menu"><b>condoms.</b></a>'
+		elseif preziktype < 2 and preziksabo = 0:
+			P 'You have <<prezik+prezikcount>> <a href="exec:dynamic $din_Switch_Condom_Menu"><b>condoms.</b></a>'
+		END
+		NL
+	else
+		pl 'You are out of condoms.'
+	end
+	if tabletki > 0:
+		pl 'You have <<tabletki>> <a href="exec:dynamic $d_tabletkied">birth control pills.</b></a>'
+	else
+		pl 'You are out of birth control pills.'
+	end	
+	act 'Close the drawer':gt $locM, $metkaM
 end
 
 --- stol ---------------------------------
