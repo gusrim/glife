@@ -29,24 +29,6 @@ if $ARGS[0] = 'start':
 		end
 	end
 
-	if karta >= 10:
-		'You can buy internet access online through your bank account. 1 hour of internet access costs 10 rubles. You have <<karta>>rubles in your account.'
-		act 'Buy more account access':
-			cla
-			intinp = input ("How many hours of internet access do you wish to purchase? (1hr = 10 rubles)")
-
-			if intinp <= 0 or intinp * 10 > karta:
-				'Invalid amount.'
-			else
-				karta -= intinp * 10
-				internet += intinp
-				'You paid for <<inttime>> hours of Internet access, you have <<internet>> hours of the Internet access remianing. <<intinp>> rubles were removed from your account.'
-			end
-
-			act 'Exit payment system':gt 'Komp', 'start'
-		end
-	end
-
 	act 'Shut your computer down':
 		if $LOC = 'shulga_room':
 			internet = internetS
@@ -77,6 +59,7 @@ if $ARGS[0] = 'brows':
 
 	act 'Cable TV services (1:00)':gt 'Komp', 'kabtv'
 	act 'Online gaming':gt 'KGstart'
+	if karta > 0: act 'Online banking': gt 'Komp', 'bank'
 
 	if shantfoto > 0:act 'Search for the heroine you photoed on "Assbook" wesite':gt 'Komp', 'foto'
 	if gor_dorm = 7:act 'Read letter from Eugene':gt 'etoexhib', 'pos91'
@@ -1491,6 +1474,27 @@ if $ARGS[0] = 'waitclients':
 	else
 		act 'Turn off the webcam':gt 'Komp','startpagemfc'
 	end
+end
+
+if $ARGS[0] = 'bank':
+	'<center><img src="images/pics/komp/online_bank.jpg"></center>'
+	if karta >= 10:
+		'You can buy internet access online through your bank account. 1 hour of internet access costs 10 rubles.'
+		'You have <b><<karta>></b>rubles in your account.'
+		
+		act 'Buy internet time':
+			intinp = input ("How many hours of internet access do you wish to purchase? (1hr = 10 rubles)")
+
+			if intinp <= 0 or intinp * 10 > karta:
+				'Invalid amount.'
+			else
+				karta -= intinp * 10
+				internet += intinp
+				'You paid for <<inttime>> hours of Internet access, you have <<internet>> hours of the Internet access remianing. <<intinp>> rubles were removed from your account.'
+			end
+		end
+	end
+	act 'Exit online banking':gt 'Komp', 'start'
 end
 
 --- Komp ---------------------------------
