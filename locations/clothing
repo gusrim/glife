@@ -44,11 +44,13 @@ $clothing_list_line = {
 		$RESULT += '<TD>No</TD>'
 	end
 
-	$RESULT += '<TD><a href="exec:gt ''clothing'', ''view_clothing_item'', ''<<$ARGS[0]>>'', ''<<$ARGS[1]>>'', <<ARGS[2]>>">View</a>'
-	if ($ARGS[1] ! 'coat' and $ARGS[1] ! 'swimwear') and dyneval('RESULT = <<$ARGS[1]>>H[<<ARGS[2]>>]') > 0:
-		$RESULT += ' <a href="exec:gs ''clothing'', ''wear'', ''<<$ARGS[1]>>'', <<ARGS[2]>> & gt ''clothing'', ''view_clothing_list'', ''wardrobe''">Wear</a></TD>'
-	else
-		$RESULT += '</TD>'
+		$RESULT += '<TD><a href="exec:gt ''clothing'', ''view_clothing_item'', ''<<$ARGS[0]>>'', ''<<$ARGS[1]>>'', <<ARGS[2]>>">View</a>'
+	if $ARGS[0] ! 'sell':
+		if ($ARGS[1] ! 'coat' and $ARGS[1] ! 'swimwear') and dyneval('RESULT = <<$ARGS[1]>>H[<<ARGS[2]>>]') > 0:
+			$RESULT += ' <a href="exec:gs ''clothing'', ''wear'', ''<<$ARGS[1]>>'', <<ARGS[2]>> & gt ''clothing'', ''view_clothing_list'', ''wardrobe''">Wear</a></TD>'
+		else
+			$RESULT += '</TD>'
+		end
 	end
 }
 
@@ -180,6 +182,7 @@ if $ARGS[0] = 'view_clothing_item':
 	if $ARGS[1] = 'shop':
 		if dyneval('RESULT = <<$ARGS[2]>>[<<ARGS[3]>>]') = 1:
 			'You already own this item.'
+			act 'Leave': gt $loc, $metka
 		else
 			price = ('<<ARGS[4]>>' * ((5 * CloQuality) + 100) / 100) * 1000 / (1250 - Clothingstock[ARGS[3]])
 			'Price: <<price>>'
@@ -286,9 +289,9 @@ if $ARGS[0] = 'view_clothing_item':
 					act 'Dress Normally':
 						gt 'clothing', 'view_clothing_list', $ARGS[1]
 					end
-				else}
+				else
 					gt 'clothing', 'view_clothing_list', $ARGS[1]
-				end
+				end}
 			end
 		end
 

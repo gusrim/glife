@@ -280,29 +280,52 @@ if $ARGS[0] = 'start':
 		act 'Escape':gt'rinok','start'
 	end
 
-	if palto < 1:
+	if coat[5] < 1:
 		'On the market you see winter jackets for sale - 5,000 rubles'
-
-		if money >= 5000:
-			act 'Buy a down jacket (5,000 rubles)':
-				cla
-				money -= 5000
-				palto = 1
-				$palto = 'Chinese wear'
-				'You bought a down jacket.'
-
-				act 'Leave':gt 'rinok', 'start'
-			end
-		end
+		if coat[5] = 0:dynamic 'act ''Look at cheap coat 5'':gt ''clothing'', ''view_clothing_item'', ''shop'', ''coat'', 5, 1500'
 	end
 
-	if money >= 1500:
-		i = 15
-		:loopcheap
-			if cheap[i] = 0:dynamic 'act ''Look at cheap clothing <<i>>'':gt ''clothing'', ''view_clothing_item'', ''shop'', ''cheap'', <<i>>, 1500'
-			i += 1
-		if i <= 20:jump 'loopcheap'
+	act 'View clothing':
+		cla
+		minut += 5
+		gt 'rinok', 'clo'
 	end
+end
+
+if $ARGS[0] = 'clo':
+	$metka = $ARGS[0]
+	$loc = $CURLOC
+	cls
+	gs'stat'
+	fcolor = rgb(0, 0, 0)
+	bcolor = rgb(255, 255, 255)
+	lcolor = rgb(106, 90, 205)
+	'<center><b><font color="maroon">Clothes.</font></b></center>'
+	'Cheap clothing on the market stall.'
+
+	act 'Return':
+		cla
+		minut += 5
+		gt 'rinok', 'start'
+	end
+
+	i = 15
+	:loopcheap
+	if cheap[i] = 0:*p '<a href="exec: i = <<i>> & gt ''rinok'', ''marketclo''"><div style="width:100%; max-width:400px; max-height:400px;"><img src="images/Clothing/1cheap/Cheap<<i>>.jpg" 	height="400" /></div></a>'
+	i += 1
+	if i <= 20:jump 'loopcheap'
+end
+
+if $ARGS[0] = 'marketclo':
+	cla
+	
+	if cheap[i] ! 0:
+		msg 'You already own these clothes.'
+		gt 'rinok', 'clo'
+	end
+
+	gt 'clothing', 'view_clothing_item', 'shop', 'cheap',i, 1500
+
 end
 
 if $ARGS[0] = 'tailor':
