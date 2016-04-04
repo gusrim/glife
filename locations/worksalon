@@ -23,10 +23,12 @@ if $ARGS[0] = 'start':
 	end
 
 	act 'Massage':
-		minut += 120
+		masstime = hour
+		minut += 60
 
 		if salonjobrand = 0:gt 'worksalon', '0'
 		if salonjobrand = 1:gt 'worksalon', '1'
+		if salonjobrand > 1:minut += 60
 
 		'You did a massage client.'
 		gt 'worksalon', 'start'
@@ -316,14 +318,15 @@ if $ARGS[0] = '0':
 	picrand = salonpicrand + 30
 	'<center><img src="images/img/centr/wmass<<salonpicrand>>.jpg"></center>'
 	'During the massage guy flipped on his back and sticks out from under the towels large standing member. He looks at you in anticipation of your actions'
-
-	act 'Finish the massage':gt 'worksalon', 'start'
-	act 'Take by mouth':guy += 1 & gt 'sex', 'minet'
+	gs 'stat'
+	act 'Finish the massage':minut += 60 & gt 'worksalon', 'start'
+	act 'Take by mouth':sexstart = 1 & sexvar = 6 & $boy='guy massaged at <<$month>> <<day>>, <<masstime>>h' & guy += 1 & gt 'sex', 'minet'
 end
 
 if $ARGS[0] = '1':
 	'While you are doing massage, the client asks if possible breast erotic massage two girls surcharge 1,000 rubles. each.'
-
+	
+	gs 'stat'
 	act 'Refuse':gt 'worksalon', 'start'
 
 	act 'Go for the second girl':
@@ -394,14 +397,25 @@ end
 
 if $ARGS[0] = '3':
 	minut += 15
+	$boy='Beauty shop administrator'
 	SUB += 1
-	guy += 1
+	if beautyadmin = 0:guy += 1 & beautyadmin = 1
 	sex += 1
-	spafinloc = 4
-gs 'cum_manage'
 	'<center><img src="images/img/centr/raks.jpg"></center>'
-	'Administrator gets you into the back room and puts cancer on the couch. Fucked your vagina he finishes you on your ass and leaves.'
-
+	fucloc = rand(0,1)
+	if fucloc = 0:
+		vagina += 1
+		'He fucks your pussy, then grabs your hips, pushes himself deep and finishes inside your vagina. After that he fixes his clothing and leaves.'
+		if tabletki <= 0 and mesec <= 0 and knowpreg = 0:'"Oh, shit!" You think, realizing with horror that you can become pregnant.'
+	else
+		anal += 1
+		anus += 1
+		spafinloc = 3
+		'He fucks your ass, then grabs your hips, pushes himself deep and finishes inside your colon. After that he fixes his clothing and leaves.'
+	end
+	sexpartkno = 1
+	gs 'cum_manage'
+	gs 'stat'
 	act 'Leave':gt 'worksalon', 'start'
 end
 
