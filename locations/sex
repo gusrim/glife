@@ -1,6 +1,33 @@
+
+
 # sex
+$stamina_npc = {
+	if sexstart <= 0:sexstart = 1 & sexvar = rand(2,5)
+	if dick = 0:
+		grdikrand = rand(0, 100)
+		if grdikrand < 80:dick = rand(12, 18)
+		elseif grdikrand < 90:dick = rand(8, 12)
+		else dick = rand(18, 25)
+		end
+	end
+	ind = sexvar
+	if ind = 6:	$ind_npc = '<font color = green	> ██████ </font>'
+	if ind = 5:	$ind_npc = '<font color = green	> █████_ </font>'
+	if ind = 4:	$ind_npc = '<font color = blue	> ████__ </font>'
+	if ind = 3:	$ind_npc = '<font color = blue	> ███ __ </font>'
+	if ind = 2:	$ind_npc = '<font color = red	> ██ ___ </font>'
+	if ind = 1: $ind_npc = '<font color = red	> █ ____ </font>'
+	if ind = 0: $ind_npc = '<font color = red	> <b>Cumming!</b> </font>'
+	'<center>Stamina: <<$ind_npc>></center>'
+}
+
 if $ARGS[0] = 'start':
+	sexstart = 1
+	sexvar = rand(3,6)
 	guy += 1
+	dynamic $stamina_npc
+	'<center><img src="images/img/sex/kiss.jpg"></center>'
+	'After some kissing it is time to move on to the next stage.'
 	gs 'stat'
 	picrand = rand(0, 1)
 	xgt 'sex', 'var'
@@ -10,18 +37,24 @@ if $ARGS[0] = 'var':
 	cla
 	gs 'stat'
 	textrand = rand(1, 4)
-
-	act 'Blow job':gt 'sex', 'minet'
-
-	if picrand ! 12 and picrand ! 28 and picrand ! 29 and picrand ! 30 and picrand ! 34 and picrand ! 35 and picrand ! 50 and picrand ! 55 and picrand ! 76 and picrand ! 81 and picrand ! 87:act 'Cooney':gt 'sex', 'kuni'
-	if picrand ! 31 and picrand ! 33 and picrand ! 36:act 'Spread her legs ':gt 'sex', 'vag'
-	if picrand ! 15 and picrand ! 28 and picrand ! 29 and picrand ! 32:act 'Horsewoman':gt 'sex', 'nae'
-
-	act 'Doggy-Style':gt 'sex', 'rak'
-
-	if picrand ! 13 and picrand ! 36 and picrand ! 39 and picrand ! 75:act 'On the side':gt 'sex', 'bok'
-	if picrand ! 15 and picrand ! 16 and picrand ! 22 and picrand ! 17 and picrand ! 44 and picrand ! 51 and picrand ! 52 and picrand ! 61 and picrand ! 74 and picrand ! 77 and picrand ! 80:act 'In the ass':gt 'sex', 'anal'
-	if sexvar >= 3:act 'Finish.':gt 'sex', 'end'
+	dynamic $BanSexType
+	if SexTypeCheck = 0 and picrand > 1:
+		SexTypeCheck = 1
+		BlowBan = arrpos('BlowArray',picrand)
+		CooneyBan = arrpos('CooneyArray',picrand)
+		MissionBan = arrpos('MissionArray',picrand)
+		CowgirlBan = arrpos('CowgirlArray',picrand)
+		DoggyBan = arrpos('DoggyArray',picrand)
+		SidewaysBan = arrpos('SidewaysArray',picrand)
+		AnalBan = arrpos('AnalArray',picrand)
+	end
+	if BlowBan <= 0:act 'Blow job':gt 'sex', 'minet'
+	if CooneyBan <= 0:act 'Cooney':gt 'sex', 'kuni'
+	if MissionBan <= 0:act 'Missionary':gt 'sex', 'vag'
+	if CowgirlBan <= 0:act 'Cowgirl':gt 'sex', 'nae'
+	if DoggyBan <= 0:act 'Doggy style':gt 'sex', 'rak'
+	if SidewaysBan <= 0:act 'Sideways':gt 'sex', 'bok'
+	if AnalBan <= 0:act 'In the ass':gt 'sex', 'anal'
 end
 
 if $ARGS[0] = 'minet':
@@ -29,7 +62,9 @@ if $ARGS[0] = 'minet':
 	*clr
 	horny += 10
 	minut += 10
-	sexvar += 1
+	sexvar -= 1
+	dynamic $stamina_npc
+	pos = 1
 
 	if sxbj = 0:
 		if svidboysex = 1:bja += 1
@@ -42,9 +77,15 @@ if $ARGS[0] = 'minet':
 	if textrand = 1:'You took a member of the hand, drew off the skin, licked his lips and sucked in her mouth naked penis. You vigorously sucking dick her soft wet lips, tongue played with him, played with a bridle. He, smiling blissfully, not take his eyes from you sucking his cock. He shivered and moaned'
 	if textrand = 2:'You knelt down and took his hand in this great and gentle trunk. Then slowly started to work hand gently leading him to my insatiable lips, and now he was drowned in your mouth.'
 	if textrand = 3:'Your tongue walked around the trunk from the testicles to the head end. Your hot lips captured his tender head and your mouth slid down the barrel of his penis. Your palm was a continuation of her mouth and tightly cover the remainder of the phallus. You then accelerated pace, then slowed, then your sponge filled elasticity, it becomes extremely soft.'
-	if textrand = 4:'Taking his hand hard dick, you sent it to your hot mouth. Then introducing it at all, to the very throat, then caressing one head, you stared at him, stretching his pleasure, your hands caressing guy''s body.'
-	if sexvar < 3:act 'More':xgt 'sex', 'var'
-	if sexvar >= 3:act 'Finish.':gt 'sex', 'end'
+	if textrand = 4:'Taking his hard dick in your hand, you sent it to your hot mouth. Then introducing it at all, to the very throat, then caressing one head, you stared at him, stretching his pleasure, your hands caressing guy''s body.'
+	if horny >= 80:
+		horny = 0
+		orgasm += 1
+		'You have an orgasm.'
+	end
+	if sexvar = 1:'<br>He indicates that he will cum soon.'
+	if sexvar > 0:xgt 'sex', 'var'
+	if sexvar = 0:gs 'sex', 'end'
 end
 
 if $ARGS[0] = 'kuni':
@@ -52,7 +93,9 @@ if $ARGS[0] = 'kuni':
 	*clr
 	horny += 10
 	minut += 10
-	sexvar += 1
+	sexvar -= 1
+	dynamic $stamina_npc
+	pos = 2
 
 	if sxkuni = 0:
 		kuni += 1
@@ -65,16 +108,25 @@ if $ARGS[0] = 'kuni':
 	if textrand = 2:'You felt like tongue deep in your pussy wielded, he got up there is that you ran like crazy. You had the feeling that he neglected, has not left any zakoulochki in vaey hot pussy. At the same time you are so run down that you thought that he''s choking. But it was not there, his tongue, not only get you deep in the pussy, but he still managed to lick and what you tried to run on the thighs'
 	if textrand = 3:'He clung to your current hole. Nose rested against the clitoris, and a large and long tongue plunged inside, where he began to lick smazochki with stenochek vagina. Thank you so podmahivat that popped out of your tongue hole. Then he grabbed you buttocks and squeezed and stretched the entire length of the language, you become a fuck.'
 	if textrand = 4:'His tongue gently began to lick pussy lips, the entrance to the womb hurt klitorok. "Oh, how cool!" - You thought. Gradually, more attention he paid to your clitoris. His tongue as easy fast moth fluttering over it.'
-	if sexvar < 3:act 'More':xgt 'sex', 'var'
-	if sexvar >= 3:act 'Finish.':gt 'sex', 'end'
+	if horny >= 80:
+		horny = 0
+		orgasm += 1
+		'You have an orgasm.'
+	end
+	if sexvar = 1:'<br>He indicates that he will cum soon.'
+	if sexvar > 0:xgt 'sex', 'var'
+	if sexvar = 0:gs 'sex', 'end'
 end
 
 if $ARGS[0] = 'vag':
 	cla
 	*clr
+	if sexstart = 0:sexstart = 1 & sexvar = rand(3,7)
 	horny += 10
 	minut += 10
-	sexvar += 1
+	sexvar -= 1
+	dynamic $stamina_npc
+	pos = 3
 
 	if sxsex = 0:
 		if svidboysex = 1:sexa += 1
@@ -84,21 +136,30 @@ if $ARGS[0] = 'vag':
 	end
 
 	'<center><img src="images/img/sex/vag<<picrand>>.jpg"></center>'
-
+	
 	if textrand = 1:'He slowly and deeply entered into you. You lay relaxing. Enjoy your body it can easily read on his face. He literally melted, moaning, dissolving into your bosom. How is it, after all it was cool!'
 	if textrand = 2:'Hard cock hard and deeply entered into your bosom. Peel it bullying and tender moist but hard head so nicely slid, rubbed on wet cunt'
-	if textrand = 3:'Going through the entire depth, he has not stopped, and began to move back, smearing the entire length of the accumulated moisture. Fearing completely out of caves so desired, it stalled at half the length, and a higher rate again began to sink into the abyss beckoning. Movements became more intense and deeper. His hips splashed on your thighs.'
+	if textrand = 3:'Going through the entire depth, he has not stopped, and began to move back, smearing the entire length of the accumulated moisture. Fearing completely out of caves so desired, it stalled at half the length, and a higher rate again began to sink into the abyss beckoning. Movements became more intense and deeper.'
 	if textrand = 4:'Your pisya squelched and slurp you fidgeting and twirling his ass okamenevschem banana, more intense and more aggressive peck their bottomless hole.'
-	if sexvar < 3:act 'More':xgt 'sex', 'var'
-	if sexvar >= 3:act 'Finish.':gt 'sex', 'end'
+	if horny >= 80:
+		horny = 0
+		orgasm += 1
+		'You have an orgasm.'
+	end
+	if sexvar = 1:'<br>He indicates that he will cum soon.'
+	if sexvar > 0:cumprecheck = 1 & gs 'cum_manage' & xgt 'sex', 'var'
+	if sexvar = 0:gs 'sex', 'end'
 end
 
 if $ARGS[0] = 'nae':
 	cla
 	*clr
+	if sexstart = 0:sexstart = 1 & sexvar = rand(3,7)
 	horny += 10
 	minut += 10
-	sexvar += 1
+	sexvar -= 1
+	dynamic $stamina_npc
+	pos = 4
 
 	if sxsex = 0:
 		if svidboysex = 1:sexa += 1
@@ -113,16 +174,25 @@ if $ARGS[0] = 'nae':
 	if textrand = 2:'Hard cock hard and deeply entered into your bosom. Peel it bullying and tender moist but hard head so nicely slid, rubbed on wet cunt'
 	if textrand = 3:'Going through the entire depth, he has not stopped, and began to move back, smearing the entire length of the accumulated moisture. Fearing completely out of caves so desired, it stalled at half the length, and a higher rate again began to sink into the abyss beckoning. Movements became more intense and deeper. His hips splashed on your thighs.'
 	if textrand = 4:'Your pisya squelched and slurp you fidgeting and twirling his ass okamenevschem banana, more intense and more aggressive peck their bottomless hole.'
-	if sexvar < 3:act 'More':xgt 'sex', 'var'
-	if sexvar >= 3:act 'Finish.':gt 'sex', 'end'
+	if horny >= 80:
+		horny = 0
+		orgasm += 1
+		'You have an orgasm.'
+	end
+	if sexvar = 1:'<br>He indicates that he will cum soon.'
+	if sexvar > 0:cumprecheck = 1 & gs 'cum_manage' & xgt 'sex', 'var'
+	if sexvar = 0:gs 'sex', 'end'
 end
 
 if $ARGS[0] = 'rak':
 	cla
 	*clr
+	if sexstart = 0:sexstart = 1 & sexvar = rand(3,7)
 	horny += 10
 	minut += 10
-	sexvar += 1
+	sexvar -= 1
+	dynamic $stamina_npc
+	pos = 5
 
 	if sxsex = 0:
 		if svidboysex = 1:sexa += 1
@@ -136,16 +206,25 @@ if $ARGS[0] = 'rak':
 	if textrand = 2:'Hard cock hard and deeply entered into your bosom. Peel it bullying and tender moist but hard head so nicely slid, rubbed on wet cunt'
 	if textrand = 3:'Going through the entire depth, he has not stopped, and began to move back, smearing the entire length of the accumulated moisture. Fearing completely out of caves so desired, it stalled at half the length, and a higher rate again began to sink into the abyss beckoning. Movements became more intense and deeper. His hips splashed on your thighs.'
 	if textrand = 4:'Your pisya squelched and slurp you fidgeting and twirling his ass okamenevschem banana, more intense and more aggressive peck their bottomless hole.'
-	if sexvar < 3:act 'More':xgt 'sex', 'var'
-	if sexvar >= 3:act 'Finish.':gt 'sex', 'end'
+	if horny >= 80:
+		horny = 0
+		orgasm += 1
+		'You have an orgasm.'
+	end
+	if sexvar = 1:'<br>He indicates that he will cum soon.'
+	if sexvar > 0:cumprecheck = 1 & gs 'cum_manage' & xgt 'sex', 'var'
+	if sexvar = 0:gs 'sex', 'end'
 end
 
 if $ARGS[0] = 'bok':
 	cla
 	*clr
+	if sexstart = 0:sexstart = 1 & sexvar = rand(3,7)
 	horny += 10
 	minut += 10
-	sexvar += 1
+	sexvar -= 1
+	dynamic $stamina_npc
+	pos = 6
 
 	if sxsex = 0:
 		if svidboysex = 1:sexa += 1
@@ -155,22 +234,31 @@ if $ARGS[0] = 'bok':
 	end
 
 	'<center><img src="images/img/sex/bok<<picrand>>.jpg"></center>'
-
+	
 	if textrand = 1:'He slowly and deeply entered into you. You lay relaxing. Enjoy your body it can easily read on his face. He literally melted, moaning, dissolving into your bosom. How is it, after all it was cool!'
 	if textrand = 2:'Hard cock hard and deeply entered into your bosom. Peel it bullying and tender moist but hard head so nicely slid, rubbed on wet cunt'
 	if textrand = 3:'Going through the entire depth, he has not stopped, and began to move back, smearing the entire length of the accumulated moisture. Fearing completely out of caves so desired, it stalled at half the length, and a higher rate again began to sink into the abyss beckoning. Movements became more intense and deeper. His hips splashed on your thighs.'
 	if textrand = 4:'Your pisya squelched and slurp you fidgeting and twirling his ass okamenevschem banana, more intense and more aggressive peck their bottomless hole.'
-	if sexvar < 3:act 'More':xgt 'sex', 'var'
-	if sexvar >= 3:act 'Finish.':gt 'sex', 'end'
+	if horny >= 80:
+		horny = 0
+		orgasm += 1
+		'You have an orgasm.'
+	end
+	if sexvar = 1:'<br>He indicates that he will cum soon.'
+	if sexvar > 0:cumprecheck = 1 & gs 'cum_manage' & xgt 'sex', 'var'
+	if sexvar = 0:gs 'sex', 'end'
 end
 
 
 if $ARGS[0] = 'anal':
 	cla
 	*clr
+	if sexstart = 0:sexstart = 1 & sexvar = rand(3,7) 
 	horny += 10
 	minut += 10
-	sexvar += 1
+	sexvar -= 1
+	dynamic $stamina_npc
+	pos = 7
 
 	if sxanal = 0:
 		if svidboysex = 1:anala += 1
@@ -185,31 +273,54 @@ if $ARGS[0] = 'anal':
 	if textrand = 2:'Cock slowly but surely making his way into your ass. For he came to the full depth. Are you struggling compressed logging into your ass, and this cock seemed even more strained, thickens and grows in size. - Yes, that''s very cool! Do not let go! How do cool! - He groaned. His steely member strongly moved back and forth, bringing you pleasure.'
 	if textrand = 3:'At the same moment, you felt something big and fat enters your narrow opening. You cried out in pain, but he is not paying attention to you, began to peck at the drop of a hat. Pain disappeared somewhere, and you began to receive a fabulous treat.'
 	if textrand = 4:'You Spreading buttocks inviting him into her ass, the guy did not hesitate and threw her dildo in your point, you squealed with every jolt, and it is only whet and he moves faster with each thrust penetrating deeper into your anus, causing you to scream louder.'
-	if sexvar < 3:act 'More':xgt 'sex', 'var'
-	if sexvar >= 3:act 'Finish.':gt 'sex', 'end'
+	if horny >= 80:
+		horny = 0
+		orgasm += 1
+		'You have an orgasm.'
+	end
+	if sexvar = 1:'<br>He indicates that he will cum soon.'
+	if sexvar > 0:xgt 'sex', 'var'
+	if sexvar = 0:gs 'sex', 'end'
 end
 
 if $ARGS[0] = 'end':
 	cla
-	*clr
+	sexstart = 0
 	svidboysex = 0
-	minut += 10
 	sexvar = 0
 	sxkuni = 0
 	sxbj = 0
 	sxsex = 0
 	sxanal = 0
-	spafinloc = 12
-gs 'cum_manage'
+	SexTypeCheck = 0
+	BlowBan = 0
+	CooneyBan = 0
+	MissionBan = 0
+	CowgirlBan = 0
+	DoggyBan = 0
+	SidewaysBan = 0
+	AnalBan = 0
+	dick = 0
 
+	if pos < 3:
+		spafinloc = 12
+		'He groans, spraying his seed into your mouth.'
+	elseif pos < 7:
+		if tabletki <= 0 and mesec <= 0 and knowpreg = 0:cuminside = 1
+		'He groans, spraying his seed deep inside your pussy.'
+	else
+		spafinloc = 3
+		'He groans, spraying his seed deep inside your ass.'
+	end
+	gs 'cum_manage'
 	if horny >= 80:
 		horny = 0
 		orgasm += 1
+		'You have an orgasm.'
 	end
-
-	'<center><img src="images/img/sex/cum<<picrand>>.jpg"></center>'
-	'You take it in your mouth and dildo suck rage until he cums.'
-
+	if cuminside = 1:cuminside = 0 & '<br>"Oh, shit!" You think, realizing with horror that you can become pregnant.'
+	pos = 0
+	gs 'stat'
 	act 'Leave':
 		if picrand >= 54 and picrand <= 73:gt 'office', 'work'
 		if picrand >= 74 and picrand <= 76:gt 'vann', 'start'
