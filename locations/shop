@@ -138,23 +138,37 @@ if $shoplocation = 'ATM':
 	'<center><b><font color="maroon">ATM</font></b></center>'
 	'<center><img src="images/bank/atm.jpg"></center>'
 	
-	if karta > 0:
-		act 'Withdraw money from the ATM':
-			minut += 5
-			kartaOUT = input ("How much money you want to withdraw?")
+	if bankAccount = 1:
+		if karta >= 0:
+			'You have <<karta>> rubles in your account.'
+			'You have an approved credit of <font color="blue"><<bankDebtLimit>></font> rubles!'
+		else
+			'You hava a debt of <font color="red"><<-1 * karta>></font> rubles.'
+			'You have an approved credit of <font color="blue"><<bankDebtLimit + karta>></font> rubles!'
+		end
+		
+		if karta + bankDebtLimit > 0:
+			act 'Withdraw money from the ATM':
+				cla
+				minut += 5
+				kartaOUT = input ("How much money you want to withdraw?")
 
-			if kartaOUT <= 0 or kartaOUT > karta:
-				'<br>Invalid operation.'
-			else
-				karta -= kartaOUT
-				money += kartaOUT
-				'<br>You withdraw <<kartaOUT>> rubles. You have <<karta>> rubles left in your bank account.'
+				if kartaOUT <= 0 or kartaOUT > karta + bankDebtLimit:
+					'<br>Invalid operation.'
+				else
+					karta -= kartaOUT
+					money += kartaOUT
+					'<br>You withdraw <<kartaOUT>> rubles. You have <<karta>> rubles left in your bank account.'
+				end
+				
+				gs 'stat'
+				act 'Move away': gt 'shop'
 			end
-			
-			gs 'stat'
+		else
+			'You don''t have any money left in the bank.'
 		end
 	else
-		'You do not have any money in the bank.'
+		'You don''t have a bank account yet!'
 	end
 	
 	act 'Move away':gt 'shop', 'start'
