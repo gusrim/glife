@@ -106,16 +106,24 @@ $santehnikend = {
 		end
 	end
 	if money < 1500:
-		'You do not have enough money'
+		'You do not have enough cash on you.'
 		if money+stolmoney >= 1500:
-			'But you remember, that with the stash in your table it will be enough.'
+			'You remember the stash in your table and with that you''ll have enough.'
 			act 'Pay':
-				if money < 1500:money = money+stolmoney & stolmoney = 0
+				money = money+stolmoney & stolmoney = 0
 				money -= 1500
 				gt'kuhr'
 			end
-		end
-		if money+stolmoney < 1500:
+		elseif money+stolmoney + karta >= 1500:
+			'You know that even with your stash in the apartment you are short, but you could get the extra from the ATM.'
+			act 'Walk down to the ATM and get the extra money, then pay':
+				minut += 10
+				money = money + stolmoney & stolmoney = 0
+				karta -= (1500 - money)
+				money = 0
+				gt'kuhr'
+			end
+		elseif money+stolmoney < 1500:
 			act 'I did not have enough money':
 				cls
 				gs'stat'
