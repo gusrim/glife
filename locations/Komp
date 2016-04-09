@@ -18,13 +18,11 @@ if $ARGS[0] = 'start':
 	if student > 0 and kursovik < 100:'<a href="exec:GT ''Komp'',''kursak''">Get some of your course work done.</a>'
 	
 	if $LOC = 'shulga_room':
-		
 		internet = 100000
 		act 'Browser':gt 'Komp', 'brows'
 	else
 		'You have <<internet>> hours of Internet access remaining.'
 		if internet > 0:
-
 			act 'Browser':gt 'Komp', 'brows'
 		end
 	end
@@ -57,7 +55,7 @@ if $ARGS[0] = 'brows':
 
 	act 'Cable TV services (1:00)':gt 'Komp', 'kabtv'
 	act 'Online gaming':gt 'KGstart'
-	if karta > 0: act 'Online banking': gt 'Komp', 'bank'
+	if bankAccount > 0: act 'Online banking': gt 'Komp', 'bank'
 
 	if shantfoto > 0:act 'Search for the heroine you photoed on "Assbook" wesite':gt 'Komp', 'foto'
 	if gor_dorm = 7:act 'Read letter from Eugene':gt 'etoexhib', 'pos91'
@@ -1476,20 +1474,36 @@ end
 
 if $ARGS[0] = 'bank':
 	'<center><img src="images/pics/komp/online_bank.jpg"></center>'
-	if karta >= 10:
-		'You can buy internet access online through your bank account. 1 hour of internet access costs 10 rubles.'
-		'You have <b><<karta>></b>rubles in your account.'
+	if karta + bankDebtLimit >= 10:
+		*pl
+		
+		'* You can buy internet access online through your bank account. 1 hour of internet for only 10 rubles! *'
+		
+		*pl
+		
+		if karta >= 0:
+			'You have <<karta>> rubles in your account.'
+			'You have an approved credit of <font color="blue"><<bankDebtLimit>></font>!'
+		else
+			'You hava a debt of <font color="red"><<-1 * karta>></font> rubles.'
+			'You have an approved credit of <font color="blue"><<bankDebtLimit + karta>></font>!'
+		end
+		
+		*pl
 		
 		act 'Buy internet time':
+			cla
 			intinp = input ("How many hours of internet access do you wish to purchase? (1hr = 10 rubles)")
 
-			if intinp <= 0 or intinp * 10 > karta:
+			if intinp <= 0 or intinp * 10 > karta + bankDebtLimit:
 				'Invalid amount.'
 			else
 				karta -= intinp * 10
 				internet += intinp
-				'You paid for <<inttime>> hours of Internet access, you have <<internet>> hours of the Internet access remianing. <<intinp>> rubles were removed from your account.'
+				'You paid for <<intinp>> hours of Internet access, you have <<internet>> hours of the Internet access remaining.'
+				'<<intinp * 10>> rubles were removed from your account.'
 			end
+			act 'Move away': gt 'Komp', 'bank'
 		end
 	end
 	act 'Exit online banking':gt 'Komp', 'start'
