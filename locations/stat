@@ -73,18 +73,14 @@ if cheatNomakeup = 1:
 	if mop = 0:mop = 1
 end
 
-if cheatNosweat = 1 and sweat ! -3:sweat = -3
+if cheatNosweat = 1 and sweat > 0:sweat = 0
 
 if cheatNoEat = 1:
-	if energy ! 19:energy = 19
-	if water ! 19:water = 19
+	if energy < 35:energy = 35
+	if water < 35:water = 35
 end
 
-if CheatNoSleep = 1:
-	son = 24
-end
-
-!!!!!!!!!!!!
+if CheatNoSleep = 1 and son < 35:son = 35
 
 if alko > 0 and frost > 0:frost = 0
 if StrongNarkota >= 20:
@@ -352,7 +348,7 @@ if willpowermax < 1:willpowermax = 1
 if mannamax < 1:mannamax = 1
 !pre-calc max value for later display
 if fairycurse >= daystart: horny = 90
-if Enable_lockhorny > 0:horny = Enable_lockhorny - 1
+if Enable_lockhorny > 0 and horny < Enable_lockhorny - 1:horny = Enable_lockhorny - 1
 if horny < 0:horny = 0
 if health > healthmax:health = healthmax
 if willpower > willpowermax:willpower = willpowermax
@@ -457,9 +453,9 @@ if minut >= 60:
 	if nerdism < 0:nerdism = 0
 	if obkvsdam > 0:obkvsdam = rand(2, 5)
 	hour += 1
-	energy -= 1
-	water -= 1
-	son -= 1
+	energy -= 8
+	water -= 8
+	son -= 4
 	minut -= 60
 	gs 'femcyc'
 
@@ -526,9 +522,9 @@ if minut >= 60:
 		manna -= 5
 	end
 
-	if energy > 25:
-		fat += (energy - 25) / 2
-		energy = 25
+	if energy > 100:
+		fat += (energy - 100) / 2
+		energy = 100
 	end
 
 	if mosol > 0:
@@ -633,9 +629,9 @@ if hour >= 24:
 	elseif salo > 60:
 		salo -= 1
 	elseif salo < 30: 
-		salo += 2
+		salo += 3
 	elseif salo < 60:
-		salo += 1
+		salo += 2
 	end
 
 	if fat > 240:
@@ -647,9 +643,9 @@ if hour >= 24:
 	elseif fat > 60:
 		fat -= 1
 	elseif fat < 30:
-		fat += 2
+		fat += 3
 	elseif fat < 60:
-		fat += 1
+		fat += 2
 	end
 
 	if strenbuf > 90:
@@ -705,7 +701,15 @@ if hour >= 24:
 
 	!MJ: Add some (daily) interest to the bank account. 
 	!Not very realistic but wont make anyone too rich.
-	karta += (karta/1000)
+	
+	if bankAccount = 1:
+		if karta >= 0:
+			karta += (karta/1000)
+		else
+			! karta is already negative ...
+			karta += ((3*karta/1000) - 1)
+		end
+	end
 	
 	if hour >= 24:jump 'loop'
 end
@@ -884,7 +888,7 @@ if Mud >= totminut:
 else
 	$mud = ''
 end
-
+	
 if nerdism > 0:
 	if lastreadday = daystart:
 		!!<font color="green">You are completely healthy shine and a healthy glow.</font>
@@ -1033,6 +1037,7 @@ end
 !!!!!!!!!!!!!
 !!!ENERGY!!!
 !!!!!!!!!!!!!
+
 if son < 0:
 	son = 0
 	manna -= 5
@@ -1040,12 +1045,12 @@ end
 
 if energy < 0:
 	energy = 0
-	health -= 1
+	health -= 5
 
 	if fat = 0 and stren + vital > 0:
 		stren -= 1
 		vital -= 1
-		energy += 2
+		energy += 8
 	elseif fat = 0 and stren + vital <= 0:
 		if Enable_nogameover = 0 :
 			over = 3
@@ -1057,13 +1062,13 @@ if energy < 0:
 		end
 	elseif fat > 0:
 		fat -= 1
-		energy += 2
+		energy += 8
 	end
 end
 
 if water < 0:
 	water = 1
-	health -= 5
+	health -= 10
 	willpower -= 1
 end
 
@@ -1163,22 +1168,34 @@ else
 	$manna = '<font color="red">Your mood is stuck in the gutter.</font>'
 end
 
-if energy >= 20:$energy = '<font color="green">You couldn''t eat one more bite.</font>'
-	elseif energy < 20 and energy >= 10:$energy = '<font color="blue">You''re not really hungry, but a small snack would be very welcome.</font>'
-	elseif energy < 10 and energy >= 2:$energy = '<font color="brown">You are hungry.</font>'
-	elseif energy < 2:$energy = '<font color="red">You are very hungry.</font>'
+if energy >= 80:
+	$energy = '<font color="green">You couldn''t eat one more bite.</font>'
+elseif energy >= 40:
+	$energy = '<font color="blue">You''re not really hungry, but a small snack would be very welcome.</font>'
+elseif energy >= 8:
+	$energy = '<font color="brown">You are hungry.</font>'
+else
+	$energy = '<font color="red">You are very hungry.</font>'
 end
 
-if water >= 20:$water = '<font color="green">You are not thirtsy at all.</font>'
-	elseif water < 20 and water >= 10:$water = '<font color="blue">You are slightly thirsty.</font>'
-	elseif water < 10 and water >= 2:$water = '<font color="brown">You are thirsty.</font>'
-	elseif water < 2:$water = '<font color="red">You are very thirsty.</font>'
+if water >= 80:
+	$water = '<font color="green">You are not thirtsy at all.</font>'
+elseif water >= 40:
+	$water = '<font color="blue">You are slightly thirsty.</font>'
+elseif water >= 8:
+	$water = '<font color="brown">You are thirsty.</font>'
+else
+	$water = '<font color="red">You are very thirsty.</font>'
 end
 
-if son >= 20:$son = '<font color="green">You are well rested.</font>'
-	elseif son < 20 and son >= 10:$son = '<font color="blue">You are slightly tired.</font>'
-	elseif son < 10 and son >= 2:$son = '<font color="brown">You are tired.</font>'
-	elseif son < 2:$son = '<font color="red">You are very tired.</font>'
+if son >= 80:
+	$son = '<font color="green">You are well rested.</font>'
+elseif son >= 40:
+	$son = '<font color="blue">You are slightly tired.</font>'
+elseif son >= 8:
+	$son = '<font color="brown">You are tired.</font>'
+else
+	$son = '<font color="red">You are very tired.</font>'
 end
 
 !$din_shame = {
@@ -1263,6 +1280,9 @@ if insleep ! 0:exit &!no need to display status in sleep. skip them to improve p
 !!!Beginning Description!!!
 !!!!!!!!!!!!!!!!!!!!!
 
+if son > 100: son = 100
+if water > 100: water = 100
+
 if Enable_statfsize>0:pl'<font size=<<Enable_statfsize>>>'
 
 if hour < 10:
@@ -1308,13 +1328,13 @@ else
 	end
 	pl '<<$ind>> Mood'
 
-	gs 'indik', '1', energy * 4, energy
+	gs 'indik', '1', energy, energy
 	pl '<<$ind>> Hunger'
 
-	gs 'indik', '1', water * 5, water
+	gs 'indik', '1', water, water
 	pl '<<$ind>> Thirst'
 
-	gs 'indik', '1', son * 4, son
+	gs 'indik', '1', son, son
 	pl '<<$ind>> Sleep'
 end
 pl
@@ -1334,7 +1354,7 @@ if Enable_showattr = 1:
 	pl '<<$ind>> Spirit'
 	gs'indik','1',react,react
 	pl '<<$ind>> Reaction'
-	gs'indik','1',vnesh,vnesh
+	gs'indik','1',vnesh / 2,vnesh
 	pl '<<$ind>> Attractiveness'
 	if SUB > 0:
 			gs'indik','1',SUB,SUB
@@ -1417,6 +1437,36 @@ if birthday = day and birthmonth = month: pl '<b>Today is your birthday.</b>' & 
 pl '<b><<$manna>></b>'
 pl
 
+if energy < 5:
+	pl '<font color="red">You feel faint from hunger, if you don''t have something to eat very soon, you will pass out.</font>'
+elseif energy < 10:
+	pl '<font color="red">You are starving, you really need to have something to eat.</font>'
+elseif energy < 20:
+	pl 'You are very hungry and struggle to concentrate on anything other than food.'
+elseif energy < 30:
+	pl 'You feel peckish and your thoughts sometimes drift towards food.'
+end
+
+if water < 5:
+	pl '<font color="red">You feel light-headed, if you don''t have something to drink very soon, you will pass out.</font>'
+elseif water < 10:
+	pl '<font color="red">You are dehydrated, you really need to have something to drink.</font>'
+elseif water < 20:
+	pl 'You are thirsty and your dry throat is irritating and distracting you.'
+elseif water < 30:
+	pl 'You feel a little thirsty and your mouth is a little dry.'
+end
+
+if son < 5:
+	pl '<font color="red">You can''t keep your eyes open, if you don''t go to bed now, you will fall asleep right here.</font>'
+elseif son < 10:
+	pl '<font color="red">You are exhausted, you really need to go to bed soon.</font>'
+elseif son < 20:
+	pl 'You are tired and you are struggling to concentrate.'
+elseif son < 30:
+	pl 'You feel a little tired.'
+end
+
 if horny >= 50:
 	if horny < 90 and tanga = 1:
 		pl'<font color = #DB7093>You are a little nervous, feeling nice between your legs <a href="exec:view''images/picb/briefs1.jpg''">itchy</a> from arousal.</font>'
@@ -1441,7 +1491,7 @@ $smoker = {
 	fbreath = 0
 	manna += 100
 	wipo += 100
-	if energy < 20:energy += 3
+	if energy < 80:energy += 4
 	gs 'stat'
 }
 
@@ -1532,8 +1582,9 @@ if mesec > 0:
 	elseif isprok = 1:
 		pl 'You are having your period.'
 	elseif isprokp = 1:
-		if tenga = 0:
-			pl '<b><font color="red">You are bleeding between your legs, you need to use feminine hygine products.</font></b>'
+		if tanga = 0:
+			isprokp = 0
+			pl '<b><font color="red">You are bleeding between your legs, you need to wear panties to use a sanitary pad.</font></b>'
 		else
 			pl 'You are having your period.'
 		end
@@ -2140,12 +2191,12 @@ pl '<<$bimbostatus>>'
 if tanga = 1 and $clothingworntype = 'nude':
 	pl'<b><font color = red>You are stripped down to your panties and your boobs sway invitingly as you walk</font></b>'
 elseif tanga= 1 and PCloBimbo = 1:
-	pl'<b><font color = pink>You are dressed as a bimbo</font></b>'
+	pl'<b><font color = #FF1493>You are dressed as a bimbo</font></b>'
 elseif tanga = 0:
 	if $clothingworntype = 'naughty' and CloQuality = 2:
 		pl '<b><font color="red">you are not wearing panties, but you are dressed as a hooker, so that''s hardly surprising.</font></b>'
 	elseif PCloBimbo = 1:
-		pl '<b><font color="pink">You like, totally forgot to put on any panties. You are such a bimbo.</font></b>'
+		pl '<b><font color = #FF1493>You like, totally forgot to put on any panties. You are such a bimbo.</font></b>'
 	elseif PCloSkirt > 3:
 		pl '<b><font color="red">Your face is flushed with shame, you are not wearing panties and your naked ass flashes from under your short skirt.</font></b>'
 	elseif opPRE = 0 and $clothingworntype ! 'nude':
@@ -2255,31 +2306,39 @@ proverka5 = 0
 if remdrop = 0:
 	remdrop = 1
 
-	if jeans = 1:jeans[1] = 1 & jeansH[1] = 50 & jeansB[1] = bedra
-	if jeans2 = 1:jeans[2] = 1 & jeansH[2] = 50 & jeansB[2] = bedra
-	if jeans3 = 1:jeans[3] = 1 & jeansH[3] = 50 & jeansB[3] = bedra
-	if jeans4 = 1:jeans[4] = 1 & jeansH[4] = 50 & jeansB[4] = bedra
-	if jeans5 = 1:jeans[5] = 1 & jeansH[5] = 50 & jeansB[5] = bedra
-	if yoga = 1:yoga[1] = 1 & yogaH[1] = 50
-	if yoga2 = 1:yoga[2] = 1 & yogaH[2] = 50
-	if yoga3 = 1:yoga[3] = 1 & yogaH[3] = 50
-	if yoga4 = 1:yoga[4] = 1 & yogaH[4] = 50
-	if yoga5 = 1:yoga[5] = 1 & yogaH[5] = 50
-	if yoga6 = 1:yoga[6] = 1 & yogaH[6] = 50
-	if yoga7 = 1:yoga[7] = 1 & yogaH[7] = 50
-	if yoga8 = 1:yoga[8] = 1 & yogaH[8] = 50
-	if yoga9 = 1:yoga[9] = 1 & yogaH[9] = 50
-	if yoga10 = 1:yoga[10] = 1 & yogaH[10] = 50
-	if yoga11 = 1:yoga[11] = 1 & yogaH[11] = 50
-	if yoga12 = 1:yoga[12] = 1 & yogaH[12] = 50
-	if yoga13 = 1:yoga[13] = 1 & yogaH[13] = 50
-	if yoga14 = 1:yoga[14] = 1 & yogaH[14] = 50
-	if yoga15 = 1:yoga[15] = 1 & yogaH[15] = 50
-	if yoga16 = 1:yoga[16] = 1 & yogaH[16] = 50
-	if yoga17 = 1:yoga[17] = 1 & yogaH[17] = 50
-	if yoga18 = 1:yoga[18] = 1 & yogaH[18] = 50
-	if sarafan = 1:sarafan[1] = 1 & sarafanH[1] = 50
-	if sarafan2 = 1:sarafan[2] = 1 & sarafanH[2] = 50
+	if jeans[1] = 1:cheap[15] = 1 & cheapH[15] = jeansH[1] & cheapB[15] = jeansB[1]
+	if jeans[205] = 1:average[65] = 1 & averageH[65] = jeansH[205] & averageB[65] = jeansB[205]
+	if jeans[202] = 1:average[64] = 1 & averageH[64] = jeansH[202] & averageB[64] = jeansB[202]
+	if jeans[2] = 1:average[62] = 1 & averageH[62] = jeansH[2] & averageB[62] = jeansB[2]
+	if jeans[222] = 1:average[75] = 1 & averageH[75] = jeansH[222] & averageB[75] = jeansB[222]
+	if jeans[223] = 1:average[76] = 1 & averageH[76] = jeansH[223] & averageB[76] = jeansB[223]
+	if jeans[224] = 1:average[78] = 1 & averageH[78] = jeansH[224] & averageB[78] = jeansB[224]
+	if jeans[232] = 1:average[79] = 1 & averageH[79] = jeansH[232] & averageB[79] = jeansB[232]
+	if jeans[233] = 1:average[80] = 1 & averageH[80] = jeansH[233] & averageB[80] = jeansB[233]
+	if jeans[267] = 1:expensive[3] = 1 & expensiveH[3] = jeansH[267] & expensiveB[3] = jeansB[267]
+	if jeans[263] = 1:expensive[18] = 1 & expensiveH[18] = jeansH[263] & expensiveB[18] = jeansB[263]
+	if jeans[234] = 1:expensive[71] = 1 & expensiveH[71] = jeansH[234] & expensiveB[71] = jeansB[234]
+	if jeans[231] = 1:expensive[124] = 1 & expensiveH[124] = jeansH[231] & expensiveB[124] = jeansB[231]
+	if yoga[1] = 1:exercise[1] = 1 & yogaH[1] = 50
+	if yoga[2] = 1:exercise[2] = 1 & yogaH[2] = 50
+	if yoga[3] = 1:exercise[3] = 1 & yogaH[3] = 50
+	if yoga[4] = 1:exercise[4] = 1 & yogaH[4] = 50
+	if yoga[5] = 1:exercise[5] = 1 & yogaH[5] = 50
+	if yoga[6] = 1:exercise[6] = 1 & yogaH[6] = 50
+	if yoga[7] = 1:exercise[7] = 1 & yogaH[7] = 50
+	if yoga[8] = 1:exercise[8] = 1 & yogaH[8] = 50
+	if yoga[9] = 1:exercise[9] = 1 & yogaH[9] = 50
+	if yoga[10] = 1:exercise[10] = 1 & yogaH[10] = 50
+	if yoga[11] = 1:exercise[11] = 1 & yogaH[11] = 50
+	if yoga[12] = 1:exercise[12] = 1 & yogaH[12] = 50
+	if yoga[13] = 1:exercise[13] = 1 & yogaH[13] = 50
+	if yoga[14] = 1:exercise[14] = 1 & yogaH[14] = 50
+	if yoga[15] = 1:exercise[15] = 1 & yogaH[15] = 50
+	if yoga[16] = 1:exercise[16] = 1 & yogaH[16] = 50
+	if yoga[17] = 1:exercise[17] = 1 & yogaH[17] = 50
+	if yoga[18] = 1:exercise[18] = 1 & yogaH[18] = 50
+	if sarafan[1] = 1:sarafan[1] = 1 & sarafanH[1] = 50
+	if sarafan[2] = 1:sarafan[2] = 1 & sarafanH[2] = 50
 	if short = 1:short[1] = 1 & shortH[1] = 50 & shortB[1] = bedra
 	if short2 = 1:short[2] = 1 & shortH[2] = 50 & shortB[2] = bedra
 	if short3 = 1:short[3] = 1 & shortH[3] = 50 & shortB[3] = bedra
@@ -2323,26 +2382,27 @@ if remdrop = 0:
 	if pants5 = 1:pants[5] = 1 & pantsH[5] = 50 & pantsB[5] = bedra
 	if latex = 1:latex[1] = 1 & latexH[1] = 50 & latexB[1] = bedra
 	if latex2 = 1:latex[2] = 1 & latexH[2] = 50 & latexB[2] = bedra
-	if hooker = 1:hooker[1] = 1 & hookerH[1] = 50 & hookerB[1] = bedra
-	if hooker2 = 1:hooker[2] = 1 & hookerH[2] = 50 & hookerB[2] = bedra
-	if hooker3 = 1:hooker[3] = 1 & hookerH[3] = 50 & hookerB[3] = bedra
-	if hooker4 = 1:hooker[4] = 1 & hookerH[4] = 50 & hookerB[4] = bedra
-	if hooker5 = 1:hooker[5] = 1 & hookerH[5] = 50 & hookerB[5] = bedra
-	if dressel1 = 1:odekis[1] = 1 & odekisH[1] = 50 & odekisB[1] = bedra
-	if odekis1 = 1:odekis[2] = 1 & odekisH[2] = 50 & odekisB[2] = bedra
-	if odekis2 = 1:odekis[3] = 1 & odekisH[3] = 50 & odekisB[3] = bedra
-	if odekis3 = 1:odekis[4] = 1 & odekisH[4] = 50 & odekisB[4] = bedra
-	if odekis4 = 1:odekis[5] = 1 & odekisH[5] = 50 & odekisB[5] = bedra
-	if odekis5 = 1:odekis[6] = 1 & odekisH[6] = 50 & odekisB[6] = bedra
-	if odekis6 = 1:odekis[7] = 1 & odekisH[7] = 50 & odekisB[7] = bedra
-	if odekis7 = 1:odekis[8] = 1 & odekisH[8] = 50 & odekisB[8] = bedra
-	if odekis8 = 1:odekis[9] = 1 & odekisH[9] = 50 & odekisB[9] = bedra
-	if odekis9 = 1:odekis[10] = 1 & odekisH[10] = 50 & odekisB[10] = bedra
+	if hooker[1] = 1:hooker[1] = 1 & hookerH[1] = 50 & hookerB[1] = bedra
+	if hooker[2] = 1:hooker[2] = 1 & hookerH[2] = 50 & hookerB[2] = bedra
+	if hooker[3] = 1:hooker[3] = 1 & hookerH[3] = 50 & hookerB[3] = bedra
+	if hooker[4] = 1:hooker[4] = 1 & hookerH[4] = 50 & hookerB[4] = bedra
+	if hooker[5] = 1:hooker[5] = 1 & hookerH[5] = 50 & hookerB[5] = bedra
+	if odekis[1] = 1:odekis[1] = 1 & odekisH[1] = 50 & odekisB[1] = bedra
+	if odekis[2] = 1:odekis[2] = 1 & odekisH[2] = 50 & odekisB[2] = bedra
+	if odekis[3] = 1:odekis[3] = 1 & odekisH[3] = 50 & odekisB[3] = bedra
+	if odekis[4] = 1:odekis[4] = 1 & odekisH[4] = 50 & odekisB[4] = bedra
+	if odekis[5] = 1:odekis[5] = 1 & odekisH[5] = 50 & odekisB[5] = bedra
+	if odekis[6] = 1:odekis[6] = 1 & odekisH[6] = 50 & odekisB[6] = bedra
+	if odekis[7] = 1:odekis[7] = 1 & odekisH[7] = 50 & odekisB[7] = bedra
+	if odekis[8] = 1:odekis[8] = 1 & odekisH[8] = 50 & odekisB[8] = bedra
+	if odekis[9] = 1:odekis[9] = 1 & odekisH[9] = 50 & odekisB[9] = bedra
+	if odekis[10] = 1:odekis[10] = 1 & odekisH[10] = 50 & odekisB[10] = bedra
 end
 }
 
 if Enable_statfsize>0:pl'</font>' & !disable this, all texts comes from pl will have the same font size, like[time]
 if Enable_faceturn = 1:	view FUNC('$face_image')
+
 
 --- stat ---------------------------------
 

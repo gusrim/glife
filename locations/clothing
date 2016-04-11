@@ -44,10 +44,15 @@ $clothing_list_line = {
 		$RESULT += '<TD>No</TD>'
 	end
 
-		$RESULT += '<TD><a href="exec:gt ''clothing'', ''view_clothing_item'', ''<<$ARGS[0]>>'', ''<<$ARGS[1]>>'', <<ARGS[2]>>">View</a>'
+	$RESULT += '<TD><a href="exec:gt ''clothing'', ''view_clothing_item'', ''<<$ARGS[0]>>'', ''<<$ARGS[1]>>'', <<ARGS[2]>>">View</a>'
+
 	if $ARGS[0] ! 'sell':
 		if ($ARGS[1] ! 'coat' and $ARGS[1] ! 'swimwear') and dyneval('RESULT = <<$ARGS[1]>>H[<<ARGS[2]>>]') > 0:
-			$RESULT += ' <a href="exec:gs ''clothing'', ''wear'', ''<<$ARGS[1]>>'', <<ARGS[2]>> & gt ''clothing'', ''view_clothing_list'', ''wardrobe''">Wear</a></TD>'
+			if $ARGS[1] ! 'exercise' and CloStyle ! 5 and (dyneval('RESULT = <<$ARGS[1]>>B[<<ARGS[2]>>]') < (bedra - 8) or dyneval('RESULT = <<$ARGS[1]>>B[<<ARGS[2]>>]') > (bedra + 8)):
+				$RESULT += '</TD>'
+			else
+				$RESULT += ' <a href="exec:gs ''clothing'', ''wear'', ''<<$ARGS[1]>>'', <<ARGS[2]>> & gt ''clothing'', ''view_clothing_list'', ''wardrobe''">Wear</a></TD>'
+			end
 		else
 			$RESULT += '</TD>'
 		end
@@ -279,26 +284,7 @@ if $ARGS[0] = 'view_clothing_item':
 			act 'Wear':
 				gs 'clothing', 'wear', $ARGS[2], ARGS[3]
 				dynamic $ARGS[2] + 'W[<<ARGS[3]>>] = 1'
-
-				! WD: Bimbo look
-				!{if hcol = 3 and (exhibi + lip + skin + mop + tits) >= 15 and CloBimbo = 1:
-					cla
-					*clr
-					'<center><img src="images/etogame/cloth_bimbo.jpg"></center>'
-					'Do you want to be dressed looking like a bimbo? You will not be taken seriously.'
-
-					act 'Dress like a Bimbo':
-						cloth_vid = 1
-						odevnesh += 5
-						bimbocl = 1
-						gt 'clothing', 'view_clothing_list', $ARGS[1]
-					end
-					act 'Dress Normally':
-						gt 'clothing', 'view_clothing_list', $ARGS[1]
-					end
-				else
-					gt 'clothing', 'view_clothing_list', $ARGS[1]
-				end}
+				gt 'clothing', 'view_clothing_list', $ARGS[1]
 			end
 		end
 

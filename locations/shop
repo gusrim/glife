@@ -138,23 +138,37 @@ if $shoplocation = 'ATM':
 	'<center><b><font color="maroon">ATM</font></b></center>'
 	'<center><img src="images/bank/atm.jpg"></center>'
 	
-	if karta > 0:
-		act 'Withdraw money from the ATM':
-			minut += 5
-			kartaOUT = input ("How much money you want to withdraw?")
+	if bankAccount = 1:
+		if karta >= 0:
+			'You have <<karta>> rubles in your account.'
+			'You have an approved credit of <font color="blue"><<bankDebtLimit>></font> rubles!'
+		else
+			'You hava a debt of <font color="red"><<-1 * karta>></font> rubles.'
+			'You have an approved credit of <font color="blue"><<bankDebtLimit + karta>></font> rubles!'
+		end
+		
+		if karta + bankDebtLimit > 0:
+			act 'Withdraw money from the ATM':
+				cla
+				minut += 5
+				kartaOUT = input ("How much money you want to withdraw?")
 
-			if kartaOUT <= 0 or kartaOUT > karta:
-				'<br>Invalid operation.'
-			else
-				karta -= kartaOUT
-				money += kartaOUT
-				'<br>You withdraw <<kartaOUT>> rubles. You have <<karta>> rubles left in your bank account.'
+				if kartaOUT <= 0 or kartaOUT > karta + bankDebtLimit:
+					'<br>Invalid operation.'
+				else
+					karta -= kartaOUT
+					money += kartaOUT
+					'<br>You withdraw <<kartaOUT>> rubles. You have <<karta>> rubles left in your bank account.'
+				end
+				
+				gs 'stat'
+				act 'Move away': gt 'shop'
 			end
-			
-			gs 'stat'
+		else
+			'You don''t have any money left in the bank.'
 		end
 	else
-		'You do not have any money in the bank.'
+		'You don''t have a bank account yet!'
 	end
 	
 	act 'Move away':gt 'shop', 'start'
@@ -220,11 +234,12 @@ if $shoplocation= 'cosmetics':
 	FUNC ('$stock_item', 10, 'Razors', 500, 'stanok', $CURLOC) + _
 	FUNC ('$stock_item', 20, 'Sunblock', 500, 'krem', $CURLOC) + _
 	FUNC ('$stock_item', 20, 'Tampons', 200, 'tampon', $CURLOC) + _
+	FUNC ('$stock_item', 20, 'Sanitary napkins', 200, 'sanpad', $CURLOC) + _
 	FUNC ('$stock_item', 30, 'Shampoo', 500, 'shampoo', $CURLOC) + _
-	FUNC ('$stock_item', 10, 'Hair scrunchies', 80, 'hscrunch', $CURLOC)
-
-	*pl FUNC ('$stock_item', 12, 'Hair pins', 100, 'hpingrip', $CURLOC) + _
-	iif(bag > 0, FUNC ('$stock_item', 10, 'Wipes', 100, 'salfetka', $CURLOC), '') + _
+	FUNC ('$stock_item', 10, 'Hair scrunchies', 80, 'hscrunch', $CURLOC) + _
+	FUNC ('$stock_item', 12, 'Hair pins', 100, 'hpingrip', $CURLOC)
+	
+	*pl iif(bag > 0, FUNC ('$stock_item', 10, 'Wipes', 100, 'salfetka', $CURLOC), '') + _
 	iif(bag > 0, FUNC ('$stock_item', 10, 'Portable makeup', 1000, 'kosmetitka', $CURLOC), '') + _
 	iif(bag > 0, FUNC ('$stock_item', 20, 'Mouthwash', 400, 'mouthwash', $CURLOC), '') + _
 	iif(bag > 0, FUNC ('$single_stock_item', 1, 'Comb', 150, 'greben', $CURLOC), '') + _
@@ -288,8 +303,7 @@ if $shoplocation = 'hardware':
 					'<center><img src="images/etogame/kassa.jpg"></center>'
 					'You paid the cashier and bought cloth.'
 				 end
-			 	
-			 gs'stat'	
+			 	gs'stat'
 			 act 'Move away from the counter':gt'shop','hos'	
 	         end
 	     end
@@ -646,15 +660,13 @@ if $shoplocation = 'icecream':
 		act 'Buy ice cream':
 			cls
 			money -= 50
-			fat += 50
+			fat += 3
 			manna += 500
-			water = 20
-			energy = 20
+			water += 60
+			energy = 30
 			cumspclnt = 2
 			gs 'cum_cleanup'
 			fbreath = 0
-			!! perkice is currently only ever referenced in stat and only then to decrement itself if > 0, so it does not currently do anything
-			!perkice += 1
 			gs 'stat'
 			'<center><img src="images/etogame/icecreem.jpg"></center>'
 			'You bought ice cream and ate it not going far.'
@@ -668,8 +680,42 @@ if $shoplocation = 'megafon':
 	cls
 	minut+=3
 	gs'stat'
+	i = 0
 	'<center><b><font color = maroon>Salon connection Megaphone</font></B></center>'
 	'<center><img src="images/pic/phone/megafon2.jpg" ></center>'
+
+	*pl '<center><table align="center">'
+
+	:loopcard
+
+	if i = 0:
+		n = 5
+		price = 60
+		$buy_link = '<a' + iif(money >= 60, ' href="exec: gs ''$buy_item'', <<n>>, ''hours of internet access'', <<price>>, ''intinp'', ''shop''">buy ','>buy ') +'</a>'
+	elseif i = 1:
+		n = 10
+		price = 115
+		$buy_link = '<a' + iif(money >= 115, ' href="exec: gs ''$buy_item'', <<n>>, ''hours of internet access'', <<price>>, ''intinp'', ''shop''">buy ','>buy ') +'</a>'
+	elseif i = 2:
+		n = 20
+		price = 220
+		$buy_link = '<a' + iif(money >= 220, ' href="exec: gs ''$buy_item'', <<n>>, ''hours of internet access'', <<price>>, ''intinp'', ''shop''">buy ','>buy ') +'</a>'
+	elseif i = 3:
+		n = 50
+		price = 520
+		$buy_link = '<a' + iif(money >= 520, ' href="exec: gs ''$buy_item'', <<n>>, ''hours of internet access'', <<price>>, ''intinp'', ''shop''">buy ','>buy ') +'</a>'
+	end
+
+	i += 1
+
+	'<tr><td align="center"><<n>> hour internet card </td><td align="right">(you have <<intinp>> hours of internet access) </td><td align="right"><<$buy_link>> </td><td align="left">for <<price>> rubles</td></tr>'
+
+	if i < 4:
+		jump 'loopcard'
+	end
+
+	'</table></center>'
+
 
 	act 'Exit Department':gt'shop','start'
 

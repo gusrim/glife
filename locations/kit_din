@@ -106,16 +106,24 @@ $santehnikend = {
 		end
 	end
 	if money < 1500:
-		'You do not have enough money'
+		'You do not have enough cash on you.'
 		if money+stolmoney >= 1500:
-			'But you remember, that with the stash in your table it will be enough.'
+			'You remember the stash in your table and with that you''ll have enough.'
 			act 'Pay':
-				if money < 1500:money = money+stolmoney & stolmoney = 0
+				money = money+stolmoney & stolmoney = 0
 				money -= 1500
 				gt'kuhr'
 			end
-		end
-		if money+stolmoney < 1500:
+		elseif money+stolmoney + karta >= 1500:
+			'You know that even with your stash in the apartment you are short, but you could get the extra from the ATM.'
+			act 'Walk down to the ATM and get the extra money, then pay':
+				minut += 10
+				money = money + stolmoney & stolmoney = 0
+				karta -= (1500 - money)
+				money = 0
+				gt'kuhr'
+			end
+		elseif money+stolmoney < 1500:
 			act 'I did not have enough money':
 				cls
 				gs'stat'
@@ -364,7 +372,7 @@ $edahotd = {
 	edahot = 0
 	dirttarelka += 1
 	manna += 20
-	dynamic $food
+	gs 'food', 'm_meal'
 }
 
 $eatout = {
@@ -372,7 +380,7 @@ $eatout = {
 	*clr
 	edahot = 0
 	manna += 20
-	dynamic $food
+	gs 'food', 'm_meal'
 }
 
 $posudomashina = {
@@ -394,12 +402,12 @@ $pranik = {
 		pranik -= 1
 		health += 30
 		manna += 100
-		energy += 20
-		water += 20
+		energy = 100
+		water = 100
 		cumspclnt = 2
 		gs 'cum_cleanup'
 		fbreath = 0
-		fat += 50
+		fat += 4
 		frost = 0
 		gs 'stat'
 		'<center><img src="images/pics/food.jpg"></center>'
@@ -415,77 +423,17 @@ $edaD = {
 		act 'Eat diet food (0:30)':
 			edaD -= 1
 			manna += 15
-			dynamic $food
+			gs 'food', 'm_meal'
 		end
 	end
 }
 
 $food = {
-	cla
-	*clr
-	frost = 0
-	minut += 30
-	health += 10
-	cumspclnt = 2
-	gs 'cum_cleanup'
-	fbreath = 0
-	'<center><img src="images/pics/food.jpg"></center>'
-
-	if energy >= 30:
-		'You have no hunger, so just pick at the things you like most. You feel a little bloated.'
-	elseif energy >= 20 and energy < 30:
-		energy += 10
-		'You force down the meal and now feel full.'
-	elseif energy < 20:
-		energy += 20
-		'You gladly eat the cooked meal. You feel sated.'
-	end
-
-	if water >= 20:
-		'You aren''t thirsty, so you don''t have any tea.'
-	else
-		water += 20
-		'You gladly drink a mug of tea.'
-	end
-
-	act 'Get up from the table':gt $locM, $metkaM
+	gs 'food', 'm_meal'
 }
 
 $snack = {
-	cla
-	*clr
-	gs 'stat'
-	minut += 15
-	health += 10
-	manna += 20
-	'<center><img src="images/pics/food.jpg"></center>'
-	if energy >= 30:
-		fat += 5
-		'You have no hunger, so just pick at the things you like most. You feel a little bloated.'
-	elseif energy >= 20 and energy < 30:
-		fat += 3
-		energy += 10
-		'You force down the meal and now feel full.'
-	elseif energy < 20:
-		energy += 20
-		!!fat += 1
-		'You gladly eat the cooked meal. You feel sated.'
-	end
-
-	if water >= 20:
-		cumspclnt = 2
-		gs 'cum_cleanup'
-		fbreath = 0
-		'The coffee doesn''t affect your thirst.'
-	elseif water < 20:
-		water += 20
-		cumspclnt = 2
-		gs 'cum_cleanup'
-		fbreath = 0
-		'You aren''t thirsty, so you don''t have any coffee.'
-	end
-
-	act 'Throw away leftovers':gt $locM, $metkaM
+	gs 'food', 'snack'
 }
 
 $fatdel = {
@@ -510,10 +458,10 @@ $driwater = {
 		cla
 		minut += 5
 
-		if water >= 20:
+		if water >= 80:
 			'You don''t need any more water.'
 		else
-			water += 20
+			water += 80
 			cumspclnt = 2
 			gs 'cum_cleanup'
 			fbreath = 0
@@ -536,7 +484,6 @@ $lekarstvo = {
 				lekarday = daystart
 				lekarstvo -= 1
 				sick -= sick * 20 / 100
-				lekrand = rand(1, 9)
 
 				'<center><img src="images/inBed/lekr<<picrand>>.jpg"></center>'
 				'You took a pill'
