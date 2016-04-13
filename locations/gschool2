@@ -51,13 +51,12 @@ if $ARGS[0] = 'start':
 
 			!'Finally the bell rang and the students went to a big change.'
 
-			!gt 'gschool2', 'break'
+			!gt 'gschool2', 'lunch'
 		end
 	end
 end
 
 if $ARGS[0] = 'class':
-	'<center><img src="images/qwest/alter/urok<<urand>>.jpg"></center>'
 	if hour = 9:
 	
 		minut += 60 * 3
@@ -71,7 +70,7 @@ if $ARGS[0] = 'class':
 		lernSkill += 1
 		lernHome += 1
 		if schoolSorev = 1:schoolSorev = 0
-
+		'<center><img src="images/qwest/alter/urok<<urand>>.jpg"></center>'
 		gs 'stat'
 		'You sit in the classroom and listen to the monotonous droning of your teacher, doing your best to not fall asleep.'
 		if GorSlut > 0:'During the class you hear classmates whisper nasty things about you, and sometimes they make lewd gestures when the teacher is not looking.'
@@ -87,8 +86,9 @@ if $ARGS[0] = 'class':
 		$teacher[1] = 'Ilya Yenotin'
 		$teacher[2] = 'Ilya Yenotin'
 	end
+	
 	if Enable_skipnoevclass > 0 and ($teacher = 'Ilya Yenotin' or RAND(1,100) > Enable_skipnoevclass):
-		gt 'gschool2', 'break' & !skip class ev if 1.not Anatoly E. or 2. rand < set chance by illume
+		gt 'gschool2', 'lunch' & !skip class ev if 1.not Anatoly E. or 2. rand < set chance by illume
 	else
 		act'Listen attentively to <<$teacher[1]>>':
 			cla
@@ -112,7 +112,7 @@ if $ARGS[0] = 'class':
 					Suspeh += 1
 					'<<$teacher>> nods approvingly, always happy to see his students engaged in his class. He happily spends some extra time explaining the topic again, and answers any extra questions you might have. You feel smarter, thoroughly understanding today''s topics now.'
 				end
-				act'Wait for the end of the lesson':gt 'gschool2', 'break'
+				act'Wait for the end of the lesson':gt 'gschool2', 'lunch'
 			end
 
 			if $teacher = 'Anatoly E.' and vnesh > 60 and grupNPC[26] >= 40:
@@ -149,7 +149,7 @@ if $ARGS[0] = 'class':
 				end
 			end
 			'<<$school_class_txtrand>>'
-			act'Wait for the end of the lesson':gt 'gschool2', 'break'
+			act'Wait for the end of the lesson':gt 'gschool2', 'lunch'
 		end
 		act'Daydream':
 			cla
@@ -169,25 +169,25 @@ if $ARGS[0] = 'class':
 								act'Don''t leave the classroom':
 									'"What good would that do? Are you trying to get me to start smoking to pass the time? I''m not interrupting your classes, just leave me alone. I''m having some... girl problems. Would you like me to talk about those?" you answer brashly, not having any intentions of getting up.'
 									'Your teacher doesn''t know what to say, and after a while just decides to continue his classes. You obviously don''t learn anything today.'
-									act'Wait for the end of the lesson':gt 'gschool2', 'break'
+									act'Wait for the end of the lesson':gt 'gschool2', 'lunch'
 								end
-								act'Leave the classroom':school_event_hour = day & gt 'gschool2', 'break'
+								act'Leave the classroom':school_event_hour = day & gt 'gschool2', 'lunch'
 								exit
 							else
 								'The eyes of <<$teacher>> grow narrower, and even though you roll your eyes at him, you sit through the rest of the lesson in silence, at least pretending to pay attention sometimes. You don''t learn anything today.'
-								act'Wait for the end of the lesson':gt 'gschool2', 'break'
+								act'Wait for the end of the lesson':gt 'gschool2', 'lunch'
 							end
 						end
 					end
 					act'Try to focus on the lesson':
-						act'Wait for the end of the lesson':gt 'gschool2', 'break'
+						act'Wait for the end of the lesson':gt 'gschool2', 'lunch'
 					end
 					exit
 				end
 
-				act'Wait for the end of the lesson':gt 'gschool2', 'break'
+				act'Wait for the end of the lesson':gt 'gschool2', 'lunch'
 			else
-				act'Wait for the end of the lesson':gt 'gschool2', 'break'
+				act'Wait for the end of the lesson':gt 'gschool2', 'lunch'
 			end
 		end
 		act'Play with your phone':
@@ -206,13 +206,12 @@ if $ARGS[0] = 'class':
 			else
 				'<<$school_class_txtrand>>'
 			end
-			act'Wait for the end of the lesson':gt 'gschool2', 'break'
+			act'Wait for the end of the lesson': gt 'gschool2', 'lunch'
 		end
 	end
 end
 
-if $ARGS[0] = 'break':
-	'<center><img src="images/qwest/alter/urok<<urand>>.jpg"></center>'
+if $ARGS[0] = 'lunch':
 	cla
 	if school_event_hour ! day: 
 		gt 'gschool3', 'rand_class'
@@ -222,8 +221,41 @@ if $ARGS[0] = 'break':
 		gt 'gschool', 'start'
 		exit
 	end
-	gs'stat'
+	gs 'stat'
+	'<center><img src="images/qwest/alter/stolovka.jpg"></center>'
+	act 'Go to the cafeteria':
+		cls
+		minut += 30
+		gs 'stat'
+		'<center><img src="images/qwest/alter/stolovka.jpg"></center>'
+		if grupTipe[25] = 0:
+		'During the break, <a href="exec:gt ''Sgrup''">students</a> are standing in line waiting for their food.'
+		else
+			'During lunch break, everyone wanting something to eat heads for the school canteen.'
+		end
+		if money >= 50:
+			act 'Buy food (50 rubles)':
+				gs 'food', 'dyn_meal'
+				act 'Continue your break': gt 'gschool2', 'break'
+			end
+		end
+		act 'Eat bagged lunch':
+			gs 'food', 'bag_lunch'
+			act 'Continue your break': gt 'gschool2', 'break'
+		end
+	end
+end
 
+if $ARGS[0] = 'break':
+	urand = rand(0, 12)
+	'<center><img src="images/qwest/alter/urok<<urand>>.jpg"></center>'
+	cla
+	if hour > 13: 
+		gt 'gschool', 'start'
+		exit
+	end
+	gs'stat'
+	
 	if npcSex[14] = 1 and KatjaLust >= 50 and KatjaHorny + KatjaSlut >= 100 and KatjaHorny > 50:
 		'During the break Katja Meynold approaches you, her face flustered in a mixture of arousal and shame. After a few seconds, she gathers enough courage to ask if you want go somewhere quiet with her.'
 
@@ -530,29 +562,6 @@ if $ARGS[0] = 'break':
 				end
 		end
 	end
-
-	act 'Go to the canteen':
-		cls
-		minut += 60
-		urand = rand(0, 12)
-		gs 'stat'
-		'<center><img src="images/qwest/alter/stolovka.jpg"></center>'
-		if grupTipe[25] = 0:
-		'During the break, <a href="exec:gt ''Sgrup''">students</a> are standing in line waiting for their food.'
-		else
-			'During the break, everyone wanting something to eat heads for the school canteen.'
-		end
-
-		act 'Go to afternoon lessons': gt 'gschool2', 'afternoon'
-
-		if money >= 50:
-			act 'Buy food (50 rubles)':
-				gs 'food', 'dyn_meal'
-				act 'Go to afternoon lessons': gt 'gschool2', 'afternoon'
-			end
-		end
-	end
-
 	if zverevaQW = 2 and zverRageQW = 0 or zverevaQW = 3 and zverRageQW = 0:
 		act 'Spread rumors about Christina':
 			cls
