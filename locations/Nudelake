@@ -1,8 +1,23 @@
 # Nudelake
-gs 'stat'
 '<center><b>nudist beach</b></center>'
 '<center><img src="images/img/Lake/Nudelake.jpg"></center>'
 'The nudist beach - clothing optional.'
+
+if $clothingworntype ! 'swimwear' and $clothingworntype ! 'nude':
+	minut += 5
+	tanga = 0
+	gs 'clothing', 'strip'
+	'You strip naked, enjoying the warm breeze on your bare skin.'
+elseif $clothingworntype = 'swimwear':
+	act'Strip naked':
+		cls
+		minut += 5
+		tanga = 0
+		gs 'clothing', 'strip'
+		xgt 'Nudelake'
+	end
+end
+gs 'stat'
 
 if hour >= 6 and hour <= 20 and temper >= 20:
 	'Here you can <a href="exec:gt ''Nudelake'', ''zagarat''">sunbathe</a> and <a href="exec:gt ''Nudelake'', ''swim''">swim</a>'
@@ -13,7 +28,7 @@ else
 	'The nudist beach is closed.'
 end
 
-act 'Return to the main beach':gt 'lake', 'start'
+act 'Return to the main beach':if $clothingworntype = 'nude':gs 'clothing', 'wear_last_worn' & gt 'lake', 'start'
 
 if katday ! daystart and kat >= 1:
 	'You see Kat on the beach.'
