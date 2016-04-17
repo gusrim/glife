@@ -49,7 +49,6 @@ if $ARGS[0] = 'start':
 				horny = 0
 				orgasm += 1
 				picrand = 11
-				! WD: Correct Image path ~ "images/img/mastr/mastr<<picrand>>.jpg"
 				'<center><img src="images/inBed/mastr11.JPG"></center>'
 				'You masturbated.'
 				'Gradually a pleasant warmth and pulsation increases in the lower abdomen, then descend to the feeling you and your entire body covered hot waves of orgasm'
@@ -122,6 +121,14 @@ if $ARGS[0] = '0':
 			picrand = 12
 			sexpartkno = 1
 			$boy = 'patient'
+			if arrpos('$cumarrnam',$boy) ! -1:
+				boycount = 2
+				:naming
+					$boycount = '#<<boycount>> '+$boy
+					arrmodtmp = arrpos('$cumarrnam',$boycount)
+				if $cumarrnam[arrmodtmp] = $boycount:boycount += 1 & jump 'naming'
+				$boy = $boycount
+			end
 			gt 'podrsex', 'suck'
 		end
 	elseif katprorand = 2:
@@ -134,9 +141,11 @@ if $ARGS[0] = '0':
 			sexpartkno = 1
 			dynamic $randdoc
 			$boy1 = $boy
+			if docfuck[randdoc] = 1:guy += 1
 			:docloop
 			dynamic $randdoc
-			if $boy = $boy1: jump 'docloop'
+			if $boy = $boy1:docfuck[randdoc] -= 1 & jump 'docloop'
+			if docfuck[randdoc] = 1:guy += 1
 			xgt 'sexdvanadva', 'var'
 		end
 	end
@@ -157,6 +166,7 @@ if $ARGS[0] = '1':
 			guy += 1
 			picrand = 12
 			dynamic $randdoc
+			if docfuck[randdoc] = 1:guy += 1
 			gt 'sex', 'minet'
 		end
 	else
@@ -169,13 +179,15 @@ if $ARGS[0] = '1':
 		end
 
 		act 'Amuse':
-			guy += 2
 			sexpartkno = 1
 			dynamic $randdoc
 			$boy1 = $boy
+			if docfuck[randdoc] = 1:guy += 1
 			:docloop
 			dynamic $randdoc
-			if $boy = $boy1: jump 'docloop'
+			if $boy = $boy1:docfuck[randdoc] -= 1 & jump 'docloop'
+			if docfuck[randdoc] = 1:guy += 1
+			SkipNameCycle = 1
 			xgt 'sexdvoe', 'var'
 		end
 	end
@@ -207,12 +219,12 @@ if $ARGS[0] = '3':
 		picrand = 13
 		sexpartkno = 1
 		dynamic $randdoc
+		if docfuck[randdoc] = 1:guy += 1
 		gt 'podrsex', 'suck'
 	end
 end
 
 $randdoc = {
-	:docloop
 	randdoc = rand(1,20)
 	if randdoc = 1:$boy = 'Dr. Ivanov'
 	elseif randdoc = 2:$boy = 'Dr. Smirnov'
@@ -235,6 +247,7 @@ $randdoc = {
 	elseif randdoc = 19:$boy = 'Dr. Nikolaev'
 	elseif randdoc = 20:$boy = 'Dr. Orlov'
 	end
+	docfuck[randdoc] += 1
 }
 
 --- WorkHosp ---------------------------------

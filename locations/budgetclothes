@@ -23,6 +23,12 @@ if $ARGS[0] = 'start':
 		gt 'budgetclothes', 'office'
 	end
 
+	act 'View uniforms':
+		cla
+		minut += 5
+		gt 'budgetclothes', 'uniform'
+	end
+
 	act 'View school uniforms':
 		cla
 		minut += 5
@@ -39,7 +45,6 @@ if $ARGS[0] = 'start':
 		cla
 		if torg = 1:
 			minut += 3
-			torg = 0
 			gt 'torgcentr'
 		else
 			gt 'Gshveyfab', 'start'
@@ -81,7 +86,7 @@ if $ARGS[0] = 'cheapclo':
 	
 	if cheap[i] ! 0:
 		msg 'You already own these clothes.'
-		gt $loc, $metka
+		gt 'budgetclothes', 'clothes'
 	end
 
 	gt 'clothing', 'view_clothing_item', 'shop', 'cheap',i, 2000
@@ -118,10 +123,47 @@ if $ARGS[0] = 'officeclo':
 	
 	if office[i] ! 0:
 		msg 'You already own these clothes.'
-		gt $loc, $metka
+		gt 'budgetclothes', 'office'
 	end
 
 	gt 'clothing', 'view_clothing_item', 'shop', 'office',i, 4000
+end
+
+if $ARGS[0] = 'uniform':
+	$metka = $ARGS[0]
+	$loc = $CURLOC
+	cls
+	gs'stat'
+
+	act 'Return':
+		cla
+		minut += 5
+		gt 'budgetclothes', 'start'
+	end
+
+	if Clothingstock > 7:
+		i = 1
+	elseif Clothingstock > 15:
+		i = 2
+	else
+		i = 3
+	end
+
+	:loopuniform
+		if uniform[i] = 0:*p '<a href="exec: i = <<i>> & gt ''budgetclothes'', ''uniformclo''"><div style="width:100%; max-width:250px; max-height:250px;"><img src="images/Clothing/10uniform/Uniform<<i>>.jpg" 	height="250" /></div></a>'
+		i += 3
+	if i <= 24:jump 'loopuniform'
+end
+
+if $ARGS[0] = 'uniformclo':
+	cla
+	
+	if uniform[i] ! 0:
+		msg 'You already own these clothes.'
+		gt 'budgetclothes', 'uniform'
+	end
+
+	gt 'clothing', 'view_clothing_item', 'shop', 'uniform',i, 3000
 end
 
 if $ARGS[0] = 'school':
@@ -153,7 +195,7 @@ if $ARGS[0] = 'schoolclo':
 	
 	if school[i] ! 0:
 		msg 'You already own these clothes.'
-		gt $loc, $metka
+		gt 'budgetclothes', 'school'
 	end
 
 	gt 'clothing', 'view_clothing_item', 'shop', 'school',i, 3000
@@ -186,7 +228,7 @@ if $ARGS[0] = 'coatsclo':
 	
 	if coat[i] ! 0:
 		msg 'You already own these clothes.'
-		gt $loc, $metka
+		gt 'budgetclothes', 'coats'
 	end
 
 	gt 'clothing', 'view_clothing_item', 'shop', 'coat',i, 8000
