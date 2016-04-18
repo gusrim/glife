@@ -745,22 +745,22 @@ $d_cycreport_choice = {
 		PL 'Change Status because:'
 		if thinkpreg = 0:
 			if knowpreg = 1:
-				PL '<a href=exec: dynamic $d_cycreport_actor, 2">I''m pregnant.</a>'
+				PL '<a href="exec: dynamic $d_cycreport_actor, 2">I''m pregnant.</a>'
 			else 
-				PL '<a href=exec: dynamic $d_cycreport_actor, 2">I think I am Pregnant.</a>'
+				PL '<a href="exec: dynamic $d_cycreport_actor, 2">I think I am Pregnant.</a>'
 			end
 		elseif thinkpreg = 1:
-			PL '<a href=exec: dynamic $d_cycreport_actor, 1">I''m not Pregnant.</a>'
+			PL '<a href="exec: dynamic $d_cycreport_actor, 1">I''m not Pregnant.</a>'
 		end
 		if mesec > 0:
-			PL '<a href=exec: dynamic $d_cycreport_actor, 3">I''m menstruating.</a>'
+			PL '<a href="exec: dynamic $d_cycreport_actor, 3">I''m menstruating.</a>'
 		else:
-			PL '<a href=exec: dynamic $d_cycreport_actor, 4">I just recently menstruated.</a>'
-			PL '<a href=exec: dynamic $d_cycreport_actor, 5">I think my menstrual cycle has stopped.</a>'
+			PL '<a href="exec: dynamic $d_cycreport_actor, 4">I just recently menstruated.</a>'
+			PL '<a href="exec: dynamic $d_cycreport_actor, 5">I think my menstrual cycle has stopped.</a>'
 		end
 		if thinkpreg = 1 or knowpreg = 1:
-			PL '<a href=exec: dynamic $d_cycreport_actor, 6">I think my due date is...</a>'
-			PL '<a href=exec: dynamic $d_cycreport_actor, 7">I think the Father is...</a>'
+			PL '<a href="exec: dynamic $d_cycreport_actor, 6">I think my due date is...</a>'
+			PL '<a href="exec: dynamic $d_cycreport_actor, 7">I think the Father is...</a>'
 		end
 	elseif cycle = 5:
 		pl 'Broken water and contractions, it''s pretty clear what is going on. Labour. You need to get to a hospital ASAP.'
@@ -801,25 +801,20 @@ $d_cycreport_actor = {
 		thinkpreg = 0
 		denypreg = 0
 		cyccustom = 2
-		temp = input("How many days ago was your last period?")
-		if #temp > 0:
-			daylastperiod = #temp
-		else
-			'error'
-		end
+		clr
+		pl 'How many days ago was your last period?'
+		pl 'Currently: <<pertemp>>
+		pl '<a href="exec: pertemp += 1 & clr & dynamic $d_cycreport_actor, 4">+1</a> <a href="exec: pertemp += 5 & clr & dynamic $d_cycreport_actor, 4">+5</a> <a href="exec: pertemp += 10 & clr & dynamic $d_cycreport_actor, 4">+10</a> <a href="exec: pertemp = 0 & clr & dynamic $d_cycreport_actor, 4">Reset</a> <a href="exec: daylastperiod = daystart - pertemp & gs ''stat''">Accept</a>'
 	elseif ARGS[0] = 5:
 		thinkpreg = 0
 		denypreg = 0
 		cyccustom = 1
 		$cycreport_txt = 'You do not believe you have periods any more.'
 	elseif ARGS[0] = 6:
-		temp = input("How many days ago was your last period?")
-		daylastperiod = #temp
-		if #temp > 0:
-			daylastperiod = #temp
-		else
-			'error'
-		end
+		clr
+		pl 'How many days ago was your last period?'
+		pl 'Currently: <<pertemp>>
+		pl '<a href="exec: pertemp += 1 & clr & dynamic $d_cycreport_actor, 6">+1</a> <a href="exec: pertemp += 5 & clr & dynamic $d_cycreport_actor, 6">+5</a> <a href="exec: pertemp += 10 & clr & dynamic $d_cycreport_actor, 6">+10</a> <a href="exec: pertemp = 0 & clr & dynamic $d_cycreport_actor, 6">Reset</a> <a href="exec: daylastperiod = daystart - pertemp & gs ''stat''">Accept</a>'
 	elseif ARGS[0] = 7:
 		temp = arrsize('$wombpotfath')
 		:cyccustfathchoice
@@ -854,12 +849,12 @@ $d_cycreport_update = {
 		end
 	end
 	if denypreg = 1:
-		if pregchem < 672:
+		if pregchem < 525:
 				cyccustom = 1
 				denypreg = 1
 				thinkpreg = 0
 				$cycreport_txt = 'There is nothing wrong, your cycle is just irregular.'
-			elseif pregchem < 2016:
+			elseif pregchem < 1863:
 				cyccustom = 1
 				denypreg = 1
 				thinkpreg = 0
@@ -892,7 +887,7 @@ $d_cycreport_update = {
 }
 
 $d_cycreport_upduedate = {
-	temp = day + 280
+	temp = day + 280 - (daystart - daylastperiod)
 	pregdueday = day
 	pregduemonth = month
 	pregdueyear = year
@@ -1034,7 +1029,7 @@ $d_pregmovement = {
 			end
 		end
 	elseif pregchem > 0:
-		if kid > 0 and PregChem > 4050:
+		if kid > 0 and PregChem > 3903:
 			'You try to deny it, but you just can''t any more. The large belly, the movement, You are pregnant again.'
 			denypreg = 0
 			dynamic $d_cycreport_upduedate
