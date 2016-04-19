@@ -816,6 +816,71 @@ $din_std_cure = {
 	Kandidoz = 0
 }
 
+$din_force_preg = {
+	if mesec ! 0: mesec = 0
+	if FocH ! 0: FocH = 0
+	if EggRH ! 0: EggRH = 0
+	if Ovulate ! 0: Ovulate = 0
+	if UnfertEgg ! 0: UnfertEgg = 0
+	if LutH ! 0: LutH = 0
+	if RecovH ! 0: RecovH = 0
+	preg = 1
+	cycle = 5
+	PregChem = 150
+	babyembryo += 1
+	if fertegg = 0
+	Nextbaby = arrsize('$ChildFath')
+	Temppolkid = rand(0,1)
+	polkid[nextbaby] = Temppolkid
+	$kidname[nextbaby] = 'unborn'
+	kidage[nextbaby] = 0
+	daykid[nextbaby] = 0
+	monthkid[nextbaby] = 0
+	yearkid[nextbaby] = 0
+	Babyptype[nextbaby] = 0
+	$ChildFath[nextbaby] = 'A sperm donor'
+	$ChildThFath[nextbaby] = 'A sperm donor'
+	hairkid[nextbaby] = rand(0, 3)
+	eyeskid[nextbaby] = rand(0, 3)
+	ChildConType[nextbaby] = 0
+	Babyptype[nextbaby] = 1
+	else
+	fertegg -= 1
+	end
+}
+
+$din_remove_preg = {
+	Nextbaby = arrsize('$ChildFath') - 1
+	killvar 'polkid[nextbaby]'
+	killvar '$kidname[nextbaby]'
+	killvar 'kidage[nextbaby]'
+	killvar 'daykid[nextbaby]'
+	killvar 'monthkid[nextbaby]'
+	killvar 'yearkid[nextbaby]'
+	killvar 'Babyptype[nextbaby]'
+	killvar '$ChildFath[nextbaby]'
+	killvar '$ChildThFath[nextbaby]'
+	killvar 'hairkid[nextbaby]'
+	killvar 'eyeskid[nextbaby]'
+	killvar 'ChildConType[nextbaby]'
+	killvar 'Babyptype[nextbaby]'
+	if babyembryo > 0: babyembryo -= 1
+	if preg > 0 and babyembryo < 1
+	mesec = 48
+	FocH = 0
+	EggRH = 0
+	Ovulate = 0
+	fertegg = 0
+	UnfertEgg = 0
+	PregChem = 0
+	preg = 0
+	LutH = 0
+	RecovH = 0
+	babyembryo = 0
+	cycle = 0
+	end
+}
+
 $din_cheat_menu_view = {
 	gs'stat'
 	clr
@@ -874,7 +939,7 @@ $objcheat_menu = {
 	gs'stat'
 	clr
 	pl'<center><a href="exec:gs''stat''"><b>Exit cheat menu</b></a></center>'
-	pl''
+	nl
 	pl'<a href="exec:dynamic $din_cheat_menu_permanent"><b>Recurrent</b></a>'
 	pl'<a href="exec:dynamic $din_cheat_menu_look"><b>Appearance</b></a>'
 	pl'<a href="exec:dynamic $din_cheat_menu_stats"><b>Attributes and skills</b></a>'
@@ -883,13 +948,15 @@ $objcheat_menu = {
 	pl'<a href="exec:dynamic $din_cheat_menu_time"><b>Manipulating time</b></a>'
 	pl'<a href="exec:dynamic $din_cheat_menu_view"><b>Status Display</b></a>'
 	if StoryLine = 0:pl'<a href="exec:dynamic $din_cheat_menu_magic"><b>Magic</b></a>'
-	pl''
+	nl
 	pl'<a href="exec:health = vital*10 + stren*5+1000 & willpower = intel*5 + will*5+1000 & manna = (intel*magik) + magik*100 + vital*10 + rikudo & vgape = 0 & agape = 0 & nippain = 0 & dynamic $objcheat_menu">Full restoration of health, manna, Reason.</a>'
 	pl'<a href="exec:dynamic $din_cheat_money">Change money</a>'
 	pl'<a href="exec:money = 0 & dynamic $din_cheat">Zero money</a>'
 	pl'<a href="exec:dynamic $din_std_cure">Cure all stds</a>'
 	pl'<a href="exec:vgape = 0 & agape = 0 & nippain = 0 & painpub = 0 & pirs_pain_ton = 0 & mesec = 0 & spanked = 0 & SLomka = 0 & Narkoman = 0 & strongnark = 0 & SNarkTimes = 0 & nark = 0 & fingal = 0 & mosol = 0 & frost = 0 & sick = 0 & dynamic $din_std_cure">Cure all ailments.</a>'
 	nl
+	pl'<a href="exec:dynamic $din_force_preg">Force random pregnancy</a>'
+	pl'<a href="exec:dynamic $din_remove_preg">Remove pregnancy</a>'
 	if Enable_nogameover = 1:
 		pl' <a href="exec:Enable_nogameover = 0 & dynamic $objcheat_menu">Prevent Non-Drama GAMEOVER: ON</a>'
 	else
