@@ -9,27 +9,22 @@ $clothing_list_line = {
 
 	$bgcolor = iif($bgcolor='#f3f4ee','#ffffff','#f3f4ee')
 
-	!$RESULT = FUNC('$short_description', $ARGS[1])
-	!$RESULT += '<<ARGS[2]>>'
 	$RESULT = '<TR bgcolor='+$bgcolor+'>'
 	$RESULT +='<TD><a href="exec:gt ''clothing'', ''view_clothing_item'', ''<<$ARGS[0]>>'', ''<<$ARGS[1]>>'', <<ARGS[2]>>"><img src="<<FUNC(''$clothing_image'', $ARGS[1], ARGS[2])>>" width="75"></a></TD>'
-	!$RESULT +='<TD><<FUNC(''$short_description'', $ARGS[1])>> <<ARGS[2]>></TD>'
+	gs 'clothing_attributes', $ARGS[1], ARGS[2]
+
 	if $ARGS[1] ! 'school' or ARGS[2] ! 6:
-		!$RESULT += ' (strength ' + dyneval '$RESULT += <<$ARGS[1]>>H[<<ARGS[2]>>]'
 		$RESULT += '<TD>' + dyneval '$RESULT += <<$ARGS[1]>>H[<<ARGS[2]>>]' + '</TD>'
 
 		if $ARGS[1] ! 'exercise' and $ARGS[1] ! 'coat' and CloStyle ! 5:
-			!$RESULT += ', hip size ' + dyneval '$RESULT += <<$ARGS[1]>>B[<<ARGS[2]>>]'
 			$RESULT += '<TD>' + dyneval '$RESULT += <<$ARGS[1]>>B[<<ARGS[2]>>]' + '</TD>'
 		else
 			$RESULT += '<TD></TD>'
 		end
-
-		!$RESULT += ')'
 	else
 		$RESULT += '<TD colspan="2"></TD>'
 	end
-	gs 'clothing_attributes', $ARGS[1], ARGS[2]
+
 	if $ARGS[1] ! 'coat' and $ARGS[1] ! 'swimwear':
 		gs 'clothing_descriptions'
 		$RESULT += '<TD><<FUNC(''$short_description'', $ARGS[1])>> <<ARGS[2]>><br/><br/><<$description>></TD>'
@@ -62,6 +57,7 @@ $clothing_list_line = {
 			$RESULT += '</TD>'
 		end
 	end
+
 	$RESULT += '<TD>'
 	if cloc ! 1:$RESULT += ' <a href="exec:gt ''clothing'', ''dest1'', ''<<$ARGS[0]>>'', ''<<$ARGS[1]>>'', <<ARGS[2]>>">Store it</a>'
 	if cloc ! 0:$RESULT += ' <a href="exec:gt ''clothing'', ''dest0'', ''<<$ARGS[0]>>'', ''<<$ARGS[1]>>'', <<ARGS[2]>>">Put in wardrobe</a>'
@@ -543,7 +539,6 @@ end
 if $ARGS[0] = 'wear_last_worn':
 	gs 'clothing', 'wear', $lastwornclothingtype, lastwornclothingnumber
 end
-
 
 --- clothing ---------------------------------
 
