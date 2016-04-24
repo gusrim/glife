@@ -1,5 +1,5 @@
 # rinok
-if $ARGS[0] = 'start':
+if $ARGS[0] = 'start' or $metka = 'start':
 	CLOSE ALL
 	if sound = 0:
 		if month >=11 and month <= 12 or month >=1 and month <=3:
@@ -11,162 +11,35 @@ if $ARGS[0] = 'start':
 		end
 	end
 	!if sound = 0:PLAY 'sound/street.mp3',30
-	$rinbuy1 = {
-		cla
-		*clr
-		portion = input ("How much you want to buy?")
 
-		if portion <= 0:portion = 1
-		if portion * 50 > money:'You do not have enough money.'
-
-		if portion * 50 <= money:
-			fairy += portion
-			money -= portion * 50
-			'<center><img src="images/etogame/kassa2.jpg"></center>'
-			'You bought dishwashing detergent and paid the money to the cashier.'
-		end
-
-		act 'Move away from the counter':gt 'rinok', 'start'
-	}
-
-	$rinbuy2 = {
-		cla
-		*clr
-		portion = input ("How much you want to buy?")
-
-		if portion <= 0:portion = 1
-		if portion * 150 > money:'You do not have enough money.'
-
-		if portion * 150 <= money:
-			poroshok += portion
-			money -= portion * 150
-			'<center><img src="images/etogame/kassa2.jpg"></center>'
-			'You bought detergent and paid the money to the cashier.'
-		end
-
-		act 'Move away from the counter':gt 'rinok', 'start'
-	}
-
-	$rinbuy3 = {
-		cla
-		*clr
-		portion = input ("How much you want to buy?")
-
-		if portion <= 0:portion = 1
-		if portion * 150 > money:'You do not have enough money.'
-
-		if portion * 150 <= money:
-			cltarelka += portion * 3
-			money -= portion * 150
-			'<center><img src="images/etogame/kassa2.jpg"></center>'
-			'You bought plates and paid the money to the cashier.'
-		end
-
-		act 'Move away from the counter':gt 'rinok', 'start'
-	}
-
-	$rinbuy4 = {
-		cla
-		*clr
-		portion = input ("How much you want to buy?")
-
-		if portion <= 0:portion = 1
-		if portion * 500 > money:'You do not have enough money.'
-
-		if portion * 500 <= money:
-			kosmetica += portion * 25
-			money -= portion * 500
-			'<center><img src="images/etogame/kassa2.jpg"></center>'
-			'You bought cosmetics and paid the money to the cashier.'
-		end
-
-		act 'Move away from the counter':gt 'rinok', 'start'
-	}
-
-	$rinbuy5 = {
-		cla
-		*clr
-		portion = input ("How much you want to buy?")
-
-		if portion <= 0:portion = 1
-		if portion * 200 > money:'You do not have enough money.'
-
-		if portion * 200 <= money:
-			stanok += portion * 10
-			money -= portion * 200
-			'<center><img src="images/etogame/kassa2.jpg"></center>'
-			'You bought razor and paid the money to the cashier.'
-		end
-
-		act 'Move away from the counter':gt 'rinok', 'start'
-	}
-
-	$rinbuy6 = {
-		cla
-		*clr
-		portion = input ("How much you want to buy?")
-
-		if portion <= 0:portion = 1
-		if portion * 150 > money:'You do not have enough money.'
-
-		if portion * 150 <= money:
-			tampon += portion * 20
-			money -= portion * 150
-			'<center><img src="images/etogame/kassa2.jpg"></center>'
-			'You bought tampons and paid the money to the cashier.'
-		end
-
-		act 'Move away from the counter':gt 'rinok', 'start'
-	}
-
-	$rinbuy7 = {
-		cla
-		*clr
-		portion = input ("How much you want to buy?")
-
-		if portion <= 0:portion = 1
-		if portion * 200 > money:'You do not have enough money.'
-
-		if portion * 200 <= money:
-			clrbelo += portion
-			money -= portion * 200
-			'<center><img src="images/etogame/kassa2.jpg"></center>'
-			'You pay the cashier and bought clothes.'
-		end
-
-		act 'Move away from the counter':gt 'rinok', 'start'
-	}
-
-	$rinbuy9 = {
-		if money >= 1000 and umbrella < 1:
-			cla
-			*clr
-			money -= 1000
-			umbrella = 1
-			'<center><img src="images/etogame/kassa2.jpg"></center>'
-			'You pay the cashier and bought an umbrella.'
-
-			act 'Move away from the counter':gt 'rinok', 'start'
-		else
-			'You do not have enough money.'
-		end
-	}
-
-	cla
-	*clr
+	cls
+	gs 'stat'
+	gs 'time'
 	minut = minut + 5
 	mag = 1
-	$metka = $ARGS[0]
+	$metka = 'start'
 	$loc = $CURLOC
 	$metkaM = $ARGS[0]
 	$locM = $CURLOC
 	'<center><b><font color="maroon">Marketplace</font></b></center>'
 	'<center><img src="images/etogame/rinok.jpg"></center>'
-	'<a href="exec:dynamic $rinbuy1">Dishwashing detergent - 50 rubles</a> <a href="exec:dynamic $rinbuy2">laundry detergent - 150 rubles</a> <a href="exec:dynamic $rinbuy3">a of 3 plates - 150 rubles</a> <a href="exec:dynamic $rinbuy4">Cosmetics - 500 rubles</a> <a href="exec:dynamic $rinbuy5">razor - 200 rubles</a> <a href="exec:dynamic $rinbuy6">tampons - 100 rubles</a> <a href="exec:dynamic $rinbuy7">Underwear - 200 rubles</a>'
-
-	if umbrella < 1:'<a href="exec:dynamic $rinbuy9">Umbrella - 1,000 rubles</a>'
 
 	'On one of the tents hangs a sign <a href="exec:gt ''clothing'', ''view_clothing_list'', ''sell''">"Cash paid for secondhand clothes"</a>'
+
+	*p iif($ARGS[0] = 'start' or $ARGS[0] = '' or $ARGS[0] = 'move', '<br/>', '<center><<$ARGS[0]>></center>')
+
+	*pl '<center><table align="center">' + _
+	FUNC ('$stock_item', 10, 'Dishwashing detergent', 45, 'fairy', 'rinok') + _
+	FUNC ('$stock_item', 10, 'Clothing detergent', 90, 'poroshok', 'rinok') + _
+	FUNC ('$stock_item', 8, 'Plates', 500, 'cltarelka', 'rinok') + _
+	FUNC ('$stock_item', 20, 'Cosmetics', 380, 'kosmetica', 'rinok') + _
+	FUNC ('$stock_item', 5, 'Razors', 200, 'stanok', 'rinok') + _
+	FUNC ('$stock_item', 10, 'Tampons', 120, 'tampon', 'rinok') + _
+	FUNC ('$stock_item', 10, 'Sanitary napkins', 120, 'sanpad', 'rinok') + _
+	FUNC ('$stock_item', 5, 'Underwear', 1450, 'clrbelo', 'rinok')
+	*pl iif(umbrella = 0, FUNC ('$single_stock_item', 1, 'Umbrella', 1000, 'umbrella', 'rinok'), '') + _
+	'</table></center>'
+
 
 	if analplugIN = 1 and tanga = 0 and PCloSkirt > 2:
 		nurand = rand(0, 100)
@@ -180,13 +53,12 @@ if $ARGS[0] = 'start':
 		end
 	end
 
-	clr
-	gs 'stat'
-	gs 'time'
+
 
 	act 'Leave':
 		cla
 		minut += 5
+		$metka = ''
 		gt 'street'
 	end
 
@@ -281,8 +153,8 @@ if $ARGS[0] = 'start':
 	end
 
 	if coat[5] < 1:
-		'On the market you see winter jackets for sale - 5,000 rubles'
-		if coat[5] = 0:dynamic 'act ''Look at cheap coat 5'':gt ''clothing'', ''view_clothing_item'', ''shop'', ''coat'', 5, 1500'
+		'On the market you see winter jackets for sale - 4,000 rubles'
+		if coat[5] = 0:dynamic 'act ''Look at cheap coat 5'':gt ''clothing'', ''view_clothing_item'', ''shop'', ''coat'', 5, 4000'
 	end
 
 	act 'View clothing':
