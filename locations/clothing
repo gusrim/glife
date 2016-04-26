@@ -57,13 +57,13 @@ $clothing_list_line = {
 		else
 			$RESULT += '</TD>'
 		end
-	end
 
-	$RESULT += '<TD>'
-	if cloc ! 1:$RESULT += ' <a href="exec:gt ''clothing'', ''dest1'', ''<<$ARGS[0]>>'', ''<<$ARGS[1]>>'', <<ARGS[2]>>">Storage</a>'
-	if cloc ! 0:$RESULT += ' <a href="exec:gt ''clothing'', ''dest0'', ''<<$ARGS[0]>>'', ''<<$ARGS[1]>>'', <<ARGS[2]>>">Wardrobe</a>'
-	if cloc ! 2:$RESULT += ' <a href="exec:gt ''clothing'', ''dest2'', ''<<$ARGS[0]>>'', ''<<$ARGS[1]>>'', <<ARGS[2]>>">Unwanted</a>'
-	$RESULT += '</TD>'
+		$RESULT += '<TD>'
+		if cloc ! 1:$RESULT += ' <a href="exec:gt ''clothing'', ''dest1'', ''<<$ARGS[0]>>'', ''<<$ARGS[1]>>'', <<ARGS[2]>>">Storage</a>'
+		if cloc ! 0:$RESULT += ' <a href="exec:gt ''clothing'', ''dest0'', ''<<$ARGS[0]>>'', ''<<$ARGS[1]>>'', <<ARGS[2]>>">Wardrobe</a>'
+		if cloc ! 2:$RESULT += ' <a href="exec:gt ''clothing'', ''dest2'', ''<<$ARGS[0]>>'', ''<<$ARGS[1]>>'', <<ARGS[2]>>">Unwanted</a>'
+		$RESULT += '</TD>'
+	end
 }
 
 if $ARGS[0] = 'dest0':
@@ -92,12 +92,16 @@ if $ARGS[0] = 'view_clothing_list':
 
 	act 'Leave':gt $loc, $metka
 
-	'<center><table border=1><TH><a href="exec:gt ''clothing'', ''view_clothing_list'', ''wardrobe''">Wardrobe </a></TH><TH><a href="exec:gt ''clothing'', ''view_clothing_list'', ''store''">Storage</a></TH><TH><a href="exec:gt ''clothing'', ''view_clothing_list'', ''unwanted''">Unwanted</a></TH><TH><a href="exec:gt ''clothing_QV'', ''list''">Pick something to wear</a></TH></center>'
+	if $ARGS[1] ! 'sell' :'<center><table border=1><TH><a href="exec:gt ''clothing'', ''view_clothing_list'', ''wardrobe''">Wardrobe </a></TH><TH><a href="exec:gt ''clothing'', ''view_clothing_list'', ''store''">Storage</a></TH><TH><a href="exec:gt ''clothing'', ''view_clothing_list'', ''unwanted''">Unwanted</a></TH><TH><a href="exec:gt ''clothing_QV'', ''list''">Pick something to wear</a></TH></center>'
 
 	$bgcolor='#f3f4ee'
-	
-	'<table border=0 cellspacing=0 cellpadding=5><TH></TH><TH>Strength</TH><TH>Hip size</TH><TH>Description</TH><TH>Bimbo</TH><TH>Prostitute</TH><TH>Actions</TH><TH>Move to</TH>'
 
+	if $ARGS[1] = 'sell' :
+		'<table border=0 cellspacing=0 cellpadding=5><TH></TH><TH>Strength</TH><TH>Hip size</TH><TH>Description</TH><TH>Bimbo</TH><TH>Prostitute</TH><TH>Actions</TH>'
+	else
+		'<table border=0 cellspacing=0 cellpadding=5><TH></TH><TH>Strength</TH><TH>Hip size</TH><TH>Description</TH><TH>Bimbo</TH><TH>Prostitute</TH><TH>Actions</TH><TH>Move to</TH>'
+	end
+	
 	if $ARGS[1] = 'wardrobe':
 		cloc = 0
 		if $clothingworntype ! 'nude':act 'Strip':gs 'clothing', 'strip' & gt $loc, $metka
@@ -364,7 +368,7 @@ if $ARGS[0] = 'view_clothing_item':
 				money += 300
 				gt 'clothing', 'view_clothing_list', $ARGS[1]
 			end
-			elseif RESULT > 0:
+		elseif RESULT > 0:
 			'You can sell this item for 100 rubles.'
 			act 'Sell':
 				dynamic '<<$ARGS[2]>>[<<ARGS[3]>>] = 0'
@@ -373,6 +377,10 @@ if $ARGS[0] = 'view_clothing_item':
 			end
 		else
 			'This item is too worn to have any sale value.'
+			act 'Throw it away':
+				dynamic '<<$ARGS[2]>>[<<ARGS[3]>>] = 0'
+				gt 'clothing', 'view_clothing_list', $ARGS[1]
+			end
 		end
 	elseif $ARGS[1] = 'resize':
 		act 'Leave item alone':gt 'clothing', 'view_clothing_list', $ARGS[1]
