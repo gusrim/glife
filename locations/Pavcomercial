@@ -1,0 +1,109 @@
+# Pavcomercial
+!{Change log
+25 March 2016
+Fixed diplaced period after church link
+Fixed visting links to look the same
+Added start of Andrei kidnapping
+}
+
+$metka = $ARGS[0]
+$loc = $CURLOC
+$metkaStreet = $ARGS[0]
+$locStreet = $CURLOC
+CLOSE ALL
+if sound = 0:
+	if month >=11 and month <= 12 or month >=1 and month <=3:
+		if hour >= 8 and hour <= 23: PLAY 'sound/street2.mp3',30 & PLAY 'sound/zima.mp3',30
+		if hour >= 0 and hour <= 7: PLAY 'sound/street_night.mp3',30 & PLAY 'sound/zima.mp3',30
+	else
+		if hour >= 8 and hour <= 23: PLAY 'sound/street2.mp3',30 & PLAY 'sound/street_leto.mp3',30
+		if hour >= 0 and hour <= 7:PLAY 'sound/street_night.mp3',30
+	end
+end
+
+cla
+*clr
+litltown = 1
+alkoblock = 0
+boynumBlock = 0
+!music_on = 0
+
+'<center><h4>Pavlovsk<a href="exec:dynamic $objnewmenu">.</a></h4></center>'
+'<center><img src="images/etogame/gorodok.jpg"></center>'
+'<center>The high street of a provincial town in a rural area of Russia. Population: about 10000 inhabitants.</center>'
+'<center>Apart from the old palace and fort, it looks much like all the other towns in the area. The tallest building in town is the <a href="exec:gt ''ParChurch'',''start''">church of St Nikolas.</a></center>'
+''
+
+if belgangQW=1000 and hour>=16 and hour<21 and daybelisex!daystart:gt 'BelSex', 'outing'
+
+if belgangQW=100 and hour>=16 and hour<21 and daybelisex!daystart:gt 'BelSex', 'drive'
+
+if 	belgangQW=9000 and belgangday<daystart:gt 'BelSex', 'pay'
+
+if AlbFather >= 1:
+	if AlbFaterBlackTime = 0:AlbFaterBlackTime = totminut + 2880
+
+	'You can see election posters on the walls all over town. They say: "Vote for Boris Barlovsky!" Wait a minute... isn''t that Albina''s father?'
+end
+
+if AlbFaterBlackTime > 0 and AlbFaterBlackTime <= totminut and hour >= 16 and AlbFather = 1:gt 'AlbFatherQW'
+if hour >= 16 and hour <= 22 and AlbFather = 2 and AlbZaDay + 30 < daystart and year > 2015:
+	gt 'AlbStarsEnd'
+end
+
+if StoryLine > 0 and hour < 4 and motherWorry = 0 and SchoolAtestat = 0 and age < 18:
+	motherWorry = 1
+end
+
+if rand(1, 5) >= 4:
+	if GorSlut = 3:'You catch people staring at you intently, as if they''re supposed to know who you are but can''t quite remember why. You sincerely hope they don''t realize your promiscuous adventures are the reason why. The occasional person chuckling and pointing at you crushes those hopes, and you quickly keep walking before they get a chance to say anything.'
+	if GorSlut = 4:'People look at you with lewd grins on their faces, some of them even making vulgar gestures. Looks like they know what you''ve been up to.'
+	if GorSlut >= 5:'Everywhere you go, people recognize you as a whore. Some even come over and slap you on the ass, claiming they know you like it when they do, or claiming they want to sample your goods. An elderly woman sitting on a bench calls out to you, loudly calling you a slut and a whore. You hide your face and run away as fast as you can, before she can draw too much attention to you.'
+end
+
+gs 'stat'
+gs 'time'
+
+if car > 0 and cardrive = 24:
+	cardrive = 24
+	'Your <a href="exec:gs ''carF'', ''start''">car<<$car>></a> is parked in the street.'
+end
+
+if hour >= 8 and hour <= 20:
+	$Pharmname = ', and the <a href="exec: minut += 15 & gt ''gaptek'', ''start''">pharmacy</a> is right across the street.'
+else
+	$Pharmname = '.'
+end
+
+'You are on the high street, at one end is the <a href="exec:minut += 15 & gt ''vokzalG''">train station</a> and access to the highway. Near the highway you can also find a <a href="exec:gt ''zaprF'', ''start''">gas station</a>.'
+'The nearby residential area is next to the lake and the town surrounds the old palace grounds which are now a large <a href="exec:gt ''gskver'', ''park''">public park</a>.'
+'There is a small <a href="exec:minut += 15 & gt ''gpoli''">clinic</a><<$Pharmname>>'
+
+if hour >= 8 and hour <= 17:'The local <a href="exec: minut += 3 & gt ''barbershop'', ''start''">barbershop</a> is within walking distance, merely a few minutes away.'
+if hour >= 7 and hour <= 18:'Pavlovsk has a <a href="exec:gt ''etoexhib'', ''pos20''">vocational school</a>, where young adults can learn a trade.'
+if hour >= 8 and hour <= 22:'Right outside your apartment, a <a href="exec:dynamic $kiosksig">kiosk</a> sells cigarettes and magazines.'
+if hour >= 8 and hour <= 20:'There is a big chain <a href="exec:gt ''shop'', ''start''">supermarket</a> nearby.'
+
+'A <a href="exec:minut += 15 & gt ''Gshveyfab'', ''start''">garment factory</a> named Paris Commune is situated in the industrial area on the outskirts of town, close to the highway.'
+
+''
+
+if workPTU > 2:act '<b>Go to the hostel</b>':gt 'etoexhib', 'pos40'
+
+act 'Wait':
+	cla
+	waiting = input ("How long would you like to wait? (Not more than 120 minutes)")
+
+	if waiting <= 0 or waiting > 120:
+		minut += 15
+	elseif waiting > 0 and waiting <= 120:
+		minut += waiting
+	end
+
+	act 'Check the time':gt $curloc
+end
+
+if rand (0,2) ! 0:gs 'din_bad' & dynamic $mobile_check
+
+--- Pavcomercial ---------------------------------
+
