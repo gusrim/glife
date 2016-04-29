@@ -1,6 +1,10 @@
 @ECHO off
 
+:: Set those lines to fit your setup. 
+:: This is where glife.qsp will be copied. If you don't want to move it just comment (::) the line below.
 set CP_TO=..\GL_ECV
+
+:: This is the program used to open glife.qsp. If you comment this line windows will launch the default app to open glife.qsp
 set QSPGUI=..\QSP\qspgui.exe
 
 :menu
@@ -8,7 +12,7 @@ cls
 echo.
 echo -- QSP Compiler and Launcher --
 echo.
-echo (b)uild  (r)un  (f)ull  (q)uit
+echo (B)uild  (R)un  (F)ull  (Q)uit
 echo.
 set /p action=Choose an action:
 
@@ -24,8 +28,9 @@ echo Building ...
 @ECHO ON
 python -3 txtmerge.py locations glife.txt
 txt2gam.exe glife.txt glife.qsp
-cp glife.qsp %CP_TO%
 @ECHO OFF
+
+if defined CP_TO (cp glife.qsp %CP_TO% )
 
 echo.
 echo Done.
@@ -33,13 +38,11 @@ if %action% == f goto run
 pause
 goto menu
 
+:exit
+pause
+
 :run
 echo.
 echo Running ...
 
-@ECHO ON
-start %QSPGUI% %CP_TO%\glife.qsp
-@ECHO OFF
-
-:exit
-pause
+if defined CP_TO (start %QSPGUI% %CP_TO%\glife.qsp ) else (start %QSPGUI% glife.qsp )
