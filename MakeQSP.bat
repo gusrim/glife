@@ -31,7 +31,7 @@ txt2gam.exe glife.txt glife.qsp > nul
 @ECHO OFF
 
 echo.
-if defined CP_TO (echo Copying glife.qsp to "%CP_TO%" ... & cp glife.qsp %CP_TO% )
+if defined CP_TO (echo Copying glife.qsp to "%CP_TO%" ... & copy glife.qsp %CP_TO% )
 
 echo.
 echo Done.
