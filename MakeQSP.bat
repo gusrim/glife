@@ -27,10 +27,11 @@ echo Building ...
 
 @ECHO ON
 python -3 txtmerge.py locations glife.txt
-txt2gam.exe glife.txt glife.qsp
+txt2gam.exe glife.txt glife.qsp > nul
 @ECHO OFF
 
-if defined CP_TO (cp glife.qsp %CP_TO% )
+echo.
+if defined CP_TO (echo Copying glife.qsp to "%CP_TO%" ... & cp glife.qsp %CP_TO% )
 
 echo.
 echo Done.
@@ -38,11 +39,10 @@ if %action% == f goto run
 pause
 goto menu
 
-:exit
-pause
-
 :run
 echo.
 echo Running ...
 
 if defined CP_TO (start %QSPGUI% %CP_TO%\glife.qsp ) else (start %QSPGUI% glife.qsp )
+
+:exit
