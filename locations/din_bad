@@ -890,21 +890,22 @@ $d_cycreport_update = {
 			$cycreport_txt = 'It has been <<temp>> days since you last remember having a period.'
 		end
 	elseif cyccustom = 0:
-		if $cycreport_txt = 'In labour':
-			$cycreport_txt = 'In labour'
-		elseif thinkpreg = 1 or knowpreg = 1:
-			if knowpreg = 0: $temp = ' think you'
-			if $wombthfath = 'Unknown' or $wombthfath = '':
-				$cycreport_txt = 'You<<$temp>> are pregnant. You aren''t yet sure who the father is. Based on your last remembered period, your due date is probably around <<$pregduedate>>.'
-			else
-				$cycreport_txt = 'You<<$temp>> are pregnant with <<$wombthfath>>''s baby. Based on your last remembered period, your due date is probably around <<$pregduedate>>.'
+		if $cycreport_txt ! 'In labour':
+			if thinkpreg = 1 or knowpreg = 1:
+				if knowpreg = 0: $temp = ' think you'
+				if $wombthfath = 'Unknown' or $wombthfath = '':
+					$cycreport_txt = 'You<<$temp>> are pregnant. You aren''t yet sure who the father is. Based on your last remembered period, your due date is probably around <<$pregduedate>>.'
+				else
+					$cycreport_txt = 'You<<$temp>> are pregnant with <<$wombthfath>>''s baby. Based on your last remembered period, your due date is probably around <<$pregduedate>>.'
+				end
+			elseif $cycreport_txt ! 'You do not believe you have periods any more.':
+				temp = daystart-daylastperiod
+				$cycreport_txt = 'It has been <<temp>> days since you last remember having a period.'
 			end
-		elseif $cycreport_txt ! 'You do not believe you have periods any more.':
-			temp = daystart-daylastperiod
-			$cycreport_txt = 'It has been <<temp>> days since you last remember having a period.'
 		end
 	end
 }
+
 
 $d_cycreport_upduedate = {
 	temp = (280 + daylastperiod) - daystart
