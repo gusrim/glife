@@ -16,6 +16,11 @@ set QGEN=..\QSP\QGen5\QGen.exe
 :menu
 cls
 echo.
+
+if defined NOT_FOUND ( echo ERROR: Option '%action%' wasn't recognized. Is it lowercase\? ) ELSE ( echo. )
+set NOT_FOUND=
+
+echo.
 echo -- QSP Compiler and Launcher --
 echo.
 echo (B)uild  (R)un  (F)ull  (Q)Gen  (E)xit
@@ -27,6 +32,8 @@ if %action% == r goto run
 if %action% == f goto build
 if %action% == q goto qgen
 if %action% == e goto exit
+set NOT_FOUND=1
+goto menu
 
 :build
 echo.
