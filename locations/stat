@@ -734,6 +734,11 @@ if hour >= 24:
 			karta += temp
 			smallmoney -= temp*200000
 		end
+		
+		if atmDeposit > 0 and atmDepositDate <= daystart:
+			karta += atmDeposit
+			atmDeposit = 0
+		end
 	end
 	
 	if hour >= 24:jump 'loop'
@@ -830,28 +835,23 @@ end
 
 if sdaday = day and sdamonth = month and housr = 0:
 	housr = 1
-	'<b><font color="red">Your tenants have moved out and your apartment is now vacant.</font></b>' & msg 'Your tenants have moved out and your apartment is now vacant.'
+	'<b><font color="red">Your tenants have moved out and your apartment is now vacant.</font></b>'
+	!msg 'Your tenants have moved out and your apartment is now vacant.'
 end
 
-if month = 1 or month = 3 or month = 5 or month = 7 or month = 8 or month = 10 or month = 12:
-	!!31
-	if day > 31:day -= 31 & month += 1
-elseif month = 2:
-	!!28
-	if day > 28:day -= 28 & month += 1
-elseif month = 0:
-	month = 1
-
-	if day > 31:day -= 31 & month += 1
-elseif month = 13:
-	month = 1
-
-	if day > 31:day -= 31 & month += 1
-else
-	!!30
-	if day > 30:day -= 30 & month += 1
+if day > monthEnd[month]:
+	day -= monthEnd[month]
+	month += 1
+	
+	if month > 12: month = 1
+	
+	!MJ: Dont think that one is needed. But it was in the original loop.
+	if month < 1: month = 1
+	
+	$month = $monthName[month]
 end
 
+!MJ: Dont think that one is needed. But it was here already.
 if day = 0:day = 1
 
 if week > 7:
@@ -872,22 +872,12 @@ if week = 5:$week = 'Friday'
 if week = 6:$week = 'Saturday'
 if week = 7:$week = 'Sunday'
 
-if month = 0:month = 1
-if month = 13:month = 1 & year += 1
-If month = 1:$month = 'January' & $mons = 'January'
-If month = 2:$month = 'February' & $mons = 'February'
-If month = 3:$month = 'March' & $mons = 'March'
-If month = 4:$month = 'April' & $mons = 'April'
-If month = 5:$month = 'May' & $mons = 'May'
-If month = 6:$month = 'June' & $mons = 'June'
-If month = 7:$month = 'July' & $mons = 'July'
-If month = 8:$month = 'August' & $mons = 'August'
-If month = 9:$month = 'September' & $mons = 'September'
-If month = 10:$month = 'October' & $mons = 'October'
-If month = 11:$month = 'November' & $mons = 'November'
-If month = 12:$month = 'December' & $mons = 'December'
-if minut < 10:$nilmin = '0'
-if minut >= 10:$nilmin = ''
+if minut < 10: 
+	$nilmin = '0' 
+else 
+	$nilmin = '' 
+end
+
 if kid > 0:
 	i = arrsize('yearkid')
 	:LoopKidAgeCounter
@@ -1318,15 +1308,15 @@ if Enable_statfsize>0:pl'<font size=<<Enable_statfsize>>>'
 
 if hour < 10:
 	if minut > 9 :
-		pl '<b> 0<<hour>>:<<minut>></b> <<$week>> <<day>> <<$mons>> <<year>>'
+		pl '<b> 0<<hour>>:<<minut>></b> <<$week>> <<day>> <<$month>> <<year>>'
 	else
-		pl '<b> 0<<hour>>:0<<minut>></b> <<$week>> <<day>> <<$mons>> <<year>>'
+		pl '<b> 0<<hour>>:0<<minut>></b> <<$week>> <<day>> <<$month>> <<year>>'
 	end
 else
 	if minut > 9 :
-		pl '<b> <<hour>>:<<minut>></b> <<$week>> <<day>> <<$mons>> <<year>>'
+		pl '<b> <<hour>>:<<minut>></b> <<$week>> <<day>> <<$month>> <<year>>'
 	else
-		pl '<b> <<hour>>:0<<minut>></b> <<$week>> <<day>> <<$mons>> <<year>>'
+		pl '<b> <<hour>>:0<<minut>></b> <<$week>> <<day>> <<$month>> <<year>>'
 	end
 end
 pl
