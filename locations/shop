@@ -143,16 +143,39 @@ if $shoplocation = 'ATM':
 			'You have <<karta>> <b>₽</b> in your account.'
 			'You have an approved credit of <font color="blue"><<bankDebtLimit>></font> <b>₽</b>!'
 		else
-			'You hava a debt of <font color="red"><<-1 * karta>></font> <b>₽</b>.'
+			'You have a debt of <font color="red"><<-1 * karta>></font> <b>₽</b>.'
 			'You have an approved credit of <font color="blue"><<bankDebtLimit + karta>></font> <b>₽</b>!'
+		end
+		
+		'<br>ATM Deposit Fee: 100 <b>₽</b>'
+		
+		if atmDeposit = 0:
+			act 'Deposit money':
+				cla
+				minut += 5
+				
+				kartaINATM = input ("How much money you want to deposit into the account?")
+				if kartaINATM <= 0 or kartaINATM > money:
+					'This is not a valid input.'
+				else
+					atmDeposit += kartaINATM - 100
+					atmDepositDate = daystart + 2
+					money -= kartaINATM
+					'<br>You deposited <<kartaINATM>> <b>₽</b> into your account.'
+					'It will take 2 days for funds to be available. Your new balance will be <<karta+atmDeposit>>  <b>₽</b>.'
+				end
+				
+				gs 'stat'
+				act 'Move away': gt 'shop'
+			end
 		end
 		
 		if karta + bankDebtLimit > 0:
 			act 'Withdraw money from the ATM':
 				cla
 				minut += 5
+				
 				kartaOUT = input ("How much money you want to withdraw?")
-
 				if kartaOUT <= 0 or kartaOUT > karta + bankDebtLimit:
 					'<br>Invalid operation.'
 				else
