@@ -603,20 +603,38 @@ klismaday1 = 0
 !Not very realistic but wont make anyone too rich.
    
 if bankAccount = 1:
-	if karta >= 0:
-		!yearly interest recalculated into daily interest
-		smallmoney += karta
+	if karta >= 2000000:
+		!yearly interest of 2.3% recalculated into daily interest = 0.006% daily
+		smallmoneypos += (karta * 60)
+	elseif karta >= 0 and karta < 2000000:
+		!yearly interest of 0.4% recalculated into daily interest = 0.0011% daily
+		smallmoneypos += (karta * 11)
 	else
-		!yearly interest recalculated into daily interest if your account is negative
-		smallmoney += (karta * 137)
+		!yearly overdraft interest of 20% recalculated into daily interest = 0.055% daily
+		smallmoneydebt += (karta * 550)
 	end
-	!if your fraction is high enough, it will finally appear on your bank account too, not just in the bank accounting
-	if smallmoney >= 200000 or smallmoney <= -200000:
-		temp = smallmoney/200000
-		karta += temp
-		smallmoney -= temp*200000
+			
+	:kopeckloop
+	if smallmoneypos > 10000:
+		karta += 1
+		smallmoneypos -= 10000
+		jump 'kopeckloop'
+	else
+		kartakop += smallmoneypos
+		if kartakop >= 10000: karta += 1 & kartakop -= 10000
 	end
-      
+	:kopeckloop2
+	if smallmoneydebt < -10000:
+		karta -= 1
+		smallmoneydebt += 10000
+		jump 'kopeckloop2'
+	else
+		kartakop += smallmoneydebt
+		if kartakop < 0: karta -= 1 & kartakop += 10000
+	end
+	smallmoneypos = 0
+	smallmoneydebt = 0
+	      
 	if atmDeposit > 0 and atmDepositDate <= daystart:
 		karta += atmDeposit
 		atmDeposit = 0
