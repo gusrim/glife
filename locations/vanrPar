@@ -1,223 +1,324 @@
 # vanrPar
-CLOSE ALL
-$brother_voyeurism = {
-	if indorf = 0 and brother >= 40 and vanr_lock = 0 and hour >= 18 and hour <= 20 and brother_ev1 ! day:
-		ivrand = RAND(1,4)
-		if ivrand = 1:
+
+if $ARGS[0] = '':
+	CLOSE ALL
+	if vanr_lock = 0:
+		act'<font size = 1>Close the latch on the door</font>':vanr_lock = 1 & gt'vanrPar'
+	elseif vanr_lock = 1:
+		act'<font size = 1>Open the latch on the door</font>':vanr_lock = 0 & gt'vanrPar'
+	end
+
+	act 'Return to the hallway':gt 'korrPar'
+
+	$metkaM = $ARGS[0]
+	$locM = $CURLOC
+	$metka = $ARGS[0]
+	$loc = $CURLOC
+	clr
+	minut += 1
+	gs 'stat'
+	fcolor = rgb(0, 0, 0)
+	bcolor = rgb(255, 255, 255)
+	lcolor = rgb(106, 90, 205)
+	'<center><b><font color="maroon">Bathroom</font></b></center>'
+	! WD: Correct Image path ~ "images/qwest/alter/<<$loc>>.jpg"
+	'<center><img src="images/qwest/alter/vanrPar.jpg"></center>'
+	'The bathroom is very small and unimpressive. Nevertheless, it has everything you need: a shower, toilet, <a href="exec:GT ''mirror'',''start''">mirror</a>, sink and even a bath tub.'
+	if vanr_hanger = 1: 'Next to the sink, you find the neatly folded <a href="exec:dynamic $vanr_hanger_dress & tanga = tanga_hanger & GT ''vanrPar'' ">clothes</a> Mom washed for you'.
+
+	if stanok > 0:'Your razor will last for <b><<stanok>></b> more shavings.'
+	!WD: heal chafe
+	if mosolmaz>0:'On a shelf is a tube of ointment for chafing, which will be enough for <b><<mosolmaz>><b> applications.'
+
+	if dirtbelo > 0 and BuyHous = 0:
+		'In the bathroom you find the laundry Mom washed for you.'
+		clrbelo += dirtbelo
+		dirtbelo = 0
+	end
+
+	dynamic $shower
+	dynamic $bath
+
+	if pirsA + pirsB + pirsC + pirsD + pirsE + pirsF + pirsN + pirsG + pirsGL > 0:'<a href="exec:dynamic $pirManage">Manage Piercings</a>'
+
+	if fillimplant = 1 and siliconeBag >= 1:'<a href="exec:cls & siliconeBag -= 1 & silicone += 10 & gt $curloc">Inject silicone into breast implants</a>'
+	if fillimplant = 1 and silicone >= 20:'<a href="exec:cls & silicone -= 10 & gt $curloc">Drain silicone from breast implants</a>'
+
+	dynamic $bteeth
+
+	dynamic $tampon
+
+	if clrbelo <= 4: clrbelo = 5
+
+	dynamic $wearpan
+	dynamic $basin
+
+	if spdirtyc > 0:
+		act 'Wipe the cum off your clothes (0:10)':
 			cla
-			brother_ev1 = day
-			'Despite the clattering noise of water, you hear the bathroom door creaking open slightly. Through a small opening in the doorway, you notice your brother Kolka watching you.'
-			if sub < 30:
-				act'Tell him to get lost':gt'brother','brother_go_away'
+			cumspclnt = 6
+			gs 'cum_cleanup'
+			minut += 10
+			gs 'stat'
+			'<center><img src="images/etogame/frotsp.jpg"></center>'
+			'You remove the traces of cum from your clothes.'
+
+			act 'Finish':gt $curloc
+		end
+	end
+
+	if leghair > 0 and stanok > 0:
+		act 'Shave your legs (0:15)':
+			cla
+			*clr
+			minut += 15
+			leghair = -5
+			horny += 5
+			stanok -= 1
+			'<center><img src="images/pics/shave.jpg"></center>'
+			'You lather your legs up with some soapy water and shave your legs. After a few swift movements, your legs are smooth as silk. The feeling of your smooth legs turns you on a little.'
+
+			act 'Return to showering':gt $curloc
+		end
+	end
+
+	if lobok > 0 and stanok > 0:
+		act 'Shave pubis (0:15)':
+			cla
+			*clr
+			minut += 15
+			lobok = -5
+			horny += 5
+			stanok -= 1
+			'<center><img src="images/pics/shave3.jpg"></center>'
+			'You lather your crotch with some soapy water and carefully shave your pubic hair. After shaving you can''t help but run your fingers over your pussy, enjoying the smooth feeling and getting slightly more aroused by the touch.'
+
+			act 'Return to showering':gt $curloc
+		end
+	end
+
+	if analplug = 1 and analplugin = 1:
+		act 'Remove the butt plug (0:05)':
+			cla
+			*clr
+			minut += 5
+			analplugIN = 0
+
+			if anus < 30:anus += 1
+
+			'<center><img src="images/body/analplug.jpg"></center>'
+
+			'You squat and tug gently at the butt plug, gasping as you push it out of you. You can''t help but feel a bit empty, now that it''s out.' & !!0.2.6: Removed unneccessary var check
+
+			act 'Finish':gt $curloc
+		end
+	elseif analplug = 1 and analplugin = 0 and klismaday = daystart:
+		act 'Insert your butt plug (0:05)':
+			cla
+			*clr
+			minut += 5
+			analplugIN = 1
+
+			if anus < 10:anus += 5
+			if anus >= 10 and anus < 20:anus += rand(1, 2)
+			if anus >= 20 and anus < 30:anus += rand(0, 1)
+
+			'<center><img src="images/body/analplug.jpg"></center>'
+
+			if butpluguse > 0:'You squat and gently rub the butt plug against your anus, after lubricating it with a bit of saliva. After a short while, you''ve relaxed enough to be able to push it in. Once it''s in you give it a few gentle tugs, wondering if anyone will catch you wearing it today.'
+			if butpluguse = 0:butpluguse = 1 & '"If I''m not going to use it, then why did I buy it?" you ask yourself. You look at the butt plug for a while, thinking "It is necessary to start developing my ass, so I could have great adventures someday... you could even say huge and thick adventures with crimson heads, uh, now I got carried away..." You''re slightly embarrassed at the thought for a second, but are then overcome by your horny fantasies. Determined to get the plug all the way in, you slowly press it against your asshole after lubricating it with a bit of saliva. It hurts a bit at first, but once the thickest part is in the rest follows rather easily. Patting yourself on your ass once it''s in, you wonder if anyone will notice you''re wearing it today and then immediately feel naughty for even having thought that.'
+
+			act 'Finish':gt $curloc
+		end
+	end
+
+	if klisma = 1 and klismaday ! daystart:
+		act 'Give yourself an enema (0:05)':
+			cla
+			*clr
+			cumspclnt = 7
+			gs 'cum_cleanup'
+			minut += 5
+			klismaday = daystart
+			klismaday1 = 1
+			'<center><img src="images/picV/klisma.jpg"></center>'
+			'You give yourself an enema, feeling clean down there. Your ass is now ready for anal sex without any awkward surprises.'
+
+			act 'Finish':gt $curloc
+		end
+	end
+
+	if vibrator = 1 and vibratorIN = 1:
+		act 'Remove the vibrator (0:05)':
+			cla
+			*clr
+			minut += 5
+			vibratorIN = 0
+
+			if vagina < 30:vagina += 1
+
+			'<center><img src="images/etogame/vibrator.jpg"></center>'
+			'You spread your legs and take the vibrator out of your pussy, letting out a slight moan as you do so. You feel somewhat empty now.'
+
+			act 'Finish':gt $curloc
+		end
+	elseif vibrator = 1 and vibratorIN = 0 and vagina ! 0:
+		act 'Insert the vibrator in your vagina (0:05)':
+			cla
+			*clr
+			minut += 5
+			vibratorIN = 1
+
+			if vagina < 30:vagina += 2
+
+			'<center><img src="images/etogame/vibrator.jpg"></center>'
+			'You spread your legs and slowly insert the vibrator in your pussy, wondering if anyone will notice you wearing it today.'
+
+			act 'Finish':gt $curloc
+		end
+	end
+
+	if mosolmaz > 0 and mosol > 0:
+		act 'Rub ointment onto your pussy (0:05)':
+			cla
+			minut += 5
+			mosolmaz -= 1
+			mosol -= 5
+			'You take a tube of cream and rub it onto your itchy vulva.'
+
+			act 'Finish':gt $curloc
+		end
+	end
+
+	if pregtest > 0:
+		act 'Do a pregnancy test (0:05)':
+			cla
+			minut += 5
+			pregtest -= 1
+			gs 'stat'
+
+			if pregchem > 30:
+				knowpreg = 1
+				'The test showed two strips. You are pregnant.'
+			else
+				'The test showed one band.'
 			end
-			act'Let him look':gt'brother','brother_voyeur_ev1'
-			exit
+
+			act 'Finish':gt $curloc
 		end
 	end
-}
-if vanr_lock = 0:
-	act'<font size = 1>Close the latch on the door</font>':vanr_lock = 1 & gt'vanrPar'
-elseif vanr_lock = 1:
-	act'<font size = 1>Open the latch on the door</font>':vanr_lock = 0 & gt'vanrPar'
 end
 
-act 'Return to the hallway':gt 'korrPar'
+if $ARGS[0] = 'peek':
+	cla
+	*clr
 
-$metkaM = $ARGS[0]
-$locM = $CURLOC
-$metka = $ARGS[0]
-$loc = $CURLOC
-clr
-minut += 1
-gs 'stat'
-fcolor = rgb(0, 0, 0)
-bcolor = rgb(255, 255, 255)
-lcolor = rgb(106, 90, 205)
-'<center><b><font color="maroon">Bathroom</font></b></center>'
-! WD: Correct Image path ~ "images/qwest/alter/<<$loc>>.jpg"
-'<center><img src="images/qwest/alter/vanrPar.jpg"></center>'
-'The bathroom is very small and unimpressive. Nevertheless, it has everything you need: a shower, toilet, <a href="exec:GT ''mirror'',''start''">mirror</a>, sink and even a bath tub.'
-if vanr_hanger = 1: 'Next to the sink, you find the neatly folded <a href="exec:dynamic $vanr_hanger_dress & tanga = tanga_hanger & GT ''vanrPar'' ">clothes</a> Mom washed for you'.
-
-if stanok > 0:'Your razor will last for <b><<stanok>></b> more shavings.'
-!WD: heal chafe
-if mosolmaz>0:'On a shelf is a tube of ointment for chafing, which will be enough for <b><<mosolmaz>><b> applications.'
-
-if dirtbelo > 0 and BuyHous = 0:
-	'In the bathroom you find the laundry Mom washed for you.'
-	clrbelo += dirtbelo
-	dirtbelo = 0
-end
-
-dynamic $shower
-dynamic $bath
-
-if pirsA + pirsB + pirsC + pirsD + pirsE + pirsF + pirsN + pirsG + pirsGL > 0:'<a href="exec:dynamic $pirManage">Manage Piercings</a>'
-
-if fillimplant = 1 and siliconeBag >= 1:'<a href="exec:cls & siliconeBag -= 1 & silicone += 10 & gt $curloc">Inject silicone into breast implants</a>'
-if fillimplant = 1 and silicone >= 20:'<a href="exec:cls & silicone -= 10 & gt $curloc">Drain silicone from breast implants</a>'
-
-dynamic $bteeth
-
-dynamic $tampon
-
-if clrbelo <= 4: clrbelo = 5
-
-dynamic $wearpan
-dynamic $basin
-
-if spdirtyc > 0:
-	act 'Wipe the cum off your clothes (0:10)':
-		cla
-		cumspclnt = 6
-		gs 'cum_cleanup'
-		minut += 10
-		gs 'stat'
-		'<center><img src="images/etogame/frotsp.jpg"></center>'
-		'You remove the traces of cum from your clothes.'
-
-		act 'Finish':gt $curloc
-	end
-end
-
-if leghair > 0 and stanok > 0:
-	act 'Shave your legs (0:15)':
-		cla
-		*clr
-		minut += 15
-		leghair = -5
-		horny += 5
-		stanok -= 1
-		'<center><img src="images/pics/shave.jpg"></center>'
-		'You lather your legs up with some soapy water and shave your legs. After a few swift movements, your legs are smooth as silk. The feeling of your smooth legs turns you on a little.'
-
-		act 'Return to showering':gt $curloc
-	end
-end
-
-if lobok > 0 and stanok > 0:
-	act 'Shave pubis (0:15)':
-		cla
-		*clr
-		minut += 15
-		lobok = -5
-		horny += 5
-		stanok -= 1
-		'<center><img src="images/pics/shave3.jpg"></center>'
-		'You lather your crotch with some soapy water and carefully shave your pubic hair. After shaving you can''t help but run your fingers over your pussy, enjoying the smooth feeling and getting slightly more aroused by the touch.'
-
-		act 'Return to showering':gt $curloc
-	end
-end
-
-if analplug = 1 and analplugin = 1:
-	act 'Remove the butt plug (0:05)':
-		cla
-		*clr
-		minut += 5
-		analplugIN = 0
-
-		if anus < 30:anus += 1
-
-		'<center><img src="images/body/analplug.jpg"></center>'
-
-		'You squat and tug gently at the butt plug, gasping as you push it out of you. You can''t help but feel a bit empty, now that it''s out.' & !!0.2.6: Removed unneccessary var check
-
-		act 'Finish':gt $curloc
-	end
-elseif analplug = 1 and analplugin = 0 and klismaday = daystart:
-	act 'Insert your butt plug (0:05)':
-		cla
-		*clr
-		minut += 5
-		analplugIN = 1
-
-		if anus < 10:anus += 5
-		if anus >= 10 and anus < 20:anus += rand(1, 2)
-		if anus >= 20 and anus < 30:anus += rand(0, 1)
-
-		'<center><img src="images/body/analplug.jpg"></center>'
-
-		if butpluguse > 0:'You squat and gently rub the butt plug against your anus, after lubricating it with a bit of saliva. After a short while, you''ve relaxed enough to be able to push it in. Once it''s in you give it a few gentle tugs, wondering if anyone will catch you wearing it today.'
-		if butpluguse = 0:butpluguse = 1 & '"If I''m not going to use it, then why did I buy it?" you ask yourself. You look at the butt plug for a while, thinking "It is necessary to start developing my ass, so I could have great adventures someday... you could even say huge and thick adventures with crimson heads, uh, now I got carried away..." You''re slightly embarrassed at the thought for a second, but are then overcome by your horny fantasies. Determined to get the plug all the way in, you slowly press it against your asshole after lubricating it with a bit of saliva. It hurts a bit at first, but once the thickest part is in the rest follows rather easily. Patting yourself on your ass once it''s in, you wonder if anyone will notice you''re wearing it today and then immediately feel naughty for even having thought that.'
-
-		act 'Finish':gt $curloc
-	end
-end
-
-if klisma = 1 and klismaday ! daystart:
-	act 'Give yourself an enema (0:05)':
-		cla
-		*clr
-		cumspclnt = 7
-		gs 'cum_cleanup'
-		minut += 5
-		klismaday = daystart
-		klismaday1 = 1
-		'<center><img src="images/picV/klisma.jpg"></center>'
-		'You give yourself an enema, feeling clean down there. Your ass is now ready for anal sex without any awkward surprises.'
-
-		act 'Finish':gt $curloc
-	end
-end
-
-if vibrator = 1 and vibratorIN = 1:
-	act 'Remove the vibrator (0:05)':
-		cla
-		*clr
-		minut += 5
-		vibratorIN = 0
-
-		if vagina < 30:vagina += 1
-
-		'<center><img src="images/etogame/vibrator.jpg"></center>'
-		'You spread your legs and take the vibrator out of your pussy, letting out a slight moan as you do so. You feel somewhat empty now.'
-
-		act 'Finish':gt $curloc
-	end
-elseif vibrator = 1 and vibratorIN = 0 and vagina ! 0:
-	act 'Insert the vibrator in your vagina (0:05)':
-		cla
-		*clr
-		minut += 5
-		vibratorIN = 1
-
-		if vagina < 30:vagina += 2
-
-		'<center><img src="images/etogame/vibrator.jpg"></center>'
-		'You spread your legs and slowly insert the vibrator in your pussy, wondering if anyone will notice you wearing it today.'
-
-		act 'Finish':gt $curloc
-	end
-end
-
-if mosolmaz > 0 and mosol > 0:
-	act 'Rub ointment onto your pussy (0:05)':
-		cla
-		minut += 5
-		mosolmaz -= 1
-		mosol -= 5
-		'You take a tube of cream and rub it onto your itchy vulva.'
-
-		act 'Finish':gt $curloc
-	end
-end
-
-if pregtest > 0:
-	act 'Do a pregnancy test (0:05)':
-		cla
-		minut += 5
-		pregtest -= 1
-		gs 'stat'
-
-		if pregchem > 30:
-			knowpreg = 1
-			'The test showed two strips. You are pregnant.'
+	if ((week < 6 and hour >= 16 and hour < 18) or (week >= 6 and hour >= 7 and hour < 18)) and indorf = 0 and father_go = 0 and stepdadqw_day ! daystart and iif(stepdadqw>0,1,rand(0,1)) = 1:
+		stepdadqw_day = daystart
+		if father < 60 or stepdadqw < 3:
+			'<center><img src="images/qwest/alter/father/bath_voyer_0.gif"></center>'
+			'As luck would have it, out the door heard footsteps. Turning around, you have time to notice a figure of a stepfather and his eyes. He, muttering something about the door, immediately goes away, leaving you confused and with a rapidly beating heart.'
+			stepdadqw += 1
+			act 'Finish': gt 'vanrPar'
 		else
-			'The test showed one band.'
+			if stepdadqw < 5 or vagina = 0 or mesec > 0 or mother_go = 0 or hour < 16:
+				gs 'vanrPar', 'stepdad_nosex'
+			else
+				if hadsexwithfather = 0 and stepdadqw < 5:
+					gs 'vanrPar', 'stepdad_nosex'
+				else
+					cla
+					*clr
+					'<center><img src="images/qwest/alter/father/bath_voyer_3.jpg"></center>'
+					'Suddenly the shower door slightly creaks, Protaras. Turning around, you see the stepfather. He stands in the hall and devouring your naked body with the eyes. In your imagination immediately break out all those scenes that have already been between the two of you - and then you remember that mom is at work. On your face a smile appears, and the abdomen becomes heavier pleasantly warm:
+					- Daddy wants to join?'
+					act 'Daddy wants to join?': gs 'vanrPar', 'stepdad_sex'					
+				end
+			end
 		end
+	elseif hour >= 18 and hour <= 21 and brother_ev1 ! daystart and rand(0,2) = 1:
+		cla
+		brother_ev1 = daystart
+		'Despite the clattering noise of water, you hear the bathroom door creaking open slightly. Through a small opening in the doorway, you notice your brother Kolka watching you.'
+		if sub < 30: act 'Get rid of him': gt 'brother', 'brother_go_away'
+		act 'Let him look': gt 'brother', 'brother_voyeur_ev1'
+		exit
+	else
+		'<center><img src="images/qwest/alter/father/bath_voyer_4.jpg"></center>'
+		'Fortunately, the door`s no one around - and you quickly vyturelis one towel and shook his head others finish their business.'
+		!act 'Finish': gt 'vanrPar'
+		gs 'vanrPar'
+		exit
+	end
+end
 
-		act 'Finish':gt $curloc
+if $ARGS[0] = 'stepdad_nosex':
+	'<center><img src="images/qwest/alter/father/bath_voyer_2.gif"></center>'
+	'Outside the door hearing some movement, and you turn around. It was my stepfather, it seems, passed by and looked accidentally. Catching his glance, you feel pleasantly mischievous excitement - and send the man a kiss. Without words, he silently disappears - and you, happy, remain, giggling wipe the hair.'
+	stepdadqw += 1
+	act 'Finish': gt 'vanrPar'
+end
+
+if $ARGS[0] = 'stepdad_sex':
+	cla
+	*clr
+	'<center><img src="images/qwest/alter/father/bath_voyer_5.jpg"></center>'
+	'Turns vulgar and silly, but this vulgarity excites - and you, and. Nervously licking her lips, her stepfather walks opens the door, quickly goes inside and locks it behind him. Due to the fact that he was a large man, in a small bathroom dramatically getting crowded - and you feel a sweet sense of his own weakness compared to him.
+	- You me ever crazy Shine, - tells you stepfather, frantically undressing. 
+	You only laugh, leaning on the shoulder blades against the cold tile wall and thrusting forward with the midsection hips. You know you look like a Horny little imp wet - and hell, you like it. You from doing pret. And my step-father was already undressed, he climbs to you in the bathroom, presses his belly to the wall, roughly groping at your body with hands - and then suddenly expands, pressed into the wall. You pressed against the tile with hot cheek, put a little wider feet and toes men already trying to touch your ass hole. Treacherously-wet. You I bite my lip, expecting some rude things - but instead feel how the finger is replaced by a member of.'
+	stepdadqw += 1
+	hadsexwithfather = 1
+	act 'Hey, what about a condom?':
+		cla
+		*clr
+		'<center><img src="images/qwest/alter/father/bath_voyer_6.gif"></center>'
+		'How would you not good in this point, your head works - and forget about the protection you are not going. In the end, it`s you if that whippersnapper to wear, not him. So, zadruga ass, you anxiously ask:'
+		'- Hey, what about a condom?'
+		'Stepfather pauses for a moment - clearly he too does not smile to seal his stepdaughter baby. But he`s too wound up to retreat - so whispers soothingly:'
+		'- CSS, Shine, everything will be fine. I take.'
+		'And you bit his lip, silent. Still you`d like - bake as much inside as you want. And now the strong man`s member deceptively slowly and gently enters you to now go, causing an involuntary moan sweet - and after a couple of seconds the stepfather puts him on the tomatoes, causing your eyes to get out on the forehead. Looks like your constant pranks have brought the person to handle. Hysterically giggling, you moaning under his cock, winema into the cold tiled wall, squashed by her stepfather and puffing in the back, doesn`t stop, seriously intending to shake you who`s boss. And it turns out - soon you turn into a little squeaky bitch, groaning under the male, reaching more. It lasts not so long - after all, the stepfather was too fast paced - but you both enough. You climax, not that very much, but bright; warmth spreads all over your body, and the fingers on the arms and legs convulsively compressed. And your sweet moans and cums stepfather - having to pull out your cock and generously irrigate my seed into your ass.'
+		'- Ffuh, he exhales wearily, wiping the sweat from his forehead, I told. Thanks, <<$name>>.'
+		'And on the ass slaps you. After choosing from the bathroom and begins to get dressed - well, you seem to again have to wash.'
+		gs 'vanrPar', 'stepdad_sex_end'
+	end
+	act 'Only don`t come inside me!':
+		cla
+		*clr
+		'<center><img src="images/qwest/alter/father/bath_voyer_7.gif"></center>'
+		'At this point you too well, so in time your head is work no time - and you forget protection. The stepfather also is not up to it - he too badly wants you to fuck. So first strong male member deceptively slowly and gently enters you to now go, causing an involuntary moan sweet - and only after that you realize that there is no condom. And anxious ask, moaning:'
+		'- Oh... Just don`t cum inside me... accidentally.'
+		'Stepfather pauses for a moment. And then, with unexpected agility drives his penis into your vagina on the tomatoes, causing your eyes to get out on the forehead. It`s not very typical of him - he`s usually more careful. But you are so good, that you resist not in forces. Overexcited, you moaning under his cock, winema into the cold tiled wall, squashed by her stepfather and puffing in the back, doesn`t stop, seriously intending to shake you who`s boss. And it turns out - soon you turn into a little squeaky bitch, groaning under the male, reaching more. It lasts not so long - after all, the stepfather was too fast paced - but you both enough. You climax, not that very much, but bright; warmth spreads all over your body, and the fingers on the arms and legs convulsively compressed. In his head flashes again, the thought is just not in me; does he have time to take out, taking a pace? It turns out that he is not going to take out. Stepfather Fucks you until it stops, forgetting about everything and shamelessly cums right in your unprotected pussy, in her most serdtsevinu, right under macocco. A mixed feeling of pleasure and fear nearly makes you cum again.'
+		'- Hey! I told!'
+		'Removing the member, the stepfather sheepishly scratching his head:'
+		'- I`m sorry, dear, the devil made me do it. Completely forgot. Don`t worry, nothing will be, everything will be fine!'
+		'And smiling, such a bastard, happy as an elephant. Old goat. Frowning, you pushed him with his clothes from the bathroom - you`ll cut it yourself wash.'
+		gs 'vanrPar', 'stepdad_sex_end'
+	end
+	act 'Fuck me!':
+		cla
+		*clr
+		'<center><img src="images/qwest/alter/father/bath_voyer_8.gif"></center>'
+		'At this point you so well that all you can think is how to get yourself in this sweet, strong dick. And now the stepfather is not much different from you - an exemplary family man and careful man is gone, there is just a man, a male who wants to fuck caught him in the clutches of a bitch. Your ass wagging invitingly - and soon your pussy is deceptively slowly and gently enters the strong man`s member, now go, causing an involuntary moan sweet. Satisfied, you ask for it, please:'
+		'-	Oh... Fuck me!..'
+		'But he is in no hurry. He takes you confidently and slowly, savoring every inch of your narrow little slits, making you moan sweetly and again and again begging for more. Not immediately, but it gives you an even - gradually accelerate, faster and faster, harder and harder until it starts to literally tear. Looks like your constant pranks have brought the person to handle. Hysterically giggling, you moaning under his cock, winema into the cold tiled wall, squashed by her stepfather and puffing in the back, doesn`t stop, seriously intending to shake you who`s boss. It lasts not so long - after all, the stepfather was too fast paced - but you both enough. You climax, not that very much, but bright; warmth spreads all over your body, and the fingers on the arms and legs convulsively compressed. And your sweet moans and cums stepfather - having to pull out your cock and generously irrigate my seed into your ass.'
+		'-	Ffuh, he exhales wearily, wiping the sweat from his forehead, Oh and fuck you, Lightyear.'
+		'He pronounces this sweetly, and you smile pretty, still reliving the sweetest moments and almost sliding down along the wall. After a couple of minutes stepdad is selected out of the bathroom and begins to get dressed - well, you seem to again have to wash.'
+		gs 'vanrPar', 'stepdad_sex_end'
+	end
+end
+
+if $ARGS[0] = 'stepdad_sex_end':
+	guy += 1
+	horny = 0
+	manna += 15
+	willpower += 15
+	orgasm += 1
+	vaginalOrgasm += 1
+	if vagina < dick: vagina += 1
+	act 'Wash again':
+		minut += 15
+		gs 'stat'
+		gt 'vanrPar'
 	end
 end
 
