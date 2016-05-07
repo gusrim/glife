@@ -2,12 +2,17 @@
 
 !{Hourly reduction in semen potency}
 !{First it sets the array index to the first index, then it checks to be sure the array tracking the age is less than 200 hours. If it is 200 hours old, it kills that index, which should shift the index up. If it is less than 200 hours old, it sets a current potency drop. The drop is 2x or 3x regularly, but during ovulation it is only 1x, to represent the better environment from fertile cervical mucus.}
+if rcntorgzm = 1
+	if rcntorgzmtmp = 1: rcntorgzm = 0 & rcntorgzmtmp = 0
+	if rcntorgzmtmp = 0: rcntorgzmtmp = 1
+end
 ctemp = 0
 ctemp[1] = 0
 ctemp[2] = 0
 cumarrtemp = 0
 :cummarrpdloop
 if cumarrage[cumarrtemp] < 190 and cumarrcpt[cumarrtemp] > 0:
+	if rcntorgzm = 1 and cumarrcpt[cumarrtemp] < cumarrppt[cumarrtemp] and cumarrage[cumarrtemp] < 1 and cumarrcon[cumarrtemp]: cumarrcpt[cumarrtemp] += cumarrppt[cumarrtemp] / 12
 	CumPDrop = cumarrcpt[cumarrtemp] / (200 - cumarrage[cumarrtemp])
 	if ovulate <= 0:
 		Temprand = rand(0,3)
@@ -197,6 +202,7 @@ elseif cycle = 1:
 		if rand(0,1) = 1: EggRH += 1
 		temprand = rand(0,1000)
 		temprand -= sterileov
+		temprand += tempovbonus
 		if temprand <= 0: EggRH -= 1
 		if pillcon > 7000: EggRH -= 1
 	else
@@ -219,14 +225,20 @@ elseif cycle = 2:
 !{Fertilization. It checks if you are ovulating and that there is cum in the cum array. Then it sets a random flag with a chance of 25*10000. (1 in 25 chance.) It then overlays that chance with the concentration of pill chemical in your blood, initializing it if it is in the negatives for some reason. It begins at the beginning of the cum array, and starts the processing. The check should be done with the same number. It is checking the oldest first. Their sperm should already be in the best position, even though it is unhealty by comparison. Then it moves down to the fresher stuff. The first sperm to have the potency above the threshold gets to fertilize. So a custom potency of a million is a sure pregnancy.}
 	arrmodtmp = arrsize('$cumarrnam')
 	if Ovulate > 0 and arrmodtmp > 0:
-		Temprand = rand(1,250000)
-		if pillcon < 0: pillcon = 0
-		Temprand += pillcon
-		if steriletu = 1: Temprand += Temprand*30
-		cumarrtemp = 0
+		temp = UnFertEgg
+		if temp > 0: temp[1] = 1
 		:cumloop
+		if temp[1] > 0
+			Temprand = rand(1,250000)
+			if pillcon < 0: pillcon = 0
+			Temprand += pillcon
+			if steriletu = 1: Temprand += Temprand*30
+			if temprand > 0 and broodcurse > 0: Temprand = Temprand / 2
+			cumarrtemp = 0
+			temp[1] = 0
+		end
 !{Here it verifies there is unfertilized eggs. If there are, it checks the current index potency against the current threshold. If it fails, it goes up one in the index, checks to verify it hasnt reached the end, then starts a new check. if it succeeds, it checks to see if it is a second or greater part of a litter, if it isnt, then it cleans up the array containing a list of the potential fathers, then sets the list to contain people your MC should know are potential fathers for the baby. It does this by evaluating the cum array, the potential fathers variable. It does this independently of the main loop evaluating the array for pregnancy.}
-		if UnfertEgg > 0:
+		if temp > 0:
 			if TempRand < cumarrcpt[cumarrtemp]:
 				if fertegg = 0:
 					KILLVAR '$wombpotfath'
@@ -258,17 +270,26 @@ elseif cycle = 2:
 				yearkid[nextbaby] = 0
 				Babyptype[nextbaby] = 0
 				$ChildFath[nextbaby] = $cumarrnam[cumarrtemp]
-				$ChildThFath[nextbaby] = 'unknown'
+				$ChildThFath[nextbaby] = 'Unknown'
 				hairkid[nextbaby] = rand(0, 3)
 				eyeskid[nextbaby] = rand(0, 3)
 				ChildConType = cumarrcon[nextbaby]
+				temp -= 1
+				cumarrtemp = arrmodtmp
 			else
 				cumarrtemp += 1
-				arrmodtmp = arrsize('$cumarrnam')
-				if cumarrtemp < arrmodtmp:
-					Jump 'cumloop'
+			end
+			if cumarrtemp < arrmodtmp:
+				Jump 'cumloop'
+			else
+				temp -= 1
+				temp[1] = 1
+				Jump 'cumloop'
 				end
 			end
+		else
+			killvar 'temp'
+			tempovbonus = 0
 		end
 	end
 !{Ovulation to Luteal. It checks to see if you are on the ovulation cycle. If you are, it checks you for your pillcon. If it is high enough, no egg is released. Under high concentrations of pill chemical, ovulation ticks away quicker. Otherwise, it checks to see if your ovulation hormone is high enough, and if it is it gives you an egg and drops a good chunk down on your ovulation hormone. if its still high, it drops another egg. Then it checks your ovulation hours. If its down to 0, it starts the Luteal phase. Otherwise, it adds an hour to the egg age and reduces the ovulation window by an hour.}
@@ -295,7 +316,7 @@ elseif cycle = 3:
 	ferteggage += 1
 	if FertEgg >= 1:
 		temprand = rand (0,100000)
-		if ferteggage < 120:
+		if ferteggage < 120 and broodcurse <= 0:
 			temprand += 170
 			temprand -= age*10
 			if steriletu = 1: temprand -= 200
@@ -313,6 +334,8 @@ elseif cycle = 3:
 		else
 !{Otherwise, it adds your womb sterilie factor to the temprand. Then it checks if your temprand crosses a threshold for implantation. Younger women implant easier. It then sets the next baby to the next unimplanted baby in your kid array. It registers the kid as a normal pregnancy, removes a fertilized egg and adds an embryo. Then it adds some pregnancy hormone if you arent already pregnant, and calls you officially pregnant.}
 			temprand += sterilewb
+			temprand -= tempwbbonus
+			if broodcurse > 0 and ferteggage >= 120: Temprand = 0
 			if temprand <= (1200-(Age*7)):
 				tempbabyi  = ARRPOS('Babyptype',0)
 				Babyptype[tempbabyi] = 1
@@ -323,7 +346,8 @@ elseif cycle = 3:
 					preg = 1
 				end
 			end
-		end
+			tempwbbonus = 0
+		end		
 	end
 !{Then, it progresses the Luteal phase. It checks to see if you are pregnant. If you are, it ends the cycle and sets preg if your Luteal hormone is at the max as well as cleans out any unimplanted eggs. Otherwise, it just progresses pregnancy chemical and Luteal Hormone. If you arent pregnant, it checks your Luteal hormone. If its at the maximum, it adds 3-5 days of bleeding, clears out your unimplanted eggs, and clears out your Luteal hormone, or ends your cycle if you are past your menopausal age. Otherwise it will just progress the Luteal hormone.}
 	if LutH > 300:
