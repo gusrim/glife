@@ -4,8 +4,29 @@ if BeInNatBelHome = 0:BeInNatBelHome = 1
 
 gs 'stat'
 '<center><b><font color="maroon"><<$npcName[16]>> <<$npcSurName[16]>></font></b></center>'
-'<center><img src="images/qwest/alter/npc/16.jpg"></center>'
-'The room shows the the occupant is very poor as does the whole apartment.'
+if (daystart-natpregday) > 84:
+	if (daystart-natpregday) < 200:
+		'<center><img src="images/qwest/alter/npc/16(2).jpg" width="356"></center>'
+	else
+		'<center><img src="images/qwest/alter/npc/16(3).jpg" width="356"></center>'
+	end
+	'The state of the room and the whole apartment shows, that the occupant is very poor.'
+	'Looking at Natasha it is obvious that she is pregnant, and you have a strong suspicion that she carries your niece or nephew.'
+	''
+	act 'Touch her belly':
+		if nataskedbaby = 1:
+			delact 'Touch her belly'
+			nataskedbaby = 0
+		end
+		''
+		'She looks at you with a strange smile.'
+		'"Yes, your little brother has actually knocked me up. I hope you are happy with it, since we can''t afford to abort it."'
+		nataskedbaby = 1
+	end
+else 
+	'<center><img src="images/qwest/alter/npc/16.jpg"></center>'
+	'The state of the room and the whole apartment shows, that the occupant is very poor.'
+end
 
 if lernHome ! 0:
 	'Natasha arranges her books on the table.'
@@ -217,7 +238,7 @@ elseif lernHome = 0:
 					end
 				end
 			
-				if hour >= 18 and hour < 21 and natsub >= 6 and natbro = 0:
+				if hour >= 18 and hour < 21 and natsub >= 6 and natfuckday < daystart:
 					act 'Call your brother':
 						cls
 						minut += 15
@@ -226,6 +247,7 @@ elseif lernHome = 0:
 						NatDolg -= 500
 						natbj += 1
 						natbro += 1
+						natfuckday = daystart
 						gs 'stat'
 						'<center><img src="images/qwest/alter/ev2/natbj.jpg"></center>'
 					
@@ -245,6 +267,74 @@ elseif lernHome = 0:
 							'Natasha grimaches but complies, swallowing Kolka''s load then opening her mouth to show that it is gone.'
 					
 							act 'Next':gt $curloc
+							end
+						end
+						if natsub >= 10 and brotherSex > 0 and NatDolg > 0 and natbro > 0:
+							act 'Make her fuck your brother for 500':
+								cls
+								cla
+								dom += 2
+								NatDolg -= 500
+								minut += 15
+								natsub += 1
+								natfuck += 1
+								bother += 5
+								gs 'stat'
+								'<center><img src="images/qwest/alter/ev2/natfuck.gif"></center>'
+								'In a few minutes your brother is hard and panting, but you stop him, and pull away Natasha to whisper into her ear.'
+								'"I let go another 500 of your debt if you fuck him."'
+								'Natasha stares at you, then nods her head without a glance at Kolka, then she gets in doggie pose. Still staring at you, she says "He can fuck me."'
+								'You smile az your brother, and playfully slap her very nice ass to incite him. "She is yours, bro. Fuck her hard!"'
+								'He pushes inside her pussy, insistently but patiently, then stars to fuck her fast and hard. As Natasha''s body moves with the thrusts, you lean forward and start kissing her.'
+								if natcp = 0:
+									'She responds eagerly, and you keep kissing until Kolka says, "I''m coming!"'
+									'Natalia suddenly tries to pull away from Kolka, saying "Pull out, not inside! I don''t want to end up pregnant!"'
+								elseif natpregday > 0 and (daystart-natpregday) > 20:
+									'Natalia looks at you questioningly, whether will you let him cum inside of her. It doesn''t seems to bother her that Kolka may knock her up.'
+								elseif natpregday > 0 and (daystart-natpregday) >= 84:
+									'Natalia looks at you questioningly, whether will you let him cum inside of her. It doesn''t really matter now, since Kolka has already knocked her up.'
+								else
+									'Natalia looks at you questioningly, whether will you let him cum inside of her and risking her getting pregnant with your niece or nephew, or letting her pull away from you brother.'
+								end
+								if natsub >= 20 and dom > 20:
+									act 'Let him cum inside her':
+										cla
+										natcp += 1
+										natsub += 1
+										dom += 3
+										'<center><img src="images/qwest/alter/ev2/natcp.gif"></center>'
+										'You grab her head, and say to her, "He will not pull out. The deal was a fuck, so that''s what he gets."'
+										'She looks at you submissively then nods, just as Kolka groans and fills her womb with his semen.'
+										if rand(1,100) >= 93 and natpregday = 0:natpregday = daystart
+										gs 'stat'
+										act 'Next':gt $curloc
+									end
+								end
+								act 'Let her pull away':
+									cla
+									if rand(0,9) = 0:
+										'You let her pull away from your brother, but it appears Kolka was really close, and before anyone could do anything, your brother pumps his seed in Natalia''s body.'
+										'"Fuck, I really am sorry, Nat!", he says apologetically. "It is just, you are so hot!"'
+										'Natalia doesn''t even listen to him, just looks at you with a strange expression on her face. You can''t really decide whether she is scared that Kolka came in her pussy, or enjoyed it. Maybe both at the same time?'
+										'You quitely signal your brother to dress up and leave while you kiss her deeply. "I hope you enjoyed it, pet. We may repeat it."'
+										if rand(1,100) >= 95 and natpregday = 0:natpregday = daystart
+									else
+										'You let her pull away from your brother, so that you brother''s dick slips out of her just in time. His seed sprays Natalia''s ass, back and hair, and it even reaches your face and hair.'
+										'<center><img src="images/qwest/alter/ev2/NatKolFacial.jpg"></center>'
+										'"Nice shot, bro!", you say laughing, wiping his seed away from your eyelid. "That was quite the distance!"'
+										'"That was close," whispers Nat, with a strange look in her face. You actually can''t decide whether she is relieved or disappointed that Kolka didn''t cum in her pussy.'
+										'You quitely signal your brother to dress up and leave while you kiss her deeply. "I hope you enjoyed it, pet. We may repeat it."'
+										$boy = 'Kolka'
+										spafinloc = 11
+										sexpartkno = 1
+										gs 'cum_manage'
+										spafinloc = 16
+										sexpartkno = 1
+										gs 'cum_manage'
+									end
+									gs 'stat'
+									act 'Next':gt $curloc
+								end
 							end
 						end
 					end	
