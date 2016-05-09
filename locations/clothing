@@ -298,13 +298,26 @@ if $ARGS[0] = 'view_clothing_item':
 				dynamic 'RESULT = <<$ARGS[2]>>B[<<ARGS[3]>>]'
 				if RESULT < bedra - 8:
 					'This item is too small for you to wear.'
-					if poSkill >= 100:
+					if poSkill >= 200:
 						cla
 						'You can resize this thanks to your sewing skill.'
 						minut += 15
-						act 'Resize':
-							dynamic '<<$ARGS[2]>>B[<<ARGS[3]>>] = bedra'
-							gt 'clothing', 'view_clothing_list', $ARGS[1]
+						act 'Repair item':
+							if rand (1, 100) < 30:
+								cla
+								tkan -= 1
+								minut += 30
+								dynamic $ARGS[2] + 'H[<<ARGS[3]>>] += 30'
+								'You spend 30 minutes fixing the outfit.'
+								act 'Return':gt 'clothing', 'view_clothing_list', $ARGS[1]
+							else
+								cla
+								tkan += 3
+								minut += 30
+								dynamic $ARGS[2] + '[<<ARGS[3]>>] = 0'
+								'Despite your skill with a needle, this outfit has proved beyond repair. All that is left of it is only good for your cloth pile.'
+								act 'Return':gt 'clothing', 'view_clothing_list', $ARGS[1]
+							end
 						end
 						act 'Leave in closet':
 							gt 'clothing', 'view_clothing_list', $ARGS[1]
@@ -313,13 +326,26 @@ if $ARGS[0] = 'view_clothing_item':
 					exit
 				elseif RESULT > bedra + 8:
 					'This item is too large for you to wear.'
-					if poSkill >= 100:
+					if poSkill >= 200:
 						cla
 						'You can resize this thanks to your sewing skill.'
 						minut += 15
-						act 'Resize':
-							dynamic '<<$ARGS[2]>>B[<<ARGS[3]>>] = bedra'
-							gt 'clothing', 'view_clothing_list', $ARGS[1]
+						act 'Repair item':
+							if rand (1, 100) < 30:
+								cla
+								tkan -= 1
+								minut += 30
+								dynamic $ARGS[2] + 'H[<<ARGS[3]>>] += 30'
+								'You spend 30 minutes fixing the outfit.'
+								act 'Return':gt 'clothing', 'view_clothing_list', $ARGS[1]
+							else
+								cla
+								tkan += 3
+								minut += 30
+								dynamic $ARGS[2] + '[<<ARGS[3]>>] = 0'
+								'Despite your skill with a needle, this outfit has proved beyond repair. All that is left of it is only good for your cloth pile.'
+								act 'Return':gt 'clothing', 'view_clothing_list', $ARGS[1]
+							end
 						end
 						act 'Leave in closet':
 							gt 'clothing', 'view_clothing_list', $ARGS[1]
@@ -330,32 +356,11 @@ if $ARGS[0] = 'view_clothing_item':
 			end
 		end
 
-		! WD: Bimbo look
 		if $ARGS[2] ! 'coat' and $ARGS[2] ! 'swimwear':
 			act 'Wear':
 				gs 'clothing', 'wear', $ARGS[2], ARGS[3]
 				dynamic $ARGS[2] + 'W[<<ARGS[3]>>] = 1'
 				gt 'clothing', 'view_clothing_list', $ARGS[1]
-			end
-		end
-
-		if dyneval('RESULT = <<$ARGS[2]>>H[<<ARGS[3]>>]') < 5 and poSkill >= 200 and tkan > 0:
-			act 'Repair item':
-				if rand (1, 100) < 30:
-					cla
-					tkan -= 1
-					minut += 30
-					dynamic $ARGS[2] + 'H[<<ARGS[3]>>] += 30'
-					'You spend 30 minutes fixing the outfit.'
-					act 'Return':gt 'clothing', 'view_clothing_list', $ARGS[1]
-				else
-					cla
-					tkan += 3
-					minut += 30
-					dynamic $ARGS[2] + '[<<ARGS[3]>>] = 0'
-					'Despite your skill with a needle, this outfit has proved beyond repair. All that is left of it is only good for your cloth pile.'
-					act 'Return':gt 'clothing', 'view_clothing_list', $ARGS[1]
-				end
 			end
 		end
 		
