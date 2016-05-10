@@ -1,6 +1,9 @@
 # paysex
+! Expects the guy names as array ($boy[0]='X', $boy[1]='Y',...)
+! Since there is no way of knowing how big $boy is, before using the array use: dynamic '$clrboy'
+! It does not need the array size
+! Custom text can be entered for each kind of sex type, in $paysextext[0] = '', $paysextext[1] = '' format
 if $ARGS[0] = 'start':
-	minut += 30
 	gang += 1
 	sweat += 1
 	picrand = rand(0, 1)
@@ -8,145 +11,185 @@ if $ARGS[0] = 'start':
 end
 
 if $ARGS[0] = 'var':
-	colpaysex += 1
-	paysexrand = rand(0, 2)
-
-	if paysexrand = 0:
-		cla
-		*clr
-		horny += 10
-		SUB += 1
-
-		if paysxbj = 0:
-			bj += 1
-			paysxbj = 1
-		end
-
-		if paysxsex = 0:
-			sex += 1
-			paysxsex = 1
-			$boy = 'Man from a gang bang used as payment'
+	cla
+	*clr
+	minut += 5
+	sexvar -= 1
+	dynamic $stamina_npc
+	horny += 10
+	randpicture = rand(2)
+	if randpicture = 0:$randpicture = 'vag'
+	if randpicture = 1:$randpicture = 'anal'
+	if randpicture = 2:$randpicture = 'dp'	
+	'<center><img src="images/img/paysex/<<$randpicture>><<picrand>>.jpg"></center>'
+	
+! Creating a random ordered array from $boy array
+	COPYARR '$temp1','$boy'
+	x = 0
+	:randomorder	
+		paysexrand = rand(ARRSIZE('$temp1')-1)
+		$temp2[x] = $temp1[paysexrand]
+		x += 1
+		KILLVAR '$temp1',paysexrand
+	if ARRSIZE('$temp1') > 0:jump 'randomorder'
+	
+! Describing the action of each participant. The order of events are fix, only the person doing it changes.
+	j = 0
+	i = ARRSIZE('$boy')
+	:arrayloop
+		if j = 0:
+			if paysxsex = 0:sex += 1 & paysxsex = 1
+			if $paysextext[j] = '':
+				'<<$temp2[j]>> fucks you in your pussy.'
+			else
+				'<<<$paysextext[j]>>'
+			end
 			cumprecheck = 1
-			gs 'cum_manage'
+			gs 'cum_call', '', $temp2[j]
+		elseif j = 1:
+			if paysxanal = 0:anal += 1 & paysxanal = 1
+			if $paysextext[j] = '':
+				'<<$temp2[j]>> fucks you in your ass.'
+			else
+				'<<<$paysextext[j]>>'
+			end
+		elseif j = 2:
+			if paysxbj = 0:bj += 1 & paysxbj = 1
+			if $paysextext[j] = '':
+				'<<$temp2[j]>> fucks you in your mouth.'
+			else
+				'<<<$paysextext[j]>>'
+			end
+		elseif j = 3:
+			if paysxhj = 0:hj += 1 & paysxhj = 1
+			if $paysextext[j] = '':
+				'<<$temp2[j]>> uses one of your hands to masturbate.'
+			else
+				'<<<$paysextext[j]>>'
+			end
+		elseif j = 4:
+			if $paysextext[j] = '':
+				'<<$temp2[j]>> uses one of your hands to masturbate.'
+			else
+				'<<<$paysextext[j]>>'
+			end
+		elseif j > 4:
+			if $paysextext[j] = '':
+				'<<$temp2[j]>> masturbates above your body, waiting for his turn to your body.'
+			else
+				'<<<$paysextext[j]>>'
+			end
 		end
-
-		'<center><img src="images/img/paysex/vag<<picrand>>.jpg"></center>'
-		'While one guy fucks your pussy, you sucked the rest.'
-
-		act 'More':gt 'paysex', 'var'
-
-		if colpaysex > 3:
-			act 'Finish.':gt 'paysex', 'end'
-		end
-	elseif paysexrand = 1:
-		cla
-		*clr
-		horny += 10
-		SUB += 1
-
-		if paysxbj = 0:
-			bj += 1
-			paysxbj = 1
-		end
-
-		if paysxanal = 0:
-			anal += 1
-			paysxanal = 1
-		end
-
-		'<center><img src="images/img/paysex/anal<<picrand>>.jpg"></center>'
-		'While one guy fucks you in the ass, you sucked the rest.'
-
-		act 'More':gt 'paysex', 'var'
-
-		if colpaysex > 3:
-			act 'Finish.':gt 'paysex', 'end'
-		end
-	elseif paysexrand = 2:
-		cla
-		*clr
-		horny += 10
-
-		if paysxbj = 0:
-			bj += 1
-			paysxbj = 1
-		end
-
-		if paysxsex = 0:
-			sex += 1
-			paysxsex = 1
-			$boy = 'Man from a gang bang used as payment'
-			cumprecheck = 1
-			gs 'cum_manage'
-		end
-
-		if paysxanal = 0:
-			anal += 1
-			paysxanal = 1
-		end
-
-		'<center><img src="images/img/paysex/dp<<picrand>>.jpg"></center>'
-		'Fuck you in all the cracks.'
-
-		act 'More':gt 'paysex', 'var'
-
-		if colpaysex > 3:
-			act 'Finish.':gt 'paysex', 'end'
-		end
+		j += 1
+	if j < i:jump 'arrayloop'	
+	
+	if horny >= 80:
+		horny = 0
+		orgasm += 1
+	end
+		
+	gs 'stat'
+	
+	if sexvar > 1:
+		act 'Continue':gt 'paysex', 'var'
+	else
+		act 'Finish':gt 'paysex', 'end'
 	end
 end
 
 if $ARGS[0] = 'end':
 	cla
 	*clr
-	paysxbj = 0
-	paysxsex = 0
-	paysxanal = 0
-	colpaysex = 0
-	temp = 2
-
-	:paysexloop
-
-	$boy = 'Man from a gang bang used as payment <<temp>>'
-	gs 'cum_manage'
-	spafinloc = 1
-	gs 'cum_manage'
-	spafinloc = 3
-	gs 'cum_manage'
-	spafinloc = 4
-	gs 'cum_manage'
-	spafinloc = 8
-	gs 'cum_manage'
-	spafinloc = 9
-	gs 'cum_manage'
-	spafinloc = 10
-	gs 'cum_manage'
-	spafinloc = 11
-	gs 'cum_manage'
-	spafinloc = 12
-	gs 'cum_manage'
-	spafinloc = 13
-	gs 'cum_manage'
-	spafinloc = 14
-	gs 'cum_manage'
-	spafinloc = 15
-	gs 'cum_manage'
-	spafinloc = 16
-	gs 'cum_manage'
-	temp -= 1
-
-	if temp > 0: jump 'paysexloop'
+	sexvar -= 1
+	dynamic $stamina_npc
+	COPYARR '$temp1','$boy'
+	horny += 10
+	'<center><img src="images/img/paysex/cum<<picrand>>.jpg"></center>'
+	x = 0
+	:randomend	
+		paysexrand = rand(ARRSIZE('$temp1')-1)
+		$temp2[x] = $temp1[paysexrand]
+		x += 1
+		KILLVAR '$temp1',paysexrand
+	if ARRSIZE('$temp1') > 0:jump 'randomend'
+	j = 0
+	i = ARRSIZE('$boy')
+	:arrayloopend
+		if j = 0:
+			if rand(3) ! 0:
+				'<<$temp2[j]>> is cumming in your pussy.'
+				gs 'cum_call', '', $temp2[j]
+			else
+				'<<$temp2[j]>> is cumming on your labia.'
+				gs 'cum_call', 'labia', $temp2[j]
+			end
+		elseif j = 1:
+			if rand(3) ! 0:
+				'<<$temp2[j]>> is cumming in your ass.'
+				gs 'cum_call', 'anus', $temp2[j]
+			else
+				'<<$temp2[j]>> is cumming on your ass.'
+				gs 'cum_call', 'butt', $temp2[j]
+			end
+		elseif j = 2:
+			if rand(3) ! 0:
+				'<<$temp2[j]>> is cumming in your mouth.'
+				gs 'cum_call', 'mouth', $temp2[j]
+			else
+				'<<$temp2[j]>> is cumming on your face.'
+				gs 'cum_call', 'face', $temp2[j]
+			end
+		elseif j > 2:
+			cumrand = rand(8)
+			if cumrand = 0:
+				'<<$temp2[j]>> is cumming on your tits.'
+				gs 'cum_call', 'breasts', $temp2[j]
+			elseif cumrand = 1:
+				'<<$temp2[j]>> is cumming on your belly.'
+				gs 'cum_call', 'stomach', $temp2[j]
+			elseif cumrand = 2:
+				'<<$temp2[j]>> is cumming on your hair.'
+				gs 'cum_call', 'hair', $temp2[j]
+			elseif cumrand = 3:
+				'<<$temp2[j]>> is cumming on your face.'
+				gs 'cum_call', 'face', $temp2[j]
+			elseif cumrand = 4:
+				'<<$temp2[j]>> is cumming on your ass.'
+				gs 'cum_call', 'butt', $temp2[j]
+			elseif cumrand = 5:
+				'<<$temp2[j]>> is cumming on your labia.'
+				gs 'cum_call', 'labia', $temp2[j]
+			elseif cumrand = 6:
+				'<<$temp2[j]>> is cumming in your pussy.'
+				gs 'cum_call', '', $temp2[j]
+			elseif cumrand = 7:
+				'<<$temp2[j]>> is cumming in your ass.'
+				gs 'cum_call', 'anus', $temp2[j]
+			elseif cumrand = 8:
+				'<<$temp2[j]>> is cumming in your mouth.'
+				gs 'cum_call', 'mouth', $temp2[j]
+			end	
+		end
+		j += 1
+	if j < i: jump 'arrayloopend'
 
 	if horny >= 80:
 		horny = 0
 		orgasm += 1
 	end
+	gs 'stat'
 
-	'<center><img src="images/img/paysex/cum<<picrand>>.jpg"></center>'
-
-	'When they were satisfied that you have filled in all his sperm.'
+	'After all of the guys had their way with your body, you can finally catch your breath.'
 
 	act 'Leave':
+		paysxbj = 0
+		paysxsex = 0
+		paysxanal = 0
+		paysxhj = 0
+		dynamic $clrboy
+		KILLVAR '$temp2'
+		KILLVAR '$paysextext'
+		firstact = 0
 		if picrand = 16 or picrand = 17:gt 'office', 'work'
 		if picrand = 18:gt 'husbSex', 'dolgend'
 
