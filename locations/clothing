@@ -363,7 +363,17 @@ if $ARGS[0] = 'view_clothing_item':
 				gt 'clothing', 'view_clothing_list', $ARGS[1]
 			end
 		end
-		
+	elseif $ARGS[1] = 'store' or $ARGS[1] = 'unwanted':
+		act 'Return':gt 'clothing', 'view_clothing_list', $ARGS[1]
+
+		if $ARGS[2] ! 'coat' and $ARGS[2] ! 'swimwear':
+			act 'Wear (Will move back to wardrobe when removed)':
+				gs 'clothing', 'wear', $ARGS[2], ARGS[3]
+				dynamic $ARGS[2] + 'W[<<ARGS[3]>>] = 1'
+				gt 'clothing', 'view_clothing_list', $ARGS[1]
+			end
+		end
+
 	elseif $ARGS[1] = 'sell':
 		act 'Keep item':gt 'clothing', 'view_clothing_list', $ARGS[1]
 
@@ -469,6 +479,8 @@ if $ARGS[0] = 'wear':
 	end
 
 	gs 'clothing_attributes', $ARGS[1], ARGS[2]
+
+	dynamic '<<$ARGS[1]>>S[<<ARGS[2]>>] = 0'
 
 	PCloQuality = CloQuality
 	PCloThinness = CloThinness
