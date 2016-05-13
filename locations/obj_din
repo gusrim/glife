@@ -206,6 +206,23 @@ $objstatistika = {
 	if opPRE = 0:pl 'It has been <<daystart>> days since the game started.'
 	if BuyHous = 2 and ArendHouseSL >0:pl 'You have rented an apartment in the residential area for <<ArendHouseSL>> days.'
 
+	if BuyHous = 2 and ArendHouseSL >0:
+		pl 'You have rented an apartment in the residential area for <<ArendHouseSL>> days.'
+			if money >= 6000 or stolmoney >= 6000 or money + stolmoney >= 6000 or karta >= 6000:
+			*P ' Renew with '
+			if money >= 6000:
+				*P ' <a href="exec:money -= 6000 & housr = 1 & BuyHous = 2 & ArendHouseSL += 30">cash</a>'
+			elseif stolmoney >= 6000:
+				*P ' <a href="exec:stolmoney -= 6000 & housr = 1 & BuyHous = 2 & ArendHouseSL += 30 & dynamic $objstatistika">cash from drawer</a>'
+			elseif money + stolmoney >= 6000:
+				!both < 6000, so money = money - 6000 + stolmoney
+				*P ' <a href="exec:money -= 6000 - stolmoney & stolmoney = 0 & housr = 1 & BuyHous = 2 & ArendHouseSL += 30 & dynamic $objstatistika">cash from purse and drawer</a>'
+			end
+			!from purse, drawer or both
+			if karta >= 6000: *P ' <a href="exec:karta -= 6000 & housr = 1 & BuyHous = 2 & ArendHouseSL += 30 & dynamic $objstatistika">bank account</a>'
+		end
+	end
+
 	if KikWinPro > 0 or KikLossPro > 0 or KikDrawPro > 0:
 		pl 'Professional Kickboxing Record:Win (Victory KO) - Loss (Defeat KO) - Draw'
 		pl '<<KikWinPro>> (<<KikWinProKO>>KO) - <<KikLossPro>> (<<KikLossProKO>>KO) - <<KikDrawPro>>'

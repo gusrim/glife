@@ -163,6 +163,25 @@ end
 
 if BuyHous = 2 and ArendHouseSL <= 0:'<font color="red"><b>The rent on your apartment expires today.</b></font>'
 
+if BuyHous = 2 and ArendHouseSL <= 0:
+	'<font color="red"><b>The rent on your apartment expires today.</b></font>'
+	if money >= 6000 or stolmoney >= 6000 or money + stolmoney >= 6000 or karta >= 6000:
+		*P ' Renew with '
+		if money >= 6000:
+			*P ' <a href="exec:money -= 6000 & housr = 1 & BuyHous = 2 & ArendHouseSL += 30" & gs''stat''>cash</a>'
+		elseif stolmoney >= 6000:
+			*P ' <a href="exec:stolmoney -= 6000 & housr = 1 & BuyHous = 2 & ArendHouseSL += 30" & gs''stat''>cash from drawer</a>'
+		elseif money + stolmoney >= 6000:
+			!both < 6000, so money = money - 6000 + stolmoney
+			*P ' <a href="exec:money -= 6000 - stolmoney & stolmoney = 0 & housr = 1 & BuyHous = 2 & ArendHouseSL += 30" & gs''stat''>cash from purse and drawer</a>'
+		end
+		!from purse, drawer or both
+		if karta >= 6000: *P ' <a href="exec:karta -= 6000 & housr = 1 & BuyHous = 2 & ArendHouseSL += 30 & gs''stat''">bank account</a>'
+	else
+		*P ' But you can''t afford to renew the lease.'
+	end   
+end
+
 if  weatherDay = daystart: pl '<<$weather>>' & pl
 
 if opPRE = 0: pl '<<$mop>> and your hair is <<$hapri>>.' & pl
