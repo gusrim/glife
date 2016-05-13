@@ -5,8 +5,35 @@ if $ARGS[0] = 'list':
 	'<center><table border=1><TH><a href="exec:gt ''clothing'', ''view_clothing_list'', ''wardrobe''">Wardrobe </a></TH><TH><a href="exec:gt ''clothing'', ''view_clothing_list'', ''store''">Storage</a></TH><TH><a href="exec:gt ''clothing'', ''view_clothing_list'', ''unwanted''">Unwanted</a></TH><TH><a href="exec:gt ''clothing_QV'', ''list''">Pick something to wear</a></TH></center>'
 
 
-	act 'Strip':gt 'clothing_QV', 'strip'
-	act 'Leave':gt $loc, $metka
+	if $clothingworntype ! 'nude':
+		act 'Strip':gt 'clothing_QV', 'strip'
+	end
+
+	if tanga = 0 and clrbelo > 0:
+		act 'Wear underwear':
+			cla
+			tanga = 1
+			clrbelo -= 1
+			gt $curloc, 'list'
+		end
+	elseif tanga = 1:
+		act 'Take off your underwear':
+			cla
+			tanga = 0
+			dirtbelo += 1
+			gt $curloc, 'list'
+		end
+	end
+
+	act 'Leave':
+		if $clothingworntype ! 'nude' or $loc ! 'gschool':
+			gt $loc, $metka
+		else
+			msg'<b><font color = red>You need to get dressed.</font></b>'
+			gt 'clothing_QV', 'list'
+		end
+	end
+	
 
 	i = 1
 	:loopcheap
@@ -106,7 +133,15 @@ if $ARGS[0] = 'strip':
 
 	gs 'clothing', 'strip'
 	act 'Choose something to wear':gt 'clothing_QV', 'list'
-	act 'Leave':gt $loc, $metka
+	
+	act 'Leave':
+		if $clothingworntype ! 'nude' or $loc ! 'gschool':
+			gt $loc, $metka
+		else
+			msg'<b><font color = red>You need to get dressed.</font></b>'
+			gt 'clothing_QV', 'list'
+		end
+	end
 end
 
 if $ARGS[0] = 'change':
@@ -145,7 +180,15 @@ if $ARGS[0] = 'change':
 		end
 	end
 	act 'Choose another outfit': gt 'clothing_QV', 'list'
-	act 'Leave':gt $loc, $metka
+	
+	act 'Leave':
+		if $clothingworntype ! 'nude' or $loc ! 'gschool':
+			gt $loc, $metka
+		else
+			msg'<b><font color = red>You need to get dressed.</font></b>'
+			gt 'clothing_QV', 'list'
+		end
+	end
 end
 
 
