@@ -51,7 +51,7 @@ $ind_stamina_groupnpc = {
 !Randomization text!
 !===================!============================================
 !deduce if gg first time
-$gg_devst_deflor = {
+if $ARGS[0] = 'gg_devst_deflor':
 	cumprecheck = 1
 	gs 'cum_manage'	
 	if vagina <= 0:
@@ -62,7 +62,8 @@ $gg_devst_deflor = {
 		'You tell them that this is your first time and ask for them to be gentle.'
 		'<font color = red><b>You bite your lip in pain and tears stream from your eyes when his member enters into you, breaking your hymen. You cry and moan as the sturdy cock fucks your bloody pussy.</b></font>'
 	end
-}
+end
+
 !orgasm text NPC:
 $npc_orgasm = {
 npc_orgasm_txt = rand(1,5)
@@ -103,7 +104,7 @@ orgasm_text = RAND(0,11)
 	if orgasm_text = 10:$orgasm_text = 'Then the room nanoWell lnilasenskim cryom. You are inonchaDo grouo, Nickogo ne Articleesnyayas.'
 	if orgasm_text = 11:$orgasm_text = 'The abundance of surging emotions you with a loud groan finished.'	
 !orgasm years:
-$gg_sex_orgasm = {
+if $ARGS[0] = 'gg_sex_orgasm':
 	if mesec > 0:
 	!periods, orgasm is not possible
 		horny = 0
@@ -121,9 +122,9 @@ $gg_sex_orgasm = {
 			'<<$orgasm_text>>'
 		end
 	end
-}
+end
 !masturbation years(when spying):
-$masturb_gg = {
+if $ARGS[0] = 'masturb_gg':
 
 rnd_masturb_text = rand(1,3)
 	if rnd_masturb_text = 1:$rnd_masturb_text = 'You this picture of a little excited, you have got a hand into her panties and began to pull at the clitoris.'
@@ -147,7 +148,7 @@ rnd_masturb_text = rand(1,3)
 			'The abundance of surging emotions you with a loud groan finished.'
 		end
 	end
-}
+end
 
 !anal tube and lubrication (1on1)
 $gop_sex_analplugin = {
@@ -961,7 +962,7 @@ txt_sex_cumass = RAND(0,1)
 !    SEX SG \u0026 CO !
 !======================!
 !choice with whom to fuck:
-$gopsex_select = {
+if $ARGS[0] = 'gopsex_select':
 	cls
 	gop_sex_lubri = 0
 	gop_groupsex_lubri = 0
@@ -973,14 +974,14 @@ $gopsex_select = {
 		if shgopsex_vasya_count = 0:
 			cla
 			'Bob says: -"<<$gop_name_gg>> Jam has me, sex is enough for today, do not bother."'
-			act 'Escape': gt'shulga_room'
+			act 'Escape': gt 'shulga_room', 'start'
 		elseif shgopsex_vasya_count > 0:
 			$gopsex_name_npc = 'Vasya'
 			$gopsex_n_npc = 1
 			shgopsex_vasya_day = daystart
 			shgopsex_vasya_count -= 1
 			if npcSex[11] = 0:npcSex[11] = 1 & guy += 1
-			dynamic $shgopsex
+			gs 'gopsex', 'shgopsex'
 		end
 	end
 	if week < 6 and hour >= 0 and hour < 3:
@@ -988,28 +989,28 @@ $gopsex_select = {
 			if shgopsex_den_count = 0:
 				cla
 				'Dan says: -"Here you <<$gop_gg_name>> Jam me today, fuck off."'
-				act 'Escape': gt'shulga_room'
+				act 'Escape': gt 'shulga_room', 'start'
 			elseif shgopsex_den_count > 0:
 				$gopsex_name_npc = 'Dan'
 				$gopsex_n_npc = 0
 				shgopsex_den_day = daystart
 				shgopsex_den_count -= 1		
 				if npcSex[10] = 0:npcSex[10] = 1 & guy += 1
-				dynamic $shgopsex
+				gs 'gopsex', 'shgopsex'
 			end
 		end
 		act 'Sex with Vityok':
 			if shgopsex_vitya_count = 0:	
 				cla
 				'Vitek says: -"Sorry <<$gop_name_gg>>, more today will not be able."'
-				act 'Escape': gt'shulga_room'	
+				act 'Escape': gt 'shulga_room', 'start'	
 			elseif shgopsex_vitya_count > 0:
 				$gopsex_name_npc = 'Vitya'
 				$gopsex_n_npc = 2
 				shgopsex_vitya_day = daystart
 				shgopsex_vitya_count -= 1
 				if npcSex[9] = 0:npcSex[9] = 1 & guy += 1
-				dynamic $shgopsex
+				gs 'gopsex', 'shgopsex'
 			end
 		end	
 		if alko >= 3 and GorSlut >= 3 and shgopsex_gr_count > 0 or horny >= 50 and GorSlut >= 3 and shgopsex_gr_count > 0:
@@ -1019,17 +1020,17 @@ $gopsex_select = {
 				if npcSex[10] = 0:npcSex[10] = 1 & guy += 1
 				if npcSex[11] = 0:npcSex[11] = 1 & guy += 1
 				if npcSex[9] = 0:npcSex[9] = 1 & guy += 1
-				dynamic $shgopsex_group
+				gs 'gopsex', 'shgopsex_group'
 			end	
 		end
 	end
-	act 'Escape': gt'shulga_room'
-}		
+	act 'Escape': gt 'shulga_room', 'start'
+end		
 !===========================================================!
 !Sex 1 on 1!
 !===========!
 !sex selection!
-$shgopsex = {
+if $ARGS[0] = 'shgopsex':
 	cla
 	$boy = $gop_name_npc
 	sexpartkno = 1
@@ -1057,9 +1058,9 @@ $shgopsex = {
 		act 'Get lick': dynamic $shgopsex_lick
 	end	
 	if dom >= 5: 
-		act 'Escape': gt'shulga_room'
+		act 'Escape': gt 'shulga_room', 'start'
 	end
-}
+end
 !ending sex
 $shgopsex_end = {
 	cla
@@ -1109,7 +1110,7 @@ $shgopsex_lick = {
 			dynamic $ind_stamina_npc
 			'<center><img src="images/zsoft/pod_ezd/shulgahome/bigroom/gopsex/lick/lick'+rand(1,11)+'.jpg"></center>'
 			dynamic $text_sex_cun
-			dynamic $gg_sex_orgasm
+			gs 'gopsex', 'gg_sex_orgasm'
 		end
 	end
 	!Dan (NPC 0)
@@ -1119,7 +1120,7 @@ $shgopsex_lick = {
 	'- And what`s wrong with that?, zapadlo you do me nicely?'
 	'- Yes, I zapadlo davalki pussy licking, dick knows how many there are today visited cocks... So go ahead, do not fuck my brain, substitute your whorish holes, I am going to fuck!'
 	end
-	act 'Sex selection': dynamic $shgopsex
+	act 'Sex selection': gs 'gopsex', 'shgopsex'
 	!act 'Finish': dynamic $shgopsex_end
 }
 !mutual affection, posture 69
@@ -1130,7 +1131,7 @@ $shgopsex_69 = {
 	if $gopsex_n_npc >= 1:
 		if gorslut >=4:
 			'<<$gop_name_gg>> You have <<$gnikname>>, I zapadlo a babe pussy licking, dick knows how many there are today visited cocks. So go ahead, better substitute your whorish holes!'
-			act 'Sex selection': dynamic $shgopsex
+			act 'Sex selection': gs 'gopsex', 'shgopsex'
 		elseif gorslut <4:
 			horny += 10
 			minut += ''+rand(3,7)+''
@@ -1139,10 +1140,10 @@ $shgopsex_69 = {
 			dynamic $ind_stamina_npc
 			'<center><img src="images/zsoft/pod_ezd/shulgahome/bigroom/gopsex/lick/69_'+rand(1,3)+'.jpg"></center>'
 			dynamic $text_sex_69
-			dynamic $gg_sex_orgasm
+			gs 'gopsex', 'gg_sex_orgasm'
 			dynamic $npc_orgasm
 			if shgopsex_count > 0:
-				act 'Sex selection': dynamic $shgopsex
+				act 'Sex selection': gs 'gopsex', 'shgopsex'
 				!act 'Finish': dynamic $shgopsex_end
 			elseif shgopsex_count = 0:
 				dynamic $shgopsex_end
@@ -1150,7 +1151,7 @@ $shgopsex_69 = {
 		end		
 	elseif $gopsex_n_npc = 0:
 		'- "No, <<$gop_name_gg>> lick pussy, I will not"'
-		act 'Sex selection': dynamic $shgopsex
+		act 'Sex selection': gs 'gopsex', 'shgopsex'
 	end
 }
 !===============================================================!
@@ -1164,7 +1165,7 @@ $shgopsex_eattits = {
 	'<center><img src="images/zsoft/pod_ezd/shulgahome/bigroom/gopsex/tits/eat'+rand(1,2)+'.jpg"></center>'
 	'<<$gopsex_name_npc>> biting your tits.'
 	act 'To urge member between boobs': dynamic $shgopsex_fucktits
-	act 'Sex selection': dynamic $shgopsex
+	act 'Sex selection': gs 'gopsex', 'shgopsex'
 }
 !drive between the breasts
 $shgopsex_fucktits = {
@@ -1178,7 +1179,7 @@ $shgopsex_fucktits = {
 	'<center><img src="images/zsoft/pod_ezd/shulgahome/bigroom/gopsex/tits/tj'+rand(1,9)+'.jpg"></center>'
 	'<<$gopsex_name_npc>> He wants to drive your dick between boobs, and you do not mind.'
 	if shgopsex_count > 0:
-		act 'Sex selection': dynamic $shgopsex
+		act 'Sex selection': gs 'gopsex', 'shgopsex'
 		!act 'Finish': dynamic $shgopsex_end
 	end
 	if shgopsex_count = 0:
@@ -1197,7 +1198,7 @@ $shgopsex_tits= {
 	'- "Yes <<$gop_name_gg>>, fucking tits you!"'
 	act 'Sucking boobs': dynamic $shgopsex_eattits
 	act 'To urge member between boobs': dynamic $shgopsex_fucktits
-	act 'Sex selection': dynamic $shgopsex
+	act 'Sex selection': gs 'gopsex', 'shgopsex'
 }
 !===============================================================!
 !work with your hands
@@ -1213,7 +1214,7 @@ $shgopsex_hj = {
 	dynamic $text_sex_hj
 	dynamic $npc_orgasm
 	if shgopsex_count > 0:
-		act 'Sex selection': dynamic $shgopsex
+		act 'Sex selection': gs 'gopsex', 'shgopsex'
 		!act 'Finish': dynamic $shgopsex_end
 	end	
 	if shgopsex_count = 0:
@@ -1236,7 +1237,7 @@ $shgopsex_bj = {
 	dynamic $text_sex_bj
 	dynamic $npc_orgasm
 	if shgopsex_count > 0:
-		act 'Sex selection': dynamic $shgopsex
+		act 'Sex selection': gs 'gopsex', 'shgopsex'
 		!act 'Finish': dynamic $shgopsex_end
 	end	
 	if shgopsex_count = 0:
@@ -1258,7 +1259,7 @@ $shgopsex_throat = {
 	dynamic $text_sex_bjt
 	dynamic $npc_orgasm
 	if shgopsex_count > 0:
-		act 'Sex selection': dynamic $shgopsex
+		act 'Sex selection': gs 'gopsex', 'shgopsex'
 		!act 'Finish': dynamic $shgopsex_end
 	end	
 	if shgopsex_count = 0:
@@ -1279,15 +1280,15 @@ $shgopsex_vag = {
 	gs'stat'
 	dynamic $ind_stamina_npc
 	'<center><img src="images/zsoft/pod_ezd/shulgahome/bigroom/gopsex/sex/pussy/dog'+rand(1,20)+'.jpg"></center>'
-	dynamic $gg_devst_deflor
+	gs 'gopsex', 'gg_devst_deflor'
 	dynamic $text_sex_doggy
-	dynamic $gg_sex_orgasm
+	gs 'gopsex', 'gg_sex_orgasm'
 	dynamic $npc_orgasm
 	if shgopsex_count > 0:
 		act 'Change position: missionary': dynamic $shgopsex_vag1
 		act 'Change position: horsewoman': dynamic $shgopsex_vag2
 		act 'Change position: sideways': dynamic $shgopsex_vag3
-		act 'Sex selection': dynamic $shgopsex
+		act 'Sex selection': gs 'gopsex', 'shgopsex'
 		!act 'Finish': dynamic $shgopsex_end
 	end	
 	if shgopsex_count = 0:
@@ -1303,13 +1304,13 @@ $shgopsex_vag1 = {
 	dynamic $ind_stamina_npc
 	'<center><img src="images/zsoft/pod_ezd/shulgahome/bigroom/gopsex/sex/pussy/miss'+rand(1,20)+'.jpg"></center>'
 	dynamic $text_sex_miss
-	dynamic $gg_sex_orgasm
+	gs 'gopsex', 'gg_sex_orgasm'
 	dynamic $npc_orgasm
 	if shgopsex_count > 0:
 		act 'Change position: cancer': dynamic $shgopsex_vag
 		act 'Change position: horsewoman': dynamic $shgopsex_vag2
 		act 'Change position: sideways': dynamic $shgopsex_vag3
-		act 'Sex selection': dynamic $shgopsex
+		act 'Sex selection': gs 'gopsex', 'shgopsex'
 		!act 'Finish': dynamic $shgopsex_end
 	end	
 	if shgopsex_count = 0:
@@ -1325,13 +1326,13 @@ $shgopsex_vag2 = {
 	dynamic $ind_stamina_npc
 	'<center><img src="images/zsoft/pod_ezd/shulgahome/bigroom/gopsex/sex/pussy/cow'+rand(1,20)+'.jpg"></center>'
 	dynamic $text_sex_cow
-	dynamic $gg_sex_orgasm
+	gs 'gopsex', 'gg_sex_orgasm'
 	dynamic $npc_orgasm
 	if shgopsex_count > 0:
 		act 'Change position: cancer': dynamic $shgopsex_vag
 		act 'Change position: missionary': dynamic $shgopsex_vag1
 		act 'Change position: sideways': dynamic $shgopsex_vag3
-		act 'Sex selection': dynamic $shgopsex
+		act 'Sex selection': gs 'gopsex', 'shgopsex'
 		!act 'Finish': dynamic $shgopsex_end
 	end	
 	if shgopsex_count = 0:
@@ -1347,13 +1348,13 @@ $shgopsex_vag3 = {
 	dynamic $ind_stamina_npc
 	'<center><img src="images/zsoft/pod_ezd/shulgahome/bigroom/gopsex/sex/pussy/bok'+rand(1,3)+'.jpg"></center>'
 	'sideways'
-	dynamic $gg_sex_orgasm
+	gs 'gopsex', 'gg_sex_orgasm'
 	dynamic $npc_orgasm
 	if shgopsex_count > 0:
 		act 'Change position: cancer': dynamic $shgopsex_vag
 		act 'Change position: missionary': dynamic $shgopsex_vag1
 		act 'Change position: horsewoman': dynamic $shgopsex_vag2
-		act 'Sex selection': dynamic $shgopsex
+		act 'Sex selection': gs 'gopsex', 'shgopsex'
 		!act 'Finish': dynamic $shgopsex_end
 	end	
 	if shgopsex_count = 0:
@@ -1379,13 +1380,13 @@ $shgopsex_anal = {
 
 	dynamic $text_sex_doggy_anal
 
-	dynamic $gg_sex_orgasm
+	gs 'gopsex', 'gg_sex_orgasm'
 	dynamic $npc_orgasm
 	if shgopsex_count > 0:
 		act 'Change position: missionary': dynamic $shgopsex_anal1
 		act 'Change position: horsewoman': dynamic $shgopsex_anal2
 		act 'Change position: sideways': dynamic $shgopsex_anal3
-		act 'Sex selection': dynamic $shgopsex
+		act 'Sex selection': gs 'gopsex', 'shgopsex'
 		!act 'Finish': dynamic $shgopsex_end
 	end	
 	if shgopsex_count = 0:
@@ -1406,13 +1407,13 @@ $shgopsex_anal1 = {
 
 	dynamic $text_sex_miss_anal
 
-	dynamic $gg_sex_orgasm
+	gs 'gopsex', 'gg_sex_orgasm'
 	dynamic $npc_orgasm
 	if shgopsex_count > 0:
 		act 'Change position: cancer': dynamic $shgopsex_anal
 		act 'Change position: horsewoman': dynamic $shgopsex_anal2
 		act 'Change position: sideways': dynamic $shgopsex_anal3
-		act 'Sex selection': dynamic $shgopsex
+		act 'Sex selection': gs 'gopsex', 'shgopsex'
 		!act 'Finish': dynamic $shgopsex_end
 	end	
 	if shgopsex_count = 0:
@@ -1433,13 +1434,13 @@ $shgopsex_anal2 = {
 
 	dynamic $text_sex_cow_anal
 
-	dynamic $gg_sex_orgasm
+	gs 'gopsex', 'gg_sex_orgasm'
 	dynamic $npc_orgasm
 	if shgopsex_count > 0:
 		act 'Change position: cancer': dynamic $shgopsex_anal
 		act 'Change position: missionary': dynamic $shgopsex_anal1
 		act 'Change position: sideways': dynamic $shgopsex_anal3
-		act 'Sex selection': dynamic $shgopsex
+		act 'Sex selection': gs 'gopsex', 'shgopsex'
 		!act 'Finish': dynamic $shgopsex_end
 	end	
 	if shgopsex_count = 0:
@@ -1460,13 +1461,13 @@ $shgopsex_anal3 = {
 
 	'on the side'
 
-	dynamic $gg_sex_orgasm
+	gs 'gopsex', 'gg_sex_orgasm'
 	dynamic $npc_orgasm
 	if shgopsex_count > 0:
 		act 'Change position: cancer': dynamic $shgopsex_anal
 		act 'Change position: missionary': dynamic $shgopsex_anal1
 		act 'Change position: horsewoman': dynamic $shgopsex_anal2
-		act 'Sex selection': dynamic $shgopsex
+		act 'Sex selection': gs 'gopsex', 'shgopsex'
 		!act 'Finish': dynamic $shgopsex_end
 	end	
 	if shgopsex_count = 0:
@@ -1488,7 +1489,7 @@ $shgopsex_swallow = {
 	gs 'cum_manage'
 	'<center><img src="images/zsoft/pod_ezd/shulgahome/bigroom/gopsex/cum/swallow'+rand(1,18)+'.jpg"></center>'
 	dynamic $text_sex_cumm
-	act 'Escape': gt'shulga_room'
+	act 'Escape': gt 'shulga_room', 'start'
 }
 
 !Cum on face
@@ -1503,7 +1504,7 @@ $shgopsex_cumface = {
 	gs'stat'
 	'<center><img src="images/zsoft/pod_ezd/shulgahome/bigroom/gopsex/cum/cumface'+rand(1,25)+'.jpg"></center>'
 	dynamic $text_sex_cumface
-	act 'Escape': gt'shulga_room'
+	act 'Escape': gt 'shulga_room', 'start'
 }
 !Cum on body
 $shgopsex_cumbelly = {
@@ -1516,7 +1517,7 @@ $shgopsex_cumbelly = {
 	sexpartkno = 1
 	'<center><img src="images/zsoft/pod_ezd/shulgahome/bigroom/gopsex/cum/cumbody'+rand(1,14)+'.jpg"></center>'
 	dynamic $text_sex_cumbody
-	act 'Escape': gt'shulga_room'
+	act 'Escape': gt 'shulga_room', 'start'
 }
 
 !Cum in pussy
@@ -1529,7 +1530,7 @@ $shgopsex_cumvag = {
 	sexpartkno = 1
 	'<center><img src="images/zsoft/pod_ezd/shulgahome/bigroom/gopsex/cum/cumpussy'+rand(1,10)+'.jpg"></center>'
 	dynamic $text_sex_cumvag
-	act 'Escape': gt'shulga_room'
+	act 'Escape': gt 'shulga_room', 'start'
 }
 
 !ending in the ass
@@ -1543,7 +1544,7 @@ $shgopsex_cumanal = {
 	gs'stat'
 	'<center><img src="images/zsoft/pod_ezd/shulgahome/bigroom/gopsex/cum/cumass'+rand(1,13)+'.jpg"></center>'
 	dynamic $text_sex_cumass
-	act 'Escape': gt'shulga_room'
+	act 'Escape': gt 'shulga_room', 'start'
 }
 
 
@@ -1665,7 +1666,7 @@ $text_sex_group_triple = {
 }
 
 !sex selection:
-$shgopsex_group = {
+if $ARGS[0] = 'shgopsex_group':
 	cla
 	gs'stat'
 	group_sex_text = RAND(0,8)	
@@ -1705,9 +1706,10 @@ $shgopsex_group = {
 		act 'Three members in the ass': dynamic $shgopsex_group_tripleanal
 	end
 	if dom => 10:
-		act 'Escape': gt'shulga_room'
+		act 'Escape': gt 'shulga_room', 'start'
 	end
-}
+end
+
 !ending sex
 $shgopsex_group_end = {
 	cla
@@ -1746,7 +1748,7 @@ $shgopsex_group_bj = {
 	dynamic $npc_orgasm
 
 	if shgopsex_group_count > 0:
-		act 'Sex selection': dynamic $shgopsex_group
+		act 'Sex selection': gs 'gopsex', 'shgopsex_group'
 		!act 'Finish': dynamic $shgopsex_group_end
 	end	
 	if shgopsex_group_count = 0:
@@ -1770,7 +1772,7 @@ $shgopsex_group_bja = {
 	dynamic $npc_orgasm
 
 	if shgopsex_group_count > 0:
-		act 'Sex selection': dynamic $shgopsex_group
+		act 'Sex selection': gs 'gopsex', 'shgopsex_group'
 		!act 'Finish': dynamic $shgopsex_group_end
 	end	
 	if shgopsex_group_count = 0:
@@ -1794,11 +1796,11 @@ $shgopsex_group_vag = {
 
 	dynamic $text_sex_group_vag
 
-	dynamic $gg_sex_orgasm
+	gs 'gopsex', 'gg_sex_orgasm'
 	dynamic $npc_orgasm
 
 	if shgopsex_group_count > 0:
-		act 'Sex selection': dynamic $shgopsex_group
+		act 'Sex selection': gs 'gopsex', 'shgopsex_group'
 		!act 'Finish': dynamic $shgopsex_group_end
 	end	
 	if shgopsex_group_count = 0:
@@ -1825,11 +1827,11 @@ $shgopsex_group_anal = {
 
 	dynamic $text_sex_group_anal
 
-	dynamic $gg_sex_orgasm
+	gs 'gopsex', 'gg_sex_orgasm'
 	dynamic $npc_orgasm
 
 	if shgopsex_group_count > 0:
-		act 'Sex selection': dynamic $shgopsex_group
+		act 'Sex selection': gs 'gopsex', 'shgopsex_group'
 		!act 'Finish': dynamic $shgopsex_group_end
 	end	
 	if shgopsex_group_count = 0:
@@ -1856,11 +1858,11 @@ $shgopsex_group_dp = {
 
 	dynamic $text_sex_group_dp
 
-	dynamic $gg_sex_orgasm
+	gs 'gopsex', 'gg_sex_orgasm'
 	dynamic $npc_orgasm
 
 	if shgopsex_group_count > 0:
-		act 'Sex selection': dynamic $shgopsex_group
+		act 'Sex selection': gs 'gopsex', 'shgopsex_group'
 		!act 'Finish': dynamic $shgopsex_group_end
 	end	
 	if shgopsex_group_count = 0:
@@ -1887,11 +1889,11 @@ $shgopsex_group_twoanal = {
 
 	dynamic $text_sex_group_dpa
 
-	dynamic $gg_sex_orgasm
+	gs 'gopsex', 'gg_sex_orgasm'
 	dynamic $npc_orgasm
 
 	if shgopsex_group_count > 0:
-		act 'Sex selection': dynamic $shgopsex_group
+		act 'Sex selection': gs 'gopsex', 'shgopsex_group'
 		!act 'Finish': dynamic $shgopsex_group_end
 	end	
 	if shgopsex_group_count = 0:
@@ -1917,11 +1919,11 @@ $shgopsex_group_tripleanal = {
 
 	dynamic $text_sex_group_triple
 
-	dynamic $gg_sex_orgasm
+	gs 'gopsex', 'gg_sex_orgasm'
 	dynamic $npc_orgasm
 
 	if shgopsex_group_count > 0:
-		act 'Sex selection': dynamic $shgopsex_group
+		act 'Sex selection': gs 'gopsex', 'shgopsex_group'
 		!act 'Finish': dynamic $shgopsex_group_end
 	end	
 	if shgopsex_group_count = 0:
@@ -1947,7 +1949,7 @@ $shgopsex_group_cumface = {
 	gs'stat'
 	'<center><img src="images/zsoft/pod_ezd/shulgahome/bigroom/gopsex/group/cum/cumface'+rand(1,23)+'.jpg"></center>'
 	'<<$gop_text_npcr>> obkonchalsya your pretty face.'
-	act 'Escape': gt'shulga_room'
+	act 'Escape': gt 'shulga_room', 'start'
 }
 !Cum in mouth
 $shgopsex_group_swallow = {
@@ -1962,7 +1964,7 @@ $shgopsex_group_swallow = {
 	gs'stat'
 	'<center><img src="images/zsoft/pod_ezd/shulgahome/bigroom/gopsex/group/cum/swallow'+rand(1,12)+'.jpg"></center>'
 	'<<$gop_text_npcr>> We poured semen into your mouth and you swallow it.'
-	act 'Escape': gt'shulga_room'
+	act 'Escape': gt 'shulga_room', 'start'
 }
 !Cum on body
 $shgopsex_group_cumbelly = {
@@ -1976,7 +1978,7 @@ $shgopsex_group_cumbelly = {
 	gs'stat'
 	'<center><img src="images/zsoft/pod_ezd/shulgahome/bigroom/gopsex/group/cum/cumbody'+rand(1,15)+'.jpg"></center>'
 	'<<$gop_text_npcr>> obtruhali your whole body.'
-	act 'Escape': gt'shulga_room'
+	act 'Escape': gt 'shulga_room', 'start'
 }
 !Cum in pussy
 $shgopsex_group_cumvag = {
@@ -1988,7 +1990,7 @@ $shgopsex_group_cumvag = {
 	gs'stat'
 	'<center><img src="images/zsoft/pod_ezd/shulgahome/bigroom/gopsex/group/cum/cumvag'+rand(1,6)+'.jpg"></center>'
 	'<<$gop_text_npcr>> in turn, poured out to you in the pussy.'
-	act 'Escape': gt'shulga_room'
+	act 'Escape': gt 'shulga_room', 'start'
 }
 !ending in the ass
 $shgopsex_group_cumanal = {
@@ -2002,7 +2004,7 @@ $shgopsex_group_cumanal = {
 	gs'stat'
 	'<center><img src="images/zsoft/pod_ezd/shulgahome/bigroom/gopsex/group/cum/cumass'+rand(1,9)+'.jpg"></center>'
 	'<<$gop_text_npcr>> in turn, pumped up your asshole with sperm.'
-	act 'Escape': gt'shulga_room'
+	act 'Escape': gt 'shulga_room', 'start'
 }
 --- gopsex ---------------------------------
 
