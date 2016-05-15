@@ -859,7 +859,21 @@ $d_cycreport_update = {
 			$cycreport_txt = 'You have gone through menopause.'
 		else
 			temp[1] = daystart-daylastperiod
-			$cycreport_txt = 'It has been <<temp[1]>> days since you last had a period.'
+			if tabletkishot > 0:
+				$cycreport_txt = 'It has been <<temp[1]>> days since you last had a period. <font color=green>You are currently protected by a birth control shot.</font>'
+			elseif pillcon > 30000:
+				$cycreport_txt = 'It has been <<temp[1]>> days since you last had a period. <font color=green>You are currently on the pill.</font>'
+			elseif pillcon > 8000 and (FocH > 70 or ovulate > 0):
+				$cycreport_txt = 'It has been <<temp[1]>> days since you last had a period. You are currently on the pill but it is not yet effective. <font color=red>It is currently a dangerous day.</font>'
+			elseif pillcon > 8000:
+				$cycreport_txt = 'It has been <<temp[1]>> days since you last had a period. You are currently on the pill but it is not yet effective.'
+			elseif daystart = tabletkiday:
+				$cycreport_txt = 'It has been <<temp[1]>> days since you last had a period. You have taken the pill but it will be several weeks before it is fully effective.'
+			elseif FocH > 70 or ovulate > 0:
+				$cycreport_txt = 'It has been <<temp[1]>> days since you last had a period. <font color=red>It is currently a dangerous day.</font>'
+			else
+				$cycreport_txt = 'It has been <<temp[1]>> days since you last had a period.'
+			end
 		end
 	elseif denypreg = 1:
 		if pregchem < 525:
