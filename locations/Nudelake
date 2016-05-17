@@ -5,6 +5,7 @@
 
 if $clothingworntype ! 'swimwear' and $clothingworntype ! 'nude':
 	minut += 5
+	if tanga = 1: remtanga = 1
 	tanga = 0
 	gs 'clothing', 'strip'
 	'You strip naked, enjoying the warm breeze on your bare skin.'
@@ -12,6 +13,7 @@ elseif $clothingworntype = 'swimwear':
 	act'Strip naked':
 		cls
 		minut += 5
+		if tanga = 1: remtanga = 1
 		tanga = 0
 		gs 'clothing', 'strip'
 		xgt 'Nudelake'
@@ -28,7 +30,11 @@ else
 	'The nudist beach is closed.'
 end
 
-act 'Return to the main beach':if $clothingworntype = 'nude':gs 'clothing', 'wear_last_worn' & gt 'lake', 'start'
+act 'Return to the main beach':
+	if $clothingworntype = 'nude':gs 'clothing', 'wear_last_worn'
+	if remtanga = 1: tanga = 1 & remtanga = 0
+	gt 'lake', 'start'
+end
 
 if katday ! daystart and kat >= 1:
 	'You see Kat on the beach.'
