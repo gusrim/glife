@@ -1,4 +1,32 @@
 # bed2
+
+if $args[0] = 'options':
+	cla
+	act 'Set Alarm Clock':gt 'budilnik', 'start'
+	if bedPanty = 0:
+		act 'You will wear panties in the morning, click to turn off':bedpanty = 1 & gt 'bed2', 'options'
+	else
+		act 'You will not wear panties in the morning, click to turn on':bedpanty = 0 & gt 'bed2', 'options'
+	end
+	if analplug = 1:
+		if bedanal = 0:
+			act 'If worn, you will remove your analplug at night, click to always leave it in':bedanal = 1 & gt 'bed2', 'options'
+		else
+			act 'If worn, you will wear your analplug through the night, click to always remove it':bedanal = 0 & gt 'bed2', 'options'
+		end
+	end
+
+	if vibrator = 1 and cheatVib = 1:
+		if bedvibrator = 0:
+			act 'If worn, you will remove your vibrator at night, click to always leave it in':bedvibrator = 1 & gt 'bed2', 'options'
+		else
+			act 'If worn, you will wear your vibrator through the night, click to always remove it':bedvibrator = 0 & gt 'bed2', 'options'
+		end
+	end
+
+	act 'Return':gt 'bed2'
+end
+
 if $args[0] = '':
 	gs 'stat'
 	cla
@@ -9,7 +37,11 @@ if $args[0] = '':
 		'<center><img src="images/pics/son.jpg"></center>'
 	end
 
-	dynamic $budilnikOn
+	if budilnikOn = 0:
+		'You lie on the bed. Alarm set for <<timer>> hours <<timerM>> minutes and currently turned <a href="exec: budilnikOn = 1 & GT ''bed2''">off</a>.'
+	else
+		'You lie on the bed. Alarm set for <<timer>> hours <<timerM>> minutes and currently turned <a href="exec: budilnikOn = 0 & GT ''bed2''">on</a>.'
+	end
 
 	if mop ! 1:'<b><font color="red">You need to wash off your makeup before going to bed.</font></b>'
 
@@ -31,7 +63,7 @@ if $args[0] = '':
 			gt 'bed2', 'sleep'
 		end
 	end
-	act 'Options':dynamic $sopts
+	act 'Options':gt 'bed2', 'options'
 
 	act 'Get out of bed':gt $locM, $metkaM
 end
@@ -125,20 +157,30 @@ if $args[0] = 'wake':
 			if schoolH[schtype] = 0:schtype = 6
 			gs 'clothing', 'wear', 'school', schtype
 			minut += 15
-			dynamic $wakepar
+			gs 'bed2', 'end'
 		end
 	end
 
 	act 'Get out of bed and get dressed (0:15)':
 		gs 'clothing', 'wear_last_worn'
 		minut += 15
-		dynamic $wakepar
+		gs 'bed2', 'end'
 	end
 
 	act 'Get out of bed (0:10)':
 		minut += 10
-		dynamic $wakepar
+		gs 'bed2', 'end'
 	end
+end
+
+if $args[0] = 'end':
+	InSleep = 0
+	if bedpanty = 0 and clrbelo > 0:
+		tanga = 1
+	else
+		tanga =0
+	end
+	gt $locM, $metkaM
 end
 
 --- bed2 ---------------------------------
