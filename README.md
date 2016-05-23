@@ -1,5 +1,4 @@
-# glife
-Girl Life (ЭТО) [English Community Version] - github edition
+# Girl Life (ЭТО) [English Community Version] - github edition
 
 ## Quick start (for Unixy machines)
 * clone/fork the repo
