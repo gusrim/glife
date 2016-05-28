@@ -848,74 +848,78 @@ $d_cycreport_actor = {
 
 $d_cycreport_update = {
 	if thinkpreg = 1 or knowpreg = 1: dynamic $d_cycreport_upduedate
-	if cyccustom = 1:
-		if preg = 1 and knowpreg = 1:
-			$cycreport_txt = 'You are pregnant. Your due date is around <<$pregduedate>>.'
-			if $wombthfath ! 'Unknown': $cycreport_txt = '<<$cycreport_txt>> You think the father is <<$wombthfath>>'
-		elseif knowpregloss = 1:
-			$cycreport_txt = 'Your body is recovering from the trauma of pregnancy.'
-		elseif knowpregrecover = 1:
-			$cycreport_txt = 'Your body is recovering from the trauma of childbirth.'
-		elseif menoage <= age:
-			$cycreport_txt = 'You have gone through menopause.'
-		else
-			temp[1] = daystart-daylastperiod
-			if tabletkishot > 0:
-				$cycreport_txt = 'It has been <<temp[1]>> days since you last had a period. <font color=green>You are currently protected by a birth control shot.</font>'
-			elseif pillcon > 30000:
-				$cycreport_txt = 'It has been <<temp[1]>> days since you last had a period. <font color=green>You are currently on the pill.</font>'
-			elseif pillcon > 8000 and (FocH > 70 or ovulate > 0):
-				$cycreport_txt = 'It has been <<temp[1]>> days since you last had a period. You are currently on the pill but it is not yet effective. <font color=red>It is currently a dangerous day.</font>'
-			elseif pillcon > 8000:
-				$cycreport_txt = 'It has been <<temp[1]>> days since you last had a period. You are currently on the pill but it is not yet effective.'
-			elseif daystart = tabletkiday:
-				$cycreport_txt = 'It has been <<temp[1]>> days since you last had a period. You have taken the pill but it will be several weeks before it is fully effective.'
-			elseif FocH > 70 or ovulate > 0:
-				$cycreport_txt = 'It has been <<temp[1]>> days since you last had a period. <font color=red>It is currently a dangerous day.</font>'
+	if mesec > 0:
+		$cycreport_txt = 'You are currently on your period.'
+	else
+		if cyccustom = 1:
+			if preg = 1 and knowpreg = 1:
+				$cycreport_txt = 'You are pregnant. Your due date is around <<$pregduedate>>.'
+				if $wombthfath ! 'Unknown': $cycreport_txt = '<<$cycreport_txt>> You think the father is <<$wombthfath>>'
+			elseif knowpregloss = 1:
+				$cycreport_txt = 'Your body is recovering from the trauma of pregnancy.'
+			elseif knowpregrecover = 1:
+				$cycreport_txt = 'Your body is recovering from the trauma of childbirth.'
+			elseif menoage <= age:
+				$cycreport_txt = 'You have gone through menopause.'
 			else
-				$cycreport_txt = 'It has been <<temp[1]>> days since you last had a period.'
-			end
-		end
-	elseif denypreg = 1:
-		if pregchem < 525:
-			denypreg = 1
-			thinkpreg = 0
-			$cycreport_txt = 'There is nothing wrong, your cycle is just irregular.'
-		elseif pregchem < 1863:
-			denypreg = 1
-			thinkpreg = 0
-			$cycreport_txt = 'You have a strange flu making you feel ill.'
-		elseif pregchem < 4000:
-			denypreg = 1
-			thinkpreg = 0
-			$cycreport_txt = 'Your strange flu still hasn''t gone away. As soon as it does you plan to exercise and loose the excess fat you are building up.'
-		elseif pregchem < 6000:
-			denypreg = 1
-			thinkpreg = 0
-			$cycreport_txt = 'Your weight just won''t come off...'
-		elseif pregchem < 7500:
-			denypreg = 1
-			thinkpreg = 0
-			$cycreport_txt = 'People are rude, constantly asking you when you are due. You are not pregnant!'
-		elseif pregchem >= 7500:
-			thinkpreg = 0
-			$cycreport_txt = 'Surely if you were pregnant, you''d have had the baby by now, so you can''t possibly be pregnant.'
-		else
-			temp = daystart-daylastperiod
-			$cycreport_txt = 'It has been <<temp>> days since you last remember having a period.'
-		end
-	elseif cyccustom = 0:
-		if $cycreport_txt ! 'In labour':
-			if thinkpreg = 1 or knowpreg = 1:
-				if knowpreg = 0: $temp = ' think you'
-				if $wombthfath = 'Unknown' or $wombthfath = '':
-					$cycreport_txt = 'You<<$temp>> are pregnant. You aren''t yet sure who the father is. Based on your last remembered period, your due date is probably around <<$pregduedate>>.'
+				temp[1] = daystart-daylastperiod
+				if tabletkishot > 0:
+					$cycreport_txt = 'It has been <<temp[1]>> days since you last had a period. <font color=green>You are currently protected by a birth control shot.</font>'
+				elseif pillcon > 30000:
+					$cycreport_txt = 'It has been <<temp[1]>> days since you last had a period. <font color=green>You are currently on the pill.</font>'
+				elseif pillcon > 8000 and (FocH > 70 or ovulate > 0):
+					$cycreport_txt = 'It has been <<temp[1]>> days since you last had a period. You are currently on the pill but it is not yet effective. <font color=red>It is currently a dangerous day.</font>'
+				elseif pillcon > 8000:
+					$cycreport_txt = 'It has been <<temp[1]>> days since you last had a period. You are currently on the pill but it is not yet effective.'
+				elseif daystart = tabletkiday:
+					$cycreport_txt = 'It has been <<temp[1]>> days since you last had a period. You have taken the pill but it will be several weeks before it is fully effective.'
+				elseif FocH > 70 or ovulate > 0:
+					$cycreport_txt = 'It has been <<temp[1]>> days since you last had a period. <font color=red>It is currently a dangerous day.</font>'
 				else
-					$cycreport_txt = 'You<<$temp>> are pregnant with <<$wombthfath>>''s baby. Based on your last remembered period, your due date is probably around <<$pregduedate>>.'
+					$cycreport_txt = 'It has been <<temp[1]>> days since you last had a period.'
 				end
-			elseif $cycreport_txt ! 'You do not believe you have periods any more.':
+			end
+		elseif denypreg = 1:
+			if pregchem < 525:
+				denypreg = 1
+				thinkpreg = 0
+				$cycreport_txt = 'There is nothing wrong, your cycle is just irregular.'
+			elseif pregchem < 1863:
+				denypreg = 1
+				thinkpreg = 0
+				$cycreport_txt = 'You have a strange flu making you feel ill.'
+			elseif pregchem < 4000:
+				denypreg = 1
+				thinkpreg = 0
+				$cycreport_txt = 'Your strange flu still hasn''t gone away. As soon as it does you plan to exercise and loose the excess fat you are building up.'
+			elseif pregchem < 6000:
+				denypreg = 1
+				thinkpreg = 0
+				$cycreport_txt = 'Your weight just won''t come off...'
+			elseif pregchem < 7500:
+				denypreg = 1
+				thinkpreg = 0
+				$cycreport_txt = 'People are rude, constantly asking you when you are due. You are not pregnant!'
+			elseif pregchem >= 7500:
+				thinkpreg = 0
+				$cycreport_txt = 'Surely if you were pregnant, you''d have had the baby by now, so you can''t possibly be pregnant.'
+			else
 				temp = daystart-daylastperiod
 				$cycreport_txt = 'It has been <<temp>> days since you last remember having a period.'
+			end
+		elseif cyccustom = 0:
+			if $cycreport_txt ! 'In labour':
+				if thinkpreg = 1 or knowpreg = 1:
+					if knowpreg = 0: $temp = ' think you'
+					if $wombthfath = 'Unknown' or $wombthfath = '':
+						$cycreport_txt = 'You<<$temp>> are pregnant. You aren''t yet sure who the father is. Based on your last remembered period, your due date is probably around <<$pregduedate>>.'
+					else
+						$cycreport_txt = 'You<<$temp>> are pregnant with <<$wombthfath>>''s baby. Based on your last remembered period, your due date is probably around <<$pregduedate>>.'
+					end
+				elseif $cycreport_txt ! 'You do not believe you have periods any more.':
+					temp = daystart-daylastperiod
+					$cycreport_txt = 'It has been <<temp>> days since you last remember having a period.'
+				end
 			end
 		end
 	end
