@@ -4,9 +4,9 @@
 :: This is where glife.qsp will be copied. If you don't want to move it just comment (::) the line below.
 :: set CP_TO=..\GL_ECV
 
-:: This is the program used to open glife.qsp. If you comment this line windows will launch the default app to open glife.qsp
-set QSPGUI=..\QSP\qspgui.exe
-set QGEN=..\QSP\QGen5\QGen.exe
+:: This is the program used to open the QSPFILE. If you comment this line windows will launch the default app for the ".qsp" extension.
+set QSPGUI=QSP\qspgui.exe
+set QGEN=QSP\QGen5\QGen.exe
 
 :: The file that will be generated or open
 set QSPFILE=glife.qsp
