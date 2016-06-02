@@ -27,6 +27,7 @@ if StoryLine = 0:
 	FUNC ('$single_stock_item', 1, 'enema kit', 500, 'klisma', $CURLOC) + _
 	FUNC ('$stock_item', 10, 'antibiotics', 500, 'lekarstvo', $CURLOC) + _
 	FUNC ('$stock_item', 20, 'vitamin tablets', 500, 'vitamin', $CURLOC) + _
+	FUNC ('$stock_item', 16, 'painkillers', 500, 'painkiller', $CURLOC) + _
 	FUNC ('$stock_item', 10, 'soothing ointment for chafed skin', 600, 'mosolmaz', $CURLOC) + _
 	FUNC ('$stock_item', 25, 'lip balm', 100, 'lipbalm', $CURLOC) + _
 	FUNC ('$stock_item', 1, 'weight loss pill', 2000, 'fatdel', $CURLOC) + _
@@ -41,6 +42,7 @@ else
 	if klisma = 0:'Enema kit - 500 <b>₽</b>'
 	'Antibiotics - 500 <b>₽</b>'
 	'Vitamin drinks - 500 <b>₽</b>'
+	'Painkillers - 500 <b>₽</b>'
 	'Soothing ointment for chafed skin - 600 <b>₽</b>'
 	'Moisturizing lip balm - 1000 <b>₽</b>'
 	'Fat burners - 1500 <b>₽</b>'
@@ -266,6 +268,25 @@ if StoryLine = 1:
 				'You purchase the vitamin tablets and put them in your pocket.'
 			else
 				'You can''t afford the vitamin tablets.'
+			end
+
+			act 'Move away from the counter':gt 'gaptek', 'start'
+		end
+
+		act 'Buy painkillers (500 <b>₽</b>) <<iif(painkiller > 0, ''[left:<b>'' + painkiller + ''</b>]'', '''')>>':
+			cla
+			*clr
+			portion = input("How many packs do you want to buy? (One package contains 16 tablets)")
+
+			if portion <= 0:portion = 1
+
+			if portion * 500 <= money:
+				painkiller += portion * 16
+				money -= portion * 500
+				'<center><img src="images/etogame/kassa.jpg"></center>'
+				'You purchase the painkiller and put them in your pocket.'
+			else
+				'You can''t afford the painkiller tablets.'
 			end
 
 			act 'Move away from the counter':gt 'gaptek', 'start'
