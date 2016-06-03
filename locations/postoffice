@@ -1,0 +1,75 @@
+# postoffice
+
+if $ARGS[0] = 'start':
+	cla
+	clr
+	*clr
+	minut += 5
+	gs 'stat'
+	fcolor = rgb(0, 0, 0)
+	bcolor = rgb(255, 255, 255)
+	lcolor = rgb(106, 90, 205)
+	'<center>Post Office</center>'
+	'<center><img src="images/locations/shared/postoffice/main.jpg"></center>'
+	'It is currently very busy and looks like you''ll have to wait to get to the counter.'
+		act 'Wait in line (30 Minutes)':
+			minut += 30
+			gt 'postoffice', 'counter'
+		end
+	end
+
+	act 'Leave':
+		minut += 5
+		if bankloc = 1:
+			gt 'down'
+		else
+			gt 'pavCommercial'
+		end
+	end
+end
+
+if $ARGS[0] = 'counter':
+	!image goes here
+	'The counter, its boring here.'
+	
+	if bankAccount = 1 and money > 0:
+		act 'Deposit money to your bank account':
+			cla
+			minut += 5
+			kartaIN = input ("How much money you want to deposit into the account?")
+
+			if kartaIN <= 0 or kartaIN > money:
+				'Not correct operation.'
+			else
+				karta += kartaIN
+				money -= kartaIN
+
+				'<br>You put on the account <<kartaIN>> <b>₽</b>, now you have <<karta>> <b>₽</b> on it.'
+			end
+
+			'"Is there anything else I can do for you?"'
+
+			act 'Yes':gt 'postoffice', 'counter'
+			act 'Leave':
+				minut += 5
+				if bankloc = 1:
+					gt 'down'
+				else
+					gt 'pavCommercial'
+				end
+			end
+		end
+	end
+
+	act 'Leave':
+		minut += 5
+		if bankloc = 1:
+			gt 'down'
+		else
+			gt 'pavCommercial'
+		end
+	end
+end
+
+--- postoffice ---------------------------------
+
