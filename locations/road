@@ -1,7 +1,124 @@
 # road
 
-CLOSE ALL
-$polustanok = {
+if $ARGS[0] = '':
+	CLOSE ALL
+	$metka = $ARGS[0]
+	$loc = $CURLOC
+	cls
+	gs 'stat'
+	gs 'outdoors'
+	'<center><h4>Main road between St. Petersburg and Pavlovsk</h4></center>'
+	'<center><img src="images/etogame/road.jpg"></center>'
+	'<center><<nroad>> km</center>'
+	'Calling it a highway would be too much credit, but this road is the main way to get from St. Petersburg to the town of Pavlovsk, 20km away. Smaller villages named Gadyukino and Pushkin can be found along the way. Cars are driving by you at a high speed.'
+
+	if car > 0 and cardrive = 19 and ncarroad = nroad:'You parked <a href="exec:gs ''carF'', ''start''">your <<$car>></a> next to the road.'
+	if nroad = 0:act 'Enter the northern district of the city':minut += 60 & gt 'nord'
+	if nroad = 16:act 'Check out the construction site':minut += 60 & gt 'obekt'
+	if nroad = 20:act 'Enter Pavlovsk':minut += 60 & gt 'pavCommercial'
+	if nroad < 20:act 'Walk towards Pavlovsk':minut += 60 & nroad += 1 & gt $curloc
+	if nroad > 0:act 'Walk towards St. Petersburg':minut += 60 & nroad -= 1 & gt $curloc
+	if nroad>0 and nroad<20:
+		act'Try hitchhiking towards Pavlovsk':
+			cls
+			minut+=15
+			gs'stat'
+			gorand=rand(1,100)
+			picrand = RAND(1,3)
+			if gorand<=60:
+				'<center><B>Main road between St. Petersburg and Pavlovsk</B></center>'
+				'<center><img src="images/pic/city/road/autostop (<<picrand>>).jpg" ></center>'
+				'You try to catch the attention of people driving towards Pavlovsk but everyone just rushes by, ignoring you completely.'
+				act 'Continue':gt $curloc
+			elseif gorand>60:
+				gs 'road', 'autostop_d'
+				if nroad<15:
+					act 'Ask the driver to take you to Gadyukino':
+						$road_textrand0 = 'Gadyukino'
+						gt 'road', 'autostpo_money'
+					end
+				end
+				act 'Ask the driver to take you to Pavlovsk':
+					$road_textrand0 = 'Pavlovsk'
+					gt 'road', 'autostpo_money'
+				end
+			end
+		end
+		act'Try hitchhiking towards St. Petersburg':
+			cls
+			minut+=15
+			gs'stat'
+			gorand=rand(1,100)
+			picrand = RAND(1,3)
+			if gorand<=60:
+				'<center><B>Main road between St. Petersburg and Pavlovsk</B></center>'
+				'<center><img src="images/pic/city/road/autostop (<<picrand>>).jpg" ></center>'
+				'You try to catch the attention of people driving towards St. Petersburg but everyone just rushes by, ignoring you completely.'
+				act 'Continue':gt $curloc
+			elseif gorand>60:
+				gs 'road', 'autostop_d'
+				if nroad>15:
+					act 'Ask the driver to take you to Gadyukino':
+						$road_textrand0 = 'Gadyukino'
+						gt 'road', 'autostpo_money'
+					end
+				end
+				act 'Ask the driver to take you to St. Petersburg':
+					$road_textrand0 = 'St. Petersburg'
+					gt 'road', 'autostpo_money'
+				end
+			end
+		end
+	end
+
+	if nroad = 0:
+		'You''re on the outskirts of St. Petersburg. You see a number of crudely made huts near the trees, a bunch of homeless people must have sought shelter here.'
+		'A <a href="exec:minut+=5&GT ''furi''">lorry</a> is parked next to the road. The driver is currently taking a break, and is having a cigarette. He could probably bring you to Pavlovsk, for a price...'
+	elseif nroad = 1:
+		'You''re not very far from St. Petersburg. You see a bunch of <a href="exec:minut += 15 & gt ''locmansion''">luxury houses</a> not far from the road. That settlement looks like it''s very expensive to live in.'
+	elseif nroad = 2:
+		''
+	elseif nroad = 3:
+		'You see a sign pointing towards a <a href="exec:minut += 15 & gt ''graveyard''">cemetery</a>, hidden between lots of trees. You think it''ll be a 15 minute walk, from here.'
+	elseif nroad = 4:
+		''
+	elseif nroad = 5:
+		'You see a <a href="exec:gt ''road'', ''platform''">railway platform</a> not far from the road. A bit further away, someone built <a href="exec:minut += 15 & gt ''dachi''">a bunch of cottages</a>. Some of them are for sale. This must be a nice place to stay at, in the summer!'
+	elseif nroad = 6:
+		''
+	elseif nroad = 7:
+		''
+	elseif nroad = 8:
+		''
+	elseif nroad = 9:
+		''
+	elseif nroad = 10:
+		'You see a <a href="exec:gt ''road'', ''platform2''">railway platform</a> not far from the road. According to a sign, the old town of <a href="exec:minut += 15 & gt ''liam''">Pushkin</a> is about a fifteen minute walk down a cobblestone road away from here. It''s a fairly popular town for tourists to explore, much of its old architecture is still intact.'
+	elseif nroad = 11:
+		''
+	elseif nroad = 12:
+		''
+	elseif nroad = 13:
+		''
+	elseif nroad = 14:
+		'You see a <a href="exec:minut += 15 & gt ''motel''">trucker motel</a> near the road. You have no business there, you''re no trucker!'
+	elseif nroad = 15:
+		'You see a <a href="exec:gt ''road'', ''platform3''">railway platform</a> not far from the road. In the same direction, a dirt road leads to the village of <a href="exec:minut += 30 & gt ''gadukino''">Gadyukino</a>.'
+	elseif nroad = 16:
+		'All you see is an abandoned building, not too far from the road. From the look of it, the heavy fences around the building will make it difficult for you to get anywhere near it.'
+	elseif nroad = 17:
+		''
+	elseif nroad = 18:
+		''
+	elseif nroad = 19:
+		''
+	elseif nroad = 20:
+		'The main road ends at the old provincial town of Pavlovsk. You can see the castle from a distance.'
+		'A <a href="exec:minut+=5&GT ''furi''">lorry</a> is parked next to the road. The driver is currently taking a break, and is having a cigarette. He could probably bring you to St. Petersburg, for a price...'
+	end
+end
+
+if $ARGS[0] = 'platform':
 	cls
 	gs 'stat'
 	'A fairly non-descript railway platform, with little of interest near it.'
@@ -55,9 +172,9 @@ $polustanok = {
 			act 'Get off the train':minut += 5 & nroad = 0 & gt 'vokzalper'
 		end
 	end
-}
+end
 
-$polustanok2 = {
+if $ARGS[0] = 'platform2':
 	cls
 	gs 'stat'
 	'A fairly non-descript railway platform. The old town of Pushkin is about a fifteen minute walk away from here, on the other side of the road.'
@@ -111,9 +228,9 @@ $polustanok2 = {
 			act 'Get off the train':minut += 20 & nroad = 5 & gt 'road'
 		end
 	end
-}
+end
 
-$polustanok3 = {
+if $ARGS[0] = 'platform3':
 	cls
 	gs 'stat'
 	'A fairly non-descript railway platform. The small village of Gadyukino is not far from here.'
@@ -167,10 +284,9 @@ $polustanok3 = {
 			act 'Get off the train near Pushkin':minut += 20 & nroad = 10 & gt 'road'
 		end
 	end
-}
+end
 
-$drive_sex[1] = {
-	cla
+if $ARGS[0] = 'drive_sex1':
 	cls
 	gs'stat'
 	autostop_price = 0
@@ -205,12 +321,10 @@ $drive_sex[1] = {
 	'You eagerly bob your head up and down while he drives, totally forgetting about your earlier doubts and do your best to get him off.'
 	'With success: in no time at all, the man groans and his cock erupts inside your mouth, shooting gobs of his hot sperm onto your tongue while you keep your lips closed around his cock to not make a mess.'
 	'Realizing you can''t spit it out anywhere, you have no option but to swallow his load while he keeps driving.'
-    act'To go further': dynamic $autospot_drive
-}
+    act'To go further': gt 'road', 'autospot_drive'
+end
 
-
-$drive_sex[2] = {
-	cla
+if $ARGS[0] = 'drive_sex2':
 	cls
 	gs'stat'
 	autostop_price = 0
@@ -239,11 +353,10 @@ $drive_sex[2] = {
     if dick >= 20: $raod_text_sex = 'huge'
     'You gentle massage his cock between your fingers while the man gets comfortable. It''s <<$raod_text_sex>>, roughly <<dick>> centimetres long and quite girthy. You manage to massage him to a full erection in no time at all, and begin to jerk him off while he drives, rubbing your fingertips over his glans.'
     'Even though you feel a bit awkward for having to service this man to get where you need to be, you''re serious about what you promised him and jerk him off diligently. In no time at all, your soft touch brings him to an orgasm. Unfortunately his cock was pointing straight at you when it happened, and most of his sperm ends up on your clothes.'
-    act'Continue': dynamic $autospot_drive
-}
+    act'Continue': gt 'road', 'autospot_drive'
+end
 
-$autospot_drive = {
-	cla
+if $ARGS[0] = 'autospot_drive':
 	cls
 	gs'stat'
 	money -= autostop_price * 100
@@ -275,10 +388,10 @@ $autospot_drive = {
 		'Fifteen minutes later you arrive, and the man pulls over. "Alright, we''re here. Take care, girl!"'
     end
     act'Get out of the car':gt $curloc
-}
+end
 
-$autostpo_money = {
-	cla
+if $ARGS[0] = 'autostpo_money':
+	cls
 	gs'stat'
 	autostop_price = RAND(3,6)
 	textrand = RAND(1,3)
@@ -308,7 +421,7 @@ $autostpo_money = {
 			drive_sex[1] = 1
 			'You bite your lip for a second, quickly going through your options. Then you say: "I really do need this ride, sir! Would a blowjob be okay?"'
 			'The guy grins greedily and says: "Excellent, I knew we would find a way to help each other out! Get in."'
-			act'Get in the car':dynamic $drive_sex[1]
+			act'Get in the car':gt 'road', 'drive_sex1'
 		end
 		act'Offer a handjob':
 			cla
@@ -317,14 +430,14 @@ $autostpo_money = {
 			'The guy gives you a slightly disappointed look and frowns: "What? Only a handjob?"'
 			'You really don''t want to go further than that! Your cheeks turn a deep red and you begin to stumble: "I''m sorry. I don''t normally do this..."'
 			'After some hesitation, he responds: "Oh, alright then. Getting a handjob from a cute girl such as yourself sounds like a fair deal. Get in."'
-			act'Get in the car':dynamic $drive_sex[2]
+			act'Get in the car':gt 'road', 'drive_sex2'
 		end
 		exit
 	else 
 		'He ponders for a second, and then says: "<<$road_textrand4>>"'
 	end
 	if money > autostop_price*100:
-		act'Agree to pay him': dynamic $autospot_drive
+		act'Agree to pay him': gt 'road', 'autospot_drive'
 	end
 	act'Decline his offer':
 		cla
@@ -350,7 +463,7 @@ $autostpo_money = {
 				drive_sex[1] = 1
 				'You bite your lip for a second, quickly going through your options. Then you say: "I really do need this ride, sir! Would a blowjob be okay?"'
 				'The guy grins greedily and says: "Excellent, I knew we would find a way to help each other out! Get in."'
-				act'Get in the car':dynamic $drive_sex[1]
+				act'Get in the car':gt 'road', 'drive_sex1'
 			end
 			act'Offer a handjob':
 				cla
@@ -359,7 +472,7 @@ $autostpo_money = {
 				'The guy gives you a slightly disappointed look and says: "What? Only a handjob?"'
 				'You really don''t want to go further than that! Your cheeks turn a deep red and you begin to stumble: "I''m sorry. I don''t normally do this..."'
 				'After some hesitation, he responds: "Oh, alright then. Getting a handjob from a cute girl such as yourself sounds like a fair deal. Get in."'
-				act'Get in the car':dynamic $drive_sex[2]
+				act'Get in the car':gt 'road', 'drive_sex2'
 			end
 		else 
 			ivrand = RAND(1,2)
@@ -369,7 +482,7 @@ $autostpo_money = {
 			if money > autostop_price*100:
 				act'Agree to pay him':
 					!trip
-					dynamic $autospot_drive
+					gt 'road', 'autospot_drive'
 				end
 			end
 			act'Decline his offer':
@@ -383,16 +496,14 @@ $autostpo_money = {
 				'You bite your lip, as if you are ashamed for what you''re about to say next. In a weak voice, you offer: "I can''t pay you money, sir. But... I could give you a blowjob? Would that be okay?"'
 				'You lick your lips seductively and offer him a weak smile, hoping that maybe he''ll feel bad for you and just take you with him for free.'
 				'The man grins from ear to ear, and says: "You know what, girl? I was kinda hoping you''d say that. Get in."'
-				act'Get in the car':dynamic $drive_sex[1]
+				act'Get in the car':gt 'road', 'drive_sex1'
 			end
 		end
 	end
-	
-}
+end
 
-$autostop_d = {
+if $ARGS[0] = 'autostop_d':
 	cls
-	cla
 	gs'stat'
 	truck_drive = 0
     bandit_drive = 0
@@ -444,125 +555,6 @@ $autostop_d = {
 		if vnesh < 60:'Then he shrugs and says: "Where do you need to go, lady?"'
 		if vnesh >= 60:'Then he gives you a friendly smile and says: "<<$road_textrand1>>"'
 	end
-}
-
-$metka = $ARGS[0]
-$loc = $CURLOC
-clr
-gs 'stat'
-gs 'outdoors'
-'<center><h4>Main road between St. Petersburg and Pavlovsk</h4></center>'
-'<center><img src="images/etogame/road.jpg"></center>'
-'<center><<nroad>> km</center>'
-'Calling it a highway would be too much credit, but this road is the main way to get from St. Petersburg to the town of Pavlovsk, 20km away. Smaller villages named Gadyukino and Pushkin can be found along the way. Cars are driving by you at a high speed.'
-
-if car > 0 and cardrive = 19 and ncarroad = nroad:'You parked <a href="exec:gs ''carF'', ''start''">your <<$car>></a> next to the road.'
-if nroad = 0:act 'Enter the northern district of the city':minut += 60 & gt 'nord'
-if nroad = 16:act 'Check out the construction site':minut += 60 & gt 'obekt'
-if nroad = 20:act 'Enter Pavlovsk':minut += 60 & gt 'pavCommercial'
-if nroad < 20:act 'Walk towards Pavlovsk':minut += 60 & nroad += 1 & gt $curloc
-if nroad > 0:act 'Walk towards St. Petersburg':minut += 60 & nroad -= 1 & gt $curloc
-if nroad>0 and nroad<20:
-    act'Try hitchhiking towards Pavlovsk':
-		cls
-		minut+=15
-		gs'stat'
-		gorand=rand(1,100)
-		picrand = RAND(1,3)
-        if gorand<=60:
-			'<center><B>Main road between St. Petersburg and Pavlovsk</B></center>'
-			'<center><img src="images/pic/city/road/autostop (<<picrand>>).jpg" ></center>'
-			'You try to catch the attention of people driving towards Pavlovsk but everyone just rushes by, ignoring you completely.'
-			act 'Continue':gt $curloc
-        elseif gorand>60:
-			dynamic $autostop_d
-            if nroad<15:
-                act 'Ask the driver to take you to Gadyukino':
-					cls
-					$road_textrand0 = 'Gadyukino'
-					dynamic $autostpo_money
-                end
-            end
-            act 'Ask the driver to take you to Pavlovsk':
-				cls
-				$road_textrand0 = 'Pavlovsk'
-				dynamic $autostpo_money
-			end
-        end
-    end
-    act'Try hitchhiking towards St. Petersburg':
-		cls
-		minut+=15
-		gs'stat'
-		gorand=rand(1,100)
-		picrand = RAND(1,3)
-        if gorand<=60:
-			'<center><B>Main road between St. Petersburg and Pavlovsk</B></center>'
-			'<center><img src="images/pic/city/road/autostop (<<picrand>>).jpg" ></center>'
-			'You try to catch the attention of people driving towards St. Petersburg but everyone just rushes by, ignoring you completely.'
-			act 'Continue':gt $curloc
-        elseif gorand>60:
-			dynamic $autostop_d
-            if nroad>15:
-                act 'Ask the driver to take you to Gadyukino':
-					cls
-					$road_textrand0 = 'Gadyukino'
-					dynamic $autostpo_money
-				end
-            end
-			act 'Ask the driver to take you to St. Petersburg':
-				cls
-				$road_textrand0 = 'St. Petersburg'
-				dynamic $autostpo_money
-			end
-        end
-    end
-end
-
-if nroad = 0:
-	'You''re on the outskirts of St. Petersburg. You see a number of crudely made huts near the trees, a bunch of homeless people must have sought shelter here.'
-	'A <a href="exec:minut+=5&GT ''furi''">lorry</a> is parked next to the road. The driver is currently taking a break, and is having a cigarette. He could probably bring you to Pavlovsk, for a price...'
-elseif nroad = 1:
-	'You''re not very far from St. Petersburg. You see a bunch of <a href="exec:minut += 15 & gt ''locmansion''">luxury houses</a> not far from the road. That settlement looks like it''s very expensive to live in.'
-elseif nroad = 2:
-	''
-elseif nroad = 3:
-	'You see a sign pointing towards a <a href="exec:minut += 15 & gt ''graveyard''">cemetery</a>, hidden between lots of trees. You think it''ll be a 15 minute walk, from here.'
-elseif nroad = 4:
-	''
-elseif nroad = 5:
-	'You see a <a href="exec:dynamic $polustanok">railway platform</a> not far from the road. A bit further away, someone built <a href="exec:minut += 15 & gt ''dachi''">a bunch of cottages</a>. Some of them are for sale. This must be a nice place to stay at, in the summer!'
-elseif nroad = 6:
-	''
-elseif nroad = 7:
-	''
-elseif nroad = 8:
-	''
-elseif nroad = 9:
-	''
-elseif nroad = 10:
-	'You see a <a href="exec:dynamic $polustanok2">railway platform</a> not far from the road. According to a sign, the old town of <a href="exec:minut += 15 & gt ''liam''">Pushkin</a> is about a fifteen minute walk down a cobblestone road away from here. It''s a fairly popular town for tourists to explore, much of its old architecture is still intact.'
-elseif nroad = 11:
-	''
-elseif nroad = 12:
-	''
-elseif nroad = 13:
-	''
-elseif nroad = 14:
-	'You see a <a href="exec:minut += 15 & gt ''motel''">trucker motel</a> near the road. You have no business there, you''re no trucker!'
-elseif nroad = 15:
-	'You see a <a href="exec:dynamic $polustanok3">railway platform</a> not far from the road. In the same direction, a dirt road leads to the village of <a href="exec:minut += 30 & gt ''gadukino''">Gadyukino</a>.'
-elseif nroad = 16:
-	'All you see is an abandoned building, not too far from the road. From the look of it, the heavy fences around the building will make it difficult for you to get anywhere near it.'
-elseif nroad = 17:
-	''
-elseif nroad = 18:
-	''
-elseif nroad = 19:
-	''
-elseif nroad = 20:
-	'The main road ends at the old provincial town of Pavlovsk. You can see the castle from a distance.'
-	'A <a href="exec:minut+=5&GT ''furi''">lorry</a> is parked next to the road. The driver is currently taking a break, and is having a cigarette. He could probably bring you to St. Petersburg, for a price...'
 end
 
 --- road ---------------------------------
