@@ -632,30 +632,17 @@ if bankAccount = 1:
 		smallmoneypos += (karta * 11)
 	else
 		!yearly overdraft interest of 20% recalculated into daily interest = 0.055% daily
-		smallmoneydebt += (karta * 550)
+		smallmoneypos -= (karta * 550)
 	end
-			
-	:kopeckloop
-	if smallmoneypos > 1000000:
-		karta += 1
-		smallmoneypos -= 1000000
-		jump 'kopeckloop'
-	else
-		kartakop += smallmoneypos
-		if kartakop >= 1000000: karta += 1 & kartakop -= 1000000
+
+	if smallmoneypos >= 1000000:
+		karta += smallmoneypos / 1000000
+		smallmoneypos -= smallmoneypos mod 1000000
+	elseif smallmoneypos <= 1000000:
+		karta -= smallmoneypos / 1000000
+		smallmoneypos += smallmoneypos mod 1000000
 	end
-	:kopeckloop2
-	if smallmoneydebt < -1000000:
-		karta -= 1
-		smallmoneydebt += 1000000
-		jump 'kopeckloop2'
-	else
-		kartakop += smallmoneydebt
-		if kartakop < 0: karta -= 1 & kartakop += 1000000
-	end
-	smallmoneypos = 0
-	smallmoneydebt = 0
-	      
+
 	if atmDeposit > 0 and atmDepositDate <= daystart:
 		karta += atmDeposit
 		atmDeposit = 0
