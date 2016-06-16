@@ -1,70 +1,72 @@
 # narkopriton
-cla
-clr
+
+cls
 gs 'stat'
 fcolor = rgb(0, 0, 0)
 bcolor = rgb(255, 255, 255)
 lcolor = rgb(106, 90, 205)
-'<center><b>drug houses</b></center>'
+'<center><b>Local drug den</b></center>'
 '<center><img src="images/etogame/narkopriton.jpg"></center>'
-'Crappy apartment where addicts come to inject and buy heroin.'
-'Door is opened by a skinny guy with a crazy look. After examining you, he said, "This product is worth apiece."'
+'A local drug den, where you know addicts come to buy and use heroin in peace.'
+'A skinny guy opens the door, with a paranoid look in his eyes. He says doubtfully: "Are you sure you can afford to be here? My product ain''t cheap..."'
 
 if StrongNarkota >= 24:
     if StoryLine = 1 and snarkozak = 0:
-        act 'Ask a period in Pavlovsk':gs 'events', 'narkozakladka'
+        act 'Ask for a drop-off point in Pavlovsk':gs 'events', 'narkozakladka'
     end
 
-    act 'Escape':minut += 15 & gs 'events', 'snkayf1'
+    act 'Leave the drug den':minut += 15 & gs 'events', 'snkayf1'
 end
 
 if StrongNarkota <= 23:
-    act 'Escape':minut += 15 & gt'street'
+    act 'Leave the drug den':minut += 15 & gt'street'
 end
 
 if money >= 1000:
-	act 'Buy dope and shirnutsya (1,000 <b>₽</b>)':
+	act 'Buy some heroin and use it (1,000 <b>₽</b>)':
 		cls
 		minut += 5
 		money -= 1000
 		StrongNarkota += 25
 		SNarkTimes += 1
 		gs 'stat'
-		'You bought some heroin and injected yourself with trembling hands'
+		'You buy some heroin and find a quiet place in the house to use it, injecting the needle into your arm with a trembling hand.'
 
-		act 'Go away':gt $curloc
+		act 'Continue':gt $curloc
 	end
 elseif money < 1000 and SLomka > 0:
-	act 'Persuade to sell you on credit.':
+	act 'Beg him to give you some drugs':
 		cls
 		minut += 5
 		gs 'stat'
 		if NarkShmaraTimes > 0:
-			'You start to persuade Bobkov to give you a dose on credit, promising to pay back later. But he only grinned wickedly "Yeah, Do you know how many times a day I hear that? I won''t give anything on credit."'
+			'"Bobka, please! You remember me, right? I''m good for it, you can trust me!" you beg him, but he gives you a wicked grin.'
+			'"Come on, <<$name>>! You know I don''t do credit!" he snorts.'
 
-			act 'Leave':gt $curloc
+			act 'Leave dejectedly':gt $curloc
 
-			act 'Beg and promise to do anything for it.':
+			act 'Keep begging, promising you''ll do anything':
 				cls
 				minut += 5
 				gs 'stat'
-				'You started begging to give you drugs on credit, and promise to do anything for it. He thought a little and then took you by the hand to the next room and said "Get on your knees".'
+				'With a trembling lip, you drop to your knees and continue to beg: "Please! I''ll do anything... anything you want!"'
+				'He looks at you appreciatively for a moment, and gives you a short nod with his head: "Shut up, and follow me. I may have some for you, but you''re going to have to earn it."'
+				
+				act 'Change your mind and leave':gt $curloc
 
-				act 'Escape':gt $curloc
-
-				act 'Go to the next room.':
+				act 'Follow him into the house':
 					cls
 					minut += 5
 					gs 'stat'
 					bobrand = rand(0, 4)
 
-					if bobrand >= 0 and bobrand < 3:NarkShmaraTimes += 1 & $bobtalk = 'Get on your knees and suck me.' & $bobtext = 'Suck'
-					if bobrand = 3:NarkShmaraTimes += 1 & $bobtalk = 'I polish the point.' & $bobtext = 'Lick ass'
-					if bobrand = 4:NarkShmaraTimes += 1 & $bobtalk = 'Fuck I do not hunt, but piss would be my pleasure. Get on your knees.' & $bobtext = 'Kneel'
+					if bobrand >= 0 and bobrand < 3:NarkShmaraTimes += 1 & $bobtalk = '"You know the drill. Get on your knees and start sucking!"' & $bobtext = 'Do as he says'
+					if bobrand = 3:NarkShmaraTimes += 1 & $bobtalk = '"You''re just a dirty whore, aren''t you? Lick my dirty asshole and I''ll consider it!"' & $bobtext = 'Lick his ass'
+					if bobrand = 4:NarkShmaraTimes += 1 & $bobtalk = '"I don''t need more blowjobs from you. I do have to pee, though... maybe you''ll make a decent toilet. Get down on your knees and open your mouth!" <br>Despite your need for drugs, you realize you can''t keep doing this! You''ll lose yourself if you keep this up...' & $bobtext = 'Kneel down and open your mouth'
 
-					'You begged Man give you drugs in debt, and promise to do for it whatever you like, little guy thought, after which he took you by the hand led into the room and said "<<$bobtalk>>"'
+					'You keep begging Bobka to give you some heroin, while you follow him to an empty room. He just laughs at you and says: <<$bobtalk>>'
 
-					act 'Run away':gt $curloc
+					act 'Change your mind and leave':gt $curloc
 					act '<<$bobtext>>':gt 'bobka'
 				end
 			end
@@ -72,42 +74,49 @@ elseif money < 1000 and SLomka > 0:
 			if NarkShmaraTimes > 5:
 				act 'Submit to your fate':
 					cla
-					cls
+					*clr
 					over = 8
 
 					'<center><img src="images/qwest/sosed/crackwhore.jpg"></center>'
-					'The increasing dependence on drugs and lack of money led to that your will was broken. You are tired of fighting and agreed to the proposal merchant foolishness. You were in the den and turned into heroin whore, paying for housing, food and your body dose.'
+					'Your ever increasing dependence on drugs has taken its toll on you. Your will was slowly being worn down by always having to go to Bobka to beg for your next dosage... and he supplies it readily, considering it an investment. When he thinks you''re ready, he offers you permanent lodging in the drug den.'
+					'You readily accept. Paid housing, food and your daily dose, too! What more could you need?'
+					'Of course Bobka is no kind Samaritan, and expects things from you in return...'
 
 					act '...':
 						cla
-						cls
+						*clr
 						'<center><img src="images/qwest/sosed/crackwhore2.jpg"></center>'
-						'Your life has changed dramatically. Now your mouth, pussy and ass wholly owned by the owner of a brothel and his friends. The rumor about a new whore, ready for any abomination per dose, quickly spread throughout the area and began to lend Bobka you to everyone for a small amount. At first you tried feebly protest, but you quickly pointed to your site and you dutifully accepted it powerless position.'
+						'Your life has changed drastically. Your mouth, pussy and ass are completely owned by Bobka, and he readily whores you out to whoever will pay him for it. The rumour of the drug den having a new full-time whore spreads quickly. Bobka is willing to rent you out to whoever is willing to pay, even if they''re not paying much at all! Some money is better than no money, in the end...'
+						'At first you try to resist, but you soon realize that you can''t. You need Bobka to survive, and have no choice but to meekly accept your new role as his whore.'
 
 						act '...':
 							cla
-							cls
+							*clr
 							'<center><img src="images/qwest/sosed/crackwhore3.jpg"></center>'
-							'-"What is the difference in the end? One more by a dick, one less, main shirnutsya time" - you decide, and meekly serving a any, to indicate who the owner of a brothel, dutifully pushing the legs, substituting ass and mouth, as befits this heroin whore.'
+							'"What difference does it make?" you think to yourself, as yet another stranger buries his cock to the hilt in your well-used ass. Bobka sold you to a brothel owner, who keeps you in his basement as a cheap attraction for his regulars. He takes good care of you though, giving you a roof over your head and the daily dosage of heroin you need so badly.'
 
 							act '...':
 								cla
-								cls
+								*clr
 								'<center><img src="images/qwest/sosed/crackwhore4.jpg"></center>'
-								'In those rare moments, when you do not hover in the narcotic intoxication, sometimes you remember the house, family, friends. Past life now seems a surreal.'
+								'In the rare moments your mind is not intoxicated by your last hit, you think back to the friends and family you used to have. It all seems surreal now.'
 
 								act '...':
 									cla
-									cls
+									*clr
 									'<center><img src="images/qwest/sosed/crackwhore5.jpg"></center>'
-									'You fed such hopes studying at school. The teacher spoke of the great potential. I wonder what he would say when he saw you on my knees with a member of the cheek? And your classmates, they learned his girlfriend in this finally descended nipple? But for a long time to reminisce fails, and to the reality you very roughly returns the next dick, which by tradition once unceremoniously they drive you deep into the throat.'
-									'You do not even try to resist or help hands, but only a little wider open your mouth and draw out the tongue out. Professional habit. what to do, heroin whores nobody on ceremony. And more, the more gross and perverted things you have to do to earn money for the next dose.'
+									'Your future was so bright, when you were in school. The teachers would sing your praises, saying how much potential you had.'
+									'You can''t help but wonder what they would think of you now. On your knees, with some random stranger making your cheeks bulge when he feeds you yet another fat cock. The guy snaps you out of your memories when he roughly forces his cock down your throat, nearly making you choke.'
+									'It''s nothing new to you, this is your life now. You don''t try to resist or fend him off any more, but simply open your mouth wider and stick your tongue out to give him full access to your throat. Force of habit. What else could you do?'
+									'You''ve long since realized it: you''re a whore now, doing whatever perverted acts the customers demand from you. You have to! Anything to earn enough money for your next dose...'
 
 									act '...':
 										cla
-										cls
+										*clr
 										'<center><img src="images/qwest/sosed/crackwhore6.jpg"></center>'
-										'You have long ceased to take care of yourself, from the former beauty was gone, in the face, hair and clothes traces of dried semen, and his mouth all day and night it smells, suction after each rinse your long lazy. Substituting their broken-down holes or taking the cheek once you dick sometimes thinking - "Was there another way?"'
+										'You''ve long since stopped taking care of yourself, tending to your poor-paying customers'' cocks out of sheer habit. Your former beauty is completely gone, and traces of dried semen cover your hair, face and clothes constantly.'
+										'The brothel owner is starting to lose his patience with you. Even his customers, who already have fairly low standards, no longer seem to be very interested in you. Lucky for you, some them of them can''t afford any better.'
+										'Occasionally, when you get ready to offer your broken down holes up again to yet another customer, you wonder... was there anything you could''ve done differently?'
 
 										act '...':gt 'gameover'
 									end
@@ -118,27 +127,30 @@ elseif money < 1000 and SLomka > 0:
 				end
 			end
 		elseif NarkShmaraTimes = 0:
-			'You start to persuade Bobkov to give you a dose on credit, promising to pay back later. But he only grinned wickedly "Yeah, Do you know how many times a day I hear that? I won''t give anything on credit."'
+			'You beg the man: "Please! I need a hit... I need it badly! Please, I''ll pay you back! I promise!"'
+			'The guy laughs: "Yea, sure. Do you know how many times a day I hear that? If I had a ruble for every time someone told me that, I would''ve retired by now! I don''t do credit, simple as that. Get lost."'
 
-			act 'Go away':gt $curloc
+			act 'Leave dejectedly':gt $curloc
 
-			act 'Beg and promise to do for it whatever you like':
+			act 'Keep begging, promising you''ll do anything':
 				cls
 				minut += 5
 				gs 'stat'
-				'You started begging to give you drugs on credit, and promise to do anything for it. He thought a little and then took you by the hand to the next room and said "Get on your knees".'
+				'With a trembling lip, you drop to your knees and continue to beg: "Please! I''ll do anything... anything you want!"'
+				'He looks at you appreciatively for a moment, and gives you a short nod with his head: "Shut up, and follow me. I may have some for you, but you''re going to have to earn it."'
 
-				act 'Run away':gt $curloc
+				act 'Change your mind and leave':gt $curloc
 
-				act 'Go into the room':
+				act 'Follow him into the house':
 					cls
 					minut += 5
 					gs 'stat'
-					'You begged Man give you drugs in debt, and promise to do for it whatever you like, little guy thought, after which he took you by the hand led into the room and said "Get on your knees and suck me."'
+					'You follow him dejectedly... you don''t know what he wants from you, but what choice do you have?'
+					'He takes you by the hand and pulls you into an empty room. He doesn'''t bother closing the door, and simply orders you: "Get down on your knees and suck me off. If you do good, we''ll see."'
 
-					act 'Run away':gt $curloc
+					act 'Change your mind and leave':gt $curloc
 
-					act 'Suck':
+					act 'Suck his cock':
 						cls
 						minut += 5
 						guy += 1
@@ -146,21 +158,26 @@ elseif money < 1000 and SLomka > 0:
 						swallow += 1
 						NarkShmaraTimes += 1
 						spafinloc = 12
-gs 'cum_manage'
+						gs 'cum_manage'
 						gs 'stat'
 						dynamic $venerasiak
 						'<center><img src="images/qwest/sosed/bj.jpg"></center>'
-						'You need so much dope, you flopped down in front of a guy on his knees and began to suck his flaccid penis. Finally. Suddenly. You continued sucking swallowing sperm. Man exhausted and took his penis in your mouth. He tucked his dick in his pants and threw you a syringe.'
+						'You need the drugs so badly, you drop to your knees automatically and quickly pull his pants down without even thinking of rejecting him. His cock is still flaccid but you close your lips around it anyway, doing the best you can to arouse him. You slowly feel his cock grow inside your mouth and suck him off obediently, until you feel several warm jets of sperm land on the back of your throat.'
+						'The guy moans exhaustedly: "Could be better..."'
+						'He pulls up his pants again and throws you a syringe, with a discompassionate look in his eyes. He smirks: "I believe this is what you were looking for?"'
 
-						act 'shirnutsya':
+						act 'Take the hit right in front of him':
 							cls
 							minut += 5
 							StrongNarkota += 25
 							SNarkTimes += 1
 							gs 'stat'
-							'You grabbed the syringe and injected his foolishness itself in a vein shaking hands. Man with a smile looking at you. "By the way my name is Bobkov, and you?" You mumbled through a veil "<<$name>>."'
+							'You grab the syringe off the ground nervously and use it without a second thought, injecting it into your arm with a shaky hand. He shakes his head, almost as if he is disappointed in you, but says with a pitiful smile: "I reckon I''m going to see you around more often! My name is Bobka. Who are you?"'
+							'The drugs is quickly clouding your mind, and you barely register him talking. You softly mutter: "<<$name>>..."'
+							'He laughs, and says: "I think we''ll be seeing more of you here, <<$name>>..."'
+							'When the fog in your mind clears, Bobka is gone and you''re by yourself in the room.'
 
-							act 'Leave':minut += 15 & gt 'street'
+							act 'Leave the drug den':minut += 15 & gt 'street'
 						end
 					end
 				end
