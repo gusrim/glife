@@ -61,22 +61,64 @@ if bimbolevel = 0:bimbobeauty = 0 and bimbostupidity = 0
 if bimbolevel = 1:bimbobeauty = (vnesh / 10) and bimbostupidity = (intel / 6)
 if bimbolevel = 2:bimbobeauty = (vnesh / 6) and bimbostupidity = (intel / 4)
 if bimbolevel = 3:bimbobeauty = (vnesh / 5) and bimbostupidity = (intel / 3)
-if bimbolevel = 4:bimbobeauty = (vnesh / 4) and bimbostupidity = (intel / 3)
+if bimbolevel = 4:
+	if succublvl = 1: bimbobeauty = (vnesh / 5) and bimbostupidity = (intel / 3)
+	if succublvl = 2: bimbobeauty = (vnesh / 4) and bimbostupidity = (intel / 4)
+	if succublvl = 3: bimbobeauty = (vnesh / 3) and bimbostupidity = (intel / 6)
+	if succublvl = 4: bimbobeauty = (vnesh / 2) and bimbostupidity = 0
+end
 
 if bimbocl = 1:
 	bimbocl = 0
 	bimbo += 2
 end
-!!Checks how often sex has occured in the last 24 hours and for drops in bimbo score, for calculating withdrawal
-if bimbolevel >= 1:
-	bimbo += ((sex + bj + anal) - snapshotX) - 3
-	if snapshotY - bimbo <= 1 or bimbo > 40:
-		bimbowithdrawal = 0
+
+!Succubus Level & xp calcs
+if succubusflag = 1:
+	cheatHealth = 1
+	dynamic $cheatmenu['std_cure']
+	succubxp += ((stat['vaginal'] + stat['bj'] + stat['anal'] + lesbian) - snapshotX - suclezsnapshot)
+	suclezsnapshot = lesbian
+	if succubxp < 0: succubxp = 0
+	if succubxp < 20:
+		succublvl = 1
+	elseif succubxp < 50:
+		succublvl = 2
+	elseif succubxp < 90:
+		succublvl = 3
 	else
-		bimbowithdrawal += 1
+		succublvl = 4
+	end
+	if mutagenP < (succublvl - 1): mutagenP = (succublvl - 1)
+	if mutagenS < (succublvl - 1): mutagenS = (succublvl - 1)
+	if mutagenA < (succublvl - 1): mutagenA = (succublvl - 1)
+	if mutagenR < (succublvl - 1): mutagenR = (succublvl - 1)
+	if mutagenV < (succublvl - 1): mutagenV = (succublvl - 1)
+	if mutagenW < (succublvl - 1): mutagenW = (succublvl - 1)
+	if mutagenI < (succublvl - 1): mutagenI = (succublvl - 1)
+	If sucexcess >= 100:
+		stren += 1
+		speed += 1
+		agil += 1
+		react += 1
+		vital += 1
+		will += 1
+		intel += 1
+		sucexcess = 0
+	end
+else
+	!!Checks how often sex has occured in the last 24 hours and for drops in bimbo score, for calculating withdrawal
+	if bimbolevel >= 1:
+		bimbo += ((stat['vaginal'] + stat['bj'] + stat['anal']) - snapshotX) - 3
+		if snapshotY - bimbo <= 1 or bimbo > 40:
+			bimbowithdrawal = 0
+		else
+			bimbowithdrawal += 1
+		end
 	end
 end
-snapshotX = (sex + bj + anal)
+
+snapshotX = (stat['vaginal'] + stat['bj'] + stat['anal'])
 snapshotY = bimbo
 
 
