@@ -47,9 +47,13 @@ if $args[0] = '':
 
 	if son > 80:
 		'You are not tired.'
+	elseif succubusQW = 2:
+		act 'Undress and go to sleep':
+			gs 'clothing', 'strip'
+			gt 'bed2', 'succhoice'
+		end
 	else
 		act 'Undress and go to sleep':
-
 			if disable_autosave = 0:
 				if StoryLine = 0:
 					savegame 'autosave.sav'
@@ -57,14 +61,12 @@ if $args[0] = '':
 					savegame 'autosave_alt.sav'
 				end
 			end
-
 			gs 'clothing', 'strip'
-
 			gt 'bed2', 'sleep'
 		end
 	end
-	act 'Options':gt 'bed2', 'options'
 
+	act 'Options':gt 'bed2', 'options'
 	act 'Get out of bed':gt $locM, $metkaM
 end
 
@@ -117,6 +119,8 @@ if $args[0] = 'sleep':
 				$waketext = 'Maybe trying to sleep with a vibrator in your pussy wasn''t such a good idea.'
 				gt 'bed2', 'wake'
 			end
+
+			exit
 		end
 	end
 
@@ -182,12 +186,120 @@ end
 
 if $args[0] = 'end':
 	InSleep = 0
-	if bedpanty = 0 and clrbelo > 0:
-		tanga = 1
+	if tanga = 1:
+		if bedpanty = 1:
+			tanga = 0
+			dirtbelo += 1
+		else
+			if clrbelo > 0:
+				clrbelo -= 1
+			else
+				tanga = 0
+			end
+		end
 	else
-		tanga =0
+		if bedpanty = 0 and clrbelo > 0:tanga = 1 & clrbelo -= 1
 	end
 	gt $locM, $metkaM
+end
+
+if $ARGS[0] = 'succhoice':
+	minut += 15
+	gs 'stat'
+	cla
+	if $clothingworntype ! 'nude':
+		'<center><img src="images/pics/bed.jpg"></center>'
+	else
+		'<center><img src="images/pics/son.jpg"></center>'
+	end
+	''
+	'You toss and turn for a while, but the energy that has been buzzing under your skin since that dream just will not let you sleep.'
+	''
+	'In thinking about that energy you realize that you can push the energy out or pull the energy in!'
+	''
+	'<font color="red"><b>You also feel that both are <i>permanent</i> choices.</b></font>'
+	act 'Try and Ingore it and go to sleep':
+		if disable_autosave = 0:
+			if StoryLine = 0:
+				savegame 'autosave.sav'
+			else
+				savegame 'autosave_alt.sav'
+			end
+		end
+		gt 'bed2', 'sleep'
+	end
+	act 'Push the Energy out for all time': gt 'bed2', 'succhoiceNO'
+	act 'Pull the Energy in and let it change you permanently': gt 'bed2', 'succhoiceYES'
+end
+
+if $ARGS[0] = 'succhoiceNO':
+	cla
+	if $clothingworntype ! 'nude':
+		'<center><img src="images/pics/bed.jpg"></center>'
+	else
+		'<center><img src="images/pics/son.jpg"></center>'
+	end
+	''
+	'You push the energy out of you and it dissipates.'
+	succubusQW = 3
+	horny = 0
+	minut +=5
+	gs 'stat'
+	act 'Go to sleep':
+		if disable_autosave = 0:
+			if StoryLine = 0:
+				savegame 'autosave.sav'
+			else
+				savegame 'autosave_alt.sav'
+			end
+		end
+		gt 'bed2', 'sleep'
+	end
+end
+
+if $ARGS[0] = 'succhoiceYES':
+	cla
+	if $clothingworntype ! 'nude':
+		'<center><img src="images/pics/bed.jpg"></center>'
+	else
+		'<center><img src="images/pics/son.jpg"></center>'
+	end
+	succubusQW = 4
+	''
+	'You pull the energy deeper into yourself and hold it there.'
+	''
+	'Then you feel pressure building...'
+	wait 450
+	minut += 5
+	gs 'stat'
+	'BUILDING...'
+	wait 450
+	minut += 5
+	gs 'stat'
+	'<b>BUILDING...</b>'
+	wait 450
+	minut += 5
+	gs 'stat'
+	'Power bursts through your body causing you to hop out of bed.'
+	act 'Continue': gt 'bed2', 'succubinit'
+end
+
+if $ARGS[0] = 'succubinit':
+	cls
+	cla
+	minut += 10
+	gs 'stat'
+	!!Sets the succubus flag, succubus level (succublvl), Initial lesbian sex count (suclezsnapshot), and initial Succubus hunger (succhungry)
+	succubusflag = 1
+	succublvl = 1
+	suclezsnapshot = lesbian
+	succhungry = -2
+	!!To give you 2 days to get in the Succubus grove
+	horny = 100
+	'<center><img src="images/picQW/succubusself.jpg"></center>'
+	''
+	'<font color="red">You feel the power flowing around your body for several minutes, leaking through your skin and making changes all throughout you, before fading to a presence deep in your core leaving you looking the same as before... but feeling so different! </font>'
+	act 'Finish': gt $locM, $metkaM
 end
 
 --- bed2 ---------------------------------

@@ -164,7 +164,8 @@ elseif nark = 0 and narkoman = 1:
 	narkoman = 0
 end
 
-if CheatSlut = 1:
+if CheatSlut = 1 or succubusflag = 1:
+	!!Succubus cannot get pregnant
 	mesec = 0
 	FocH = 0
 	EggRH = 0
@@ -177,7 +178,7 @@ if CheatSlut = 1:
 	RecovH = 0
 	babyembryo = 0
 	cycle = 1
-	if horny < 50: horny = 50
+	if horny < 50 and CheatSlut = 1: horny = 50
 end
 
 boxing = Jab + Punch + Kik + KikDef
@@ -420,14 +421,15 @@ if minut >= 60:
 	if obkvsdam > 0:obkvsdam = rand(2, 5)
 
 	if insleep = 1:
-		energy -= 4
-		water -= 4
+		energy -= (4 + succublvl/2)
+		water -= (4 + succublvl/2)
 		son -= 4
 	else
-		energy -= 8
-		water -= 8
+		energy -= (8 + succublvl)
+		water -= (8 + succublvl)
 		son -= 4
 	end
+
 	minut -= 60
 	gs 'femcyc'
 
@@ -704,27 +706,85 @@ else
 !! level four, adds supernatural-style succubus abilities. May be removed or spun off into its own TF or obtained through special means unlike the rest.
 !! Also planning to add much more severe and rapidly advancing penalties for not having sex to offset bonuses
 		if bimbolevel = 4:
-			if arousal < 80:arousal = 80
-			if arousal < 100:arousal += 2
-			if cumlip > 0:sexnutrition += cumlip & cumlip = 0 & absorbflag = 1
-			if swallow > 0:sexnutrition += swallow * 2 & swallow = 0 & absorbflag = 1
-			if cumpussy > 0:sexnutrition += cumpussy * 4 & cumpussy = 0 & absorbflag = 1
-			if cumanus > 0:sexnutrition += cumanus * 4 & cumanus = 0 & absorbflag = 1
-			if absorbflag = 1:
-				if (manna < mannamax):manna += ((manna / 100) * 5)
-				pl 'You absorb the semen in your body, gaining nourishment.'
-				absorbflag = 0
+			!! debug code pl 'Succubus'
+			if horny < 80:horny = 80
+			if horny < 100:horny += succublvl + 1
+			if succhungry > 0:
+				energy -= succhungry*succublvl
+				water -= succhungry*succublvl
+				son -= succhungry*succublvl
+			end
+			if cumlip > 0:sexnutrition += cumlip & cumlip = 0
+			!if swallow > 0:sexnutrition += swallow * 2 & swallow = 0
+			if cumpussy > 0:sexnutrition += cumpussy * 4 & cumpussy = 0
+			if cumanus > 0:sexnutrition += cumanus * 4 & cumanus = 0
+			if arrsize('sparrvol') > 0:
+				suctempi = 0
+				:SuccAbsorbLoop
+				suctempi += 1
+				if suctempi = 1 or suctempi = 4 or suctempi >= 8:
+					if suctempi = 12: jump 'SuccAbsorbLoop'
+					suctemparr = arrpos('sparrloc',suctempi)
+					if suctemparr >= 0 and sparrloc[suctemparr] = suctempi and sparrvol[suctemparr] > 0:
+						sexnutrition += succublvl * 5
+						cumsumbod -= sparrvol[suctemparr]
+						succubxp += 2
+						sucabscum = 1
+						KILLVAR 'spafinloc',suctemparr
+						KILLVAR 'sparrage',suctemparr
+						KILLVAR 'sparrloc',suctemparr
+						KILLVAR '$sparrnam',suctemparr
+						KILLVAR 'sparrppt',suctemparr
+						KILLVAR 'sparridt',suctemparr
+						KILLVAR 'sparrvol',suctemparr
+						KILLVAR 'sparrslc',suctemparr
+						cumloc[suctempi] = 0
+						spdirty = 0
+						spdirtyn = 0
+						spdirtyv = 0
+						spdirtyf = 0
+						!! debug code pl 'Absorb ext <<sexnutrition>>'
+					end
+				else
+					jump 'SuccAbsorbLoop'
+				end
+				if suctempi < 17:jump 'SuccAbsorbLoop'
+			end
+			if suclezsex < lesbian:
+				sexnutrition += succublvl * 20
+				suclezsex = lesbian
+				succubxp += 3
+				sucabslez = 1
 			end
 			if sexnutrition > 0:
+				if sucabslez = 1 and sucabscum = 1:
+					$sucabs1 = 'absorbed energy from the woman you had sex with'
+					$sucabs2 = ' and you '
+					$sucabs3 = 'absorb the semen in your body'
+				elseif sucabscum = 1:
+					$sucabs3 = 'absorb the semen in your body'
+				elseif sucabslez = 1:
+					$sucabs1 = 'absorbed energy from the woman you had sex with'
+				else
+					!!Debug code
+					pl 'SOMTHING HAPPENED!'
+				end
+				pl 'You <<$sucabs1>><<$sucabs2>><<$sucabs3>>, gaining nourishment.'
+				sucabslez = 0 & sucabscum = 0
+				$sucabs1 = '' & $sucabs2 = '' & $sucabs3 = ''
+				if (manna < mannamax): manna += ((manna / 100) * 5)
+				if energy > 100: entemp = (energy - 100)
 				water += sexnutrition / 2
-				energy += sexnutrition / 3
-				son += sexnutrition / 4
+				energy += sexnutrition / 2
+				son += sexnutrition / 5
+				if succhungry > 0: succhungry = 0
 				sexnutrition = 0
+				if energy > 100: sucexcess += (energy - entemp - 100) & entemp = 0
 			end
 		end
 !! safeguards to prevent bimbolevel from going above or below its intended limits
 		if bimbolevel > 4:bimbolevel = 4
-		if bimbolevel < 0:bimbolevel = 0			
+		if bimbolevel < 0:bimbolevel = 0
 
 		! do loop
 		if (totminut - Trig15Minute) >= 15:jump 'Trig15MinuteLoop'

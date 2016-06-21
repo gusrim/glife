@@ -1,0 +1,146 @@
+# succubus
+
+!!The verious calls for succubus specific events
+!!Varible identification:
+!!	scfwon; a flag to indicate that a call is from a fight that was won or you were hunting, set at the calling location
+!!	scpopt; a flag to indicate that a call is optional for some reason, set at the calling location
+!!	scpoptout; a flag set at the calling location that, hopfully, will let you go back to where you were if you opt out of feeding.
+!!	$sclocrt; a string to indicate where a call came from if $loc may not have been set, set at the calling location when needed
+!!	$scargrt; a string to set by the $ARGS from the calling location if $metca may not have been set, set at the calling location when needed
+!!	$scsubloc; a string to allow a sub-routine in this location to call another and still get back to the first
+!!	suceatinit; a flag to indicate that the initiation sub-routine was done
+
+!!*********
+!!This is used to indicate how far up the succubus ladder you are.
+!!May change them later and/or move them to cikl
+
+if succublvl = 1:
+	$sucself1 = 'that feeling'
+elseif succublvl = 2:
+	$sucself1 = 'the power'
+elseif succublvl = 3:
+	$sucself1 = 'your other self'
+elseif succublvl = 4:
+	$sucself1 = 'your true self'
+else
+	$sucself1 = 'OOPS, SOMETHING HAPPENED!'
+end
+
+!!*********
+!!This is the initiation sub-routine and is called by every event
+
+if $ARGS[0] = 'init':
+	if succubusQW = 4:
+		gt 'succubus', 'firsttime'
+	else
+		'You call <<$sucself1>> up from its resting place'
+	end
+	'It fills you completely, suffusing you being with power...'
+	'<font color="red"><b>and hunger</b></font>'
+	'<center><img src="images/picQW/succubusself.jpg"></center>'
+	suceatinit = 1 
+	act 'Continue': gt 'succubus', $scsubloc
+end
+
+
+
+!!*********
+!! This is used if the called event is the first time it has happened (ie succubusQW = 4)
+
+if $ARGS[0] = 'firsttime':
+	if scfwon = 1:
+		'As the exhilaration from a fight won and the fear of what could have happened fully sets in time seems to stop.'
+	else
+		'As the fear of what is about to happen to you fully sets in time seems to stop.'	
+	end
+	'You feel, from the same core of power that has been in you since you embraced fairy’s energy, something start to...'
+	''
+	'<i>uncoil...</i>'
+	if scpopt = 1:
+		cla
+		act 'Push it back down': scpopt = 0 & scpoptout = 1 & gt $sclocrt, $scargrt
+		act 'Let it go': 'You let the feeling flow through you' & succubusQW = 5 & xgt 'succubus', 'init'
+	else
+		cla
+		act 'Continue': succubusQW = 5 & xgt 'succubus', 'init'
+	end
+end
+
+!!*********
+
+!!This is the 'park' and 'street' call
+
+if $ARGS[0] = 'RapistFight':
+	gs 'stat'
+	$scsubloc = $ARGS[0]
+	if suceatinit = 0: gt 'succubus', 'init'
+	suceatinit = 0
+	cls
+	gs 'stat'
+	'<center><img src="images/picQW/succubusself.jpg"></center>'
+	'Instinct you are barely aware of causes your power to reach out and take hold of your would-be rapist''s mind.'
+	'You see fear fill his eyes even as lust fills his loins and you feel his mind fighting your hold.'
+	horny = 100
+	act 'Continue':
+		cla
+		scrand = rand(0,3)
+		if RapistFight = 1 and scfwon = 1:
+			scrand -= 1
+			scfwon = 0
+			RapistFight = 0
+			if rikudo > 10:rikudo += 100
+			DOM += 1
+			Win += 1
+		elseif RapistFight = 1:
+			RapistFight = 0
+			SUB += 1
+			Loss += 1
+			if rikudo > 10:rikudo -= 10
+		else
+			scrand -= 1
+			scfwon = 0
+		end
+		if scrand < succublvl:
+			scfeed = succublvl + rand(1,4)
+			if scfeed = 2:
+				$scxcum = 'twice'
+			else
+				$scxcum = 'multiple times'
+			end
+			'You quickly drag him out of sight, then rip off his pants and expose your now hungry pussy.'
+			'You force him to the ground and immediately mount him, your now hair-trigger snach sending you into orgasm.'
+			''
+			'You ride him for some time, your power forcing him to cum <<$scxcum>>, pulling every drop of energy out of each eruption, with the rush causing you to orgasm as he does...'
+			''
+			act 'Continue':
+				cla
+				'Finally, when your instincts tell you he has nothing left to give, you get up off of him and fix your clothes.'
+				'As you make ready to leave, you look down upon your would-be-rapist-turned-meal as he lays there utterly exhausted and wonder if this experience will discourage him from such activities if the future...'
+				sex += 1
+				guy += 1
+				vagina += 1
+				horny = 0
+				DOM += scfeed
+				orgasm += 1 + scfeed
+				succubxp += 6
+				sexnutrition += 30 * scfeed
+				sucabscum = 1
+				minut += 20 * scfeed
+				gs 'stat'
+				act 'Leave': gt $loc, $metka
+			end
+		else
+			''
+			'And you feel his fear overcome his lust and your hold...'
+			'By the time you pull yourself back to the physical world he is long gone.'
+			minut +=5
+			gs 'stat'
+			act 'Continue': gt $loc, $metka
+		end
+	end
+end
+
+!!**********
+
+--- succubus ---------------------------------
+
