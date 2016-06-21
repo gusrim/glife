@@ -57,15 +57,17 @@ end
 if bimbo >= 50:bimbo = 50
 
 !!Bimbo levels. They use custom variables so they wont permanently change character stats
+vneshtemp = (3*(9 + lip + tanKoef + skin + resnic + glaraz + bodykoef + vidagebonus - (zub * 2) + tatKeof))
+
 if bimbolevel = 0:bimbobeauty = 0 and bimbostupidity = 0
-if bimbolevel = 1:bimbobeauty = (vnesh / 10) and bimbostupidity = (intel / 6)
-if bimbolevel = 2:bimbobeauty = (vnesh / 6) and bimbostupidity = (intel / 4)
-if bimbolevel = 3:bimbobeauty = (vnesh / 5) and bimbostupidity = (intel / 3)
+if bimbolevel = 1:bimbobeauty = (vneshtemp / 10) and bimbostupidity = (intel / 6)
+if bimbolevel = 2:bimbobeauty = (vneshtemp / 6) and bimbostupidity = (intel / 4)
+if bimbolevel = 3:bimbobeauty = (vneshtemp / 5) and bimbostupidity = (intel / 3)
 if bimbolevel = 4:
-	if succublvl = 1: bimbobeauty = (vnesh / 5) and bimbostupidity = (intel / 3)
-	if succublvl = 2: bimbobeauty = (vnesh / 4) and bimbostupidity = (intel / 4)
-	if succublvl = 3: bimbobeauty = (vnesh / 3) and bimbostupidity = (intel / 6)
-	if succublvl = 4: bimbobeauty = (vnesh / 2) and bimbostupidity = 0
+	if succublvl = 1: bimbobeauty = (vneshtemp / 5) and bimbostupidity = (intel / 3)
+	if succublvl = 2: bimbobeauty = (vneshtemp / 4) and bimbostupidity = (intel / 4)
+	if succublvl = 3: bimbobeauty = (vneshtemp / 3) and bimbostupidity = (intel / 6)
+	if succublvl = 4: bimbobeauty = (vneshtemp / 2) and bimbostupidity = 0
 end
 
 if bimbocl = 1:
@@ -73,18 +75,18 @@ if bimbocl = 1:
 	bimbo += 2
 end
 
-!Succubus Level & xp calcs
+!Succubus Level & hunger calcs 
 if succubusflag = 1:
 	cheatHealth = 1
 	dynamic $cheatmenu['std_cure']
-	succubxp += ((stat['vaginal'] + stat['bj'] + stat['anal'] + lesbian) - snapshotX - suclezsnapshot)
-	suclezsnapshot = lesbian
+	if sucxpsnapshot >= succubxp: succhungry += 1
+	sucxpsnapshot = succubxp
 	if succubxp < 0: succubxp = 0
-	if succubxp < 20:
+	if succubxp < 60:
 		succublvl = 1
-	elseif succubxp < 50:
+	elseif succubxp < 150:
 		succublvl = 2
-	elseif succubxp < 90:
+	elseif succubxp < 270:
 		succublvl = 3
 	else
 		succublvl = 4
@@ -104,7 +106,16 @@ if succubusflag = 1:
 		vital += 1
 		will += 1
 		intel += 1
-		sucexcess = 0
+		if succhungry > (0 - 2 - succublvl): sunnhungry -= 1
+		!!Future proofing as sucexcess is currently planned for use in a Succubus body mod spell 
+		sucexcess -= 100
+		if succublvl < 3:
+			sucexcess = 0
+		elseif succub lvl < 4:
+			if sucexcess >= 100: sucexcess = 100
+		else
+			if sucexcess >= 200: sucexcess = 200
+		end
 	end
 else
 	!!Checks how often sex has occured in the last 24 hours and for drops in bimbo score, for calculating withdrawal

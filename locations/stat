@@ -706,18 +706,18 @@ else
 !! level four, adds supernatural-style succubus abilities. May be removed or spun off into its own TF or obtained through special means unlike the rest.
 !! Also planning to add much more severe and rapidly advancing penalties for not having sex to offset bonuses
 		if bimbolevel = 4:
-			!pl 'Succubus'
+			!! debug code pl 'Succubus'
 			if horny < 80:horny = 80
-			if horny < 100:horny += (succublvl+(succublvl*bimbowithdrawal))
-			if bimbowithdrawal > 0:
-				energy -= bimbowithdrawal*succublvl
-				water -= bimbowithdrawal*succublvl
-				son -= bimbowithdrawal*succublvl
+			if horny < 100:horny += succublvl + 1
+			if succhungry > 0:
+				energy -= succhungry*succublvl
+				water -= succhungry*succublvl
+				son -= succhungry*succublvl
 			end
-			if cumlip > 0:sexnutrition += cumlip & cumlip = 0 & absorbflag = 1
-			!if swallow > 0:sexnutrition += swallow * 2 & swallow = 0 & absorbflag = 1
-			if cumpussy > 0:sexnutrition += cumpussy * 4 & cumpussy = 0 & absorbflag = 1
-			if cumanus > 0:sexnutrition += cumanus * 4 & cumanus = 0 & absorbflag = 1
+			if cumlip > 0:sexnutrition += cumlip & cumlip = 0
+			!if swallow > 0:sexnutrition += swallow * 2 & swallow = 0
+			if cumpussy > 0:sexnutrition += cumpussy * 4 & cumpussy = 0
+			if cumanus > 0:sexnutrition += cumanus * 4 & cumanus = 0
 			if arrsize('sparrvol') > 0:
 				suctempi = 0
 				:SuccAbsorbLoop
@@ -728,7 +728,8 @@ else
 					if suctemparr >= 0 and sparrloc[suctemparr] = suctempi and sparrvol[suctemparr] > 0:
 						sexnutrition += succublvl * 5
 						cumsumbod -= sparrvol[suctemparr]
-						absorbflag = 1
+						succubxp += 2
+						sucabscum = 1
 						KILLVAR 'spafinloc',suctemparr
 						KILLVAR 'sparrage',suctemparr
 						KILLVAR 'sparrloc',suctemparr
@@ -742,7 +743,7 @@ else
 						spdirtyn = 0
 						spdirtyv = 0
 						spdirtyf = 0
-						pl 'Absorb ext <<sexnutrition>>'
+						!! debug code pl 'Absorb ext <<sexnutrition>>'
 					end
 				else
 					jump 'SuccAbsorbLoop'
@@ -752,18 +753,31 @@ else
 			if suclezsex < lesbian:
 				sexnutrition += succublvl * 20
 				suclezsex = lesbian
-				pl 'You absorbed energy from the woman you had sex with.'
-			end
-			if absorbflag = 1:
-				if (manna < mannamax):manna += ((manna / 100) * 5)
-				pl 'You absorb the semen in your body, gaining nourishment.'
-				absorbflag = 0
+				succubxp += 3
+				sucabslez = 1
 			end
 			if sexnutrition > 0:
+				if sucabslez = 1 and sucabscum = 1:
+					$sucabs1 = 'absorbed energy from the woman you had sex with'
+					$sucabs2 = ' and you '
+					$sucabs3 = 'absorb the semen in your body'
+				elseif sucabscum = 1:
+					$sucabs3 = 'absorb the semen in your body'
+				elseif sucabslez = 1
+					$sucabs1 = 'absorbed energy from the woman you had sex with'
+				else
+					!!Debug code
+					pl 'SOMTHING HAPPENED!'
+				end
+				pl 'You <<$sucabs1>><<$sucabs2>><<$sucabs3>>, gaining nourishment.'
+				sucabslez = 0 & sucabscum = 0
+				$sucabs1 = '' & $sucabs2 = '' & $sucabs3 = ''
+				if (manna < mannamax): manna += ((manna / 100) * 5)
 				if energy > 100: entemp = (energy - 100)
 				water += sexnutrition / 2
 				energy += sexnutrition / 2
 				son += sexnutrition / 5
+				if succhungry > 0: succhungry = 0
 				sexnutrition = 0
 				if energy > 100: sucexcess += (energy - entemp - 100) & entemp = 0
 			end
