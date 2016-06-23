@@ -13,7 +13,7 @@ rand1=rand(0,100)
 
 if poSkill > 1000:poSkill = 1000
 
-if cheatHealth = 1:dynamic $din_std_cure
+if cheatHealth = 1:dynamic $cheatmenu['std_cure']
 
 if analplay >= 2 and anus <= 10:anus += 1 & analplay = 0
 if analplay >= 4 and anus <= 15:anus += 1 & analplay = 0
@@ -145,7 +145,7 @@ if poledance > 100:poledance = 100
 
 
 if bfa < 0:bfa = 0
-if painQW = 0:painweather = 6
+painweather = 6
 if beg < 0:beg = 0
 if beg > 2000:beg = 2000
 if oficiant > 100:oficiant = 100
@@ -419,6 +419,8 @@ if minut >= 60:
 	if SbrosNerdism = 1:nerdism = will / 10 - orgasm
 	if nerdism < 0:nerdism = 0
 	if obkvsdam > 0:obkvsdam = rand(2, 5)
+
+	if scpopt > 1: scpopt = 0
 
 	if insleep = 1:
 		energy -= (4 + succublvl/2)
@@ -767,19 +769,28 @@ else
 					$sucabs1 = 'absorbed energy from the woman you had sex with'
 				else
 					!!Debug code
-					pl 'SOMTHING HAPPENED!'
+					pl 'SOMETHING HAPPENED!'
 				end
 				pl 'You <<$sucabs1>><<$sucabs2>><<$sucabs3>>, gaining nourishment.'
 				sucabslez = 0 & sucabscum = 0
 				$sucabs1 = '' & $sucabs2 = '' & $sucabs3 = ''
 				if (manna < mannamax): manna += ((manna / 100) * 5)
 				if energy > 100: entemp = (energy - 100)
+				if sucexcess < 0 and sexnutrition > 20 and energy > 30:
+					if sexnutrition - 20 >= (0 - sucexcess) * 2:
+						sexnutrition += sucexcess * 2
+						sucexcess = 0
+					else
+						sucexcess += (sexnutrition - 20) / 2
+						sexnutrition = 20
+					end
+				end
 				water += sexnutrition / 2
 				energy += sexnutrition / 2
 				son += sexnutrition / 5
 				if succhungry > 0: succhungry = 0
 				sexnutrition = 0
-				if energy > 100: sucexcess += (energy - entemp - 100) & entemp = 0
+				if energy > 100: sucexcess += (energy - entemp - 100) & energy = 100 + entemp & killvar 'entemp'
 			end
 		end
 !! safeguards to prevent bimbolevel from going above or below its intended limits
@@ -794,6 +805,22 @@ end
 !!!!!!!!!!!!!
 !!!ENERGY!!!
 !!!!!!!!!!!!!
+
+if succubusflag ! 1:
+	if energy < 0:
+		energy += 8 + succublvl
+		sucexcess -= (8+succublvl) * (6-succublvl)
+	end
+	if health < 0:
+		health = 10
+		sucexcess -= 25 * (9-succublvl)
+	end
+	if willpower < 0:
+		willpower = 10
+		sucexcess -= 20 * (9-succublvl)
+		!!sucwilzeroed = 1; this is future-proofing
+	end
+end
 
 if son < 0:
 	son = 0
@@ -936,7 +963,7 @@ else
 end
 
 if water >= 80:
-	$water = '<font color="green">You are not thirtsy at all.</font>'
+	$water = '<font color="green">You are not thirsty at all.</font>'
 elseif water >= 40:
 	$water = '<font color="blue">You are slightly thirsty.</font>'
 elseif water >= 8:

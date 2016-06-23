@@ -37,11 +37,11 @@ Open the program and follow:
 
 ### Using SourceTree client to manage your fork.
 
-Download and install SourceTree (https://www.sourcetreeapp.com/). Let it install everything.
-Create your own fork of project if you haven't already. 
-Go to the project tab of your fork and copy SSH/HTTP link there.
-Run SourceTree and Clone/New button. Paste in the SSH/HTTP link of your fork. You will probably get a prompt to log into GitLab. Do so. Project files will be copied to your drive.
-You search and edit files in working copy. 
-Since files in /location have no extension its best to open them using custom actions. Tools/Options/Custom actions. Enter $FILE in parameters and link to your text editor of choice in scripts. Will need to restart SourceTree for new actions to become available.
-Commits you make will not appear on your project web page until you Push them.
-To sync your fork with main fork when there are new commits go to Repository/Repository Settings in SourceTree menu bar and click add. Enter ssh://git@git.tfgamessite.com:9000/mjsmagalhes/girllife-ecv.git (or http://) into Url/Path. Name it whatever you want. Once that is done click Pull button and select it from the dropdown list. Your fork will be updated.
+- Download and install SourceTree (https://www.sourcetreeapp.com/). Let it install everything.
+- Create your own fork of project if you haven't already. 
+- Go to the project tab of your fork and copy SSH/HTTP link there.
+- Run SourceTree and Clone/New button. Paste in the SSH/HTTP link of your fork. You will probably get a prompt to log into GitLab. Do so. Project files will be copied to your drive.
+- You search and edit files in working copy. 
+- Since files in /location have no extension its best to open them using custom actions. Tools/Options/Custom actions. Enter $FILE in parameters and link to your text editor of choice in scripts. Will need to restart SourceTree for new actions to become available.
+- Commits you make will not appear on your project web page until you Push them.
+- To sync your fork with main fork when there are new commits go to Repository/Repository Settings in SourceTree menu bar and click add. Enter ssh://git@git.tfgamessite.com:9000/mjsmagalhes/girllife-ecv.git (or http://) into Url/Path. Name it whatever you want. Once that is done click Pull button and select it from the dropdown list. Your fork will be updated.
