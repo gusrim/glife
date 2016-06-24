@@ -345,12 +345,68 @@ if pirsG ! 1 and pirsGL = 1:$pirspiz = 'A barbell is inserted into your clitoris
 if pirsG = 1 and pirsGL = 1:$pirspiz = 'You have a piercing through your clit and several rings hanging from your labia.'
 
 ! WD: Move missing Image ~ "pussy.jpg" from "images/picb" to "images/body"
-if lashair = 1:$lobok = 'You have a smooth, <a href="exec:view''images/body/pussy.jpg''">bald pussy</a>. <<$pirspiz>>'
-if lashair = 0 and lobok <= 0:lobkoef = 3 & $lobok = 'You have a smoothly <a href="exec:view''images/body/pussy.jpg''">shaved pussy</a>. <<$pirspiz>>'
-if lashair = 0 and lobok > 0 and lobok <= 2:lobkoef = 0 & $lobok = 'You have light but visible hair above your <a href="exec:view''images/body/spussy.jpg''">crotch</a>. <<$pirspiz>>'
+if lashair = 1:$lobok = 'You have a smooth, <a href="exec:view''images/body/pussy.jpg''">bald pussy</a>. <<$pirspiz>><br><<$clitsize>>'
+if lashair = 0 and lobok <= 0:lobkoef = 3 & $lobok = 'You have a smoothly <a href="exec:view''images/body/pussy.jpg''">shaved pussy</a>. <<$pirspiz>><br><<$clitsize>>'
+if lashair = 0 and lobok > 0 and lobok <= 2:lobkoef = 0 & $lobok = 'You have light but visible hair above your <a href="exec:view''images/body/spussy.jpg''">crotch</a>. <<$pirspiz>><br><<$clitsize>>'
+
+if clit_size < 20:$clitsize = 'You consider your <a href="exec:view''images/body/clit/clit1.jpg''">clitoris</a> to be of an average size.'
+    elseif clit_size >= 20 and clit_size < 40:$clitsize = 'You feel your <a href="exec:view''images/body/clit/clit2.jpg''">clitoris</a> is somewhat on the large side.'
+    elseif clit_size >= 40 and clit_size < 60:$clitsize = 'Your <a href="exec:view''images/body/clit/clit3.jpg''">clit</a> is quite large.'
+    elseif clit_size >= 60 and clit_size < 80:$clitsize = 'You have a big <a href="exec:view''images/body/clit/clit4.jpg''">clit</a> that resembles a penis.'
+    elseif clit_size >= 80:$clitsize = 'Your <a href="exec:view''images/body/clit/clit5.jpg''">clit</a> is so large it can be mistake for a penis.'
+end
+
+if nipple_size < 20:$nipplesize = 'You have average <a href="exec:view''images/body/nipples/nipples1.jpg''">nipples</a>.'
+    elseif nipple_size >= 20 and nipple_size < 40:$nipplesize = 'Your <a href="exec:view''images/body/nipples/nipples2.jpg''">nipples</a> are slightly on the large side.'
+    elseif nipple_size >= 40 and nipple_size < 60:$nipplesize = 'You have large, puffy <a href="exec:view''images/body/nipples/nipples3.jpg''">nipples</a>.'
+    elseif nipple_size >= 60 and nipple_size < 80:$nipplesize = 'Your <a href="exec:view''images/body/nipples/nipples4.jpg''">nipples</a> are the size of radio knobs.'
+    elseif nipple_size >= 80:$nipplesize = 'You have huge <a href="exec:view''images/body/nipples/nipples5.jpg''">nipples</a>.'
+end
+
+$milk_me = {
+cla
+*clr
+minut += 15
+        
+        if $location_type ! 'bathroom':
+            'You can''t use it here.'
+        elseif lactatemv > 0 and pain['nipples'] < 60:
+			'<center><img src="images/pics/pump_lactating.jpg"></center>'
+			'You attach the pump to your breast and start rythmically squeezing the bulb until your breasts feel empty.<br>You give it a few more pumps and detach the pump.<br>You filled the bottle with <<lactatemv>>ml of your milk.'
+            
+            breastcounter = 1
+            lactatemv = 0
+            if breastpumped = 1:pain['nipples'] += 10 & 'Your nipples are feeling sore.'
+            breastpumped = 1
+            temp = rand(0,1)
+            if bcream_used = 1:temp += 1
+            nipple_size += temp
+            
+        elseif lactate = 0 and pain['nipples'] < 60:
+            if rand(1,100) + breastcounter >= rand(100,200):
+                '<center><img src="images/pics/lactate_start.jpg"></center>'
+                'As usual, you attach the pump but after s few pumps white liquid starts spurting from your nipples.<br>You started lactating!'
+                lactate = 1
+                lactatemv = 0
+                lactatemm = 10
+            else
+                'You attach pump to your nipples and start squeezing the bulb. Vacuum feels good on your nipples.<br>Few droplets of liquid come out of your nipples but they are not milk.'
+
+                breastcounter = 1
+                if breastpumped = 1:pain['nipples'] += 10 & 'Your nipples are feeling sore.'
+                breastpumped = 1
+                temp = rand(0,1)
+                if bcream_used = 1:temp += 1
+                nipple_size += temp
+            end
+        else
+            'Your nipples feel too sore to use the pump right now.'
+        end
+			act 'Finish':gt $curloc
+}
 
 ! WD: Move missing Image ~ "hpussy.jpg" from "images/picb" to "images/body"
-if lobok > 2:lobkoef = 0 & $lobok = 'You have a full triangle of thick <a href="exec:view''images/body/hpussy.jpg''">pubic hair</a>. <<$pirspiz>>'
+if lobok > 2:lobkoef = 0 & $lobok = 'You have a full triangle of thick <a href="exec:view''images/body/hpussy.jpg''">pubic hair</a>. <<$pirspiz>><br><<$clitsize>>'
 
 bodytipe = bedra - talia
 if bodytipe < 20:bodykoef = 0
