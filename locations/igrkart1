@@ -8,39 +8,41 @@ gs 'stat'
 if turn = 0:
 	cla
 	'<right><img src="images/casino/stavkacw.jpg"></right>'
-	' Please give me your bets, gentlemen.'
+	' Place your bets, ladies and gentlemen.'
 
-	act 'Make a bet':
+	act 'Place a bet':
 		if money <= 0:
-			'You don''t have enough money to place a bet.'
-			act 'Move away from the table':gt 'bldzh'
+			'You don''t have any money!'
+			act 'Leave the table':gt 'bldzh'
 		end
-		turn = 1
-		deal = input 'Enter the amount'
+		bet_amnt = input 'Enter the amount to bet:'
 
-		if money >= deal:
-			msg 'You have enough money'
-			money -= deal
+		if bet_amnt < 1:
+			msg 'You can''t bet zero or negative amounts.'
 			gt 'igrkart1'
-		elseif deal < 0:
-			msg 'Wrong, try again.'
+		elseif bet_amnt > 1000:
+			msg 'The maximum bet allowed is 1000 <b>₽</b>.'
 			gt 'igrkart1'
-		elseif deal > 1000:
-			msg 'The maximum rate of 1000 <b>₽</b>.'
+		elseif money < bet_amnt:
+			msg 'You don''t have that much money.'
+			gt 'igrkart1'
+		elseif money >= bet_amnt:
+			money -= bet_amnt
+			turn = 1
 			gt 'igrkart1'
 		end
 
 		gt 'igrkart1'
 	end
 
-	act 'Move away from the table':gt 'bldzh'
+	act 'Leave the table':gt 'bldzh'
 end
 
 !!the cards are dealt
 if turn = 1:
 	cla
 	'<right><img src="images/casino/cartbd.jpg"></right>'
-	' The dealer deals the cards:'
+	' The dealer deals the cards:'
 	'...'
 	suit = rand(1, 4)
 	number = rand(1, 13)
@@ -58,33 +60,33 @@ if turn = 1:
 	if p_points = 22:
 		p_points = 21
 	elseif p_points < 21:
-		'Map of dealer:'
-		'  <<$d_card[1]>>'
+		'Dealer is showing:'
+		'  <<$d_card[1]>>'
 		'__________________________'
-		'Player Maps:'
-		'  <<$p_card[1]>>'
-		'  <<$p_card[2]>>'
+		'Your cards:'
+		'  <<$p_card[1]>>'
+		'  <<$p_card[2]>>'
 
-		act 'Enough':
+		act 'Stay':
 			turn = 3
 			gt 'igrkart1'
 		end
 
-		act 'Another card':
+		act 'Hit':
 			turn = 2
 			gt 'igrkart1'
 		end
 	elseif p_points = 21:
-		prise = deal * 3
-		'Map of dealer:'
-		'  <<$d_card[1]>>'
+		prise = bet_amnt * 3
+		'Dealer is showing:'
+		'  <<$d_card[1]>>'
 		'__________________________'
-		'Player Maps:'
-		'  <<$p_card[1]>>'
-		'  <<$p_card[2]>>'
+		'Your cards:'
+		'  <<$p_card[1]>>'
+		'  <<$p_card[2]>>'
 		'BLACK JACK!'
 
-		act 'Pick up the win (<<prise>> <b>₽</b>)':
+		act 'Gather your winnings (<<prise>> <b>₽</b>).':
 			money += prise
 			turn = 0
 			gt 'igrkart1'
@@ -104,32 +106,32 @@ if turn = 2:
 	p_points += points[number]
 
 	if p_points <= 21:
-		'Map of dealer:'
-		'  <<$d_card[1]>>'
+		'Dealer is showing:'
+		'  <<$d_card[1]>>'
 		'__________________________'
-		'Player Maps:'
-		'  <<$p_card[1]>>'
-		'  <<$p_card[2]>>'
-		'  <<$p_card[3]>>'
+		'Your cards:'
+		'  <<$p_card[1]>>'
+		'  <<$p_card[2]>>'
+		'  <<$p_card[3]>>'
 
-		act 'Enough':
+		act 'Stay':
 			turn = 3
 			gt 'igrkart1'
 		end
 
-		act 'Another card':
+		act 'Hit':
 			turn = 22
 			gt 'igrkart1'
 		end
 
 	elseif p_points > 21:
-		'Map of dealer:'
-		'  <<$d_card[1]>>'
+		'Dealer is showing:'
+		'  <<$d_card[1]>>'
 		'__________________________'
-		'Player Maps:'
-		'  <<$p_card[1]>>'
-		'  <<$p_card[2]>>'
-		'  <<$p_card[3]>>'
+		'Your cards:'
+		'  <<$p_card[1]>>'
+		'  <<$p_card[2]>>'
+		'  <<$p_card[3]>>'
 		'Bust! You lose.'
 
 		act '...':
@@ -150,33 +152,33 @@ if turn = 22:
 	p_points += points[number]
 
 	if p_points <= 21:
-		'Map of dealer:'
-		'  <<$d_card[1]>>'
+		'Dealer is showing:'
+		'  <<$d_card[1]>>'
 		'__________________________'
-		'Player Maps:'
-		'  <<$p_card[1]>>'
-		'  <<$p_card[2]>>'
-		'  <<$p_card[3]>>'
-		'  <<$p_card[4]>>'
+		'Your cards:'
+		'  <<$p_card[1]>>'
+		'  <<$p_card[2]>>'
+		'  <<$p_card[3]>>'
+		'  <<$p_card[4]>>'
 
-		act 'Enough':
+		act 'Stay':
 			turn = 3
 			gt 'igrkart1'
 		end
 
-		act 'Another card':
+		act 'Hit':
 			turn = 222
 			gt 'igrkart1'
 		end
 	elseif p_points > 21:
-		'Map of dealer:'
-		'  <<$d_card[1]>>'
+		'Dealer is showing:'
+		'  <<$d_card[1]>>'
 		'__________________________'
-		'Player Maps:'
-		'  <<$p_card[1]>>'
-		'  <<$p_card[2]>>'
-		'  <<$p_card[3]>>'
-		'  <<$p_card[4]>>'
+		'Your cards:'
+		'  <<$p_card[1]>>'
+		'  <<$p_card[2]>>'
+		'  <<$p_card[3]>>'
+		'  <<$p_card[4]>>'
 		'Bust! You lose.'
 
 		act '...':
@@ -197,30 +199,30 @@ if turn = 222:
 	p_points += points[number]
 
 	if p_points <= 21:
-		'Bank card:'
-		'  <<$d_card[1]>>'
+		'Dealer is showing:'
+		'  <<$d_card[1]>>'
 		'__________________________'
-		'Player Maps:'
-		'  <<$p_card[1]>>'
-		'  <<$p_card[2]>>'
-		'  <<$p_card[3]>>'
-		'  <<$p_card[4]>>'
-		'  <<$p_card[5]>>'
+		'Your cards:'
+		'  <<$p_card[1]>>'
+		'  <<$p_card[2]>>'
+		'  <<$p_card[3]>>'
+		'  <<$p_card[4]>>'
+		'  <<$p_card[5]>>'
 
-		act 'Enough':
+		act 'Stay':
 			turn = 3
 			gt 'igrkart1'
 		end
 	elseif p_points > 21:
-		'Map of dealer:'
-		'  <<$d_card[1]>>'
+		'Dealer is showing:'
+		'  <<$d_card[1]>>'
 		'__________________________'
-		'Player Maps:'
-		'  <<$p_card[1]>>'
-		'  <<$p_card[2]>>'
-		'  <<$p_card[3]>>'
-		'  <<$p_card[4]>>'
-		'  <<$p_card[5]>>'
+		'Your cards:'
+		'  <<$p_card[1]>>'
+		'  <<$p_card[2]>>'
+		'  <<$p_card[3]>>'
+		'  <<$p_card[4]>>'
+		'  <<$p_card[5]>>'
 		'Bust! You lose.'
 
 		act '...':
@@ -244,35 +246,36 @@ if turn = 3:
 
 	if p_points = 22:
 		p_points = 21
-	elseif d_points >= 17:
-		'Bank cards:'
-		'  <<$d_card[1]>>'
-		'  <<$d_card[2]>>'
+	end
+	if d_points >= 17:
+		'Dealer is showing:'
+		'  <<$d_card[1]>>'
+		'  <<$d_card[2]>>'
 		'Points dealer:<<d_points>>'
 		'__________________________'
 		'Player Points <<p_points>>'
 		'__________________________'
 
 		if d_points > p_points:
-			'Casinos won'
+			'The dealer wins.'
 
 			act '...':
 				turn = 0
 				gt 'igrkart1'
 			end
 		elseif d_points = p_points:
-			'Draw'
+			'Draw.'
 
-			act 'Take a bet':
-				money += deal
+			act 'Retrieve your bet.':
+				money += bet_amnt
 				turn = 0
 				gt 'igrkart1'
 			end
 		elseif d_points < p_points:
-			'Player won'
-			prise = deal * 2
+			'You win!'
+			prise = bet_amnt * 2
 
-			act 'Pick up the win (<<prise>> <b>₽</b>).':
+			act 'Gather your winnings (<<prise>> <b>₽</b>).':
 				money += prise
 				turn = 0
 				gt 'igrkart1'
@@ -286,51 +289,51 @@ if turn = 3:
 
 		if d_points <= 21:
 			'The dealer''s cards:'
-			'  <<$d_card[1]>>'
-			'  <<$d_card[2]>>'
-			'  <<$d_card[3]>>'
+			'  <<$d_card[1]>>'
+			'  <<$d_card[2]>>'
+			'  <<$d_card[3]>>'
 			'Points dealer:<<d_points>>'
 			'__________________________'
 			'Player Points <<p_points>>'
 			'__________________________'
 
 			if d_points > p_points:
-				'Casinos won'
+				'The dealer wins.'
 
 				act '...':
 					turn = 0
 					gt 'igrkart1'
 				end
 			elseif d_points = p_points:
-				'Draw'
+				'Draw.'
 
-				act 'Take a bet':
-					money += deal
+				act 'Retrieve your bet.':
+					money += bet_amnt
 					turn = 0
 					gt 'igrkart1'
 				end
 			elseif d_points < p_points:
-				'Player won'
-				prise = deal * 2
+				'You win!'
+				prise = bet_amnt * 2
 
-				act 'Pick up the win (<<prise>> <b>₽</b>).':
+				act 'Gather your winnings (<<prise>> <b>₽</b>).':
 					money += prise
 					turn = 0
 					gt 'igrkart1'
 				end
 			end
 		elseif d_points > 21:
-			prise = deal * 2
+			prise = bet_amnt * 2
 			'The dealer''s cards:'
-			'  <<$d_card[1]>>'
-			'  <<$d_card[2]>>'
-			'  <<$d_card[3]>>'
+			'  <<$d_card[1]>>'
+			'  <<$d_card[2]>>'
+			'  <<$d_card[3]>>'
 			'__________________________'
-			'Busting!'
+			'The dealer busts!'
 			'__________________________'
-			'Player won'
+			'You win!'
 
-			act 'Pick up the win (<<prise>> <b>₽</b>)':
+			act 'Gather your winnings (<<prise>> <b>₽</b>)':
 				money += prise
 				turn = 0
 				gt 'igrkart1'
