@@ -1,6 +1,6 @@
 # BurgerTip
 
-$burger_work_din = {
+if $ARGS[0] = 'work':
 	burand = rand(0, 6)
 
 	if burand = 0:
@@ -83,7 +83,7 @@ $burger_work_din = {
 					'<center><img src="images/qwest/sosed/bossex.jpg"></center>'
 					'While you kiss him, Anatoly leads you to the couch. He soon has his face planted between your breasts, and a hand fondling your ass.'
 
-					dynamic $boss_din_bj
+					act 'Suck his dick': gt 'BurgerTip', 'bj'
 
 					act 'Have sex':
 						cls
@@ -95,10 +95,10 @@ $burger_work_din = {
 						bosstipsexrand = rand(1, 10)
 
 						if bosstipsexrand >= 3:
-							dynamic $boss_din_sex2
+							act 'Moan': gt 'BurgerTip', 'sex2'
 						elseif bosstipsexrand < 3:
 							'His hand goes further finding your sphincter with one of his fingers. The probing of his finger leaves no doubt about what he wants.'
-							dynamic $boss_din_anal2
+							act 'Take it in the ass':gt 'BurgerTip', 'anal2'
 						end
 					end
 				end
@@ -115,10 +115,10 @@ $burger_work_din = {
 						'<center><img src="images/qwest/sosed/bossbj.jpg"></center>'
 						'When his pants are around his ankles, you kiss and rub your hands along the fabric covering his bulge. Eventually you see the tip of his penis poking out his briefs, and can''t take it anymore. Playfully, you remove his underwear with your teeth.'
 
-						dynamic $boss_din_bj
+						act 'Suck his dick': gt 'BurgerTip', 'bj'
 					end
 
-					dynamic $boss_din_bj
+					act 'Suck his dick': gt 'BurgerTip', 'bj'
 				end
 			end
 		end
@@ -186,7 +186,7 @@ $burger_work_din = {
 
 				if bburand = 0:
 					'The senior manager Ivan shows up in your office.'
-					dynamic $din_Ivan_work
+					gs 'BurgerTip', 'ivan_work'
 
 					if kompromatLife = 0 or kompromatBlackMail > 1:
 						'Ivan grins, "Honey, I need you to put your stamp on these papers." You give Ivan a sceptical look, as you find your company stamp. Then you put your stamp on the papers, and hand the back to Ivan.'
@@ -408,7 +408,7 @@ $burger_work_din = {
 		exit
 	elseif burand = 2:
 		'The senior manager Ivan shows up in your office.'
-		dynamic $din_Ivan_work
+		gs 'BurgerTip', 'ivan_work'
 
 		if kompromatLife = 0 or kompromatBlackMail > 1:
 			'Ivan grins, "Honey, I need you to put your stamp on these papers." You give Ivan a sceptical look, as you find your company stamp. Then you put your stamp on the papers, and hand the back to Ivan.'
@@ -474,7 +474,7 @@ $burger_work_din = {
 
 		exit
 	end
-}
+end
 
 $boss_ass_din = {
 	bossassrand = rand(0, 3)
@@ -482,83 +482,81 @@ $boss_ass_din = {
 	if bossassrand = 0:'When you bend over to pick up the papers from the table, Anatoly gives you a slap on the ass. '
 }
 
-$boss_din_bj = {
+if $ARGS[0] = 'bj':
 	act 'Suck his dick':
-		cls
-		numbjrand = rand(0, 14)
-		wantrand = rand(0, 3)
-		bj += 1
-		gs 'stat'
-		'<center><img src="images/qwest/sosed/bossbj<<numbjrand>>.jpg"></center>'
-		'You greedily wrap your <<$lip1>> lips around the head of his cock. Smiling up at Anatoly, you give you lips a playfully little pop, before you begin to suck in earnest.'
-		
-		if wantrand = 3:
-			'After a short time, Anatoly takes his cock from your mouth and says, "<<$name>>, I want all of you."'
-			dynamic $boss_din_bendover
-		elseif wantrand = 2:
-			'After a short time, Anatoly groans, "<<$name>> if keep sucking, I''m going to finish"'
-			dynamic $boss_din_bendover
-			dynamic $boss_din_bj2
-		elseif wantrand < 2:
-			'After a short time, Anatoly groans loudly. He is obviously about to finish.'
-			dynamic $boss_din_bj_cum
+	cls
+	numbjrand = rand(0, 14)
+	wantrand = rand(0, 3)
+	bj += 1
+	gs 'stat'
+	'<center><img src="images/qwest/sosed/bossbj<<numbjrand>>.jpg"></center>'
+	'You greedily wrap your <<$lip1>> lips around the head of his cock. Smiling up at Anatoly, you give you lips a playfully little pop, before you begin to suck in earnest.'
+	
+	if wantrand = 3:
+		'After a short time, Anatoly takes his cock from your mouth and says, "<<$name>>, I want all of you."'
+		act 'Bend over the desk': gt 'BurgerTip', 'bend'
+	elseif wantrand = 2:
+		'After a short time, Anatoly groans, "<<$name>> if keep sucking, I''m going to finish"'
+		act 'Bend over the desk': gt 'BurgerTip', 'bend'
+		dynamic $boss_din_bj2
+	elseif wantrand < 2:
+		'After a short time, Anatoly groans loudly. He is obviously about to finish.'
+		act 'Finish him by hand': gt 'BurgerTip', 'bj_cum'
+		act 'Continue to suck': gt 'BurgerTip', 'bj2'
+	end
+end
+
+if $ARGS[0] = 'toilet':
+	cls
+	gs 'stat'
+	bosstoirand = rand(0, 10)
+
+	if bosstoirand = 10:
+		gossipBU += 1
+		'On your way to the toilet, you accidentally collide with Ivan. He looks at you with a knowing little grin, before going about his business.'
+		gs 'BurgerTip', 'toilet_wash'
+	elseif bosstoirand = 9:
+		gossipBU += 1
+		'On your way to the toilet, you encounter Lena. The accountant notices the stain on your blouse and mutters "whore", before walking away.'
+		gs 'BurgerTip', 'toilet_wash'
+	elseif bosstoirand = 8:
+		gossipBU += 1
+		'On your way to the toilet, you accidentally collided with the personnel manager. Vic notices the cum stain, and her eyes widen in surprise. She wrinkles her nose in disgust, and walks away.'
+		gs 'BurgerTip', 'toilet_wash'
+	elseif bosstoirand = 7:
+		gossipBU += 1
+		'On your way to the toilet, you encounter Sergei. The pimply deputy manager notices the cum stain and laughs. "I thought you always swallowed everything, cocksucker", he says, as he walks away.'
+		gs 'BurgerTip', 'toilet_wash'
+	elseif bosstoirand < 7:
+		bosstoirandin = rand(0, 10)
+
+		if bosstoirandin = 10:
+			gossipBU += 1
+			'You quietly slipped into the toilet, but come face to face with Lena. She notices the stain on your top and muttered "whore" before walking away.'
+			gs 'BurgerTip', 'toilet_wash2'
+		elseif bosstoirandin = 9:
+			gossipBU += 1
+			'In the bathroom you come face to face with toilet faced nose to nose with Vik. The personnel manager notices what you are doing, and shakes her head with disdain, as she walks out.'
+			gs 'BurgerTip', 'toilet_wash2'
+		elseif bosstoirandin < 9:
+			if spdirtyc > 0:$deytoibur2 = 'Your attempt to discreetly wipe the semen from clothing failed, leaving you with a large wet spot on your blouse.'
+			if spdirtyv > 0:$deytoibur = 'You manage to get the stain off your blouse. All that''s left is a barely noticeable damp spot.'
+			cumspclnt = 12
+			gs 'cum_cleanup'
+			cumspclnt = 9
+			gs 'cum_cleanup'
+			cumspclnt = 6
+			gs 'cum_cleanup'
+
+			'You go into the bathroom, and turn the water on in the sink. <<$deytoibur>><<$deytoibur2>>'
+
+			if PSBBtimes = 1:dynamic $dinBistroWork
+			if PSBBtimes = 2:dynamic $dinBistroWork2
 		end
 	end
-}
+end
 
-$boss_din_go_toilet = {
-	act 'Go to the toilet':
-		cls
-		gs 'stat'
-		bosstoirand = rand(0, 10)
-
-		if bosstoirand = 10:
-			gossipBU += 1
-			'On your way to the toilet, you accidentally collide with Ivan. He looks at you with a knowing little grin, before going about his business.'
-			dynamic $boss_din_toilet_wash
-		elseif bosstoirand = 9:
-			gossipBU += 1
-			'On your way to the toilet, you encounter Lena. The accountant notices the stain on your blouse and mutters "whore", before walking away.'
-			dynamic $boss_din_toilet_wash
-		elseif bosstoirand = 8:
-			gossipBU += 1
-			'On your way to the toilet, you accidentally collided with the personnel manager. Vic notices the cum stain, and her eyes widen in surprise. She wrinkles her nose in disgust, and walks away.'
-			dynamic $boss_din_toilet_wash
-		elseif bosstoirand = 7:
-			gossipBU += 1
-			'On your way to the toilet, you encounter Sergei. The pimply deputy manager notices the cum stain and laughs. "I thought you always swallowed everything, cocksucker", he says, as he walks away.'
-			dynamic $boss_din_toilet_wash
-		elseif bosstoirand < 7:
-			bosstoirandin = rand(0, 10)
-
-			if bosstoirandin = 10:
-				gossipBU += 1
-				'You quietly slipped into the toilet, but come face to face with Lena. She notices the stain on your top and muttered "whore" before walking away.'
-				dynamic $boss_din_toilet_wash2
-			elseif bosstoirandin = 9:
-				gossipBU += 1
-				'In the bathroom you come face to face with toilet faced nose to nose with Vik. The personnel manager notices what you are doing, and shakes her head with disdain, as she walks out.'
-				dynamic $boss_din_toilet_wash2
-			elseif bosstoirandin < 9:
-				if spdirtyc > 0:$deytoibur2 = 'Your attempt to discreetly wipe the semen from clothing failed, leaving you with a large wet spot on your blouse.'
-				if spdirtyv > 0:$deytoibur = 'You manage to get the stain off your blouse. All that''s left is a barely noticeable damp spot.'
-				cumspclnt = 12
-				gs 'cum_cleanup'
-				cumspclnt = 9
-				gs 'cum_cleanup'
-				cumspclnt = 6
-				gs 'cum_cleanup'
-
-				'You go into the bathroom, and turn the water on in the sink. <<$deytoibur>><<$deytoibur2>>'
-
-				if PSBBtimes = 1:dynamic $dinBistroWork
-				if PSBBtimes = 2:dynamic $dinBistroWork2
-			end
-		end
-	end
-}
-
-$boss_din_toilet_wash = {
+if $ARGS[0] = 'toilet_wash':
 	if spdirtyc > 0:$deytoibur2 = 'Your attempt to discreetly wipe the semen from clothing failed, leaving you with a large wet spot on your blouse.'
 	if spdirtyv > 0:$deytoibur = 'You manage to get the stain off your blouse. All that''s left is a barely noticeable damp spot.'
 	cumspclnt = 12
@@ -572,9 +570,9 @@ $boss_din_toilet_wash = {
 
 	if PSBBtimes = 1:dynamic $dinBistroWork
 	if PSBBtimes = 2:dynamic $dinBistroWork2
-}
+end
 
-$boss_din_toilet_wash2 = {
+if $ARGS[0] = 'toilet_wash2':
 	if spdirtyc > 0:$deytoibur2 = 'Your attempt to discreetly wipe the semen from clothing failed, leaving you with a large wet spot on your blouse.'
 	if spdirtyv > 0:$deytoibur = 'You manage to get the stain off your blouse. All that''s left is a barely noticeable damp spot.'
 	cumspclnt = 12
@@ -588,220 +586,206 @@ $boss_din_toilet_wash2 = {
 
 	if PSBBtimes = 1:dynamic $dinBistroWork
 	if PSBBtimes = 2:dynamic $dinBistroWork2
-}
+end
 
-$boss_din_bj_cum = {
-	act 'Finish him by hand':
-		cls
-		gs 'stat'
+if $ARGS[0] = 'bj_cum':
+	cls
+	gs 'stat'
 
-		reaktrand = rand(0, 10)
+	reaktrand = rand(0, 10)
 
-		if reaktrand <= 5:
-			'<center><img src="images/qwest/sosed/bossbjcum.jpg"></center>'
-			'Not wanting a mouth full of cum, you decide to jerk Anatoly to completion. His semen pours out all over your hand. Exhausted, Anatoly lies back breathing heavily.'
+	if reaktrand <= 5:
+		'<center><img src="images/qwest/sosed/bossbjcum.jpg"></center>'
+		'Not wanting a mouth full of cum, you decide to jerk Anatoly to completion. His semen pours out all over your hand. Exhausted, Anatoly lies back breathing heavily.'
 
-			if PSBBtimes = 1:dynamic $dinBistroWork
-			if PSBBtimes = 2:dynamic $dinBistroWork2
-		elseif reaktrand > 5 and reaktrand < 9:
-			spafinloc = 7
-			gs 'cum_manage'
-			'<center><img src="images/qwest/sosed/bossbjcum2.jpg"></center>'
-			'Not wanting a mouth full of cum, you decide to jerk Anatoly to completion. Oh dear, it looks like your clever plan backfired. Anatoly managed to shoot his load all over your pretty outfit. It looks sexy, but you better head to the bathroom before it stains.'
-			dynamic $boss_din_go_toilet
-		elseif reaktrand >= 9:
-			spafinloc = 11
-			gs 'cum_manage'
-			spafinloc = 7
-			gs 'cum_manage'
-			'<center><img src="images/qwest/sosed/bossbjcum3.jpg"></center>'
-			'Not wanting a mouth full of cum, you decide to jerk Anatoly to completion. You realize your error when jets of semen splatter against your face and clothes. You manage to get most of it off your face with a tissue, but you better get to the little girls room before it stains your top.'
-			dynamic $boss_din_go_toilet
-		end
-
-		gs 'stat'
-	end
-
-	dynamic $boss_din_bj2
-}
-
-$boss_din_bj2 = {
-	act 'Continue to suck':
-		cls
-		spafinloc = 12
+		if PSBBtimes = 1:dynamic $dinBistroWork
+		if PSBBtimes = 2:dynamic $dinBistroWork2
+	elseif reaktrand > 5 and reaktrand < 9:
+		spafinloc = 7
 		gs 'cum_manage'
-		gs 'stat'
-		'<center><img src="images/qwest/sosed/bossbjcum4.jpg"></center>'
-		'Wanting to get a taste, you pick up the pace to finish him. Soon, his salty semen pours into your mouth. It tastes delicious.'
-
-		act 'Show him how full your mouth is':
-			cls
-			gs 'stat'
-			'<center><img src="images/qwest/sosed/bossbjcum5.jpg"></center>'
-			'When his sperm ceases to flow into your mouth, you open to show Anatoly. You let his load slowly run from your mouth.'
-			boburand = rand(0, 10)
-
-			if boburand > 2:
-				if PSBBtimes = 1:dynamic $dinBistroWork
-				if PSBBtimes = 2:dynamic $dinBistroWork2
-			elseif boburand <= 2:
-				spafinloc = 7
-				gs 'cum_manage'
-				gs 'stat'
-				'Afterword, you notice you got some of his semen on your blouse.'
-				dynamic $boss_din_go_toilet
-			end
-		end
-
-		act 'Swallow it down':
-			cls
-			swallow += 1
-			gs 'stat'
-			'<center><img src="images/qwest/sosed/bossbjcum6.jpg"></center>'
-			'You swallow his cum down as fast as you can. You are left with the a strange, but not altogether unpleasant aftertaste in your mouth.'
-			boburand = rand(0, 10)
-
-			if boburand > 2:
-				if PSBBtimes = 1:dynamic $dinBistroWork
-				if PSBBtimes = 2:dynamic $dinBistroWork2
-			elseif boburand <= 2:
-				spafinloc = 7
-				gs 'cum_manage'
-				gs 'stat'
-				'You notice that you didn''t get it all. A few drops of semen are staining your blouse.'
-				dynamic $boss_din_go_toilet
-			end
-		end
+		'<center><img src="images/qwest/sosed/bossbjcum2.jpg"></center>'
+		'Not wanting a mouth full of cum, you decide to jerk Anatoly to completion. Oh dear, it looks like your clever plan backfired. Anatoly managed to shoot his load all over your pretty outfit. It looks sexy, but you better head to the bathroom before it stains.'
+		act 'Go to the toilet': gt 'BurgerTip', 'toilet'
+	elseif reaktrand >= 9:
+		spafinloc = 11
+		gs 'cum_manage'
+		spafinloc = 7
+		gs 'cum_manage'
+		'<center><img src="images/qwest/sosed/bossbjcum3.jpg"></center>'
+		'Not wanting a mouth full of cum, you decide to jerk Anatoly to completion. You realize your error when jets of semen splatter against your face and clothes. You manage to get most of it off your face with a tissue, but you better get to the little girls room before it stains your top.'
+		act 'Go to the toilet': gt 'BurgerTip', 'toilet'
 	end
-}
 
-$boss_din_bendover = {
-	act 'Bend over the desk':
+	gs 'stat'
+end
+
+if $ARGS[0] = 'bj2':
+	cls
+	spafinloc = 12
+	gs 'cum_manage'
+	gs 'stat'
+	'<center><img src="images/qwest/sosed/bossbjcum4.jpg"></center>'
+	'Wanting to get a taste, you pick up the pace to finish him. Soon, his salty semen pours into your mouth. It tastes delicious.'
+
+	act 'Show him how full your mouth is':
 		cls
 		gs 'stat'
-		!!bossfuck
-		'<center><img src="images/qwest/sosed/bossbendover.jpg"></center>'
-		'You bend over the desk, spreading your cheeks to give Anatoly access to whatever he wants.'
-		bosstipsex = rand(0, 10)
+		'<center><img src="images/qwest/sosed/bossbjcum5.jpg"></center>'
+		'When his sperm ceases to flow into your mouth, you open to show Anatoly. You let his load slowly run from your mouth.'
+		boburand = rand(0, 10)
 
-		if bosstipsex <= 8:
-			'He starts rubbing the head of his cock against your little pussy.'
-			dynamic $boss_din_sex
-		elseif bosstipsex > 8:
-			'He bends down and spits into your ass. Then you feel his finger start working it''s way into your backdoor.'
-			dynamic $boss_din_anal
-		end
-	end
-}
-$boss_din_sex = {
-	act 'Moan':
-		cls
-		bosstipsex = rand(0, 10)
-		$boy = 'Anatoly'
-		dick = 12
-		silavag = 0
-		pose = 1
-		gs 'stat'
-		!!bossfuck
-		'<center><img src="images/qwest/sosed/bossfuck.jpg"></center>'
-		'You urge him on with your moans, and a little wiggle of your hips.'
-		dynamic $sexstart2
-		!!dynamic $sexcum
-		bosswantrand = rand(0, 10)
-
-		if bosswantrand >= 3:
-			spafinloc = 4
-			gs 'cum_manage'
-			'<<$boy>> withdraws his cock, and shoots hot streams of semen all over your naked ass.'
+		if boburand > 2:
 			if PSBBtimes = 1:dynamic $dinBistroWork
 			if PSBBtimes = 2:dynamic $dinBistroWork2
-		elseif bosswantrand < 3:
-			'Without warning, Anatoly takes his cock from pussy, and pushes it against your sphincter.'
-			dynamic $boss_din_anal
+		elseif boburand <= 2:
+			spafinloc = 7
+			gs 'cum_manage'
+			gs 'stat'
+			'Afterword, you notice you got some of his semen on your blouse.'
+			act 'Go to the toilet': gt 'BurgerTip', 'toilet'
 		end
 	end
-}
 
-$boss_din_anal = {
-	act 'Give it to him':
+	act 'Swallow it down':
 		cls
-		bosstipsex = rand(0, 10)
-		$boy = 'Anatoly'
-		dick = 12
-		silavag = 0
-		pose = 1
+		swallow += 1
 		gs 'stat'
-		!!bossfuck
-		'<center><img src="images/qwest/sosed/bossanal.jpg"></center>'
-		'You push your hips back presenting your ass for Anatoly.'
-		dynamic $analsex
-		!!dynamic $sexcum
+		'<center><img src="images/qwest/sosed/bossbjcum6.jpg"></center>'
+		'You swallow his cum down as fast as you can. You are left with the a strange, but not altogether unpleasant aftertaste in your mouth.'
+		boburand = rand(0, 10)
+
+		if boburand > 2:
+			if PSBBtimes = 1:dynamic $dinBistroWork
+			if PSBBtimes = 2:dynamic $dinBistroWork2
+		elseif boburand <= 2:
+			spafinloc = 7
+			gs 'cum_manage'
+			gs 'stat'
+			'You notice that you didn''t get it all. A few drops of semen are staining your blouse.'
+			act 'Go to the toilet': gt 'BurgerTip', 'toilet'
+		end
+	end
+end
+
+if $ARGS[0] = 'bend':
+	cls
+	gs 'stat'
+	!!bossfuck
+	'<center><img src="images/qwest/sosed/bossbendover.jpg"></center>'
+	'You bend over the desk, spreading your cheeks to give Anatoly access to whatever he wants.'
+	bosstipsex = rand(0, 10)
+
+	if bosstipsex <= 8:
+		'He starts rubbing the head of his cock against your little pussy.'
+		act 'Moan': gt 'BurgerTip', 'sex'
+	elseif bosstipsex > 8:
+		'He bends down and spits into your ass. Then you feel his finger start working it''s way into your backdoor.'
+		act 'Give it to him': gt 'BurgerTip', 'anal'
+	end
+end
+
+if $ARGS[0] = 'sex':
+	cls
+	bosstipsex = rand(0, 10)
+	$boy = 'Anatoly'
+	dick = 12
+	silavag = 0
+	pose = 1
+	gs 'stat'
+	!!bossfuck
+	'<center><img src="images/qwest/sosed/bossfuck.jpg"></center>'
+	'You urge him on with your moans, and a little wiggle of your hips.'
+	dynamic $sexstart2
+	!!dynamic $sexcum
+	bosswantrand = rand(0, 10)
+
+	if bosswantrand >= 3:
 		spafinloc = 4
 		gs 'cum_manage'
-		'He finishes by giving you a little smack on the ass and a "good girl".'
-
+		'<<$boy>> withdraws his cock, and shoots hot streams of semen all over your naked ass.'
 		if PSBBtimes = 1:dynamic $dinBistroWork
 		if PSBBtimes = 2:dynamic $dinBistroWork2
+	elseif bosswantrand < 3:
+		'Without warning, Anatoly takes his cock from pussy, and pushes it against your sphincter.'
+		act 'Give it to him': gt 'BurgerTip', 'anal'
 	end
-}
+end
 
-$boss_din_sex2 = {
-	act 'Moan':
-		cls
-		bosstipsex = rand(0, 10)
-		$boy = 'Anatoly'
-		dick = 12
-		silavag = 0
-		pose = 0
-		gs 'stat'
-		!!bossfuck
-		'<center><img src="images/qwest/sosed/bossfuck2.jpg"></center>'
-		'You urge him on with your moans, and a little wiggle of your hips.'
-		dynamic $sexstart2
-		!!dynamic $sexcum
+if $ARGS[0] = 'anal':
+	cls
+	bosstipsex = rand(0, 10)
+	$boy = 'Anatoly'
+	dick = 12
+	silavag = 0
+	pose = 1
+	gs 'stat'
+	!!bossfuck
+	'<center><img src="images/qwest/sosed/bossanal.jpg"></center>'
+	'You push your hips back presenting your ass for Anatoly.'
+	dynamic $analsex
+	!!dynamic $sexcum
+	spafinloc = 4
+	gs 'cum_manage'
+	'He finishes by giving you a little smack on the ass and a "good girl".'
 
-		bosswantrand = rand(0, 10)
+	if PSBBtimes = 1:dynamic $dinBistroWork
+	if PSBBtimes = 2:dynamic $dinBistroWork2
+end
 
-		if bosswantrand >= 3:
-			spafinloc = 14
-			gs 'cum_manage'
-			'<<$boy>> withdraws his cock, and shoots hot streams of semen all over your naked ass.'
-			if PSBBtimes = 1:dynamic $dinBistroWork
-			if PSBBtimes = 2:dynamic $dinBistroWork2
-		elseif bosswantrand < 3:
-			'Without warning, Anatoly takes his cock from pussy, and pushes it against your tight little ass.'
-			dynamic $boss_din_anal2
-		end
-	end
-}
+if $ARGS[0] = 'sex2':
+	cls
+	bosstipsex = rand(0, 10)
+	$boy = 'Anatoly'
+	dick = 12
+	silavag = 0
+	pose = 0
+	gs 'stat'
+	!!bossfuck
+	'<center><img src="images/qwest/sosed/bossfuck2.jpg"></center>'
+	'You urge him on with your moans, and a little wiggle of your hips.'
+	dynamic $sexstart2
+	!!dynamic $sexcum
 
-$boss_din_anal2 = {
-	act 'Take it in the ass':
-		cls
-		bosstipsex = rand(0, 10)
-		$boy = 'Anatoly'
-		dick = 12
-		silavag = 0
-		pose = 0
-		gs 'stat'
-		'<center><img src="images/qwest/sosed/bossanal2.jpg"></center>'
-		'You brace yourself, as he pushes his rock hard cock against your tight little sphincter.'
-		dynamic $analsex
-		!!dynamic $sexcum
-		spafinloc = 3
+	bosswantrand = rand(0, 10)
+
+	if bosswantrand >= 3:
+		spafinloc = 14
 		gs 'cum_manage'
-		'He finishes by giving you a little smack on the ass and a "good girl".'
-
+		'<<$boy>> withdraws his cock, and shoots hot streams of semen all over your naked ass.'
 		if PSBBtimes = 1:dynamic $dinBistroWork
 		if PSBBtimes = 2:dynamic $dinBistroWork2
+	elseif bosswantrand < 3:
+		'Without warning, Anatoly takes his cock from pussy, and pushes it against your tight little ass.'
+		act 'Take it in the ass':gt 'BurgerTip', 'anal2'
 	end
-}
+end
 
-$din_Ivan_work = {
+if $ARGS[0] = 'anal2':
+	act 'Take it in the ass':gt 'BurgerTip', 'anal2'
+	cls
+	bosstipsex = rand(0, 10)
+	$boy = 'Anatoly'
+	dick = 12
+	silavag = 0
+	pose = 0
+	gs 'stat'
+	'<center><img src="images/qwest/sosed/bossanal2.jpg"></center>'
+	'You brace yourself, as he pushes his rock hard cock against your tight little sphincter.'
+	dynamic $analsex
+	!!dynamic $sexcum
+	spafinloc = 3
+	gs 'cum_manage'
+	'He finishes by giving you a little smack on the ass and a "good girl".'
+
+	if PSBBtimes = 1:dynamic $dinBistroWork
+	if PSBBtimes = 2:dynamic $dinBistroWork2
+end
+
+if $ARGS[0] = 'Ivan_work':
 	if kompromatLife > 0 and kompromatBlackMail = 0:
 		'Ivan grins, "<<$name>>, <<$name>>, I would have never imagined this from a sweet young thing like you." He puts a photo on your desk. You pick it up, and take a look. <<$kompromatFoto>>. Ivan is looking at you like a cat about to catch a mouse: "<<$name>>, we can''t have this our boss has aims at a career in politics. If something like this were to get out it would it would...well we can''t let that happen. I''m afraid you are just going to have to quit. Anatoly can''t be known as a man who keeps a slutty secretary."' 
 	
-		dynamic $din_Ivan_work2
+		act 'Plead with him not to show the pictures':gs 'BurgerTip', 'ivan_work2'
 
 		act 'Keep silent':
 			cls
@@ -814,79 +798,73 @@ $din_Ivan_work = {
 			if PSBBtimes = 1:dynamic $dinBistroWork
 			if PSBBtimes = 2:dynamic $dinBistroWork2
 
-			dynamic $din_Ivan_work2
+			act 'Plead with him not to show the pictures':gs 'BurgerTip', 'ivan_work2'
 		end
 	end
-}
+end
 
-$din_Ivan_work2 = {
-	act 'Plead with him not to show the pictures':
+if $ARGS[0] = 'Ivan_work2':
+	cls
+	minut += 5
+	gs 'stat'
+	'<center><img src="images/qwest/sosed/work5.jpg"></center>'
+	'"Please Ivan, I need this job. What will it take to keep you quiet?" you ask.'
+	'Ivan chuckled, "I see you are ready to cooperate. Let''s go to my office to discuss it."'
+
+	act 'Go with Ivan':
 		cls
-		minut += 5
+		kompromatBlackMail = 2
 		gs 'stat'
-		'<center><img src="images/qwest/sosed/work5.jpg"></center>'
-		'"Please Ivan, I need this job. What will it take to keep you quiet?" you ask.'
-		'Ivan chuckled, "I see you are ready to cooperate. Let''s go to my office to discuss it."'
+		'When you enter his office, Ivan locks the door. "Well baby, you can start by getting those clothes off," he orders.'
 
-		act 'Go with Ivan':
+		act 'Undress':
 			cls
 			kompromatBlackMail = 2
 			gs 'stat'
-			'When you enter his office, Ivan locks the door. "Well baby, you can start by getting those clothes off," he orders.'
+			'As you undress you feel Ivan''s gaze all over your body. When you are naked, he slowly walks across the room, staring at you. He reaches out with a hand and tweaks one of you nipples, saying, "Not bad, not bad, I think you and I will get along just fine. Now on your knees bitch, and open that cute fucking mouth of yours wide."'
 
-			act 'Undress':
+			act 'Get on your knees and open your mouth':
 				cls
 				kompromatBlackMail = 2
+				spafinloc = 11
+				gs 'cum_manage'
+				facial += 1
+				boy += 1
 				gs 'stat'
-				'As you undress you feel Ivan''s gaze all over your body. When you are naked, he slowly walks across the room, staring at you. He reaches out with a hand and tweaks one of you nipples, saying, "Not bad, not bad, I think you and I will get along just fine. Now on your knees bitch, and open that cute fucking mouth of yours wide."'
+				'<center><img src="images/qwest/sosed/ivanfacial.jpg"></center>'
+				'You kneel with mouth open waiting for what comes next. Ivan gets his dick out, and starts to masturbate in front of your face, coldly staring down at you. He shouts, "I knew you''d be my whore!" as sperm flies out of his cock and splatters against your face. After he is finished coating your face, he puts his dick back in his pants saying, "OK, get out of my office slut, and don''t forget unless you want the boss finding out about those pictures I own your ass."'
 
-				act 'Get on your knees and open your mouth':
-					cls
-					kompromatBlackMail = 2
-					spafinloc = 11
-					gs 'cum_manage'
-					facial += 1
-					boy += 1
-					gs 'stat'
-					'<center><img src="images/qwest/sosed/ivanfacial.jpg"></center>'
-					'You kneel with mouth open waiting for what comes next. Ivan gets his dick out, and starts to masturbate in front of your face, coldly staring down at you. He shouts, "I knew you''d be my whore!" as sperm flies out of his cock and splatters against your face. After he is finished coating your face, he puts his dick back in his pants saying, "OK, get out of my office slut, and don''t forget unless you want the boss finding out about those pictures I own your ass."'
-
-					if PSBBtimes = 1:dynamic $dinBistroWork
-					if PSBBtimes = 2:dynamic $dinBistroWork2
-				end
+				if PSBBtimes = 1:dynamic $dinBistroWork
+				if PSBBtimes = 2:dynamic $dinBistroWork2
 			end
-
-			dynamic $din_Ivan_work3
 		end
 
-		dynamic $din_Ivan_work3
+		act 'Refuse': gt 'BurgerTip', 'ivan_work3'
 	end
-}
 
-$din_Ivan_work3 = {
-	act 'Refuse':
-		cls
-		kompromatBlackMail = 1
-		gs 'stat'
-		'<center><img src="images/qwest/sosed/work7.jpg"></center>'
-		'When you refuse to undress, Ivan says, "I''m tired of messing with you anyway, you stupid cunt. It''s easier just to get rid of you once and for all." With that, he opens the door and orders you to exit.'
+	act 'Refuse': gt 'BurgerTip', 'ivan_work3'
+end
 
-		if PSBBtimes = 1:dynamic $dinBistroWork
-		if PSBBtimes = 2:dynamic $dinBistroWork2
-	end
-}
+if $ARGS[0] = 'Ivan_work3':
+	cls
+	kompromatBlackMail = 1
+	gs 'stat'
+	'<center><img src="images/qwest/sosed/work7.jpg"></center>'
+	'When you refuse to undress, Ivan says, "I''m tired of messing with you anyway, you stupid cunt. It''s easier just to get rid of you once and for all." With that, he opens the door and orders you to exit.'
 
-$din_Ivan_work4 = {
-	act 'Refuse':
-		cls
-		kompromatBlackMail = 1
-		gs 'stat'
-		'<center><img src="images/qwest/sosed/work7.jpg"></center>'
-		'When you refuse, Ivan says, "I''m tired of messing with you anyway, you stupid cunt. It''s easier just to get rid of you once and for all." With that, he turns and walks away.'
+	if PSBBtimes = 1:dynamic $dinBistroWork
+	if PSBBtimes = 2:dynamic $dinBistroWork2
+end
 
-		act 'Leave':gt 'down'
-	end
-}
+if $ARGS[0] = 'work4':
+	cls
+	kompromatBlackMail = 1
+	gs 'stat'
+	'<center><img src="images/qwest/sosed/work7.jpg"></center>'
+	'When you refuse, Ivan says, "I''m tired of messing with you anyway, you stupid cunt. It''s easier just to get rid of you once and for all." With that, he turns and walks away.'
+
+	act 'Leave':gt 'down'
+end
 
 --- BurgerTip ---------------------------------
 
