@@ -1,35 +1,51 @@
 # authors3
 clr
 minut += 10
-gs 'stat'
-'<center><img src="images/casino/avt.jpg"></center>'
-'Slot machines are pretty simple: insert 1000 <b>₽</b> and pull the lever. The jackpot on this machine is 10,000,000 <b>₽</b>.'
 
+gs 'stat'
+betAmount = 10
+slotsJackpot = betAmount * 20000
+
+'<center><img src="images/casino/avt.jpg"></center>'
+'Rules of the game are very simple: feed a <<betAmount>> <b>₽</b> coin into the machine and pull the lever. There are multiple winning combinations, but everyone here has their eyes on the <<slotsJackpot>> <b>₽</b> jackpot.'
 
 act 'Pull the lever':
-	if money >= 1000:
+	if money >= betAmount:
 		clr
-		money -= 1000
-		x_10 = rand(1, 1000)
+		money -= betAmount
 
-		if x_10 = 1000:
-			money += 10000000
-			msg 'JACKPOT! YOU WIN 1,000,000 <b>₽</b>!'
-		elseif x_10 < 1000 and x_10 >= 850:
-			money += 2000
-			msg 'Congratulations, you have won 20 <b>₽</b>!'
-		elseif x_10 >= 500 and x_10 < 850:
-			money += 1000
-			msg 'Congratulations, you have won 10 <b>₽</b>!'
-		elseif x_10 < 500:
-			msg 'You didn''t win anything this time.'
+		slotsRand = rand(1, 100000)
+
+		if slotsRand > 99990:
+			winnings = slotsJackpot
+			msg 'Jackpot! What are the odds!?'
+		elseif slotsRand >= 99900:
+			winnings = betAmount * 1500
+		elseif slotsRand >= 99000:
+			winnings = betAmount * 100
+		elseif slotsRand >= 90000:
+			winnings = betAmount * 5
+		elseif slotsRand >= 66667:
+			winnings = betAmount * 2
+		else
+			winnings = 0
+		end
+
+		if winnings > 0:
+			money += winnings
+			msg 'You have won <<winnings>> <b>₽</b>.'
+		else
+			msg 'Alas, you lose. Try again?'
 		end
 
 		gt 'authors3'
 	else
-		msg 'You don''t have enough money to play this machine.'
+		msg 'You don''t have enough money to play. Turns out there''s no such thing as a free lunch, and you need money for a chance to win more money. Life is so unfair.'
 		gt 'authors3'
 	end
+
+	killvar 'slotsRand'
+	killvar 'winnings'
 end
 
 act 'Go back to the main hall':gt 'igravt'
