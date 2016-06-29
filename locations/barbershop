@@ -3,11 +3,34 @@
 $pokraska = {
 	clr
 	cla
-	money -= 750
 	'You ask Mr. Sherman, the barber, if he could dye your hair.'
 	'"Sure.", he says.'
-	'"Which colour would like to have your hair dyed in?"'
+	'"What colour would like to have your hair dyed?"'
+	
+	act 'Change your mind':gt 'barbershop', 'start'
+	
+	if hcol ! nathcol:
+		act'Return to natural colour':
+			cla
+			*clr
+			'"I want to go back to my natural hair colour." you say as you pick at your hair in the mirror, "I don''t think <<$hcol>> is working for me."' 
+			'"Sure thing!", he says, "Why don''t you take a seat?"'
+			'"We''ll be done in no time!", he says and points your over to sit down on one of the seats.'
 
+			act 'Sit down':
+				cla
+				*clr
+				minut += 45
+				hcol = nathcol
+				money -= 750
+				'Less than an hour later your hair is dyed and dried.'
+				'Mr. Sherman removes the dryer hood. "And we''re all done."'
+				'You stand up from the chair and pay him 750 <b>₽</b>.'
+
+				act 'Leave':gt 'barbershop', 'start'
+			end
+		end
+	end
 	if hcol ! 0:
 		act 'Black':
 			cla
@@ -21,6 +44,8 @@ $pokraska = {
 				*clr
 				minut += 45
 				hcol = 0
+				dyefade = rand(28,35)
+				money -= 750
 				'Not even an hour later everything seems to have dried up.'
 				'Mr. Sherman removes the dryer hood. "And we''re all done."'
 				'You stand up from the chair and pay him 750 <b>₽</b>.'
@@ -43,6 +68,8 @@ $pokraska = {
 				*clr
 				minut += 45
 				hcol = 1
+				dyefade = rand(28,35)
+				money -= 750
 				'45 minutes later, everything should be dried up.'
 				'Mr. Sherman removes the dryer hood. "And we''re all done."'
 				'You stand up from the chair and pay him 750 <b>₽</b>.'
@@ -65,6 +92,8 @@ $pokraska = {
 				*clr
 				minut += 45
 				hcol = 2
+				dyefade = rand(28,35)
+				money -= 750
 				'45 minutes later, everything should be dried up.'
 				'Mr. Sherman removes the dryer hood. "And we''re all done."'
 				'You stand up from the chair and pay him 750 <b>₽</b>.'
@@ -86,6 +115,8 @@ $pokraska = {
 				*clr
 				minut += 45
 				hcol = 3
+				dyefade = rand(28,35)
+				money -= 750
 				'About an hour later, everything should be dried up.'
 				'Mr. Sherman removes the dryer hood. "And we''re all done."'
 				'You stand up from the chair and pay him 750 <b>₽</b>.'
@@ -418,8 +449,8 @@ if $ARGS[0] = 'start':
 
 	''
 
-	if money >= 750:'<a href="exec:dynamic $pokraska">Dye your hair - 1.000 <b>₽</b></a>'
-	if money < 750:'You cannot afford dyeing your hair, as you are missing the 1.000 <b>₽</b> required for it.'
+	if money >= 750:'<a href="exec:dynamic $pokraska">Dye your hair - 750 <b>₽</b></a>'
+	if money < 750:'You cannot afford to dye your hair, as you are short the 750 <b>₽</b> required for it.'
 
 	''
 
