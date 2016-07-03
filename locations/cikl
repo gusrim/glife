@@ -2,6 +2,7 @@
 day += 1
 week += 1
 hour -= 24
+gs 'daystart'
 
 !phone reset for bf
 ringA = 0
@@ -172,13 +173,24 @@ if tabletkicheck = 2:
 		FocH = EggRH
 	end
 	if tabletkishot <= 0:
-		'The chemicals regulating your fertility cycle are wearing off.'
 		pillcon -= 29000
+		if tabletkishot < 0: tabletkishot = 0
+	end
+	if shotdays = -8:
 		tabletkicheck = 0
-	elseif tabletkishot > 1 and tabletkishot < 5:
-		'You are due for a birth control shot. If you do not get one, you might get pregnant.'
-	elseif tabletkishot = 1:
-		'Your birth control shot will wear off tomorrow.'
+		shotdue = 0
+		'Your birth control shot is no longer protecting you.'
+	elseif shotdays <= 0:
+		if shotdays = 0: 
+			shotdue = 7
+		else
+			shotdue -= 1
+		end
+		'The chemicals regulating your fertility cycle are wearing off. You need to get your shot in <<shotdue>> days.'
+	elseif shotdays > 1 and shotdays < 5:
+		'You are due for a birth control shot soon. If you do not get one, you might get pregnant.'
+	elseif shotdays = 1:
+		'Your birth control shot is due for renewal tomorrow.'
 	end
 
 	if tabletkishot > 0:tabletkishot -= 1
@@ -199,28 +211,28 @@ end
 
 if tabletkicheck = 1 and tabletkichday < daystart:
 	tabletkichday = daystart
-	tabletkimm = ((100-(willpower / (intel * 5 + will * 5))) + (100-(manna / (intel * magik + magik * 100 + vital * 10 + rikudo))))
+	tabletkimm = (100*(willpower / willpowermax)) + (100*(manna / mannamax))
 	if son < 10:
-		tabletkimm += (100- (son * 10))
+		tabletkimm -= (100- (son * 10))
 	end
-	if willpower < ((intel * 5 + will * 5) * 25 / 100):
-		tabletkimm = tabletkimm * 4
-	elseif manna < ((intel * magik + magik * 100 + vital * 10 + rikudo) * 10 / 100):
-		tabletkimm = tabletkimm * 2
+	if willpower < willpowermax / 4:
+		tabletkimm = tabletkimm / 4
+	elseif manna < mannamax / 10:
+		tabletkimm = tabletkimm / 2
 	end
 	tabletkiap = tabletkimm
-	tabletkiap += (((100-intel)*4)+((100-will)*2)+((50-age)*3))
-	tabletkiap -= ((kid*30)+(abort*2)+(tabletkipd*(age/10)))
-	temprand = rand(0,(200+(tabletkimm-(will*3))))
+	tabletkiap += (intel*4)+(will*2)+(age*3)
+	tabletkiap -= ((kid*30)+(abort*2)-(tabletkipd*((60-age)/10)))
+	temprand = rand(0,(200+(tabletkimm-((100-will)*3))))
 	if temprand = 0:
 		tabletkioddp = 1
 	end
 	tabletkiap += temprand
-	if tabletkiap < 600:
+	if tabletkiap < 300:
 		if tabletkipd > -10:
-			if willpower < ((intel * 5 + will * 5) * 25 / 100):
+			if willpower < willpowermax / 4:
 				'You stare at your bottle of birth control pills. You know you should take one, but you can''t quite work up enough effort to care.'
-			elseif manna < ((intel * magik + magik * 100 + vital * 10 + rikudo) * 10 / 100):
+			elseif manna < mannamax / 10:
 				'You stare at your bottle of birth control pills, but don''t open it.'
 			elseif son < 10:
 				'You fumble with the cap on your birth control pills, trying to get it open. You finally give up, too tired to manage it.'
@@ -231,7 +243,7 @@ if tabletkicheck = 1 and tabletkichday < daystart:
 		tabletkipt = 2
 		tabletkipi = -4
 	else
-		if tabletkiap < 650:
+		if tabletkiap < 350:
 			temprand = rand(0,5)
 		else
 			temprand = rand(0,1000)
@@ -250,18 +262,18 @@ if tabletkicheck = 1 and tabletkichday < daystart:
 			if tabletkipd > -10:
 				'You find yourself holding the bottle of birth control pills. You cannot remember if you took one or not.'
 			end
-			if tabletkipd > 10:
+			if tabletkipd > 0:
 				if rand(0,9) = 0:
 					if tabletkipt < 0:
-						'You don''t think you have taken it today.'
+						'You don''t think you have taken your pill today.'
 					else
-						'You think you have taken it today.'
+						'You think you have taken your pill today.'
 					end
 				else
 					if tabletkipt > 0:
-						'You don''t think you have taken it today.'
+						'You don''t think you have taken your pill today.'
 					else
-						'You think you have taken it today.'
+						'You think you have taken your pill today.'
 					end
 				end
 			end
@@ -466,6 +478,13 @@ end
 !!! Hair grows 1mm each day, it takes 20 months (1 month = 30 days) to regrow the hair from 0.
 if hairlength < 601:hairlength += 1
 
+if hcol ! nathcol: 
+	dyefade -=1
+	if dyefade < 0: dyefade = 0
+	if dyefade > 0 and dyefade < 7: dyevmod = 5
+	if dyefade = 0: dyevmod = 15
+end
+	
 if hscrunch > 0:
 	hscrunchrand = rand(1, 100)
 
@@ -843,7 +862,6 @@ if week = 5:$week = 'Friday'
 if week = 6:$week = 'Saturday'
 if week = 7:$week = 'Sunday'
 
-gs 'daystart'
 gs 'outdoors', 'weather'
 
 if storyline = 1 and SchoolAtestat = 0:
@@ -910,7 +928,11 @@ if bcream_used >= 1:
     nbsize += temp
     if temp > 0:'Feels like your breasts have grown slightly.'
 end
-if steroid_dose >= 1:lobok += steroid_dose & leghair += steroid_dose & steroid_dose = 0
+if steroid_dose >= 1 and lashair < 1:
+    lobok += steroid_dose 
+    leghair += steroid_dose 
+    steroid_dose = 0
+end
 if aphrodisiac_overdose = 1:aphrodisiac_overdose = 0
 if aphrodisiac_timer ! 0:aphrodisiac_timer  = 0
 
@@ -920,7 +942,7 @@ elseif mentats_dose > 1:
     pain['head'] += 20 * mentats_dose
     mentats_dose = 0
 end
-
+if breastpumped = 0 and breastcount > 0: breastcount -= 1
 if breastpumped = 1:breastpumped = 0
 
 --- cikl ---------------------------------

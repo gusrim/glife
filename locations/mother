@@ -34,17 +34,40 @@ if $loc = 'gkafe':
 	cla
 	'Your mom sees you and frowns: "<<$nickname>>, how many times have I told you: don''t come visit me at work! I have no time for you right now, and there is nothing to do here for young girls like you."'
 	act 'Move away from her':gt 'gkafe'
-exit
+	exit
 end
 
 !check hair color
-if hcolfronce=0:hcolmotherremember=hcol&hcolfronce=1
+if hcolfronce=0:
+	hcolmotherremember=hcol 
+	hcolfronce=1
+end
+
 if hcolmotherremember!hcol:
-if hcol=0:$texthcol='I see you decided to become a brunette?'
-if hcol=1:$texthcol='I see you decided to go back to your natural hair color?'
-if hcol=2:$texthcol='I see you decided to become a redhead?'
-if hcol=3:$texthcol='I see you decided to go blonde?'
+	if hcol = nathcol: 
+		$texthcol = 'Or, rather, un-dyed your hair. Good, you decided to go back to your natural color!'
+	elseif hcol=0:
+		$texthcol='I see you decided to become a brunette?'
+	elseif hcol=1:
+		$texthcol='I see you decided to go back to go with black hair?'
+	elseif hcol=2:
+		$texthcol='I see you decided to become a redhead?'
+	elseif hcol=3:
+		$texthcol='I see you decided to go blonde?'
+	elseif hcol >=4:
+		mother -= 25
+		$texthcol='What were you thinking? Do you think you''ll get into university with hair like that!'
+	end
+	if hcol ! nathcol and hcol <= 3 and mother < 60: 
+		$texthcol2 = 'says with a frown, "You should concentrate on your studies, not on how you look."'
+	elseif hcol ! nathcol and hcol > 3 and mother < 60:
+		$texthcol2 = 'then angrily grabs a handful of your hair. She holds it tightly but doesn''t quite pull it. "What a fool you are. Do you want to throw away your future? Get out of my sight!"'
+	else
+		$texthcol2 = 'says with a smile, "It looks nice on you. I''m sure the boys will like it too. Just make sure you keep your grades up."'
+	end
 'Your mother immediately notices you dyed your hair and says: "Wait a minute, you dyed your hair! <<$texthcol>>"'
+'She fingers your hair and <<$texthcol2>>'
+
 hcolmotherremember=hcol
 end
 
