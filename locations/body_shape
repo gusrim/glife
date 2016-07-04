@@ -188,7 +188,7 @@ if $ARGS[0] = '':
 
 !!This will trigger the dream for the option to use magic to increase bust
 !!Three nos at the dream will lock it out (1 yes resets the count)
-	if magik >= 5 and MagikDostup ! 0 and magf2bdo = 0:
+	if magik >= 5 and MagikDostup = 0 and magf2bdo = 0:
 		if salolast < salo and salo >= (20 * (salocatnow + 1)) - 11 and tits < 10:
 			if mgf2bnocnt < 3:
 				magf2bdo = 2
@@ -223,6 +223,7 @@ if $ARGS[0] = 'softreset':
 	sftrstflag = 1
 	:resetloop
 	if fat ! salo:
+		if gmstrtflag = 1: salobustdo = 1
 		gs 'body_shape'
 		jump 'resetloop'
 	end
@@ -267,6 +268,25 @@ if $ARGS[0] = 'hardreset':
 	else
 		'If you''re seeing this, something odd happened.'
 	end
+end
+
+if $ARGS[0] = 'initial':
+	if fat ! salo: fat = salo
+	if fat <= 0: fat = 80
+	if genbsize = 0:
+		genbsize = 12 & nbsize = 12
+	else
+		nbsize = genbsize
+	end
+	agilbuf = agil & strenbuf = stren & vitalbuf = vital
+	normbuffpick = -1 & gmstrtflag = 1
+	salo = 0
+	gs 'body_shape', 'softreset'
+	salocatlast = salocatnow
+	normbuffpick = 0 & magf2bdo = 0
+	killvar 'gmstrtflag'
+	newbdsp = 1
+	gs 'stat'
 end
 
 --- body_shape ---------------------------------
