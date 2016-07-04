@@ -104,54 +104,42 @@ end
 !!!!!SIZE AND WEIGHT!!!
 !!!!!!!!!!!!!!!!
 if dounspell = 0:
-	strenbuf = stren / 2
-	vitalbuf = vital / 2
-	vmeat = (strenbuf + vitalbuf) / 8
-	vfat = salo / 10
-	Kves = vmeat + vfat
-	krost = rost - 130
-	ves = Kves + krost - (agilbuf / 10)
-	talia = ves - (agilbuf / 10)
-	grudi = talia + 10 + vfat + silicone + nbsize
-	grutal = talia
-	bedra = talia + 15 + (vmeat / 2) + vfat
-	titK = grudi - talia
-	if (bedra - talia) > 45 and musle < salo:
-		if ves < 70:koefvesbt = 0
-		if ves >= 70:koefvesbt = ves - 70
+	bedra = (rost * hratio) / 100 + vhips
+	talia = (bedra * wratio) / 100 + vofat
+	grutal = (talia * bratio) / 100 + vofat
+	grudi = (talia * bratio) / 100 + nbsize + magicf2b + silicone
+	titK = grudi - grutal
+!!This is just a quick abstration for weight and will change
+	ves = talia
 
-		koefbt = koefvesbt + ((bedra - talia) - 45)
-		talia += koefbt
-	end
-
-	if titK <= 10:
+	if titK <= 5:
 		tits = 0
 		$titsize = 'A cup'
-	elseif titK <= 15:
+	elseif titK <= 10:
 		tits = 1
 		$titsize = 'B cup'
-	elseif titK <= 20:
+	elseif titK <= 15:
 		tits = 2
 		$titsize = 'C cup'
-	elseif titK <= 25:
+	elseif titK <= 20:
 		tits = 3
 		$titsize = 'D cup'
-	elseif titK <= 30:
+	elseif titK <= 25:
 		tits = 4
 		$titsize = 'E cup'
-	elseif titK <= 35:
+	elseif titK <= 30:
 		tits = 5
 		$titsize = 'F cup'
-	elseif titK <= 40:
+	elseif titK <= 35:
 		tits = 6
 		$titsize = 'G cup'
-	elseif titK <= 45:
+	elseif titK <= 40:
 		tits = 7
 		$titsize = 'H cup'
-	elseif titK <= 50:
+	elseif titK <= 45:
 		tits = 8
 		$titsize = 'I cup'
-	elseif titK <= 55:
+	elseif titK <= 50:
 		tits = 9
 		$titsize = 'J cup'
 	else
@@ -403,15 +391,17 @@ $milk_me = {
 ! WD: Move missing Image ~ "hpussy.jpg" from "images/picb" to "images/body"
 if lobok > 2:lobkoef = 0 & $lobok = 'You have a full triangle of thick <a href="exec:view''images/body/hpussy.jpg''">pubic hair</a>. <<$pirspiz>><br><<$clitsize>>'
 
-bodytipe = bedra - talia
-if bodytipe < 20:bodykoef = 0
-if bodytipe >= 20 and bodytipe < 25:bodykoef = 2
-if bodytipe >= 25 and bodytipe < 30:bodykoef = 4
-if bodytipe >= 30 and bodytipe < 35:bodykoef = 8
-if bodytipe >= 35:bodykoef = 4
+If dounspell = 1:
+	bodytipe = bedra - talia
+	if bodytipe < 20: bodykoef = 0
+	if bodytipe >= 20 and bodytipe < 25: bodykoef = 2
+	if bodytipe >= 25 and bodytipe < 30: bodykoef = 4
+	if bodytipe >= 30 and bodytipe < 35: bodykoef = 8
+	if bodytipe >= 35: bodykoef = 4
+end
+
 if tan > 0:tanKoef = 1
 if tan = 0:tanKoef = 0
-
 
 ! WD: Add braids (Maruda Hair Mod) to bonus to vnesh
 if curly > 0 or hbraids > 0:
@@ -495,7 +485,14 @@ end
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!BODY
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-musle = strenbuf + vitalbuf
+
+If dounspell = 1:
+	musle = strenbuf + vitalbuf
+elseif normbuffpick = 2:
+	musle = salo + 1
+else
+	musle = salo - 1
+end
 
 if musle >= salo:
 	!!muscular type

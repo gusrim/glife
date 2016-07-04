@@ -3,99 +3,6 @@ $location_type = 'public_indoors'
 
 if $ARGS[0] = 'start':
 
-	$solyariy = {
-		minut += 60
-		tan += 10
-		money -= 1000
-
-		if salonrand > 6 and nastjaqw > 2:gt 'etoexhib', 'pos1'
-		if salonrand = 0 and masha = 0:gt 'salon', '0'
-
-		gs 'stat'
-		'You sunbathe in the solarium.'
-		act 'Leave':gt 'salon', 'start'
-	}
-
-	$resnici = {
-		minut += 60
-		resnic += 1
-		money -= 5000
-
-		if salonrand = 0 and masha = 0:gt 'salon', '0'
-
-		gs 'stat'
-		'You lengthen lashes.'
-
-		act 'Leave':gt 'salon', 'start'
-	}
-
-	$epilyaciya = {
-		minut += 60
-		leghair = -20
-		lobok = -20
-		money -= 5000
-
-		if salonrand = 0 and masha = 0:gt 'salon', '0'
-
-		gs 'stat'
-		'You had a full body hair removal.'
-		act 'Leave':gt 'salon', 'start'
-	}
-
-	$ozdormas = {
-		minut += 60
-		salo -= 2
-		vidageday += 3
-		money -= 5000
-		gs 'stat'
-
-		if salonrand = 0:
-			cla
-			*clr
-			picrand = rand(25, 28)
-			'<center><img src="images/img/centr/mass.jpg"></center>'
-			'During the massage guy is interested and his fingers start to slip masljannye it in your pussy then in the ass.'
-
-			act 'Indignant':gt 'salon', 'start'
-
-			act 'Enjoy':
-				guy += 1
-				gt 'sex', 'minet'
-			end
-		end
-
-
-		act 'Leave':gt 'salon', 'start'
-	}
-
-
-	$uhodkosha = {
-		minut += 60
-		skin += 1
-		money -= 15000
-
-		if salonrand = 0 and masha = 0:gt 'salon', '0'
-
-		gs 'stat'
-		'You mask the face, after a while removed her beautician.'
-
-		act 'Leave':gt 'salon', 'start'
-	}
-
-
-	$omoloshenie = {
-		minut += 60
-		vidageday += 50
-		money -= 250000
-
-		if salonrand = 0 and masha = 0:gt 'salon', '0'
-
-		gs 'stat'
-		'You spent rejuvenation procedures, they can not turn the clock to sleep, they can only stop the aging at the time.'
-
-		act 'Leave':gt 'salon', 'start'
-	}
-
 	$sexloc = $CURLOC
 
 	if week = 1 and hour >= 9 and hour <= 10 and worksalon = 1:gt 'salon', 'beginwork'
@@ -115,22 +22,28 @@ if $ARGS[0] = 'start':
 	'<center><img src="images/etogame/salon.jpg"></center>'
 	'Approach the <a href="exec:gt ''salon'', ''1''">beauty technician.</a>'
 
-	if money >= 1000:'<a href="exec:dynamic $solyariy">Solarium - 1,000 <b>₽</b></a>'
-	if money < 1000:'Solarium - 1,000 <b>₽</b>'
-	if money >= 5000:'<a href="exec:dynamic $resnici">Lengthening eyelashes - 5,000 <b>₽</b></a>'
-	if money < 5000:'Lengthening eyelashes - 5,000 <b>₽</b>'
-	if money >= 5000 and lashair = 0:'<a href="exec:dynamic $epilyaciya">Full body depilation - 5,000 <b>₽</b></a>'
+	if money >= 1000:
+		'<a href="exec:gt ''salon'', ''solyariy''">Solarium - 1,000 <b>₽</b></a>'
+	else
+		'Solarium - 1,000 <b>₽</b>'
+	end
+	if money >= 5000:
+		'<a href="exec:gt ''salon'', ''resnici''">Lengthening eyelashes - 5,000 <b>₽</b></a>'
+		'<a href="exec:gt ''salon'', ''ozdormas''">Wellness massage (accelerates fat loss and rejuvenates the body), 5,000 <b>₽</b></a>'
+	else
+		'Lengthening eyelashes - 5,000 <b>₽</b>'
+		'Wellness massage (accelerates fat loss and rejuvenates the body), 5,000 <b>₽</b>'
+	end
+	if money >= 5000 and lashair = 0:'<a href="exec:gt ''salon'', ''epilyaciya''">Full body depilation - 5,000 <b>₽</b></a>'
 	if money < 5000 or lashair = 1:'Full body depilation - 5,000 <b>₽</b>'
-	if money >= 5000:'<a href="exec:dynamic $ozdormas">Wellness massage (accelerates fat, rejuvenates the body), 5,000 <b>₽</b></a>'
-	if money < 5000:'Wellness massage (accelerates fat, rejuvenates the body), 5,000 <b>₽</b>'
-	if money >= 15000:'<a href="exec:dynamic $uhodkosha">Skin Care - 15,000 <b>₽</b></a>'
+	if money >= 15000:'<a href="exec:gt ''salon'', ''uhodkosha''">Skin Care - 15,000 <b>₽</b></a>'
 	if money < 15000:'Skin Care - 15,000 <b>₽</b>'
-	if money >= 250000:'<a href="exec:dynamic $omoloshenie">Procedures for rejuvenation - 250,000 <b>₽</b></a>'
+	if money >= 250000:'<a href="exec:gt ''salon'', ''omoloshenie''">Full body skin rejuvenation - 250,000 <b>₽</b></a>'
 	if money < 250000:'Rejuvenation - 250,000 <b>₽</b>'
 
 	if hour < 8 or hour > 20:
 		cls
-		'Salon is closing and you are asked to leave.'
+		'As the salon closes you are politely asked to leave and come again.'
 
 		act 'Leave':minut += 5 & gt 'torgcentr'
 
@@ -140,14 +53,111 @@ if $ARGS[0] = 'start':
 	act 'Leave':minut += 5 & gt 'torgcentr'
 end
 
+if $ARGS[0] = 'solyariy':
+	minut += 60
+	tan += 10
+	money -= 1000
+
+	if salonrand > 6 and nastjaqw > 2:gt 'etoexhib', 'pos1'
+	if salonrand = 0 and masha = 0:gt 'salon', '0'
+
+	gs 'stat'
+	'<center><img src="images/img/centr/solarium.jpg"></center>'
+	'You take off your clothes and get in the tanning booth.'
+	act 'Leave':gt 'salon', 'start'
+end
+
+if $ARGS[0] = 'resnici':
+	minut += 60
+	resnic += 1
+	money -= 5000
+
+	if salonrand = 0 and masha = 0:gt 'salon', '0'
+
+	gs 'stat'
+	'You get a eyelash extension, giving you long and lustrous eyelashes.'
+
+	act 'Leave':gt 'salon', 'start'
+end
+
+if $ARGS[0] = 'epilyaciya':
+	minut += 60
+	leghair = -20
+	lobok = -20
+	money -= 5000
+
+	if salonrand = 0 and masha = 0:gt 'salon', '0'
+
+	gs 'stat'
+	'<center><img src="images/img/centr/depilation.jpg"></center>'
+	'You get a full body hair removal treatment, giving you a smooth and completely hair free body.'
+	act 'Leave':gt 'salon', 'start'
+end
+
+if $ARGS[0] = 'ozdormas':
+	minut += 60
+	vidageday += 3
+	money -= 5000
+	gs 'stat'
+
+	if salonrand = 0:
+		cla
+		*clr
+		picrand = rand(25, 28)
+		'<center><img src="images/img/centr/mass.jpg"></center>'
+		'During your massage, you moan with pleasure as the guy really knows how to get your muscles to relax, it even makes you a little turned on. You feel his had slide down to your ass and before you can even protest he slips a oiled up finger into your pussy and his thumb in your ass.'
+
+		act 'Indignant':gt 'salon', 'start'
+
+		act 'Enjoy':
+			guy += 1
+			gt 'sex', 'minet'
+		end
+	end
+
+
+	act 'Leave':gt 'salon', 'start'
+end
+
+if $ARGS[0] = 'uhodkosha':
+	minut += 60
+	skin += 1
+	money -= 15000
+
+	if salonrand = 0 and masha = 0:gt 'salon', '0'
+
+	gs 'stat'
+	'<center><img src="images/img/centr/facialmask.jpg"></center>'
+	'You get a beauty mask treatment, afterwards your face feels smooth and your skin tight.'
+
+	act 'Leave':gt 'salon', 'start'
+end
+
+if $ARGS[0] = 'omoloshenie':
+	minut += 60
+	vidageday += 50
+	money -= 250000
+
+	if salonrand = 0 and masha = 0:gt 'salon', '0'
+
+	gs 'stat'
+	'<center><img src="images/img/centr/bodyscrub.jpg"></center>'
+	'You get a full body rejuvenation procedure, afterwards your skin feels soft and silky smooth.'
+
+	act 'Leave':gt 'salon', 'start'
+end
+
 if $ARGS[0] = '0':
-    $location_type = 'event'
 	cla
 	*clr
 	spafinloc = 7
-gs 'cum_manage'
+	gs 'cum_manage'
 	'<center><img src="images/img/centr/pri1.jpg"></center>'
-	'During the procedure, the girl manages to stain your clothes which is a liquid, it is now on the traces are very similar to sperm. You start to vomuschatsya suits you and the administrator tries to reassure you, that obyaschaya girl will be punished and you offthe cost of chemical cleaning in Ramer 5000rub.'
+	'During the procedure, the girl manages to stain your clothes with a clearish white liquid, which looks very similar to sperm.'
+	'You start to get very upset, not knowing if the stain will come out and not willing to wear clothes that look like someone has cummed on them.'
+	'The manager quickly comes over to see what the problem is. "What is the problem?"'
+	'You show him the stain on your clothes. "You girl her spilled that stuff on my clothes look at it, it''s ruined."'
+	'He gives the girl a glare for a moment before he gives you a reassuring smile. "Oh no that will come right out with a cleaning, we will do all we can to make this right, we will even pay for the cleaning and I will assure you she will be punished."'
 
 	act 'Agree':money += 5000 & gt 'salon', 'start'
 
@@ -156,53 +166,67 @@ gs 'cum_manage'
 			cla
 			orgasm += 1
 			DOM += 1
-			'Administrator looks at you not knowing what you want'
-			'"What is not clear, I want something to punish this bitch now" started to resent you.'
-			'"Do you want something to punish her?" asked the receptionist'
-			'"Fuck it here with me, " cried you.'
-			'"Sorry, but I can not do that, " stammered guy'
+			'You nod at his offer. "Fine but I want this bitch punished now!'
+			'He seems a bit taken back by your attitude. "Very well, how would you like her punished? Perhaps we can take it out of her pay, or she can do this procedure at no wages." He seems to think these are fitting punishments.'
+			'You shake your head no, no the bitch made your clothes look like they have cum on them. It''s only fitting you return the favor. "No I want you to fuck her right here as I tell you to."'
+			'"I''m sorry, but I can not do that." stammered the guy.'
 
-			act '"All you can"':
+			act 'Punish the bitch':
 				cla
 				*clr
+				gs 'boyStat', 59
 				'<center><img src="images/img/centr/pri2.jpg"></center>'
-				'"All you can" you said and rastegnuv pants guy got his dick dildo strongly excited by it was clear that the guy really like your idea of ​​punishment.'
+				'"You asked me how I''d like her to be punished, now fuck her right here as I tell you to." you say, <<$boy>> looks from you to her and back to you.'
+				'Clearly he likes your idea of punishment, the bulge now straining against his pants is clear evidence of that. He seems unsure what to say, so you decided to take matters into your own hands.'
+				'You reach over and unzip his pants, reaching inside you grab his now hard <<dick>>cm <<$dick_girth>> dick in your hand and pull it out. As you do you start stroking it, any further protest he might have had vanishes.'
 
-				act '"Suck it bitch"':
+				act 'Make the bitch suck it':
 					cla
 					*clr
 					'<center><img src="images/img/centr/pri3.jpg"></center>'
-					'With these words, you pulled the girl''s head to the penis and she obediently around his lips.'
-					'"Moving, deeper" you customized Woman'
+					'When he no longer protest any further, you reach over with your other hand and grab the bitch by her hair. You pull her face over to his cock and you say. "Open your mouth bitch and suck his cock."'
+					'With these words, you push her mouth at his cock, she obediently opens her mouth letting his <<dick>>cm <<$dick_girth>> cock in her mouth, she wraps her lips tightly around it.'
+					'You pull the girls head by her hair back and forth, occasionally forcing her lips against his balls, gagging her as you make her deep throat him.'
 
-					act '"Put her cancer"':
+					act 'Doggystyle':
 						cla
 						*clr
+						gs 'boyStat', 59
 						'<center><img src="images/img/centr/pri4.jpg"></center>'
-						'Man obediently put her cancer, and put his dildo in her vagina, the girl quietly vzvignula, and the guy went into the role fucked her yarosno shoving member as deeply as possible into it. You took her hand and put on her pubis, she obediently began to massage your clitoris'
+						'After several minutes of making her gag on his <<dick>>cm <<$dick_girth>> cock, you want a change in the action. You pull her head away and command her. "Take your clothes off bitch."'
+						'She obediently strips naked with out a word, once she is naked you force her to bend over as you look to the man and command him. "Fuck her pussy." He obediently slips his dick in her pussy, both of them let out moans of pleasure.'
+						'He beings to get into it and starts pounding her balls deep. You pull down your panties and spread you legs. Taking one of her hands in yours you put it on your pussy, she diligently begins to massage your clitoris.'
 
-						act '"Plant it on top"':
+						act 'Put her on top':
 							cla
 							*clr
 							'<center><img src="images/img/centr/pri5.jpg"></center>'
-							'Man sat on a chair, she quickly hopped on top and started jumping, you took her buttocks and each time it jump with power lowered it to a member of the girl cried, and you continued to stick it on his dildo.'
+							'A few minutes later you get off the chair and look at him. "Sit in the chair." Which he does at once, then you pull the girl over and point at him.'
+							'"Crawl on top of him and straddle him, ride him." She wastes no time doing as you command, once straddling him she beings to rhythmically ride his cock. As she moans in pleasure you grab her hips and force her all the way down, so he is once again balls deep in her twat.'
 
-							act '"Lie down on the floor"':
+							act 'Lay them on the floor':
 								cla
 								*clr
 								'<center><img src="images/img/centr/pri6.jpg"></center>'
-								'The girl lay on the floor, and fell in with Perrin side, you''re sat on the girl''s face she did not give you a chance to give the order and once your pussy was in the zone dosigaemosti her tongue began to lick you trying not to miss a millimeter your pussy, both outside and inside , how many missed her tongue. Soon pleasant wave covered you and you left off sitting on her face'
+								'Watching this you begin to masturbate, you feel yourself getting turned on as you pussy gets wetter. Unable to be left out anymore, you grab the girl and pull her off, shoving her down on the floor. "Lay on your back."'
+								'She does as you tell her and then you look at the man. "Lay on your side next to her and start fucking her again." His grin tells you he is not only enjoying fucking her but loves that you are telling him how to fuck her.'
+								'He lays down next to her and immediately slips his <<dick>>cm <<$dick_girth>> dick back in her and starts fucking her again. You pull the rest of your clothes off and kneel down over her face. "Lick my pussy, bitch." Which she eagerly does, her tongue laps and teases your clit.'
+								'You can tell she has some experience at eating pussy as it feels great.'
 
-								act '"Finish"':
+								act 'Finish':
 									cla
 									*clr
 									telmasha = 1
 									masha += 1
+									orgasm += 1
 									'<center><img src="images/img/centr/pri7.jpg"></center>'
-									'The guy stood up, lifted her to her knees and discharged, filling her mouth, face and chest with hot sperm'
-									'"That''s necessary to punish bitches" with these words, you take a card girl "So you have Masha, I can call you, you have a good tongue" with these words you left on the floor leaving the girl all in the semen.'
+									'You begin to pant and moan and finally you have a intense orgasm, coating the girls face in your pussy juices. Seeing this the guy grunts and starts pounding harder, obviously getting near to blowing his load as well.'
+									'Standing up you look at him. "Don''t cum in her, stand up." With a slight frown from being so close he does as you tell him. You grab the girl by the hair and pull her up till she is kneeling in front of the guy.'
+									'"Stroke his cock till he cums all over your face." The guy is grinning again as she grabs his cock and begins jerking him off for all she''s worth, while you get dressed. It doesn''t take long before he is shooting his cum all over her pretty face.'
+									'You look at the man. "That''s how you punish bitches." Glancing at her you add. "Isn''t that right bitch?" She nods in agreement, though you are not sure if it is because she really does agree or she is just doing what you say.'
+									'Either way you find it a turn on, with that you take the offered money and grab one of her cards off the counter reading it. "Masha huh? You really know how to use your tongue, I might just call you, so you can use it again." You say to her and then without another glance at the two of them or waiting for a reply you walk out, leaving Masha kneeling on the floor covered in sperm.'
 
-									act 'Leave':gt 'salon', 'start'
+									act 'Leave':money += 5000 & gt 'salon', 'start'
 								end
 							end
 						end
@@ -218,15 +242,15 @@ if $ARGS[0] = '1':
 	minut += 5
 
 	if worksalon = 0:
-		'You ask whether you take on the job.'
+		'You ask the manager if he has a job opening.'
 
 		if masash < 10:
-			'You do not be able to come when you learn'
+			'After asking the manager about a job he tells you. "You need to complete a massage course at the community center before I can hire you."'
 
 			act 'Move away':gt 'salon', 'start'
 		elseif masash >= 10:
-			'"Well, we need a masseuse.''ll Work Monday, Wednesday and Friday from 9 to 10 hours, and come out to replace, will work up to 19 hours. Not come, you will not be counted this day in wages. Salary listed 25 th, for each an elaborate shift - 800 <b>₽</b>. "'
-			'"Labor should hand over to the personnel department. You understand, will work?"'
+			'The manager tells you. "We need a masseuse. You''d work Monday, Wednesday and Friday be here between 9:00 and 10:00, your shift will finish at 19:00. Your wages will be 800<b>₽</b> per shift."'
+            '"You''ll need to file your paperwork with the personnel department."'
 
 			if (work = 0 and worksalon = 0) or (cheatWork = 1 and worksalon = 0):
 				act 'Move away':gt 'salon', 'start'
@@ -235,7 +259,7 @@ if $ARGS[0] = '1':
 					cla
 					worksalon = 1
 					work = 1
-					'You classify working in the personnel department.'
+					'You file your paperwork with the personnel department'
 
 					act 'Move away':gt 'salon', 'start'
 				end
@@ -254,7 +278,7 @@ if $ARGS[0] = 'beginwork':
 	*clr
 	'<center><b><font color="maroon">Beauty</font></b></center>'
 	'<center><img src="images/etogame/salon.jpg"></center>'
-	'You have replaced a beauty salon.'
+	'You go to your workstation and prepare it as you wait for your first customer.'
 
 	act 'Start work':
 		smena += 1
@@ -272,7 +296,7 @@ if $ARGS[0] = 'discharge':
 	pay = smena * 800
 	money += pay
 	smena = 0
-	'The administrator looked at you:"Here is your payment <<pay>> <b>₽</b> and employment history. Goodbye."'
+	'You tell your boss you have had enough and that you quit. He looks at you a moment and then says. "Here is your paycheck <<pay>> <b>₽</b> and employment history. Goodbye."'
 
 	act 'Leave':gt 'salon', 'start'
 end
