@@ -351,6 +351,19 @@ $dirtarm = {
 $edagotd = {
 	cla
 	*clr
+	gs 'stat'
+	'<center><img src="images/pics/cook.jpg"></center>'
+	'What kind of meal would you like to make?'
+
+	act 'Prepare a light meal (0:30)': $edameal = 's_meal' & dynamic $edagotpk
+	act 'Prepare a normal meal (0:30)': $edameal = 'm_meal' & dynamic $edagotpk
+	act 'Prepare a hearty meal (0:30)': $edameal = 'l_meal' & plcooked = 1 & dynamic $edagotpk
+	act 'Nevermind':gt $locM, $metkaM
+}
+
+$edagotpk = {
+	cla
+	*clr
 	minut += 30
 	edahot += 1
 	eda -= 1
@@ -360,7 +373,7 @@ $edagotd = {
 	manna -= 5
 	gs 'stat'
 	'<center><img src="images/pics/cook.jpg"></center>'
-	'You prepare a meal.'
+	'You prepare the meal.'
 
 	act 'Eat cooked food (0:30)':dynamic $edahotd
 	act 'Leave the meal':gt $locM, $metkaM
@@ -372,7 +385,9 @@ $edahotd = {
 	edahot = 0
 	dirttarelka += 1
 	manna += 20
-	gs 'food', 'm_meal'
+	if $edameal = '': $edameal = 'm_meal'
+	gs 'food', $edameal
+	killvar '$edameal'
 }
 
 $eatout = {
@@ -444,7 +459,8 @@ $fatdel = {
 			if fat > salo:fat = salo
 			fatdel -= 1
 			fat -= 25
-			if fat < 0:fat = 0
+			if fat < 11: fat = 11
+			gs 'body_shape', 'softreset'
 
 			'You drink the fat burning capsule. These capsules are quick release and results can be seen immediately.'
 
