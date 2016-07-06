@@ -6,109 +6,7 @@ if $ARGS[0] = 'start':
 	$locM = $CURLOC
 	$metka = $ARGS[0]
 	$loc = $CURLOC
-
-	$answerrin = {
-		if tipred = pokti:
-			if pokvnirand = 0:
-				pokpay = rand(1000, 1200)
-			elseif pokvnirand = 1:
-				pokpay = rand(1200, 1500)
-			elseif pokvnirand = 2:
-				pokpay = rand(1500, 2000)
-			end
-		else
-			$rinitog = '<<$poktip>> puts the item back and leaves.'
-			pokupatel = 0
-		end
-	}
-
-	$answerrin2 = {
-		act 'Name the price':
-			cla
-			prodpay = input ("Enter the selling price")
-
-			if prodpay < 1000:prodpay = prodpayum
-
-			'You tell them <<prodpay>> <b>₽</b>'
-
-			if prodpay <= pokpay:
-				poknorand = rand(1, 100 + vnesh/4)
-
-				if poknorand >= 10:
-					rinmon += prodpay
-					rinvesh += 1
-					'The buyer takes the item and pays <<prodpay>> <b>₽</b>.'
-
-					act 'Trading on':gt 'rinwork', 'start'
-				else
-					'The buyer twirls clothing in thier hands <<prodpay>> <b>₽</b> is too expensive.'
-					dynamic $answerrin3
-
-					act 'I can not take less (take the item)':gt 'rinwork', 'start'
-				end
-			elseif prodpay > pokpay and prodpay <= pokpay + 100:
-				poknorand = rand(1, 100 + vnesh/4)
-
-				if poknorand >= 10:
-					'The buyer twirls clothing in thier hands <<prodpay>> <b>₽</b> is too expensive.'
-					dynamic $answerrin3
-
-					act 'I can not take less (take the item)':gt 'rinwork', 'start'
-				else
-					'Buyer puts thing into place and leaves'
-
-					act 'Trading on':gt 'rinwork', 'start'
-				end
-			elseif prodpay > pokpay + 100:
-				'The buyer puts the item back and leaves.'
-
-				act 'Trading on':gt 'rinwork', 'start'
-			end
-		end
-	}
-
-	$answerrin3 = {
-		if prodpay >= 1100:
-			act 'Reduce the price by 100 <b>₽</b>':
-				cla
-				'You have reduced the price by 100 <b>₽</b>.'
-				poknorand = rand(1, 100 + vnesh/4)
-
-				if poknorand >= 10:
-					rinmon += prodpay - 100
-					rinvesh += 1
-					'The buyer takes the item and pays <<prodpay - 100>> <b>₽</b>'
-
-					act 'Trading on':gt 'rinwork', 'start'
-				else
-					'The buyer puts the item back and leaves.'
-
-					act 'Trading on':gt 'rinwork', 'start'
-				end
-			end
-		elseif prodpay >= 1050:
-			act 'Reduce the price by 50 <b>₽</b>':
-				cla
-				'You have reduced the price by 50 <b>₽</b>.'
-				poknorand = rand(1, 100 + vnesh/4)
-
-				if poknorand >= 30:
-					rinmon += prodpay - 50
-					rinvesh += 1
-					'The buyer takes the item and pays <<prodpay - 50>> <b>₽</b>'
-
-					act 'Trading on':gt 'rinwork', 'start'
-				else
-					'The buyer puts the item back and leaves.'
-
-					act 'Trading on':gt 'rinwork', 'start'
-				end
-			end
-		end
-	}
-
-	cla
-	*clr
+	cls
 	gs 'stat'
 	'<center><b><font color="maroon">Marketplace</font></b></center>'
 	'<center><img src="images/etogame/rinok.jpg"></center>'
@@ -255,60 +153,59 @@ if $ARGS[0] = 'start':
 					'<<$poktip>> picks up the item.'
 				end
 
-				!!dynamic $answerrin
 				act 'Now this is very fashionable':
 					cla
 					tipred = 3
-					dynamic $answerrin
+					gs 'rinwork', 'answerrin'
 					'<<$rinitog>>'
 
 					if pokupatel = 0:act 'Further':gt 'rinwork', 'start'
 
 					if pokupatel = 1:
 						'<<$poktip>> asks you for a price'
-						dynamic $answerrin2
+						gs 'rinwork', 'answerrin2'
 					end
 				end
 
 				act 'This item is very high quality and reliable':
 					cla
 					tipred = 1
-					dynamic $answerrin
+					gs 'rinwork', 'answerrin'
 					'<<$rinitog>>'
 
 					if pokupatel = 0:act 'Further':gt 'rinwork', 'start'
 
 					if pokupatel = 1:
 						'<<$poktip>> asks you for a price'
-						dynamic $answerrin2
+						gs 'rinwork', 'answerrin2'
 					end
 				end
 
 				act 'You''ll find this very reasonable':
 					cla
 					tipred = 0
-					dynamic $answerrin
+					gs 'rinwork', 'answerrin'
 					'<<$rinitog>>'
 
 					if pokupatel = 0:act 'Further':gt 'rinwork', 'start'
 
 					if pokupatel = 1:
 						'<<$poktip>> asks you for a price'
-						dynamic $answerrin2
+						gs 'rinwork', 'answerrin2'
 					end
 				end
 
 				act 'That is so you':
 					cla
 					tipred = 2
-					dynamic $answerrin
+					gs 'rinwork', 'answerrin'
 					'<<$rinitog>>'
 
 					if pokupatel = 0:act 'Further':gt 'rinwork', 'start'
 
 					if pokupatel = 1:
 						'<<$poktip>> asks you for a price'
-						dynamic $answerrin2
+						gs 'rinwork', 'answerrin2'
 					end
 				end
 			end
@@ -687,6 +584,107 @@ if $ARGS[0] = 'start':
 				money -= 200
 				gs 'kit_din'
 				dynamic $snack
+			end
+		end
+	end
+end
+
+if $ARGS[0] = 'answerrin':
+	if tipred = pokti:
+		$rinitog = ''
+		if pokvnirand = 0:
+			pokpay = rand(1000, 1200)
+		elseif pokvnirand = 1:
+			pokpay = rand(1200, 1500)
+		elseif pokvnirand = 2:
+			pokpay = rand(1500, 2000)
+		end
+	else
+		$rinitog = '<<$poktip>> puts the item back and leaves.'
+		pokupatel = 0
+	end
+end
+
+if $ARGS[0] = 'answerrin2':
+	act 'Name the price':
+		cla
+		prodpay = input ("Enter the selling price")
+
+		if prodpay < 1000:prodpay = prodpayum
+
+		'You tell them <<prodpay>> <b>₽</b>'
+
+		if prodpay <= pokpay:
+			poknorand = rand(1, 100 + vnesh/4)
+
+			if poknorand >= 10:
+				rinmon += prodpay
+				rinvesh += 1
+				'The buyer takes the item and pays <<prodpay>> <b>₽</b>.'
+
+				act 'Trading on':gt 'rinwork', 'start'
+			else
+				'The buyer twirls clothing in thier hands <<prodpay>> <b>₽</b> is too expensive.'
+				gs 'rinwork', 'answerrin3'
+
+				act 'I can not take less (take the item)':gt 'rinwork', 'start'
+			end
+		elseif prodpay > pokpay and prodpay <= pokpay + 100:
+			poknorand = rand(1, 100 + vnesh/4)
+
+			if poknorand >= 10:
+				'The buyer twirls clothing in thier hands <<prodpay>> <b>₽</b> is too expensive.'
+				gs 'rinwork', 'answerrin3'
+
+				act 'I can not take less (take the item)':gt 'rinwork', 'start'
+			else
+				'Buyer puts thing into place and leaves'
+
+				act 'Trading on':gt 'rinwork', 'start'
+			end
+		elseif prodpay > pokpay + 100:
+			'The buyer puts the item back and leaves.'
+
+			act 'Trading on':gt 'rinwork', 'start'
+		end
+	end
+end
+
+if $ARGS[0] = 'answerrin3':
+	if prodpay >= 1100:
+		act 'Reduce the price by 100 <b>₽</b>':
+			cla
+			'You have reduced the price by 100 <b>₽</b>.'
+			poknorand = rand(1, 100 + vnesh/4)
+
+			if poknorand >= 10:
+				rinmon += prodpay - 100
+				rinvesh += 1
+				'The buyer takes the item and pays <<prodpay - 100>> <b>₽</b>'
+
+				act 'Trading on':gt 'rinwork', 'start'
+			else
+				'The buyer puts the item back and leaves.'
+
+				act 'Trading on':gt 'rinwork', 'start'
+			end
+		end
+	elseif prodpay >= 1050:
+		act 'Reduce the price by 50 <b>₽</b>':
+			cla
+			'You have reduced the price by 50 <b>₽</b>.'
+			poknorand = rand(1, 100 + vnesh/4)
+
+			if poknorand >= 30:
+				rinmon += prodpay - 50
+				rinvesh += 1
+				'The buyer takes the item and pays <<prodpay - 50>> <b>₽</b>'
+
+				act 'Trading on':gt 'rinwork', 'start'
+			else
+				'The buyer puts the item back and leaves.'
+
+				act 'Trading on':gt 'rinwork', 'start'
 			end
 		end
 	end
