@@ -173,6 +173,124 @@ if $ARGS[0] = 'RapistFight':
 	end
 end
 
+!!*********
+
+!!This is where you ask Karin about what you are
+if $ARGS[0] = 'karinask':
+	gs 'stat'
+	fcolor = rgb(0, 0, 0)
+	bcolor = rgb(255, 255, 255)
+	lcolor = rgb(106, 90, 205)
+	'<center><b><font color="maroon">Karin</font></b></center>'
+	If sucpcinfo = 2:
+		minut += 10
+		'<center><img src="images/qwest/main1.jpg"></center>'
+		'You undress and lie down on the couch and Karin begins to examine you.'
+		'This time, as she uses her charms and strange devices, you actually feel her power reach into you and move around inside, poking and prodding.'
+		if succubusQW = 4: 'Something in you panics at this and the fear overtakes your mind.'
+		'Distantly you hear Karin mutter, "Huh, what''s this?" and her power pokes <<$sucself1>>.'
+		$sclocrt = 'succubus' & $scargrt = 'karinask'
+		$scsubloc = 'karinsex' & scpopt = 1
+		sucpcinfo = 3
+		if succubusQW = 4: scpopt = 0 & karinsucsex = 1
+		act 'Continue': xgt 'succubus', 'init'
+	exit
+	elseif sucpcinfo = 3:
+		'<center><img src="images/qwest/main1.jpg"></center>'
+		scpopt = 0
+		If karinsucsex ! 0:
+			'Once you finish that unintended feeding and Karin has pulled herself back together, she says, "Well, that was unexpected. Go ahead and get dressed."'
+		else
+			'Looking flushed once she has finished, Karin says, "Well, that''s interesting. Go ahead and get dressed."'
+		end
+		sucpcinfo = 4
+		act 'Get dressed': gt 'succubus', 'karinask'
+	exit
+	end
+	minut += 10
+	'<center><img src="images/picpre/karinpre.jpg"></center>'
+	'"You are a Succubus. Now, the succubae are not demons, that impression is a byproduct of the masking spell; they are instead a type of Fae, like that Fairy you told me about, and they are native to this plain of existence. As Fae, Succubae have nothing to do with "souls", but they do feed on the energy released during sex. The most efficient means of getting this energy is semen taken internally, but a lot is gained by lesbian orgasm if the Succubus is in sexual contact with the woman as she cums."'
+	if karinsucsex ! 0:
+		'She then gives you a coy smile and says, "I can tell you, sex with a willing Succubus is an <i>amazing experience</i>."'
+	else
+		'She then gives you a searching look as she says, "I''m told that sex with a willing Succubus is an amazing experience."'
+	end
+	'"Succubae only reproduce by converting normal humans, and by "normal", I mean non-mages. Whatever that Fairy did, it cannot be the normal Succubus conversion, but I don''t know <i>what</i> the normal method is.'
+	'"They can and should eat normal food as they use more energy just staying alive than a human, but they need sexual energy to survive as well, so you can''t just eat more and not have sex.'
+	'"They likely have other weaknesses but the few succubae I have encountered were not that willing to part with information, but as far as I know you are the only Succubae in the region."'
+	act 'Ask if she knows more':
+		cla
+		'You ask her if she knows anything else.'
+		'She replies, "No, that''s all I know."'
+		act 'Continue': gt 'lab', 'karin'
+	end
+	act 'Finish': gt 'lab', 'karin'
+end
+
+!!**********
+
+!!This is sex with Karin
+if $ARGS[0] = 'karinsex':
+	gs 'stat'
+	$scsubloc = 'karinsex'
+	if suceatinit = 0: gt 'succubus', 'init'
+	suceatinit = 0
+	cls
+	gs 'stat'
+	'<center><img src="images/picQW/succubusself.jpg"></center>'
+	if sucpcinfo < 4:
+		karinsucsex -= 2
+		'Your power reaches through the connection to Karin, enflaming her lust, even as <<$sucself1>> grabs ahold of her power.'
+		'At this point you gain some control back and cause her power to cycle through you, as <<$sucself1>> cycles through her, making her passion and yours move together.'
+		'Karin quickly strips down and moves between your legs...'
+	else
+		'You take control of <<$sucself1>> and, as you softly kiss her, <<$sucself1>> gently flows into Karin even as you coax her power to flow into you.'
+		'With her power and <<$sucself1>> fully intertwined, you set up a gently flowing cycle, making her passion and yours move together.'
+		'Karin then kisses her way down your body, taking up position between your legs.'
+	end
+
+	act 'Continue':
+		cls
+		cla
+		'<center><img src="images/picQW/karinsucsex1.jpg"></center>'
+		'As she licks you out, she feels the same things you do, until you both have your first orgasm.'
+		'You then move her around into a "69" position.'
+		act 'Continue':
+			cls
+			cla
+			'<center><img src="images/picQW/karinsucsex2.jpg"></center>'
+			'You pleasure each other for some time, orgasming together, and then at some point you flip over.'
+			act 'Continue':
+				cls
+				cla
+				'<center><img src="images/picQW/karinsucsex3.jpg"></center>'
+				'You continue this way for some time, flipping back and forth; having multiple simultaneous orgasms, until you sense her body is tiring even though her power level is a bit higher than when you two started.'
+				act 'Finish':
+					cla
+					scfeed = 2 + succublvl + rand(1,4)
+					lesbian += 1
+					if KarinSex = 0: KarinSex = 1 & girl += 1
+					horny = 0
+					orgasm += scfeed
+					sexnutrition += 25 * scfeed
+					suclezsex = lesbian
+					succubxp += 6
+					sucabslez = 1
+					minut += 20 + (20 * scfeed) / succublvl
+					karinsucsexday = daystart + 1 + scfeed / 3
+					killvar 'scfeed'
+					if sucpcinfo < 4: gt 'succubus', 'karinask' & exit
+					karinsucsex += 1
+					if karinsucsex = 0: karinsucsex = 1
+					'As you both put yourselves back together, Karin says, "That was intense, Thank You!"'
+					act 'Continue': gt 'lab', 'karin'
+				end
+			end
+		end
+	end
+end
+!!**********
+
 !!**********
 
 !!This is the computer search
