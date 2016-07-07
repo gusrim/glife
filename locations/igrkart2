@@ -6,55 +6,53 @@ gs 'stat'
 if turn1 = 0:
 	cla
 	'<right><img src="images/casino/stavkacw.jpg"></right>'
-	' Please give me your bets, gentlemen.'
+	' Place your bets, ladies and gentlemen.'
 
-	act 'Make a bet':
-		money -= deal
-		turn1 = 1
-		deal = input 'Enter the amount'
+	act 'Place a bet':
+		if money < 1:
+			'You don''t have any money!'
+			act 'Leave the table' :gt 'kazvar'
+		end
 
-		if money < deal:
-			msg 'You have enough money'
-			gt 'igrkart2'
-		elseif deal < 0:
-			msg 'Wrong, try again.'
-			gt 'igrkart1'
-		elseif deal > 1000:
-			msg 'The maximum rate of 1000 <b>₽</b>.'
-			gt 'igrkart1'
+		bet_amount = input 'Enter the amount to bet'
+
+		if money < bet_amount:
+			msg 'You don''t have enough money to bet that much'
+		elseif bet_amount < 1:
+			msg 'You must place a minimum bet of 1 <b>₽</b>.'
+		elseif bet_amount > 1000:
+			msg 'The maximum bet allowed is 1000 <b>₽</b>.'
+		else
+			money -= bet_amount
+			turn1 = 1
 		end
 
 		gt 'igrkart2'
 	end
 
-	act 'Move away from the table':gt 'kazvar'
+	act 'Leave the table' :gt 'kazvar'
 end
 
 if turn1 = 1:
 	cla
-	nich = 0
+	bet_draw = 0
 	'<right><img src="images/casino/stavkacw.jpg"></right>'
 
-	act 'Put another draw':
+	if money < bet_amount:
 		turn1 = 2
-		nich = 1
-
-		if money < deal:
-			msg 'You have enough money'
+		gt 'igrkart2'
+	else
+		act 'Bet on draw (doubles bet)':
 			turn1 = 2
-			nich = 0
+			bet_draw = 1
+			money -= bet_amount
 			gt 'igrkart2'
-		else
-			money -= deal
 		end
 
-		gt 'igrkart2'
-	end
-
-	act 'Continue without an additional rate':
-		turn1 = 2
-		nich = 0
-		gt 'igrkart2'
+		act 'Continue with regular bet':
+			turn1 = 2
+			gt 'igrkart2'
+		end
 	end
 end
 
@@ -65,46 +63,44 @@ if turn1 = 2:
 	'...'
 	suit = rand(1, 4)
 	number = rand(1, 13)
-	$di_card[1] = $number[number] + $suit[suit]
-	di_points = points[number]
-	di_poi = number
+	$d_card[1] = $number[number] + 'of ' + $suit[suit]
+	d_points = number
 	suit = rand(1, 4)
+	! Player draws from cards 2-14 so that they win if both they and the dealer draw an ace
 	number = rand(2, 14)
-	$pl_card[1] = $number[number] + $suit[suit]
-	pl_points = points[number]
-	pl_poi = number
+	$p_card[1] = $number[number] + 'of ' + $suit[suit]
+	p_points = number
 	wait 1000
-	'Map of dealer:'
-	'  <<$di_card[1]>>'
+	'Dealer''s Card:'
+	'  <<$d_card[1]>>'
 
 	'__________________________'
-	'Player Maps:'
+	'Your Card:'
+	'  <<$p_card[1]>>'
 
-	'  <<$pl_card[1]>>'
-
-	if di_poi > pl_poi:
+	if d_points > p_points:
 		' '
-		'Casinos won'
+		'Casino won'
 
 		act 'You lost':
 			turn1 = 0
 			gt 'igrkart2'
 		end
-	elseif di_poi < pl_poi:
+	elseif d_points < p_points:
 		' '
 		'You won'
-		act 'You have won (<<2 * deal>> <b>₽</b>)':
-			money += 2 * deal
+		act 'You have won (<<2 * bet_amount>> <b>₽</b>)':
+			money += 2 * bet_amount
 			turn1 = 0
 			gt 'igrkart2'
 		end
-	elseif di_poi = pl_poi:
-		if nich = 1:
+	else
+		if bet_draw = 1:
 			' '
 			'You won'
 
-			act 'You have won (<<11 * deal>> <b>₽</b>)':
-				money += 11 * deal
+			act 'You have won (<<11 * bet_amount>> <b>₽</b>)':
+				money += 11 * bet_amount
 				turn1 = 0
 				gt 'igrkart2'
 			end
@@ -116,70 +112,67 @@ if turn1 = 2:
 end
 
 if turn1 = 3:
-	act 'Continue to play':
-		cla
+	if money >= bet_amount:
+		act 'Continue (bet another <<bet_amount>> <b>₽</b>)':
+			cla
 
-		if money < deal:
-			msg 'You have enough money'
-			gt 'igrkart2'
-		else
-			money -= deal
-		end
+			money -= bet_amount
 
-		'<right><img src="images/casino/cartcw.jpg"></right>'
-		' The dealer deals the cards:'
-		'...'
-		suit = rand(1, 4)
-		number = rand(1, 13)
-		$di_card[2] = $number[number] + $suit[suit]
-		di_points = points[number]
-		di_poi = number
-		suit = rand(1, 4)
-		number = rand(2, 14)
-		$pl_card[2] = $number[number] + $suit[suit]
-		pl_points = points[number]
-		pl_poi = number
-		'Map of dealer:'
-		'  <<$di_card[1]>>'
-		'  <<$di_card[2]>>'
-		'__________________________'
-		'Player Maps:'
-		'  <<$pl_card[1]>>'
-		'  <<$pl_card[2]>>'
+			'<right><img src="images/casino/cartcw.jpg"></right>'
+			' The dealer deals the cards:'
+			'...'
+			suit = rand(1, 4)
+			number = rand(1, 13)
+			$d_card[2] = $number[number] + 'of ' + $suit[suit]
+			d_points = number
+			suit = rand(1, 4)
+			number = rand(2, 14)
+			$p_card[2] = $number[number] + 'of ' + $suit[suit]
+			p_points = number
+			'Dealer''s Cards:'
+			'  <<$d_card[1]>>'
+			'  <<$d_card[2]>>'
+			'__________________________'
+			'Your Cards:'
+			'  <<$p_card[1]>>'
+			'  <<$p_card[2]>>'
 
-		if di_poi > pl_poi:
-			' '
-			'Casinos won'
+			if d_points > p_points:
+				' '
+				'Casino won'
 
-			act 'You lost':
-				turn1 = 0
-				gt 'igrkart2'
-			end
-		elseif di_poi < pl_poi:
-			' '
-			'You won'
+				act 'You lost':
+					turn1 = 0
+					gt 'igrkart2'
+				end
+			elseif d_points < p_points:
+				' '
+				'You won'
 
-			act 'You have won (<<4 * deal>> <b>₽</b>)':
-				money += 4 * deal
-				turn1 = 0
-				gt 'igrkart2'
-			end
-		elseif di_poi = pl_poi:
-			' '
-			'Again draw'
+				act 'You have won (<<4 * bet_amount>> <b>₽</b>)':
+					money += 4 * bet_amount
+					turn1 = 0
+					gt 'igrkart2'
+				end
+			elseif d_points = p_points:
+				' '
+				'Draw'
 
-			act 'Pick up (<<3 * deal>> <b>₽</b>)':
-				money += 3 * deal
-				turn1 = 0
-				gt 'igrkart2'
+				act 'Take money (<<3 * bet_amount>> <b>₽</b>)':
+					money += 3 * bet_amount
+					turn1 = 0
+					gt 'igrkart2'
+				end
 			end
 		end
+	else
+		' '
+		'You don''t have enough money to continue'
 	end
 
-	act 'Pick up half your bet':
-		if deal mod 2 = 1:deal += 1
-
-		money += deal / 2
+	act 'Take money (<<bet_amount>> <b>₽</b>)':
+		money += bet_amount
+		turn = 0
 		gt 'igrkart2'
 	end
 end
