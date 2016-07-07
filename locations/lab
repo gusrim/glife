@@ -13,6 +13,20 @@ if $ARGS[0] = 'start':
 	'<center><b><font color="maroon">Karinas'' Laboratory</font></b></center>'
 	'<center><img src="images/qwest/lab.jpg"></center>'
 
+	if succubusflag = 1 and sucpcinfo < 2:
+		cla
+		clr
+		*clr
+		'<center><b><font color="maroon">Karin</font></b></center>'
+		'<center><img src="images/picpre/karinpre.jpg"></center>'
+		'The moment you walked into her lab, Karin''s head jerked up and she hurried over to you.'
+		'She stares at you for several seconds, then demands, "What the hell happened to you!?!?"'
+		'You start to answer her when she holds up her hand and says, "Wait, come sit on the couch and tell me."'
+		'She turns away from you and walks toward the couch.'
+		act 'Follow her': gt 'lab', 'karinsuctalk'
+		exit
+	end
+
 	act 'Leave':
 		cla
 		minut += 5
@@ -170,6 +184,10 @@ if $ARGS[0] = 'karin':
 	'<center><b><font color="maroon">Karina</font></b></center>'
 	'<center><img src="images/picpre/karinpre.jpg"></center>'
 	'Karyn as always studying something.'
+
+	if karinsucsex ! 0 and karinsucsexask ! daystart: act 'Ask if she want''s to have sex': karinsucsexask = daystart & gt 'lab', 'karinsucsexask'
+
+	if sucpcinfo >= 4: act 'Ask her about Succubae': gt 'lab', 'karinsuctalk'
 
 	act 'Leave':gt 'lab', 'start'
 
@@ -363,6 +381,107 @@ if $ARGS[0] = 'karin':
 			'You learned the technique of pre-shield. This technique allows you to enter into battle with a magical shield protecting you against physical impacts.'
 
 			act 'Leave':gt 'lab', 'karin'
+		end
+	end
+end
+
+if $ARGS[0] = 'karinsuctalk':
+	cla
+	clr
+	*clr
+	gs 'stat'
+	fcolor = rgb(0, 0, 0)
+	bcolor = rgb(255, 255, 255)
+	lcolor = rgb(106, 90, 205)
+	'<center><b><font color="maroon">Karin</font></b></center>'
+	'<center><img src="images/picpre/karinpre.jpg"></center>'
+	if sucpcinfo < 2:
+		minut += 15
+		'As you both settle onto the couch, Karin turns to you and says, "Ok, tell me what happened."'
+		'You spend the next 15 minutes telling her about the Fairy, the odd dream, the energy you let loose the other night,'
+		if succubusQW = 4:
+			'and the felling you get when you''ve had sex.'
+		elseif succubusQW > 4:
+			'the felling you get when you''ve had sex, and the reaction you had to almost being raped.'
+		end
+		''
+		'She thinks about it for a moment and then says, "Well, I have a couple of ideas, but no sense guessing when I can just magically examine you."'
+		'She hops up and says, "Get undressed and lie down on the couch."'
+		sucpcinfo = 2
+		act 'Undress and lie down': gt 'succubus', 'karinask'
+		exit
+	end
+
+	if karinsucsex = 0 and karinsucsexask ! daystart: act 'Ask Karin if she wants to try Succubus Sex': karinsucsexask = daystart & gt 'lab', 'karinsucsexask'
+
+	act 'Ask her to repeat what she knows about Succubae': gt 'succubus', 'karinask'
+
+	act 'Ask her if she has learned anything new about Succubae':
+		'No, I havn''t.'
+		cla
+		act 'Continue': gt 'lab', 'karinsuctalk'
+	end
+
+	act 'Change topics': gt 'lab', 'karin'
+
+end
+
+if $ARGS[0] = 'karinsucsexask':
+	cla
+	clr
+	*clr
+	gs 'stat'
+	fcolor = rgb(0, 0, 0)
+	bcolor = rgb(255, 255, 255)
+	lcolor = rgb(106, 90, 205)
+	'<center><b><font color="maroon">Karin</font></b></center>'
+	'<center><img src="images/picpre/karinpre.jpg"></center>'
+	If karinsucsex = 0:
+		if KarinSex = 1:
+			'You give Karin what you hope is a "come hither" smile and ask,'
+			'"So, you want to give Succubus sex a try?"'
+		else
+			'You give Karin a shy smile and ask,'
+			'"Do you want to try Succubus sex?"'
+		end
+	else
+		'You give Karin a bright smile and ask,'
+		'Hey Karin, you up for some Succubus Sex?'
+	end
+	act 'She answers:':
+		cla
+		If karinsucsex = 0:
+			'She gives you a wide eyed look before saying,'
+			if succublvl + KarinSex > rand(0,6):
+				'"I''m sorry, <<$name>>, I just don''t have the time now."'
+				act 'Move on to something else': gt 'lab', 'karin'
+			else
+				'"I would love to!", with a wide smile.'
+				'She leads you over to the couch and you both strip.'
+				act 'Proceed': gt 'succubus', 'karinsex'
+			end
+		else
+			If karinsucsexday <= daystart:
+				if 1 + (succublvl * 2) + karinsucsex > rand(1,20):
+					'"I''m sorry, <<$nickname>>, I just don''t have the time now."'
+					act 'Move on to something else': gt 'lab', 'karin'
+				else
+					'She gives you a "come hither" smile and says, "I would love to, <<$nickname>>!"
+					'You both head toward the couch, stripping as you go.'
+					'Once there, you both sit down facing each other and she looks at you in anticipation.'
+					act 'Proceed': gt 'succubus', 'karinsex'
+				end
+			else
+				if karinsucsexday - daystart > 1:
+					$scsextmp = 'days'
+				else
+					$scsextmp = 'day'
+				end
+				'She looks at you with a sad smile and says,'
+				'"I''m sorry, <<$nickname>>, I need at least <<karinsucsexday - daystart>> more <<$scsextmp>>."'
+				killvar '$scsextmp'
+				act 'Move on to something else': gt 'lab', 'karin'
+			end
 		end
 	end
 end
