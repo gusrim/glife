@@ -37,20 +37,20 @@ if turn1 = 1:
 	cla
 	bet_draw = 0
 	'<right><img src="images/casino/stavkacw.jpg"></right>'
-
+	'Continue with regular bet (payout 2 to 1), or bet on a draw (payout 11 to 1)?'
 	if money < bet_amount:
 		turn1 = 2
 		gt 'igrkart2'
 	else
+		act 'Continue with regular bet':
+			turn1 = 2
+			gt 'igrkart2'
+		end
+
 		act 'Bet on draw (doubles bet)':
 			turn1 = 2
 			bet_draw = 1
 			money -= bet_amount
-			gt 'igrkart2'
-		end
-
-		act 'Continue with regular bet':
-			turn1 = 2
 			gt 'igrkart2'
 		end
 	end
@@ -66,7 +66,7 @@ if turn1 = 2:
 	$d_card[1] = $number[number] + 'of ' + $suit[suit]
 	d_points = number
 	suit = rand(1, 4)
-	! Player draws from cards 2-14 so that they win if both they and the dealer draw an ace
+	!! Player draws from cards 2-14 so that they win if both they and the dealer draw an ace
 	number = rand(2, 14)
 	$p_card[1] = $number[number] + 'of ' + $suit[suit]
 	p_points = number
@@ -89,7 +89,7 @@ if turn1 = 2:
 	elseif d_points < p_points:
 		' '
 		'You won'
-		act 'You have won (<<2 * bet_amount>> <b>₽</b>)':
+		act 'Take money (<<2 * bet_amount>> <b>₽</b>)':
 			money += 2 * bet_amount
 			turn1 = 0
 			gt 'igrkart2'
@@ -99,7 +99,7 @@ if turn1 = 2:
 			' '
 			'You won'
 
-			act 'You have won (<<11 * bet_amount>> <b>₽</b>)':
+			act 'Take money (<<11 * bet_amount>> <b>₽</b>)':
 				money += 11 * bet_amount
 				turn1 = 0
 				gt 'igrkart2'
@@ -112,13 +112,16 @@ if turn1 = 2:
 end
 
 if turn1 = 3:
+	'<right><img src="images/casino/cartcw.jpg"></right>'
+	' '
+	'Draw'
+
 	if money >= bet_amount:
 		act 'Continue (bet another <<bet_amount>> <b>₽</b>)':
 			cla
 
 			money -= bet_amount
 
-			'<right><img src="images/casino/cartcw.jpg"></right>'
 			' The dealer deals the cards:'
 			'...'
 			suit = rand(1, 4)
@@ -149,7 +152,7 @@ if turn1 = 3:
 				' '
 				'You won'
 
-				act 'You have won (<<4 * bet_amount>> <b>₽</b>)':
+				act 'Take money (<<4 * bet_amount>> <b>₽</b>)':
 					money += 4 * bet_amount
 					turn1 = 0
 					gt 'igrkart2'
@@ -170,9 +173,9 @@ if turn1 = 3:
 		'You don''t have enough money to continue'
 	end
 
-	act 'Take money (<<bet_amount>> <b>₽</b>)':
+	act 'Take original bet (<<bet_amount>> <b>₽</b>)':
 		money += bet_amount
-		turn = 0
+		turn1 = 0
 		gt 'igrkart2'
 	end
 end
