@@ -176,21 +176,24 @@ if $ARGS[0] = 'pa':
 				
 				if film < 10 and porn_fame < 10:
 
-					'The guy whispers "By the way, if you wanted, I could completely remove them from the network - for a good price of course."'
+					'The guy whispers "By the way, if you wanted, I could completely remove them from our systems - for a good price of course."'
 
 					act 'Tell me more':
 						cla
 						minut += 5
 						films_stop_payment = film * 40000
 						gs 'stat'
-						'Seeing as you''re not well known, it''s unlikely anyone would notice. However, to remove them you''d have to cover the studios potential future profits, 40,000 <b>₽</b> per film. That''s a total of <<films_stop_payment>> <b>₽</b>.'
-						'Also, that would piss off your co-stars and our director. It would end your porn career.'
+						'"Seeing as you''re not well known, it''s unlikely anyone would notice. However, to remove them you''d have to cover the studios potential future profits, 40,000 <b>₽</b> per film. That''s a total of <<films_stop_payment>> <b>₽</b>.'
+						'Also, that would piss off your co-stars and our director. It would end your porn career. You should know, there is no guarantee that there are no other copies of your movies out there anyway, so think carefully."'
 
 						if money >= films_stop_payment:
-							act 'Agree':
+							act 'Remove them':
 								minut += 5
 								money -= films_stop_payment
 								pfilmSTOP = 1
+								killvar 'pfilmday'
+								killvar 'pornplan'
+								killvar 'porntaken'
 								film = 0
 								gs 'stat'
 								'We never met. Have a nice day, and don''t come back'
@@ -272,78 +275,111 @@ if $ARGS[0] = 'manager':
 	cls
 	minut += 5
 	gs 'stat'
-	'<center><img src="images/studia/studia_0.jpg"></center>'
-	'The boss of the porn studio welcomes you and gestures for you to sit down on the couch.'
+	$displayimage = '<center><img src="images/studia/studia_0.jpg"></center>'
+	$displayimage
+	'You walk into the office of the producer in the porn production company, and you see that the producer is here.'
 
 	if firstkasting = 0:gt 'pornstudio', 'first'
 
 	if pfilmNO = 1:
+	! Banned from shooting porn
 		'You''re blacklisted, no decent porn studio will hire you, goodbye.'
 	elseif pfilmSTOP = 1:
+	! No longer shooting porn
 		'I''m sorry I thought you had retired...'
-	elseif (pfilmday - daystart) = 1 and pfilm > 0:
-		'Do not distract me from my work. Like I said, we shoot tomorrow.'
-		if vnesh < 50:'"And do something with yourself. You look unacceptable."'
-	elseif pfilmday > daystart and pfilm > 0:
+	elseif ((pfilmday[0] > 0 and hour > 12) or pornmiss = 1) and porndebt < 20000 and missedshoot = 0:
+	! You missed your shooting time, but you have a chance to work it off
+		missedshoot = 1
+		'Peter seems really agitated, as he storms to you, ready to yell your head off.'
+		'"Didn''t I tell you not to be late? Where the fuck where you? I''ve wasted a lot of money! I had to pay actors, assistants, the director and the doctor just to sit on their asses! The whole shoot was a bust, just because of you, slut!"'
+		'He managed to cool off a little with the airing some of his frustration, and after a deep breath he continues more calmly.'
+		if pfilmday[1] = 0:
+			act 'Jump in tomorrow':
+				pfilmNOPAY = 1
+				pornstack += 1
+				pfilmday[1] = rand(1,14)
+				gt 'pornstudio', 'start'
+			end
+			'"I''ll give you a chance to make it right. An another actress has gotten sick and cancelled her shoot. If you jump in instead of her, your debt is canceled. Or you can work it off, but that will take longer. Of course you can also pay it back, if you have the money. And no, I do not remember what the fuck are we going to shoot, in this whole shitstorm I didn''t even remembered to eat!"'
+		else
+			'You know what, you can work it off, but it will take you a while. Of course you can also pay it back, if you have the money."'
+		end
+		
+		act 'Accept your debt':gt 'pornstudio', 'start'
+	
+		act 'Fuck this shit, I quit!':
+			pfilmNO = 1
+			killvar 'pfilmday'
+			killvar 'pornplan'
+			killvar 'porntaken'
+			gt 'pornstudio', 'start'
+		end
+		exit
+	elseif porndebt > 20000 and missedshoot = 0:
+	! You really fucked up, you are banned from porn for life
+		missedshoot = 1
 		pfilmNO = 1
-		'You did not come to the shoot. You fucked me. I paid a lot of money for assistants, actors, cameramen, plus studio rental, and you took it and threw it in my face.'
+		killvar 'pfilmday'
+		killvar 'pornplan'
+		killvar 'porntaken'
+		'You did not come to the shoot. You fucked me, and you already owed me a lot of money! I paid a lot of money for assistants, actors, cameramen, plus studio rental, and you took it and threw it in my face.'
 		'No, I do not want to work with you and moreover, you''re blacklisted.'
-	elseif pfilm > 0 and hour >= 10 and hour <= 12:
+	elseif pfilmday[0] > 0 and hour >= 10 and hour <= 12:
+	! You have porn shoot today, and you are in time
 		if hour = 10:'"Come on honey, inspection."'
-		if hour = 11:'"You''re late, my patience is not eternal", Peter says, strictly. Quickly now, inspection.'
-		if hour = 12:'What the hell? Everyone''s waiting for you. Hurry up honey, inspection. Now!.'
+		if hour = 11:'"You''re late, my patience is not eternal", Peter says strictly. "Quickly now, to the inspection!"'
+		if hour = 12:'"What the hell? Everyone''s waiting for you. Hurry up, get inspected! Now!"'
 
-		pfilmday = daystart
 		act 'Go for medical check-up':gt 'pornstudio', 'medical'
 		exit
-	elseif pfilm > 0 and hour > 12:
-		pfilmday = daystart
-		'Didn''t I tell you not to be late? Where the fuck where you?, I''ve wasted a lot of money. I had to pay actors, assistants, the director and the doctor just to sit on their asses!'
-		'The whole shoot was a write off, just because of you, slut!'
-		'I''ll give you one chance, come tomorrow and work for free, or we''re done!'
-
-		act 'Fuck him. Who needs this idiot':
-			pfilmNO = 1
-			pfilm = 0
-			gt 'pornstudio', 'start'
+	elseif film = 0 and spornstack = 0:
+	! Your first ever movie offer
+		if firstoffer = 0:
+			firstoffer = 1
+			'So, you''re the new girl. As luck would have it we are looking for a brand new girl for our shoot. It''s called ''Girls Jerk Guys #36''.'
+			'Guess what? You have to jerk off a guy, in this one he will finish on you tits. It pays 2,000 <b>₽</b>.'
+		else
+			'Hello <<$pfname>>, since you are brand new, all I can offer is an introductory movie called ''Girls Jerk Guys #36''.'
+			'Yes, you have to jerk off a guy, in this one he will finish on you tits. It pays 2,000 <b>₽</b>.'
 		end
-
-		act 'Fine, I will do it':
-			pfilmNOPAY = 1
-			gt 'pornstudio', 'start'
-		end
-	elseif film = 0 and pfilm = 0:
-		'So, you''re the new girl, and we as luck would have it, we are looking for a brand new girl. It''s called ''Girls jerk guys 36''.'
-		'Guess what? You have to jerk off a guy, in this one he will finish on you tits. It pays 2,000 <b>₽</b>.'
 
 		act 'Agree':
 			cla
-			pfilm = 1
-			pfilmday = daystart
-			'Cool, we shoot tomorrow. Get here between 10 and 11, do not be late.'
+			spornstack += 1
+			pfilmday[1] = 1
+			'Cool, we shoot tomorrow. Get here between 10 and 11, and please do not be late.'
 
 			act 'Leave':gt 'pornstudio', 'start'
 		end
 
 		act 'I don''t think I''m ready':gt 'pornstudio', 'start'
 		exit
-	elseif film > 0:
+	elseif pfilmday[0] = 0 and pornstack = 10:
+		! You have 15 contracted porn movies, and you do not shoot today, but otherwise you are an employee
+		'Please do not distract me from my work. There is no shoot today, and you should not contract to too many movies.'
+		if vnesh < 50:'"And do something with yourself. You look unacceptable."'
+	elseif film > 0 and pornstack < 10:
+	! You can still make new contracts
 		if rand(0,5) = 5:
 			'Peter is on the phone, he covers the receiver, "I''m busy right now, come back later."'			
-		elseif daystart >= pffilmday and pfilm = 0:
+		else
 			gs 'pornstudio', 'options'
-		elseif pffilmday - daystart > 1:
-			'Sorry <<$pfname>>, there is no work for you now. Come back in <<pffilmday-daystart>> days.'
-		elseif pffilmday - daystart = 1:
-			'Sorry <<$pfname>>, there is no work for you now. Come back tomorrow.'
+			exit
 		end
+	end
+	
+	if porndebt > 0:
+		act 'Ask about your debt':'"Of course, <<$name>>! You current debt to the company is <<porndebt>> <b>₽</b>."'
 	end
 
 	act 'Leave':gt 'pornstudio', 'start'
 end
 
 if $ARGS[0] = 'options':
-	'Come on <<$pfname>>. Let''s see what I can offer for you.'
+	*clear
+	$displayimage
+	$displaytext = 'Come on <<$pfname>>. Let''s see what I can offer for you.'
+	$displaytext
 	if film < 5:
 		fmulti = 100
 	elseif film < 10:
@@ -357,178 +393,241 @@ if $ARGS[0] = 'options':
 	elseif film >= 50:
 		fmulti = 200
 	end
-	if rand(0,2) ! 0:
-		i = 1
+	
+	
+	act 'Filter by date':
+		*clear
+		$displayimage
+		$displaytext
+		'<br><font color="grey">The selected days will not be displayed</color>'
+		!selecting days, with "href"
+		'<a href="exec:killvar datefilter">Clear date filters</a>'
+	end
+	
+	act 'Filter by tag':
+		*clear
+		$displayimage
+		$displaytext
+		'<br><font color="grey">The selected tags will not be displayed</color>'
+		
+		'<a href="exec:killvar tagfilter">Clear date filters</a>'
+	end
+	
+	act 'Filter by participants':
+		*clear
+		$displayimage
+		$displaytext
+		'<br><font color="grey">The movies with the selected number and gender of participants will not be displayed</color>'
+		
+		'<a href="exec:killvar peoplefilter">Clear date filters</a>'
+	end	
+	
+	act 'Show available movies':
+		*clear
+		$displayimage
+		$displaytext
+		''
+		gs 'pornschedule', 'displayselected'
+	end	
+	
+	
+	
+	
+	
+!{	if rand(0,2) ! 0:
+		pf = 1
+		t[1] = rand(10,30)
 		dynamic $pornfilmdesc
-		act 'Jerk a guy, until he cums on your chest (<<pcash * fmulti>>₽)':
+		act 'Jerk a guy, until he cums on your chest (<<pcash * fmulti>>₽, in <<t[1]>> days)':
 			cla
-			pfilm = 1
-			pfilmday = daystart
+			pfilmday[val(t[1])] = 1
+			pornstack += 1
+			'Cool, we shoot tomorrow. Come between 10 and 11. don''t be late.'
+
+			act 'Leave':gt 'pornstudio', 'start'
+		end
+		if pfilmday[val(t[1])] > 0: delact 'Jerk a guy, until he cums on your chest (<<pcash * fmulti>>₽, in <<t[1]>> days)'
+	end
+	if rand(0,2) ! 0:
+		pf = 2
+		t[2] = rand(10,30)
+		dynamic $pornfilmdesc
+		act 'Blowjob, finish with a facial (<<pcash * fmulti>>₽, in <<t[2]>> days)':
+			cla
+			pfilmday[val(t[2])] = 2
+			pornstack += 1
+			'Cool, we shoot tomorrow. Come between 10 and 11. don''t be late.'
+
+			act 'Leave':gt 'pornstudio', 'start'
+		end
+		if pfilmday[val(t[2])] > 0: delact 'Blowjob, finish with a facial (<<pcash * fmulti>>₽, in <<t[2]>> days)'
+	end
+	if rand(0,2) ! 0:
+		pf = 3
+		t[3] = rand(14,42)
+		dynamic $pornfilmdesc
+		act 'Classic, first blowjob, then sex, finish with a facial (<<pcash * fmulti>>₽, in <<t[3]>> days)':
+			cla
+			pfilmday[val(t[3])] = 3
+			pornstack += 1
+			'Cool, we shoot tomorrow. Come between 10 and 11. don''t be late.'
+
+			act 'Leave':gt 'pornstudio', 'start'
+		end
+		if pfilmday[val(t[3])] > 0: delact 'Classic, first blowjob, then sex, finish with a facial (<<pcash * fmulti>>₽, in <<t[3]>> days)'
+	end
+	if rand(0,2) ! 0:
+		pf = 4
+		t[4] = rand(14,42)
+		dynamic $pornfilmdesc
+		act 'Classic with anal, blowjob, sex, anal and facial finish (<<pcash * fmulti>>₽, in <<t[4]>> days)':
+			cla
+			pfilmday[val(t[4])] = 4
+			pornstack += 1
+			'Cool, we shoot tomorrow. Come between 10 and 11. don''t be late.'
+
+			act 'Leave':gt 'pornstudio', 'start'
+		end
+		if pfilmday[val(t[4])] > 0: delact 'Classic with anal, blowjob, sex, anal and facial finish (<<pcash * fmulti>>₽, in <<t[4]>> days)'
+	end
+	if rand(0,2) ! 0:
+		pf = 5
+		
+		t[5] = rand(14,42)
+		if pfilmday[val(t[5])] > 0:
+		dynamic $pornfilmdesc
+		act 'Threesome, no dp, finish in ass and facial (<<pcash * fmulti>>₽, in <<t[5]>> days)':
+			cla
+			pfilmday[val(t[5])] = 5
+			pornstack += 1
+			'Cool, we shoot tomorrow. Come between 10 and 11. don''t be late.'
+
+			act 'Leave':gt 'pornstudio', 'start'
+		end
+		if pfilmday[val(t[5])] > 0: delact 'Threesome, no dp, finish in ass and facial (<<pcash * fmulti>>₽, in <<t[5]>> days)'
+	end
+	if rand(0,2) ! 0:
+		pf = 6
+		t[6] = rand(14,42)
+		dynamic $pornfilmdesc
+		act 'Threesome with dp, double facial (<<pcash * fmulti>>₽, in <<t[6]>> days)':
+			cla
+			pfilmday[val(t[6])] = 6
+			pornstack += 1
+			'Cool, we shoot tomorrow. Come between 10 and 11. don''t be late.'
+
+			act 'Leave':gt 'pornstudio', 'start'
+		end
+		if pfilmday[val(t[6])] > 0: delact 
+	end
+	if rand(0,2) ! 0:
+		pf = 7
+		t[7] = rand(14,42)
+		dynamic $pornfilmdesc
+		act 'A simple sex scene, with blowjob and creampie (<<pcash * fmulti>>₽, in <<t[7]>> days)':
+			cla
+			pfilmday[val(t[7])] = 7
+			pornstack += 1
+			'Cool, we shoot tomorrow. Come between 10 and 11. don''t be late.'
+
+			act 'Leave':gt 'pornstudio', 'start'
+		end
+		if pfilmday[val(t[7])] > 0: delact 
+	end
+	if rand(0,2) ! 0:
+		pf = 8
+		t[8] = rand(14,42)
+		dynamic $pornfilmdesc
+		act 'Threesome with dp, creampie in ass and pussy (<<pcash * fmulti>>₽, in <<t[8]>> days)':
+			cla
+			pfilmday[val(t[8])] = 8
+			pornstack += 1
+			'Cool, we shoot tomorrow. Come between 10 and 11. don''t be late.'
+
+			act 'Leave':gt 'pornstudio', 'start'
+		end
+		if pfilmday[val(t[8])] > 0: delact 'Threesome with dp, creampie in ass and pussy (<<pcash * fmulti>>₽, in <<t[8]>> days)'
+	end
+	if rand(0,2) ! 0:
+		pf = 9
+		t[9] = rand(14,42)
+		dynamic $pornfilmdesc
+		act 'Spitroast pussy-mouth fuck with creampie and swallowing (<<pcash * fmulti>>₽, in <<t[9]>> days)':
+			cla
+			pfilmday[val(t[9])] = 9
+			pornstack += 1
 			'Cool, we shoot tomorrow. Come between 10 and 11. don''t be late.'
 
 			act 'Leave':gt 'pornstudio', 'start'
 		end
 	end
 	if rand(0,2) ! 0:
-		i = 2
+		pf = 10
+		t[10] = rand(14,42)
 		dynamic $pornfilmdesc
-		act 'Blowjob, finish with a facial (<<pcash * fmulti>>₽)':
+		act 'Group sex with four guys, cumming on pussylips (<<pcash * fmulti>>₽, in <<t[10]>> days)':
 			cla
-			pfilm = 2
-			pfilmday = daystart
+			pfilmday[val(t[10])] = 10
+			spornstack += 1
 			'Cool, we shoot tomorrow. Come between 10 and 11. don''t be late.'
 
 			act 'Leave':gt 'pornstudio', 'start'
 		end
 	end
 	if rand(0,2) ! 0:
-		i = 3
+		pf = 11
+		t[11] = rand(14,42)
 		dynamic $pornfilmdesc
-		act 'Classic, first blowjob, then sex, finish with a facial (<<pcash * fmulti>>₽)':
+		act 'Group sex with four guys, cum inside pussy (<<pcash * fmulti>>₽, in <<t[11]>> days)':
 			cla
-			pfilm = 3
-			pfilmday = daystart
+			pfilmday[val(t[11])] = 11
+			spornstack += 1
 			'Cool, we shoot tomorrow. Come between 10 and 11. don''t be late.'
 
 			act 'Leave':gt 'pornstudio', 'start'
 		end
 	end
 	if rand(0,2) ! 0:
-		i = 4
+		pf = 12
+		t[12] = rand(14,42)
 		dynamic $pornfilmdesc
-		act 'Classic with anal, blowjob, sex, anal and facial finish (<<pcash * fmulti>>₽)':
+		act 'Group sex with four guys, cum inside ass (<<pcash * fmulti>>₽, in <<t[12]>> days)':
 			cla
-			pfilm = 4
-			pfilmday = daystart
+			pfilmday[val(t[12])] = 12
+			spornstack += 1
 			'Cool, we shoot tomorrow. Come between 10 and 11. don''t be late.'
 
 			act 'Leave':gt 'pornstudio', 'start'
 		end
 	end
 	if rand(0,2) ! 0:
-		i = 5
+		pf = 13
+		t[13] = rand(14,42)
 		dynamic $pornfilmdesc
-		act 'Threesome, no dp, finish in ass and facial (<<pcash * fmulti>>₽)':
+		act 'Group sex with four guys, double dp, cum inside ass and pussy (<<pcash * fmulti>>₽, in <<t[13]>> days)':
 			cla
-			pfilm = 5
-			pfilmday = daystart
-			'Cool, we shoot tomorrow. Come between 10 and 11. don''t be late.'
-
-			act 'Leave':gt 'pornstudio', 'start'
-		end
-	end
-	if rand(0,2) ! 0:
-		i = 6
-		dynamic $pornfilmdesc
-		act 'Threesome with dp, double facial (<<pcash * fmulti>>₽)':
-			cla
-			pfilm = 6
-			pfilmday = daystart
-			'Cool, we shoot tomorrow. Come between 10 and 11. don''t be late.'
-
-			act 'Leave':gt 'pornstudio', 'start'
-		end
-	end
-	if rand(0,2) ! 0:
-		i = 7
-		dynamic $pornfilmdesc
-		act 'A simple sex scene, with blowjob and creampie (<<pcash * fmulti>>₽)':
-			cla
-			pfilm = 7
-			pfilmday = daystart
-			'Cool, we shoot tomorrow. Come between 10 and 11. don''t be late.'
-
-			act 'Leave':gt 'pornstudio', 'start'
-		end
-	end
-	if rand(0,2) ! 0:
-		i = 8
-		dynamic $pornfilmdesc
-		act 'Threesome with dp, creampie in ass and pussy (<<pcash * fmulti>>₽)':
-			cla
-			pfilm = 8
-			pfilmday = daystart
-			'Cool, we shoot tomorrow. Come between 10 and 11. don''t be late.'
-
-			act 'Leave':gt 'pornstudio', 'start'
-		end
-	end
-	if rand(0,2) ! 0:
-		i = 9
-		dynamic $pornfilmdesc
-		act 'Threesome without anal sex, pussy-mouth fuck, with creampie and swallowing. (<<pcash * fmulti>>₽)':
-			cla
-			pfilm = 9
-			pfilmday = daystart
-			'Cool, we shoot tomorrow. Come between 10 and 11. don''t be late.'
-
-			act 'Leave':gt 'pornstudio', 'start'
-		end
-	end
-	if rand(0,2) ! 0:
-		i = 10
-		dynamic $pornfilmdesc
-		act 'Group sex with four guys, cumming on pussylips (<<pcash * fmulti>>₽)':
-			cla
-			pfilm = 10
-			pfilmday = daystart
-			'Cool, we shoot tomorrow. Come between 10 and 11. don''t be late.'
-
-			act 'Leave':gt 'pornstudio', 'start'
-		end
-	end
-	if rand(0,2) ! 0:
-		i = 11
-		dynamic $pornfilmdesc
-		act 'Group sex with four guys, cum inside pussy (<<pcash * fmulti>>₽)':
-			cla
-			pfilm = 11
-			pfilmday = daystart
-			'Cool, we shoot tomorrow. Come between 10 and 11. don''t be late.'
-
-			act 'Leave':gt 'pornstudio', 'start'
-		end
-	end
-	if rand(0,2) ! 0:
-		i = 12
-		dynamic $pornfilmdesc
-		act 'Group sex with four guys, cum inside ass (<<pcash * fmulti>>₽)':
-			cla
-			pfilm = 12
-			pfilmday = daystart
-			'Cool, we shoot tomorrow. Come between 10 and 11. don''t be late.'
-
-			act 'Leave':gt 'pornstudio', 'start'
-		end
-	end
-	if rand(0,2) ! 0:
-		i = 13
-		dynamic $pornfilmdesc
-		act 'Group sex with four guys, double dp, cum inside ass and pussy. (<<pcash * fmulti>>₽)':
-			cla
-			pfilm = 13
-			pfilmday = daystart
+			pfilmday[val(t[13])] = 13
+			spornstack += 1
 			'Cool, we shoot tomorrow. Come between 10 and 11. don''t be late.'
 
 			act 'Leave':gt 'pornstudio', 'start'
 		end
 	end
 	if film > 14 and rand(0,2) ! 0:
-		i = 14
+		pf = 14
+		t[14] = rand(28,49)
 		dynamic $pornfilmdesc
-		act 'A classic gangbang, with fifty guys (<<pcash * fmulti>>₽)':
+		act 'A classic gangbang, with fifty guys (<<pcash * fmulti>>₽, in <<t[14]>> days)':
 			cla
-			pfilm = 14
-			pfilmday = daystart
+			pfilmday[val(t[14])] = 14
+			spornstack += 1
 			'Cool, we shoot tomorrow. Come between 10 and 11. don''t be late.'
 
 			act 'Leave':gt 'pornstudio', 'start'
 		end
 	end
-	act 'Leave and come back another day':
-		pffilmday = daystart + 1
-		gt 'pornstudio', 'start'
-	end
+}
+	act 'No new contract':gt 'pornstudio', 'start'
 end
 
 if $ARGS[0] = 'first':
@@ -641,7 +740,8 @@ if $ARGS[0] = 'medical':
 			'Very good, you are clean. Go to the dressing room'
 
 			act 'Go to the dressing room':
-				pf = pfilm
+				pf = pfilmday[0]
+				dynamic $pornfilmdesc
 				gs 'pornfilm', 'pornactor'
 				cla
 				*clr
@@ -657,7 +757,7 @@ if $ARGS[0] = 'medical':
 				'In the dressing room a skinny whiter-haired woman is waiting for you.'
 				'You take a thorough shower, carefully washing yourself, and getting an enema too, then you put on some makeup and get your hair done.'
 
-				act 'Go to the set':gt 'pornfilm', '<<pfilm>>'
+				act 'Go to the set':gt 'pornfilm', '<<pfilmday[0]>>'
 			end
 		end
 	end
@@ -666,7 +766,8 @@ end
 if $ARGS[0] = 'postvideo':
 	cls
 	minut += 30
-	pf = pfilm
+	pf = pfilmday[0]
+	pfilmday[0] = 0
 	dynamic $pornfilmdesc
 	if film < 5:
 		fmulti = 100
@@ -682,14 +783,18 @@ if $ARGS[0] = 'postvideo':
 		fmulti = 200
 	end
 
-	film += 1	
-	if $pstory = '':
-		$pornfilmstory[film] = input('You can enter the story of the porn movie. This action can be done only once, but you can choose to do it later! (Just hit Enter/Esc when blank)<br>Tags of the current movie: <font color=#541717 size=2><<$pfilmtags>></font>')
+	film += 1
+	if film = 1:
+		$porntitle[film] = 'Girls Jerk Guys #36 - <<$pfname>>'
+		$pornfilmstory[film] = '<<$pfname>>''s introduction to the world of porn, where she jerk off <<$pakter[1]>> on her tits.'
 	else
-		$pornfilmstory[film] = $pstory
+		if $pstory = '':
+			$pornfilmstory[film] = input('You can enter the story of the porn movie. This action can be done only once, but you can choose to do it later! (Just hit Enter/Esc when blank)<br>Tags of the current movie: <font color=#541717 size=2><<$pfilmtags>></font>')
+		else
+			$pornfilmstory[film] = $pstory
+		end
+		$porntitle[film] = input("Enter the name of the porn movie. <i>This action can be done only once, but you can choose to do it later! (Just hit Enter/Esc when blank)</i>")
 	end
-	$porntitle[film] = input("Enter the name of the porn movie. <i>This action can be done only once, but you can choose to do it later! (Just hit Enter/Esc when blank)</i>")
-
 	
 	if pfilmNOPAY = 0:
 		pfcash = pcash * fmulti
@@ -748,10 +853,6 @@ if $ARGS[0] = 'postvideo':
 			pact -= 1
 		if pact > 0:jump 'pornactortext'
 	end
-	
-
-	pfilm = 0
-	pfcash = 0
 
 	if film < 10:
 		filmkoef = 10
@@ -760,13 +861,10 @@ if $ARGS[0] = 'postvideo':
 	else
 		filmkoef = 0
 	end
-
-	pffilmday = daystart + (rand (10,20) + filmkoef)
-	pfilmday = 0
 	
+	spornstack -= 1
+	pfcash = 0
 	gs 'stat'
-
-	'I think we will have a job for you in no less than <<pffilmday-daystart>> day(s).'
 
 	act 'Leave':gt 'pornstudio', 'start'
 end
