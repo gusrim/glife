@@ -9,13 +9,20 @@
 ## Remember
 
 - Try to keep the game playable ... always. Bugs will happen but obvious mistakes can be eliminated in a simple testing run.
-- Be careful! Do not erase other people work. 
+- **Be careful! Do not erase other people work.**
     - Git offer some help with that but sometimes we have to resolve conflicts ourselves.
 - Try to make **meaningful** commit messages.
-    - You can use emojis like: :wrench:, :recycle:, :new:, :x:, :shower:. Just dont overload :smile:
+    - You can use emojis like: :wrench:, :up:, :recycle:, :new:, :x:, :shower:. Just dont overload :smile:
     - emoji cheat sheet: http://www.emoji-cheat-sheet.com/
 - Commit **often** and in **small** chunks. 
-    - If revert is needed we dont lose much.
+    - If revert is needed we don't lose much.
+
+### How to contribute?
+
+- Fork our repository clicking that "fork" button near the star button above.
+- **Read the code** to see how we do things.
+- Make your changes.
+- Submit merge requests.
 
 ## Instructions
 
