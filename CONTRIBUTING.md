@@ -21,6 +21,7 @@
 
 - Fork our repository clicking that "fork" button near the star button above.
 - **Read the code** to see how we do things.
+    - There is a developer guide, a coding guide and a QSP reference in our wiki.
 - Make your changes.
 - Submit merge requests.
 
