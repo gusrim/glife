@@ -1,5 +1,27 @@
 # MagEncounterFairy
-$din_fairy_chat_no1 ={
+
+if $ARGS[0] = '':
+	if knowsfairy = 1:
+		if fairyshoo = 0:
+			act 'Look for the fairy to chat': gt 'MagEncounterFairy', 'fairy_chat'
+			act 'Just be on your way': gt $loc, $metka
+		else
+			if manna >= ((intel * magik + magik * 100 + vital * 10 + rikudo) / 2): act 'Be nice and chat with the fairy': gt 'MagEncounterFairy', 'fairy_chat'
+			if manna >= ((intel * magik + magik * 100 + vital * 10 + rikudo) / 4): act 'Just ignore the fairy': gt $loc, $metka
+			act 'Shoo the pesky fairy away': gt 'MagEncounterFairy', 'fairy_shoo'
+		end
+	elseif magik + rand (1,10) >= 8:
+		act 'Investigate the strange glow': gt 'MagEncounterFairy', 'fairy_chat_no1'
+		act 'Shoo the pesky firefly away': gt 'MagEncounterFairy', 'fairy_shoo'
+		act 'Ignore the firefly': fairyskip = 1 & gt $loc, $metka
+	else
+		gs 'stat'
+		'You have the strange feeling of being watched, but looking around you don''t see anybody.'
+		act 'Shake off the feeling and move on': fairyskip = 1 & gt $loc, $metka
+	end
+end
+
+if $ARGS[0] = 'fairy_chat_no1':
 	cls
 	gs 'stat'
 	knowsfairy = 1
@@ -10,7 +32,7 @@ $din_fairy_chat_no1 ={
 		cls
 		minut += 30
 		fairychat = 1
-		manna += 5 * magik * 5
+		manna += 25 * magik
 		gs 'stat'
 		'You chat with the fairy. At first it feels strange to talk with a creature, you thought was a myth from children''s books. More so, since the small beautiful woman flutters in front of your face the whole time. But the fairy is so amicable that half hour has passed before you even notice.'
 		if vnesh < 120 and skin < 4:
@@ -26,11 +48,11 @@ $din_fairy_chat_no1 ={
 		else
 			'The fairy waves you goodbye and flies away.'
 		end
-		act 'Wave goodbye':gt 'gskver'
+		act 'Wave goodbye':gt $loc, $metka
 	end
-}
+end
 
-$din_fairy_shoo ={
+if $ARGS[0] = 'fairy_shoo':
 	cls
 	minut += 1
 	if knowsfairy < 1:
@@ -43,18 +65,18 @@ $din_fairy_shoo ={
 		'Stunned by surprise you take a closer look at what you thought was a firefly. In the glow you can see a small woman with fluttering wings on her back. It''s a fairy! Taking advantage of your bewilderment she blows something sparkling in your face. Flabbergasted as you are you inhale the substance.'
 		'Instantly you become completely horny and your face flushes with arousal.'
 		'"Maybe this will teach you." she says with a pout and flies off.'
-		act 'Move along':gt 'gskver'
+		act 'Move along':gt $loc, $metka
 	else
 		fairyshoo += 1
 		horny = 90
 		fairycurse = daystart + (fairyshoo - 1) * 2
 		gs 'stat'
 		'"Still a meanie, I see!", squeals the fairy "Well, have it your way."'
-		act 'Get away from the fairy': gt 'gskver'
+		act 'Get away from the fairy': gt $loc, $metka
 	end
-}
+end
 
-$din_fairy_chat ={
+if $ARGS[0] = 'fairy_chat':
 	cls
 	gs 'stat'
 	'You take the few steps over to the glowing orb that apparently only you can recognize as what it truely is: a fairy.'
@@ -67,7 +89,7 @@ $din_fairy_chat ={
 			fairyshoo -= 1
 		end
 		fairychat += 1
-		manna += 5 * magik * 5
+		manna += 25 * magik
 		'You sit down to chat with the fairy. She being so amicably before you know it half an hour has passed.'
 		if vnesh < 120 and skin < 4 and fairyday < daystart and fairyshoo = 0:
 			skinvan += 10
@@ -94,27 +116,11 @@ $din_fairy_chat ={
 		else
 			'You two say your goodbyes and the fairy flies off.'
 		end
-		act 'Go on your way': gt 'gskver'
+		act 'Go on your way': gt $loc, $metka
 	end
-}
-
-if knowsfairy = 1:
-	if fairyshoo = 0:
-		act 'Look for the fairy to chat': dynamic $din_fairy_chat
-		act 'Just be on your way': gt 'gskver'
-	else
-		if manna >= ((intel * magik + magik * 100 + vital * 10 + rikudo) * 50 / 100): act 'Be nice and chat with the fairy': dynamic $din_fairy_chat
-		if manna >= ((intel * magik + magik * 100 + vital * 10 + rikudo) * 25 / 100): act 'Just ignore the fairy': gt 'gskver'
-		act 'Shoo the pesky fairy away': dynamic $din_fairy_shoo
-	end
-elseif magik + rand (1,10) >= 8:
-	act 'Investigate the strange glow': dynamic $din_fairy_chat_no1
-	act 'Shoo the pesky firefly away': dynamic $din_fairy_shoo
-	act 'Ignore the firefly': gt 'gskver'
-else
-	gs 'stat'
-	'You have the strange feeling of being watched, but looking around you don''t see anybody.'
-	act 'Shake off the feeling and move on': gt 'gskver'
 end
+
+killvar '$din_fairy_chat_no1' & killvar '$din_fairy_shoo' & killvar '$din_fairy_chat'
+
 --- MagEncounterFairy ---------------------------------
 

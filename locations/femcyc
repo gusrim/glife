@@ -41,21 +41,52 @@ if $ARGS[0] = '':
 		if arrmodtmp > cumarrtemp: jump 'cummarrpdloop2'
 	end
 
+	!!Succubus absorption of sperm in womb
+	if succubusflag = 1:
+		if arrsize('cumarrppt') > 0:
+			succycletmp = 0
+			:sucvagabs
+			if cumarrdel[succycletmp] = 0:
+				if cumarrcpt[succycletmp] > 10000:
+					sexnutrition += 30 * succublvl
+					succubxp += 3
+				elseif cumarrcpt[succycletmp] < 3000 and cumarrcpt[succycletmp] > 1000:
+					sexnutrition += 5 * succublvl
+					succubxp += 2
+				elseif cumarrcpt[succycletmp] =< 1000:
+					 sexnutrition += succublvl
+				else
+					sexnutrition += 25 * succublvl
+					succubxp += 3
+				end
+				KILLVAR 'cumarrcpt', succycletmp
+				KILLVAR 'cumarrppt', succycletmp
+				KILLVAR '$cumarrnam', succycletmp
+				KILLVAR 'cumarrage', succycletmp
+				KILLVAR 'cumarrdel', succycletmp
+				KILLVAR 'cumarrkno', succycletmp
+				KILLVAR 'cumarrcon', succycletmp
+				sucabscum = 1
+			end
+			succycletmp += 1
+			if succycletmp < arrsize('cumarrppt'): jump 'sucvagabs'
+		end
+		killvar 'succycletmp'
+	end
+
 	cumarrtemp = 0
 	if arrsize('sparrvol') > 0:
 		:cumspaloop
-		!!Succubus absorption (not yet active)
+		!!Succubus absorption for internal locations other than womb
 		if succubusflag = 1:
-			if sparrloc[cumarrtemp] = 0 or sparrloc[cumarrtemp] = 3 or sparrloc[cumarrtemp] = 12:
+			if sparrloc[cumarrtemp] = 3 or sparrloc[cumarrtemp] = 12:
 				sexnutrition += 25*succublvl
-				sparrvol[cumarrtemp] -= 25*succublvl
 				succubxp += 3
 				sucabscum = 1
-				if sparrvol[cumarrtemp] > 0: sexnutrition += sparrvol[cumarrtemp] & sparrvol[cumarrtemp] = 0
-				!!Debug code pl 'Absorb int <<sexnutrition>>'
+				if sparrvol[cumarrtemp] > 0: sparrvol[cumarrtemp] = 0
 			end
 		end
-		!{if sparrloc[cumarrtemp] = 0 or sparrloc[cumarrtemp] = 3 or sparrloc[cumarrtemp] = 12:
+		!!{if sparrloc[cumarrtemp] = 0 or sparrloc[cumarrtemp] = 3 or sparrloc[cumarrtemp] = 12:
 			sexnutrition += 30*succublvl
 			sparrvol[cumarrtemp] -= 30*succublvl
 			if sparrvol[cumarrtemp] < 0: sexnutrition += sparrvol[cumarrtemp] & sparrvol[cumarrtemp] = 0
