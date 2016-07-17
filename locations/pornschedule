@@ -1,4 +1,15 @@
 # pornschedule
+if $ARGS[0] = 'pornmiss':
+	pornmiss = 1
+	missedshoot = 0
+	pf = pfilmday[0]
+	dynamic $pornfilmdesc
+	porndebt += prodcost
+	if pornstack > 0:pornstack -= 1
+end
+
+if $ARGS[0] = 'schedule':
+	killvar 'pfilmday', 0
 	days = 0
 	:fillschedule
 		porns = 0
@@ -35,14 +46,14 @@
 			porntaken['<<days>>,<<porns>>'] = porntaken['<<days+1>>,<<porns>>']
 			!moving the shooting schedule and the contracts ahead by one day. "days = 0" is the current day
 			if porntaken['<<days>>,<<porns>>'] = 0:
-				if rand(1,days+1) = 1: porntaken['<<days>>,<<porns>>'] = 1
+				if rand(1,days*3/2) = 1: porntaken['<<days>>,<<porns>>'] = 1
 				!some other porn actress contracted the movie. The more closer the shooting day is, the more likely, that all of them is taken
 			end
 			if porntaken['<<days>>,<<porns>>'] = 1:
 				if rand(1,100) = 1: porntaken['<<days>>,<<porns>>'] = 0
 				!some other porn actress contracted to the movie has canceled her contract. Not likely, but it happens.
 			end
-		if porns < 3:porns += 1 & jump 'moveschedule'
+		if porns < 3:porns += 1 & jump 'moveschedule'	
 	if days < 49:days += 1 & jump 'fillschedule'
 	! Finally deleting the unnecessary (and the next day overwritten) schedule day to reduce array size
 	killvar 'pornplan', 203
