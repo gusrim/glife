@@ -398,21 +398,68 @@ if $ARGS[0] = 'options':
 		*clear
 		$displayimage
 		$displaytext
-		'<br><font color="grey">The selected days will not be displayed</color>'
-		!selecting days, with "href"
-		'<Table border=1><TR><TH><<$month>></TH><TH>'
-		'<TR><TH>Monday</TH><TH>Tuesday</TH><TH>Wednesday</TH><TH>Thursday</TH><TH>Friday</TH><TH>Satursay</TH><TH>Sunday</TH></TR>'
-!{		a = 1
-		:weekloop
-			if week > a:
-				a += 1
+		'<br><font color="grey">The selected days will not be displayed</font>'
+		m1 = month
+		d1 = day
+		p1 = 1
+		w2 = week
+		w1 = 1
+		:monthloop
+			'<Table border=0 cellspacing=10><TR><TH><b><i><font size=6><<$monthName[m1]>></font></i></b></TH></TR>'
+			'<TR><TH>Monday</TH><TH>Tuesday</TH><TH>Wednesday</TH><TH>Thursday</TH><TH>Friday</TH><TH>Satursay</TH><TH>Sunday</TH></TR>'
 			
-		
-		
-		*P 				'<TR><TD> </TD><TD><<$cumarrnam[cycletemp]>></TD><TD><<cumarrppt[cycletemp]>> Sperm</TD><TD><<cumarrcpt[cycletemp]>> Sperm</TD><TD><<$cycletemp[2]>></TD><TD><<$cycletemp[3]>></TD><TD><<Cumarrage[cycletemp]>></TD><TD><<cumarrkno[cycletemp]>></TD></TR>'
-		
-		'</TABLE>'
-		}
+			:weekloop
+				if w1 = 1:'<TR>'
+				!making sure that the date and the day of the week are in the correct position
+				if w2 ! 1:
+					if w2 = 7:
+						w1 = 7 & '<TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD>'
+					elseif w2 = 6:
+						w1 = 6 & '<TD></TD><TD></TD><TD></TD><TD></TD><TD></TD>'
+					elseif w2 = 5:
+						w1 = 5 & '<TD></TD><TD></TD><TD></TD><TD></TD>'
+					elseif w2 = 4:
+						w1 = 4 & '<TD></TD><TD></TD><TD></TD>'
+					elseif w2 = 3:
+						w1 = 3 & '<TD></TD><TD></TD>'
+					else
+						w1 = 2 & '<TD></TD>'
+					end
+					w2 = 1
+				end
+				!selectable day display comes
+				if w1 = 7:
+					'<TD>''<a href="exec:dayfilter = p1"><font color="red"><<d1>></font></a>''</TD>'
+				else
+					'<TD>''<a href="exec:dayfilter = p1"><font color="black"><<d1>></font></a>''</TD>'
+				end
+				!preparing for next day
+				d1 += 1
+				p1 += 1
+				w1 += 1
+		!we have to check the end of the month too
+		if monthsend[m1] < d1:
+			!Oh-oh, this is the next month already!
+			'</TR></TABLE>'
+			if w1 = 8: w1 = 1
+			w2 = w1
+			w1 = 1
+			m1 += 1
+			d1 = 1
+			!does it necessary to display the next month?
+			if p1 < 50:jump 'monthloop'
+		else
+			!the next day is still the same month
+			if p1 < 50:
+				!the next day have to be displayed
+				if w1 = 8: '</TR>' & w1 = 1
+				jump 'weekloop'
+			else
+				!the next day does not have to be displayed
+				'</TR></TABLE>'
+			end
+		end
+
 		'<a href="exec:killvar datefilter">Clear date filters</a>'
 	end
 	
