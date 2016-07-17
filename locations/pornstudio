@@ -396,86 +396,85 @@ if $ARGS[0] = 'options':
 	
 	act 'Filter by date':
 		$selection = {
-		*clear
-		$displayimage
-		$displaytext
-		'<br><font color="grey">The selected days will not be displayed</font>'
-		m1 = month
-		d1 = day
-		p1 = 1
-		w2 = week
-		w1 = 1
-		:monthloop
-			'<Table border=0 cellspacing=10><TR><TH><b><i><font size=6><<$monthName[m1]>></font></i></b></TH></TR>'
-			'<TR><TH>Monday       </TH><TH>Tuesday      </TH><TH>Wednesday</TH><TH>Thursday     </TH><TH>Friday          </TH><TH>Satursay     </TH><TH>Sunday        </TH></TR>'
-			mht_m1 = m1
-			:weekloop
-				if w1 = 1:'<TR>'
-				!making sure that the date and the day of the week are in the correct position
-				if w2 ! 1:
-					if w2 = 7:
-						w1 = 7 & '<TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD>'
-					elseif w2 = 6:
-						w1 = 6 & '<TD></TD><TD></TD><TD></TD><TD></TD><TD></TD>'
-					elseif w2 = 5:
-						w1 = 5 & '<TD></TD><TD></TD><TD></TD><TD></TD>'
-					elseif w2 = 4:
-						w1 = 4 & '<TD></TD><TD></TD><TD></TD>'
-					elseif w2 = 3:
-						w1 = 3 & '<TD></TD><TD></TD>'
-					else
-						w1 = 2 & '<TD></TD>'
-					end
-					w2 = 1
-				end
-				selected[p1] = p1
-				!selectable day display comes
-				if datefilter['<<selected[p1]>>'] = 1:
-					$option = '<font color="grey"><<d1>></font>'
-				elseif pfilmday[p1] > 0:
-					$option = '<font color="magenta"><<d1>></font>'
-				else
-					$option = '<a href="exec:datefilter[''<<selected[p1]>>''] = 1 & dynamic $selection"><font color="black"><<d1>></font></a>'
-				end
-				'<TD><<$option>></TD>'
-				!preparing for next day
-				d1 += 1
-				p1 += 1
-				w1 += 1
-		!we have to check the end of the month too
-		if monthsend[m1] < d1:
-			!Oh-oh, this is the next month already!
-			'</TR></TABLE>'
-			if w1 = 8: w1 = 1
-			w2 = w1
+			*clear
+			$displayimage
+			$displaytext
+			'<font color="grey">The selected days will not be displayed</font><br>'
+			m1 = month
+			d1 = day
+			p1 = 1
+			w2 = week
 			w1 = 1
-			m1 += 1
-			d1 = 1
-			!does it necessary to display the next month?
-			if p1 < 50:jump 'monthloop'
-		else
-			!the next day is still the same month
-			if p1 < 50:
-				!the next day have to be displayed
-				if w1 = 8: '</TR>' & w1 = 1
-				jump 'weekloop'
-			else
-				!the next day does not have to be displayed
+			:monthloop
+				'<Table border=0 cellpadding=2><TR><TH><b><i><font size=6><<$monthName[m1]>></font></i></b></TH></TR>'
+				'<TR align="center"><TH>   Monday    </TH><TH>   Tuesday   </TH><TH>Wednesday</TH><TH>  Thursday   </TH><TH>     Friday     </TH><TH>  Satursay   </TH><TH>    Sunday    </TH></TR>'
+				:weekloop
+					selected[p1] = p1
+					if w1 = 1:'<TR>'
+					!making sure that the date and the day of the week are in the correct position
+					if w2 ! 1:
+						if w2 = 7:
+							w1 = 7 & '<TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD>'
+						elseif w2 = 6:
+							w1 = 6 & '<TD></TD><TD></TD><TD></TD><TD></TD><TD></TD>'
+						elseif w2 = 5:
+							w1 = 5 & '<TD></TD><TD></TD><TD></TD><TD></TD>'
+						elseif w2 = 4:
+							w1 = 4 & '<TD></TD><TD></TD><TD></TD>'
+						elseif w2 = 3:
+							w1 = 3 & '<TD></TD><TD></TD>'
+						else
+							w1 = 2 & '<TD></TD>'
+						end
+						w2 = 1
+					end
+					!selectable day display comes
+					if datefilter['<<selected[p1]>>'] = 1:
+						$option = '<font color="grey"><<d1>></font>'
+					elseif pfilmday[p1] > 0:
+						$option = '<font color="magenta"><<d1>></font>'
+					else
+						$option = '<a href="exec:datefilter[''<<selected[p1]>>''] = 1 & dynamic $selection"><font color="black"><<d1>></font></a>'
+					end
+					'<TD align="center"><font size=5><<$option>></font></TD>'
+					!preparing for next day
+					d1 += 1
+					p1 += 1
+					w1 += 1
+			!we have to check the end of the month too
+			if monthsend[m1] < d1:
+				!Oh-oh, this is the next month already!
 				'</TR></TABLE>'
+				if w1 = 8: w1 = 1
+				w2 = w1
+				w1 = 1
+				m1 += 1
+				d1 = 1
+				!does it necessary to display the next month?
+				if p1 < 50:jump 'monthloop'
+			else
+				!the next day is still the same month
+				if p1 < 50:
+					!the next day have to be displayed
+					if w1 = 8: '</TR>' & w1 = 1
+					jump 'weekloop'
+				else
+					!the next day does not have to be displayed
+					'</TR></TABLE>'
+				end
 			end
-		end
-		''
-		if dfilter ! 0:datefilter[dfilter] = 1
-		'<a href="exec:killvar ''datefilter'' & dynamic $selection">Clear date filters</a>'
+			''
+			'<a href="exec:killvar ''datefilter'' & killvar ''selected'' & dynamic $selection">Clear date filters</a>'
 		}
 		dynamic $selection 
 	end
 	
 	act 'Filter by tag':
-		*clear
-		$displayimage
-		$displaytext
 		$displaytag = {
+			*clear
+			$displayimage
+			$displaytext
+			'<font color="grey">The selected tags will not be displayed</font><br><br>Currenty filtered tags: <font color="green"><<$tagfilter>></font>'
 			if flag_tag[1] = 0:'<a href="exec:$tagfilter += ''hetero '' & flag_tag[1] = 1 & *clear & $displayimage & $displaytext & dynamic $displaytag">heterosexual</a>'
 			if flag_tag[2] = 0:'<a href="exec:$tagfilter += ''lesbian '' & flag_tag[2] = 1 & *clear & $displayimage & $displaytext & dynamic $displaytag">lesbian</a>'
 			if flag_tag[3] = 0:'<a href="exec:$tagfilter += ''threesome '' & flag_tag[3] = 1 & *clear & $displayimage & $displaytext & dynamic $displaytag">threesome</a>'
@@ -488,8 +487,7 @@ if $ARGS[0] = 'options':
 			if flag_tag[10] = 0:'<a href="exec:$tagfilter += ''cumshot '' & flag_tag[10] = 1 & *clear & $displayimage & $displaytext & dynamic $displaytag">cumshot</a>'
 			if flag_tag[11] = 0:'<a href="exec:$tagfilter += ''swallowing '' & flag_tag[11] = 1 & *clear & $displayimage & $displaytext & dynamic $displaytag">swallowing</a>'
 			if flag_tag[12] = 0:'<a href="exec:$tagfilter += ''DP '' & flag_tag[12] = 1 & *clear & $displayimage & $displaytext & dynamic $displaytag">DP</a>'
-			''
-			'Currenty filtered tags: <font color="green"><<$tagfilter>></font><br><font color="grey">The selected tags will not be displayed</font>'
+			if flag_tag[13] = 0:'<a href="exec:$tagfilter += ''creampie '' & flag_tag[13] = 1 & *clear & $displayimage & $displaytext & dynamic $displaytag">creampie</a>'
 			''
 			'<a href="exec:killvar ''$tagfilter'' & killvar ''flag_tag'' & *clear & $displayimage & $displaytext & $displaytag & dynamic $displaytag">Clear date filters</a>'
 		}
@@ -497,10 +495,11 @@ if $ARGS[0] = 'options':
 	end
 	
 	act 'Filter by participants':
-		*clear
-		$displayimage
-		$displaytext
 		$displaynum = {
+			*clear
+			$displayimage
+			$displaytext
+			'<font color="grey">The movies above the selected number of partners will not be displayed</color><br>'
 			if ppnum = 1: 
 				$pp1 = '<b><font color="red" size=8>1</font></b>'
 			else
@@ -529,219 +528,42 @@ if $ARGS[0] = 'options':
 			''
 			'<Table border=0 cellspacing=10><TR><TH><<$pp1>></TH><TH><<$pp2>></TH><TH><<$pp3>></TH><TH><<$pp4>></TH><TH><<$pp5>></TH></TR>'
 			''
-			'<font color="grey">The movies above the selected number of partners will not be displayed</color>'
-			''
 			'<a href="exec:killvar ''ppnum'' & *clear & $displayimage & $displaytext & dynamic $displaynum">Clear participant limitations</a>'
 		}
 		dynamic $displaynum
 	end	
 	
 	act 'Show available movies':
-		*clear
-		$displayimage
-		$displaytext
-		''
-		gs 'pornschedule', 'displayselected'
+		$contracting = {
+			*clear
+			$displayimage
+			$displaytext
+			''
+		}
+		dynamic $contracting
+!		gs 'pornschedule', 'displayselected'
 	end	
-	
-	
-	
-	
-	
-!{	if rand(0,2) ! 0:
-		pf = 1
-		t[1] = rand(10,30)
-		dynamic $pornfilmdesc
-		act 'Jerk a guy, until he cums on your chest (<<pcash * fmulti>>₽, in <<t[1]>> days)':
-			cla
-			pfilmday[val(t[1])] = 1
-			pornstack += 1
-			'Cool, we shoot tomorrow. Come between 10 and 11. don''t be late.'
 
-			act 'Leave':gt 'pornstudio', 'start'
-		end
-		if pfilmday[val(t[1])] > 0: delact 'Jerk a guy, until he cums on your chest (<<pcash * fmulti>>₽, in <<t[1]>> days)'
+	act 'No further contract':
+		killvar 'ppnum'
+		killvar 'displaynum'
+		killvar 'displaytext'
+		killvar 'displayimage'
+		killvar '$pp1'
+		killvar '$pp2'
+		killvar '$pp3'
+		killvar '$pp4'
+		killvar '$pp5'
+		killvar 'displaytag'
+		killvar 'flag_tag'
+		killvar 'selection'
+		killvar 'datefilter'
+		killvar 'selected'
+		killvar 'option'
+		killvar 'tagfilter'
+		killvar 'contracting'
+		gt 'pornstudio', 'start'
 	end
-	if rand(0,2) ! 0:
-		pf = 2
-		t[2] = rand(10,30)
-		dynamic $pornfilmdesc
-		act 'Blowjob, finish with a facial (<<pcash * fmulti>>₽, in <<t[2]>> days)':
-			cla
-			pfilmday[val(t[2])] = 2
-			pornstack += 1
-			'Cool, we shoot tomorrow. Come between 10 and 11. don''t be late.'
-
-			act 'Leave':gt 'pornstudio', 'start'
-		end
-		if pfilmday[val(t[2])] > 0: delact 'Blowjob, finish with a facial (<<pcash * fmulti>>₽, in <<t[2]>> days)'
-	end
-	if rand(0,2) ! 0:
-		pf = 3
-		t[3] = rand(14,42)
-		dynamic $pornfilmdesc
-		act 'Classic, first blowjob, then sex, finish with a facial (<<pcash * fmulti>>₽, in <<t[3]>> days)':
-			cla
-			pfilmday[val(t[3])] = 3
-			pornstack += 1
-			'Cool, we shoot tomorrow. Come between 10 and 11. don''t be late.'
-
-			act 'Leave':gt 'pornstudio', 'start'
-		end
-		if pfilmday[val(t[3])] > 0: delact 'Classic, first blowjob, then sex, finish with a facial (<<pcash * fmulti>>₽, in <<t[3]>> days)'
-	end
-	if rand(0,2) ! 0:
-		pf = 4
-		t[4] = rand(14,42)
-		dynamic $pornfilmdesc
-		act 'Classic with anal, blowjob, sex, anal and facial finish (<<pcash * fmulti>>₽, in <<t[4]>> days)':
-			cla
-			pfilmday[val(t[4])] = 4
-			pornstack += 1
-			'Cool, we shoot tomorrow. Come between 10 and 11. don''t be late.'
-
-			act 'Leave':gt 'pornstudio', 'start'
-		end
-		if pfilmday[val(t[4])] > 0: delact 'Classic with anal, blowjob, sex, anal and facial finish (<<pcash * fmulti>>₽, in <<t[4]>> days)'
-	end
-	if rand(0,2) ! 0:
-		pf = 5
-		
-		t[5] = rand(14,42)
-		if pfilmday[val(t[5])] > 0:
-		dynamic $pornfilmdesc
-		act 'Threesome, no dp, finish in ass and facial (<<pcash * fmulti>>₽, in <<t[5]>> days)':
-			cla
-			pfilmday[val(t[5])] = 5
-			pornstack += 1
-			'Cool, we shoot tomorrow. Come between 10 and 11. don''t be late.'
-
-			act 'Leave':gt 'pornstudio', 'start'
-		end
-		if pfilmday[val(t[5])] > 0: delact 'Threesome, no dp, finish in ass and facial (<<pcash * fmulti>>₽, in <<t[5]>> days)'
-	end
-	if rand(0,2) ! 0:
-		pf = 6
-		t[6] = rand(14,42)
-		dynamic $pornfilmdesc
-		act 'Threesome with dp, double facial (<<pcash * fmulti>>₽, in <<t[6]>> days)':
-			cla
-			pfilmday[val(t[6])] = 6
-			pornstack += 1
-			'Cool, we shoot tomorrow. Come between 10 and 11. don''t be late.'
-
-			act 'Leave':gt 'pornstudio', 'start'
-		end
-		if pfilmday[val(t[6])] > 0: delact 
-	end
-	if rand(0,2) ! 0:
-		pf = 7
-		t[7] = rand(14,42)
-		dynamic $pornfilmdesc
-		act 'A simple sex scene, with blowjob and creampie (<<pcash * fmulti>>₽, in <<t[7]>> days)':
-			cla
-			pfilmday[val(t[7])] = 7
-			pornstack += 1
-			'Cool, we shoot tomorrow. Come between 10 and 11. don''t be late.'
-
-			act 'Leave':gt 'pornstudio', 'start'
-		end
-		if pfilmday[val(t[7])] > 0: delact 
-	end
-	if rand(0,2) ! 0:
-		pf = 8
-		t[8] = rand(14,42)
-		dynamic $pornfilmdesc
-		act 'Threesome with dp, creampie in ass and pussy (<<pcash * fmulti>>₽, in <<t[8]>> days)':
-			cla
-			pfilmday[val(t[8])] = 8
-			pornstack += 1
-			'Cool, we shoot tomorrow. Come between 10 and 11. don''t be late.'
-
-			act 'Leave':gt 'pornstudio', 'start'
-		end
-		if pfilmday[val(t[8])] > 0: delact 'Threesome with dp, creampie in ass and pussy (<<pcash * fmulti>>₽, in <<t[8]>> days)'
-	end
-	if rand(0,2) ! 0:
-		pf = 9
-		t[9] = rand(14,42)
-		dynamic $pornfilmdesc
-		act 'Spitroast pussy-mouth fuck with creampie and swallowing (<<pcash * fmulti>>₽, in <<t[9]>> days)':
-			cla
-			pfilmday[val(t[9])] = 9
-			pornstack += 1
-			'Cool, we shoot tomorrow. Come between 10 and 11. don''t be late.'
-
-			act 'Leave':gt 'pornstudio', 'start'
-		end
-	end
-	if rand(0,2) ! 0:
-		pf = 10
-		t[10] = rand(14,42)
-		dynamic $pornfilmdesc
-		act 'Group sex with four guys, cumming on pussylips (<<pcash * fmulti>>₽, in <<t[10]>> days)':
-			cla
-			pfilmday[val(t[10])] = 10
-			spornstack += 1
-			'Cool, we shoot tomorrow. Come between 10 and 11. don''t be late.'
-
-			act 'Leave':gt 'pornstudio', 'start'
-		end
-	end
-	if rand(0,2) ! 0:
-		pf = 11
-		t[11] = rand(14,42)
-		dynamic $pornfilmdesc
-		act 'Group sex with four guys, cum inside pussy (<<pcash * fmulti>>₽, in <<t[11]>> days)':
-			cla
-			pfilmday[val(t[11])] = 11
-			spornstack += 1
-			'Cool, we shoot tomorrow. Come between 10 and 11. don''t be late.'
-
-			act 'Leave':gt 'pornstudio', 'start'
-		end
-	end
-	if rand(0,2) ! 0:
-		pf = 12
-		t[12] = rand(14,42)
-		dynamic $pornfilmdesc
-		act 'Group sex with four guys, cum inside ass (<<pcash * fmulti>>₽, in <<t[12]>> days)':
-			cla
-			pfilmday[val(t[12])] = 12
-			spornstack += 1
-			'Cool, we shoot tomorrow. Come between 10 and 11. don''t be late.'
-
-			act 'Leave':gt 'pornstudio', 'start'
-		end
-	end
-	if rand(0,2) ! 0:
-		pf = 13
-		t[13] = rand(14,42)
-		dynamic $pornfilmdesc
-		act 'Group sex with four guys, double dp, cum inside ass and pussy (<<pcash * fmulti>>₽, in <<t[13]>> days)':
-			cla
-			pfilmday[val(t[13])] = 13
-			spornstack += 1
-			'Cool, we shoot tomorrow. Come between 10 and 11. don''t be late.'
-
-			act 'Leave':gt 'pornstudio', 'start'
-		end
-	end
-	if film > 14 and rand(0,2) ! 0:
-		pf = 14
-		t[14] = rand(28,49)
-		dynamic $pornfilmdesc
-		act 'A classic gangbang, with fifty guys (<<pcash * fmulti>>₽, in <<t[14]>> days)':
-			cla
-			pfilmday[val(t[14])] = 14
-			spornstack += 1
-			'Cool, we shoot tomorrow. Come between 10 and 11. don''t be late.'
-
-			act 'Leave':gt 'pornstudio', 'start'
-		end
-	end
-}
-	act 'No new contract':gt 'pornstudio', 'start'
 end
 
 if $ARGS[0] = 'first':
