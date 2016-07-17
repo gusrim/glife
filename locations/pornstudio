@@ -395,6 +395,7 @@ if $ARGS[0] = 'options':
 	end
 	
 	act 'Filter by date':
+		$selection = {
 		*clear
 		$displayimage
 		$displaytext
@@ -406,8 +407,8 @@ if $ARGS[0] = 'options':
 		w1 = 1
 		:monthloop
 			'<Table border=0 cellspacing=10><TR><TH><b><i><font size=6><<$monthName[m1]>></font></i></b></TH></TR>'
-			'<TR><TH>Monday</TH><TH>Tuesday</TH><TH>Wednesday</TH><TH>Thursday</TH><TH>Friday</TH><TH>Satursay</TH><TH>Sunday</TH></TR>'
-			
+			'<TR><TH>Monday       </TH><TH>Tuesday      </TH><TH>Wednesday</TH><TH>Thursday     </TH><TH>Friday          </TH><TH>Satursay     </TH><TH>Sunday        </TH></TR>'
+			mht_m1 = m1
 			:weekloop
 				if w1 = 1:'<TR>'
 				!making sure that the date and the day of the week are in the correct position
@@ -427,12 +428,16 @@ if $ARGS[0] = 'options':
 					end
 					w2 = 1
 				end
+				selected[p1] = p1
 				!selectable day display comes
-				if w1 = 7:
-					'<TD>''<a href="exec:dayfilter = p1"><font color="red"><<d1>></font></a>''</TD>'
+				if datefilter['<<selected[p1]>>'] = 1:
+					$option = '<font color="grey"><<d1>></font>'
+				elseif pfilmday[p1] > 0:
+					$option = '<font color="magenta"><<d1>></font>'
 				else
-					'<TD>''<a href="exec:dayfilter = p1"><font color="black"><<d1>></font></a>''</TD>'
+					$option = '<a href="exec:datefilter[''<<selected[p1]>>''] = 1 & dynamic $selection"><font color="black"><<d1>></font></a>'
 				end
+				'<TD><<$option>></TD>'
 				!preparing for next day
 				d1 += 1
 				p1 += 1
@@ -459,8 +464,11 @@ if $ARGS[0] = 'options':
 				'</TR></TABLE>'
 			end
 		end
-
-		'<a href="exec:killvar datefilter">Clear date filters</a>'
+		''
+		if dfilter ! 0:datefilter[dfilter] = 1
+		'<a href="exec:killvar ''datefilter'' & dynamic $selection">Clear date filters</a>'
+		}
+		dynamic $selection 
 	end
 	
 	act 'Filter by tag':
