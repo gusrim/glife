@@ -11,7 +11,7 @@ if (daystart-natpregday) > 84 and natpregday > 0:
 		'<center><img src="images/qwest/alter/npc/16(3).jpg" width="356"></center>'
 	end
 	'The state of the room and the whole apartment shows, that the occupant is very poor.'
-	'Looking at Natasha it is obvious that she is pregnant, and you have a strong suspicion that she carries your niece or nephew.'
+	'Looking at Natasha, it is obvious that she is pregnant; you have a strong suspicion that she carries your niece or nephew.'
 	''
 	act 'Touch her belly':
 		if nataskedbaby = 1:
@@ -20,16 +20,17 @@ if (daystart-natpregday) > 84 and natpregday > 0:
 		end
 		''
 		'She looks at you with a strange smile.'
-		'"Yes, your little brother has actually knocked me up. I hope you are happy with it, since we can''t afford to abort it."'
+		'"Yes", she answers the question you didn''t voice, "your little brother has actually knocked me up. I hope you are happy with that because I can''t afford an abortion."'
+		'Her tone is a lot less accusing than you expected. In fact, she seems... happy.'
 		nataskedbaby = 1
 	end
 else 
 	'<center><img src="images/qwest/alter/npc/16.jpg"></center>'
-	'The state of the room and the whole apartment shows, that the occupant is very poor.'
+	'The state of the room and the whole apartment shows that the occupants are very poor: The color and even parts of the plaster are coming down everywhere, there are cracks in the floor and the furniture seems to have been bought secondhand and with no direction or style in mind.'
 end
 
 if lernHome ! 0:
-	'Natasha arranges her books on the table.'
+	'Natasha arranges her books on the table and looks at you expectantly. After all, you came here to study with her, right?'
 
 	act 'Study with Natasha':
 		cls
@@ -37,15 +38,15 @@ if lernHome ! 0:
 		!grupNPC[16] += 10
 		lernHome = 0
 		lern += rand(3, 6)
-		intel += rand(1, 2) + (mentats_dose - rand(0,mentats_dose))
+		intel += rand(1, 2)
 		gs 'stat'
 		'<center><img src="images/qwest/alter/npc/16.jpg"></center>'
-		'You spend an hour studying with Natasha and get your homework done.'
+		'You spend an hour doing your homework with Natasha and reading up on what you did in class. Natasha might be poor but she''s a great study partner.'
 
 		act 'Next':gt $curloc
 	end
 elseif lernHome = 0:
-	'Natasha is sitting on her bed.'
+	'Natasha sits down on her bed and, polite as she is, offers you a seat in her semi-hospitable room.'
 
 	act 'Chat with Natasha':
 		cls
@@ -53,32 +54,32 @@ elseif lernHome = 0:
 		NatBelBestFrend += 1
 		gs 'stat'
 		'<center><img src="images/qwest/alter/npc/16.jpg"></center>'
-		'You talk with Natasha about things that interest you both.'
+		'You talk with Natasha about this and that, passing fifteen minutes with ease.'
 
-		if NatBelBestFrend = 1:'Natasha knows that she lives in a very poor family. She has no father and her mother works for a pittance at the garment factory.'
+		if NatBelBestFrend = 1:'Natasha knows that she lives in a very poor family. She has no father and her mother works for a pittance at the garment factory. You feel sorry for her.'
 		if NatBelBestFrend >= 2:'Natasha is envious that other girls can dress smartly and buy cosmetics while she has to wear her mother''s things.'
 
-		act 'further':gt $curloc
+		act 'Continue':gt $curloc
 	end
 
 	if NatDolg <= 0 and money >= 2000 and natsub > 0:
 		'Hesitantly, Natasha asks you, "<<$name>>, can you lend me a couple of thousand <b>₽</b>? I''ll pay you back, I promise."'
 
-		act 'Give Natasha the money':
+		act 'Give Natasha some money (2000 <b>₽</b>)':
 			cls
 			minut += 15
 			NatDolg = 2000
 			money -= 2000
 			gs 'stat'
 			'<center><img src="images/qwest/alter/npc/16.jpg"></center>'
-			'You get your purse and give Natasha the money knowing that she will not be able to repay it and that you would prefer to play with her.'
+			'You get your purse and give Natasha the money. At this point, both of you know very well that she is not going to be able to repay you and that you will treat her like a sextoy as long as she is in your debt. Doesn''t this make her a prostitute?'
 
 			act 'Next':gt $curloc
 		end
 	elseif NatBelBestFrend >= 3 and NatDolg = 0 and money >= 5000 and natsub = 0:
 		'Natasha looks down in embarrassment, "<<$name>>, you have lots of money. Could you lend me 5000 <b>₽</b>? I will pay it back, I give you my word."'
 
-		act 'Lend Natasha':
+		act 'Lend Natasha the 5000 <b>₽</b>':
 			cls
 			minut += 15
 			NatDolg = 5000
@@ -87,14 +88,14 @@ elseif lernHome = 0:
 			NatBelBestFrend += 1
 			gs 'stat'
 			'<center><img src="images/qwest/alter/npc/16.jpg"></center>'
-			'You get your purse and lend Natasha the money. Natasha is delighted and says that she will pay it back in a month.'
+			'You get your purse and give Natasha the money. Natasha is delighted and says that she will pay it back in a month.'
 
 			act 'rest':gt $curloc
 		end
 	elseif NatDolg>0 and NatDolgDay > daystart:
 		'Natasha promises you to repay the <<NatDolg>> <b>₽</b> in <<NatDolgDay-daystart>> days.'
 	elseif NatDolg > 0 and NatDolgDay <= daystart:
-		'Natasha looks at the floor, "<<$name>>, I have no money to pay you."'
+		'Natasha looks at the floor, "<<$name>>, I... I''m sorry, I don''t have your money."'
 
 		act 'Forgive Natasha''s debt':
 			cls
@@ -115,9 +116,13 @@ elseif lernHome = 0:
 				minut += 15
 				gs 'stat'
 				'<center><img src="images/qwest/alter/npc/16.jpg"></center>'
-				'You decide not to reduce Natasha''s debt. You angrily confront her, demanding the return of the money. Natasha curls up into a ball on her bed "<<$nickname>>, dear, please forgive me. I will do anything you say." Natasha looks at you with fearful eyes and comes up with a couple of ideas on how you can use this chicken. You snarl at her with an evil hiss, "You''re my creature until you''ve worked off every last kopeck."'
+				'You decide not to reduce Natasha''s debt. You angrily confront her, demanding that she return the money to you, one way or another. Natasha curls up into a ball on her bed: "<<$nickname>>, I''m so sorry! I will do anything you say! Anything!"' 
+				''
+				'Natasha looks at you with fearful eyes and you are getting some ideas as to how you could "use" her. She did say "anything", after all...' 
+				'You snarl at her with an evil hiss: "You''ll be my little pet until you''ve worked off every last kopeck. And don''t you dare tell anyone about this!"' 
+				'You give her a soft slap on the cheek, more to test your newfound power over her than to hurt her, but she flinches and nods profusely. Looks like you''ve got your own little slave now.'
 
-				act 'On your knees! And open your mouth!':
+				act 'On your knees! Open your mouth!':
 					cls
 					minut += 5
 					natotrab += 1
@@ -150,7 +155,7 @@ elseif lernHome = 0:
 		elseif natotrab > 0 and NatDolg > 0:
 			'Natasha still doesn''t  have the <<NatDolg>> <b>₽</b>.'
 
-			act 'On your knees! And open your mouth!':
+			act 'On your knees! Open your mouth!':
 				cls
 				minut += 5
 				natotrab += 1
@@ -296,6 +301,52 @@ elseif lernHome = 0:
 										act 'Next':gt $curloc
 									end
 								end
+								if natsub >= 20 and dom > 30:
+									act 'Have Kolka fuck and cum in Natasha''s ass instead':
+										cla
+										natsub += 2
+										brother += 5
+										gs 'stat'
+										'<center><img src="images\lur\sex\anal11.gif"></center>'
+										'You tell your brother to stop moving, put a finger under her chin and look at her imperiously. "How would you like to get fucked in the ass by my brother?"'
+										''
+										if natanal = 0:
+											natanal += 1
+											dom += 3
+											'She whimpers. "But... but I''ve never had anal sex before."'
+											'Instead of dissuading you, her words cause you to smile cruelly. "Well, if you''d rather have Kolka cum inside your pussy and knock you up..."'
+											''
+											if natcp = 0:
+												'"No!", she cries, "no, please don''t! He... he can fuck my ass."'
+											elseif natcp >= 1:
+												'"I... I don''t know." She seems to be pondering back and forth. He''s come inside her before so the thought doesn''t scare her as much as it used to. Maybe she''s a little bit curious about anal too because after only a few more seconds, she nods. "I... I guess I can fuck my ass, if he wants to."'
+											end
+											''
+											'You are a little disappointed, actually. You expected her to resist more, especially when it was about popping her anal cherry, but Natasha was so used to being dominated by you that defying you never really was an option. Her debt to you was basically just a formality at this point.'
+											''
+											'Kolka lines his dick up with her puckered hole and pushes. Natasha''s cries of pain aside, it goes surprisingly well. Fast, too. Afterwards, you were wondering if it was Kolka''s first anal, too - it would explain why he was so rough and excited.'
+											'Tears are streaming down your girl toy''s face but doesn''t protest beyond her sobs. She doesn''t have to hold out for long: The sex and tightness of her anus are too much for Kolka and he groans loudly as he cums in her ass for the first time.'
+											''
+											'You gently kiss Natasha''s tears away and gently speak to her, praise her, encourage her. By the time Kolka leaves, she''s stopped crying at least.'
+										
+										elseif natanal >= 1:
+											'"I... I guess he can fuck my ass again, if he wants to."'
+											'"Then ask him to", you order.'
+											'Natasha remains silent for a while. Even after quite a bit of humiliation by you and Kolka, she doesn''t seem all that comfortable with demeaning herself. There''s no doubt as to her submissive streak or her enjoyment of it, however. All she needs a little nudge here and there.'
+											''
+											'"Please fuck my ass", she whispers, barely audible. You consider having her repeat it but that''s all the encouragement your brother needs: Before you know it, his well-lubricated dick is pushing against her sphincter, causing her to groan in pain.'
+											''
+											'It''s nowhere near as difficult as the first time he took her ass - perhaps because he''s also a little more experienced now than he was before. His movements are slow and gentle at first so she can get used to the cock in her ass.'
+											'And after a while, it sounds like she does - her groans more and more turn into soft coos of pleasure and when you kiss Natasha, she excitedly breathes into your mouth. As if on command, your brother picks up the pace. Caught between pain and pleasure, Natasha doesn''t try to escape his rough treatment but instead moves with him.'
+											'The sex before and the tightness of her anus soon prove too much for your younger brother and Natasha''s moans tell you that he''s cum into her ass.' 
+											''
+											'Natasha doesn''t even pretend to be unhappy with that.'
+										
+										
+										end
+										act 'Next': gt $curloc
+									end
+								end
 								act 'Let her pull away':
 									cla
 									if rand(0,9) = 0:
@@ -308,7 +359,7 @@ elseif lernHome = 0:
 										if rand(1,100) >= 95 and natpregday = 0:natpregday = daystart
 									else
 										'You let her pull away from your brother, so that you brother''s dick slips out of her just in time. His seed sprays Natasha''s ass, back and hair, and it even reaches your face and hair.'
-										'<center><img src="images/qwest/alter/ev2/natkolfacial.jpg"></center>'
+										'<center><img src="images/qwest/alter/ev2/NatKolFacial.jpg"></center>'
 										'"Nice shot, bro!", you say laughing, wiping his seed away from your eyelid. "That was quite the distance!"'
 										'"That was close," whispers Nat, with a strange look in her face. You actually can''t decide whether she is relieved or disappointed that Kolka didn''t cum in her pussy.'
 										'You quitely signal your brother to dress up and leave while you kiss her deeply. "I hope you enjoyed it, pet. We may repeat it."'
@@ -335,7 +386,7 @@ elseif lernHome = 0:
 						
 							'Kolka holds Natasha by the hair as he pistons his cock into he mouth rapidly. Natasha''s chin is covered with her drool and it is soaking the front of her shirt. With a grunt, Kolka pulls his dick from Natasha''s mouth and she automatically opens her mouth and sticks out her tongue. Kolka pumps his dick a few times then shoots his cum into Natasha''s waiting mouth.'
 							'"Swallow it, slut." You command when Kolka is done before Natasha can spit out the sperm.'
-							'Natasha grimaches but complies, swallowing Kolka''s load then opening her mouth to show that it is gone.'
+							'Natasha grimaces but complies, swallowing Kolka''s load then opening her mouth to show that it is gone.'
 					
 							act 'Next':gt $curloc
 						end
