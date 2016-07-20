@@ -400,14 +400,18 @@ if $ARGS[0] = 'options':
 	act 'Filter by date':
 		$selection = {
 			*clr
+			'<center><img src="images/studia/studia_0.jpg"></center>'
 			'<font color="grey">The selected days will not be displayed</font><br>'
 			m1 = month
-			d1 = day
+			d1 = day + 1
+			if monthsend[m1] < d1: m1 += 1 & d1 = 1
+			if m1 > 12: m1 = 1
+			w2 = week + 1
+			if w2 > 7: w2 = 1
 			p1 = 1
-			w2 = week
 			w1 = 1
 			:monthloop
-				*p '<Table border=0 cellpadding=1><TR><TH><b><i><font size=6 color="brown"><<$monthName[m1]>></font></i></b></TH></TR>'
+				*p '<Table border=0 cellpadding=1><TR><TH colspan=7><b><i><font size=6 color="brown"><<$monthName[m1]>></font></i></b></TH></TR>'
 				*p '<TR align="center"><TH>   Monday    </TH><TH>   Tuesday   </TH><TH>Wednesday</TH><TH>  Thursday   </TH><TH>     Friday     </TH><TH>  Satursay   </TH><TH>    Sunday    </TH></TR>'
 				:weekloop
 					selected[p1] = p1
@@ -445,11 +449,12 @@ if $ARGS[0] = 'options':
 			!we have to check the end of the month too
 			if monthsend[m1] < d1:
 				!Oh-oh, this is the next month already!
-				*p '</TR></TABLE><br>'
+				*p '</TR></TABLE><br><br>'
 				if w1 = 8: w1 = 1
 				w2 = w1
 				w1 = 1
 				m1 += 1
+				if m1 > 12: m1 = 1
 				d1 = 1
 				!does it necessary to display the next month?
 				if p1 < 50:jump 'monthloop'
@@ -461,7 +466,7 @@ if $ARGS[0] = 'options':
 					jump 'weekloop'
 				else
 					!the next day does not have to be displayed
-					*p '</TR></TABLE><br>'
+					*p '</TR></TABLE><br><br>'
 				end
 			end
 			''
@@ -473,6 +478,7 @@ if $ARGS[0] = 'options':
 	act 'Filter by tag':
 		$displaytag = {
 			*clr
+			'<center><img src="images/studia/studia_0.jpg"></center>'
 			'<font color="grey">The selected tags will not be displayed</font><br><br>Currenty filtered tags: <font color="green"><<$tagfilter>></font>'
 			if flag_tag[1] = 0:'<a href="exec:$tagfilter += ''hetero '' & flag_tag[1] = 1 & dynamic $displaytag">heterosexual</a>'
 			if flag_tag[2] = 0:'<a href="exec:$tagfilter += ''lesbian '' & flag_tag[2] = 1 & dynamic $displaytag">lesbian</a>'
@@ -496,6 +502,7 @@ if $ARGS[0] = 'options':
 	act 'Filter by participants':
 		$displaynum = {
 			*clr
+			'<center><img src="images/studia/studia_0.jpg"></center>'
 			'<font color="grey">The movies above the selected number of partners will not be displayed</color><br>'
 			if ppnum = 1: 
 				$pp1 = '<b><font color="red" size=8>1</font></b>'
@@ -539,6 +546,7 @@ if $ARGS[0] = 'options':
 			$week[6] = 'Saturday'
 			$week[7] = 'Sunday'
 			*clr
+			'<center><img src="images/studia/studia_0.jpg"></center>'
 			''
 			d1 = day
 			w1 = week
@@ -550,7 +558,8 @@ if $ARGS[0] = 'options':
 				if w1 > 7:w1 = 1
 				d1 += 1
 				if monthsend[m1] < d1: m1 += 1 & d1 = 1
-				if datefilter['<<selected[i+1]>>'] = 0:
+				if m1 > 12: m1 = 1
+				if datefilter['<<selected[i]>>'] = 0:
 					'<<$monthName[m1]>> <<d1>>, <<$week[w1]>>:'
 					porns = 0
 					:pornplanloop
@@ -578,8 +587,44 @@ if $ARGS[0] = 'options':
 			end
 		}
 		dynamic $contracting
+	end	
+	
+	if pornstack > 1 or (freefilm = 0 and pornstack > 0):
+		act 'Cancel out a contract':
+			$week[1] = 'Monday'
+			$week[2] = 'Tuesday'
+			$week[3] = 'Wednesday'
+			$week[4] = 'Thursday'
+			$week[5] = 'Friday'
+			$week[6] = 'Saturday'
+			$week[7] = 'Sunday'
+			$canceling = {
+				*clr
+				'<center><img src="images/studia/studia_0.jpg"></center>'
+				d1 = day
+				w1 = week
+				m1 = month
+				i = 1
+				:nopornopt
+					pcount[i] = i
+					w1 += 1
+					if w1 > 7:w1 = 1
+					d1 += 1
+					if monthsend[m1] < d1: m1 += 1 & d1 = 1
+					if (pfilmday[i] = 1 and freefilm = 0) or pfilmday[i] > 1:'<<$monthName[m1]>> <<d1>>, <<$week[w1]>>:'
+					porns = 0
+					:nopornplanloop
+						if porntaken['<<i>>,<<porns>>'] = 2:'<a href="exec:pornstack -= 1 & porntaken[''<<i>>,<<porns>>''] = 0 & pfilmday[<<pcount[i]>>] = 0 & gs ''stat'' & dynamic $canceling"><<$porndesc[pornplan[''<<i>>,<<porns>>'']]>></a>'
+					if porns < 3: porns += 1 & jump 'nopornplanloop'					
+				if i < 49:
+					i += 1
+					jump 'nopornopt'
+				end
+			}
+			dynamic $canceling
+		end
 	end
-
+	
 	act 'No further contract':
 		killvar 'ppnum'
 		killvar 'displaynum'
@@ -600,12 +645,6 @@ if $ARGS[0] = 'options':
 		killvar 'contracting'
 		killvar 'pcount'
 		gt 'pornstudio', 'start'
-	end
-	
-	if pornstack > 1 or (freefilm = 0 and pornstack > 0):
-		act 'Cancel out a contract':
-			
-		end
 	end
 end
 
