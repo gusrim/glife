@@ -360,18 +360,8 @@ if $ARGS[0] = 'manager':
 
 		act 'I don''t think I''m ready':gt 'pornstudio', 'start'
 		exit
-	elseif pfilmday[0] = 0 and pornstack = 10:
-		! You have 15 contracted porn movies, and you do not shoot today, but otherwise you are an employee
-		'Please do not distract me from my work. There is no shoot today, and you should not contract to too many movies.'
-		if vnesh < 50:'"And do something with yourself. You look unacceptable."'
-	elseif film > 0 and pornstack < 10:
-	! You can still make new contracts
-		if rand(0,5) = 5:
-			'Peter is on the phone, he covers the receiver, "I''m busy right now, come back later."'			
-		else
-			gs 'pornstudio', 'options'
-			exit
-		end
+	else
+		gs 'pornstudio', 'options'
 	end
 	
 	if porndebt > 0:
@@ -551,33 +541,42 @@ if $ARGS[0] = 'options':
 			d1 = day
 			w1 = week
 			m1 = month
-			i = 1
+			counter = 1
+			$pornofday = ''
 			:pornopt
-				pcount[i] = i
+				pcount[counter] = counter
 				w1 += 1
 				if w1 > 7:w1 = 1
 				d1 += 1
 				if monthsend[m1] < d1: m1 += 1 & d1 = 1
 				if m1 > 12: m1 = 1
 				if datefilter['<<selected[i]>>'] = 0:
-					'<<$monthName[m1]>> <<d1>>, <<$week[w1]>>:'
 					porns = 0
 					:pornplanloop
-						if porntaken['<<i>>,<<porns>>'] = 2:
-							'<font color="green"><b><<$porndesc[pornplan[''<<i>>,<<porns>>'']]>></b> - <i>Already contracted</i></font>'
-						elseif pfilmday[i] > 0 and porntaken['<<i>>,<<porns>>'] = 0:
-							'<font color="grey"><<$porndesc[pornplan[''<<i>>,<<porns>>'']]>></font>'
-						elseif porntaken['<<i>>,<<porns>>'] = 1:
-							'<font color="red"><<$porndesc[pornplan[''<<i>>,<<porns>>'']]>> - <i>Taken by someone else</i></font>'
-						elseif pornstack < 10:
-							'<a href="exec:pornstack += 1 & porntaken[''<<i>>,<<porns>>''] = 2 & pfilmday[<<pcount[i]>>] = pornplan[''<<i>>,<<porns>>''] & gs ''stat'' & dynamic $contracting"><<$porndesc[pornplan[''<<i>>,<<porns>>'']]>></a>'
-						else
-							'<font color="grey"><<$porndesc[pornplan[''<<i>>,<<porns>>'']]>></font>'
+						pornfilmtype[i] = pornplan['<<counter>>,<<porns>>']
+						dynamic $pornfilmdesc
+						if (pfactor <= ppnum) or (ppnum = 0):
+							if porntaken['<<counter>>,<<porns>>'] = 2:
+								$pornofday += '<font color="green"><b><<$porndesc[pornplan[''<<counter>>,<<porns>>'']]>></b> - <i>Already contracted</i></font><br>'
+							elseif pfilmday[i] > 0 and porntaken['<<counter>>,<<porns>>'] = 0:
+								$pornofday += '<font color="grey"><<$porndesc[pornplan[''<<counter>>,<<porns>>'']]>></font><br>'
+							elseif porntaken['<<counter>>,<<porns>>'] = 1:
+								$pornofday += '<font color="red"><<$porndesc[pornplan[''<<counter>>,<<porns>>'']]>> - <i>Taken by someone else</i></font><br>'
+							elseif pornstack < 10:
+								$pornofday += '<a href="exec:pornstack += 1 & porntaken[''<<counter>>,<<porns>>''] = 2 & pfilmday[<<pcount[counter]>>] = pornplan[''<<counter>>,<<porns>>''] & gs ''stat'' & dynamic $contracting"><<$porndesc[pornplan[''<<counter>>,<<porns>>'']]>></a><br>'
+							else
+								$pornofday += '<font color="grey"><<$porndesc[pornplan[''<<counter>>,<<porns>>'']]>></font><br>'
+							end
 						end
-					if porns < 3: porns += 1 & jump 'pornplanloop'					
+					if porns < 3: porns += 1 & jump 'pornplanloop'
+					if $pornofday ! '':
+						'<<$monthName[m1]>> <<d1>>, <<$week[w1]>>:'
+						'<<$pornofday>>'
+						$pornofday = ''
+					end
 				end
-			if i < 49:
-				i += 1
+			if counter < 49:
+				counter += 1
 				jump 'pornopt'
 			end
 			if pornstack >= 10: 
