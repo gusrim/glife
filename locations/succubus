@@ -137,7 +137,8 @@ if $ARGS[0] = 'RapistFight':
 				if vagina < dick: vagina += 1 & dick = 0
 				horny = 0
 				DOM += scfeed
-				orgasm += 1 + scfeed
+				orgasm += scfeed
+				willpower += 15 * scfeed
 				succubxp += 6
 				sexnutrition += 30 * scfeed
 				sucabscum = 1
@@ -256,6 +257,7 @@ if $ARGS[0] = 'karinsex':
 					if KarinSex = 0: KarinSex = 1 & girl += 1
 					horny = 0
 					orgasm += scfeed
+					willpower += 15 * scfeed
 					sexnutrition += 25 * scfeed
 					suclezsex = lesbian
 					succubxp += 6
@@ -275,8 +277,6 @@ if $ARGS[0] = 'karinsex':
 end
 !!**********
 
-!!**********
-
 !!This is the computer search
 if $ARGS[0] = 'kompresearch':
 	gs 'stat'
@@ -288,6 +288,406 @@ if $ARGS[0] = 'kompresearch':
 	'Maybe you should go ask Karin...'
 	act 'Continue': gt 'Komp', 'brows'
 end
+
+!!**********
+
+!!This is the start of the Succubus "Sleepwalking" code
+if $args[0] = 'sucwalkinginit':
+
+!!This checks for a valid location and sets the zone
+!!Zone 1;
+!!'bedr' = Apartment on St. Petersburg Residential street
+!!'spalnya' = Tanya''s apartment downtown
+!!'dom_gor' = Hostel downtown
+!!'obroom' = Dorm downtown
+!!Zone 2;
+!!'bedrPar' = Parent's apartment in Pavlovsk
+!!'HotelRoom' = Hotel next to train station in Pavlovsk
+!!Zone 3; 'ybedr' = Mansion outside city
+!!Zone 4; 'bedr2x' = Apartment in "Old Town" (aka Pushkin)
+!!Zone 5; 'Gadhouse' = Grandmother's house in Gadyukino
+
+	if $loc = 'bedr' or $loc = 'spalnya' or $loc = 'dom_gor' or $loc = 'obroom': sucslpzone = 1
+	if $loc = 'bedrPar' or $loc = 'HotelRoom': sucsplzone = 2
+	if $loc = 'ybedr': sucslpzone = 3
+	if $loc = 'bedr2x': sucslpzone = 4
+	if $loc = 'Gadhouse': sucslpzone = 5
+
+	if sucslpzone = 0: exit
+
+!!Vibrator and Panty handling (pun intended)
+	if succublvl <= 2:
+		if tanga = 1: tanga = 0 & dirtbelo += 1
+	else
+		if tanga = 1:
+			if bedpanty = 1:
+				tanga = 0 & dirtbelo += 1
+			else
+				if clrbelo > 0:
+					clrbelo -= 1 & dirtbelo += 1
+				else
+					tanga = 0 & dirtbelo += 1
+				end
+			end
+		else
+			if bedpanty = 0 and clrbelo > 0: tanga = 1 & clrbelo -= 1
+		end
+	end
+	if analplugIN = 1: analplugIN = 0
+	if vibratorIN = 1: vibratorIN = 0
+
+!!This is the simple method for the base level succubus
+	if succublvl = 1 and $lastwornclothingtype ! 'nude':
+		gs 'clothing', 'wear_last_worn'
+		gt 'succubus', 'sucwalkinggo'
+	end
+
+!!This is to put all owned and wearable clothing in 2 large arrays
+	x = 0
+	i = 1
+	:loopexhibit
+		if exhibit[i] = 1 and exhibitS[i] = 0 and exhibitH[i] > 0 and exhibitB[i] >= (bedra - 8) and exhibitB[i] <= (bedra + 8):
+			$succlolistn[x] = 'exhibit' & succlolisti[x] = i & x += 1
+		end
+		i += 1
+	if i <= 30:jump 'loopexhibit'
+
+	i = 1
+	:loopnaughty
+		if naughty[i] = 1 and naughtyS[i] = 0 and naughtyH[i] > 0 and naughtyB[i] >= (bedra - 8) and naughtyB[i] <= (bedra + 8):
+			$succlolistn[x] = 'naughty' & succlolisti[x] = i & x += 1
+		end
+		i += 1
+	if i <= 67:jump 'loopnaughty'
+
+	i = 1
+	:loopexpensive
+		gs 'clothing_attributes', 'expensive', i
+		if CloStyle ! 5:
+			if expensive[i] = 1 and expensiveS[i] = 0 and expensiveH[i] > 0 and expensiveB[i] >= (bedra - 8) and expensiveB[i] <= (bedra + 8):
+				$succlolistn[x] = 'expensive' & succlolisti[x] = i & x += 1
+			end
+		else
+			if expensive[i] = 1 and expensiveS[i] = 0 and expensiveH[i] > 0: $succlolistn[x] = 'expensive' & succlolisti[x] = i & x += 1
+		end
+		i += 1
+	if i <= 147:jump 'loopexpensive'
+
+	i = 1
+	:loopaverage
+		gs 'clothing_attributes', 'average', i
+		if CloStyle ! 5:
+			if average[i] = 1 and averageS[i] = 0 and averageH[i] > 0 and averageB[i] >= (bedra - 8) and averageB[i] <= (bedra + 8):
+				$succlolistn[x] = 'average' & succlolisti[x] = i & x += 1
+			end
+		else
+			if average[i] = 1 and averageS[i] = 0 and averageH[i] > 0: $succlolistn[x] = 'average' & succlolisti[x] = i & x += 1
+		end
+		i += 1
+	if i <= 125:jump 'loopaverage'
+
+	i = 1
+	:loopcheap
+		gs 'clothing_attributes', 'cheap', i
+		if CloStyle ! 5:
+			if cheap[i] = 1 and cheapS[i] = 0 and cheapH[i] > 0 and cheapB[i] >= (bedra - 8) and cheapB[i] <= (bedra + 8):
+				$succlolistn[x] = 'cheap' & succlolisti[x] = i & x += 1 
+			end
+		else
+			if cheap[i] = 1 and cheapS[i] = 0 and cheapH[i] > 0: $succlolistn[x] = 'cheap' & succlolisti[x] = i & x += 1
+		end
+		i += 1
+	if i <= 85:jump 'loopcheap'
+
+	i = 1
+	:loopoffice
+		if office[i] = 1 and officeS[i] = 0 and officeH[i] > 0 and officeB[i] >= (bedra - 8) and officeB[i] <= (bedra + 8):
+			$succlolistn[x] = 'office' & succlolisti[x] = i & x += 1
+		end
+		i += 1
+	if i <= 30:jump 'loopoffice'
+
+	i = 1
+	:loopschool
+		if school[i] = 1 and schoolS[i] = 0 and schoolH[i] > 0 and schoolB[i] >= (bedra - 8) and schoolB[i] <= (bedra + 8):
+			$succlolistn[x] = 'school' & succlolisti[x] = i & x += 1
+		end
+		i += 1
+		if i = 6: i = 7
+	if i <= 14:jump 'loopschool'
+
+	i = 1
+	:loopexercise
+		if exercise[i] = 1 and exerciseS[i] = 0 and exerciseH[i] > 0: $succlolistn[x] = 'exercise' & succlolisti[x] = i & x += 1
+		i += 1
+	if i <= 26:jump 'loopexercise'
+
+	i = 1
+	:loopformal
+		if formal[i] = 1 and formalS[i] = 0 and formalH[i] > 0 and formalB[i] >= (bedra - 8) and formalB[i] <= (bedra + 8):
+			$succlolistn[x] = 'formal' & succlolisti[x] = i & x += 1
+		end
+		i += 1
+	if i <= 14:jump 'loopformal'
+
+	i = 1
+	:loopuniform
+		if uniform[i] = 1 and uniformS[i] = 0 and uniformH[i] > 0 and uniformB[i] >= (bedra - 8) and uniformB[i] <= (bedra + 8):
+			$succlolistn[x] = 'uniform' & succlolisti[x] = i & x += 1
+		end
+		i += 1
+	if i <= 24:jump 'loopuniform'
+	killvar 'i'
+	x -= 1
+
+	if succublvl <= 2:
+!!	This picks any outfit at random
+		:oops
+		clopickrand = rand(0,x)
+		if $succlolistn[clopickrand] = '': jump 'oops'
+		gs 'clothing', 'wear', $succlolistn[clopickrand], succlolisti[clopickrand]
+		dynamic $succlolistn[clopickrand] + 'W[<<succlolisti[clopickrand]>>] = 1'
+		killvar '$succlolistn' & killvar 'succlolisti' & killvar 'x'
+		gt 'succubus', 'sucwalkinggo'
+	else
+!!	This picks a random outfit by "looks"
+		$succlocat[0] = 'exhibit'
+		$succlocat[1] = 'naughty'
+		$succlocat[2] = 'expensive'
+		$succlocat[3] = 'average'
+		$succlocat[4] = 'cheap'
+		$succlocat[5] = 'office'
+		$succlocat[6] = 'school'
+		$succlocat[7] = 'exercise'
+		$succlocat[8] = 'formal'
+		$succlocat[9] = 'uniform'
+
+		scbimbochk = 1
+		y = 0 & z = 0
+		scclocatcnt = 0
+
+		:randpoploop
+
+		if scbimbochk = 1 and $succlocat[scclocatcnt] = $succlolistn[y]:
+			gs 'clothing_attributes', $succlolistn[y], succlolisti[y]
+			if CloBimbo = 1: $succlorandn[z] = $succlolistn[y] & succlorandi[z] = succlolisti[y] & z += 1
+		elseif $succlocat[scclocatcnt] = $succlolistn[y]:
+			$succlorandn[z] = $succlolistn[y] & succlorandi[z] = succlolisti[y] & z += 1
+		end
+		y += 1
+		if y <= x: jump 'randpoploop'
+		scclocatcnt += 1 & y = 0
+		if scbimbochk = 1:
+			if scclocatcnt <= 3: jump 'randpoploop'
+			if z < 1 or scpckrnd > 0:
+				if z < 1: scpckrnd = 1
+				if scclocatcnt <= 6: jump 'randpoploop'
+			end
+		else
+			if scclocatcnt <= 3: jump 'randpoploop'
+			if z < 1 or scpckrnd > 1:
+				if z < 1: scpckrnd = 2
+				if scclocatcnt <= 6: jump 'randpoploop'
+				if z < 1 or scpckrnd > 2:
+					if z < 1: scpckrnd = 3
+					if scclocatcnt <= 9: jump 'randpoploop'
+				end
+			end
+		end
+		if z < 1 and scbimbochk = 1: scclocatcnt = 0 & scbimbochk = 0 & jump 'randpoploop'
+		z -= 1
+
+		:oops
+		clopickrand = rand(0,z)
+		if $succlorandn[clopickrand] = '': jump 'oops'
+
+		gs 'clothing', 'wear', $succlorandn[clopickrand], succlorandi[clopickrand]
+		dynamic $succlorandn[clopickrand] + 'W[<<succlorandi[clopickrand]>>] = 1'
+
+		killvar '$succlolistn' & killvar 'succlolisti' & killvar '$succlorandn' & killvar 'succlorandi'
+		killvar '$succlocat' & killvar 'scbimbochk' & killvar 'scclocatcnt' & killvar 'scpckrnd'
+		killvar 'x' & killvar 'y' & killvar 'z'
+
+!!		This covers a high level succubus doing complex activities
+		if succublvl >= 4:
+			if hapri = 0: hapri = 1
+			if lipbalm > 0 and lipbalmstat <= 0:
+				lipbalm -= 1
+				lipkoef += rand(0, 1)
+				if lipkoef > 50:
+					lipkoef = 0
+					lip += 1
+				end
+				lipbalmstat += 8
+			end
+			if mop <= 1 and kosmetica > 0:
+				mop = 4
+				if kosmetica < 3 and mop = 4: mop = 3
+				if kosmetica < 2 and mop = 3: mop = 2
+				if kosmetica < 1 and mop ! 1:
+					mop = 1
+				else
+					if mop = 2: kosmetica -= 1
+					if mop = 3: kosmetica -= 2
+					if mop = 4: vidageday -= 1 & kosmetica -= 3
+				end
+			end
+			gt 'succubus', 'sucwalkinggo'
+		else
+			gt 'succubus', 'sucwalkinggo'
+		end
+	end
+end
+
+!!This sets the results of the "sucwalking" event and picks the final location
+if $args[0] = 'sucwalkinggo':
+
+!!Here is what the PC sees
+	cls
+	clr
+	'<center><img src="images/pic/dream/succubus/sucrandream3.jpg"></center>'
+	if succublvl < 3:
+		$sucselftmp = 'a personification of <<$sucself1>> in your core'
+	else
+		$sucselftmp = $sucself1
+	end
+	'You dream that you are arguing with <<$sucselftmp>>.'
+	'You don''t know what it''s about, but you think you <b><i>lost</i></b>...'
+	killvar '$sucselftmp'
+	
+!!This is the results, time, and sleep variable clearing section
+	sucencntrand = (1 + succublvl)/2 + rand(0,succublvl)
+	scfeed = (succublvl * sucencntrand) + rand(1,(4 * sucencntrand))
+	minut += 360 + ((scfeed * 10) / succublvl)
+	health += 5 * (360 + ((scfeed * 10) / succublvl))
+	son += 15 * ((360 + ((scfeed * 10) / succublvl)) / 60)
+	gs 'stat'
+	clr
+
+	Insleep = 0
+	horny = 0
+	orgasm += scfeed
+	willpower += 15 * scfeed
+	succubxp += 3 * sucencntrand
+	sexnutrition += 25 * scfeed
+	scwalkmon = rand (50,(100 * sucencntrand))
+	money += scwalkmon
+
+	sctemp = rand(1,10)
+	if sucencntrand > 1:
+		if sctemp <= 6:
+			sucabscum = 1
+		elseif sctemp = 7:
+			sucabslez = 1
+		else
+			sucabslez = 1 & sucabscum = 1
+		end
+	else
+		if sctemp <= 7:
+			sucabscum = 1
+		else
+			sucabslez = 1
+		end
+	end
+	killvar 'sctemp'
+	killvar 'scfeed' & killvar 'sucencntrand'
+	
+!!This picks the location where you end up and how you got there
+	if succublvl >= 4 and car > 0:
+		if benz <= 4:
+			if money < (30 * (40 - benz)):
+				if kanistra > 0:
+					benz += 5 & kanistra -= 1
+				else
+					money = 0
+					scwalkmon = 0
+					benz += rand(10,40)
+				end
+			else
+				money -= (30 * (40 - benz))
+				benz = 40
+			end
+		end
+		sctemp = rand(1,11)
+		if sctemp = 1: cardrive = 1
+		if sctemp = 2: cardrive = 2
+		if sctemp = 3: cardrive = 3
+		if sctemp = 4: cardrive = 19
+		if sctemp = 5: cardrive = 4
+		if sctemp = 6: cardrive = 5
+		if sctemp = 7: cardrive = 13
+		if sctemp = 8: cardrive = 14
+		if sctemp = 9: cardrive = 20
+		if sctemp = 10: cardrive = 23
+		if sctemp = 11: cardrive = 24
+		killvar 'sctemp'
+		benz -= rand(1,4)
+		teh -= rand(3,6)
+!!		This forces the dynmanic at the top of carF to load in case it had not
+		gs 'carF'
+		sccarflag = 1
+	else
+		sctemp = rand(1,5)
+		if sucslpzone = 1:
+			if sctemp = 1: $sucgoloc = 'Nord' & $sucgometka = ''
+			if sctemp = 2: $sucgoloc = 'street' & $sucgometka = ''
+			if sctemp = 3: $sucgoloc = 'down' & $sucgometka = ''
+			if sctemp = 4: $sucgoloc = 'park' & $sucgometka = 'start'
+			if sctemp = 5: $sucgoloc = 'lake' & $sucgometka = 'start'
+		elseif sucslpzone = 2:
+			if sctemp = 1: $sucgoloc = 'pavCommercial' & $sucgometka = ''
+			if sctemp = 2: $sucgoloc = 'pavResidential' & $sucgometka = ''
+			if sctemp = 3: $sucgoloc = 'gskver' & $sucgometka = ''
+			if sctemp = 4: $sucgoloc = 'vokzalG' & $sucgometka = ''
+			if sctemp = 5: $sucgoloc = 'gLake' & $sucgometka = ''
+		elseif sucslpzone = 3:
+			if sctemp = 1: $sucgoloc = 'Nord' & $sucgometka = ''
+			if sctemp = 2: $sucgoloc = 'park' & $sucgometka = 'start'
+			if sctemp = 3: $sucgoloc = 'pavCommercial' & $sucgometka = ''
+			if sctemp = 4: $sucgoloc = 'vokzalG' & $sucgometka = ''
+			if sctemp = 5: $sucgoloc = 'motel' & $sucgometka = ''
+		elseif sucslpzone = 4:
+			if sctemp = 1: $sucgoloc = 'liam' & $sucgometka = ''
+			if sctemp = 2: $sucgoloc = 'liames' & $sucgometka = ''
+			if sctemp = 3: $sucgoloc = 'parks' & $sucgometka = ''
+			if sctemp = 4: $sucgoloc = 'vokzalG' & $sucgometka = ''
+			if sctemp = 5: $sucgoloc = 'Nord' & $sucgometka = ''
+		elseif sucslpzone = 5:
+			if sctemp = 1: $sucgoloc = 'gadukino' & $sucgometka = ''
+			if sctemp = 2: $sucgoloc = 'vokzalG' & $sucgometka = ''
+			if sctemp = 3: $sucgoloc = 'motel' & $sucgometka = ''
+			if sctemp = 4: $sucgoloc = 'Nord' & $sucgometka = ''
+			if sctemp = 5: $sucgoloc = 'park' & $sucgometka = 'start'
+		end
+		killvar 'sctemp' & killvar 'sucslpzone'
+	end
+
+!!This is the wake up action
+	act 'Wake Up':
+		cla
+		minut += 15
+		gs 'stat'
+		$scwrdtmp = '.'
+		''
+		'You wake up and realize that you''re not in your bed...'
+		if hapri = 1 and mop > 1: $scwrdtmp = ', your hair is brushed, and you''re wearing makeup.'
+		'Instead, you are fully dressed<<$scwrdtmp>>'
+		if scwalkmon > 0: 'You find <<scwalkmon>> <b>₽</b> stuffed in your cleavage (which you place in your wallet)'
+		'And you feel aboslutly <i>bursting</i> with energy.'
+		''
+		'After a moment, you start wondering where you are...'
+		killvar 'scwalkmon' & killvar '$scwrdtmp'
+		act 'Look around to see where you are':
+			if sccarflag = 1:
+				killvar 'sccarflag'
+				dynamic $enddrive
+			else
+				gt $sucgoloc, $sucgometka
+			end
+		end
+	end
+end
+!!**********
 
 --- succubus ---------------------------------
 
