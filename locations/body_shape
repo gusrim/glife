@@ -43,38 +43,73 @@ if $ARGS[0] = '':
 
 !!All the ratios were rounded to 2 digits and there are divide 100s at the final calc points
 !!Waist to hip ratio
+
 	wrtemp = ((2 * vitalbuf + strenbuf + agilbuf) /4)
-	if wrtemp >= 11 and wrtemp < 20: wratio = 85
-	if wrtemp >= 20 and wrtemp < 35: wratio = 85 - (wrtemp - 20) / 3
-	if wrtemp >= 35 and wrtemp < 55: wratio = 80 - (wrtemp - 35) / 4
-	if wrtemp >= 55 and wrtemp < 80: wratio = 75 - (wrtemp - 55) / 5
-	if wrtemp >= 80 and (vitalbuf + strenbuf + agilbuf) /3 <= 100: wratio = 70
+
+	if wrtemp < 11:
+		if (vitalbuf + strenbuf + agilbuf) /3 < 11:
+			wratio = 85 + (11 - (vitalbuf + strenbuf + agilbuf)/3)
+		elseif (vitalbuf + strenbuf + agilbuf) /3 > 100:
+			wratio = 70 - ((vitalbuf + strenbuf)/2 - agilbuf)/5
+		end
+	elseif wrtemp < 20:
+		wratio = 85
+	elseif wrtemp < 35:
+		wratio = 85 - (wrtemp - 20) / 3
+	elseif wrtemp < 55:
+		wratio = 80 - (wrtemp - 35) / 4
+	elseif wrtemp < 80:
+		wratio = 75 - (wrtemp - 55) / 5
+	elseif wrtemp >= 80 and (vitalbuf + strenbuf + agilbuf) /3 <= 100:
+		wratio = 70
+	end
 
 	if wratio < 65: wratio = 65
 	killvar 'wrtemp'
 
 !!Setting the vnesh bonus based on wratio
-	if wratio >= 85: bodykoef = 0
-	if wratio < 85 and wratio >= 80: bodykoef = 2
-	if wratio < 80 and wratio >= 75: bodykoef = 4
-	if wratio < 75 and wratio >= 70: bodykoef = 8
-	If wratio < 70: bodykoef = 4
+	if wratio >= 85:
+		bodykoef = 0
+	elseif wratio >= 80:
+		bodykoef = 2
+	elseif wratio >= 75:
+		bodykoef = 4
+	elseif wratio >= 70:
+		bodykoef = 8
+	else
+		bodykoef = 4
+	end
 
 !!For band to waist ratio
 	brtemp = (2 * strenbuf + vitalbuf + agilbuf) /4
-	if brtemp < 10: bratio = 105
-	if brtemp >= 10 and brtemp =< 23: bratio = 106
-	if brtemp > 23 and brtemp =< 80: bratio = 106 + (brtemp - 23) / 3
-	if brtemp > 80: bratio = 125
+
+	if brtemp < 10:
+		bratio = 105
+	elseif brtemp =< 23:
+		bratio = 106
+	elseif brtemp =< 80:
+		bratio = 106 + (brtemp - 23) / 3
+	else
+		bratio = 125
+	end
+
 	killvar 'brtemp'
 
 !!For hip to height ratio which is used to set the center point
 	hrtemp = (2 * agilbuf + vitalbuf + strenbuf) /4
-	if hrtemp < 35: hratio = 60
-	if hrtemp >= 35 and hrtemp < 45: hratio = 59
-	if hrtemp >= 45 and hrtemp < 60: hratio = 58
-	if hrtemp >= 60 and hrtemp < 80: hratio = 57
-	if hrtemp >= 80: hratio = 56
+
+	if hrtemp < 35:
+		hratio = 60
+	elseif hrtemp < 45:
+		hratio = 59
+	elseif hrtemp < 60:
+		hratio = 58
+	elseif hrtemp < 80:
+		hratio = 57
+	else
+		hratio = 56
+	end
+
 	killvar 'hrtemp'
 
 !!Salo Handling
