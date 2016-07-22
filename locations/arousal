@@ -307,12 +307,12 @@ if $ARGS[0] ! 'end' and $ARGS[0] ! 'checks':
 			stim['prostitution'] = 1
 		elseif $ARGS[i] = 'dom':
 			stim['kink'] += dom['exp']
-			stim['pref'] += dom['pref']
+			stim['pref'] += dom
 			stim['kinkno'] += 1
 			stim['dom'] = 1
 		elseif $ARGS[i] = 'sub':
 			stim['kink'] += sub['exp']
-			stim['pref'] += sub['pref']
+			stim['pref'] += sub
 			stim['kinkno'] += 1
 			stim['sub'] = 1
 		elseif $ARGS[i] = 'incest':
@@ -364,18 +364,24 @@ if $ARGS[0] ! 'end' and $ARGS[0] ! 'checks':
 	!Fetishes are divided by total number of fetishes
 	if stim['kinkno'] ! 0:
 		stim['kink'] = stim['kink']/stim['kinkno']
-		stim['pref'] = (stim['pref']/stim['kinkno']) + 50
+		stim['pref'] = (stim['pref']/stim['kinkno'])
 		stim['kinkno'] = 0
-	else
-		stim['pref'] += 50
 	end
-	
-	stim['kink'] = (stim['kink'] + 10) / 10
 
-	if stim['pref'] = 0: stim['pref'] = 1
+	if rand(0,100) < stim['kink']:
+		stim['kink'] = 120
+	elseif rand(0,80) < stim['kink']:
+		stim['kink'] = 110
+	elseif rand(0,60) < stim['kink']:
+		stim['kink'] = 100
+	elseif rand(0,40) < stim['kink']:
+		stim['kink'] = 90
+	else
+		stim['kink'] = 80
+	end
 
 	!arousal calculation
-	stim['total'] = stim['mag']*(stim['act']*stim['kink']*stim['pref'])/60*stim['time'] / 100
+	stim['total'] = ((stim['mag']*stim['act']*stim['kink']/100) + stim['pref'])/60*stim['time'] / 100
 
 	if pain['total'] > 0:
 		if maso['pref'] <= 0 and pain['total'] < 50:
@@ -406,9 +412,9 @@ if $ARGS[0] ! 'end' and $ARGS[0] ! 'checks':
 	if $orgasm_or ! 'no':
 		if $orgasm_or = 'yes':
 			gs 'orgasm'
-		elseif (orgasm[total] >= 100 and rand(1,100) >= 20:
+		elseif (orgasm[total] >= 100 and rand(1,100) <= 20:
 			gs 'orgasm'
-		elseif (orgasm[total] >= 150 and rand(1,100) >= 50:
+		elseif (orgasm[total] >= 150 and rand(1,100) <= 50:
 			gs 'orgasm'
 		elseif (orgasm[total] >= 200:
 			gs 'orgasm'
