@@ -1,35 +1,148 @@
 # postoffice
 
 if $ARGS[0] = 'start':
-	cla
-	clr
-	*clr
-	minut += 5
+	cls
 	gs 'stat'
-	fcolor = rgb(0, 0, 0)
-	bcolor = rgb(255, 255, 255)
-	lcolor = rgb(106, 90, 205)
-	'<center>Post Office</center>'
-	'<center><img src="images/locations/shared/postoffice/main.jpg"></center>'
-	'It is currently very busy and looks like you''ll have to wait to get to the counter.'
-	act 'Wait in line (30 Minutes)':
-		minut += 30
-		gt 'postoffice', 'counter'
-	end
+	$postloc = ''
 
-	act 'Leave':
-		minut += 5
-		if bankloc = 1:
-			gt 'down'
-		else
-			gt 'pavCommercial'
+	if (hour >= 9 and hour <= 10) or (hour >= 15 and hour <=16):
+				
+				'<center><b><font color="maroon">Post Office</font></b></center>'
+				'<center><img src="images/locations/shared/postoffice/main.jpg"></center>'
+				'It is currently very busy and looks like you''ll have to wait to get to the counter.'
+			
+			act 'Wait in line (30 Minutes)':
+				cla
+				minut += 30
+				gs 'stat'
+				$postloc = 'counter' & gt 'postoffice'
+			end
+	
+			if exhibi >= 4:
+				act 'Flash both your tits and your pussy':
+					cls
+					gs 'stat'
+					minut += 10
+
+					if postflash = 0:
+						exhibi += 1
+						postflash = 1
+					end
+					
+					'<center><img src="images/community/flash_tits_pus.jpg"></center>'
+					'The people in front of you are shocked, as they see you flashing your tits and your pussy. As a small thank you, some of them let you move further up in the line.'
+
+				act 'Go to the counter':$postloc = 'counter' & gt 'postoffice'
+				end
+			end
+
+			if exhibi >= 3:
+				act 'Flash your pussy':
+					cls
+					gs 'stat'
+					minut += 10
+
+					if postflash = 0:
+						exhibi += 1
+						postflash = 1
+					end
+
+						if lobok >= 2:'<center><img src="images/community/flash_hairy.jpg"></center>'
+						if lobok <= 2:'<center><img src="images/community/flash_nohairy.jpg"></center>'
+
+						'The people in front of you are shocked, as they see you flashing your pussy. As a small thank you, some of them let you move further up in the line.'
+
+				act 'Go to the counter':$postloc = 'counter' & gt 'postoffice'
+				end
+			end
+
+			if exhibi >= 2:
+				act 'Flash your tits':
+					cls
+					gs 'stat'
+					minut += 10
+
+					if postflash = 0:
+						exhibi += 1
+						postflash = 1
+					end
+
+					'<center><img src="images/community/flash_tits.jpg"></center>'
+					'The people in front of you are shocked, as they see you flashing your tits. As a small thank you, some of them let you move further up in the line.'
+
+				act 'Go to the counter':$postloc = 'counter' & gt 'postoffice'
+				end
+			end
+			
+			if SUB >= 15 and exhibi > 10:
+				act 'Suggest a blowjob in exchange for jumping the queue':
+					cls
+					gs 'stat'
+					minut += 10
+					throat += 1
+					bj += 1
+					$boy = 'Stranger'
+
+					if spdirtyb = 0 and spdirtyv = 0:
+						!!Blatte:IMAGE NEEDED
+						$ImageNeededPlacholder
+						!! '<center><img src="images/community/image_needed.png"></center>'
+					
+						act 'Cum on your face':
+							cls
+							'<center><img src="images/body/cumface.jpg"></center>'
+							'The man cums on your face.'
+							spafinloc = 11
+							gs 'cum_manage'
+
+						act 'Go to the counter':$postloc = 'counter' & gt 'postoffice'
+						end
+
+						act 'Cum in your mouth':
+							cls
+							'<center><img src="images/etogame/cumlip.jpg"></center>'
+							'The man cums inside your mouth.'
+							spafinloc = 12
+							gs 'cum_manage'
+
+						act 'Go to the counter':$postloc = 'counter' & gt 'postoffice'
+						end
+					
+					else
+						!!Blatte:IMAGE NEEDED
+						$ImageNeededPlacholder
+						!!'<center><img src="images/community/image_needed.png"></center>'						'The Man punches you in the gut and says, <font color="#0D42C0">"Go away bitch, your mouth is full of sperm."</font> You stagger away from the postoffice and spend 2 hours curled up like a ball.'
+						minut += 120
+						gs 'pain', 4, 'tummy', 'hit'
+
+					act 'Recover':gt $locM
+					end
+				end
+			end
+	else
+			'<center><b><font color="maroon">Post Office</font></b></center>'
+			'<center><img src="images/locations/shared/postoffice/main.jpg"></center>'
+			'It is currently very busy and looks like you''ll have to wait to get to the counter.'
+		
+		act 'Wait in line (30 Minutes)':
+			cla
+			minut += 30
+			gs 'stat'
+			$postloc = 'counter' & gt 'postoffice'
 		end
 	end
+
+	act 'Go to kiosk':
+		$postloc = 'kiosk' & gt 'postoffice'
+	end
+	
+	act 'Leave': gt 'pavCommercial'		
 end
 
-if $ARGS[0] = 'counter':
+if $postloc = 'counter':
 	cla
 	*clr
+	'<center><b><font color="maroon">Counter</font></b></center>'
 	'<center><img src="images/locations/shared/postoffice/counter.jpg"></center>'
 	'The counter, its boring here.'
 	
@@ -37,6 +150,7 @@ if $ARGS[0] = 'counter':
 		act 'Deposit money to your bank account':
 			cla
 			minut += 5
+			gs 'stat'
 			kartaIN = input ("How much money you want to deposit into the account?")
 
 			if kartaIN <= 0 or kartaIN > money:
@@ -53,6 +167,7 @@ if $ARGS[0] = 'counter':
 			act 'Yes':gt 'postoffice', 'counter'
 			act 'Leave':
 				minut += 5
+				gs 'stat'
 				if bankloc = 1:
 					gt 'down'
 				else
@@ -61,16 +176,95 @@ if $ARGS[0] = 'counter':
 			end
 		end
 	end
-
-	act 'Leave':
+	
+	act 'Check received mail':
+		cls
+		gs 'stat'
 		minut += 5
-		if bankloc = 1:
-			gt 'down'
+		if mail <= 0:
+			'Sorry no mail.'
 		else
-			gt 'pavCommercial'
+			'You have mail.'
+		end
+		
+		act 'Leave':gt 'postoffice', 'counter'
+	end	
+
+	act 'Leave':gt 'postoffice', 'start'
+		minut += 5
+end
+
+if $postloc = 'kiosk':
+	cls
+	minut+=3
+	gs'stat'
+	i = 0
+	'<center><b><font color="maroon">Kiosk</font></b></center>'
+	!!Blatte: MISSING IMAGE
+	$ImageNeededPlacholder
+	!!'<center><img src="images/community/image_needed.png"></center>'
+	'Welcome to the kiosk. How may I help you?'
+	
+	*pl '<center><table align="center">'
+
+	:loopcard
+
+	if i = 0:
+		n = 5
+		price = 60
+		$buy_link = '<a' + iif(money >= 60, ' href="exec: gs ''$buy_item'', <<n>>, ''hours of internet access'', <<price>>, ''internet'', ''shop''">buy ','>buy ') +'</a>'
+	elseif i = 1:
+		n = 10
+		price = 115
+		$buy_link = '<a' + iif(money >= 115, ' href="exec: gs ''$buy_item'', <<n>>, ''hours of internet access'', <<price>>, ''internet'', ''shop''">buy ','>buy ') +'</a>'
+	elseif i = 2:
+		n = 20
+		price = 220
+		$buy_link = '<a' + iif(money >= 220, ' href="exec: gs ''$buy_item'', <<n>>, ''hours of internet access'', <<price>>, ''internet'', ''shop''">buy ','>buy ') +'</a>'
+	elseif i = 3:
+		n = 50
+		price = 520
+		$buy_link = '<a' + iif(money >= 520, ' href="exec: gs ''$buy_item'', <<n>>, ''hours of internet access'', <<price>>, ''internet'', ''shop''">buy ','>buy ') +'</a>'
+	end
+
+	i += 1
+
+	'<tr><td align="center"><<n>> hour internet card </td><td align="right">(you have <<internet>> hours of internet access) </td><td align="right"><<$buy_link>> </td><td align="left">for <<price>> <b>₽</b></td></tr>'
+
+	if i < 4:
+		jump 'loopcard'
+	end
+
+	'</table></center>'
+	
+	if money > 0:
+		act 'Put the money on the phone':
+			cla
+			set minut = minut + 5
+			obmennik = input ("How many <b>₽</b> do you want to deposit?")
+
+			if obmennik <= 0:
+				'<center><br><b>Do you want to think again?</b></center>'
+				act 'Exit Department':gt'shop','start'
+			else
+				if money < obmennik:
+					'<center><br>You do not have <b><<obmennik>></b> <b>₽</b>.</center>'
+					act 'Exit Department':gt'shop','start'
+				end
+
+				if money >= obmennik:
+					set balans = balans + obmennik
+					set money = money - obmennik
+					clr
+					gs'stat'
+					'<center><br>You put <b><<obmennik>></b> <b>₽</b> to the account.</center>'
+					act 'Go back':gt'postoffice','start'
+				end
+			end
 		end
 	end
+	
+	act 'Leave':gt 'postoffice', 'start'
 end
 
 --- postoffice ---------------------------------
-
