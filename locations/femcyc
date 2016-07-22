@@ -286,82 +286,113 @@ if $ARGS[0] = 'cyc1':
 end
 
 
-!{Fertilization. It checks if you are ovulating and that there is cum in the cum array. Then it sets a random flag with a chance of 25*10000. (1 in 25 chance.) It then overlays that chance with the concentration of pill chemical in your blood, initializing it if it is in the negatives for some reason. It begins at the beginning of the cum array, and starts the processing. The check should be done with the same number. It is checking the oldest first. Their sperm should already be in the best position, even though it is unhealty by comparison. Then it moves down to the fresher stuff. The first sperm to have the potency above the threshold gets to fertilize. So a custom potency of a million is a sure pregnancy.}
+!!{Fertilization.}
 
 if $ARGS[0] = 'cyc2':	
-	arrmodtmp = arrsize('$cumarrnam')
-	if Ovulate > 0 and arrmodtmp > 0:
-		temp = UnFertEgg
-		if temp > 0: temp[1] = 1
-		:cumloop
-		if temp[1] > 0:
-			Temprand = rand(1,250000)
-			if pillcon < 0: pillcon = 0
-			Temprand += pillcon
-			if steriletu = 1: Temprand += Temprand*30
-			if temprand > 0 and broodcurse > 0: Temprand = Temprand / 2
-			cumarrtemp = 0
-			temp[1] = 0
-		end
-		!{Here it verifies there is unfertilized eggs. If there are, it checks the current index potency against the current threshold. If it fails, it goes up one in the index, checks to verify it hasnt reached the end, then starts a new check. if it succeeds, it checks to see if it is a second or greater part of a litter, if it isnt, then it cleans up the array containing a list of the potential fathers, then sets the list to contain people your MC should know are potential fathers for the baby. It does this by evaluating the cum array, the potential fathers variable. It does this independently of the main loop evaluating the array for pregnancy.}
-		if temp > 0:
-			if TempRand < cumarrcpt[cumarrtemp] and UnfertEgg > 0:
-				if fertegg = 0:
-					KILLVAR '$wombpotfath'
-					$wombthfath = 'Unknown'
-					$wombpotfath[0] = 'Unknown'
-					FathpotAdd = 1
-					Fathpotcheck = 0
-					arrmodtmp = arrsize('$cumarrnam')
-					:potfathaddloop
-					if arrmodtmp > Fathpotcheck:
-						if cumarrkno[Fathpotcheck] = 1:
-							$wombpotfath[Fathpotadd] = $cumarrnam[Fathpotcheck]
-							Fathpotadd += 1
-						end
-						Fathpotcheck += 1
-						jump 'potfathaddloop'
-					end
+	can_sz = arrsize('$cumarrnam')
+	if Ovulate > 0 and can_sz > 0 and UnfertEgg > 0:
+		KILLVAR 'cumfathwght'
+		KILLVAR '$cumfathnames'
+		can_idx = 0
+		cum_total = 0
+!!{Compute array of unique fathers known to PC and another two arrays of unique total fathers and their individual sperm totals from all entries in cumarrcpt for that father. Also tally all cum present.}
+		:FatherCumAnalyze
+		if can_idx < can_sz:
+			if cumarrkno[can_idx] = 1:
+				wpf_in = arrpos(0, '$wombpotfath', $cumarrnam[can_idx])
+				if wpf_in < 0:
+					wpf_sz = arrsize('$wombpotfath')
+					$wombpotfath[wpf_sz] = $cumarrnam[can_idx]
 				end
-				!{It adds a fertilized egg, removes an unfertilized egg, then sets the array index checker to the size of the array of children you have to make sure it is adding to the end of the file. It then sets a temporary flag to determine the sex of your baby. 0 is a girl. Then it calls the babys name unborn. It clears the variable for the age, sets the real fathers name to the name stored in the cum array, then sets the person you think is the father of this baby to "unknown". It then sets a random hair color and random eye color. This was used in the old system in a variable that wasnt ever called from the best of my ability to find. Then it flags the child based on what kind of contraception failed when it was concieved. Useful in several ways.}
-				FertEgg += 1
+			end
+
+			cfn_in = arrpos(0, '$cumfathnames', $cumarrnam[can_idx])
+			cfw_sz = arrsize('cumfathwght')
+			if cfn_in < 0:
+				cumfathwght[cfw_sz] = cumarrcpt[can_idx]
+				$cumfathnames[cfw_sz] = $cumarrnam[can_idx]
+			else
+				cumfathwght[cfw_in] += cumarrcpt[can_idx]
+			end
+			cum_total += cumarrcpt[can_idx]
+
+			can_idx += 1
+			jump 'FatherCumAnalyze'
+		end
+
+		wpf_sz = arrsize('$wombpotfath')
+		if wpf_sz ! 1 and arrpos(0, '$wombpotfath', 'Unknown') < 0: $wombpotfath[wpf_sz] = 'Unknown'
+
+
+
+!!{Create lotto of potential fathers based on each potential fathers sperm as a percentage of the total. The higher percentage of sperm from a given father, the more lotto entries he will have.}
+		KILLVAR '$cumfathlotto'
+		cfw_idx = 0
+		cfw_sz = arrsize('cumfathwght')
+		:FathLottoLoop
+		if cfw_idx < cfw_sz:
+			cfl_ct = (cumfathwght[cfw_idx] * 100) / cum_total
+			if cfl_ct < 1: cfl_ct = 1
+			cfl_idx = arrsize('$cumfathlotto')
+			:FathLottoAdd
+			if cfl_ct > 0:
+				$cumfathlotto[cfl_idx] = $cumfathnames[cfw_idx]
+				cfl_idx += 1
+				cfl_ct -= 1
+				jump 'FathLottoAdd'
+			end
+			cfw_idx += 1
+			jump 'FathLottoLoop'
+		end
+		cfl_sz = arrsize('$cumfathlotto')
+
+		egg_idx = 0
+		egg_sz = UnfertEgg
+		:FertLoop
+		if egg_idx < egg_sz:
+!!{fert_thresh is the chance this specific egg is fertilized. Its modified by being on the pill, being sterilized, the brood curse, and so on. If it computes to less than the cum total calculated above, the egg is fertilized by a father randomly drawn from the lotto array.}
+			fert_thresh = rand(1,250000)
+			if pillcon < 0: pillcon = 0
+			fert_thresh += pillcon
+			if steriletu = 1: fert_thresh += fert_thresh*30
+			if fert_thresh > 0 and broodcurse > 0: fert_thresh = fert_thresh / 2
+			if fert_thresh <= cum_total:
+				lotto_idx = rand(0, cfl_sz-1)
 				UnfertEgg -= 1
-				Nextbaby = arrsize('$ChildFath')
-				Temppolkid = rand(0,1)
-				polkid[nextbaby] = Temppolkid
+				FertEgg += 1
+				nextbaby = arrsize('$ChildFath')
+				polkid[nextbaby] = rand(0, 1)
 				$kidname[nextbaby] = 'unborn'
 				kidage[nextbaby] = 0
 				daykid[nextbaby] = 0
 				monthkid[nextbaby] = 0
 				yearkid[nextbaby] = 0
 				Babyptype[nextbaby] = 0
-				$ChildFath[nextbaby] = $cumarrnam[cumarrtemp]
-				$ChildThFath[nextbaby] = 'Unknown'
+				$ChildFath[nextbaby] = $cumfathlotto[lotto_idx]
+				if arrsize('$wombpotfath') = 1:
+					$ChildThFath[nextbaby] = $wombpotfath[0]
+				else
+					$ChildThFath[nextbaby] = 'Unknown'
+				end
 				hairkid[nextbaby] = rand(0, 3)
 				eyeskid[nextbaby] = rand(0, 3)
 				ChildConType = cumarrcon[nextbaby]
-				cumarrtemp = arrmodtmp
-			else
-				cumarrtemp += 1
 			end
-			if cumarrtemp >= arrmodtmp:
-				temp -= 1
-				temp[1] = 1
-			end
-			jump 'cumloop'
-		else
-			killvar 'temp'
-			tempovbonus = 0
+			egg_idx += 1
+			jump 'FertLoop'
 		end
+		killvar 'temp'
+		tempovbonus = 0
 	end
-	!{Ovulation to Luteal. It checks to see if you are on the ovulation cycle. If you are, it checks you for your pillcon. If it is high enough, no egg is released. Under high concentrations of pill chemical, ovulation ticks away quicker. Otherwise, it checks to see if your ovulation hormone is high enough, and if it is it gives you an egg and drops a good chunk down on your ovulation hormone. if its still high, it drops another egg. Then it checks your ovulation hours. If its down to 0, it starts the Luteal phase. Otherwise, it adds an hour to the egg age and reduces the ovulation window by an hour.}
+
+!!{Ovulation to Luteal. It checks to see if you are on the ovulation cycle. If you are, it checks you for your pillcon. If it is high enough, no egg is released. Under high concentrations of pill chemical, ovulation ticks away quicker. Otherwise, it checks to see if your ovulation hormone is high enough, and if it is it gives you an egg and drops a good chunk down on your ovulation hormone. if its still high, it drops another egg. Then it checks your ovulation hours. If its down to 0, it starts the Luteal phase. Otherwise, it adds an hour to the egg age and reduces the ovulation window by an hour.}
 	if pillcon > 26000:
 		if rand(0,400) ! 1: EggRH = 0
 		ovulate -= 2
 	end
 	:OviLoop
-	If EggRH > (UnfertEgg * 150):
-		Unfertegg += 1
+	If EggRH > ((UnfertEgg + FertEgg) * 150):
+		UnfertEgg += 1
 		EggRH -= (200*UnfertEgg)
 		jump 'OviLoop'
 	end
@@ -409,10 +440,10 @@ if $ARGS[0] = 'cyc3':
 			tempwbbonus = 0
 		end		
 	end
-	!{Then, it progresses the Luteal phase. It checks to see if you are pregnant. If you are, it ends the cycle and sets preg if your Luteal hormone is at the max as well as cleans out any unimplanted eggs. Otherwise, it just progresses pregnancy chemical and Luteal Hormone. If you arent pregnant, it checks your Luteal hormone. If its at the maximum, it adds 3-5 days of bleeding, clears out your unimplanted eggs, and clears out your Luteal hormone, or ends your cycle if you are past your menopausal age. Otherwise it will just progress the Luteal hormone.}
+!!{Then, it progresses the Luteal phase. It checks to see if you are pregnant. If you are, it ends the cycle and sets preg if your Luteal hormone is at the max as well as cleans out any unimplanted eggs. Otherwise, it just progresses pregnancy chemical and Luteal Hormone. If you arent pregnant, it checks your Luteal hormone. If its at the maximum, it adds 3-5 days of bleeding, clears out your unimplanted eggs, and clears out your Luteal hormone, or ends your cycle if you are past your menopausal age. Otherwise it will just progress the Luteal hormone.}
 	if LutH > 300:
 		:lutcycloop
-		if fertegg > 0:
+		if FertEgg > 0:
 			tempbabyi = ARRPOS('Babyptype',0)
 			KILLVAR 'polkid',tempbabyi
 			KILLVAR '$kidname',tempbabyi
@@ -426,7 +457,7 @@ if $ARGS[0] = 'cyc3':
 			KILLVAR 'hairkid',tempbabyi
 			KILLVAR 'eyeskid',tempbabyi
 			KILLVAR 'cumarrcon',tempbabyi
-			fertegg -= 1
+			FertEgg -= 1
 			jump 'lutcycloop'
 		end
 		LutH = 0

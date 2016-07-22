@@ -1,6 +1,6 @@
 # arousal
 
-!{For checking arousal and when applicable triggering orgasms.
+!!{For checking arousal and when applicable triggering orgasms.
 $ARGS[0] the action causing arousal can be when receiving any of the following:
 'masturbate' 'porn' 'voyeur' 'kiss' 'breasts' 'massage' 'foreplay' 'cuni' 'rimming' 'trib' 'anal' 'anal_finger' 'anal_fist' 'anal_dildo' 'anal_strap' 'anal_vibe' 'vaginal' 'vaginal_finger' 'vaginal_fist' 'vaginal_dildo' 'vaginal_strap' 'vaginal_vibe'
 also when giving any of the following:
@@ -13,7 +13,10 @@ $ARGS[2] - [9] Are optional but can be upto 7 fetishes involved in the act and c
 Format to use: gs 'arousal', 'act', 'duration', 'fetish', 'fetish', 'fetish', 'fetish', 'fetish', 'fetish', 'fetish', 'fetish'
 eg: gs 'arousal', 'trib', 10, 'bound', 'sub'
 In this case lesbianism is automatically added, much as feet would be applied to 'footjob'
-Only call one at a time, if more required, use multiple calls}
+Only call one at a time, if more required, use multiple calls
+You can override the orgasm to force or prevent, to do so use:
+$orgasm_or = 'yes' to force orgasm, it will reset in orgasm call so if you want to force it again, you have to enter it again
+$orgasm_or = 'no' to prevent orgasm, it will remain in place until manually changed, or if end is called.}
 
 if $ARGS[0] ! 'end' and $ARGS[0] ! 'checks':
 
@@ -46,7 +49,7 @@ if $ARGS[0] ! 'end' and $ARGS[0] ! 'checks':
 		counter['mast'] = 1
 		stim['mag'] += 4
 		stim['act'] = 100
-	if $ARGS[0] = 'porn':
+	elseif $ARGS[0] = 'porn':
 		counter['porn'] = 1
 		stim['act'] = 20
 	elseif $ARGS[0] = 'voyeur':
@@ -304,12 +307,12 @@ if $ARGS[0] ! 'end' and $ARGS[0] ! 'checks':
 			stim['prostitution'] = 1
 		elseif $ARGS[i] = 'dom':
 			stim['kink'] += dom['exp']
-			stim['pref'] += dom['pref']
+			stim['pref'] += dom
 			stim['kinkno'] += 1
 			stim['dom'] = 1
 		elseif $ARGS[i] = 'sub':
 			stim['kink'] += sub['exp']
-			stim['pref'] += sub['pref']
+			stim['pref'] += sub
 			stim['kinkno'] += 1
 			stim['sub'] = 1
 		elseif $ARGS[i] = 'incest':
@@ -358,32 +361,42 @@ if $ARGS[0] ! 'end' and $ARGS[0] ! 'checks':
 		jump 'stimloop'
 	end
 
-
 	!Fetishes are divided by total number of fetishes
 	if stim['kinkno'] ! 0:
 		stim['kink'] = stim['kink']/stim['kinkno']
-		stim['pref'] = (stim['pref']/stim['kinkno']) + 50
+		stim['pref'] = (stim['pref']/stim['kinkno'])
 		stim['kinkno'] = 0
+	end
+
+	if rand(0,100) < stim['kink']:
+		stim['kink'] = 120
+	elseif rand(0,80) < stim['kink']:
+		stim['kink'] = 110
+	elseif rand(0,60) < stim['kink']:
+		stim['kink'] = 100
+	elseif rand(0,40) < stim['kink']:
+		stim['kink'] = 90
 	else
-		stim['kink'] = 1
-		stim['pref'] = 1
+		stim['kink'] = 80
 	end
 
 	!arousal calculation
-	stim['total'] = stim[mag]*(stim['act']*stim['kink']*stim['pref'])/60*stim['time'] / 1000000
+	stim['total'] = ((stim['mag']*stim['act']*stim['kink']/100) + stim['pref'])/60*stim['time'] / 100
 
-	if maso['pref'] <= 0 and pain ['total'] < 50:
-		if pain['total'] - (maso['exp'] / 6) > 0:stim['total'] -= (pain['total'] - (maso['exp'] / 6))
-	elseif maso['pref'] < 25 and pain ['total'] < 55:
-		stim['total'] += (pain['total'] * maso['exp'] / 400)/60*stim['time']
-	elseif maso['pref'] < 50 and pain ['total'] < 70:
-		stim['total'] += (pain['total'] * maso['exp'] / 300)/60*stim['time']
-	elseif maso['pref'] < 75 and pain ['total'] < 85:
-		stim['total'] += (pain['total'] * maso['exp'] / 200)/60*stim['time']
-	elseif maso['pref'] >= 75:
-		stim['total'] += (pain['total'] * maso['exp'] / 100)/60*stim['time']
-	else
-		stim['total'] = 0
+	if pain['total'] > 0:
+		if maso['pref'] <= 0 and pain['total'] < 50:
+			if pain['total'] - (maso['exp'] + 1 / 6) > 0:stim['total'] -= (pain['total'] - (maso['exp'] / 6))
+		elseif maso['pref'] < 25 and pain['total'] < 55:
+			stim['total'] += (pain['total'] * maso['exp'] +1 / 400)/60*stim['time']
+		elseif maso['pref'] < 50 and pain['total'] < 70:
+			stim['total'] += (pain['total'] * maso['exp'] + 1 / 300)/60*stim['time']
+		elseif maso['pref'] < 75 and pain['total'] < 85:
+			stim['total'] += (pain['total'] * maso['exp'] + 1 / 200)/60*stim['time']
+		elseif maso['pref'] >= 75:
+			stim['total'] += (pain['total'] * maso['exp'] + 1 / 100)/60*stim['time']
+		else
+			stim['total'] = 0
+		end
 	end
 
 	stim['event'] += stim['total']
@@ -394,11 +407,23 @@ if $ARGS[0] ! 'end' and $ARGS[0] ! 'checks':
 	!-------------------Orgasm-------------------
 	!This is intended to be hidden and the stats and calculations should not appear in game.
 
-	orgasm[total] += stim['total'] + horny
+	orgasm[total] += stim['total']
 
-	if orgasm[total] >= 100:gt 'orgasm'
+	if $orgasm_or ! 'no':
+		if $orgasm_or = 'yes':
+			gs 'orgasm'
+		elseif (orgasm[total] >= 100 and rand(1,100) <= 20:
+			gs 'orgasm'
+		elseif (orgasm[total] >= 150 and rand(1,100) <= 50:
+			gs 'orgasm'
+		elseif (orgasm[total] >= 200:
+			gs 'orgasm'
+		end
+	end
+end
 
 if $ARG[0] = 'end':
+	if $orgasm_or = 'no': $orgasm_or = ''
 	gs 'arousal', 'checks', 'maso'
 	gs 'arousal', 'checks', 'bound'
 	gs 'arousal', 'checks', 'beast'
