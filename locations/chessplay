@@ -1,191 +1,292 @@
 # chessplay
-if $chess_name='':$chess_name='girl'
-gs'stat'
-if chess_hod=0:
-chess_ini=50
-chess_pos=50
-end
-if chess_ini<0:chess_ini=0
-if chess_ini>100:chess_ini=100
-if chess_pos<0:chess_pos=0
-if chess_pos>100:chess_pos=100
-'Move <<chess_hod>>'
-'Instead you, the board is sitting <<$chess_name>> pondering moves'
-if chess_hod=0:'Chess pieces are on the starting positions'
-if chess_hod>0:
-if chess_ini=50:'The initiative is not who seized'
-if chess_pos=50:'Positions is equal'
-if chess_ini<50:'You managed to seize the initiative'
-if chess_ini>50:'You have lost the initiative'
-if chess_pos<50:'Your position is stronger'
-if chess_pos>50:'Your position is weaker'
-if chess_pos<10:'You are close to the, that would checkmate the enemy'
-if chess_pos>90:'You are close to defeat'
-end
-!'chess_ini <<chess_ini>>'
-!'chess_pos <<chess_pos>>'
 
-deV=rand(1,100)
-if chess_hod<10:
-	if deV>=chessH:
-		!Initiative opponent
-		derV=1
+if $ARGS[0] = '':
+	if $chess_name='':$chess_name='girl'
+	gs'stat'
+	chess_GG = 20
+	chess_com = 20
+	
+	chess_ind = (chessV - chess) / 100
+
+	gt 'chessplay', 'game'
+end
+
+if $ARGS[0] = 'game':
+
+	if chess_GG <= 0:
+		gt 'chessplay', 'lose'
+	elseif chess_com <= 0:
+		gt 'chessplay', 'win'
 	else
-		!the enemy defense
-		derV=0
+		gs 'chessplay', 'moves'
 	end
 end
 
-if chess_hod>=10:
-	if chess_ini<90:
-		if deV>=chessH:
-			!Initiative opponent
-			derV=1
+if $ARGS[0] = 'moves':
+	cla
+	act 'Go defensive':
+		chessM = rand (0,5)
+		if chessM = 0:
+			'Your opponent tries to trap you, but you avoid it and gain some advantage.'
+			if chess_ind < 2:
+				chess_GG += 2 - chess_ind
+				chess_com -= 2 + chess_ind
+			else
+				'However their superior skill negates that advantage.'
+			end
+		elseif chessM = 1:
+			'Your opponent goes offensive much to their advantage.'
+			if chess_ind > -4:
+				chess_GG -= 4 + chess_ind
+				chess_com += 4 - chess_ind
+			else
+				'However your superior skill negates that advantage.'
+			end
+		elseif chessM = 2:
+			'Your opponent goes aggressive you absorb some of it, but still lose some advantage.'
+			if chess_ind > -2:
+			chess_GG -= 2 + chess_ind
+				chess_com += 2 - chess_ind
+			else
+				'However your superior skill negates that advantage.'
+			end
+		elseif chessM = 3:
+			'Your opponent tries to manoeuvre the game pieces, but your defensive actions expose all their efforts, much to your advantage.'
+			if chess_ind < 4:
+				chess_GG += 4 - chess_ind
+				chess_com -= 4 + chess_ind
+			else
+				'However their superior skill negates that advantage.'
+			end
 		else
-			!the enemy defense
-			derV=0
+			'Your opponent also goes defensive and neither of you gain any advantage.'
 		end
+
+		gs 'chessplay', 'game'
 	end
-	if chess_ini>=90:
-		derV=2
+
+	act 'Heavy defense':
+		chessM = rand (0,5)
+		if chessM = 0:
+			'Your opponent tries to trap you, but you easily avoid it and gain a good advantage.'
+			if chess_ind < 4:
+				chess_GG += 4 - chess_ind
+				chess_com -= 4 + chess_ind
+			else
+				'However their superior skill negates that advantage.'
+			end
+		elseif chessM = 1:
+			'Your opponent goes offensive you absorb some of it, but still lose some advantage.'
+			if chess_ind > -2:
+			chess_GG -= 2 + chess_ind
+				chess_com += 2 - chess_ind
+			else
+				'However your superior skill negates that advantage.'
+			end
+		elseif chessM = 2:
+			'Your opponent goes aggressive much to their advantage.'
+			if chess_ind > -4:
+				chess_GG -= 4 + chess_ind
+				chess_com += 4 - chess_ind
+			else
+				'However your superior skill negates that advantage.'
+			end
+		elseif chessM = 3:
+			'Your opponent tries to manoeuvre the game pieces, but your defensive actions expose some of their efforts, to your advantage.'
+			if chess_ind < 2:
+				chess_GG += 2 - chess_ind
+				chess_com -= 2 + chess_ind
+			else
+				'However their superior skill negates that advantage.'
+			end
+		else
+			'Your opponent also goes defensive and neither of you gain any advantage.'
+		end
+
+		gs 'chessplay', 'game'
+	end
+
+	act 'Go offensive':
+		chessM = rand (0,5)
+		if chessM = 0:
+			'Your opponent tries to trap you, gaining some advantage.'
+			if chess_ind > -2:
+			chess_GG -= 2 + chess_ind
+				chess_com += 2 - chess_ind
+			else
+				'However your superior skill negates that advantage.'
+			end
+		elseif chessM = 1:
+			'Your opponent goes offensive much to your advantage.'
+			if chess_ind < 4:
+				chess_GG += 4 - chess_ind
+				chess_com -= 4 + chess_ind
+			else
+				'However their superior skill negates that advantage.'
+			end
+		elseif chessM = 2:
+			'Your opponent goes aggressive you easily absorb it, and gain some advantage.'
+			if chess_ind < 2:
+				chess_GG += 2 - chess_ind
+				chess_com -= 2 + chess_ind
+			else
+				'However their superior skill negates that advantage.'
+			end
+		elseif chessM = 3:
+			'Your opponent tries to manoeuvre the game pieces, your offensive actions leave you exposed, and they take advantage.'
+			if chess_ind > -4:
+				chess_GG -= 4 + chess_ind
+				chess_com += 4 - chess_ind
+			else
+				'However your superior skill negates that advantage.'
+			end
+		else
+			'Your opponent also goes on the attack and neither of you gain any advantage.'
+		end
+
+		gs 'chessplay', 'game'
+	end
+
+	act 'Be aggressive':
+		chessM = rand (0,5)
+		if chessM = 0:
+			'Your opponent tries to trap you, and you are playing right into their hands.'
+			if chess_ind > -4:
+				chess_GG -= 4 + chess_ind
+				chess_com += 4 - chess_ind
+			else
+				'However your superior skill negates that advantage.'
+			end
+		elseif chessM = 1:
+			'Your opponent goes defensive to your advantage.'
+			if chess_ind < 2:
+				chess_GG += 2 - chess_ind
+				chess_com -= 2 + chess_ind
+			else
+				'However their superior skill negates that advantage.'
+			end
+		elseif chessM = 2:
+			'Your opponent goes heavily defensive very much to your advantage.'
+			if chess_ind < 4:
+				chess_GG += 4 - chess_ind
+				chess_com -= 4 + chess_ind
+			else
+				'However their superior skill negates that advantage.'
+			end
+		elseif chessM = 3:
+			'Your opponent tries to manoeuvre the game pieces, gaining some advantage.'
+			if chess_ind > -2:
+			chess_GG -= 2 + chess_ind
+				chess_com += 2 - chess_ind
+			else
+				'However your superior skill negates that advantage.'
+			end
+		else
+			'Your opponent also goes on the attack and neither of you gain any advantage.'
+		end
+
+		gs 'chessplay', 'game'
+	end
+
+	act 'Bait trap':
+		chessM = rand (0,5)
+		if chessM = 0:
+			'Your opponent goes offensive to your advantage.'
+			if chess_ind < 2:
+				chess_GG += 2 - chess_ind
+				chess_com -= 2 + chess_ind
+			else
+				'However their superior skill negates that advantage.'
+			end
+		elseif chessM = 1:
+			'Your opponent goes defensive to their advantage.'
+			if chess_ind > -2:
+				chess_GG -= 2 + chess_ind
+				chess_com += 2 - chess_ind
+			else
+				'However your superior skill negates that advantage.'
+			end
+		elseif chessM = 2:
+			'Your opponent goes heavily defensive exposing your tactics much to their advantage.'
+			if chess_ind > -4:
+				chess_GG -= 4 + chess_ind
+				chess_com += 4 - chess_ind
+			else
+				'However your superior skill negates that advantage.'
+			end
+		elseif chessM = 3:
+			'Your opponent goes aggressive much to your advantage.'
+			if chess_ind < 4:
+				chess_GG += 4 - chess_ind
+				chess_com -= 4 + chess_ind
+			else
+				'However their superior skill negates that advantage.'
+			end
+		else
+			'Your opponent also goes tactical and neither of you gain any advantage.'
+		end
+
+		gs 'chessplay', 'game'
+	end
+
+	act 'Manoeuvre the game pieces':
+		chessM = rand (0,5)
+		if chessM = 0:
+			'Your opponent goes offensive, much to your advantage.'
+			if chess_ind < 4:
+				chess_GG += 4 - chess_ind
+				chess_com -= 4 + chess_ind
+			else
+				'However their superior skill negates that advantage.'
+			end
+		elseif chessM = 1:
+			'Your opponent goes defensive much to their advantage.'
+			if chess_ind > -4:
+				chess_GG -= 4 + chess_ind
+				chess_com += 4 - chess_ind
+			else
+				'However your superior skill negates that advantage.'
+			end
+		elseif chessM = 2:
+			'Your opponent goes heavily defensive exposing your tactics to their advantage.'
+			if chess_ind > -2:
+			chess_GG -= 2 + chess_ind
+				chess_com += 2 - chess_ind
+			else
+				'However your superior skill negates that advantage.'
+			end
+		elseif chessM = 3:
+			'Your opponent goes aggressive to your advantage.'
+			if chess_ind < 2:
+				chess_GG += 2 - chess_ind
+				chess_com -= 2 + chess_ind
+			else
+				'However their superior skill negates that advantage.'
+			end
+		else
+			'Your opponent also goes tactical and neither of you gain any advantage.'
+		end
+
+		gs 'chessplay', 'game'
 	end
 end
 
-$chess_hod_dy={
-	chessV_proc=chessV/100
-	chessVmin=chessV_proc*90
-	chessVmax=chessV_proc*110
-	chessV_hod=rand(chessVmin,chessVmax)
-	chess_proc=chess/100
-	chessmin=chess_proc*90
-	chessmax=chess_proc*110
-	chessY_hod=rand(chessmin,chessmax)
-	!'chessV_hod <<chessV_hod>>'
-	!'chessY_hod <<chessY_hod>>'
-	if chess_hod<10:
-		if chessV_hod>chessY_hod:
-			if derV=1:
-				chess_ini+=1
-				'The enemy manages to increase the lead'
-			end
-			if derV=0:
-				chess_pos+=1
-				'The enemy can improve their position'
-			end
-		end
-		if chessV_hod=chessY_hod:
-			'Your actions and those of the enemy no matter what is not particularly affected.'
-		end
-		if chessV_hod<chessY_hod:
-			if derY=1:
-				chess_ini-=1
-				'You manage to increase the lead'
-			end
-			if derY=0:
-				chess_pos-=1
-				'You can improve its position'
-			end
-		end
-	else
-		if derY=2:
-			chess_temp=100-chess_ini
-			chessY_hod+=100-chess_temp
-			chess_ini=50
-		end
-		if derV=2:
-			chess_temp=100+chess_ini
-			chessV_hod+=100+chess_temp
-			chess_ini=50
-		end
-		if chessV_hod=chessY_hod:
-			'Your actions and those of the enemy no matter what is not particularly affected.'
-		end
-		if chessV_hod<chessY_hod:
-			chessResult=chessY_hod-chessV_hod
-			if derY=2:
-				chess_pos-=chess_temp+chessResult
-				'Your attack failed'
-			end
-			if derV=2:
-				chess_pos-=chess_temp+chessResult
-				'Attack the enemy failed'
-			end
-			if derY=1:
-				chess_ini-=chessResult
-				'You manage to increase the lead'
-			end
-			if derY=0:
-				chess_pos-=chessResult
-				'You can improve its position'
-			end
-		end
-		if chessV_hod>chessY_hod:
-			chessResult=chessV_hod-chessY_hod
-			if derY=2:
-				chess_pos+=chess_temp+chessResult
-				'Your attack failed miserably'
-			end
-			if derV=2:
-				chess_pos+=chess_temp+chessResult
-				'Attack the enemy was successful'
-			end
-			if derV=1:
-				chess_ini+=chessResult
-				'You lose the initiative'
-			end
-			if derV=0:
-				chess_pos+=chessResult
-				'You lose position'
-			end
-		end
-	end
-	derY=0
-	derV=0
-	act'Further':gt $curloc
-}
 
+if $ARGS[0] = 'win':
+	cls
+	gs 'stat'
+	chess_win += 1
+	'You have won this game.'
+	act 'Return': gt $loc
+end
 
-if chess_pos>0 and chess_pos<100:
-	act'To seize the initiative':
-		cls
-		chess_hod+=1
-		derY=1
-		gs'stat'
-		'You play aggressively, trying to seize the initiative in the game.'
-		dynamic $chess_hod_dy
-	end
+if $ARGS[0] = 'lose':
+	cls
+	gs 'stat'
+	'You have lost this game.'
+	act 'Return': gt $loc
+end
 
-	act'Strengthens the position of':
-		cls
-		chess_hod+=1
-		derY=0
-		gs'stat'
-		'You build a defense in depth, though losing in the initiative.'
-		dynamic $chess_hod_dy
-	end
-
-	if chess_pos<50 and chess_hod>=10:
-		act'Attack':
-			cls
-			chess_hod+=1
-			derY=2
-			gs'stat'
-			'You attack using seized the initiative.'
-			dynamic $chess_hod_dy
-		end
-	end
-end
-if chess_pos<=0:
-	chess_win+=1
-	'You checkmate the enemy'
-end
-if chess_pos>=100:
-	chess_loss+=1
-	'You checkmate'
-end
-if chess_pos<=0 or chess_pos>=100:
-	if chess_exit=0:act'Escape':gt'gdkkru'
-end
 
 --- chessplay ---------------------------------
 
