@@ -427,10 +427,17 @@ if $ARGS[0] = 'options':
 						w2 = 1
 					end
 					!selectable day display comes
-					if datefilter['<<selected[p1]>>'] = 1:
-						$option = '<font color="grey"><<d1>></font>'
-					elseif pfilmday[p1] > 0:
+					if inversefilter = 1:
+						if datefilter['<<selected[p1]>>'] = 1:
+							datefilter['<<selected[p1]>>'] = 0
+						else
+							datefilter['<<selected[p1]>>'] = 1
+						end
+					end
+					if pfilmday[p1] > 0:
 						$option = '<font color="green"><<d1>></font>'
+					elseif datefilter['<<selected[p1]>>'] = 1 or (weekdayfilter = 1 and w1 < 6) or (weekendfilter = 1 and w1 >= 6):
+						$option = '<font color="grey"><del><<d1>></del></font>'
 					else
 						$option = '<a href="exec:datefilter[''<<selected[p1]>>''] = 1 & dynamic $selection"><font color="black"><<d1>></font></a>'
 					end
@@ -462,8 +469,20 @@ if $ARGS[0] = 'options':
 					*p '</TR></TABLE><br><br>'
 				end
 			end
+			inversefilter = 0
 			''
-			'<a href="exec:killvar ''datefilter'' & killvar ''selected'' & dynamic $selection">Clear date filters</a>'
+			if weekdayfilter = 0: 
+				$weekdayfilter = '<a href="exec:weekdayfilter = 1 & dynamic $selection">Remove weekdays</a>'
+			else
+				$weekdayfilter = '<a href="exec:weekdayfilter = 0 & dynamic $selection">Restore weekdays</a>'
+			end
+			if weekendfilter = 0: 
+				$weekendfilter = '<a href="exec:weekendfilter = 1 & dynamic $selection">Remove weekends</a>'
+			else
+				$weekendfilter = '<a href="exec:weekendfilter = 0 & dynamic $selection">Restore weekends</a>'
+			end
+			'<<$weekdayfilter>>  <<$weekendfilter>>  <a href="exec:inversefilter = 1 & dynamic $selection">Inverse selection</a>'
+			'<a href="exec:killvar ''datefilter'' & killvar ''selected'' & weekdayfilter = 0 & weekendfilter = 0 & dynamic $selection">Clear date filters</a>'
 		}
 		dynamic $selection 
 	end
@@ -553,28 +572,30 @@ if $ARGS[0] = 'options':
 				d1 += 1
 				if monthsend[m1] < d1: m1 += 1 & d1 = 1
 				if m1 > 12: m1 = 1
-				if datefilter['<<selected[counter]>>'] = 0:
-					porns = 0
-					:pornplanloop
-						dynamic $pornfilmdesc, pornplan['<<counter>>,<<porns>>']
-						if (pfactor <= ppnum) or (ppnum = 0):
-							if porntaken['<<counter>>,<<porns>>'] = 2:
-								$pornofday += '<font color="green"><b><<$porndesc[pornplan[''<<counter>>,<<porns>>'']]>></b> - <i>Already contracted</i></font><br>'
-							elseif pfilmday[counter] > 0 and porntaken['<<counter>>,<<porns>>'] = 0:
-								$pornofday += '<font color="grey"><<$porndesc[pornplan[''<<counter>>,<<porns>>'']]>></font><br>'
-							elseif porntaken['<<counter>>,<<porns>>'] = 1:
-								$pornofday += '<font color="red"><<$porndesc[pornplan[''<<counter>>,<<porns>>'']]>> - <i>Taken by someone else</i></font><br>'
-							elseif pornstack < 10:
-								$pornofday += '<a href="exec:pornstack += 1 & porntaken[''<<counter>>,<<porns>>''] = 2 & pfilmday[<<pcount[counter]>>] = pornplan[''<<counter>>,<<porns>>''] & gs ''stat'' & dynamic $contracting"><<$porndesc[pornplan[''<<counter>>,<<porns>>'']]>></a><br>'
-							else
-								$pornofday += '<font color="grey"><<$porndesc[pornplan[''<<counter>>,<<porns>>'']]>></font><br>'
+				if (weekdayfilter = 1 and w1 >= 6) or (weekendfilter = 1 and w1 < 6) or (weekdayfilter = 0 and weekendfilter = 0):
+					if datefilter['<<selected[counter]>>'] = 0:
+						porns = 0
+						:pornplanloop
+							dynamic $pornfilmdesc, pornplan['<<counter>>,<<porns>>']
+							if (pfactor <= ppnum) or (ppnum = 0):
+								if porntaken['<<counter>>,<<porns>>'] = 2:
+									$pornofday += '<font color="green"><b><<$porndesc[pornplan[''<<counter>>,<<porns>>'']]>></b> - <i>Already contracted</i></font><br>'
+								elseif pfilmday[counter] > 0 and porntaken['<<counter>>,<<porns>>'] = 0:
+									$pornofday += '<font color="grey"><<$porndesc[pornplan[''<<counter>>,<<porns>>'']]>></font><br>'
+								elseif porntaken['<<counter>>,<<porns>>'] = 1:
+									$pornofday += '<font color="red"><<$porndesc[pornplan[''<<counter>>,<<porns>>'']]>> - <i>Taken by someone else</i></font><br>'
+								elseif pornstack < 10:
+									$pornofday += '<a href="exec:pornstack += 1 & porntaken[''<<counter>>,<<porns>>''] = 2 & pfilmday[<<pcount[counter]>>] = pornplan[''<<counter>>,<<porns>>''] & gs ''stat'' & dynamic $contracting"><<$porndesc[pornplan[''<<counter>>,<<porns>>'']]>></a><br>'
+								else
+									$pornofday += '<font color="grey"><<$porndesc[pornplan[''<<counter>>,<<porns>>'']]>></font><br>'
+								end
 							end
+						if porns < 3: porns += 1 & jump 'pornplanloop'
+						if $pornofday ! '':
+							'<<$monthName[m1]>> <<d1>>, <<$week[w1]>>:'
+							'<<$pornofday>>'
+							$pornofday = ''
 						end
-					if porns < 3: porns += 1 & jump 'pornplanloop'
-					if $pornofday ! '':
-						'<<$monthName[m1]>> <<d1>>, <<$week[w1]>>:'
-						'<<$pornofday>>'
-						$pornofday = ''
 					end
 				end
 			if counter < 49:
@@ -640,6 +661,8 @@ if $ARGS[0] = 'options':
 		killvar 'tagfilter'
 		killvar 'contracting'
 		killvar 'pcount'
+		killvar 'weekdayfilter'
+		killvar 'weekendfilter'
 		gt 'pornstudio', 'start'
 	end
 end
