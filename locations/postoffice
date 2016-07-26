@@ -130,7 +130,7 @@ if $ARGS[0] = 'start':
 		end
 	end
 
-	if hour =>12 and hour < 14:
+	if hour =>12 and hour < 14 and bankloc = 0:
 		if askWork = 1:
 			act 'Go to Postmaster Office':
 				$postloc = 'post_off' & gt 'postoffice'
@@ -138,7 +138,13 @@ if $ARGS[0] = 'start':
 		end
 	end
 
-	act 'Leave': gt 'pavCommercial'		
+	act 'Leave':
+		if bankloc = 1:
+				gt 'down'
+			else
+				gt 'pavCommercial'
+		end
+	end
 end
 
 if $postloc = 'counter':
@@ -279,7 +285,7 @@ if $postloc = 'counter':
 		end
 	end
 
-	if askWork = 0:	
+	if askWork = 0 and bankloc = 0:	
 		act 'Ask for work':
 	
 			cls
@@ -287,10 +293,11 @@ if $postloc = 'counter':
 			gs 'stat'
 			
 			'You approach the counter and ask the girl at the counter: "Excuse me... I hear you are looking for postal workers? I would like to come work as a one."'
-			'She nods understandingly: "We are looking for new workers, that''s true. I''d hire you in an instant, but unfortunately it''s not up to me. You should go see Oleg Koltsov, the postmaster. He''s usually in his office between 12:00 and 14:00. I bet he will hire you! Good luck when you go see him!"'
+!!'She nods understandingly: "We are looking for new workers, that''s true. I''d hire you in an instant, but unfortunately it''s not up to me. You should go see Oleg Koltsov, the postmaster. He''s usually in his office between 12:00 and 14:00. I bet he will hire you! Good luck when you go see him!"'
+			'"I''m afraid there is no position available at this time."'
 
 			act 'Step away from the counter':gt'postoffice', 'start'
-			askWork += 1
+!!askWork += 1
 		end
 	end
 
