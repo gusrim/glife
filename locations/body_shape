@@ -46,12 +46,9 @@ if $ARGS[0] = '':
 
 	wrtemp = ((2 * vitalbuf + strenbuf + agilbuf) /4)
 
+!!	Primary wratio handling
 	if wrtemp < 11:
-		if (vitalbuf + strenbuf + agilbuf) /3 < 11:
-			wratio = 85 + (11 - (vitalbuf + strenbuf + agilbuf)/3)
-		elseif (vitalbuf + strenbuf + agilbuf) /3 > 100:
-			wratio = 70 - ((vitalbuf + strenbuf)/2 - agilbuf)/5
-		end
+		wratio = 85 + (11 - (vitalbuf + strenbuf + agilbuf)/3)
 	elseif wrtemp < 20:
 		wratio = 85
 	elseif wrtemp < 35:
@@ -60,11 +57,16 @@ if $ARGS[0] = '':
 		wratio = 80 - (wrtemp - 35) / 4
 	elseif wrtemp < 80:
 		wratio = 75 - (wrtemp - 55) / 5
-	elseif wrtemp >= 80 and (vitalbuf + strenbuf + agilbuf) /3 <= 100:
+	elseif wrtemp >= 80:
 		wratio = 70
 	end
 
+!!	High stat value edge case handling
+	if (vitalbuf + strenbuf + agilbuf) /3 > 100: wratio -= ((vitalbuf + strenbuf)/2 - agilbuf)/5
+
+!!	This is the oops and high stat gone overboard handling
 	if wratio < 65: wratio = 65
+
 	killvar 'wrtemp'
 
 !!Setting the vnesh bonus based on wratio
@@ -239,12 +241,18 @@ if $ARGS[0] = '':
 	if salolast > salo: salolast -= 1
 	if salolast < salo: salolast += 1
 
-!!This accounts for higher Stats burning more fat during the day (the plus 5 is to give some working room)
-	if salo + 5 < fat:
+!!This accounts for higher Stats keeping the body shape stable and a bypass for resets (the plus/minus 5 is to give some working room)
+	if salo + 5 < fat and sftrstflag = 0:
 		if salo + 5 < fat - ((agilbuf + strenbuf + vitalbuf)/30):
 			fat -= (agilbuf + strenbuf + vitalbuf)/30
 		else
 			fat = salo + 5
+		end
+	elseif salo - 5 > fat and sftrstflag = 0:
+		if salo - 5 > fat + ((agilbuf + strenbuf + vitalbuf)/30):
+			fat += (agilbuf + strenbuf + vitalbuf)/30
+		else
+			fat = salo - 5
 		end
 	end
 
