@@ -51,6 +51,9 @@ i += 1
 if i <= 147:jump 'loopprice'
 
 !!SECTION: Bimbo (daily status update checks)
+!!A Succubus cannot be a Bimbo
+if succubusflag = 1 and bimbo > 0: bimbo -= succublvl * 2
+
 if bimbo < 0:
 	bimbo = 0
 elseif bimbo < 10:
@@ -60,16 +63,10 @@ elseif bimbo < 20:
 	bimbolevel = 1
 elseif bimbo < 30:
 	bimbolevel = 2
-elseif bimbo < 40:
-	bimbolevel = 3
 else
-	if succubusflag = 1:
-		bimbolevel = 4
-	else
-		bimbolevel = 3
-	end
+	bimbolevel = 3
 end
-if bimbo >= 50:bimbo = 50
+if bimbo >= 40: bimbo = 40
 
 !!Bimbo levels. They use custom variables so they wont permanently change character stats
 vneshtemp = (3*(9 + lip + tanKoef + skin + resnic + glaraz + bodykoef + vidagebonus - (zub * 2) + tatKeof))
@@ -78,16 +75,12 @@ if bimbolevel = 0:bimbobeauty = 0 & bimbostupidity = 0
 if bimbolevel = 1:bimbobeauty = (vneshtemp / 10) & bimbostupidity = (intel / 6)
 if bimbolevel = 2:bimbobeauty = (vneshtemp / 6) & bimbostupidity = (intel / 4)
 if bimbolevel = 3:bimbobeauty = (vneshtemp / 5) & bimbostupidity = (intel / 3)
-if bimbolevel = 4:
-	if succublvl = 1: bimbobeauty = (vneshtemp / 5) & bimbostupidity = (intel / 3)
-	if succublvl = 2: bimbobeauty = (vneshtemp / 4) & bimbostupidity = (intel / 4)
-	if succublvl = 3: bimbobeauty = (vneshtemp / 3) & bimbostupidity = (intel / 6)
-	if succublvl = 4: bimbobeauty = (vneshtemp / 2) & bimbostupidity = 0
-end
 
-if bimbocl = 1:
+if bimbocl = 1 and succubusflag = 0:
 	bimbocl = 0
 	bimbo += 2
+else
+	bimbocl = 0
 end
 
 !Succubus Level & hunger calcs 
@@ -100,16 +93,26 @@ if succubusflag = 1:
 	if succubxp < 60:
 		succublvl = 1
 		$sucself1 = 'that feeling'
+		sucstorecap = 0
+		if bimbolevel <= 0: bimbobeauty = (vneshtemp / 5) & bimbostupidity = (intel / 3)
 	elseif succubxp < 150:
 		succublvl = 2
 		$sucself1 = 'the power'
+		sucstorecap = 0
+		if bimbolevel <= 0: bimbobeauty = (vneshtemp / 4) & bimbostupidity = (intel / 4)
 	elseif succubxp < 270:
 		succublvl = 3
 		$sucself1 = 'your other self'
+		sucstorecap = 100
+		if bimbolevel <= 0: bimbobeauty = (vneshtemp / 3) & bimbostupidity = (intel / 6)
 	else
 		succublvl = 4
 		$sucself1 = 'your true self'
+		sucstorecap = 200
+		if bimbolevel <= 0: bimbobeauty = (vneshtemp / 2) & bimbostupidity = 0
 	end
+	if sucskill >= 2 and succublvl >= 2: sucstorecap += 100
+	if sucskill >= 3 and succublvl >= 2: sucstorecap += (sucstorecap * 2) / 10
 	if mutagenP < (succublvl - 1): mutagenP = (succublvl - 1)
 	if mutagenS < (succublvl - 1): mutagenS = (succublvl - 1)
 	if mutagenA < (succublvl - 1): mutagenA = (succublvl - 1)
@@ -117,7 +120,7 @@ if succubusflag = 1:
 	if mutagenV < (succublvl - 1): mutagenV = (succublvl - 1)
 	if mutagenW < (succublvl - 1): mutagenW = (succublvl - 1)
 	if mutagenI < (succublvl - 1): mutagenI = (succublvl - 1)
-	If sucexcess >= 100:
+	if (sucexcess >= 100 and (sucskill < 2 or succhungry > -2)) or (sucexcess >= 100 + sucstorecap and sucskill >= 2):
 		if stren < 250: stren += 1 & sucexcess -= 12
 		if speed < 250: speed += 1 & sucexcess -= 12
 		if agil < 250: agil += 1 & sucexcess -= 12
@@ -125,16 +128,13 @@ if succubusflag = 1:
 		if vital < 250: vital += 1 & sucexcess -= 12
 		if will < 250: will += 1 & sucexcess -= 12
 		if intel < 250: intel += 1 & sucexcess -= 12
-		if succhungry > (0 - 2 - succublvl): succhungry -= 1 & sucexcess -= 12
-		vidageday += 1 & sucexcess -= 4
-		!!Future proofing as sucexcess is currently planned for use in a Succubus body mod spell
-		if succublvl < 3:
-			sucexcess = 0
-		elseif succublvl < 4:
-			if sucexcess >= 100: sucexcess = 100
-		else
-			if sucexcess >= 200: sucexcess = 200
+		if sif succhungry > (0 - 2 - succublvl): succhungry -= 1 & sucexcess -= 12
+		if vidageday < 720 and vidage >= 18: vidageday += 2 & sucexcess -= 4
+		if vidageday >= 720 and vidage > 18:
+			vidageday -= 360
+			vidage -= 1
 		end
+		if sucexcess > sucstorecap: sucexcess = sucstorecap
 	elseif sucexcess < 0 and succhungry < 0:
 		succhungry += 1
 		if (0 - sucexcess) < (10 * succublvl):
@@ -145,6 +145,20 @@ if succubusflag = 1:
 	end
 	if sucexcess < 0: sucpowzeroed += 1
 	if sucexcess >= 0 and sucpowzeroed > 0: sucpowzeroed -= 1
+	
+!!	This is so a Succubus always moves toward a default vaginal and anal size when she has the accomadation ability
+	if sucskill >= 4:
+		if vagina - 2 >= 13:
+			vagina -= 2
+		elseif vagina + 2 <= 13:
+			vagina += 2
+		end
+		if anus - 2 >= 8:
+			anus -= 2
+		elseif anus + 2 <= 8:
+			anus += 2
+		end
+	end
 else
 	!!Checks how often sex has occured in the last 24 hours and for drops in bimbo score, for calculating withdrawal
 	if bimbolevel >= 1:
