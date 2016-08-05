@@ -11,6 +11,17 @@ if $ARGS[0] = 'start':
 	'<center><img src="images/etogame/aptek.jpg"></center>'
 
 	act 'Leave the pharmacy':gt 'pavCommercial'
+	
+	if Olu_pay > 0:
+		minut += RAND(5,10)
+		money += Olu_pay * RAND(500,700)
+		Olu_pay = 0
+
+		'You go back to the pharmacy, and wait for a slow moment so you can talk to your aunt undisturbed.'
+		'Your aunt smiles happily as she gives you a small envelope. "Thank you so much <<$name>>, this is the only way I can get some sleep. I really appreciate it. Here, please accept this money, you''ve earned it."'
+
+		act 'Thank her and leave the pharmacy':gt'pavCommercial'
+	end
 
 	if hour < 8 or hour > 20:
 		'The pharmacy is currently closed. There''s a sign on the door, that says it''s open between 8:00 and 20:00 every day.'
@@ -85,37 +96,35 @@ if $ARGS[0] = 'start':
 							'You linger around the pharmacy, waiting for your aunt to become available. However, as time passes the pharmacy only becomes more and more crowded, and your aunt has a long line of customers to deal with. You decide you''ve wasted enough time, and to try again later.'
 						end
 					end
-				elseif motherQW = 2 and gaogorod >= 40:
+				elseif motherQW = 2 and gaogorod >= 20:
 					gt'motherQW','motherQW_3'
 				elseif motherQW >= 3 and galubri = 0:
-					if gaprezikday ! day or gatabletkiday ! day:
+					if gaprezikday ! daystart or gatabletkiday ! daystart:
 						minut += RAND(5,15)
-						oluuosegunrand = RAND(1,10)
 						gs'stat'
-						if oluuosegunrand = 10 and oluuosegunday ! day:
+						if RAND(0,5) = 0 and oluuosegunday ! daystart:
 							gt'motherQW','olu'
-						elseif oluuosegunrand < 10 or oluuosegunday = day:
+						else
 							'You wait for your turn and move to the counter, discretely nodding at the counter with the contraceptives. Your aunt gives you a small smile and asks what she can do for you today.'
 
 							gs 'gaptek', 'garden'
 						end
-					elseif gaprezikday = day and gatabletkiday = day:
+					elseif gaprezikday = daystart and gatabletkiday = daystart:
 						minut += RAND(5,15)
 
 						'You wait for your turn and move up to the counter, discretely nodding at the counter with the contraceptives. She apologizes: "I''m sorry <<$name>>, those are all sold out." With some malice in her voice, she whispers: "Your stud will have to wait until tomorrow, unless you plan on entertaining him in some other way." Giving you a lewd grin, she ushers you away from the counter so she can help the next customer.'
 					end
 				elseif motherQW >= 3 and galubri = 1:
-					if gaprezikday ! day or gatabletkiday ! day or galubriday ! day:
+					if gaprezikday ! daystart or gatabletkiday ! daystart or galubriday ! daystart:
 						minut += RAND(5,15)
-						oluuosegunrand = RAND(1,10)
-						if oluuosegunrand = 10 and oluuosegunday ! day:
+						if RAND(0,5) = 0 and oluuosegunday ! daystart and tetyafirst < 3:
 							gt'motherQW','olu'
-						elseif oluuosegunrand < 10 or oluuosegunday = day:
+						else
 							'You wait for your turn and move to the counter, discretely nodding at the counter with the contraceptives. Your aunt gives you a small smile and asks what she can do for you today.'
 
 							gs 'gaptek', 'garden'
 						end
-					elseif gaprezikday = day and gatabletkiday = day and galubriday = day:
+					elseif gaprezikday = daystart and gatabletkiday = daystart and galubriday = daystart:
 						minut += RAND(5,15)
 
 						'You wait for your turn and move up to the counter, discretely nodding at the counter with the contraceptives. She apologizes: "I''m sorry <<$name>>, those are all sold out." With some malice in her voice, she whispers: "Your stud will have to wait until tomorrow, unless you plan on entertaining him in some other way." Giving you a lewd grin, she ushers you away from the counter so she can help the next customer.'
