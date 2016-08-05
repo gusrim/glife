@@ -65,7 +65,7 @@ $grandma = {
 			elseif temp = 3:
 				'"This really happened!" your grandmother reassures you. "When I was young, basically your age... it was just after the war. No one believed in superstition or anything like that. They were tough times, all anyone cared about is how to get their next meal on the table for their family."'
 				'"We all went to bed, but our cat kept meowing at me! It just wouldn''t let me sleep, for hours and hours!"'
-				'When I finally caught some sleep and woke up the next morning, my father was next to my bed. He said when he cleaned out the furnace of ashes, he found the remains of our dead cat in there!"'
+				'"When I finally caught some sleep and woke up the next morning, my father was next to my bed. He said when he cleaned out the furnace of ashes, he found the remains of our dead cat in there!"'
 				'You see her eyes tear up. "No one knew how she got there... no one noticed anything! Except for me. To this day I believe she was trying to warn me, asking for my help..."'
 				'Your grandmother shrugs, wiping a tear from her eye. You put your hand on her knee reassuringly, but don''t really know what to say to comfort her.'
 			end
@@ -133,13 +133,14 @@ $villagecat = {
 
 '<center><H4>Your grandparents'' cottage</H4></center>'
 '<center><img src="images/qwest/gadukino/izba.jpg"></center>'
-'A fairly simple home in the village of Gadyukino, but your grandparents call it home.  Inside the main room is a  huge wardrobe (where you can <a href="exec:gt ''clothing'', ''view_clothing_list'', ''wardrobe''">organize your clothes</a> or <a href="exec:gt ''clothing_QV'', ''list''"> pick something to wear</a>) and a <a href="exec:gad = 1 & gt ''bed2''">bed</a> where you can sleep. It''s more comfortable than it looks.  In the living room they have an old black and white <a href="exec:gt ''tvPar''">television</a>. It''s positioned next to a body length <a href="exec:gt ''mirror'', ''start''">mirror</a>.'
+'A fairly simple home in the village of Gadyukino, but your grandparents call it home.  Inside the main room is a  huge wardrobe (where you can <a href="exec:gt ''clothing'', ''view_clothing_list'', ''wardrobe''">organize your clothes</a> or <a href="exec:gt ''clothing_QV'', ''list''"> pick something to wear</a>) and a <a href="exec:gad = 1 & gt ''bed2''">bed</a> where you can sleep. It''s more comfortable than it looks.'
+'In the living room they have an old black and white <a href="exec:gt ''tvPar''">television</a>. It''s positioned next to a body length <a href="exec:gt ''mirror'', ''start''">mirror</a>.'
 if catday = daystart:
 	'On the table by the window <a href="exec: dynamic $villagecat ">Boniface</a> lies lazily, soaking in the heat from the rays of sunshine coming through the window.'
 else
 	if hour < 8:
-		temp = RAND(0,30)
-		if temp = 15:catday = daystart & 'On the table by the window <a href="exec: dynamic $villagecat ">Boniface</a> lies lazily, soaking up some rays of sunshine.'
+		temp = RAND(0,9)
+		if temp = 0:catday = daystart & 'On the table by the window <a href="exec: dynamic $villagecat ">Boniface</a> lies lazily, soaking up some rays of sunshine.'
 	elseif hour >= 8 and hour < 12:
 		temp = RAND(0,2)
 		if temp = 1:catday = daystart & 'On the table by the window <a href="exec: dynamic $villagecat ">Boniface</a> is busy cleaning himself with his tongue.'
@@ -147,11 +148,11 @@ else
 		temp = RAND(0,5)
 		if temp = 3:catday = daystart & 'Next to the table by the window <a href="exec: dynamic $villagecat ">Boniface</a> stretches and meows loudly, it''s time for dinner.'
 	elseif hour >= 18 and hour < 22:
-		temp = RAND(0,10)
-		if temp = 5:catday = daystart & '<a href="exec: dynamic $villagecat ">Boniface</a> is stalking around the main floor, looking for a nice juicy mouse to play with.'
+		temp = RAND(0,3)
+		if temp = 0:catday = daystart & '<a href="exec: dynamic $villagecat ">Boniface</a> is stalking around the main floor, looking for a nice juicy mouse to play with.'
 	elseif hour >= 22:
-		temp = RAND(0,20)
-		if temp = 10:catday = daystart & 'On the table by the window <a href="exec: dynamic $villagecat ">Boniface</a> lies lazily, soaking up some rays of sunshine.'
+		temp = RAND(0,2)
+		if temp = 1:catday = daystart & 'On the table by the window <a href="exec: dynamic $villagecat ">Boniface</a> lies lazily, soaking up some rays of sunshine.'
 	end	
 end
 
@@ -170,7 +171,7 @@ lcolor = rgb(106, 90, 205)
 
 act 'Go outside':
 	if $clothingworntype ! 'nude':
-		minut += 5 & gt'Gaddvor'
+		minut += 5 & gt 'Gaddvor'
 	else
 		msg'<b><font color = red>You need to get dressed first.</font></b>'
 		gt $curloc
@@ -260,7 +261,22 @@ if edaD > 0:
 	end
 end
 
-dynamic $fatdel
+if fatdel > 0:
+	act 'Consume fat burners':
+		cla
+		*clr
+		if fat > salo:fat = salo
+
+		fatdel -= 1
+		fat -= 25
+
+		if fat < 0:fat = 0
+
+		'You throw the capsule of fat burners in a glass, add some water and drink it. You''re amazed at how fast the capsule works, feeling your body slim down almost immediately.'
+
+		act 'Get up from the table':gt 'Gadhouse'
+	end
+end
 
 if lekarstvo > 0:
 	'You have <<lekarstvo>> tablet(s).'
