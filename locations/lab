@@ -13,18 +13,14 @@ if $ARGS[0] = 'start':
 	'<center><b><font color="maroon">Karinas'' Laboratory</font></b></center>'
 	'<center><img src="images/qwest/lab.jpg"></center>'
 
-	if succubusflag = 1 and sucpcinfo < 2:
-		cla
-		clr
-		*clr
-		'<center><b><font color="maroon">Karin</font></b></center>'
-		'<center><img src="images/picpre/karinpre.jpg"></center>'
-		'The moment you walked into her lab, Karin''s head jerked up and she hurried over to you.'
-		'She stares at you for several seconds, then demands, "What the hell happened to you!?!?"'
-		'You start to answer her when she holds up her hand and says, "Wait, come sit on the couch and tell me."'
-		'She turns away from you and walks toward the couch.'
-		act 'Follow her': gt 'lab', 'karinsuctalk'
-		exit
+	if succubusflag = 1 and sucbypass = 0:
+		if sucpcinfo < 2:
+			xgt 'lab', 'suctraining'
+		elseif sucpcinfo >= 6 and sucskill < 3 and sctrainprep = 1:
+			xgt 'lab', 'suctraining'
+		end
+	elseif succubusflag = 1 and sucbypass = 1:
+		sucbypass = 0
 	end
 
 	act 'Leave':
@@ -185,9 +181,36 @@ if $ARGS[0] = 'karin':
 	'<center><img src="images/picpre/karinpre.jpg"></center>'
 	'Karyn as always studying something.'
 
-	if karinsucsex ! 0 and karinsucsexask ! daystart: act 'Ask if she want''s to have sex': karinsucsexask = daystart & gt 'lab', 'karinsucsexask'
+	if succubusflag = 1:
+		if karinsucsex > 0 and sucinfoday ! 0 and sucinfoday <= daystart:
+			'"Hey <<$nickname>>!'
+			'"I''ve gotten some more information about Succubae!"'
+			if sucpcinfo = 4 and succublvl >= 2:
+				'"I heard from one of my mage contacts, in Sydney, Australia of all places, and he passed on some more details."'
+				sucpcinfo = 5
+				sucinfoday = daystart + 10 + rand(0,7)
+				act 'Ask her to tell you': gt 'succubus', 'karinask', 1
+				exit
+			elseif sucpcinfo = 5:
+				'"I heard from an old friend of mine who is now living in Morocco and she also has a Succubus for a lover. She said that after they had been together for some time, they discovered that with her help, her Succubus lover learned something new."'
+				sucpcinfo = 6
+				sucinfoday = daystart + 17 + rand(0,7)
+				act 'Ask her to tell you': gt 'succubus', 'karinask', 2
+				exit
+			elseif sucpcinfo = 6:
+				'"I heard from one of my contacts. He''s living in Las Vegas in America, which, apparently, is the Succubus capital of North America, and he passed along two pieces of information."'
+				sucpcinfo = 7
+!!				The +9000000 is so I can easily reset it when the next Skill upadtes are ready.
+				sucinfoday = daystart + 9000000
+				act 'Ask her to tell you': gt 'succubus', 'karinask', 3
+				exit
+			end
+		end
+		
+		if karinsucsex ! 0 and karinsucsexask ! daystart: act 'Ask if she want''s to have sex': karinsucsexask = daystart & gt 'lab', 'karinsucsexask'
 
-	if sucpcinfo >= 4: act 'Ask her about Succubae': gt 'lab', 'karinsuctalk'
+		if sucpcinfo >= 4: act 'Ask her about Succubae': gt 'lab', 'karinsuctalk'
+	end
 
 	act 'Leave':gt 'lab', 'start'
 
@@ -383,6 +406,134 @@ if $ARGS[0] = 'karin':
 			act 'Leave':gt 'lab', 'karin'
 		end
 	end
+!!	Succubus specific skill training.
+	if succubusflag = 1:
+		if sucpcinfo >= 4 and sucskill < 1:
+			act 'Learn to monitor your Succubus Energies (may take some time)':
+				cla
+				minut += 30
+				sucskill = 1
+				gs 'stat'
+				'You spend 30 minutes meditating, with Karin in a light link with you as she shows you how to tell what your Succubus energy levels are.'
+				'You open your eyes and look at Karin sitting across from you.'
+				'She is flushed, breathing hard, and her nipples are showing clearly through her blouse.'
+				if 1 + (succublvl * 2) + karinsucsex < 20 and rand(0,100) < 90:
+					'After a moment, she gives herself a shake and pulls herself together, before saying, "There you go!"'
+					'She then stands up and goes back to her studying.'
+					act 'Finish': gt 'lab', 'karin'
+				else
+					xgt 'lab', 'suctrainsex'
+				end
+			end
+		elseif sucpcinfo >= 5 and sucskill < 2:
+			act 'Learn to increase your energy storage (may take some time)':
+				cla
+				minut += 5
+				'You settle into a meditative state and link with Karin.'
+				if succhungry > -2:
+					gs 'stat'
+					'After a few minutes, you feel Karin break the link and say, "<<$name>>, you need to build up <i>two</i> days of reserve before we do this training."'
+					'She then stands up and goes back to her studying.'
+					act 'Finish': gt 'lab', 'karin'
+					exit
+				end
+				minut += 55
+				gs 'stat'
+				sucskill = 2
+				'Karin shows you how to build a storage reservoir that draws the excess energy in before your body uses it.'
+				'Once you''re finished, Karin is again showing clear signs of arousal and she says, "You know, touching your power is a really, <i>really</i>, intense experience!"'
+				'She then closes her eyes and visibly tries to get ahold of herself.'
+				if karinsucsex >= 20 or rand(1,100) < 95:
+					'After several moments, she pulls herself together, opens her eyes, smiles at you, and says, "There, I knew I could do it!"'
+					'She then stands up and goes back to her studying.'
+					act 'Finish': gt 'lab', 'karin'
+				else
+					'Then her eyes snap open and you feel arousal suddenly flooding the link!'
+					xgt 'lab', 'suctrainsex'
+				end
+			end
+		elseif sucpcinfo >= 6 and sucskill < 3:
+			if money >= 5000 and sctrainprep = 0:
+				act 'Ask her about the preparations and training':
+					cla
+					gs 'stat'
+					minut += 60
+					'You ask her what''s involved in the training and preparations.'
+					'She spends some time explaining the technical details of what you need to do during the "rital", then says,'
+					'"The preparations will take 7 days, the money is to modify one of my devices to pull in free sexual energy from the adult businesses around here and to make several potions we''ll need, one of which is going to temporarily make me into a sexual energy "battery" and the others are so we can do the ritual without hurting ourselves.'
+					'"Once I start, you''ll have 2 days to tell me to abort, after that I will have started building up the charge. We would not be able stop ourselves and premature sex could kill us, so I''ll be putting up a barrier to keep you out until 7 days have pasted and I''ll set it not to let you through unless you have 3 days of reserves and 100 units of stored energy.'
+					'"Once I''ve built up to a full charge, I''ll only be able to hold it for a day, after that I''ll have to release it. The "battery" potion itself as well as the materials for it will not keep, so aborting after I start or fail to show up on time and 2000 <b>?</b> will have been wasted.'
+					'"So, do you want me to start the preparations?"'
+					act 'Yes':
+						cla
+						money -= 5000
+						sctrainprep = 1
+						karinsucsexday = daystart + 7
+						'"Ok, I''ll get started! Be here next <<$week>> with 3 days of reserves and 100 units of stored energy."'
+						if karinsucsex > 0:
+							'She then pulls you in for a quick kiss before adding, "Now get out of here, I can''t have you distracting me!"'
+						else
+							'She then surprises you with a peck on the cheek before adding, "Now get out of here, I can''t have you distracting me!"'
+						end
+						act 'Leave':
+							minut += 5
+							gt 'down'
+						end
+					end
+					act 'Not Yet': gt 'lab', 'karin'
+				end
+			elseif money >= 2000 and sctrainprep = -1:
+				act 'Ask her to redo the preparations':
+					cla
+					'Are you sure? The same things from before apply; 2 days to abort, the barrier, 3 days of reserves and 100 units of stored energy, 8 to 10 hours once I''m fully charged... Another 2000 <b>?</b> wasted. Are you <i>really</i> sure?'
+					act 'Yes':
+						cla
+						money -= 2000
+						sctrainprep = 1
+						karinsucsexday = daystart + 7
+						'"Ok, I''ll get started! Be here next <<$week>> with 3 days of reserves and 100 units of stored energy."'
+						'"Now get out of here, I can''t have you distracting me!"'
+						act 'Leave':
+							minut += 5
+							gt 'down'
+						end
+					end
+					act 'Not Yet': gt 'lab', 'karin'
+				end
+			end
+		elseif sucpcinfo >= 7 and sucskill < 4 and maddildo = 1 and sucexcess >= 100:
+			act 'Ask Karin about the accommodation training':
+			cla
+			'Karin asks, "Are you ready to do the accommodation training?"'
+				act 'Yes, I''m ready. (can take a lot of time)':
+					cls
+					cla
+					minut += 120
+					gs 'stat'
+					'<center><img src="images/qwest/selfplay/dildo.jpg"></center>'
+					'She walks you through everything you need to do while leading you to the couch.'
+					'Once there, as you as stripping, so is she! At your look, she says, "What? I don''t want to tear my clothes if one of us slips."'
+					'You settle onto the couch then work the massive dildo into your snach. After working the dildo for a bit, with Karin in a light link guiding you, you switch to your ass. You work there for a while before switching back. You continue this way for nearly two hours, concentrating so hard you only have two orgasms, before you feel your body responding as it should. A quick test and you’re done.'
+					sucskill = 4
+					sucexcess -= 100
+					act 'Continue':
+						horny = 0
+						'As you''re finishing, you notice Karin has her eyes closed and is visibly trying to get ahold of herself.'
+						if karinsucsexday < daystart or rand(1,100) > 95:
+							'Then her eyes snap open and you feel arousal suddenly flooding the link!'
+							xgt 'lab', 'suctrainsex'
+						else
+							cla
+							'After several moments, she pulls herself together, opens her eyes, smiles at you, and says, "There, I knew I could do it!"'
+							'She then stands up and goes back to her studying.'
+							act 'Finish': gt 'lab', 'karin'
+						end
+					end
+				end
+				act 'Not Yet': gt 'lab', 'karin'
+			end
+		end
+	end
 end
 
 if $ARGS[0] = 'karinsuctalk':
@@ -417,9 +568,25 @@ if $ARGS[0] = 'karinsuctalk':
 	act 'Ask her to repeat what she knows about Succubae': gt 'succubus', 'karinask'
 
 	act 'Ask her if she has learned anything new about Succubae':
-		'No, I havn''t.'
 		cla
-		act 'Continue': gt 'lab', 'karinsuctalk'
+!!		Nothing after info level 6 here, because Karin will tell the PC automatically
+		if sucpcinfo >= 4 and sucinfoday ! 0 and sucinfoday <= daystart:
+			 '"Actually, I have gotten some more information about Succubae."'
+			 if sucpcinfo = 4 and succublvl >= 2:
+				'"I heard from one of my mage contacts, in Sydney, Australia of all places, and he passed on some more details."'
+				sucpcinfo = 5
+				sucinfoday = daystart + 10 + rand(0,7)
+				act 'Ask her to tell you': gt 'succubus', 'karinask', 1
+			elseif sucpcinfo = 5:
+				'"I heard from an old friend of mine who is now living in Morocco and she actually has a Succubus for a lover. She said that after they had been together for some time, they discovered that with her help, her Succubus lover learned something new."'
+				sucpcinfo = 6
+				sucinfoday = daystart + 10 + rand(0,7)
+				act 'Ask her to tell you': gt 'succubus', 'karinask', 2
+			end
+		else
+			'No, I havn''t.'
+			act 'Continue': gt 'lab', 'karinsuctalk'
+		end
 	end
 
 	act 'Change topics': gt 'lab', 'karin'
@@ -484,6 +651,153 @@ if $ARGS[0] = 'karinsucsexask':
 			end
 		end
 	end
+end
+
+if $ARGS[0] = 'karinsexreject':
+	cla
+	clr
+	*clr
+	gs 'stat'
+	'<center><b><font color="maroon">Karin</font></b></center>'
+	'<center><img src="images/picpre/karinpre.jpg"></center>'
+	if scpopt = 2:
+		'I''m sorry, Karin, I just don''t have the time right now.'
+		scpopt = 0
+		killvar '$sclocrt' & killvar '$scargrt'
+	end
+	act 'Finish': gt 'lab', 'karin'
+end
+
+if $ARGS[0] = 'suctrainsex':
+	minut += 5
+	'She suddenly lunges at you and starts kissing you! You''re so surprised it takes you a bit to respond and, before you can do anything, she is nibbling your ear and whispering, "Let it go..."'
+!!	Hopefully this can be replaced by an 'arousal' call
+	horny += 10
+	if horny >= 100:
+		horny = 0
+		orgasm += 1
+		'You''re so shocked at this; you suddenly feel a powerful orgasm rush through you, causing you to cry out even as it rushes down the link to Karin, giving her a powerful orgasm as well!'
+		'Then, you feel your control slip...'
+		act 'Continue': gt 'succubus', 'karinsex'
+	else
+		scfwon = 2
+		scpopt = 1
+		$sclocrt = 'lab'
+		$scargrt = 'karinsexreject'
+		'You only have moments to decide, do you give in and let <<sucself1>> go or do you reign it in?'
+		act 'Continue': gt 'succubus', 'karinsex'
+	end
+end
+
+if $ARGS[0] = 'suctraining':
+	if sucpcinfo < 2:
+		cla
+		clr
+		*clr
+		'<center><b><font color="maroon">Karin</font></b></center>'
+		'<center><img src="images/picpre/karinpre.jpg"></center>'
+		'The moment you walked into her lab, Karin''s head jerked up and she hurried over to you.'
+		'She stares at you for several seconds, then demands, "What the hell happened to you!?!?"'
+		'You start to answer her when she holds up her hand and says, "Wait, come sit on the couch and tell me."'
+		'She turns away from you and walks toward the couch.'
+		act 'Follow her': gt 'lab', 'karinsuctalk'
+		exit
+	elseif sucpcinfo >= 6 and sucskill < 3 and sctrainprep = 1:
+		if karinsucsexday > daystart and karinsucsexday - 5 >= daystart:
+			cla
+			clr
+			*clr
+			'<center><b><font color="maroon">Karin</font></b></center>'
+			'<center><img src="images/picpre/karinpre.jpg"></center>'
+			'You attempt to enter Karin''s lab but an invisible barrier stops you, but Karin apparently heard you as she rushes over and says, "What''s wrong? Do we need to cancel?"'
+			act 'Yes, I need to cancel.':
+				cla
+				'"Are you sure?"'
+				act 'Yes, I''m sure.':
+					cla
+					if karinsucsexday = daystart + 7:
+						sctrainprep = 0
+						money += 5000
+						'"Ok, good thing I hadn''t bought anything yet." and she hands you back the 5000 <b>?</b> before going back to her studying.'
+					else
+						minut += 3
+						sctrainprep = -1
+						'"Ok, I''ll dump the "battery" potion."'
+						'With that, she walks over to her workbench and dumps the contents of several beakers into a barrel that flairs with magic as she does so.'
+					end
+					act 'Continue': gt 'lab', 'start'
+				end
+				act 'No, never mind continue your preparations':
+					cla
+					'She gives a small shake of her head and says, "Then get out of here, I can''t have you distracting me!"'
+					act 'Leave': gt 'down'
+				end
+			end
+			act 'No...':
+				cla
+				'You say, "No, I just wanted to see you."'
+				'She answers, "That''s sweet, but I can''t have you distracting me, come back all charged up in <<karinsucsexday - daystart>> days!"'
+				act 'Leave':
+					minut += 3
+					gt 'down'
+				end
+			end
+			exit
+		elseif karinsucsexday > daystart and karinsucsexday - 5 < daystart:
+			if karinsucsexday - daystart > 1:
+				$scsextmp = 'days'
+			else
+				$scsextmp = 'day'
+			end
+			'You attempt to enter Karin''s lab but an invisible barrier stops you, but Karin apparently heard you as she shouts from across the lab, "I''ve already taken the first potion so I can''t come anywhere near you, come back all charged up in <<karinsucsexday - daystart>> <<$scsextmp>>!"'
+			killvar '$scsextmp'
+			act 'Leave':
+				minut += 3
+				gt 'down'
+			end
+			exit
+		elseif karinsucsexday = daystart or karinsucsexday = daystart - 1:
+			cla
+			clr
+			*clr
+			gs 'stat'
+			'<center><b><font color="maroon">Karin</font></b></center>'
+			'<center><img src="images/picpre/karinpre.jpg"></center>'
+			'The instant you walk into the lab, Karin''s head snaps up and she stares hard at you as you approach the barrier.'
+			if sucexcess >= 100 and succhungry < -2:
+				minut += 10
+				'As you step through the barrier, Karin seems to teleport to you and start kissing you.'
+				'She then starts pulling you toward her workbench while saying between kisses, "Thank (kiss) goodness (kiss) you''re (kiss) here (kiss) and ready (kiss)! You wouldn''t (kiss) believe (kiss) how (kiss) <i><b>horny</b></i> (kiss) carrying (kiss) all this (kiss) sexual (kiss) energy (kiss) has made me!"'
+!!				Maybe add arousal call here
+				'She suddenly turns away from you and you realize that you have reached her workbench. She grabs two smallish vails off the top, pops the tops off both, hands you one saying, "Drink this," before downing the other.'
+				'It tastes like strawberry syrup.'
+				'This time you''re ready when Karin lunges at you and you resume kissing as you lead her toward the couch while she is striping the clothes off both of you and you feel a large amount of your stored energy being released into your body.'
+				'Once there, you both sit down facing each other, she looks at you with burning lust, and says, "Do it!"'
+				act 'Proceed': gt 'succubus', 'karinsex'
+				exit
+			elseif sucexcess < 100 and succhungry > -2 and karinsucsexday = daystart:
+				'She then says, "Damn! You don''t have enough reserve <i>or</i> stored energy! Run over to the Park and find some robbers or something, then get back here tomorrow!"'
+			elseif succhungry > -2 and karinsucsexday = daystart:
+				'She then says, Damn! You don''t have enough reserve energy! Run over to the Park and find some robbers or something, then get back here tomorrow!'
+			elseif succhungry > -2 and karinsucsexday = daystart - 1:
+				'She then says, "Damn! You don''t have enough reserve energy and there isn''t enough time for you to build it up." She then sighs and says, "Go ahead and take off, I need to bleed this energy off safely."'
+				sctrainprep = -1
+			else
+				'She then says, "Damn! You don''t have enough stored energy! Run over to the Park and find some robbers or something, then get back here!"'
+			end
+			act 'Leave': minut += 5 & gt 'down'
+			exit
+		else
+			'The barrier is down when you get to the lab and Karin calls from across the room, "You''re too late, I had to release the energy and we''ll need to start over."'
+			sctrainprep = -1
+			act 'Continue': gt 'lab', 'start'
+			exit
+		end
+	end
+!!	This is oops handling
+	sucbypass = 1
+	minut -= 5
+	gt 'lab', 'start'
 end
 
 --- lab ---------------------------------
