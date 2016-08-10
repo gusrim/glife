@@ -391,15 +391,15 @@ if $ARGS[0] = 'suck':
 		end
 
 		!new act:excuse from 1.2.4
-		act 'Excuses':
+		act 'Make an excuse':
 			cls 
-			minut +=1
-			! false, pizdezh and provocation, lpp
+			minut += 1
+			!!loop to make sure the same excuse isn't used twice in a row
 			:ReCheck
 			lpp = rand(0,3) 
-			!twice in a row the same shit does not roll, so:
-			if lastlpp!0 and lastlpp=lpp: jump 'ReCheck'
-			$textlpp[0]='- Boys... I got to the dentist, the tooth hurts very much, please release!
+			if lastlpp = lpp: jump 'ReCheck'
+			if lpp = 0:
+				'- Boys... I got to the dentist, the tooth hurts very much, please release!
 - Who cares? Suck quickly and you may go.
 - I''ll miss the reception, lamentably meet you.
 - Another time you go!
@@ -407,19 +407,21 @@ Frantically inventing excuses, you remember he had seen on television advertisin
 - Okay... You Fuckers have?
 - What?! You Shmarov, generally swollen.?!
 - Well, you me to the dentist is not allowed, and I got the bacteria that cause inflammation...'
-			$textlpp[1]='- I can''t, I think I have herpes jumps...'
-			$textlpp[2]='
+			elseif lpp = 1:
+				'- I can''t, I think I have herpes jumps...'
+			elseif lpp = 2:
+				'
 The list of excuses against suction is small, and you frantically think of anything to say.
 - I can... I''m sick... - you''re mumbling a lot, holding his stomach, presenting himself as a sucking stinky dick.
 Your face is naturally green.
 - Really I was going to throw up, growled someone from the boys.'
-			$textlpp[3]='- I think I might have tonsillitis... Throat hurts, no strength, - feigning a hoarse voice, you say.'
-*pl $textlpp[lpp]
-'- Fu fuck, you get out there now. Then work doubly realized?
+			elseif lpp = 3:
+				'- I think I might have tonsillitis... Throat hurts, no strength, - feigning a hoarse voice, you say.'
+			end
+			'- Fu fuck, you get out there now. Then work doubly realized?
 - Yes! - voskliknula you. In my head flashed the thought "Here motherfuckers..."'
 			lastlpp = lpp
 			afterschoolday = daystart
-			killvar '$textlpp'
 			killvar 'lpp'
 			act 'Leave': gt 'gschool' , 'start'
 		end
@@ -437,10 +439,10 @@ if $ARGS[0] = 'afterschool':
 	'Katja has a suspicious grin on her face while you can already see the bulge of Ivan''s cock straining against his pants, as he looks at you hungrily.'
 	'You can tell by Katja''s look that she planned something with Ivan and you find yourself eager to find out what it is, as Katja waves you over. "Well what took you? We''ve been waiting for a few minutes, come on." Before you can even respond she takes you both by the hand and leads you down to the least used wing of the school, to one of the class rooms that barely sees any activity.'
 	'Katja leading the way, she pulls you into a class room, behind you Ivan stops a moment and looks back down the hall, before coming in and closing the door.' 
-	'You go back to where Katja and you made out with <<$boy>> before, you find both of them already their talking. As soon as they see you, they both stop talking. Katja has a suspicious grin on her face while you can already see the bulge of Ivan''s cock straining against his pants, as he looks at you hungrily. You can tell by Katja''s look that she planned something with Ivan and you find yourself eager to find out what it is, as Katja waves you over. "Well what took you? We''ve been waiting for a few minutes, come on." Before you can even respond she takes you both by the hand and leads you down to the least used wing of the school, to one of the class rooms that barely sees any activity. Katja leading the way, she pulls you into a class room, behind you Ivan stops a moment and looks back down the hall, before coming in and closing the door.' 
 	act 'continue':
 		cls
 		horny += 10
+		stat['bj'] += 1
 		gs 'stat'
 		'<center><img src="images/qwest/alter/katja/doublebj.jpg"></center>'
 		'Katja and you begin kissing and pulling each others clothes off, within moments your both naked. Breaking your kiss both of you turn to look at Ivan, cheek to cheek. <<$boy>> stands there with his <<dick>>cm <<$dick_girth>> cock in his hand, stroking it as he watches the two of you.'
@@ -450,15 +452,17 @@ if $ARGS[0] = 'afterschool':
 		act 'Katja wants more.':
 			cls
 			horny += 10
+			stat['cuni'] += 1
 			gs 'stat'
-			'<center><img src="images/qwest/alter/katja/cowgirl/missionary.jpg"></center>'
+			'<center><img src="images/qwest/alter/katja/cowgirlmissionary.jpg"></center>'
 			'Pulling away from Ivan, Katja lays down on her back. She pulls you on top of her, till you are straddling her face, looking down towards her legs. Her tongue immediately beings to lap at your pussy, you feel yourself getting wet.'
 			'She spreads and lifts her legs up, inviting Ivan in, he wastes no time. Lowering himself between her legs, he slides his <<dick>>cm <<$dick_girth>> dick into her pussy and starts fucking her. Within moments you and Ivan are kissing while Katja is getting fucked by him and her tongue probes insides of your pussy for several minutes.'
 			'You and Katja are both moaning in pleasure as Ivan looks into your eyes and says."I want to fuck you now."'
-			'Pulling away from Ivan, Katja lays down on her back. She pulls you on top of her, till you are straddling her face, looking down towards her legs. Her tongue immediately beings to lap at your pussy, you feel yourself getting wet. She spreads and lifts her legs up, inviting Ivan in, he wastes no time. Lowering himself between her legs, he slides his <<dick>>cm <<$dick_girth>> dick into her pussy and starts fucking her. Within moments you and Ivan are kissing while Katja is getting fucked by him and her tongue probes insides of your pussy for several minutes. You and Katja are both moaning in pleasure as Ivan looks into your eyes and says."I want to fuck you now."'
 			act 'Ivan fucks you':
 				cls
 				horny += 10
+				stat['vaginal'] += 1
+				stat['cuni_give'] += 1
 				gs 'stat'
 				'<center><img src="images/qwest/alter/katja/69doggy.jpg"></center>'
 				'Ivan pulls out of Katja and gets up. You lean forward and begin to lick Katja''s soaking wet pussy. Your tongue easily sliding inside of her in place of Ivan''s dick, while Ivan walks around the two of you and kneels down behind you, near Katja''s head.'
@@ -471,6 +475,7 @@ if $ARGS[0] = 'afterschool':
 					spafinloc = 12
 					gs 'cum_manage'
 					orgasm += 1
+					stat['anal'] += 1
 					gs 'stat'
 					'After her orgasm Katja, slides around under you, till you are face to face and your laying on her stomach, your breasts smashed together, as she begins to kiss you.'
 					'Meanwhile Ivan starts to pant, it sounds like he is starting to get close to a orgasm himself. Katja reaches up with both her hands and grabs your ass, pulling your butt cheeks as far apart as she can. Grunting as he fucks you, Ivan understands the invitation.'
