@@ -1,12 +1,6 @@
 # din_van
 
 $showerdin = {
-	cumspclnt = 10
-	gs 'cum_cleanup'
-	if sweat > 10: sweat = 10 + rand(0,4)
-}
-
-$fullclean = {
 	cumspclnt = 1
 	gs 'cum_cleanup'
 	if sweat > 10: sweat = 10 + rand(0,4)
@@ -234,18 +228,24 @@ $bath = {
 }
 
 $fishcondslip = {
-	if cumcondslip > 0:
-		act 'Try to fish out the condom slipped inside':
+	if cumcondslip >= 1:
+		act 'Try to pull out the condom slipped inside (0:30)':
+			cla
+			minut += 30
 
-		if cumcondslipdeep > 0:
-			'The condom is slipped too deep inside to be fished out with your hand. You will need to ask for help!'
-			act 'Finish':gt $locM, $metkaM
-		else
-			'You extracted the condom successfully'
-			dynamic $fishcondslip
-			act 'Finish':gt $locM, $metkaM
+			if cumcondslipdeep > 0:
+				'The condom is slipped too deep inside to be pulled out by your hand. You will need to ask for help!'
+
+			else
+				cumspclnt = 18
+				gs 'cum_cleanup'
+				cumcondslip = 0
+				gs 'stat'
+				'With some effort, you managed to remove the condom.'
+			end
+			act 'Leave':gt $curloc
+
 		end
-
 	end
 }
 
@@ -345,7 +345,7 @@ $quickwash = {
 				dirtbelo += 1
 			end
 			
-			cumspclnt = 10
+			cumspclnt = 1
 			gs 'cum_cleanup'
 			cumspclnt = 6
 			gs 'cum_cleanup'
