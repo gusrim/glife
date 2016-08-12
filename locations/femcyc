@@ -95,19 +95,20 @@ if $ARGS[0] = '':
 			sparrtmpv = arrsize('$cumarrnam')
 			if sparrloc[cumarrtemp] = 17:
 				!!Loop to search same entry by age
-				sparrtmpv = -1
-				:sparrageloop
-				!!Find next entry with same age in array
-				sparrtmpv = arrpos(sparrtmpv,'cumarrage',sparrage[cumarrtemp])
+				sparrtmpv = 0
+				:sparrageloop17
+				!!Find next entry with same age in name array
+				sparrtmpv = arrpos(sparrtmpv,'$cumarrnam',$sparrnam[cumarrtemp])
 				if sparrtmpv < 0:
 					!!No more entries with same age in array (deleted/replaced?)
 					jump 'cumspaloopnext'
-				elseif $cumarrnam[sparrtmpv] ! $sparrnam[cumarrtemp]:
-					!!Wrong boy
+				elseif cumarrage[sparrtmpv] ! (sparrage[cumarrtemp] + 1):
+					!!+1 because cumarrage is already updated at this point
+					!!Wrong age, search again from next entry
 					sparrtmpv += 1
-					jump 'sparrageloop
+					jump 'sparrageloop17'
 				end
-				!!Here sparrtmpv contains the correct index
+				!!'Found guy id' & sparrtmpv
 				if sparrage[cumarrtemp] < 4:
 					cumarrcpt[sparrtmpv] += sparrppt[cumarrtemp]/5
 				elseif sparrage[cumarrtemp] < 10:
@@ -116,17 +117,19 @@ if $ARGS[0] = '':
 			elseif sparrloc[cumarrtemp] = 0:
 				!!Loop to search same entry by age
 				sparrtmpv = -1
-				:sparrageloop
-				!!Find next entry with same age in array
-				sparrtmpv = arrpos(sparrtmpv,'cumarrage',sparrage[cumarrtemp])
+				:sparrageloop0
+				!!Find next entry with same age in name array
+				sparrtmpv = arrpos(sparrtmpv,'$cumarrnam',$sparrnam[cumarrtemp])
 				if sparrtmpv < 0:
 					!!No more entries with same age in array (deleted/replaced?)
 					jump 'cumspaloopnext'
-				elseif $cumarrnam[sparrtmpv] ! $sparrnam[cumarrtemp]:
-					!!Wrong boy
+				elseif cumarrage[sparrtmpv] ! (sparrage[cumarrtemp] + 1):
+					!!+1 because cumarrage is already updated at this point
+					!!Wrong age, search again from next entry
 					sparrtmpv += 1
-					jump 'sparrageloop
+					jump 'sparrageloop0'
 				end
+				!!'Found guy id' & sparrtmpv
 				!!Here sparrtmpv contains the correct index
 				if sparrage[cumarrtemp] < 4:
 					cumarrcpt[sparrtmpv] += sparrppt[cumarrtemp]/40
@@ -198,6 +201,7 @@ if $ARGS[0] = '':
 				if sparrage[cumarrtemp] > 48:
 					health -= rand(3,sparrage[cumarrtemp] - 45)
 					'You feel nauseous.'
+				end
 			!!else
 				!!cumcondslip = 0
 			end
