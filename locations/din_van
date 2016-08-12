@@ -1,6 +1,12 @@
 # din_van
 
 $showerdin = {
+	cumspclnt = 10
+	gs 'cum_cleanup'
+	if sweat > 10: sweat = 10 + rand(0,4)
+}
+
+$fullclean = {
 	cumspclnt = 1
 	gs 'cum_cleanup'
 	if sweat > 10: sweat = 10 + rand(0,4)
@@ -227,6 +233,21 @@ $bath = {
 	end
 }
 
+$fishcondslip = {
+	if cumcondslip > 0:
+		act 'Try to fish out the condom slipped inside':
+
+		if cumcondslipdeep > 0:
+			'The condom is slipped too deep inside to be fished out with your hand. You will need to ask for help!'
+			act 'Finish':gt $locM, $metkaM
+		else
+			'You extracted the condom successfully'
+			dynamic $fishcondslip
+			act 'Finish':gt $locM, $metkaM
+		end
+
+	end
+}
 
 $brit = {
 	cla
@@ -324,7 +345,9 @@ $quickwash = {
 				dirtbelo += 1
 			end
 			
-			cumspclnt = 20
+			cumspclnt = 10
+			gs 'cum_cleanup'
+			cumspclnt = 6
 			gs 'cum_cleanup'
 			if sweat < 30 : sweat = 15 + rand(0,4) else sweat -= 10 + rand(0,4)
 			minut += 15
@@ -546,6 +569,8 @@ if $ARGS[0] = 'private':
     dynamic $bteeth
 
     dynamic $tampon
+
+    dynamic $fishcondslip
 
     if clrbelo <= 4 and $loc = 'vanrPar': clrbelo = 5
 
