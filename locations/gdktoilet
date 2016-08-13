@@ -6,11 +6,6 @@ if $ARGS[0] = 'start':
 	$locM = $CURLOC
 	$metka = $ARGS[0]
 	$loc = $CURLOC
-	inited = 1
-	music_on = 1
-	volume = 100
-	$music_theme = 'gdis'
-	gs 'init_music'
 	cls
 	gs 'stat'
 	fcolor = rgb(0, 0, 0)
@@ -19,12 +14,25 @@ if $ARGS[0] = 'start':
 	'<center><b><font color="maroon">Bathroom Entrance</font></b></center>'
 	'<center><img src="images/qwest/publicrest/bathroom_entrance.jpg"></center>'
    
-	if hour >= 8 and hour <= 24:
+	if hour >= 8 and hour <= 23:
 		act 'Go in the Men''s toilet': gt 'gdktoilet', 'mens'
 		act 'Go in the Women''s toilet': gt 'gdktoilet', 'womens'
 	end
 
-	if hour >=20 and hour <=24:
+	if hour >=20 and hour <=23:
+		if music_off = 0:
+			inited = 1
+			music_on = 1
+			volume = 50
+			$music_theme = 'gdis'
+			gs 'init_music'
+			pl '<a href="exec: music_off = 1 & gt $loc">Turn off the music</a>'
+		else
+			music_on = 0
+			volume = 100
+			gs 'init_music'
+			pl '<a href="exec: music_off = 0 & gt $loc">Play music</a>'
+		end
 		if gdkin_in = daystart:
 			act 'Return to the dance':gt 'gdkin'
 		elseif money >= 25:
