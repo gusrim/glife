@@ -71,10 +71,11 @@ if bimbo >= 40: bimbo = 40
 !!Bimbo levels. They use custom variables so they wont permanently change character stats
 vneshtemp = (3*(9 + lip + tanKoef + skin + resnic + glaraz + bodykoef + vidagebonus - (zub * 2) + tatKeof))
 
-if bimbolevel = 0:bimbobeauty = 0 & bimbostupidity = 0
-if bimbolevel = 1:bimbobeauty = (vneshtemp / 10) & bimbostupidity = (intel / 6)
-if bimbolevel = 2:bimbobeauty = (vneshtemp / 6) & bimbostupidity = (intel / 4)
-if bimbolevel = 3:bimbobeauty = (vneshtemp / 5) & bimbostupidity = (intel / 3)
+!!Bimbo levels. They use custom variables so they wont permanently change character stats
+if bimbolevel = 0: supnatvnesh = 0 & bimbostupidity = 0
+if bimbolevel = 1: supnatvnesh = 2 & bimbostupidity = (intel / 6)
+if bimbolevel = 2: supnatvnesh = 4 & bimbostupidity = (intel / 4)
+if bimbolevel = 3: supnatvnesh = 8 & bimbostupidity = (intel / 3)
 
 if bimbocl = 1 and succubusflag = 0:
 	bimbocl = 0
@@ -94,22 +95,22 @@ if succubusflag = 1:
 		succublvl = 1
 		$sucself1 = 'that feeling'
 		sucstorecap = 0
-		if bimbolevel <= 0: bimbobeauty = (vneshtemp / 5) & bimbostupidity = (intel / 3)
+		if bimbolevel <= 0: supnatvnesh = 1
 	elseif succubxp < 150:
 		succublvl = 2
 		$sucself1 = 'the power'
 		sucstorecap = 0
-		if bimbolevel <= 0: bimbobeauty = (vneshtemp / 4) & bimbostupidity = (intel / 4)
+		if bimbolevel <= 0: supnatvnesh = 3
 	elseif succubxp < 270:
 		succublvl = 3
 		$sucself1 = 'your other self'
 		sucstorecap = 100
-		if bimbolevel <= 0: bimbobeauty = (vneshtemp / 3) & bimbostupidity = (intel / 6)
+		if bimbolevel <= 0: supnatvnesh = 6
 	else
 		succublvl = 4
 		$sucself1 = 'your true self'
 		sucstorecap = 200
-		if bimbolevel <= 0: bimbobeauty = (vneshtemp / 2) & bimbostupidity = 0
+		if bimbolevel <= 0: supnatvnesh = 10
 	end
 	if sucskill >= 2 and succublvl >= 2: sucstorecap += 100
 	if sucskill >= 3 and succublvl >= 2: sucstorecap += (sucstorecap * 2) / 10
@@ -128,9 +129,12 @@ if succubusflag = 1:
 		if vital < 250: vital += 1 & sucexcess -= 12
 		if will < 250: will += 1 & sucexcess -= 12
 		if intel < 250: intel += 1 & sucexcess -= 12
-		if succhungry > (0 - 2 - succublvl): succhungry -= 1 & sucexcess -= 12
-		if vidageday < 720 and vidage >= 18: vidageday += 2 & sucexcess -= 4
-		if vidageday >= 720 and vidage > 18:
+		if succhungry > (0 - 2 - succublvl): succhungry -= 1 & sucexcess -= 10
+		if skinvan < 100: skinvan += 1 & sucexcess -= 2
+!!		This is to drive the Succubus vidage into the max appearance range
+		if vidageday < 720 and vidage >= 28: vidageday += 2 & sucexcess -= 2
+		if vidageday > 0 and vidage <= 20: vidageday -= 2 & sucexcess -= 2
+		if vidageday >= 720 and vidage > 28:
 			vidageday -= 360
 			vidage -= 1
 		end
@@ -325,8 +329,6 @@ if tabletkicheck = 1 and tabletkichday < daystart:
 		end
 	end		
 end
-
-if skinvan >= 20:skinvan -= 20 & skin += 1
 
 if lashair ! 1:
 	leghair += 1
@@ -903,6 +905,9 @@ elseif mentats_dose > 1:
 end
 if breastpumped = 0 and breastcount > 0: breastcount -= 1
 if breastpumped = 1:breastpumped = 0
+
+!!Appearance base calculation call
+gs 'body_shape', 'basebeautycalc'
 
 --- cikl ---------------------------------
 
