@@ -1,45 +1,91 @@
 # therapist
+
 '<center><b><font color="maroon">Psychologist</font></b></center>'
-'<center><img src="images/_nuki/therapist/room.jpg"></center>'
 CLOSE ALL
 if sound = 0:PLAY 'sound/Clock.mp3',80
-$location_type = 'event'
+$location_type = 'public_indoors'
 if $ARGS[0] = '':
+	'<center><img src="images/_nuki/therapist/room.jpg"></center>'
+	'You step into the office of <a href="exec: VIEW ''images/_nuki/therapist/Pavlov.jpg''">Dr. Pavlov</a>, who invites you in with a warm smile. He appears a few years over sixty, slightly overweight, but still fit. Once he looked good, but his age has started to erode that. His har, or what is left of it is gray, but thinning.'
+	'The room looks like a study room, appearing warm and inviting. There is desk with a chair at the end of the room, but it appears seldom used. On the desk there are an older <a href="exec: VIEW ''images/_nuki/therapist/PavlovFamily.jpg''">photograph of Dr. Pavlov''s family</a>, on which he appears to be about two decades younger.'
+	'"Come in, Miss <<$surname>>! Please, tell me what can I help you with today?"'
 	act 'Raise your mood':
-		cla
+		cls
+		'<center><img src="images/_nuki/therapist/therapy1.jpg"></center>'
 		money -= 1000
 		minut += 60
-		
+		gs 'stat'
 		'You talk about your problems for a while, and in a few places Dr. Pavlov asks you some pointed questions. Although he makes you look at your own actions and desires closely, making you aware of your own issues, it somehow makes you feel better about yourself.'
+		act 'Leave':gt $loc
 	end	
 	act 'Raise your confidance':
 		cla
+		*clr
+		'<center><img src="images/_nuki/therapist/room.jpg"></center>'
 		$therapy = 'confidance'
+		'"I would like some help in raising my <<$therapy>>," you say.'
+		'"There are two ways to do that, Miss <<$surname>>. I can offer you traditional therapy. This one is slow, but just as effective, as my second offer, the hypnotherapy. I would recommend the hynosis, but some people doesn''t like the thought of me inside their head that much. The choice is yours."'
 		act 'Just talk':
-			
+			cls
+			'<center><img src="images/_nuki/therapist/therapy1.jpg"></center>'
+			money -= 1000
+			minut += 60
+			gs 'stat'
+			'<missing content>'
+			act 'Leave':gt $loc
 		end
 		act 'Hypnotherapy':gt 'therapist', 'hypno'
 	end
 	act 'Raise your dominance':
 		cla
+		*clr
+		'<center><img src="images/_nuki/therapist/room.jpg"></center>'
+		money -= 1000
+		gs 'stat'
 		$therapy = 'dominance'
+		'"I would like some help in raising my <<$therapy>>," you say.'
+		'"There are two ways to do that, Miss <<$surname>>. I can offer you traditional therapy. This one is slow, but just as effective, as my second offer, the hypnotherapy. I would recommend the hynosis, but some people doesn''t like the thought of me inside their head that much. The choice is yours."'
 		act 'Just talk':
-			
+			cls
+			'<center><img src="images/_nuki/therapist/therapy1.jpg"></center>'
+			money -= 1000
+			minut += 60
+			gs 'stat'
+			'<missing content>'
+			act 'Leave':gt $loc
 		end
 		act 'Hypnotherapy':gt 'therapist', 'hypno'
 	end
 	act 'Lower your dominance':
 		cla
+		*clr
+		'<center><img src="images/_nuki/therapist/room.jpg"></center>'
 		$therapy = 'submission'
+		'"I would like some help in raising my <<$therapy>>," you say.'
+		'"There are two ways to do that, Miss <<$surname>>. I can offer you traditional therapy. This one is slow, but just as effective, as my second offer, the hypnotherapy. I would recommend the hynosis, but some people doesn''t like the thought of me inside their head that much. The choice is yours."'
 		act 'Just talk':
-			
+			cls
+			'<center><img src="images/_nuki/therapist/therapy1.jpg"></center>'
+			money -= 1000
+			minut += 60
+			gs 'stat'
+			'<missing content>'
+			act 'Leave':gt $loc
 		end
 		act 'Hypnotherapy':gt 'therapist', 'hypno'
 	end
 	act 'Hypnotherapy to fight addiction':
+		cls
+		money -= 1000
+		minut += 60
+		gs 'stat'
 		gt 'therapist', 'hypno'
 	end
 	act 'Hypnotherapy for personality change':
+		cls
+		money -= 1000
+		minut += 60
+		gs 'stat'
 		gt 'therapist', 'hypno'
 	end
 	act 'You need no help right now':gt $loc
@@ -69,7 +115,7 @@ if $ARGS[0] = 'hypno':
 		PLAY 'sound/Rainstorm.mp3',30 & PLAY 'sound/Clock.mp3',60
 		minut += 15
 		'<center><img width=700 src="images/_nuki/therapist/hypnotism<<rand(1,4)>>.jpg"></center>'
-		hypnoStrength += 10
+		hypnoStrength += 14
 		if hypnoTime < 15:
 			if hypnoStrength >= 20:hypnoStrength = hypnoStrength-20 & hypnoTime += 1
 		elseif hypnoStrength > 20
@@ -80,10 +126,10 @@ if $ARGS[0] = 'hypno':
 			willpower += 5
 			$session = 'You will feel more confident. You are smart, beautiful, and if other people has other opinions, that is their problem. You know what you want, and do not fear to act upon your desires."<br>...<br>...<br>...'
 		elseif $therapy = 'dominance':
-			dom += 2
+			dom += 3
 			$session = 'You like to do what you want to do. It pleases you if people do what you tell them to do, or act according to your wishes, and you like to couse them pleasure this way. You have to be in control constantly, but that means others around you can relax."<br>...<br>...<br>...'
 		elseif $therapy = 'submission':
-			sub += 6
+			sub +=3
 			$session = 'You want to be told what to do and what to think, what to feel and whom to please. Obeying to others pleases you because it pleases them, and for a while you do not have to take responsibility for you actions."<br>...<br>...<br>...'
 		end
 		'<font color=brown>'
@@ -142,11 +188,12 @@ end
 
 
 if $ARGS[0] = 'hypnoSuck':
-	if sound = 0:PLAY 'sound/Rainstorm.mp3',10 & PLAY 'sound/Clock.mp3',20
+	if sound = 0:PLAY 'sound/Rainstorm.mp3',10 & PLAY 'sound/Clock.mp3',20 & PLAY 'sound/sucking.mp3',200
 	cls
 	'<center><img width=500 src="images/_nuki/therapist/hypnoBlow<<rand(1,3)>>.gif"></center>'
 	spafinloc = 12
 	gs 'Cum_Manage'
+	horny = 0
 	orgasm += 1
 	'<font color=brown>'
 	'You kneel to suck off Dr. Pavlov. You feel yourself getting moist between your legs, the sight of his massive dick, and taking it all in your mouth excites you greatly. You continue to pleasure him enthusiastically, and judging from the breathing of your <i>Master</i> you appear to be doing a great job.'
@@ -157,9 +204,19 @@ if $ARGS[0] = 'hypnoSuck':
 	'"Come on, <i>Cunt</i>, cum now!" he groans, still shooting spurt after spurt of warm cum down your throat.'
 	'His order is all you need, it pushes you over the edge, and you scream around his cock still thobbing in your mouth.'
 	'He waits for you to lick him clean, then starts to dress himself.'
-	'"Get dressed, <i>Cunt</i>. Do it erotically, as much as you can."'
-	'He watches you getting dressed, with a small smile in his face.'
-	'</font>'
+	if hypnoTime < 10:
+		'"Get dressed, <i>Cunt</i>. Do it erotically, as much as you can."</font>'
+		'He watches you getting dressed with a small smile in his face.'
+	else
+		if tanga = 1:
+			'"Get dressed, <i>Cunt</i>, but forget the underwear. You didn''t wear one when you come, and you do not like to wear them. You enjoy the thought that people may notice that you do not wear underwear, maybe catch a glimpse of your naked pussy or ass."</font>'
+			'He watches you getting dressed with a small smile in his face, especially enjoying the sight of you completely ignoring your underwear.</font>'
+			tanga = 0
+		else
+			'"Get dressed, <i>Cunt</i>. I see you didn''t wear underwear. Very good, you do not like to wear them. You enjoy the thought that people may notice that you do not wear underwear, maybe catch a glimpse of your naked pussy or ass."</font>'
+			'He watches you getting dressed with a small smile in his face, especially enjoying the sight of you completely ignoring your underwear.</font>'
+		end
+	end	
 	'<center><img width=300 src="images/_nuki/therapist/dressup.gif"></center>'
 	gs 'stat'
 	act 'Wake up':gt 'therapist', 'hypnoEnd'
@@ -167,11 +224,13 @@ end
 
 
 if $ARGS[0] = 'hypnoFuck':
-	if sound = 0:PLAY 'sound/Rainstorm.mp3',10 & PLAY 'sound/Clock.mp3',20
+	if sound = 0:PLAY 'sound/Rainstorm.mp3',10 & PLAY 'sound/Clock.mp3',20 & PLAY 'sound/sex<<rand(1,3)>>'
 	cls
+	sub += 1
 	$cumdesciption3 = 'cum filled pussy'
 	$cumdesciption2 = 'pussy is full with fresh sperm, leaking out of you'
-	gs 'Cum_Manage'
+	gs 'cum_call', '', 'Dr. Pavlov', 60, '', 15000, 1
+!	gs 'Cum_Manage'
 	randpos = rand(0,3)
 	if randpos = 0:
 	!on your back
@@ -196,12 +255,10 @@ if $ARGS[0] = 'hypnoFuck':
 	end
 	'<font color=brown>'
 	$hypnofuck
-	'<center><img width=300 src="images/_nuki/therapist/hypnoLick.gif"></center>'
 	'As soon as you are slick with your own excitement, he pushes his dick inside your pussy, and starts to fuck you.'
 	if vagina = 0:pain['vaginal'] +=5 & vagina += 1 & 'You feel a sharp pain as your <i>Master</i> pushes through your maidenhead, taking it away. He doesn''t seem to care about it, he just pushes himself deeper in your unexplored depth, enjoyinghimself immensly.'
 	$hypnofuck2
 	'"Oh yes, my little <i>Cunt</i>, I am so close! I will blow a huge wad of sperm in your beautiful pussy! And you won''t even know about it!"<br>He finally groans, jabbing his hips deep, jetting all of his sperm as deep in your pussy as he possibly can.<br>"Cum, little <i>Cunt</i>, suck all of my seed deep in your body!"'
-	''
 	if randpos <= 1:
 		'<center><img width=300 src="images/_nuki/therapist/Creampie1.gif"></center>'
 	elseif randpos = 2:
@@ -209,9 +266,19 @@ if $ARGS[0] = 'hypnoFuck':
 	else
 		'<center><img width=300 src="images/_nuki/therapist/Creampie2.gif"></center>'
 	end
-	''
-	
-	'</font>'
+	if hypnoTime < 10:
+		'"Get dressed, <i>Cunt</i>. Do it erotically, as much as you can."</font>'
+		'He watches you getting dressed with a small smile in his face.'
+	else
+		if tanga = 1:
+			'"Get dressed, <i>Cunt</i>, but forget the underwear. You didn''t wear one when you come, and you do not like to wear them. You enjoy the thought that people may notice that you do not wear underwear, maybe catch a glimpse of your naked pussy or ass."</font>'
+			'He watches you getting dressed with a small smile in his face, especially enjoying the sight of you completely ignoring your underwear.</font>'
+			tanga = 0
+		else
+			'"Get dressed, <i>Cunt</i>. I see you didn''t wear underwear. Very good, you do not like to wear them. You enjoy the thought that people may notice that you do not wear underwear, maybe catch a glimpse of your naked pussy or ass."</font>'
+			'He watches you getting dressed with a small smile in his face, especially enjoying the sight of you completely ignoring your underwear.</font>'
+		end
+	end
 	'<center><img width=300 src="images/_nuki/therapist/dressup.gif"></center>'
 	stat['vaginal'] += 1
 	gs 'stat'
@@ -220,8 +287,9 @@ end
 
 
 if $ARGS[0] = 'hypnoAnal':
-	if sound = 0:PLAY 'sound/Rainstorm.mp3',10 & PLAY 'sound/Clock.mp3',20
+	if sound = 0:PLAY 'sound/Rainstorm.mp3',10 & PLAY 'sound/Clock.mp3',20 & PLAY 'sound/sex<<rand(1,3)>>'
 	cls
+	sub += 1
 	$cumdesciption3 = 'cum filled ass'
 	$cumdesciption2 = 'ass is full of fresh sperm, slowly leaking out of you'
 	spafinloc = 3
@@ -241,10 +309,19 @@ if $ARGS[0] = 'hypnoAnal':
 		'<center><img width=500 src="images/_nuki/therapist/hypnoAnalCouchKneel<<rand(1,2)>>.gif"></center>'
 		
 	end
-	
-	'<center><img width=300 src="images/_nuki/therapist/hypnoAss.gif"></center>'
-	
-	'</font>'
+	if hypnoTime < 10:
+		'"Get dressed, <i>Cunt</i>. Do it erotically, as much as you can."</font>'
+		'He watches you getting dressed with a small smile in his face.'
+	else
+		if tanga = 1:
+			'"Get dressed, <i>Cunt</i>, but forget the underwear. You didn''t wear one when you come, and you do not like to wear them. You enjoy the thought that people may notice that you do not wear underwear, maybe catch a glimpse of your naked pussy or ass."</font>'
+			'He watches you getting dressed with a small smile in his face, especially enjoying the sight of you completely ignoring your underwear.</font>'
+			tanga = 0
+		else
+			'"Get dressed, <i>Cunt</i>. I see you didn''t wear underwear. Very good, you do not like to wear them. You enjoy the thought that people may notice that you do not wear underwear, maybe catch a glimpse of your naked pussy or ass."</font>'
+			'He watches you getting dressed with a small smile in his face, especially enjoying the sight of you completely ignoring your underwear.</font>'
+		end
+	end
 	'<center><img width=300 src="images/_nuki/therapist/dressup.gif"></center>'
 	gs 'stat'
 	act 'Wake up':gt 'therapist', 'hypnoEnd'
@@ -255,7 +332,7 @@ if $ARGS[0] = 'hypnoPerv':
 	if sound = 0:PLAY 'sound/Rainstorm.mp3',10 & PLAY 'sound/Clock.mp3',20
 	pervact = rand(1,4)
 	if pervact = 0 and pregchem < 1863:
-	!impregnation
+	!impregnation fantasy
 		'<font color=brown>'
 		if knowpreg = 1:
 		!Sveta is pregnant
@@ -392,13 +469,14 @@ if $ARGS[0] = 'hypnoEnd':
 	'<font color=brown>'
 	'"All right, <i>Cunt</i>, now listen to me. You will not remember any of this. You do not feel any discomfort from any of our activities, and you do not notice anything related to what happened here. No taste, no smell, no aches, no fluids. Nothing. You will not respont to Cunt while you are Awake, just while you are Under. You will wake up feeling good, but responsive to all of my commands. Understand, <i>Cunt</i>?"'
 	'"Yes, <i>Master</i>."'
+	if hypnoTime >= 10:'"You "'
 	'"Oh, I almost forgotten. While you are Awake, you will call me Dr. Pavlov, you will not have any desire to call me Master. Now, you are sitting in the black room. Stand up, and start walking through the door. As you close the door of the black room, you forget..."</font>'
 	'...'
 	'...'
 	if hypnoTime < 4:
 		'When you wake up, you see your therapist looking at you.'
 		'"How do you feel, Miss <<$surname>>?"'
-		'You have a nagging feeling that you have forgotten somehing you should remember, but it is quickly forgotten, when you realize that you feel better about your problem. The therapy certainly helped a lot.'
+		'You have a nagging feeling that you have forgotten somehing you should remember, but it is quickly forgotten, when you realize that you feel better about your problem. The therapy helped you a lot.'
 		'You certainly do not notice that your mouth tastes like sperm.'
 	elseif hypnoTime < 7:
 		'When you wake up, you see your therapist smiling.'
@@ -411,6 +489,7 @@ if $ARGS[0] = 'hypnoEnd':
 		if exhibi < 2: exhibi += 1
 		pain['vaginal'] -= 5
 		pain['asshole'] -= 5
+		horny = 40
 		'When you wake up, you see your therapist smiling.'
 		'"Very good, Miss <<$surname>>. How do you feel?"'
 		'You didn''t even have to ponder about it, you immediately answer that you feel better. The therapy certainly helped a lot.'
@@ -421,6 +500,7 @@ if $ARGS[0] = 'hypnoEnd':
 		if exhibi < 5: exhibi += 1
 		pain['vaginal'] -= 5
 		pain['asshole'] -= 5
+		horny = 60
 		'When you wake up, you see your therapist fixing his shirt.'
 		'"Miss <<$surname>>, how do you feel right now?"'
 		'Without hesitation, you reply.'
@@ -465,12 +545,14 @@ $hypnoAddiction = {
 	if hypnoAddict = 1:
 		if cumloc[0] > 0 or cumloc[3] > 0: 
 			horny += 1
+			if horny < 40:horny = 40
 			mana += 1
 			willpower += 1
 		end
-	else
+	elseif hypnoAddict = 2:
 		if cumloc[0] > 0 or cumloc[3] > 0:
 			horny += 2
+			if horny < 60:horny = 60
 			mana += 2
 			willpower += 2
 		end
