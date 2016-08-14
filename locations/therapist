@@ -408,13 +408,23 @@ if $ARGS[0] = 'hypnoEnd':
 	act 'Leave':gt $loc
 end
 
-$hypnoDaychange = {
-	if hypnoStrength = 0 and hypnoTime > 0:
+$hypnoDaychange = {	
+	!you visited the therapist too long ago
+	if daystart-hypnoDay > 7: 
+		if hypnoAddict = 1:
+			hypnoWithdrawal = 1
+		elseif hypnoAddict = 2:
+			hypnoWithdrawal = 2
+		end
+	end
+	!daily weaning of therapist influence
+	if hypnoStrength > 0: hypnoStrength -= 1
+	if hypnoTime > 0 and hypnoStrength = 0:
 		if hypnoAddict = 0:
 			hypnoStrength = 19
 			hypnoTime -= 1
 		elseif hypnoAddict = 1:
-			if rand(0,2) = 0: 
+			if rand(0,1) = 0:
 				hypnoStrength = 19
 				hypnoTime -= 1
 				if hypnoTime < 7:hypnoAddict = 0 & hypnoWithdrawal = 0
@@ -425,15 +435,6 @@ $hypnoDaychange = {
 				hypnoTime -= 1
 				if hypnoTime < 10:hypnoAddict = 1 & hypnoBlock = 0 & hypnoWithdrawal = 1
 			end
-		end
-	elseif hypnoStrength > 0:
-		hypnoStrength -= 1
-	end
-	if hypnoDay > 7: 
-		if hypnoAddict = 1:
-			hypnoWithdrawal = 1
-		elseif hypnoAddict = 2:
-			hypnoWithdrawal = 2
 		end
 	end
 }
