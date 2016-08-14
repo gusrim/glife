@@ -6,16 +6,20 @@ if sound = 0:PLAY 'sound/Clock.mp3',80
 $location_type = 'public_indoors'
 if $ARGS[0] = '':
 	'<center><img src="images/_nuki/therapist/room.jpg"></center>'
-	'You step into the office of <a href="exec: VIEW ''images/_nuki/therapist/Pavlov.jpg''">Dr. Pavlov</a>, who invites you in with a warm smile. He appears a few years over sixty, slightly overweight, but still fit. Once he looked good, but his age has started to erode that. His har, or what is left of it is gray, but thinning.'
+	'You step into the office of <a href="exec:dynamic $pavlov">Dr. Pavlov</a>, who invites you in with a warm smile.'
 	'The room looks like a study room, appearing warm and inviting. There is desk with a chair at the end of the room, but it appears seldom used. On the desk there are an older <a href="exec: VIEW ''images/_nuki/therapist/PavlovFamily.jpg''">photograph of Dr. Pavlov''s family</a>, on which he appears to be about two decades younger.'
 	'"Come in, Miss <<$surname>>! Please, tell me what can I help you with today?"'
+	gs 'stat'
 	act 'Raise your mood':
 		cls
 		'<center><img src="images/_nuki/therapist/therapy1.jpg"></center>'
 		money -= 1000
 		minut += 60
+		willpower = intel * 5 + will * 5 + 1000
+		manna = (intel * magik) + magik * 100 + vital * 10 + rikudo
 		gs 'stat'
 		'You talk about your problems for a while, and in a few places Dr. Pavlov asks you some pointed questions. Although he makes you look at your own actions and desires closely, making you aware of your own issues, it somehow makes you feel better about yourself.'
+		'"Please, visit me again if you have any further problems, I will be glad to help!" Says Dr. Pavlov, as he escort you out of his door.'
 		act 'Leave':gt $loc
 	end	
 	act 'Raise your confidance':
@@ -32,6 +36,7 @@ if $ARGS[0] = '':
 			minut += 60
 			gs 'stat'
 			'<missing content>'
+			'"Please, visit me again if you have any further problems, I will be glad to help!" Says Dr. Pavlov, as he escort you out of his door.'
 			act 'Leave':gt $loc
 		end
 		act 'Hypnotherapy':gt 'therapist', 'hypno'
@@ -50,8 +55,10 @@ if $ARGS[0] = '':
 			'<center><img src="images/_nuki/therapist/therapy1.jpg"></center>'
 			money -= 1000
 			minut += 60
+			dom += 2
 			gs 'stat'
 			'<missing content>'
+			'"Please, visit me again if you have any further problems, I will be glad to help!" Says Dr. Pavlov, as he escort you out of his door.'
 			act 'Leave':gt $loc
 		end
 		act 'Hypnotherapy':gt 'therapist', 'hypno'
@@ -68,13 +75,15 @@ if $ARGS[0] = '':
 			'<center><img src="images/_nuki/therapist/therapy1.jpg"></center>'
 			money -= 1000
 			minut += 60
+			sub += 2
 			gs 'stat'
 			'<missing content>'
+			'"Please, visit me again if you have any further problems, I will be glad to help!" Says Dr. Pavlov, as he escort you out of his door.'
 			act 'Leave':gt $loc
 		end
 		act 'Hypnotherapy':gt 'therapist', 'hypno'
 	end
-	act 'Hypnotherapy to fight addiction':
+!{	act 'Hypnotherapy to fight addiction':
 		cls
 		money -= 1000
 		minut += 60
@@ -87,13 +96,14 @@ if $ARGS[0] = '':
 		minut += 60
 		gs 'stat'
 		gt 'therapist', 'hypno'
-	end
+	end}
 	act 'You need no help right now':gt $loc
 end
 
 
 if $ARGS[0] = 'hypno':
 	if firsthypno = 0:
+		guy += 1
 		$firsthypno = 'While you are Under, I will call you <i>Cunt</i>, and you will respond to it. You will also call me Master.<br>You reply, "yes, <i>Master</i>."'
 		$firsthypno2 = '"Miss <<$surname>>, everything that happens while you are in the black room you will not remember. Understand it?"<br>"Yes, Dr. Pavlov."'
 	else
@@ -126,10 +136,10 @@ if $ARGS[0] = 'hypno':
 			willpower += 5
 			$session = 'You will feel more confident. You are smart, beautiful, and if other people has other opinions, that is their problem. You know what you want, and do not fear to act upon your desires."<br>...<br>...<br>...'
 		elseif $therapy = 'dominance':
-			dom += 3
+			dom += 4
 			$session = 'You like to do what you want to do. It pleases you if people do what you tell them to do, or act according to your wishes, and you like to couse them pleasure this way. You have to be in control constantly, but that means others around you can relax."<br>...<br>...<br>...'
 		elseif $therapy = 'submission':
-			sub +=3
+			sub += 4
 			$session = 'You want to be told what to do and what to think, what to feel and whom to please. Obeying to others pleases you because it pleases them, and for a while you do not have to take responsibility for you actions."<br>...<br>...<br>...'
 		end
 		'<font color=brown>'
@@ -138,50 +148,44 @@ if $ARGS[0] = 'hypno':
 			'"All right <i>Cunt</i>, let''s work on your <<$therapy>>. <<$session>>'
 			'"And now let''s play. You will enjoy the play, <i>Cunt</i>, but you will not remeber anything about it whan you are Awake. Understand?"'
 			'"Yes, <i>Master</i>."'
-			'"Perfect! Now take off your clothes."'
-		'</font>'
+			'"Perfect! Now take off your clothes."</font>'
 		gs 'stat'
 		act 'Taking off clothes':
 			cla
 			*clr
 			if sound = 0:PLAY 'sound/Rainstorm.mp3',20 & PLAY 'sound/Clock.mp3',40
-			sexpartkno = 0
-			$boy = 'Dr. Pavlov'
+			cumprecheck = 0
 			dick = 13
-			dick_girth = 6
-			sexunaware = 1
-			sexspecpot = 15000
-			sexvolume = 60
+			$dick_girth = 'massive'
 			if hypnoTime < 4:
 				$hypnoact = 'I want you to suck me!'
 				act 'Continue':gt 'therapist', 'hypnoSuck'
 			else
-				if hypnoTime < 10:
-					if rand(0,2):
+!				if hypnoTime < 10:
+					if rand(0,2) > 0:
 						$hypnoact = 'I want to fuck your pussy!'
 						act 'Continue':gt 'therapist', 'hypnoFuck'
 					else
 						$hypnoact = 'I want to fuck your ass!'
 						act 'Continue':gt 'therapist', 'hypnoAnal'
 					end
-				elseif rand(0,3) = 0:
+!{				elseif rand(0,3) = 0:
 					$hypnoact = 'I thought of something special for you.'
 					act 'Continue':gt 'therapist', 'hypnoPerv'
 				else 
-					if rand(0,2):
+					if rand(0,2) > 0:
 						$hypnoact = 'I want to fuck your pussy!'
 						act 'Continue':gt 'therapist', 'hypnoFuck'
 					else
 						$hypnoact = 'I want to fuck your ass!'
 						act 'Continue':gt 'therapist', 'hypnoAnal'
 					end
-				end
+				end}
 			end
 			'<center><img width=500 src="images/_nuki/therapist/stripping<<rand(1,3)>>.gif"></center>'
 			'<font color=brown>'
 			'You stand up from the couch and start to take off all of you clothing. While you do this, Dr. Pavlov opens up his pants and takes out his dick, slowly masturbating as he watches you. After a while he stops you, and motions you closer to him.'
-			'"Come here, <i>Cunt</i>, <<$hypnoact>>"'			
-			'</font>'
+			'"Come here, <i>Cunt</i>, <<$hypnoact>>"</font>'			
 		end
 	end
 end
@@ -191,10 +195,7 @@ if $ARGS[0] = 'hypnoSuck':
 	if sound = 0:PLAY 'sound/Rainstorm.mp3',10 & PLAY 'sound/Clock.mp3',20 & PLAY 'sound/sucking.mp3',200
 	cls
 	'<center><img width=500 src="images/_nuki/therapist/hypnoBlow<<rand(1,3)>>.gif"></center>'
-	spafinloc = 12
-	gs 'Cum_Manage'
-	horny = 0
-	orgasm += 1
+	gs 'cum_call', 'mouth', 'Dr. Pavlov', 60, '', 15000, 1
 	'<font color=brown>'
 	'You kneel to suck off Dr. Pavlov. You feel yourself getting moist between your legs, the sight of his massive dick, and taking it all in your mouth excites you greatly. You continue to pleasure him enthusiastically, and judging from the breathing of your <i>Master</i> you appear to be doing a great job.'
 	'Finally Dr. Pavlov groans, grabs your head, and pushes himself deep, filling your mouth with his seed.'
@@ -205,32 +206,34 @@ if $ARGS[0] = 'hypnoSuck':
 	'His order is all you need, it pushes you over the edge, and you scream around his cock still thobbing in your mouth.'
 	'He waits for you to lick him clean, then starts to dress himself.'
 	if hypnoTime < 10:
-		'"Get dressed, <i>Cunt</i>. Do it erotically, as much as you can."</font>'
-		'He watches you getting dressed with a small smile in his face.'
+		'"Get dressed, <i>Cunt</i>. Do it erotically, as much as you can."'
+		'He watches you getting dressed with a small smile in his face.</font>'
 	else
 		if tanga = 1:
-			'"Get dressed, <i>Cunt</i>, but forget the underwear. You didn''t wear one when you come, and you do not like to wear them. You enjoy the thought that people may notice that you do not wear underwear, maybe catch a glimpse of your naked pussy or ass."</font>'
+			'"Get dressed, <i>Cunt</i>, but forget the underwear. You didn''t wear one when you come, and you do not like to wear them. You enjoy the thought that people may notice that you do not wear underwear, maybe catch a glimpse of your naked pussy or ass."'
 			'He watches you getting dressed with a small smile in his face, especially enjoying the sight of you completely ignoring your underwear.</font>'
 			tanga = 0
 		else
-			'"Get dressed, <i>Cunt</i>. I see you didn''t wear underwear. Very good, you do not like to wear them. You enjoy the thought that people may notice that you do not wear underwear, maybe catch a glimpse of your naked pussy or ass."</font>'
+			'"Get dressed, <i>Cunt</i>. I see you didn''t wear underwear. Very good, you do not like to wear them. You enjoy the thought that people may notice that you do not wear underwear, maybe catch a glimpse of your naked pussy or ass."'
 			'He watches you getting dressed with a small smile in his face, especially enjoying the sight of you completely ignoring your underwear.</font>'
 		end
 	end	
 	'<center><img width=300 src="images/_nuki/therapist/dressup.gif"></center>'
+	horny = 0
+	orgasm += 1
+	stat['bj'] += 1
 	gs 'stat'
 	act 'Wake up':gt 'therapist', 'hypnoEnd'
 end
 
 
 if $ARGS[0] = 'hypnoFuck':
-	if sound = 0:PLAY 'sound/Rainstorm.mp3',10 & PLAY 'sound/Clock.mp3',20 & PLAY 'sound/sex<<rand(1,3)>>'
+	if sound = 0:PLAY 'sound/Rainstorm.mp3',10 & PLAY 'sound/Clock.mp3',20 & PLAY 'sound/sex<<rand(1,3)>>.mp3',100
 	cls
 	sub += 1
 	$cumdesciption3 = 'cum filled pussy'
 	$cumdesciption2 = 'pussy is full with fresh sperm, leaking out of you'
-	gs 'cum_call', '', 'Dr. Pavlov', 60, '', 15000, 1
-!	gs 'Cum_Manage'
+	gs 'cum_call', 0, 'Dr. Pavlov', 60, '', 15000, 1
 	randpos = rand(0,3)
 	if randpos = 0:
 	!on your back
@@ -267,19 +270,21 @@ if $ARGS[0] = 'hypnoFuck':
 		'<center><img width=300 src="images/_nuki/therapist/Creampie2.gif"></center>'
 	end
 	if hypnoTime < 10:
-		'"Get dressed, <i>Cunt</i>. Do it erotically, as much as you can."</font>'
-		'He watches you getting dressed with a small smile in his face.'
+		'"Get dressed, <i>Cunt</i>. Do it erotically, as much as you can."'
+		'He watches you getting dressed with a small smile in his face.</font>'
 	else
 		if tanga = 1:
-			'"Get dressed, <i>Cunt</i>, but forget the underwear. You didn''t wear one when you come, and you do not like to wear them. You enjoy the thought that people may notice that you do not wear underwear, maybe catch a glimpse of your naked pussy or ass."</font>'
+			'"Get dressed, <i>Cunt</i>, but forget the underwear. You didn''t wear one when you come, and you do not like to wear them. You enjoy the thought that people may notice that you do not wear underwear, maybe catch a glimpse of your naked pussy or ass."'
 			'He watches you getting dressed with a small smile in his face, especially enjoying the sight of you completely ignoring your underwear.</font>'
 			tanga = 0
 		else
-			'"Get dressed, <i>Cunt</i>. I see you didn''t wear underwear. Very good, you do not like to wear them. You enjoy the thought that people may notice that you do not wear underwear, maybe catch a glimpse of your naked pussy or ass."</font>'
+			'"Get dressed, <i>Cunt</i>. I see you didn''t wear underwear. Very good, you do not like to wear them. You enjoy the thought that people may notice that you do not wear underwear, maybe catch a glimpse of your naked pussy or ass."'
 			'He watches you getting dressed with a small smile in his face, especially enjoying the sight of you completely ignoring your underwear.</font>'
 		end
 	end
 	'<center><img width=300 src="images/_nuki/therapist/dressup.gif"></center>'
+	horny = 0
+	orgasm += 1
 	stat['vaginal'] += 1
 	gs 'stat'
 	act 'Wake up':gt 'therapist', 'hypnoEnd'
@@ -287,13 +292,12 @@ end
 
 
 if $ARGS[0] = 'hypnoAnal':
-	if sound = 0:PLAY 'sound/Rainstorm.mp3',10 & PLAY 'sound/Clock.mp3',20 & PLAY 'sound/sex<<rand(1,3)>>'
+	if sound = 0:PLAY 'sound/Rainstorm.mp3',10 & PLAY 'sound/Clock.mp3',20 & PLAY 'sound/sex<<rand(1,3)>>.mp3',100
 	cls
 	sub += 1
 	$cumdesciption3 = 'cum filled ass'
 	$cumdesciption2 = 'ass is full of fresh sperm, slowly leaking out of you'
-	spafinloc = 3
-	gs 'Cum_Manage'
+	gs 'cum_call', 'anus', 'Dr. Pavlov', 60, '', 15000, 1
 	randpos = rand(0,3)
 	'<font color=brown>'
 	if randpos = 0:
@@ -310,164 +314,31 @@ if $ARGS[0] = 'hypnoAnal':
 		
 	end
 	if hypnoTime < 10:
-		'"Get dressed, <i>Cunt</i>. Do it erotically, as much as you can."</font>'
-		'He watches you getting dressed with a small smile in his face.'
+		'"Get dressed, <i>Cunt</i>. Do it erotically, as much as you can."'
+		'He watches you getting dressed with a small smile in his face.</font>'
 	else
 		if tanga = 1:
-			'"Get dressed, <i>Cunt</i>, but forget the underwear. You didn''t wear one when you come, and you do not like to wear them. You enjoy the thought that people may notice that you do not wear underwear, maybe catch a glimpse of your naked pussy or ass."</font>'
+			'"Get dressed, <i>Cunt</i>, but forget the underwear. You didn''t wear one when you come, and you do not like to wear them. You enjoy the thought that people may notice that you do not wear underwear, maybe catch a glimpse of your naked pussy or ass."'
 			'He watches you getting dressed with a small smile in his face, especially enjoying the sight of you completely ignoring your underwear.</font>'
 			tanga = 0
 		else
-			'"Get dressed, <i>Cunt</i>. I see you didn''t wear underwear. Very good, you do not like to wear them. You enjoy the thought that people may notice that you do not wear underwear, maybe catch a glimpse of your naked pussy or ass."</font>'
+			'"Get dressed, <i>Cunt</i>. I see you didn''t wear underwear. Very good, you do not like to wear them. You enjoy the thought that people may notice that you do not wear underwear, maybe catch a glimpse of your naked pussy or ass."'
 			'He watches you getting dressed with a small smile in his face, especially enjoying the sight of you completely ignoring your underwear.</font>'
 		end
 	end
 	'<center><img width=300 src="images/_nuki/therapist/dressup.gif"></center>'
+	horny = 0
+	orgasm += 1
+	stat['anal'] += 1
 	gs 'stat'
 	act 'Wake up':gt 'therapist', 'hypnoEnd'
 end
 
 
-if $ARGS[0] = 'hypnoPerv':
-	if sound = 0:PLAY 'sound/Rainstorm.mp3',10 & PLAY 'sound/Clock.mp3',20
-	pervact = rand(1,4)
-	if pervact = 0 and pregchem < 1863:
-	!impregnation fantasy
-		'<font color=brown>'
-		if knowpreg = 1:
-		!Sveta is pregnant
-			if PavlovKnowpreg = 0:
-			!Pavlov did not know
-				'"Tell me <i>Cunt</i>, are you pregnant?"'
-				'"Yes <i>Master</i>, I am."'
-				'"I am happy for you! You know, every child is precious. Do you know who the father is?"'
-				if $wombthfath = '' or $wombthfath = 'Unknown':
-					'"No, <i>Master</i>, I do not."'
-					'"So you really are a cunt, Cunt! You fucked someone, and you got knocked up!" he laughs a while, then looks at you.'
-					'"You will not attempt to abort this child, you want to give birth to it, even though you do not know whos child do you carry."'
-				elseif $wombthfath = 'Kolka':
-					'"I that <<$wombpotfath>>, my little brother was the one who impregnated me.'
-					'"Heh, so you not only had some incestous sex with your brother, but you also managed to get knocked up?" he seems to like a perverseness of the thought. "You will not attempt to abort this child, you want to give birth to yourlittle niece or nephew."'
-				elseif $wombthfath = 'Stepfather':
-					'"I believe that would be my stepfather."'
-					'"Heh, so you fucked you mother''s husband, the man who had changed your nappies? I think it is kind of nice of you to give him an another child... or is is grandchild? It seems to be complicated, doesn''t it?" he seems to like a perverseness of the thought. "You will not attempt to abort this child, he or she is not only your child, but your sibling too. You want to give birth to your sister."'
-				elseif strcomp($wombthfath, '.*Rapist$') = -1:
-					'"I believe that the <<$wombpotfath>> who raped me also impregnated me."'
-					'"I am sorry to hear that. But you will not attempt to abort this child, the thought abhors you, even though you were raped. The child is innocent of his father''s actions. You want to give birth to it."'
-				elseif strcomp($wombthfath, '.*a porn actor$') = -1:
-					'"I think that wuold be <<$wombpotfath>>."'
-					'"So, you got knocked up by a porn actor? How did that happened?"'
-					'"I did a porn scene with him, and he came inside my pussy."'
-					'"Wow, a porn actress getting knocked up in a porn shoot! That is kinky! You will not attempt to abort this child, the thought abhors you. You want to give birth to it."'
-				elseif strcomp($wombthfath, '.*Business partner$') = -1:
-					'"I think he is a business partner my boss lent me to at work."'
-					'"So, you got knocked up by a guy whom your boss said to fuck for good relations?"'
-					'"Yes, I think so," you reply calmly.'
-					'"Hey, that basically makes you the company whore, only you do not fuck for money! You will not attempt to abort this child, you want to give birth to it."'
-				elseif strcomp($wombthfath, '.*Courier$') = -1:
-					'"I think a courier who fucked me at work."'
-					'"So you got knocked up by a guy whom gives you mails?"'
-					'"Yes, I believe that happened."'
-					'"Wow, what a slut! You will not attempt to abort this child, you want to give birth to it."'
-				elseif strcomp($wombthfath, '.*IT support$') = -1 or strcomp($wombthfath, '.*manager$') = -1:
-					'"He is one of the guys I work with at the office."'
-					'"So you got knocked up by your coworker?"'
-					'"Yes, I believe that happened."'
-					'"That is team spirit! You will not attempt to abort this child, you want to give birth to it."'
-				elseif $wombthfath = 'Ilari Markov, CEO':
-					'"I believe he would be my boss."'
-					'"You fucked your own boss?"'
-					'"Yes, I did."'
-					'"When?"'
-					'"When I am at work. He sometimes wants to fuck me, and sometimes he wants to share me with others."'
-					'"So basically you are his whore. Excellent. You will not attempt to abort this child, you want to give birth to the baby of your boss."'
-				else
-					'"I believe that the father of my child is <<$wombpotfath>>."'
-					'"Nice! You will not attempt to abort this child, you want to give it birth."'
-				end
-				hypnoBlock = 1
-				PavlovKnowpreg = 1
-			elseif hypnoBlock = 0:
-			!Pavlov did know, but did not had the opportunity to hypnotize Sveta
-				hypnoBlock = 1
-				if $wombthfath = '' or $wombthfath = 'Unknown':
-					$hypnofath = 'a baby who will never know its father, because you yourself do not know him'
-				elseif $wombthfath = 'Kolka':
-					$hypnofath = 'a baby whos father is your own borther. You couldn''t imagine a better present to your little brother, than a child of his own from you'
-				elseif $wombthfath = 'Stepfather':
-					$hypnofath = 'a baby whose father is your own father. It is the best gift, giving him both a child and a grandchild'
-				elseif strcomp($wombthfath, '.*Rapist$') = -1:
-					$hypnofath = 'a baby whos father raped you, impregnating you against your will'
-				elseif strcomp($wombthfath, '.*a porn actor$') = -1:
-					$hypnofath = 'a baby who has been concieved before the eyes of thousands, knowing that to the father of your child does not feel anything special toward you'
-				elseif strcomp($wombthfath, '.*Business partner$') = -1:
-					$hypnofath = 'a baby whos father you fucked for your boss to smooth out any problems'
-				elseif strcomp($wombthfath, '.*Courier$') = -1:
-					$hypnofath = 'a baby whos father you only know that he delivers mail and packages'
-				else
-					$hypnofath = 'your own child'
-				end
-				'"<i>Cunt</i>, listen to me. You will not attempt to abort your fetus, you want to give it birth. it makes you feel pleasure to know that you will give birth to <<$hypnofath>>."'
-			else
-			!Pavlov knew and hypnotized you already
-			end
-		
-		else
-			'"I do not think so, <i>Master</i>."'
-			'"You know what, let''s do a test." He pulls out a pregnancy test from his desk drawer, and hand it to you.'
-			'"Go to the bathroom, piss on this stick then come back."'
-			'You do what he instructs you, finishing with the bathroom break in five minutes, and handing the test to him.'
-			'"Good, now masturbate while we wait for the result." You do what he instructs you to do while he waits for a few minutes for the fersult to show up.'
-			if pregchem > 30:
-				PavlovKnowpreg = 1
-				'He looks at you with a slightly sadistic smile. "Congratulations, you are pregnant."'
-			else
-				'The test showed one band. Not pregnant.'
-			end
-		end
-		if 
-			'"Great! Turn around and stand still, <i>Cunt</i>!" says the doctor, opening up his desk drawer and taking out a new syringe, a needle and a bottle of some liquid stuff.'
-			'You turn around, waiting patiently, while he prepares an injection of some sort.'
-			if PavlovImpreg = 0:
-				'"Do you know what this is?" ask Dr. Pavlov showing you the now empty vial. Its label reads ''chorionic gonadotropin'', which is not helpful to you at all, so you shake your head and reply.'
-				'"No, <i>Master</i>, I do not know what is that."'
-				'Dr. Pavlov smiles, kisses your lips and says, "This is a fast-acting fertility shot, called HCG. It will ripen one - or more - of your eggs in about 36 hours, readying for fertilization."'
-				'You turn your head around and glance at him with the beginning of a panic, but he sees it and quickly acts upon it.'
-				'"<I>Cunt</i>, you do not have any objection against getting pregnant, understand?"'
-				'You nod your head, the panic forgotten, but Dr. Pavlov continues.'
-				'"You want to get pregnant with my child, but you will have no objection of carrying the child of anyone that I instruct you to fuck. Do you want go get pregnant with my child?"'
-				'"Yes, <i>Master</i>, I want to get pregnant with your child, or the child of someone you choose for me."'
-				'"Good girl!" he says, and pushes the needle into your naked bum, injecting you with the fertility hormone.'
-			else
-				'"I decided it is time for yet another fertility shot, since you are still not pregnant," he scowls at you.'
-				'"I really am sorry, <i>Master</i>. I kept your seed im my body as long as I could."'
-			end
-				'"Yes, <i>Master</i>, I want to get pregnant with your child, or the child of someone you choose for me."'
-				'"Good girl!" he says, and pushes the needle into your naked bum, injecting you with the fertility hormone.'
-		'</font>'
-		'<center><img width=300 src="images/_nuki/therapist/dressup.gif"></center>'
-		killvar 'pervact'
-		act 'Wake up':gt 'therapist', 'hypnoEnd'
-	elseif pervact = 1:
-	!buddy
-		
-		act 'Wake up':gt 'therapist', 'hypnoEnd'
-		
-	elseif pervact = 2:
-	!dog
-		act 'Wake up':gt 'therapist', 'hypnoEnd'
-	else
-	!giving orders
-		
-		act 'Wake up':gt 'therapist', 'hypnoEnd'
-	end
-end
-
-
 if $ARGS[0] = 'hypnoEnd':
 	CLOSE ALL
-	'<font color=brown>'
-	'"All right, <i>Cunt</i>, now listen to me. You will not remember any of this. You do not feel any discomfort from any of our activities, and you do not notice anything related to what happened here. No taste, no smell, no aches, no fluids. Nothing. You will not respont to Cunt while you are Awake, just while you are Under. You will wake up feeling good, but responsive to all of my commands. Understand, <i>Cunt</i>?"'
+	'<center><img src="images/_nuki/therapist/room.jpg"></center>'
+	'<font color=brown>"All right, <i>Cunt</i>, now listen to me. You will not remember any of this. You do not feel any discomfort from any of our activities, and you do not notice anything related to what happened here. No taste, no smell, no aches, no fluids. Nothing. You will not respont to Cunt while you are Awake, just while you are Under. You will wake up feeling good, but responsive to all of my commands. Understand, <i>Cunt</i>?"'
 	'"Yes, <i>Master</i>."'
 	if hypnoTime >= 10:'"You "'
 	'"Oh, I almost forgotten. While you are Awake, you will call me Dr. Pavlov, you will not have any desire to call me Master. Now, you are sitting in the black room. Stand up, and start walking through the door. As you close the door of the black room, you forget..."</font>'
@@ -508,6 +379,8 @@ if $ARGS[0] = 'hypnoEnd':
 		'"Good, just as expected," nods the doctor, as he escorts you aout of his office.'
 		'You feel aroused, and you try to close your legs as you walk out, unconsciously trying to keep you psychologist''s sperm inside your <<$cumdesciption3>> as long as possible.'
 	end
+	'The doctor smiles jovially, his hand on your shoulder as he slowly escort you out of his office.'
+	'"Please, visit me again if you have any further problems, I will be glad to help!" Says Dr. Pavlov as a goodbye, taking your hands in his, patting them, then closes his door.'
 	act 'Leave':gt $loc
 end
 
@@ -520,13 +393,13 @@ $hypnoDaychange = {
 			if rand(0,2) = 0: 
 				hypnoStrength = 19
 				hypnoTime -= 1
-				if hypnoTime < 7:hypnoAddict = 0
+				if hypnoTime < 7:hypnoAddict = 0 & hypnoWithdrawal = 0
 			end
 		else
 			if rand(0,4) = 0: 
 				hypnoStrength = 19
 				hypnoTime -= 1
-				if hypnoTime < 10:hypnoAddict = 1 & hypnoBlock = 0
+				if hypnoTime < 10:hypnoAddict = 1 & hypnoBlock = 0 & hypnoWithdrawal = 1
 			end
 		end
 	elseif hypnoStrength > 0:
@@ -544,19 +417,34 @@ $hypnoDaychange = {
 $hypnoAddiction = {
 	if hypnoAddict = 1:
 		if cumloc[0] > 0 or cumloc[3] > 0: 
-			horny += 1
-			if horny < 40:horny = 40
-			mana += 1
-			willpower += 1
+			horny += 5
+			if horny < 30:horny = 30
 		end
 	elseif hypnoAddict = 2:
 		if cumloc[0] > 0 or cumloc[3] > 0:
 			horny += 2
-			if horny < 60:horny = 60
-			mana += 2
-			willpower += 2
+			if horny < 50:horny = 50
 		end
 	end
+	if hypnoWithdrawal = 1:
+		if cumloc[0] = 0 and cumloc[3] = 0:if will > 0: will -= 1
+	elseif hypnoWithdrawal = 2:
+		if cumloc[0] = 0 and cumloc[3] = 0:if will > 0: will -= 2
+	end
+}
+
+$pavlov = {
+	*clr
+	cla
+	VIEW 'images/_nuki/therapist/Pavlov.jpg'
+	'Dr. Pavlov appears to be a few years over sixty, slightly overweight, but still fit. He still looks charming, but in a grandfatherly way. His hair, or what is left of it is gray, but thinning. He usually wears a dress shirt and sharply ironed pants, with dress shoes.'
+	'He is always helpful and has a lot of patience, which likely had been helpful to raising five children.'
+	if firsthypno < 1:
+		'He seems to like you, but he would never flirt. He appears to consider you like a troubled grandchild.'
+	else
+		'He also has a dark side, because he appears to use his hypnotized female patients to satisfy his own needs with their body. He especially seems to like you. Not that you would know anything about this, since you do not remember anything about what happened to you during these sessions.'
+	end
+	act 'Back':gt 'therapist'
 }
 
 --- therapist ---------------------------------
