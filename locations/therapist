@@ -102,8 +102,10 @@ end
 
 
 if $ARGS[0] = 'hypno':
+	hypnoWithdrawal = 0
 	minut += 15
 	if firsthypno = 0:
+		firsthypno = 1
 		guy += 1
 		$firsthypno = 'While you are Under, I will call you <i>Cunt</i>, and you will respond to it. You will also call me Master.<br>You reply, "yes, <i>Master</i>."'
 		$firsthypno2 = '"Miss <<$surname>>, everything that happens while you are in the black room you will not remember. Understand it?"<br>"Yes, Dr. Pavlov."'
@@ -132,7 +134,6 @@ if $ARGS[0] = 'hypno':
 		elseif hypnoStrength > 20
 			hypnoStrength = 20
 		end
-		
 		if $therapy = 'confidance':
 			willpower += 5
 			$session = 'You will feel more confident. You are smart, beautiful, and if other people has other opinions, that is their problem. You know what you want, and do not fear to act upon your desires."<br>...<br>...<br>...'
@@ -364,7 +365,6 @@ if $ARGS[0] = 'hypnoEnd':
 	'<center><img src="images/_nuki/therapist/room.jpg"></center>'
 	'<font color=brown>"All right, <i>Cunt</i>, now listen to me. You will not remember any of this. You do not feel any discomfort from any of our activities, and you do not notice anything related to what happened here. No taste, no smell, no aches, no fluids. Nothing. You will not respont to Cunt while you are Awake, just while you are Under. You will wake up feeling good, but responsive to all of my commands. Understand, <i>Cunt</i>?"'
 	'"Yes, <i>Master</i>."'
-	if hypnoTime >= 10:'"You "'
 	'"Oh, I almost forgotten. While you are Awake, you will call me Dr. Pavlov, you will not have any desire to call me Master. Now, you are sitting in the black room. Stand up, and start walking through the door. As you close the door of the black room, you forget..."</font>'
 	'...'
 	'...'
@@ -408,13 +408,23 @@ if $ARGS[0] = 'hypnoEnd':
 	act 'Leave':gt $loc
 end
 
-$hypnoDaychange = {
-	if hypnoStrength = 0 and hypnoTime > 0:
+$hypnoDaychange = {	
+	!you visited the therapist too long ago
+	if daystart-hypnoDay > 7: 
+		if hypnoAddict = 1:
+			hypnoWithdrawal = 1
+		elseif hypnoAddict = 2:
+			hypnoWithdrawal = 2
+		end
+	end
+	!daily weaning of therapist influence
+	if hypnoStrength > 0: hypnoStrength -= 1
+	if hypnoTime > 0 and hypnoStrength = 0:
 		if hypnoAddict = 0:
 			hypnoStrength = 19
 			hypnoTime -= 1
 		elseif hypnoAddict = 1:
-			if rand(0,2) = 0: 
+			if rand(0,1) = 0:
 				hypnoStrength = 19
 				hypnoTime -= 1
 				if hypnoTime < 7:hypnoAddict = 0 & hypnoWithdrawal = 0
@@ -425,15 +435,6 @@ $hypnoDaychange = {
 				hypnoTime -= 1
 				if hypnoTime < 10:hypnoAddict = 1 & hypnoBlock = 0 & hypnoWithdrawal = 1
 			end
-		end
-	elseif hypnoStrength > 0:
-		hypnoStrength -= 1
-	end
-	if hypnoDay > 7: 
-		if hypnoAddict = 1:
-			hypnoWithdrawal = 1
-		elseif hypnoAddict = 2:
-			hypnoWithdrawal = 2
 		end
 	end
 }
@@ -467,7 +468,7 @@ $pavlov = {
 	VIEW 'images/_nuki/therapist/Pavlov.jpg'
 	'Dr. Pavlov appears to be a few years over sixty, slightly overweight, but still fit. He still looks charming, but in a grandfatherly way. His hair, or what is left of it is gray, but thinning. He usually wears a dress shirt and sharply ironed pants, with dress shoes.'
 	'He is always helpful and has a lot of patience, which likely had been helpful to raising five children.'
-	if firsthypno < 1:
+	if firsthypno = 0:
 		'He seems to like you, but he would never flirt. He appears to consider you like a troubled grandchild.'
 	else
 		'He also has a dark side, because he appears to use his hypnotized female patients to satisfy his own needs with their body. He especially seems to like you. Not that you would know anything about this, since you do not remember anything about what happened to you during these sessions.'
