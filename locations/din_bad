@@ -847,29 +847,21 @@ $d_cycreport_actor = {
 		pl 'Currently: <<pertemp>>'
 		pl '<a href="exec: pertemp += 1 & clr & dynamic $d_cycreport_actor, 6">+1</a> <a href="exec: pertemp += 5 & clr & dynamic $d_cycreport_actor, 6">+5</a> <a href="exec: pertemp += 10 & clr & dynamic $d_cycreport_actor, 6">+10</a> <a href="exec: pertemp = 0 & clr & dynamic $d_cycreport_actor, 6">Reset</a> <a href="exec: daylastperiod = daystart - pertemp & dynamic $d_cycreport_update & gs ''stat''">Accept</a>'
 	elseif ARGS[0] = 7:
-		temp = arrsize('$wombpotfath')
-		if temp <= 0: 
-			$wombpotfath[0] = 'Unknown'
-			FathpotAdd = 1
-			Fathpotcheck = 0
-			temp = arrsize('$cumarrnam')
-			:potfakefathaddLoop
-			if temp > Fathpotcheck:
-				if cumarrkno[Fathpotcheck] = 1:
-					$wombpotfath[Fathpotadd] = $cumarrnam[Fathpotcheck]
-					Fathpotadd += 1
-				end
-				Fathpotcheck += 1
-				Jump 'potfakefathaddloop'
-			end
-			temp = arrsize('$wombpotfath')
-		end
-		pl '<a href="exec: $wombthfath = ''<<$wombpotfath[temp]>>'' & dynamic $d_cycreport_actor, 2"><<$wombpotfath[temp]>></a>'
-		:cyccustfathchoice
-		if temp => 0:
-			pl '<a href="exec: $wombthfath = ''<<$wombpotfath[temp]>>'' & dynamic $d_cycreport_actor, 2"><<$wombpotfath[temp]>></a>'
-			temp -= 1
-			jump 'cyccustfathchoice'
+		tempmax = arrsize('$wombpotfath')
+		tempcurr = 0
+		cumknown = 0
+		pl 'Total number of cumshots in your womb: <<cum_totaltime>>'
+		:potfathloop
+		if tempcurr < tempmax-1:
+			if cumtime[tempcurr] > 1:$cum = 'cumshots' else $cum = 'cumshot'
+			pl '<a href="exec: $wombthfath = ''<<$wombpotfath[tempcurr]>>'' & dynamic $d_cycreport_actor, 2"><<$wombpotfath[tempcurr]>></a> - <<cumtime[tempcurr]>> <<$cum>>'
+			cumknown += cumtime[tempcurr]
+			tempcurr += 1
+			jump 'potfathloop'
+		else
+			cumunknown = cum_totaltime - cumknown
+			if cumunknown > 1:$cum = 'cumshots' else $cum = 'cumshot'
+			pl '<a href="exec: $wombthfath = ''<<$wombpotfath[tempcurr]>>'' & dynamic $d_cycreport_actor, 2"><<$wombpotfath[tempcurr]>></a> - <<cumunknown>> <<$cum>>'
 		end
 	elseif ARGS[0] = 10:
 		temp = arrsize('Babyptype')
