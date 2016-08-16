@@ -2,7 +2,7 @@
 
 if $ARGS[0] = '':
 	!{Hourly reduction in semen potency}
-	!{First it sets the array index to the first index, then it checks to be sure the array tracking the age is less than 200 hours. If it is 200 hours old, it kills that index, which should shift the index up. If it is less than 200 hours old, it sets a current potency drop. The drop is 2x or 3x regularly, but during ovulation it is only 1x, to represent the better environment from fertile cervical mucus.}
+	!{First it sets the array index to the first index, then it checks to be sure the array tracking the age is less than 144 hours. If it is 144 hours old, it kills that index, which should shift the index up. If it is less than 200 hours old, it sets a current potency drop. The drop is 2x or 3x regularly, but during ovulation it is only 1x, to represent the better environment from fertile cervical mucus.}
 	if rcntorgzm = 1:
 		if rcntorgzmtmp = 1: rcntorgzm = 0 & rcntorgzmtmp = 0
 		if rcntorgzmtmp = 0: rcntorgzmtmp = 1
@@ -13,9 +13,9 @@ if $ARGS[0] = '':
 	cumarrtemp = 0
 	:cummarrpdloop1
 	:cummarrpdloop2
-	if cumarrage[cumarrtemp] < 190 and cumarrcpt[cumarrtemp] > 0:
+	if cumarrage[cumarrtemp] < 136 and cumarrcpt[cumarrtemp] > 0:
 		if rcntorgzm = 1 and cumarrcpt[cumarrtemp] < cumarrppt[cumarrtemp] and cumarrage[cumarrtemp] < 1 and cumarrcon[cumarrtemp]: cumarrcpt[cumarrtemp] += cumarrppt[cumarrtemp] / 12
-		CumPDrop = cumarrcpt[cumarrtemp] / (200 - cumarrage[cumarrtemp])
+		CumPDrop = cumarrcpt[cumarrtemp] / (144 - cumarrage[cumarrtemp])
 		if ovulate <= 0:
 			Temprand = rand(0,3)
 			if temprand <= 0:
@@ -362,8 +362,8 @@ if $ARGS[0] = 'cyc2':
 		:FertLoop
 		if egg_idx < egg_sz:
 !!{fert_thresh is the chance this specific egg is fertilized. Its modified by being on the pill, being sterilized, the brood curse, and so on. If it computes to less than the cum total calculated above, the egg is fertilized by a father randomly drawn from the lotto array.}
-			fert_thresh = rand(1,250000)
-			if pillcon < 0: pillcon = 0
+			fert_thresh = rand(25,2000) * rand(25,2000) * rand(1,3)
+			!!if pillcon < 0: pillcon = 0
 			fert_thresh += pillcon
 			if steriletu = 1: fert_thresh += fert_thresh*30
 			if fert_thresh > 0 and broodcurse > 0: fert_thresh = fert_thresh / 2
@@ -421,7 +421,7 @@ end
 if $ARGS[0] = 'cyc3':
 	ferteggage += 1
 	if FertEgg >= 1:
-		temprand = rand(0,100000)
+		temprand = rand(170,100000)
 		if ferteggage < 120 and broodcurse <= 0:
 			temprand += 170
 			temprand -= age*10
@@ -432,7 +432,7 @@ if $ARGS[0] = 'cyc3':
 				Babyptype[tempbabyi] = 2
 				FertEgg -= 1
 				BabyEmbryo += 1
-				PregChem = rand(0,30)
+				PregChem = rand(10,30)
 				if preg = 0: preg = 1
 			end
 		else
@@ -445,7 +445,7 @@ if $ARGS[0] = 'cyc3':
 				Babyptype[tempbabyi] = 1
 				FertEgg -= 1
 				BabyEmbryo += 1
-				PregChem += rand(0,30)
+				PregChem += rand(10,30)
 				if preg = 0: preg = 1
 			end
 			tempwbbonus = 0
