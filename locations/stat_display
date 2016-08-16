@@ -303,9 +303,9 @@ if opPRE = 0 :
 	    elseif horny < 90 and tanga = 0:
 		    $stat_msg += '<BR><font color = #DB7093>You are a little nervous, feeling nice between your legs <a href="exec:view''images/picb/briefs1a.jpg''">itchy</a> from arousal.</font>'
 	    elseif tanga = 1:
-		    $stat_msg += '<BR><font color = #FF1493>You feel that between your legs you are <a href="exec:view''images/picb/briefs2.jpg''">soaked</a> from your juices.</font>'
+		    $stat_msg += '<BR><font color = #FF1493>You can''t stop thinking about sex, between your legs you are <a href="exec:view''images/picb/briefs2.jpg''">soaked</a> from your juices.</font>'
 	    else
-		    $stat_msg += '<BR><font color = #FF1493>You feel that between your legs you are <a href="exec:view''images/picb/briefs2a.jpg''">soaked</a> from your juices.</font>' 
+		    $stat_msg += '<BR><font color = #FF1493>You can''t stop thinking about sex, between your legs you are <a href="exec:view''images/picb/briefs2a.jpg''">soaked</a> from your juices.</font>' 
 	    end
     end
 end
@@ -407,7 +407,12 @@ $stat_msg += '<BR>'
 if prezikmsg = 2:$stat_msg += '<BR><b><font color="red">You have run out of condoms.</font></b>' & $stat_msg += '<BR>'
 
 if opPRE = 0 :
-    if mesec > 0:
+	if implant_day > 0:
+		implant_since = (((daystart+1) - implant_day) * 24) - (24 - implant_hour)
+		if implant_since < 5:
+			$stat_msg += '<BR><font color="pink">You feel a slight twinge in your abdomen.</font>'
+		end
+    elseif mesec > 0:
         $stat_msg += '<BR><font color="red">You are currently having your period. '
         if isprok = 0 and isprokp = 0:
             $stat_msg += '<b>You need to use your feminine hygiene products.</b>'
@@ -479,111 +484,113 @@ if body_write > 0 or face_write > 0:
 	end
 end
 
-$temp[1] = {
-	if sparridt[temp1arr] = 1:
-		temp2arr = temp1arr + 1
+$cumdescribe = {
+	if sparridt[cumres_idx] = 1:
+		cumres_idx2 = cumres_idx + 1
 		if Enable_Android = 1:
-			temp3arr = arrpos('sparrloc',i,temp2arr)
+			cumres_idx3 = arrpos('sparrloc',i,cumres_idx2)
 			!May need to use this after Quest player 6+
 		else
-			temp3arr = arrpos(temp2arr,'sparrloc',i)
+			cumres_idx3 = arrpos(cumres_idx2,'sparrloc',i)
 		end  
-		if temp3arr > 0 and sparrvol[temp3arr] > 0 and sparrloc[temp3arr] = i and $sparrnam[temp3arr] ! $sparrnam[temp1arr]:
-			$cumtemp[1] = 'Multiple men'
+		if cumres_idx3 > 0 and sparrvol[cumres_idx3] > 0 and sparrloc[cumres_idx3] = i and $sparrnam[cumres_idx3] ! $sparrnam[cumres_idx]:
+			$cumres['name'] = 'Multiple men'
 		else
-			$cumtemp[1] = $sparrnam[temp1arr]
+			$cumres['name'] = $sparrnam[cumres_idx]
 		end
 	else
-		$cumtemp[1] = 'Somebody'
+		$cumres['name'] = 'Somebody'
 	end
-	if sparrage[temp1arr] < temp[2]:
-		$cumtemp[2] = 'fresh '
-	elseif sparrage[temp1arr] < temp[3]:
-		$cumtemp[2] = ''
+	if sparrage[cumres_idx] < cumres['new_thresh']:
+		$cumres['desc'] = 'fresh '
+	elseif sparrage[cumres_idx] < cumres['crusty_thresh']:
+		$cumres['desc'] = ''
 	else
-		temp[4] = sparrloc[temp1arr]
-		if temp[4] ! 0 and temp ! 3:
-			$cumtemp[2] = 'crusty '
+		if sparrloc[cumres_idx] ! 0 and sparr_idx ! 3:
+			$cumres['desc'] = 'crusty '
 		else
-			$cumtemp[2] = 'stale '
+			$cumres['desc'] = 'stale '
 		end
 	end
 }
-temp = arrsize('sparrvol')
-if temp > 0:
+if arrsize('sparrvol') > 0:
 	!{index for use in dynamic}
 	i = 0
 	!{values for fresh and crusty, only updated where needed}
-	temp[2] = 4
-	temp[3] = 10
-	temp1arr = arrpos('sparrloc',i)
-	if temp1arr >= 0 and sparrloc[temp1arr] = i and sparrvol[temp1arr] > 0:
-		dynamic $temp[1]
-		$cumtemp[3] = 'fills your '
-		if sparrslc[temp1arr] > 0:
-			$cumtemp[3] = 'slowly flows from your '
-			spdirtyn = 1
-		elseif sparrslc[temp] > 0 and sparrloc[temp] = 0:
-			$cumtemp[3] = 'slowly flows from your '
-			spdirtyn = 1
+	cumres['new_thresh'] = 4
+	cumres['crusty_thresh'] = 10
+	cumres_idx = arrpos('sparrloc',i)
+	if cumres_idx >= 0 and sparrloc[cumres_idx] = i and sparrvol[cumres_idx] > 0:
+		dynamic $cumdescribe
+		if vibratorIN = 1:
+			$stat_msg += '<BR><b><font color="red"><<$cumres[''name'']>>''s <<$cumres[''desc'']>>sperm fills your pussy, corked in by your vibrator.</font></b>'
+		else:
+			$cumres['state'] = 'fills your '
+			if sparrslc[cumres_idx] > 0:
+				$cumres['state'] = 'slowly flows from your '
+				spdirtyn = 1
+			elseif sparrslc[sparr_idx] > 0 and sparrloc[sparr_idx] = 0:
+				$cumres['state'] = 'slowly flows from your '
+				spdirtyn = 1
+			end
+			if swallow >= 10:
+				$stat_msg += '<BR><a href="exec:view''images/body/cumpussy.jpg''"><b><font color="red"><<$cumres[''name'']>>''s <<$cumres[''desc'']>><a href="exec:cumres_idx = arrpos(''sparrloc'',0) & gs ''cum_manage'', ''cumeater2''"><b><font color="blue">sperm</font></b></a><b> <<$cumres[''state'']>>pussy.</a></font></b>'
+			else
+				$stat_msg += '<BR><b><font color="red"><<$cumres[''name'']>>''s <<$cumres[''desc'']>>sperm <<$cumres[''state'']>><a href="exec:view''images/body/cumpussy.jpg''">pussy.</a></font></b>'
+			end
+			cumloc[0] = 1
+			spdirty = 1
 		end
-		if swallow >= 10:
-			$stat_msg += '<BR><a href="exec:view''images/body/cumpussy.jpg''"><b><font color="red"><<$cumtemp[1]>>''s <<$cumtemp[2]>><a href="exec:temp1arr = arrpos(''sparrloc'',0) & gs ''cum_manage'', ''cumeater2''"><b><font color="blue">sperm</font></b></a><b> <<$cumtemp[3]>>pussy.</a></font></b>'
-		else
-			$stat_msg += '<BR><b><font color="red"><<$cumtemp[1]>>''s <<$cumtemp[2]>>sperm <<$cumtemp[3]>><a href="exec:view''images/body/cumpussy.jpg''">pussy.</a></font></b>'
-		end
-		cumloc[0] = 1
-		spdirty = 1
 		spdirtyi = 1
 	end
 	i = 1
-	temp[2] = 1
-	temp[3] = 5
-	temp1arr = arrpos('sparrloc',i)
-	if temp1arr >= 0 and sparrloc[temp1arr] = i and sparrvol[temp1arr] > 0:
-		dynamic $temp[1]
-		if swallow >= 10 and sparrage[temp1arr] < 5:
-			$stat_msg += '<BR><b><font color="red"><<$cumtemp[1]>>''s <<$cumtemp[2]>><a href="exec:temp1arr = arrpos(''sparrloc'',1) & gs ''cum_manage'', ''cumeater2''"><b><font color="blue">sperm</font></b></a><b> is smeared across your pussy lips.</font></b>.'
+	cumres['new_thresh'] = 1
+	cumres['crusty_thresh'] = 5
+	cumres_idx = arrpos('sparrloc',i)
+	if cumres_idx >= 0 and sparrloc[cumres_idx] = i and sparrvol[cumres_idx] > 0:
+		dynamic $cumdescribe
+		if swallow >= 10 and sparrage[cumres_idx] < 5:
+			$stat_msg += '<BR><b><font color="red"><<$cumres[''name'']>>''s <<$cumres[''desc'']>><a href="exec:cumres_idx = arrpos(''sparrloc'',1) & gs ''cum_manage'', ''cumeater2''"><b><font color="blue">sperm</font></b></a><b> is smeared across your pussy lips.</font></b>.'
 		else
-			$stat_msg += '<BR><b><font color="red"><<$cumtemp[1]>>''s <<$cumtemp[2]>>sperm is smeared across your pussy lips.</a></font></b>'
+			$stat_msg += '<BR><b><font color="red"><<$cumres[''name'']>>''s <<$cumres[''desc'']>>sperm is smeared across your pussy lips.</a></font></b>'
 		end
 		cumloc[1] = 1
 		spdirty = 1
 		spdirtyn = 1
 	end
 	i = 2
-	temp1arr = arrpos('sparrloc',i)
-	if temp1arr >= 0 and sparrloc[temp1arr] = i and sparrvol[temp1arr] > 0:
-		dynamic $temp[1]
-		if swallow >= 10 and sparrage[temp1arr] < 5:
-			$stat_msg += '<BR><b><font color="red">You have <<$cumtemp[1]>>''s <<$cumtemp[2]>><a href="exec:temp1arr = arrpos(''sparrloc'',2) & gs ''cum_manage'', ''cumeater5''"><b><font color="blue">semen</font></b></a><b> stains on the crotch of your panties.</font></b>.'
+	cumres_idx = arrpos('sparrloc',i)
+	if cumres_idx >= 0 and sparrloc[cumres_idx] = i and sparrvol[cumres_idx] > 0:
+		dynamic $cumdescribe
+		if swallow >= 10 and sparrage[cumres_idx] < 5:
+			$stat_msg += '<BR><b><font color="red">You have <<$cumres[''name'']>>''s <<$cumres[''desc'']>><a href="exec:cumres_idx = arrpos(''sparrloc'',2) & gs ''cum_manage'', ''cumeater5''"><b><font color="blue">semen</font></b></a><b> stains on the crotch of your panties.</font></b>.'
 		else
-			$stat_msg += '<BR><b><font color="red">You have <<$cumtemp[1]>>''s <<$cumtemp[2]>>semen stains on the crotch of your panties.</a></font></b>'
+			$stat_msg += '<BR><b><font color="red">You have <<$cumres[''name'']>>''s <<$cumres[''desc'']>>semen stains on the crotch of your panties.</a></font></b>'
 		end
 		cumloc[2] = 1
 		spdirtyc = 1
 	end
 	i = 3
-	temp[2] = 4
-	temp[3] = 10
-	temp1arr = arrpos('sparrloc',i)
-	if temp1arr >= 0 and sparrloc[temp1arr] = i and sparrvol[temp1arr] > 0:
-		dynamic $temp[1]
+	cumres['new_thresh'] = 4
+	cumres['crusty_thresh'] = 10
+	cumres_idx = arrpos('sparrloc',i)
+	if cumres_idx >= 0 and sparrloc[cumres_idx] = i and sparrvol[cumres_idx] > 0:
+		dynamic $cumdescribe
 		if analplugin = 1:
-			$stat_msg += '<BR><b><font color="red"><<$cumtemp[1]>>''s <<$cumtemp[2]>>sperm is stuffed in your ass, corked in by your anal plug.</font></b>'
+			$stat_msg += '<BR><b><font color="red"><<$cumres[''name'']>>''s <<$cumres[''desc'']>>sperm is stuffed in your ass, corked in by your anal plug.</font></b>'
 		else
-			$cumtemp[3] = 'fills your '
-			if sparrslc[temp1arr] > 0:
-				$cumtemp[3] = 'slowly flows from your '
+			$cumres['state'] = 'fills your '
+			if sparrslc[cumres_idx] > 0:
+				$cumres['state'] = 'slowly flows from your '
 				spdirtyn = 1
-			elseif sparrslc[temp] > 0 and sparrloc[temp] = 3:
-				$cumtemp[3] = 'slowly flows from your '
+			elseif sparrslc[sparr_idx] > 0 and sparrloc[sparr_idx] = 3:
+				$cumres['state'] = 'slowly flows from your '
 				spdirtyn = 1
 			end
 			if swallow >= 10:
-				$stat_msg += '<BR><b><font color="red"><<$cumtemp[1]>>''s <<$cumtemp[2]>><a href="exec:temp1arr = arrpos(''sparrloc'',3) & gs ''cum_manage'', ''cumeater6''"><b><font color="blue">sperm</font></b></a><b> <<$cumtemp[3]>><a href="exec:view''images/body/cumanal.jpg''">ass</a>.</font></b>'
+				$stat_msg += '<BR><b><font color="red"><<$cumres[''name'']>>''s <<$cumres[''desc'']>><a href="exec:cumres_idx = arrpos(''sparrloc'',3) & gs ''cum_manage'', ''cumeater6''"><b><font color="blue">sperm</font></b></a><b> <<$cumres[''state'']>><a href="exec:view''images/body/cumanal.jpg''">ass</a>.</font></b>'
 			else
-				$stat_msg += '<BR><b><font color="red"><<$cumtemp[1]>>''s <<$cumtemp[2]>>sperm <<$cumtemp[3]>><a href="exec:view''images/body/cumanal.jpg''">ass</a>.</font></b>'
+				$stat_msg += '<BR><b><font color="red"><<$cumres[''name'']>>''s <<$cumres[''desc'']>>sperm <<$cumres[''state'']>><a href="exec:view''images/body/cumanal.jpg''">ass</a>.</font></b>'
 			end
 		end
 		cumloc[3] = 1
@@ -591,103 +598,103 @@ if temp > 0:
 		spdirtyi = 1
 	end
 	i = 4
-	temp[2] = 1
-	temp[3] = 5
-	temp1arr = arrpos('sparrloc',i)
-	if temp1arr >= 0 and sparrloc[temp1arr] = i and sparrvol[temp1arr] > 0:
-		dynamic $temp[1]
-		if swallow >= 10 and sparrage[temp1arr] < 5:
-			$stat_msg += '<BR><b><font color="red"><<$cumtemp[1]>>''s <<$cumtemp[2]>><a href="exec:temp1arr = arrpos(''sparrloc'',4) & gs ''cum_manage'', ''cumeater3''"><b><font color="blue">sperm</font></b></a><b> is smeared across your <a href="exec:view''images/body/cumass.jpg''">ass</a>.</font></b>.'
+	cumres['new_thresh'] = 1
+	cumres['crusty_thresh'] = 5
+	cumres_idx = arrpos('sparrloc',i)
+	if cumres_idx >= 0 and sparrloc[cumres_idx] = i and sparrvol[cumres_idx] > 0:
+		dynamic $cumdescribe
+		if swallow >= 10 and sparrage[cumres_idx] < 5:
+			$stat_msg += '<BR><b><font color="red"><<$cumres[''name'']>>''s <<$cumres[''desc'']>><a href="exec:cumres_idx = arrpos(''sparrloc'',4) & gs ''cum_manage'', ''cumeater3''"><b><font color="blue">sperm</font></b></a><b> is smeared across your <a href="exec:view''images/body/cumass.jpg''">ass</a>.</font></b>.'
 		else
-			$stat_msg += '<BR><b><font color="red"><<$cumtemp[1]>>''s <<$cumtemp[2]>>sperm is smeared across your <a href="exec:view''images/body/cumass.jpg''">ass</a>.</a></font></b>'
+			$stat_msg += '<BR><b><font color="red"><<$cumres[''name'']>>''s <<$cumres[''desc'']>>sperm is smeared across your <a href="exec:view''images/body/cumass.jpg''">ass</a>.</a></font></b>'
 		end
 		cumloc[4] = 1
 		spdirty = 1
 		spdirtyn = 1
 	end
 	i = 5
-	temp1arr = arrpos('sparrloc',i)
-	if temp1arr >= 0 and sparrloc[temp1arr] = i and sparrvol[temp1arr] > 0:
-		dynamic $temp[1]
-		if swallow >= 10 and sparrage[temp1arr] < 5:
-			$stat_msg += '<BR><b><font color="red">You have <<$cumtemp[1]>>''s <<$cumtemp[2]>><a href="exec:temp1arr = arrpos(''sparrloc'',5) & gs ''cum_manage'', ''cumeater5''"><b><font color="blue">semen</font></b></a><b> stains on the ass of your panties.</font></b>.'
+	cumres_idx = arrpos('sparrloc',i)
+	if cumres_idx >= 0 and sparrloc[cumres_idx] = i and sparrvol[cumres_idx] > 0:
+		dynamic $cumdescribe
+		if swallow >= 10 and sparrage[cumres_idx] < 5:
+			$stat_msg += '<BR><b><font color="red">You have <<$cumres[''name'']>>''s <<$cumres[''desc'']>><a href="exec:cumres_idx = arrpos(''sparrloc'',5) & gs ''cum_manage'', ''cumeater5''"><b><font color="blue">semen</font></b></a><b> stains on the ass of your panties.</font></b>.'
 		else
-			$stat_msg += '<BR><b><font color="red">You have <<$cumtemp[1]>>''s <<$cumtemp[2]>>semen stains on the ass of your panties.</a></font></b>'
+			$stat_msg += '<BR><b><font color="red">You have <<$cumres[''name'']>>''s <<$cumres[''desc'']>>semen stains on the ass of your panties.</a></font></b>'
 		end
 		cumloc[5] = 1
 		spdirtyc = 1
 	end
 	i = 6
-	temp1arr = arrpos('sparrloc',i)
-	if temp1arr >= 0 and sparrloc[temp1arr] = i and sparrvol[temp1arr] > 0:
-		dynamic $temp[1]
-		if swallow >= 10 and sparrage[temp1arr] < 5:
-			$stat_msg += '<BR><b><font color="red">You have <<$cumtemp[1]>>''s <<$cumtemp[2]>><a href="exec:temp1arr = arrpos(''sparrloc'',6) & gs ''cum_manage'', ''cumeater5''"><b><font color="blue">semen</font></b></a><b> stains on the crotch of your <a href="exec:view''images/body/cumfrot.jpg''">clothes</a>.</font></b>.'
+	cumres_idx = arrpos('sparrloc',i)
+	if cumres_idx >= 0 and sparrloc[cumres_idx] = i and sparrvol[cumres_idx] > 0:
+		dynamic $cumdescribe
+		if swallow >= 10 and sparrage[cumres_idx] < 5:
+			$stat_msg += '<BR><b><font color="red">You have <<$cumres[''name'']>>''s <<$cumres[''desc'']>><a href="exec:cumres_idx = arrpos(''sparrloc'',6) & gs ''cum_manage'', ''cumeater5''"><b><font color="blue">semen</font></b></a><b> stains on the crotch of your <a href="exec:view''images/body/cumfrot.jpg''">clothes</a>.</font></b>.'
 		else
-			$stat_msg += '<BR><b><font color="red">You have <<$cumtemp[1]>>''s <<$cumtemp[2]>>semen stains on the crotch of your <a href="exec:view''images/body/cumfrot.jpg''">clothes</a>.</a></font></b>'
+			$stat_msg += '<BR><b><font color="red">You have <<$cumres[''name'']>>''s <<$cumres[''desc'']>>semen stains on the crotch of your <a href="exec:view''images/body/cumfrot.jpg''">clothes</a>.</a></font></b>'
 		end
 		cumloc[6] = 1
 		spdirtyc = 1
 	end
 	i = 7
-	temp1arr = arrpos('sparrloc',i)
-	if temp1arr >= 0 and sparrloc[temp1arr] = i and sparrvol[temp1arr] > 0:
-		dynamic $temp[1]
-		if swallow >= 10 and sparrage[temp1arr] < 5:
-			$stat_msg += '<BR><b><font color="red">You have <<$cumtemp[1]>>''s <<$cumtemp[2]>><a href="exec:temp1arr = arrpos(''sparrloc'',7) & gs ''cum_manage'', ''cumeater5''"><b><font color="blue">semen</font></b></a><b> stains on your <a href="exec:view''images/body/cumfrot.jpg''">clothes</a>.</font></b>.'
+	cumres_idx = arrpos('sparrloc',i)
+	if cumres_idx >= 0 and sparrloc[cumres_idx] = i and sparrvol[cumres_idx] > 0:
+		dynamic $cumdescribe
+		if swallow >= 10 and sparrage[cumres_idx] < 5:
+			$stat_msg += '<BR><b><font color="red">You have <<$cumres[''name'']>>''s <<$cumres[''desc'']>><a href="exec:cumres_idx = arrpos(''sparrloc'',7) & gs ''cum_manage'', ''cumeater5''"><b><font color="blue">semen</font></b></a><b> stains on your <a href="exec:view''images/body/cumfrot.jpg''">clothes</a>.</font></b>.'
 		else
-			$stat_msg += '<BR><b><font color="red">You have <<$cumtemp[1]>>''s <<$cumtemp[2]>>semen stains on your <a href="exec:view''images/body/cumfrot.jpg''">clothes</a>.</a></font></b>'
+			$stat_msg += '<BR><b><font color="red">You have <<$cumres[''name'']>>''s <<$cumres[''desc'']>>semen stains on your <a href="exec:view''images/body/cumfrot.jpg''">clothes</a>.</a></font></b>'
 		end
 		cumloc[7] = 1
 		spdirtyc = 1
 	end
 	i = 8
-	temp1arr = arrpos('sparrloc',i)
-	if temp1arr >= 0 and sparrloc[temp1arr] = i and sparrvol[temp1arr] > 0:
-		dynamic $temp[1]
-		if swallow >= 10 and sparrage[temp1arr] < 5:
-			$stat_msg += '<BR><b><font color="red"><<$cumtemp[1]>>''s <<$cumtemp[2]>><a href="exec:temp1arr = arrpos(''sparrloc'',8) & gs ''cum_manage'', ''cumeater7''"><b><font color="blue">sperm</font></b></a><b> is smeared across your back.</font></b>.'
+	cumres_idx = arrpos('sparrloc',i)
+	if cumres_idx >= 0 and sparrloc[cumres_idx] = i and sparrvol[cumres_idx] > 0:
+		dynamic $cumdescribe
+		if swallow >= 10 and sparrage[cumres_idx] < 5:
+			$stat_msg += '<BR><b><font color="red"><<$cumres[''name'']>>''s <<$cumres[''desc'']>><a href="exec:cumres_idx = arrpos(''sparrloc'',8) & gs ''cum_manage'', ''cumeater7''"><b><font color="blue">sperm</font></b></a><b> is smeared across your back.</font></b>.'
 		else
-			$stat_msg += '<BR><b><font color="red"><<$cumtemp[1]>>''s <<$cumtemp[2]>>sperm is smeared across your back.</a></font></b>'
+			$stat_msg += '<BR><b><font color="red"><<$cumres[''name'']>>''s <<$cumres[''desc'']>>sperm is smeared across your back.</a></font></b>'
 		end
 		cumloc[8] = 1
 		spdirty = 1
 		spdirtyn = 1
 	end
 	i = 9
-	temp1arr = arrpos('sparrloc',i)
-	if temp1arr >= 0 and sparrloc[temp1arr] = i and sparrvol[temp1arr] > 0:
-		dynamic $temp[1]
-		if swallow >= 10 and sparrage[temp1arr] < 5:
-			$stat_msg += '<BR><b><font color="red"><<$cumtemp[1]>>''s <<$cumtemp[2]>><a href="exec:temp1arr = arrpos(''sparrloc'',9) & gs ''cum_manage'', ''cumeater7''"><b><font color="blue">sperm</font></b></a><b> is smeared across your legs.</font></b>.'
+	cumres_idx = arrpos('sparrloc',i)
+	if cumres_idx >= 0 and sparrloc[cumres_idx] = i and sparrvol[cumres_idx] > 0:
+		dynamic $cumdescribe
+		if swallow >= 10 and sparrage[cumres_idx] < 5:
+			$stat_msg += '<BR><b><font color="red"><<$cumres[''name'']>>''s <<$cumres[''desc'']>><a href="exec:cumres_idx = arrpos(''sparrloc'',9) & gs ''cum_manage'', ''cumeater7''"><b><font color="blue">sperm</font></b></a><b> is smeared across your legs.</font></b>.'
 		else
-			$stat_msg += '<BR><b><font color="red"><<$cumtemp[1]>>''s <<$cumtemp[2]>>sperm is smeared across your legs.</a></font></b>'
+			$stat_msg += '<BR><b><font color="red"><<$cumres[''name'']>>''s <<$cumres[''desc'']>>sperm is smeared across your legs.</a></font></b>'
 		end
 		cumloc[9] = 1
 		spdirty = 1
 		spdirtyn = 1
 	end
 	i = 10
-	temp1arr = arrpos('sparrloc',i)
-	if temp1arr >= 0 and sparrloc[temp1arr] = i and sparrvol[temp1arr] > 0:
-		dynamic $temp[1]
-		if swallow >= 10 and sparrage[temp1arr] < 5:
-			$stat_msg += '<BR><b><font color="red"><<$cumtemp[1]>>''s <<$cumtemp[2]>><a href="exec:temp1arr = arrpos(''sparrloc'',10) & gs ''cum_manage'', ''cumeater7''"><b><font color="blue">sperm</font></b></a><b> is smeared across your arms.</font></b>.'
+	cumres_idx = arrpos('sparrloc',i)
+	if cumres_idx >= 0 and sparrloc[cumres_idx] = i and sparrvol[cumres_idx] > 0:
+		dynamic $cumdescribe
+		if swallow >= 10 and sparrage[cumres_idx] < 5:
+			$stat_msg += '<BR><b><font color="red"><<$cumres[''name'']>>''s <<$cumres[''desc'']>><a href="exec:cumres_idx = arrpos(''sparrloc'',10) & gs ''cum_manage'', ''cumeater7''"><b><font color="blue">sperm</font></b></a><b> is smeared across your arms.</font></b>.'
 		else
-			$stat_msg += '<BR><b><font color="red"><<$cumtemp[1]>>''s <<$cumtemp[2]>>sperm is smeared across your arms.</a></font></b>'
+			$stat_msg += '<BR><b><font color="red"><<$cumres[''name'']>>''s <<$cumres[''desc'']>>sperm is smeared across your arms.</a></font></b>'
 		end
 		cumloc[10] = 1
 		spdirty = 1
 		spdirtyn = 1
 	end
 	i = 11
-	temp1arr = arrpos('sparrloc',i)
-	if temp1arr >= 0 and sparrloc[temp1arr] = i and sparrvol[temp1arr] > 0:
-		dynamic $temp[1]
-		if swallow >= 10 and sparrage[temp1arr] < 5:
-			$stat_msg += '<BR><b><font color="red"><<$cumtemp[1]>>''s <<$cumtemp[2]>><a href="exec:temp1arr = arrpos(''sparrloc'',11) & gs ''cum_manage'', ''cumeater4''"><b><font color="blue">sperm</font></b></a><b> is smeared across your <a href="exec:view''images/body/cumface.jpg''">face</a>.</font></b>.'
+	cumres_idx = arrpos('sparrloc',i)
+	if cumres_idx >= 0 and sparrloc[cumres_idx] = i and sparrvol[cumres_idx] > 0:
+		dynamic $cumdescribe
+		if swallow >= 10 and sparrage[cumres_idx] < 5:
+			$stat_msg += '<BR><b><font color="red"><<$cumres[''name'']>>''s <<$cumres[''desc'']>><a href="exec:cumres_idx = arrpos(''sparrloc'',11) & gs ''cum_manage'', ''cumeater4''"><b><font color="blue">sperm</font></b></a><b> is smeared across your <a href="exec:view''images/body/cumface.jpg''">face</a>.</font></b>.'
 		else
-			$stat_msg += '<BR><b><font color="red"><<$cumtemp[1]>>''s <<$cumtemp[2]>>sperm is smeared across your <a href="exec:view''images/body/cumface.jpg''">face</a>.</a></font></b>'
+			$stat_msg += '<BR><b><font color="red"><<$cumres[''name'']>>''s <<$cumres[''desc'']>>sperm is smeared across your <a href="exec:view''images/body/cumface.jpg''">face</a>.</a></font></b>'
 		end
 		cumloc[11] = 1
 		spdirty = 1
@@ -695,23 +702,23 @@ if temp > 0:
 		spdirtyv = 1
 	end
 	i = 12
-	temp1arr = arrpos('sparrloc',i)
-	if temp1arr >= 0 and sparrloc[temp1arr] = i and sparrvol[temp1arr] > 0:
-		dynamic $temp[1]
-		$stat_msg += '<BR><b><font color="red">Your mouth smells like <<$cumtemp[1]>>''s sperm.</a></font></b>'
+	cumres_idx = arrpos('sparrloc',i)
+	if cumres_idx >= 0 and sparrloc[cumres_idx] = i and sparrvol[cumres_idx] > 0:
+		dynamic $cumdescribe
+		$stat_msg += '<BR><b><font color="red">Your mouth smells like <<$cumres[''name'']>>''s sperm.</a></font></b>'
 		cumloc[12] = 1
 		spdirty = 1
 		spdirtyb = 1
 		fbreath = 0
 	end
 	i = 13
-	temp1arr = arrpos('sparrloc',i)
-	if temp1arr >= 0 and sparrloc[temp1arr] = i and sparrvol[temp1arr] > 0:
-		dynamic $temp[1]
-		if swallow >= 10 and sparrage[temp1arr] < 5:
-			$stat_msg += '<BR><b><font color="red"><<$cumtemp[1]>>''s <<$cumtemp[2]>><a href="exec:temp1arr = arrpos(''sparrloc'',13) & gs ''cum_manage'', ''cumeater8''"><b><font color="blue">sperm</font></b></a><b> is smeared across your hands.</font></b>.'
+	cumres_idx = arrpos('sparrloc',i)
+	if cumres_idx >= 0 and sparrloc[cumres_idx] = i and sparrvol[cumres_idx] > 0:
+		dynamic $cumdescribe
+		if swallow >= 10 and sparrage[cumres_idx] < 5:
+			$stat_msg += '<BR><b><font color="red"><<$cumres[''name'']>>''s <<$cumres[''desc'']>><a href="exec:cumres_idx = arrpos(''sparrloc'',13) & gs ''cum_manage'', ''cumeater8''"><b><font color="blue">sperm</font></b></a><b> is smeared across your hands.</font></b>.'
 		else
-			$stat_msg += '<BR><b><font color="red"><<$cumtemp[1]>>''s <<$cumtemp[2]>>sperm is smeared across your hands.</a></font></b>'
+			$stat_msg += '<BR><b><font color="red"><<$cumres[''name'']>>''s <<$cumres[''desc'']>>sperm is smeared across your hands.</a></font></b>'
 		end
 		cumloc[13] = 1
 		spdirty = 1
@@ -720,39 +727,39 @@ if temp > 0:
 		spdirtyf = 1
 	end
 	i = 14
-	temp1arr = arrpos('sparrloc',i)
-	if temp1arr >= 0 and sparrloc[temp1arr] = i and sparrvol[temp1arr] > 0:
-		dynamic $temp[1]
-		if swallow >= 10 and sparrage[temp1arr] < 5:
-			$stat_msg += '<BR><b><font color="red"><<$cumtemp[1]>>''s <<$cumtemp[2]>><a href="exec:temp1arr = arrpos(''sparrloc'',14) & gs ''cum_manage'', ''cumeater1''"><b><font color="blue">sperm</font></b></a><b> is smeared across your <a href="exec:view''images/body/cumbelly.jpg''">stomach</a>.</font></b>.'
+	cumres_idx = arrpos('sparrloc',i)
+	if cumres_idx >= 0 and sparrloc[cumres_idx] = i and sparrvol[cumres_idx] > 0:
+		dynamic $cumdescribe
+		if swallow >= 10 and sparrage[cumres_idx] < 5:
+			$stat_msg += '<BR><b><font color="red"><<$cumres[''name'']>>''s <<$cumres[''desc'']>><a href="exec:cumres_idx = arrpos(''sparrloc'',14) & gs ''cum_manage'', ''cumeater1''"><b><font color="blue">sperm</font></b></a><b> is smeared across your <a href="exec:view''images/body/cumbelly.jpg''">stomach</a>.</font></b>.'
 		else
-			$stat_msg += '<BR><b><font color="red"><<$cumtemp[1]>>''s <<$cumtemp[2]>>sperm is smeared across your <a href="exec:view''images/body/cumbelly.jpg''">stomach.</a></font></b>'
+			$stat_msg += '<BR><b><font color="red"><<$cumres[''name'']>>''s <<$cumres[''desc'']>>sperm is smeared across your <a href="exec:view''images/body/cumbelly.jpg''">stomach.</a></font></b>'
 		end
 		cumloc[14] = 1
 		spdirty = 1
 		spdirtyn = 1
 	end
 	i = 15
-	temp1arr = arrpos('sparrloc',i)
-	if temp1arr >= 0 and sparrloc[temp1arr] = i and sparrvol[temp1arr] > 0:
-		dynamic $temp[1]
-		if swallow >= 10 and sparrage[temp1arr] < 5:
-			$stat_msg += '<BR><b><font color="red"><<$cumtemp[1]>>''s <<$cumtemp[2]>><a href="exec:temp1arr = arrpos(''sparrloc'',15) & gs ''cum_manage'', ''cumeater7''"><b><font color="blue">sperm</font></b></a><b> is smeared across your breasts.</font></b>.'
+	cumres_idx = arrpos('sparrloc',i)
+	if cumres_idx >= 0 and sparrloc[cumres_idx] = i and sparrvol[cumres_idx] > 0:
+		dynamic $cumdescribe
+		if swallow >= 10 and sparrage[cumres_idx] < 5:
+			$stat_msg += '<BR><b><font color="red"><<$cumres[''name'']>>''s <<$cumres[''desc'']>><a href="exec:cumres_idx = arrpos(''sparrloc'',15) & gs ''cum_manage'', ''cumeater7''"><b><font color="blue">sperm</font></b></a><b> is smeared across your breasts.</font></b>.'
 		else
-			$stat_msg += '<BR><b><font color="red"><<$cumtemp[1]>>''s <<$cumtemp[2]>>sperm is smeared across your breasts.</a></font></b>'
+			$stat_msg += '<BR><b><font color="red"><<$cumres[''name'']>>''s <<$cumres[''desc'']>>sperm is smeared across your breasts.</a></font></b>'
 		end
 		cumloc[15] = 1
 		spdirty = 1
 		spdirtyn = 1
 	end
 	i = 16
-	temp1arr = arrpos('sparrloc',i)
-	if temp1arr >= 0 and sparrloc[temp1arr] = i and sparrvol[temp1arr] > 0:
-		dynamic $temp[1]
-		if swallow >= 10 and sparrage[temp1arr] < 5:
-			$stat_msg += '<BR><b><font color="red"><<$cumtemp[1]>>''s <<$cumtemp[2]>><a href="exec:temp1arr = arrpos(''sparrloc'',16) & gs ''cum_manage'', ''cumeater9''"><b><font color="blue">sperm</font></b></a><b> is smeared in your hair.</font></b>.'
+	cumres_idx = arrpos('sparrloc',i)
+	if cumres_idx >= 0 and sparrloc[cumres_idx] = i and sparrvol[cumres_idx] > 0:
+		dynamic $cumdescribe
+		if swallow >= 10 and sparrage[cumres_idx] < 5:
+			$stat_msg += '<BR><b><font color="red"><<$cumres[''name'']>>''s <<$cumres[''desc'']>><a href="exec:cumres_idx = arrpos(''sparrloc'',16) & gs ''cum_manage'', ''cumeater9''"><b><font color="blue">sperm</font></b></a><b> is smeared in your hair.</font></b>.'
 		else
-			$stat_msg += '<BR><b><font color="red"><<$cumtemp[1]>>''s <<$cumtemp[2]>>sperm is smeared in your hair.</a></font></b>'
+			$stat_msg += '<BR><b><font color="red"><<$cumres[''name'']>>''s <<$cumres[''desc'']>>sperm is smeared in your hair.</a></font></b>'
 		end
 		cumloc[16] = 1
 		spdirty = 1
@@ -760,32 +767,30 @@ if temp > 0:
 		spdirtyv = 1
 	end
 	i = 17
-	temp1arr = arrpos('sparrloc',i)
-	if temp1arr >= 0 and sparrloc[temp1arr] = i and sparrvol[temp1arr] > 0:
-		if sparridt[temp1arr] = 1:
-			$cumtemp[1] = $sparrnam[temp1arr]
+	cumres_idx = arrpos('sparrloc',i)
+	if cumres_idx >= 0 and sparrloc[cumres_idx] = i and sparrvol[cumres_idx] > 0:
+		if sparridt[cumres_idx] = 1:
+			$cumres['name'] = $sparrnam[cumres_idx]
 		else
-			$cumtemp[1] = 'Somebody'
+			$cumres['name'] = 'Somebody'
 		end
-		if sparrage[temp1arr] < 1:
-			$cumtemp[2] = 'freshly buried'
-		elseif sparrage[temp1arr] < 13:
-			$cumtemp[2] = 'buried'
+		if sparrage[cumres_idx] < 1:
+			$cumres['desc'] = 'freshly buried'
+		elseif sparrage[cumres_idx] < 13:
+			$cumres['desc'] = 'buried'
 		else
-			$cumtemp[2] = 'marinating '
+			$cumres['desc'] = 'marinating '
 		end
-		$stat_msg += '<BR><b><font color="red">A spent condom full of <<$cumtemp[1]>>''s sperm is <<$cumtemp[2]>> deep in your vagina.</a></font></b>'
+		$stat_msg += '<BR><b><font color="red">A spent condom full of <<$cumres[''name'']>>''s sperm is <<$cumres[''desc'']>> deep in your vagina.</a></font></b>'
 		cumloc[17] = 1
 		spdirty = 1
 		spdirtyi = 1
 	end
 end
 !{should kill all temp values}
-killvar '$temp'
-killvar '$cumtemp'
-temp1arr = 0
-temp2arr = 0
-temp3arr = 0
+cumres_idx = 0
+cumres_idx2 = 0
+cumres_idx3 = 0
 cumfrot = 0
 cumpussy = 0
 cumbelly = 0

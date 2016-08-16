@@ -10,35 +10,27 @@ if $ARGS[0] = '':
 	ctemp = 0
 	ctemp[1] = 0
 	ctemp[2] = 0
-	cumarrtemp = 0
-	:cummarrpdloop1
-	:cummarrpdloop2
-	if cumarrage[cumarrtemp] < 136 and cumarrcpt[cumarrtemp] > 0:
-		if rcntorgzm = 1 and cumarrcpt[cumarrtemp] < cumarrppt[cumarrtemp] and cumarrage[cumarrtemp] < 1 and cumarrcon[cumarrtemp]: cumarrcpt[cumarrtemp] += cumarrppt[cumarrtemp] / 12
-		CumPDrop = cumarrcpt[cumarrtemp] / (144 - cumarrage[cumarrtemp])
-		if ovulate <= 0:
-			Temprand = rand(0,3)
-			if temprand <= 0:
-				CumPDrop = CumPDrop*3
-			elseif temprand = 1:
-				CumPDrop = CumPDrop*2
-			end
+	cumarr_idx = 0
+	:cumarrloop
+	if cumarr_idx < arrsize('$cumarrnam'):
+		if cumarrcpt[cumarr_idx] > 0 and cumarrage[cumarr_idx] < 64:
+			cumpdrop = cumarrppt[cumarr_idx] * (cumarrage[cumarr_idx] / 10)
+			if cumpdrop < 10: cumpdrop = 10
+			cumpdrop += cumpdrop * rand(0, 2)
+			cumarrcpt[cumarr_idx] -= cumpdrop
+			cumarrage[cumarr_idx] += 1
+		else
+			KILLVAR 'cumarrcpt',cumarr_idx
+			KILLVAR 'cumarrppt',cumarr_idx
+			KILLVAR '$cumarrnam',cumarr_idx
+			KILLVAR 'cumarrage',cumarr_idx
+			KILLVAR 'cumarrdel',cumarr_idx
+			KILLVAR 'cumarrkno',cumarr_idx
+			KILLVAR 'cumarrcon',cumarrte_idx
 		end
-		cumarrcpt[cumarrtemp] -= CumPDrop
-		cumarrage[cumarrtemp] += 1
-		cumarrtemp += 1
-		arrmodtmp = arrsize('$cumarrnam')
-		if arrmodtmp > cumarrtemp: jump 'cummarrpdloop1'
-	else
-		KILLVAR 'cumarrcpt',cumarrtemp
-		KILLVAR 'cumarrppt',cumarrtemp
-		KILLVAR '$cumarrnam',cumarrtemp
-		KILLVAR 'cumarrage',cumarrtemp
-		KILLVAR 'cumarrdel',cumarrtemp
-		KILLVAR 'cumarrkno',cumarrtemp
-		KILLVAR 'cumarrcon',cumarrtemp    
-		arrmodtmp = arrsize('$cumarrnam')
-		if arrmodtmp > cumarrtemp: jump 'cummarrpdloop2'
+
+		cumarr_idx += 1
+		jump 'cumarrloop'
 	end
 
 	!!Succubus absorption of sperm in womb
@@ -74,98 +66,98 @@ if $ARGS[0] = '':
 		killvar 'succycletmp'
 	end
 
-	cumarrtemp = 0
+	cumarr_idx = 0
 	if arrsize('sparrvol') > 0:
 		:cumspaloop
 		!!Succubus absorption for internal locations other than womb
 		if succubusflag = 1:
-			if sparrloc[cumarrtemp] = 3 or sparrloc[cumarrtemp] = 12:
+			if sparrloc[cumarr_idx] = 3 or sparrloc[cumarr_idx] = 12:
 				sexnutrition += 25*succublvl
 				succubxp += 3
 				sucabscum = 1
-				if sparrvol[cumarrtemp] > 0: sparrvol[cumarrtemp] = 0
+				if sparrvol[cumarr_idx] > 0: sparrvol[cumarr_idx] = 0
 			end
 		end
-		!!{if sparrloc[cumarrtemp] = 0 or sparrloc[cumarrtemp] = 3 or sparrloc[cumarrtemp] = 12:
+		!!{if sparrloc[cumarr_idx] = 0 or sparrloc[cumarr_idx] = 3 or sparrloc[cumarr_idx] = 12:
 			sexnutrition += 30*succublvl
-			sparrvol[cumarrtemp] -= 30*succublvl
-			if sparrvol[cumarrtemp] < 0: sexnutrition += sparrvol[cumarrtemp] & sparrvol[cumarrtemp] = 0
+			sparrvol[cumarr_idx] -= 30*succublvl
+			if sparrvol[cumarr_idx] < 0: sexnutrition += sparrvol[cumarr_idx] & sparrvol[cumarr_idx] = 0
 		end}
-		if sparrvol[cumarrtemp] > 0:
+		if sparrvol[cumarr_idx] > 0:
 			sparrtmpv = arrsize('$cumarrnam')
-			if sparrloc[cumarrtemp] = 17:
-				sparrtmpv = arrpos('$cumarrnam',$sparrnam[cumarrtemp])
-				if sparrage[cumarrtemp] < 4:
-					cumarrcpt[sparrtmpv] += sparrppt[cumarrtemp]/5
-				elseif sparrage[cumarrtemp] < 10:
-					cumarrcpt[sparrtmpv] += sparrppt[cumarrtemp]/30
+			if sparrloc[cumarr_idx] = 17:
+				sparrtmpv = arrpos('$cumarrnam',$sparrnam[cumarr_idx])
+				if sparrage[cumarr_idx] < 4:
+					cumarrcpt[sparrtmpv] += sparrppt[cumarr_idx]/5
+				elseif sparrage[cumarr_idx] < 10:
+					cumarrcpt[sparrtmpv] += sparrppt[cumarr_idx]/30
 				end
-			elseif sparrloc[cumarrtemp] = 0:
-				sparrtmpv = arrpos('$cumarrnam',$sparrnam[cumarrtemp])
-				if sparrage[cumarrtemp] < 4:
-					cumarrcpt[sparrtmpv] += sparrppt[cumarrtemp]/40
-				elseif sparrage[cumarrtemp] < 10:
-					cumarrcpt[sparrtmpv] += sparrppt[cumarrtemp]/60
+			elseif sparrloc[cumarr_idx] = 0:
+				sparrtmpv = arrpos('$cumarrnam',$sparrnam[cumarr_idx])
+				if sparrage[cumarr_idx] < 4:
+					cumarrcpt[sparrtmpv] += sparrppt[cumarr_idx]/40
+				elseif sparrage[cumarr_idx] < 10:
+					cumarrcpt[sparrtmpv] += sparrppt[cumarr_idx]/60
 				end
-			elseif sparrslc[cumarrtemp] = 1 and sparrage < 5:
-				if sparrloc[cumarrtemp] = 1:
-					cumarrcpt[sparrtmpv] = sparrppt[cumarrtemp]/1000*sparrage[cumarrtemp]/sparrvol[cumarrtemp]
-					cumarrppt[sparrtmpv] = sparrppt[cumarrtemp]
-					$cumarrnam[sparrtmpv] = $sparrnam[cumarrtemp]
-					cumarrage[sparrtmpv] = sparrage[cumarrtemp]
+			elseif sparrslc[cumarr_idx] = 1 and sparrage < 5:
+				if sparrloc[cumarr_idx] = 1:
+					cumarrcpt[sparrtmpv] = sparrppt[cumarr_idx]/1000*sparrage[cumarr_idx]/sparrvol[cumarr_idx]
+					cumarrppt[sparrtmpv] = sparrppt[cumarr_idx]
+					$cumarrnam[sparrtmpv] = $sparrnam[cumarr_idx]
+					cumarrage[sparrtmpv] = sparrage[cumarr_idx]
 					cumarrdel[sparrtmpv] = 1
 					cumarrkno[sparrtmpv] = 0
 					cumarrcon[sparrtmpv] = 0
 				end
-			elseif sparrslc[cumarrtemp] = 3 and sparrage < 5:
-				if sparrloc[cumarrtemp] = 2:
-					cumarrcpt[sparrtmpv] = sparrppt[cumarrtemp]/1000*sparrage[cumarrtemp]/sparrvol[cumarrtemp]
-					cumarrppt[sparrtmpv] = sparrppt[cumarrtemp]
-					$cumarrnam[sparrtmpv] = $sparrnam[cumarrtemp]
-					cumarrage[sparrtmpv] = sparrage[cumarrtemp]
+			elseif sparrslc[cumarr_idx] = 3 and sparrage < 5:
+				if sparrloc[cumarr_idx] = 2:
+					cumarrcpt[sparrtmpv] = sparrppt[cumarr_idx]/1000*sparrage[cumarr_idx]/sparrvol[cumarr_idx]
+					cumarrppt[sparrtmpv] = sparrppt[cumarr_idx]
+					$cumarrnam[sparrtmpv] = $sparrnam[cumarr_idx]
+					cumarrage[sparrtmpv] = sparrage[cumarr_idx]
 					cumarrdel[sparrtmpv] = 3
 					cumarrkno[sparrtmpv] = 0
 					cumarrcon[sparrtmpv] = 0
-				elseif sparrloc[cumarrtemp] = 4:
-					cumarrcpt[sparrtmpv] = sparrppt[cumarrtemp]/1000*sparrage[cumarrtemp]/sparrvol[cumarrtemp]
-					cumarrppt[sparrtmpv] = sparrppt[cumarrtemp]
-					$cumarrnam[sparrtmpv] = $sparrnam[cumarrtemp]
-					cumarrage[sparrtmpv] = sparrage[cumarrtemp]
+				elseif sparrloc[cumarr_idx] = 4:
+					cumarrcpt[sparrtmpv] = sparrppt[cumarr_idx]/1000*sparrage[cumarr_idx]/sparrvol[cumarr_idx]
+					cumarrppt[sparrtmpv] = sparrppt[cumarr_idx]
+					$cumarrnam[sparrtmpv] = $sparrnam[cumarr_idx]
+					cumarrage[sparrtmpv] = sparrage[cumarr_idx]
 					cumarrdel[sparrtmpv] = 2
 					cumarrkno[sparrtmpv] = 0
 					cumarrcon[sparrtmpv] = 0
 				end
-			elseif sparrslc[cumarrtemp] = 5 and sparrage < 5:
-				if sparrloc[cumarrtemp] = 3:
-					cumarrcpt[sparrtmpv] = sparrppt[cumarrtemp]/1000*sparrage[cumarrtemp]/sparrvol[cumarrtemp]
-					cumarrppt[sparrtmpv] = sparrppt[cumarrtemp]
-					$cumarrnam[sparrtmpv] = $sparrnam[cumarrtemp]
-					cumarrage[sparrtmpv] = sparrage[cumarrtemp]
+			elseif sparrslc[cumarr_idx] = 5 and sparrage < 5:
+				if sparrloc[cumarr_idx] = 3:
+					cumarrcpt[sparrtmpv] = sparrppt[cumarr_idx]/1000*sparrage[cumarr_idx]/sparrvol[cumarr_idx]
+					cumarrppt[sparrtmpv] = sparrppt[cumarr_idx]
+					$cumarrnam[sparrtmpv] = $sparrnam[cumarr_idx]
+					cumarrage[sparrtmpv] = sparrage[cumarr_idx]
 					cumarrdel[sparrtmpv] = 2
 					cumarrkno[sparrtmpv] = 0
 					cumarrcon[sparrtmpv] = 0
-				elseif sparrloc[cumarrtemp] = 5:
-					cumarrcpt[sparrtmpv] = sparrppt[cumarrtemp]/1000*sparrage[cumarrtemp]/sparrvol[cumarrtemp]
-					cumarrppt[sparrtmpv] = sparrppt[cumarrtemp]
-					$cumarrnam[sparrtmpv] = $sparrnam[cumarrtemp]
-					cumarrage[sparrtmpv] = sparrage[cumarrtemp]
+				elseif sparrloc[cumarr_idx] = 5:
+					cumarrcpt[sparrtmpv] = sparrppt[cumarr_idx]/1000*sparrage[cumarr_idx]/sparrvol[cumarr_idx]
+					cumarrppt[sparrtmpv] = sparrppt[cumarr_idx]
+					$cumarrnam[sparrtmpv] = $sparrnam[cumarr_idx]
+					cumarrage[sparrtmpv] = sparrage[cumarr_idx]
 					cumarrdel[sparrtmpv] = 3
 					cumarrkno[sparrtmpv] = 0
 					cumarrcon[sparrtmpv] = 0
-				elseif sparrloc[cumarrtemp] = 6:
-					cumarrcpt[sparrtmpv] = sparrppt[cumarrtemp]/1000*sparrage[cumarrtemp]/sparrvol[cumarrtemp]
-					cumarrppt[sparrtmpv] = sparrppt[cumarrtemp]
-					$cumarrnam[sparrtmpv] = $sparrnam[cumarrtemp]
-					cumarrage[sparrtmpv] = sparrage[cumarrtemp]
+				elseif sparrloc[cumarr_idx] = 6:
+					cumarrcpt[sparrtmpv] = sparrppt[cumarr_idx]/1000*sparrage[cumarr_idx]/sparrvol[cumarr_idx]
+					cumarrppt[sparrtmpv] = sparrppt[cumarr_idx]
+					$cumarrnam[sparrtmpv] = $sparrnam[cumarr_idx]
+					cumarrage[sparrtmpv] = sparrage[cumarr_idx]
 					cumarrdel[sparrtmpv] = 3
 					cumarrkno[sparrtmpv] = 0
 					cumarrcon[sparrtmpv] = 0
 				end
 			end
-			if sparrloc[cumarrtemp] = 0 or sparrloc[cumarrtemp] = 3 or sparrloc[cumarrtemp] = 12:sparrvol[cumarrtemp] -= sparrage[cumarrtemp]/2
-			if sparrloc[cumarrtemp] = 0 and cumsumvag > 60: sparrslc = 1
-			if sparrloc[cumarrtemp] = 3 and cumsumass > 60: sparrslc = 1
-			if sparrloc[cumarrtemp] = 17 and sparrage[cumarrtemp] > 48:
+			if sparrloc[cumarr_idx] = 0 or sparrloc[cumarr_idx] = 3 or sparrloc[cumarr_idx] = 12:sparrvol[cumarr_idx] -= sparrage[cumarr_idx]/2
+			if sparrloc[cumarr_idx] = 0 and cumsumvag > 60: sparrslc = 1
+			if sparrloc[cumarr_idx] = 3 and cumsumass > 60: sparrslc = 1
+			if sparrloc[cumarr_idx] = 17 and sparrage[cumarr_idx] > 48:
 				cumcondslip = 1
 				health -= 3
 				'You feel nauseous.'
@@ -173,23 +165,23 @@ if $ARGS[0] = '':
 			else
 				cumcondslip = 0
 			end
-			if sparrloc[cumarrtemp] ! 0 and sparrloc[cumarrtemp] ! 3 and sparrloc[cumarrtemp] ! 12 and isprok = 0 and sparrage < 5: sparrslc[cumarrtemp] += 1
-			sparrage[cumarrtemp] += 1
-			cumarrtemp += 1
-			ctemp += sparrvol[cumarrtemp]
-			if sparrloc[cumarrtemp] = 0: ctemp[1] += sparrvol[cumarrtemp]
-			if sparrloc[cumarrtemp] = 3: ctemp[2] += sparrvol[cumarrtemp]
+			if sparrloc[cumarr_idx] ! 0 and sparrloc[cumarr_idx] ! 3 and sparrloc[cumarr_idx] ! 12 and isprok = 0 and sparrage < 5: sparrslc[cumarr_idx] += 1
+			sparrage[cumarr_idx] += 1
+			cumarr_idx += 1
+			ctemp += sparrvol[cumarr_idx]
+			if sparrloc[cumarr_idx] = 0: ctemp[1] += sparrvol[cumarr_idx]
+			if sparrloc[cumarr_idx] = 3: ctemp[2] += sparrvol[cumarr_idx]
 		else
-			KILLVAR 'spafinloc',cumarrtemp
-			KILLVAR 'sparrage',cumarrtemp
-			KILLVAR 'sparrloc',cumarrtemp
-			KILLVAR '$sparrnam',cumarrtemp
-			KILLVAR 'sparrppt',cumarrtemp
-			KILLVAR 'sparridt',cumarrtemp
-			KILLVAR 'sparrvol',cumarrtemp
-			KILLVAR 'sparrslc',cumarrtemp	
+			KILLVAR 'spafinloc',cumarr_idx
+			KILLVAR 'sparrage',cumarr_idx
+			KILLVAR 'sparrloc',cumarr_idx
+			KILLVAR '$sparrnam',cumarr_idx
+			KILLVAR 'sparrppt',cumarr_idx
+			KILLVAR 'sparridt',cumarr_idx
+			KILLVAR 'sparrvol',cumarr_idx
+			KILLVAR 'sparrslc',cumarr_idx	
 		end
-		if cumarrtemp < arrsize('sparrvol'): jump 'cumspaloop'
+		if cumarr_idx < arrsize('sparrvol'): jump 'cumspaloop'
 		cumsumbod = ctemp
 		cumsumvag = ctemp[1]
 		cumsumass = ctemp[2]
@@ -423,55 +415,52 @@ end
 
 if $ARGS[0] = 'cyc3':
 	ferteggage += 1
-	if FertEgg >= 1:
-		temprand = rand(170,100000)
-		if ferteggage < 120 and broodcurse <= 0:
-			temprand += 170
-			temprand -= age*10
-			if steriletu = 1: temprand -= 200
-			!{if there is a entopic pregnancy, it sets the first unborn baby in the array to this. Each egg could be different. It then removes the fertilized egg, adds an embryo, Then it adds some pregnancy hormone if you arent already pregnant, and calls you officially pregnant.}
-			if temprand <= 0:
-				tempbabyi  = ARRPOS('Babyptype',0)
-				Babyptype[tempbabyi] = 2
+	implant_idx = 0
+	implant_sz = arrsize('Babyptype')
+	:implant_loop
+	if implant_idx < implant_sz:
+		if Babyptype[implant_idx] = 0:
+			imp_thresh = (100 - (age + sterilewb))
+			if broodcurse ! 0: imp_thresh *= 2
+			imp_rand = rand(0, 120000)
+			if imp_rand < imp_thresh:
+				implant_day = daystart
+				implant_hour = hour
+				!{Egg implanted}
+				ent_thresh = age + (sterilewb * 5)
+				if broodcurse ! 0: ent_thresh = 0
+				if rand(0, 10000) < ent_thresh:
+					Babyptype[implant_idx] = 2
+				else:
+					Babyptype[implant_idx] = 1
+				end
 				FertEgg -= 1
-				BabyEmbryo += 1
-				PregChem = rand(10,30)
-				if preg = 0: preg = 1
 			end
-		else
-			!{Otherwise, it adds your womb sterilie factor to the temprand. Then it checks if your temprand crosses a threshold for implantation. Younger women implant easier. It then sets the next baby to the next unimplanted baby in your kid array. It registers the kid as a normal pregnancy, removes a fertilized egg and adds an embryo. Then it adds some pregnancy hormone if you arent already pregnant, and calls you officially pregnant.}
-			temprand += sterilewb
-			temprand -= tempwbbonus
-			if broodcurse > 0 and ferteggage >= 120: Temprand = 0
-			if temprand <= (1200-(Age*7)):
-				tempbabyi = ARRPOS('Babyptype',0)
-				Babyptype[tempbabyi] = 1
-				FertEgg -= 1
-				BabyEmbryo += 1
-				PregChem += rand(10,30)
-				if preg = 0: preg = 1
-			end
-			tempwbbonus = 0
-		end		
+		end
+		implant_idx += 1
+		jump 'implant_loop'
 	end
 !!{Then, it progresses the Luteal phase. It checks to see if you are pregnant. If you are, it ends the cycle and sets preg if your Luteal hormone is at the max as well as cleans out any unimplanted eggs. Otherwise, it just progresses pregnancy chemical and Luteal Hormone. If you arent pregnant, it checks your Luteal hormone. If its at the maximum, it adds 3-5 days of bleeding, clears out your unimplanted eggs, and clears out your Luteal hormone, or ends your cycle if you are past your menopausal age. Otherwise it will just progress the Luteal hormone.}
 	if LutH > 300:
+		rej_idx = 0
+		rej_sz = arrsize('Babyptype')
 		:lutcycloop
-		if FertEgg > 0:
-			tempbabyi = ARRPOS('Babyptype',0)
-			KILLVAR 'polkid',tempbabyi
-			KILLVAR '$kidname',tempbabyi
-			KILLVAR 'kidage',tempbabyi
-			KILLVAR 'daykid',tempbabyi
-			KILLVAR 'monthkid',tempbabyi
-			KILLVAR 'yearkid',tempbabyi
-			KILLVAR 'Babyptype',tempbabyi
-			KILLVAR '$ChildFath',tempbabyi
-			KILLVAR '$ChildThFath',tempbabyi
-			KILLVAR 'hairkid',tempbabyi
-			KILLVAR 'eyeskid',tempbabyi
-			KILLVAR 'cumarrcon',tempbabyi
-			FertEgg -= 1
+		if rej_idx < rej_sz:
+			if Babyptype[rej_idx] = 0:
+				KILLVAR 'polkid',tempbabyi
+				KILLVAR '$kidname',tempbabyi
+				KILLVAR 'kidage',tempbabyi
+				KILLVAR 'daykid',tempbabyi
+				KILLVAR 'monthkid',tempbabyi
+				KILLVAR 'yearkid',tempbabyi
+				KILLVAR 'Babyptype',tempbabyi
+				KILLVAR '$ChildFath',tempbabyi
+				KILLVAR '$ChildThFath',tempbabyi
+				KILLVAR 'hairkid',tempbabyi
+				KILLVAR 'eyeskid',tempbabyi
+				KILLVAR 'cumarrcon',tempbabyi
+			end
+			rej_idx += 1
 			jump 'lutcycloop'
 		end
 		LutH = 0
