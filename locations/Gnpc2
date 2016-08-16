@@ -1,6 +1,7 @@
 # Gnpc2
 $din_gboy_end_to_disco = {
 	!!:markgoondisco
+	music_on = 0
 	discofirsttime += 1
 	gs 'stat'
 
@@ -8,17 +9,17 @@ $din_gboy_end_to_disco = {
 		gdeystboyrand = rand(0, 1)
 
 		if gdeystboyrand = 0:
-			'<<$nameBoyfrend[numnpc]>> invited you to his home.'
+			'<<$nameBoyfrend[numnpc]>> invites you to his home.'
 			dynamic $din_gboy_go_to_boyhome
 
 			act 'Decline and go home':otnBoyFrend[numnpc] -= 10 & gt 'pavResidential'
 		elseif gdeystboyrand = 1:
-			'<<$nameBoyfrend[numnpc]>> offered to accompany you home.'
+			'<<$nameBoyfrend[numnpc]>> offers to accompany you home.'
 
 			act 'go home':gt 'pavResidential'
 		end
 	elseif gnpcSex[numnpc] > 0:
-		'<<$nameBoyfrend[numnpc]>> invited you to his home.'
+		'<<$nameBoyfrend[numnpc]>> invites you to his home.'
 		dynamic $din_gboy_go_to_boyhome
 
 		act 'Decline and go home':otnBoyFrend[numnpc] -= 10 & gt 'pavResidential'
@@ -26,213 +27,283 @@ $din_gboy_end_to_disco = {
 }
 
 $din_gboy_go_to_disco = {
-	act 'Go to the disco':
+	act 'Go to the club':
 		cls
+
+		if music_off = 0:
+			inited = 1
+			music_on = 1
+			volume = 100
+			$music_theme = 'gdis'
+			gs 'init_music'
+			pl '<a href="exec: music_off = 1 & gt $loc">Turn off the music</a>'
+		else
+			music_on = 0
+			volume = 100
+			gs 'init_music'
+			pl '<a href="exec: music_off = 0 & gt $loc">Play music</a>'
+		end
+
 		minut += 120
-
 		if dance < 50 and agil >= dance:dance += 1
-
 		manna += 10
 		gs 'stat'
-		'<<$nameBoyfrend[numnpc]>> paid an entrance fee and you came along to the disco. Together with your boyfriend you went to the dance floor and started dancing together.'
 		diskoIvrand = rand(0, 100)
-
 		if discofirsttime = 0:diskoIvrand = 0
+		set $clubDescription = '<h1><center><b><font color="maroon">Inside the club</font></b></center></h1><center><img src="images/etogame/club_yaho.jpg"></center><br />'
+
+		*pl $clubDescription
+		'You accompany <<$nameBoyfrend[numnpc]>> and when you reach the club he pays the entrance fee and you both walk in. Together with your boyfriend you head to the dance floor and start dancing.'
 
 		if diskoIvrand >= 80:
 			diskoIvTiperand = rand(0, 1)
 
 			if diskoIvTiperand = 0:
-				'You dance with your boyfriend, and a drunk kid in sweatpants and sweatshirt approaches.'
+				'While you are dancing with <<$nameBoyfrend[numnpc]>> a drunk kid in sweatpants and sweatshirt approaches.'
 
 				if GorSlut < 3:
-					'The Gopnik pushes your guy to the side and grabs you by the waist. "Let''s dance, chikulya."'
+					'The Gopnik pushes <<$nameBoyfrend[numnpc]>> to the side and grabs you by the waist. "Let''s dance, babe!"'
+					*nl
 
-					act 'Leave':
-						cls
+					act 'Resist':
+						cla
 						dom += 1
-						gs 'stat'
-						'You escape from the clutches of the Gopnik. <<$nameBoyfrend[numnpc]>> pushed the drunk kid who immediately went to the where his Gopnik buddies were standing. An argument started. The Gopnik raised his fists, showing your boyfriend that he wanted to fight.'
 						tiprand = rand(0, 100)
+						'You escape from the clutches of the Gopnik. <<$nameBoyfrend[numnpc]>> pushes the drunk kid away who immediately goes to his Gopnik buddies who were standing nearby. It didn''t take them long to approach your boyfriend and an argument starts. The Gopnik raises his fists, showing your boyfriend that he wants to fight.'
 
 						if tiprand <= 70:
-							'<<$nameBoyfrend[numnpc]>> managed to win the fight verbally, accusing the Gopnik of grabbing you, his girlfriend. But the evening was spoiled and finally <<$nameBoyfrend[numnpc]>> suggested that it would be better if you two left the disco.'
+							'Fortunately, <<$nameBoyfrend[numnpc]>> manages to win the fight verbally, accusing the Gopnik of grabbing you, his girlfriend. But the evening was spoiled and finally <<$nameBoyfrend[numnpc]>> suggests that it would be better if you both head home.'
 							act 'Go home':gt 'pavResidential'
-						elseif tiprand > 70 and tiprand < 90:
+						elseif tiprand <= 85:
 							otnBoyFrend[numnpc] -= 20
-							'The Gopnik quickly pounced on your guy and punched him in the head. <<$nameBoyfrend[numnpc]>> gave all his money to the angry Gopnik and apologized repeatedly before all of them. Then <<$nameBoyfrend[numnpc]>> suggested that you both leave.'
+							'The Gopnik quickly pounces on your guy and punches him in the face. It seems that <<$nameBoyfrend[numnpc]>> doesn''t stand a chance against the three Gopniks and before he gets completely beaten up he offers all his money to the angry Gopniks and apologizes repeatedly before all of them. You quickly leave the dance floor and <<$nameBoyfrend[numnpc]>> suggests that you both head home.'
 							act 'Go home':gt 'pavResidential'
-						elseif tiprand >= 90:
-							'The discussion quickly escalated into a fight and three Gopnik began to beat your guy up in the middle of the disco.'
+						else:
+							'The discussion escalates quickly into a fight and soon the Gopniks charge at your boyfriend in the middle of the club.'
+							*nl
+							set $bfDiscoBadEnd = 'The Gopniks meanwhile drag <<$nameBoyfrend[numnpc]>> into the streets, where they beat him some more and steal all his money. Then they take off his shoes and throw him into the bushes.<br />Once you get back to your feet you start looking for your boyfriend and find him outside the club, still lying in the bushes. You help him up and bring him home. His face is covered in blood and bruises everywhere.'
+							set $stumble = 'You stumble and come crashing down to the floor, hitting your head hard.'
+							set $looseTooth = 'You are dazed, bells are ringing in your head and you realize that you are lying on the floor. You start to feel severe pain on your jaw and your mouth is full of blood. You spit on the floor and see that they <b>knocked out one of your teeth</b>.'
 
-							act 'Watch them fight':
+							act 'Separate them':
 								cls
-								otnBoyFrend[numnpc] -= 20
-								gs 'stat'
-								'<<$nameBoyfrend[numnpc]>> could not escape the attack of the three Gopniks and soon fell under a barrage of punches. Gopari dragged him into the street where they stole all of his money, took off his shoes, and threw him into the bushes. You helped your boyfriend to his feet and managed to get him back home. His face was covered in blood and bruises everywhere.'
-								act 'Go home':gt 'pavResidential'
-							end
-
-							act 'separate the fighters':
-								cls
-								gs 'stat'
-
-								if stren < 90:
-									'You tried to push the Gopnik, but someone pushed you away from the fight and you flew across the room a few meters and came crashing down to the floor. Gopari meanwhile pulled your guy out to the street, beat him more, and stole all his money, removing his shoes, and threwing him into the bushes. You helped your boyfriend to his feet and brought him home. His face was covered in blood and bruises everywhere.'
+								*pl $clubDescription
+								if stren < 60:
+									manna -= 20
+									gs 'pain', 6, 'head', 'hit'
+									gs 'stat'
+									'You try to push the Gopnik, but someone pushes you roughly away from the fight.'
+									*pl $stumble
+									*pl $bfDiscoBadEnd
 									act 'Go home':gt 'pavResidential'
-								elseif stren >= 90:
-									'You pushed the Gopnik back with all your strength, and he flew backwards away from you. But the second Gopnik turned to you and swung his fist towards your face.'
-
-									if agil < 90:
+								else:
+									'You push back the Gopnik with all your strength and he stumbles backwards, hitting his head on the floor. But the second Gopnik turns to you and swings his fist towards your face.'
+									if agil < 60:
+										manna -= 30
 										zub += 1
+										gs 'pain', 8, 'mouth', 'hit'
 										gs 'stat'
-										'You were dazed, with bells ringing in your head and you realize that you are lying on the floor. You start to feel severe pain on your jaw and your mouth is full of blood. You spit on the floor and see that they knocked out one of your teeth. Gopari meanwhile pulled your guy out to the street, beat him more, and stole all his money, removing his shoes, and threwing him into the bushes. You helped your boyfriend to his feet and brought him home. His face was covered in blood and bruises everywhere.'
+										*pl $looseTooth
+										*pl $bfDiscoBadEnd
 										act 'Go home':gt 'pavResidential'
-									elseif agil >= 90:
-										'You quickly move your head to the side and the Gopnik''s fist hit nothing but empty air near your head.'
+									else:
+										'You react just in time and quickly move your head to the side barely avoiding his punch.'
+										*nl
+										set $discoScratch1 = 'You dig your nails into the punk''s face and begin to gouge and rip into it. The Gopnik is in so much pain that he stops attacking your guy. Your boyfriend meanwhile topples one of the Gopniks and then manages to punch a second, again and again. The Gopnik falls to the floor like a sack.'
+										set $discoScratch2 = 'The Gopnik with the scratched face seems to be recovering already because he tries to pounce on your guy again. Luckily he fails miserably with all this blood flooding his eyes from your handiwork. Your boyfriend punches him in the face knocking him down on his ass. In the meantime, the previous Gopnik got back up. "Okay, motherfucker, we''ll leave for now. We''ll get you and your bitch when you least expect it!"'
+										set $discoScratch3 = '<<$nameBoyfrend[numnpc]>> puts his arm around your shoulders and you both leave the club.'
 
-										act 'Punch the Gopnik in hs face':
-											cls
-											gs 'stat'
-
-											if speed >= 50:
+										act 'Punch him in his face':
+											cla
+											if speed >= 60:
+												manna -= 30
 												zub += 1
+												gs 'pain', 8, 'mouth', 'hit'
+												gs 'pain', 6, 'face', 'hit'
+												gs 'pain', 6, 'nose', 'hit'
+												gs 'pain', 6, 'lips', 'hit'
 												gs 'stat'
-												'You swing at the Gopnik and hit him right on the nose. The guy yelled, "Oh, you bitch!" and lashed out at you with multiple punches. Your head starts ringing and you realize that you are lying on the floor. You start to feel severe pain on your jaw and your mouth is full of blood. You spit on the floor and see that they knocked out one of your teeth. Gopari meanwhile pulled your guy out to the street, beat him more, and stole all his money, removing his shoes, and threwing him into the bushes. You helped your boyfriend to his feet and brought him home. His face was covered in blood and bruises everywhere.'
+												'You swing at the Gopnik and hit him right on the nose. He staggers briefly and then yells angrily at you, "Oh, you bitch!". He charges quickly at you and then a barrage of punches comes raining down on you.'
+												$looseTooth
+												*pl $bfDiscoBadEnd
 												act 'Go home':gt 'pavResidential'
-											elseif speed < 50:
-												'You tried to hit the hooligan with a punch to the face, but your blow was too slow. The Gopnik pushed you and you flew away from him for a few meters and crashed to the floor. Gopari meanwhile pulled your guy out to the street, beat him more, and stole all his money, removing his shoes, and threwing him into the bushes. You helped your boyfriend to his feet and brought him home. His face was covered in blood and bruises everywhere.'
+											else:
+												manna -= 20
+												gs 'pain', 6, 'head', 'hit'
+												gs 'stat'
+												'You try to hit the hooligan with a punch to the face but your blow is too slow. The Gopnik dodges your weak attempt and pushes you roughly away.'
+												$stumble
+												*pl $bfDiscoBadEnd
 												act 'Go home':gt 'pavResidential'
 											end
 										end
 
-										act 'Kick the Hooligan in the face':
-											cls
-											gs 'stat'
-
+										act 'Kick him in his face':
+											cla
 											if speed >= 90:
-												'You manage to give the punk a good kick in the face. His head swung back violently and he grabbed his face. "Shit! Fucking bitch, You broke my nose, I now you''ll break the whole fucking mouth, bitch!" Your guy at this point punched the hooligan with the new broken nose and he flew backwards for a couple of meters crashing down to the dance floor. Two other goparey grab onto on your guy trying to pin his arms.'
+												'You manage to give the punk a good kick in his face. His head swings back violently and then he grabs his face. "Shit! Fucking bitch, you broke my nose! Now I will break your whole fucking face!"'
+												'At this point <<$nameBoyfrend[numnpc]>> comes from the side and punches the hooligan hard on his already broken nose. The poor guy flies backwards and comes crashing down to the floor. Two other Gopniks used the distraction to grab onto your boyfriend and try to pin his arms.'
+												*nl
 
-												act 'Grab one of the Gopnik''s face':
-													cls
-													gs 'stat'
+												act 'Scratch one of the Gopnik''s face':
+													cla
+													otnBoyFrend[numnpc] += 5
 													GopWin[numnpc] += 1
-													'You dig your nails into the punk''s face and began to gouge and rip into it. The Gopnik was in so much pain that he stopped attacking your guy. Your boyfriend meanwhile toppled one of the Gopniks and then managed to punch a second, again and again. The Gopnik fell on the floor like a sack. The Gopnik with the scratched face tried to pounce on your guy, but failed, blood flooding his eyes from your handiwork and your guy punched him in the face knocking him down on his ass. In the meantime, the previous Gopnik got back up. "Okay, motherfucker, we''ll get you and your bitch when you least expect it!"'
+													*pl $discoScratch1
+													*pl $discoScratch2
+													*pl $discoScratch3
 													act 'Go home':gt 'pavResidential'
 												end
-											elseif speed < 90:
-												'You tried to kick hooligan in the head but he was faster than you and managed to push you before you even got your leg up. You flew away from him for a few meters and crashed on the floor in a heap. Gopari meanwhile pulled your guy out to the street, beat him more, and stole all his money, removing his shoes, and threwing him into the bushes. You helped your boyfriend to his feet and brought him home. His face was covered in blood and bruises everywhere.'
+											else:
+												'You try to kick the hooligan in his face but he is faster than you and manages to shove you away before you even got your leg up.'
+												*pl $stumble
+												*pl $bfDiscoBadEnd
+												manna -= 20
+												gs 'pain', 6, 'head', 'hit'
+												gs 'stat'
 												act 'Go home':gt 'pavResidential'
 											end
 										end
 
-										act 'Kick him in the balls':
-											cls
-											gs 'stat'
+										act 'Kick him in his balls':
+											cla
+											set $badKick = 'You try to kick the hooligan between his legs but he saw it coming. He blocks your kick and shoves you roughly away.'
 
-											if speed >= 70:
+											if speed >= 60:
 												bollrand = rand(0, 1)
 
 												if bollrand = 0:
-													'You kick your foot directly in the Gopnick''s crotch, hitting him in the balls and he flopped down on his knees howlingand clutching his crotch. Two other Gopniks grab your guy trying to hold his arms.'
+													'You kick your foot directly in the Gopnick''s crotch, hitting his balls hard. He flops down on his knees howling and clutching his crotch. Two Gopniks grab your boyfriend and try to hold his arms.'
+													*nl
 
-													act 'Grab one of Gopnik''s face':
-														cls
-														gs 'stat'
+													act 'Scratch one of the Gopnik''s face':
+														cla
+														otnBoyFrend[numnpc] += 5
 														GopWin[numnpc] += 1
-														'You dig your nails into the punk''s face and began to gouge and rip into it. The Gopnik was in so much pain that he stopped attacking your guy. Your boyfriend meanwhile toppled one of the Gopniks and then managed to punch a second, again and again. The Gopnik fell on the floor like a sack. The Gopnik with the scratched face tried to pounce on your guy, but failed, blood flooding his eyes from your handiwork and your guy punched him in the face knocking him down on his ass. In the meantime, the previous Gopnik got back up. "Okay, motherfucker, we''ll get you and your bitch when you least expect it!"'
+														*pl $discoScratch1
+														*pl $discoScratch2
+														*pl $discoScratch3
 														act 'Go home':gt 'pavResidential'
 													end
-												elseif bollrand = 1:
-													'You tried to kick the hooligan between his legs but he saw it coming and jumped aside, shoving you instead. You flew away from him for a few meters and crashed on the floor in a heap. Gopari meanwhile pulled your guy out to the street, beat him more, and stole all his money, removing his shoes, and threwing him into the bushes. You helped your boyfriend to his feet and brought him home. His face was covered in blood and bruises everywhere.'
+												else:
+													manna -= 20
+													gs 'pain', 6, 'head', 'hit'
+													gs 'stat'
+													*pl $badKick
+													*pl $stumble
+													*pl $bfDiscoBadEnd
 													act 'Go home':gt 'pavResidential'
 												end
-											elseif speed < 70:
-												'You tried to kick the hooligan between his legs but he was faster than you and jumped aside, shoving you instead. You flew away from him for a few meters and crashed on the floor in a heap. Gopari meanwhile pulled your guy out to the street, beat him more, and stole all his money, removing his shoes, and threwing him into the bushes. You helped your boyfriend to his feet and brought him home. His face was covered in blood and bruises everywhere.'
+											else:
+												manna -= 20
+												gs 'pain', 6, 'head', 'hit'
+												gs 'stat'
+												*pl $badKick
+												*pl $stumble
+												*pl $bfDiscoBadEnd
 												act 'Go home':gt 'pavResidential'
 											end
 										end
 									end
 								end
 							end
+
+							act 'Watch them fight':
+								cls
+								otnBoyFrend[numnpc] -= 20
+								gs 'stat'
+								'<<$nameBoyfrend[numnpc]>> can''t escape the attacks of the three Gopniks and soon falls under a barrage of punches. The Gopniks drag him into the streets where they steal all his money, take off his shoes, and throw him into the bushes.'
+								'Once they left, you help your boyfriend to his feet and manage to get him back home. His face is covered in blood and bruises everywhere.'
+								act 'Go home':gt 'pavResidential'
+							end
 						end
 					end
 
-					act 'Dance':
-						cls
+					act 'Dance with the guy':
+						cla
 						sub += 1
 						otnBoyFrend[numnpc] = 0
 						DPtipe = 2
 						gs 'BnameGen'
 						gs 'stat'
-						'You dance with the Gopnik. <<$nameBoyfrend[numnpc]>> approached him and grabbed his shoulder. "Hey you! That''s my girl!" A couple of Gopnik grabbed your guy, keeping him from interrupting the hooligan dancing with you. Soon <<$nameBoyfrend[numnpc]>> spat and fingered you as he left the disco. The Gopnik dancing with you suggested you dump him.'
-
-						act 'Go thump':gt 'EvgopBuh'
+						'You decide to dance with the Gopnik. For a moment <<$nameBoyfrend[numnpc]>> is staring at you in disbelieve, then he approaches the guy and grabs his shoulder. "Hey you! That''s my girl!" Suddenly a couple of Gopniks grab your boyfriend and keep him from interrupting the hooligan dancing with you.'
+						'After a few minutes <<$nameBoyfrend[numnpc]>> stops struggling and the Gopniks let him free. He curses and glares angrily at you, while you are still dancing with the Gopnik, and then stomps out of the club.'
+						'The Gopnik dancing with you is grinning and suggests that you should dump your boyfriend. His hands wander down to your ass as he offers you to go outside and have some fun.'
+						*nl
+						act 'Have fun':
+							cla
+							'Your boyfriend is unlikely to come back, so why not have some fun with this guy? You give him a slinky smile, grab his hands and move towards the exit.'
+							act 'Leave':gt 'EvgopBuh'
+						end
+						act 'Leave alone':
+							cla
+							'You have already done enough damage. You tell him that you need to use the restroom, untangle yourself from his clutches and then move towards the exit.'
+							act 'Leave':gt 'gdk'
+						end
 					end
-				elseif GorSlut >= 3:
+				else:
 					otnBoyFrend[numnpc] = 0
-					'The Gopnik takes one look at you and then starts laughing, "Listen, buddy. Why are you wasting time dancing with her? This <<$name>> is <<$gnikname>>. Just take her into the bushes out back, but don''t hurt her mouth. That sweet set of lips can really smack when sucking dick." You blush scarlet red from the Gopnik''s words, deeply embarrassed. <<$nameBoyfrend[numnpc]>> rush up to the guy, "What did you say? Come again!" But the hooliganwent back to join his friends. "Listen, boy, no need to argue. Everyone in the neighborhood knows <<$name>> her as <<$gnikname>>." <<$nameBoyfrend[numnpc]>> looks at you with surprise. "Is this true?" The boys laugh "Well, everyone except you." <<$nameBoyfrend[numnpc]>> slaps you hard across the face, "Go fuck yourself, slut!" and he abruptly leaves the dance floor.'
+					manna -= 10
+					gs 'pain', 4, 'cheeks', 'slap'
+					gs 'stat'
+					'The Gopnik takes one look at you and then starts laughing, "Listen, buddy. Why are you wasting your time dancing with her? <<$name>> is a <<$gnikname>>. Just take her into the bushes out back, but don''t hurt her mouth. That sweet set of lips can really smack when sucking dick." You blush scarlet red from the Gopnik''s words, deeply embarrassed. <<$nameBoyfrend[numnpc]>> rushes up to the guy, "What did you say? Come again!" But the hooligan just went back to join his friends. "Listen, boy, no need to argue. Everyone in the neighborhood knows she is a <<$gnikname>>." <<$nameBoyfrend[numnpc]>> looks at you in surprise. "Is this true?" The boys laugh "Well, everyone except you." <<$nameBoyfrend[numnpc]>> glares angrily at you and then he slaps you hard across the face. "Go fuck yourself, slut!" He abruptly leaves the dance floor.'
 
-					act 'rubbing cheek':gt 'gdkin'
+					act 'Rub your cheek':gt 'gdkin'
 				end
 			elseif diskoIvTiperand = 1:
-				'<<$nameBoyfrend[numnpc]>> said he wanted a beer and invited you to go with him to drink beer.'
+				'You enjoy dancing with your boyfriend. After a while <<$nameBoyfrend[numnpc]>> says that he could do with a beer and invites you to a drink.'
 
-				act 'Refuse the beer and dance':
-					cls
-
+				act 'Decline his offer and keep dancing':
+					cla
 					if dance < 50 and agil >= dance:dance += 1
-
-					minut += 3
+					minut += 5
 					gs 'stat'
-					'Your guy goes to get himself a beer at the bar in the disco, while in the meantime you continue to dance.'
+					'Your boyfriend gets himself a beer at the bar and in the meantime you continue to dance.'
 
 					if GorSlut >= 3:
-						'A guy walks up to you "Hey. I''ve been watching how <<$gnikname>> <<$name>> is having fun here with her guy. He still does not know who you are? Can I tell him?"'
+						'A guy walks up to you "Hey, I''ve been watching you having fun with your boyfriend here. He still does''t know that you are a <<$gnikname>>? Maybe I should tell him?"'
+						*nl
+						set $bfBreakup = 'You tell the guy to go to hell and he walks away with a sullen look on his face. At this point, <<$nameBoyfrend[numnpc]>> comes back and asks, "What did that guy want from you?" You quickly lie, "He wanted to dance with me, but I turned him down." Unfortunately, the guy comes back and pulls your boyfriend to the side. After a while, <<$nameBoyfrend[numnpc]>> returns and says "We''re through. Based on the shit I was just told, I won''t waste another minute on the likes of a whore like you!"'
 
-						act 'Leave me alone':
-							cls
+						act 'Tell him to piss off':
+							cla
+							manna -= 10
 							dom += 1
 							otnBoyFrend[numnpc] = 0
 							gs 'stat'
-							'You tell the guy to go to hell and he''s walks away with a bad look on his face. At this point, <<$nameBoyfrend[numnpc]>> comes back and asks, "What di that guy want?" You quickly lie to him "To dance with me, but I turned him down." Then the guy came up and pulls your boyfriend to the side. After a while, <<$nameBoyfrend[numnpc]>> comes back and says "We''re through. Based on the garbage I was just told, I won''t waste another minute on the likes of a whore like you!"'
-
-							act 'Move away':gt 'gdkin'
+							*pl $bfBreakup
+							act 'Watch him leave':gt 'gdkin'
 						end
 
-						act 'Ask him not to tell':
-							cls
+						act 'Beg him not to tell':
+							cla
 							sub += 1
 							gs 'stat'
-							'You plead with the guy not to say anything to your boyfriend. He chuckled. "Well, if you keep your mouth closed sucking on my dick, I''ll keep my mouth closed and not tell him."'
+							'You plead with the guy not to say anything to your boyfriend. He chuckles, "Well, if you keep your mouth closed sucking on my dick, I''ll keep my mouth closed as well and won''t tell him."'
+							*nl
 
-							act 'Leave me alone':
-								cls
+							act 'Tell him to piss off':
+								cla
+								manna -= 10
 								dom += 1
 								otnBoyFrend[numnpc] = 0
 								gs 'stat'
-								'You tell the guy to go to hell and he''s walks away with a bad look on his face. At this point, <<$nameBoyfrend[numnpc]>> comes back and asks, "What di that guy want?" You quickly lie to him "To dance with me, but I turned him down." Then the guy came up and pulls your boyfriend to the side. After a while, <<$nameBoyfrend[numnpc]>> comes back and says "We''re through. Based on the garbage I was just told, I won''t waste another minute on the likes of a whore like you!"'
-
-								act 'Move away':gt 'gdkin'
+								*pl $bfBreakup
+								act 'Watch him leave':gt 'gdkin'
 							end
 
 							act 'Agree':
 								cls
 								sub += 1
+								manna -= 5
 								gs 'stat'
-								'You agree to the blowjob and the guy leads you to the toilet. You start feeling depressed. The Toilets in the Disco club are something of a thoroughfare, someone smoking here, someone else defecating in booths over there, with no stall doors. The guy sent you to the men''s room. When you opened the door there, you first see some drunk guys standing in a cloud of smoke. In one of the booths you hear the sound as someone pukes. The boys look at you, bewildered, "Baby, did you make a mistake? This is the men''s room." The guy who brought you smiled "Nah, She''s with me." He turned to you, "Okay, cocksucker. Get your mouth working." You looked at the guys and asked, "What -  right here?" The Boys laugh, "C''mon. You''re not embarrassed are you?"'
+								'<h1><center><b><font color="maroon">Men''s Room</font></b></center></h1>'
+								'<center><img src="images/qwest/publicrest/bathroom_mens.jpg"></center>'
+								*nl
+								'You agree to the blowjob and the guy leads you to the toilets. You start feeling depressed. The toilets in the club are something of a thoroughfare, someone smoking here, someone else defecating in booths over there, with little privacy. The guy walks with you into the men''s room. When you open the door, you see some drunk guys standing in a cloud of smoke. In one of the booths you hear the sound of someone puking.'
+								'The boys look at you bewildered, "Babe, did you make a mistake? This is the men''s room." The guy who brought you smiles "Nah, She''s with me." He turns to you, "Okay, cocksucker, get your mouth working." You look at the other guys and ask, "What, right here?" The Boys laugh, "C''mon. You''re not embarrassed, are you?"'
 
-								act 'Leave me alone':
-									cls
-									dom += 1
-									otnBoyFrend[numnpc] = 0
-									gs 'stat'
-									'You tell the guy to go to hell and he''s walks away with a bad look on his face. At this point, <<$nameBoyfrend[numnpc]>> comes back and asks, "What di that guy want?" You quickly lie to him "To dance with me, but I turned him down." Then the guy came up and pulls your boyfriend to the side. After a while, <<$nameBoyfrend[numnpc]>> comes back and says "We''re through. Based on the garbage I was just told, I won''t waste another minute on the likes of a whore like you!"'
-
-									act 'Move away':gt 'gdkin'
-								end
-
-								act 'Suck':
+								act 'Suck his cock':
 									cls
 									sub += 5
 									guy += 1
@@ -241,18 +312,22 @@ $din_gboy_go_to_disco = {
 									gs 'cum_manage'
 									swallow += 1
 									gs 'stat'
+									'<h1><center><b><font color="maroon">Men''s room</font></b></center></h1>'
 									'<center><img src="images/qwest/alter/ev/public.jpg"></center>'
-									'You squat in front of the guy and unbutton his pants and pulled out his stiff dick. The other boys continued smoking and watched the scene. You open your mouth and lick the purple head of his swollen cock, then open your <<$liptalk>> and take the cock in your mouth. The Boys start laughing and commenting at what they see, "Look how she smacks those lips." Another echoed, "Where did you find such a cocksucker?" Then someone who knows you says "Hey it''s <<$name>> <<$surname>>. Hot Damn." You blush and your face burns with shame, sucking this dick in front of other guys. Finally the guy started to cum in your mouth and you try as quickly as possible to swallow his warm sperm. When his cock finally goes limp he tucked it back in his pants. You get up from the floor and begin to wipe your mouth, knowing your mouth now smells like cum. One of the guys chuckled, "Great Blowjob, I wouldn''t mind one."'
+									*nl
+									'You squat in front of the guy and unbutton his pants to pull out his stiff dick. The other boys continue smoking and watch the scene. You begin to lick the purple head of his swollen cock and then you open your <<$liptalk>> and take the cock in your mouth. The Boys start laughing and commenting at what they see, "Look how she smacks those lips." Another echoed, "Where did you find such a cocksucker?" Unfortunately, there''s someone who knows you. "Hey that''s <<$name>> <<$surname>>. Hot Damn!"'
+									'You blush and your face burns with shame, sucking this dick in front of other guys. Finally the guy starts to cum in your mouth and you try as quickly as possible to swallow his warm sperm. When his cock finally goes limp he tucks it back in his pants. You get up from the floor and begin to wipe your mouth, knowing it now smells like cum. One of the guys chuckled, "Great Blowjob, I wouldn''t mind one myself."'
 
-									act 'Slip out of the WC':
+									act 'Slip out of the restroom':
 										cls
 										gs 'stat'
-										'You are trying not to pay attention to the guys as you slip back out to the dance floor. <<$nameBoyfrend[numnpc]>> has been looking for you, and he comes up to you and asks, "Where did you go? I looked everywhere for you." You say the first thing that comes to mind, "I went to the toilet." <<$nameBoyfrend[numnpc]>> asked "Why are you wiping your mouth?"'
+										*pl $clubDescription
+										'You try to ignore the guys as you slip out of the restroom and walk back to the dance floor. <<$nameBoyfrend[numnpc]>> has been looking for you. He comes up to you and asks, "Where have you been? I looked everywhere for you." You say the first thing that comes to your mind, "I went to the toilet." <<$nameBoyfrend[numnpc]>> asks "Why are you wiping your mouth?"'
+										*nl
 
-										act 'suggest leave':
-											cls
-											gs 'stat'
-											'You sugggest to your boyfriend that the two of you leave the disco. <<$nameBoyfrend[numnpc]>> shrugged and you go to the exit.'
+										act 'Suggest to leave':
+											cla
+											'You suggest to your boyfriend to leave the club. <<$nameBoyfrend[numnpc]>> shrugs and you both walk out to the exit.'
 
 											act 'Leave':
 												cls
@@ -261,34 +336,53 @@ $din_gboy_go_to_disco = {
 										end
 
 										act 'Dance':
-											cls
+											cla
 											otnBoyFrend[numnpc] = 0
+											manna -= 10
+											gs 'pain', 3, 'cheeks', 'slap'
 											gs 'stat'
-											'You continued to dance with your boyfriend and suddenly you see the guys come out of the toilet that watched your whole blowjob scene. They also see you and guffawed, noisily discussing something. <<$NameBoyfrend[numnpc]>> looks at them puzzled, "What''s with them?" The boys shouted to him, "While you were wandering around the place, your girlfriend was in the toilet sucking on a dick!" <<$NameBoyfrend[numnpc]>> came up to them, "Are you crazy?" Then the Boys started to tell him how you just sucked dick in front of them. <<$NameBoyfrend[numnpc]>> comes back over to you and slaps you across the face "Get the fuck out whore! And don''t want to ever see you again!"'
+											'You continue to dance with your boyfriend. A few minutes pass and then you see the guys that watched your whole blowjob scene coming out of the toilet. They also see you and guffaw, noisily discussing something. <<$NameBoyfrend[numnpc]>> looks at them puzzled, "What''s with them?" The boys shout to him, "While you were wandering around the place, your girlfriend was in the toilet sucking on a dick!" <<$NameBoyfrend[numnpc]>> comes up to them, "Are you crazy?"'
+											'The Boys start to tell him how you just sucked off a guy in front of them. <<$NameBoyfrend[numnpc]>> rushes back over to you and slaps you across the face "Get the fuck out, slut! I don''t want to see you ever again!"'
 
-											act 'Move away':gt 'gdkin'
+											act 'Leave':gt 'gdk'
 										end
 									end
 								end
+
+								act 'Change your mind':
+									cls
+									gs 'stat'
+									*pl $clubDescription
+									manna -= 10
+									dom += 1
+									otnBoyFrend[numnpc] = 0
+									gs 'stat'
+									*nl
+									'You angrily spit at him, "Go fuck yourself, asshole!", and storm out of the restroom. Just as you reach the dance floor you see that <<$nameBoyfrend[numnpc]>> is returning from the bar. You quickly grab his hands and begin dancing with him, still a little furious about the incident.'
+									'<<$nameBoyfrend[numnpc]>> notices your bad mood and asks, "What''s wrong, <<$nickname>>?". At this moment, you see the guy from the restrooms returning. He walks up to your boyfriend and pulls him to the side. After a while, <<$nameBoyfrend[numnpc]>> returns and says "We''re through. Based on the shit I was just told, I won''t waste another minute on the likes of a whore like you!"'
+									act 'Watch him leave':gt 'gdkin'
+								end
 							end
 						end
-					elseif GorSlut < 3:
-						'While your guy went for a beer a strange guy comes up to you and wants to dance.'
+					else:
+						'While <<$nameBoyfrend[numnpc]>> went for a beer another guy comes up to you and asks for a dance.'
+						*nl
 
-						act 'Dance':
-							cls
+						act 'Accept':
+							cla
 							otnBoyFrend[numnpc] -= 20
+							manna -= 10
 							gs 'stat'
-							'You start to dance with this unknown guy and just then <<$nameBoyfrend[numnpc]>> comes up to you and pulled you by the hand, dragging you away from the other guy. "What the fuck is wrong with  you? I leave for a minute, and you''re already dancing with someone else!" He was offended at you and walked away from the disco.'
-
-							act 'Move away':gt 'gdkin'
+							'You start to dance with the guy. A few minutes later <<$nameBoyfrend[numnpc]>> comes up to you and pulls you by the hand, dragging you away from the other guy. "What the fuck is wrong with you? I leave for a minute, and you''re already dancing with someone else!" He angrily leaves the club.'
+							act 'Stand there and watch him leave':gt 'gdkin'
 						end
 
-						act 'Refuse to dance with a stranger':
-							cls
+						act 'Decline':
+							cla
 							otnBoyFrend[numnpc] += 5
+							manna += 5
 							gs 'stat'
-							'You refused to dance with the stranger and noticed that <<$nameBoyfrend[numnpc]>> came back into the club. You have a little dance with her boyfriend and he suggested to go.'
+							'You politely refuse his invitation. The guy looks dejected but leaves without making any fuss. A few minutes later <<$nameBoyfrend[numnpc]>> returns to the dance floor, a beer in his hand. You have a fun time dancing with your boyfriend and soon after he finishes his beer he suggests to leave.'
 
 							act 'Leave':
 								cls
@@ -298,8 +392,8 @@ $din_gboy_go_to_disco = {
 					end
 				end
 
-				act 'Go with him and drink beer':
-					cls
+				act 'Have a drink with him':
+					cla
 					alko += 2
 					cumspclnt = 2
 					gs 'cum_cleanup'
@@ -307,12 +401,7 @@ $din_gboy_go_to_disco = {
 					minut += 3
 					horny += 5
 					gs 'stat'
-					'You came out of discos and find a secluded place where you started drinking beer with her boyfriend.'
-
-					act 'Leave':
-						cls
-						dynamic $din_gboy_end_to_disco
-					end
+					'You head to the bar and <<$nameBoyfrend[numnpc]>> orders your drinks. When you finally get them you move to the outdoor area and find a secluded place to enjoy your drinks.'
 
 					act 'Kiss':
 						cls
@@ -403,7 +492,7 @@ $din_gboy_go_to_disco = {
 									end
 								end
 							end
-						elseif gnpcSex[numnpc] = 0:
+						else:
 							'You feel your guy''s hands caress your breasts.'
 
 							act 'Stop':
@@ -639,6 +728,11 @@ $din_gboy_go_to_disco = {
 								end
 							end
 						end
+					end
+
+					act 'Leave the club':
+						cls
+						dynamic $din_gboy_end_to_disco
 					end
 				end
 			elseif diskoIvTiperand = 2:
@@ -1063,7 +1157,7 @@ $din_gboy_go_to_boyhome = {
 								gs 'stat'
 								'You remove his hand from your knee and he shakes his head, puzzled what to do next.'
 								act 'Go home':gt 'pavResidential'
-							end							
+							end
 						end
 
 					else
