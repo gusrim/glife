@@ -7,7 +7,7 @@ if $ARGS[0] = 'morning':
 
 	act 'Skip one of your classes':
 		cla
-		'You don''t feel like attending all of your classes this afternoon, no one will miss you if you skip one of your three afternoon classes.'
+		'You don''t feel like attending all of your classes this morning, no one will miss you if you skip one of your three afternoon classes.'
 		act 'Go to girl''s bathroom': gt 'gschool_events', 'girls bathroom'
 !!		act 'Go to boy''s bathroom': gt
 !!		act 'Go to old school building': gt
@@ -15,13 +15,9 @@ if $ARGS[0] = 'morning':
 end
 
 if $ARGS[0] = 'class':
-	if hour >= 12 and hour < 16:
-		gt 'gschool_lessons', 'afternoon2'
-		exit
-	end
-	if hour = 9:
+	if hour = 10:
 	
-		minut += 60 * 3
+		minut += 60 * 2
 		urand = rand(0, 12)
 
 		if lernHome = 0:Suspeh += 2
@@ -32,12 +28,8 @@ if $ARGS[0] = 'class':
 		lernSkill += 1
 		lernHome += 1
 		if schoolSorev = 1:schoolSorev = 0
-		'<center><img src="images/qwest/alter/urok<<urand>>.jpg"></center>'
-		gs 'stat'
-		if late=1: 'Under the disapproving gaze of the teacher you feel guilty for being late' & late=0
-		'You sit in the classroom and listen to the monotonous droning of your teacher, doing your best to not fall asleep.'
-		if GorSlut > 0:'During the class you hear classmates whisper nasty things about you, and sometimes they make lewd gestures when the teacher is not looking.'
-		if soniaPS = 1:soniaPS = 2 & 'Everyone is talking about Sonia today. Apparently, she got very drunk last night at the disco and gave five guys a blowjob, at the same time! Her reputation is ruined now, everyone thinks she''s a whore. No one wants to be seen with her any more. Sonia herself looks distraught.'
+	elseif hour = 12:
+		gt gschool_lessons', 'afternoon2'
 	end
 	cla
 	if hour <= 12 and (week = 2 or week = 4):
@@ -49,7 +41,14 @@ if $ARGS[0] = 'class':
 		$teacher[1] = 'Ilya Yenotin'
 		$teacher[2] = 'Ilya Yenotin'
 	end
-	
+
+	gs 'stat'
+	'<center><img src="images/qwest/alter/urok<<urand>>.jpg"></center>'
+	if late = 1: 'Under the disapproving gaze of the teacher you feel guilty for being late' & late=0
+	'You sit in the classroom and listen to the monotonous droning of your teacher, doing your best to not fall asleep.'
+	if GorSlut > 0:'During the class you hear classmates whisper nasty things about you, and sometimes they make lewd gestures when the teacher is not looking.'
+	if soniaPS = 1:soniaPS = 2 & 'Everyone is talking about Sonia today. Apparently, she got very drunk last night at the disco and gave five guys a blowjob, at the same time! Her reputation is ruined now, everyone thinks she''s a whore. No one wants to be seen with her any more. Sonia herself looks distraught.'
+
 	if Enable_skipnoevclass > 0 and ($teacher = 'Ilya Yenotin' or RAND(1,100) > Enable_skipnoevclass):
 		gt 'gschool_lunch', 'lunch' & !skip class ev if 1.not Anatoly E. or 2. rand < set chance by illume
 	else
@@ -451,14 +450,15 @@ if $ARGS[0] = 'principal':
 	'The office in a word is impressive, it must have cost a full years worth of the schools budget to decorate it. At least now you know why so much of the rest of the school has cracked and faded paint, Or is in need of repair, that never seems to happen, they spend all the money on this office.'
 	if demerit > 20:
 		'You take a seat at her desk and wait for her to address you with a exacerbated tone "What did you do this time? No I don''t want to know. I really don''t care. You obviously have no respect for me or your teachers." She looks over your file some more and shakes her head slightly. "You have been here enough, you know what comes next. So what will it be this time? Spanking, Saturday detention perhaps." She seems more than a bit annoyed that you seem immune to her punishment system or are just that troubled of a student.'
-		act 'Choose detention':gt 'gschool_lessons', 'class' !!triggers Saturday detention on Saturday morning.
+		act 'Choose detention':gt 'gschool_lessons', 'class' & !!triggers Saturday detention on Saturday morning.
 		act 'Choose spanking': gt 'principaloffice', 'spanked'
 		if demerit >= 50:act 'Choose suspension': gt 'principaloffice', 'suspension'
 		!!act 'Call Parents': gt 'principaloffice', 'Call Parents' - I will add this one in later as it will be a bit of work to write and tie in events at home.
 	elseif demerit > 10:
 		'You take a seat at her desk and wait for her to address you. "This is becoming a routine with you, I feel like I am seeing you every day. What has changed? You use to be such a good girl, perhaps a bit quiet, but now. This is not the way to get attention." She looks over your file some more and shakes her head slightly.'
 		'"We can''t have you keep getting in trouble like this, this is going to require a form of punishment." She looks directly at you for a moment to make sure you understand when you cause problems you will be getting punished. "I believe in giving the students a voice in their future. So I will let you decided, Saturday detention or a spanking now. Which will it be?"'
-		act 'Choose detention':gt 'gschool_lessons', 'class' !!triggers Saturday detention on Saturday morning.
+
+		act 'Choose detention': gt 'gschool_lessons', 'class' & !!triggers Saturday detention on Saturday morning.
 		act 'Choose spanking': gt 'principaloffice', 'spanked'
 	else
 		'You take a seat at her desk and wait for her to address you. "You know why you are here <<$surname>>?", before you have a chance to reply she continues on. "It was a rhetorical question, we both know why you are here. You are here because you got in trouble." She pauses to look over at the folder in front of her. "It shows you have mostly stayed out of trouble until now. I hope this is only a minor lapse in judgement and not a new trend from you. We won''t get into what you did, just understand this is a warning. Straighten yourself out or their will be consequences. Now return to class."'
@@ -466,7 +466,7 @@ if $ARGS[0] = 'principal':
 	end
 end
 
-if $ARGS[0] = 'Spanked':
+if $ARGS[0] = 'spanked':
 	'<center><b><font color="maroon">Principal''s Office</font></b></center>'
 	'<center><img src="images/qwest/alter/school/principal/principal.jpg"></center>'
 	'No way are you coming back to school on a Saturday. "Uh, I would rather just get it over with, so spanking."'
