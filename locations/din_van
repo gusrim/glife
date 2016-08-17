@@ -8,7 +8,7 @@ $showerdin = {
 
 $bteeth = {
 	if fbreath ! 1:
-		act 'Brush your teeth (0.05)':
+		act 'Brush your teeth (0:05)':
 			cla
 			*clr
 			minut += 5
@@ -16,20 +16,30 @@ $bteeth = {
 			gs 'cum_cleanup'
 			fbreath = 1
 			'<center><img src="images/pics/brushteeth.jpg"></center>'
-			'You brush your teeth and now they are clean and minty fresh'
+			*nl
+			'You brush your teeth and now they are clean and minty fresh.'
 			act 'Finish':gt $locM, $metkaM
+		end
+	end
+}
+
+$dryOff = {
+	act 'Get out and dry off':
+		if indorf = 0 and vanr_lock = 0 and $loc = 'vanrPar':
+			gs 'vanrPar', 'peek'
+		else
+			mirror_steam = hour & gt $locM, $metkaM
 		end
 	end
 }
 
 $shower = {
 
-	act 'Wash in the shower (0:15)':
+	act 'Take a shower (0:15)':
 		cla
 		*clr
 		shampoo -= 1
 		minut += 15
-		horny += 1
 		hapri = 0
 		mop = 1
 
@@ -50,13 +60,17 @@ $shower = {
 		if frost > 0:frost = 0
 
 		'<center><img src="images/pics/dush.jpg"></center>'
-
+		*nl
+		'You undress and turn on the water in shower. When the water hits the right temperature you enter the shower and let the warm water rain down on you.'
 		if daystart < 10 and StoryLine = 0:
-			'It is really wild to see your new body with all its smooth curves, breasts with large nipples, wide hips, and smooth legs. You begin to lather your body in the shower noticing how soft and tender it feels. Once you lather yourself with soap you wash in the shower, continuing to experience new and strange sensations.'
-		elseif daystart >= 10 and daystart < 30 and StoryLine = 0:
-			'You have already gotten used to a woman''s body and its softness doesn''t surprise you very much.'
+			horny += rand(6,10)
+			'It''s really arousing to see your new body with all its smooth curves, breasts with large nipples, wide hips, and smooth legs. You begin to lather your body noticing how soft and tender it feels. Once you''re sure you didn''t miss a single spot on your feminine body you begin to wash yourself off, continuing to experience new and strange sensations.'
+		elseif daystart < 30 and StoryLine = 0:
+			horny += rand(2,6)
+			'You have already gotten used to your feminine body and its softness doesn''t surprise you very much anymore. But you still let your hands wander a bit over your soft curves before you begin to wash yourself in earnest.'
 		else
-			'You carefully lather soap over your body trying not to miss any spot, and then wash off in the shower.'
+			horny += rand(0,2)
+			'You carefully soap yourself trying not to miss any spot and then wash off.'
 		end
 		if hypnoAddict > 0:'You have no reason to, but you carefully avoid cleaning out your pussy and ass.'
 
@@ -67,59 +81,49 @@ $shower = {
 			killvar '$weightwarn' & btwarn = 0
 		end
 		if normbuffpick = 1:
-			''
+			*nl
 			'<b>You notice that your muscles are starting to show through your skin.</b>'
 			act 'Examine yourself closer while drying off and getting dressed...': gt 'din_van', 'buffpick'
 		end
 
 		if vanr_lock = 0 and $loc = 'vanrPar':
-			'Trying to quickly wash up and get back to business, you forget to close the door.'
-			'<br>The idea that the door is open occupies your mind when you wipe with a towel. It would be very embarrassing if your brother or stepfather looked in wrong time.'
-			cla
-			act 'Dry off':
-				if indorf = 0:
-					gs 'vanrPar', 'peek'
-				else
-					mirror_steam = hour & gt $locM, $metkaM
-				end
-			end
+			*nl
+			'In your absentmindedness you forgot to close the door.'
+			'The idea that the door is open occupies your mind while you are showering. It would be very embarrassing if your brother or stepfather looked in at the wrong time.'
 		end
 
 		if (leghair > 0 or lobok > 0) and stanok > 0:
-			act 'Get razor':dynamic $brit
+			act 'Shave':dynamic $brit
 		end
 
-		if horny >= 90:
-			act 'Use the showerhead on your pussy':
+		if horny >= 40:
+			act 'Use the shower head on your pussy':
 				cla
 				*clr
-				horny = 0
 				minut += 30
-				stat['mast'] += 1
-				orgasm += 1
-				manna += 15
-				willpower += 15
 				'<center><img src="images/pics/wash2.jpg"></center>'
-				'You place the showerhead onto your pussy and a powerful jet of warm water begins to caress you. Soon you feel a warm wave spreading over your entire body and you shudder as the orgasm overtakes you.'
+				*nl
+				'You place the shower head onto your pussy and a powerful jet of warm water begins to caress you.'
 
-				act 'Get dressed and get out':mirror_steam = hour & gt $locM, $metkaM
-			end
-		elseif horny >= 40 and horny < 90:
-			act 'Send shower pussy':
-				cla
-				*clr
-				horny += 5
-				minut += 30
-				manna += 10
-				willpower += 10
-				'<center><img src="images/pics/wash2.jpg"></center>'
-				'You place the showerhead onto your pussy and a powerful jet of warm water begins to caress you. At first it feels very nice, but after a while it starts to be a little bit painful. You decide to stop masturbating.'
+				if horny >= 90:
+					horny = 0
+					stat['mast'] += 1
+					orgasm += 1
+					manna += 15
+					willpower += 15
+					'Soon you feel a warm wave spreading over your entire body and you shudder as an orgasm overtakes you.'
+				else:
+					horny += 5
+					manna += 10
+					willpower += 10
+					'At first it feels very nice, but after a while it starts to be a little bit painful. You decide to stop masturbating.'
+				end
 
-				act 'Get dressed and get out':mirror_steam = hour & gt $locM, $metkaM
+				dynamic $dryOff
 			end
 		end	
 
-		act 'Get dressed and get out':mirror_steam = hour & gt $locM, $metkaM
+		dynamic $dryOff
 	end
 }
 
@@ -130,7 +134,6 @@ $bath = {
 		shampoo -= 1
 		minut += 60
 		sweat = 7 + rand(0,4)
-		horny += 1
 		hapri = 0
 		mop = 1
 		manna += 20
@@ -152,15 +155,21 @@ $bath = {
 		if frost > 0:frost = 0
 
 		skinvan += 1
-
 		gs 'stat'
 		'<center><img src="images/pics/wash4.jpg"></center>'
-		if daystart < 10:
-			'You got into the bathroom and sat down in the warm water, sticking out of the water your knees are rounded and smooth, which you blinked, you still have not got used to his new body was wildly like to look at all these roundness. Starting lather body you unwittingly turn attention to your chest, it''s so soft and big, and when you touch them you feel unfamiliar but pleasant sensations. Then you washed yourself with soap and you can get out of the bathroom.'
-		elseif daystart >= 10 and daystart < 30:
-			'You got into the bathroom and sat down in the warm water, you have become a little accustomed to his new body and calmly soap all these curves and bulges and flushed the soap.'
+		*nl
+		'While the bathtub fills up you get undressed and then dip a toe into the water. It has just the right temperature so you climb in and let yourself sink into the warm water.'
+
+		if daystart < 10 and StoryLine = 0:
+			horny += rand(6,10)
+			'You stare at those smooth, soft legs sticking out of the water. You''re still not used to this new body and the look of all this roundness.'
+			'Starting to soap yourself you unwittingly turn your attention to your breasts. They''re so soft and big, and when you touch them you feel an unfamiliar but pleasant sensation. You take your time getting familiar with your new body, then you begin to wash yourself in earnest.'
+		elseif daystart < 30 and StoryLine = 0:
+			horny += rand(2,6)
+			'You have become a little accustomed to your female body and casually soap up all these soft curves and rinse yourself off, rubbing your hands all over your feminine body to make sure you didn''t miss a spot.'
 		else
-			'You got into the bathroom and went into the warm water stolidly staring at his smooth legs sticking out of the water. You lathered his body and then washed soap rubbing his hands over his curves of the female body.'
+			horny += rand(0,2)
+			'You lean back and relax for a while. Then you begin to lather your body, gently gliding your soft hands over your smooth curves, and wash yourself thoroughly.'
 		end
 
 		if $loc = 'vanrPar':
@@ -180,54 +189,47 @@ $bath = {
 		end
 
 		if (leghair > 0 or lobok > 0) and  stanok > 0:
-			act 'Get razor':dynamic $brit
+			act 'Get your razor':dynamic $brit
 		end
 
 		if obdysh = 1:vannmastrand = rand(0, 5)
 
-		if horny >= 90:
-			act 'Direct water on pussy':
+		if horny >= 40:
+			act '"Wash" your pussy':
 				cla
 				*clr
-
 				if obdysh = 1 and vannmastrand = 1:gt 'vann', 'v4'
-
-				horny = 0
 				minut += 30
-				stat['mast'] += 1
-				orgasm += 1
-				manna += 15
-				willpower += 15
 
 				'<center><img src="images/pics/wash7.jpg"></center>'
-				'You sent a water faucet on pussy and tight jet of warm water began to caress you. Soon you feel like a warm wave covers your entire body and you began to shudder in orgasm.'
+				*nl
+				'You turn on the faucet, lift your legs and scoot your ass over to align your pussy with the jet of warm water.'
 
-				act 'Get dressed and get out':mirror_steam = hour & gt $locM, $metkaM
-			end
-		elseif horny >= 40 and horny < 90:
-			act 'Direct water on pussy':
-				cla
-				*clr
+				if horny >= 90:
+					horny = 0
+					stat['mast'] += 1
+					orgasm += 1
+					manna += 15
+					willpower += 15
+					'Soon you feel like warm waves wash trough your entire body and you begin to shudder as you reach your peak.'
+				else:
+					horny += 5
+					manna += 10
+					willpower += 10
+					'It feels really nice at first, but after a while it gets a bit uncomfortable and your legs fall asleep. You better stop before an awkward accident happens.'
+				end
 
-				if obdysh = 1 and vannmastrand = 1:gt 'vann', 'v4'
-				horny += 5
-				minut += 30
-				manna += 10
-				willpower += 10
-				'<center><img src="images/pics/wash7.jpg"></center>'
-				'You sent a water faucet on pussy and tight jet of warm water began to caress you. At first it was not even bad, but then sleep and arousal, even as it was not nice. So you stopped masturbating.'
-
-				act 'Get dressed and get out':mirror_steam = hour & gt $locM, $metkaM
+				dynamic $dryOff
 			end
 		end
 
 		if horny >= 50:
 			act 'Masturbate':gt 'selfplay'
 		end
-		act 'Get dressed and get out':mirror_steam = hour & gt $locM, $metkaM
+
+		dynamic $dryOff
 	end
 }
-
 
 $brit = {
 	cla
@@ -242,19 +244,23 @@ $brit = {
 			horny += 5
 			stanok -= 1
 			'<center><img src="images/pics/shave.jpg"></center>'
+			*nl
+			if daystart < 10 and StoryLine = 0:
+				'You can''t shake off the fact that you''re a girl now, so you decide it''d be best to shave your legs. You begin to lather your legs, still marveling at how soft and round they are. Then you take the razor in your hand and begin to shave your legs.'
+				'You feel really awkward, never having done this before as a guy. Luckily, you had more than enough experience with shaving your face and technically this isn''t really all that different. So in the end you get a pretty decent job done.'
+			elseif daystart < 30 and StoryLine = 0:
+				manna += 10
+				'With a newfound routine you lather up your legs and start shaving, careful not to miss a spot. After washing away the foam you softly glide your hands over your smooth legs, feeling good to know that you don''t need to hide your legs in pants. Maybe you should wear a skirt tomorrow?'
+			else:
+				'You lather up your legs and then start carefully shaving them. Once you''re finished you gently glide your hands over your smooth legs, making sure you didn''t miss a spot.'
+			end
 
-			if daystart < 10:'You have decided to shave your pussy and picking up a razor realized that you do not know how to shave. To begin, you have shaved pubic hair, it was not difficult, but then you notice that near your newfound pussy hair grow too. Here you have difficulties began, you tried to pull one hand, all these soft folds to the side so the second hand to shave all the hairs. Gradually, you still managed to shave off all his hair with your new vagina. As long as you shave you hardly came out of shock contemplating his crotch which was not at all what you''re used to. But finally it was done with shaving and you flushed with foam pussy stroking your hand and wondering sensations.'
-			if daystart >= 10 and daystart < 30:'You lathered her soft feet and took in hand razor. You have grown accustomed to his new body and shaved legs calmly knowing that hairy legs with your new body is not beautiful. Finally shaving was done with and you flushed foam stroking his smooth as silk legs.'
-			if daystart >= 30:'You lathered his feet and took a razor. Habitual movements you shaved hair on the legs and washed shaving foam.'
-
-			!!'You lathered up and shaved hair with them.'
-
-			act 'Postpone machine':dynamic $brit
+			act 'Put the razor away':dynamic $brit
 		end
 	end
 
 	if lobok > 0 and stanok > 0:
-		act 'Shave pubis (0:15)':
+		act 'Shave your pussy (0:15)':
 			cla
 			*clr
 			minut += 15
@@ -268,22 +274,19 @@ $brit = {
 			end
 
 			'<center><img src="images/pics/shave3.jpg"></center>'
+			*nl
+			'You lather your crotch with some soapy water and carefully shave your pubic hair. After shaving you can''t help but run your fingers over your pussy, enjoying the smooth feeling and getting slightly more aroused by the touch.'
 
-			if daystart < 10:'You have decided to shave pubis, lathered his foam and picking up a razor realized that he did not imagine how it shaved. To begin, you have shaved pubic hair, it was not difficult, but then you notice that near your newfound pussy hair grow too. Here you have difficulties began, you tried to pull one hand, all these soft folds to the side so the second hand to shave all the hairs. Gradually, you still managed to shave off all his hair with your new vagina. As long as you shave you hardly came out of shock contemplating his crotch which was not at all what you''re used to. But finally it was done with shaving and you flushed with foam pussy stroking her hand and wondering sensations.'
-			if daystart >= 10 and daystart < 30:'You foam lathered his groin, trying not to miss a single crease on her pussy. Then neat movements began shave pussy trying not to cut. Finally you did it and you flushed foam pubic hair and pussy.'
-			if daystart >= 30:'You lathered crotch and took a razor habitual movements began to shave pubic hairs and shave pussy vokurug. Finally shaving was finished and you flushed with foam pussy.'
-
-			!!'You lathered pubis, then shaved all the hair from it.'
-			act 'Postpone machine':dynamic $brit
+			act 'Put the razor away':dynamic $brit
 		end
 	end
 
-	act 'Get out and get dressed':gt $locM, $metkaM
+	dynamic $dryOff
 }
 
 $tampon = {
 	if sanpad > 0 and mesec > 0 and isprokp = 0 and isprok = 0 and tanga = 1:
-		act 'Use a sanitary napkin (0:05)':
+		act 'Use a sanitary pad (0:05)':
 			cla
 			*clr
 			sanpad -= 1
@@ -291,7 +294,8 @@ $tampon = {
 			minut += 5
 			manna -= 5
 			'<center><img src="images/pics/wash3.jpg"></center>'
-			'You use a sanitary napkin.'
+			*nl
+			'You use a sanitary pad.'
 			act 'Finish':gt $locM, $metkaM
 		end
 	end
@@ -304,6 +308,7 @@ $tampon = {
 			minut += 5
 			manna -= 5
 			'<center><img src="images/pics/wash3.jpg"></center>'
+			*nl
 			'You use a tampon.'
 			act 'Finish':gt $locM, $metkaM
 		end
@@ -330,7 +335,8 @@ $quickwash = {
 			if sweat < 30 : sweat = 15 + rand(0,4) else sweat -= 10 + rand(0,4)
 			minut += 15
 			'<center><img src="images/pics/wash5.jpg"></center>'
-			'You gave yourself a catlick, thus removing any traces of cum.'
+			*nl
+			'You give yourself a catlick, thus removing any traces of cum.'
 
 			act 'Finish':gt $locM, $metkaM
 		end
@@ -372,22 +378,25 @@ $basin = {
 			if sweat > 19 : sweat -= 5
 			minut += 10
 			'<center><img src="images/etogame/facesp.jpg"></center>'
-			'You clean your face and got rid of any trace of cum.'
+			*nl
+			'You clean your face and get rid of any trace of cum.'
 
 			act 'Finish':gt $locM, $metkaM
 		end
 	end
 
 	if body_write > 0 or face_write > 0:
-		act 'Wash writing off your body':
+		act 'Wash the writings off your body (0:10)':
 			cla
+			*clr
 			body_write = 0
 			face_write = 0
-			minut = minut + 5
+			minut += 10
 			gs'stat'
-			
-			!'You need a picture'
-			'You wiped off indecent inscriptions.'
+
+			'<center><img src="images/pics/wash1.jpg"></center>'
+			*nl
+			'You wash off the indecent inscriptions on your body.'
 
 			act 'Finish':gt $locM, $metkaM
 		end
@@ -402,7 +411,8 @@ $basin = {
 			cumspclnt = 11
 			gs 'cum_cleanup'
 			minut += 10
-			'You washed off your makeup.'
+			*nl
+			'You wash off your makeup.'
 
 			act 'Finish':gt $locM, $metkaM
 		end
@@ -484,7 +494,9 @@ if $ARGS[0] = 'private':
     if stanok > 0:'Your razor will last for <b><<stanok>></b> more shavings.'
     !WD: heal chafe
     if mosolmaz>0:'On a shelf is a tube of ointment for chafing, which will be enough for <b><<mosolmaz>></b> applications.'
-    if tampon > 0:
+    if tampon = 0:
+    	'<font color="red">You have only <b><<tampon>></b> tampon left.</font>'
+    elseif tampon > 1:
         'You have <b><<tampon>></b> tampons.'
     else
         '<b><font color="red">You have no tampons.</font></b>'
@@ -506,7 +518,7 @@ if $ARGS[0] = 'private':
             dirtbelo = 0
             manna = manna - 10
             '<center><img src="images/etogame/stir.jpg"></center>'
-            'You soaked clothes in the basin and poured in washing powder, then you wash clothes, until they are finally clean.'
+            'You soak the clothes in the basin and pour in washing powder, then you wash your clothes until they are finally clean.'
 
             act 'Finish':gt $locM, $metkaM
         end
@@ -533,6 +545,7 @@ if $ARGS[0] = 'private':
         act 'Take a painkiller':
             pain['killer'] += 1
             painkiller -= 1
+            *nl
             'You take a painkiller.'
         end
     end
@@ -583,7 +596,7 @@ if $ARGS[0] = 'private':
     end
 
     if lobok > 0 and stanok > 0:
-        act 'Shave pubis (0:15)':
+        act 'Shave your pussy (0:15)':
             cla
             *clr
             minut += 15
@@ -598,7 +611,7 @@ if $ARGS[0] = 'private':
     end
 
     if analplug = 1 and analplugin = 1:
-        act 'Remove the butt plug (0:05)':
+        act 'Remove your butt plug (0:05)':
             cla
             *clr
             minut += 5
@@ -721,7 +734,7 @@ if $ARGS[0] = 'misery':
         dirtbelo = 0
         manna -= 10
         '<center><img src="images/etogame/stir.jpg"></center>'
-        'You soak the dirty linen in a basin and pour the powder on them. You wash the clothes until they are finally clean.'
+        'You soak your dirty clothes in a basin and then pour washing powder on them. You wash them until they are finally clean.'
         if $curloc = 'vanr':
             act 'Hang the laundry out to dry':gt 'korr'
         elseif $curloc = 'vanr2x':
@@ -734,23 +747,23 @@ if $ARGS[0] = 'misery':
             husband += 5
             poroshok -= 2
             husporday = daystart
-            'Washing machine washed smelly socks husband and his prossannye and properdannye truselya.'
+            'The washing machine washed your husband''s dirty laundry.'
         end
 
         if dirtbelo > 0 and poroshok >= dirtbelo:
             clrbelo += dirtbelo
             poroshok -= dirtbelo
             dirtbelo = 0
-            'The washing machine washed your laundry'
+            'The washing machine washed your laundry.'
         elseif poroshok < dirtbelo:
-            'You ran out of powder for washing machine.'
+            'You ran out of washing powder for the washing machine.'
         end
     end
 
     if dirtbelo>0:'The laundry basket currently has <font color="red"><b><<dirtbelo>></b></font> pieces of dirty laundry.'
     if poroshok > 0:
         if dirtbelo = 0:$stirka = ''
-        if dirtbelo > 0:$stirka = '<a href="exec:dynamic $stirkad">You can wash clothes</a>'
+        if dirtbelo > 0:$stirka = '<a href="exec:dynamic $stirkad">You can wash the laundry.</a>'
         'Under the sink there''s detergent powder, which is enough for <b><<poroshok>></b> washes. <<$stirka>>'
     else
         '<b><font color="red">You have no detergent powder and nothing to wash clothes with.</font></b>'
@@ -772,9 +785,10 @@ if $ARGS[0] = 'misery':
             husporday = daystart
             manna -= 25
             '<center><img src="images/etogame/stir.jpg"></center>'
-            'You spend an hour washing your husbands smelly socks and his prossannye and properdannye truselya.'
+            *nl
+            'You spend an hour washing your husband''s dirty laundry.'
 
-            act 'Move away from the bath':gt $curloc
+            act 'Leave the bathroom':gt $curloc
         end
     end
 
@@ -789,13 +803,14 @@ if $ARGS[0] = 'misery':
             !!'<center><img src="images/pics/cook.jpg"></center>'
             'You take a rag and start cleaning the apartment.'
 
-            act 'Leave':gt $curloc
+            act 'Finish':gt $curloc
         end
     end
 end
 
 if $ARGS[0] = 'buffpick':
 	'<center><img src="images/body/fit2.jpg"></center>'
+	*nl
 	'While drying off and getting dressed you examine the sleek muscles that are showing through your skin.'
 	'As you do so you think about how you look and decide:'
 	act 'You like how you look.': normbuffpick = 2 & mirror_steam = hour & gt $locM, $metkaM
