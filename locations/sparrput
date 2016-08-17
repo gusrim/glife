@@ -1,0 +1,38 @@
+# sparrput
+
+if arrsize('ARGS') < 6:
+	'ERROR: sparrput called incorrectly. report to a maintainer'
+end
+
+i = arrsize('$sparrnam')
+s = ARGS[5]
+
+!{Check for prev spatter by same guy}
+i2 = 0
+:sparrputloop
+if i2 < i:
+	if sparrloc[i2] = ARGS[1] and $sparrnam[i2] = $ARGS[0]:
+		i = i2
+		!{Use existing spread value if greater than provided}
+		if s < sparrslc[i]: s = sparrslc[i]
+	else
+		i2 += 1
+		jump 'sparrputloop'
+	end
+end
+
+sparrnam[i] = $ARGS[0]
+sparrloc[i] = ARGS[1]
+sparrppt[i] = ARGS[2]
+if ARGS[3]:
+	sparridt[i] = ARGS[3]
+end
+sparrvol[i] += ARGS[4]
+sparrslc[i] = s
+
+sparrage[i] = 0
+
+RESULT = i
+
+--- sparrput ---------------------------------
+
