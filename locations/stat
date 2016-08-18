@@ -955,28 +955,54 @@ else
 	$health = '<font color="red">You are on the verge of death.</font>'
 end
 
-if willpower >= willpowermax:
-	$willpower = '<font color="green">Your mind is clear.</font>'
-elseif willpower >= willpowermax * 75 / 100:
-	$willpower = '<font color="blue">You are mostly clear of mind.</font>'
-elseif willpower >= willpowermax * 50 / 100:
-	$willpower = '<font color="brown">You are depressed.</font>'
-elseif willpower >= willpowermax * 25 / 100:
-	$willpower = '<font color="red">You have depression.</font>'
+if MagikDostup = 1:
+	if willpow >= 80:
+		$willpow = '<font color="blue">You have iron will.</font>'
+	elseif willpow >= 60:
+		$willpow = '<font color="brown">Your willpower is amazing.</font>'
+	elseif willpow >= 40:
+		$willpow = '<font color="brown">Your mind can be changed.</font>'	
+	elseif willpow >= 20:
+		$willpow = '<font color="red">You are quite convinceable.</font>'
+	else
+		$willpow = '<font color="red">You are a real pushover.</font>'
+	end
+	
+	if mood >= 80:
+		$mood = '<font color="green">You like everything is perfect.</font>'
+	elseif mood >= 60:
+		$mood = '<font color="blue">You are in a good mood.</font>'
+	elseif mood >= 40:
+		$mood = '<font color="brown">You are stressed.</font>'
+	elseif mood >= 20:
+		$mood = '<font color="red">You are depressed.</font>'
+	else
+		$mood = '<font color="red">You are struggling with suicidal thoughts.</font>'
+	end
 else
-	$willpower = '<font color="red">You are on the verge of madness.</font>'
-end
+	if willpower >= willpowermax:
+		$willpower = '<font color="green">Your mind is clear.</font>'
+	elseif willpower >= willpowermax * 75 / 100:
+		$willpower = '<font color="blue">You are mostly clear of mind.</font>'
+	elseif willpower >= willpowermax * 50 / 100:
+		$willpower = '<font color="brown">You are depressed.</font>'
+	elseif willpower >= willpowermax * 25 / 100:
+		$willpower = '<font color="red">You have depression.</font>'
+	else
+		$willpower = '<font color="red">You are on the verge of madness.</font>'
+	end
 
-if manna >= mannamax:
-	$manna = '<font color="green">You are in a good mood.</font>'
-elseif manna >= mannamax * 75 / 100:
-	$manna = '<font color="blue">You have a normal mood.</font>'
-elseif manna >= mannamax * 50 / 100:
-	$manna = '<font color="brown">You are in a bad mood.</font>'
-elseif manna >= mannamax * 25 / 100:
-	$manna = '<font color="red">You are in a terrible mood.</font>'
-else
-	$manna = '<font color="red">Your mood is stuck in the gutter.</font>'
+	if manna >= mannamax:
+		$manna = '<font color="green">You are bursting with energy.</font>'
+	elseif manna >= mannamax * 75 / 100:
+		$manna = '<font color="blue">You have a lot of energy.</font>'
+	elseif manna >= mannamax * 50 / 100:
+		$manna = '<font color="brown">You do not feel energetic.</font>'
+	elseif manna >= mannamax * 25 / 100:
+		$manna = '<font color="red">You energy reserves are really low.</font>'
+	else
+		$manna = '<font color="red">You are totally depleted.</font>'
+	end
 end
 
 if energy >= 80:
@@ -1027,6 +1053,16 @@ end
 !!if shame = 2:$shame = '<font color="brown">You nemnog opokrasneli shame.</font>'
 !!if shame = 1:$shame = '<font color="green">You''re a little confused.</font>'
 !!if shame <= 0:$shame = '<font color="green">You''re a little confused.</font>'
+maxmood = 100-moodmodifier
+if mood > maxmood:
+	mood = maxmood
+	manna = mannamax
+	$mood = 'You feel buoyed.'
+elseif mood < 0:
+	mood = 0
+	!{Asylum: basically this means clinically insane, like court-ordered committed, saliva dripping, blubbering... 
+		Ordinarily irreversible at this stage meaning Game Over, but cheat can help}
+end
 
 if workFabrika = 1 and week => 1 and week <= 5 and hour > 8 and age => 16 and age < 18 and FabrikaProgulDay ! day or workFabrika = 1 and week => 1 and week <= 5 and hour > 16 and age > 18 and FabrikaProgulDay ! day:
 	!absence from work in a factory in Pavlovsk
