@@ -1,78 +1,79 @@
 # Cum_Manage
-!{	Locations to be defined by 'spafinloc'
-	0 = 'In your Vagina'
-	1 = 'On your labia'
-	2 = 'On your panties over your vagina'
-	3 = 'In your anus'
-	4 = 'On your butt'
-	5 = 'On your panties over your butt'
-	6 = 'On your clothes in your groin area'
-	7 = 'On your clothes'
-	8 = 'On your back'
-	9 = 'On your legs'
-	10 = 'On your arms'
-	11 = 'On your face'
-	12 = 'Inside your mouth'
-	13 = 'On your hands'
-	14 = 'On your stomach'
-	15 = 'On your breasts'
-	16 = 'In your hair'
-	17 = 'In a condom in your vagina'}
+
+!{     Locations to be defined by 'spafinloc'
+       0 = 'In your Vagina'
+       1 = 'On your labia'
+       2 = 'On your panties over your vagina'
+       3 = 'In your anus'
+       4 = 'On your butt'
+       5 = 'On your panties over your butt'
+       6 = 'On your clothes in your groin area'
+       7 = 'On your clothes'
+       8 = 'On your back'
+       9 = 'On your legs'
+       10 = 'On your arms'
+       11 = 'On your face'
+       12 = 'Inside your mouth'
+       13 = 'On your hands'
+       14 = 'On your stomach'
+       15 = 'On your breasts'
+       16 = 'In your hair'
+       17 = 'In a condom in your vagina'}
 
 !{ values of 'sexcontra'
-	0 = 'No contraception used'
-	1 = 'You lied about being on the pill'
-	2 = 'You were on the pill'
-	3 = 'You used a condom'
-	4 = 'The condom broke'
-	5 = 'The condom slipped off inside you'
-	6 = 'The condom was sabotaged by someone else'
-	7 = 'You sabotaged the condom'
-	8 = 'Precum had sperm in it'}
+       0 = 'No contraception used'
+       1 = 'You lied about being on the pill'
+       2 = 'You were on the pill'
+       3 = 'You used a condom'
+       4 = 'The condom broke'
+       5 = 'The condom slipped off inside you'
+       6 = 'The condom was sabotaged by someone else'
+       7 = 'You sabotaged the condom'
+       8 = 'Precum had sperm in it'}
 if $ARGS[0] = 'cumeater':
-	loc = ARGS[1]
-	i = arrpos('sparrloc', loc)
+	cloc = ARGS[1]
+	i = arrpos('sparrloc', cloc)
 	if i ! -1:
 		spdirtyb = 1
 		fbreath = 0
 		vaf += 1
 		$part = ''
-		if loc = 13:
+		if cloc = 13:
 			'You carefully lick the sperm residue from both hands, enjoying the tart taste of semen.'
-			gs 'cum_cleanup', 'cleanloc', loc
-		elseif loc = 17:
+			gs 'cum_cleanup', 'cleanloc', cloc
+		elseif cloc = 17:
 			'You fish around in your vagina and pull forth a condom full of <<$sparrnam[i]>>''s semen and drink it.'
 			gs 'cum_cleanup', 'cleandeposit', i
 		else
-			if loc = 0:
+			if cloc = 0:
 				$part = 'pussy'
-			elseif loc = 1:
+			elseif cloc = 1:
 				$part = 'pussylips'
-			elseif loc = 2 or loc = 5:
+			elseif cloc = 2 or cloc = 5:
 				$part = 'your panties'
 				gs 'cum_cleanup', 'cleanloc', 2
 				gs 'cum_cleanup', 'cleanloc', 5
-			elseif loc = 3:
+			elseif cloc = 3:
 				$part = 'anus'
-			elseif loc = 4:
+			elseif cloc = 4:
 				$part = 'buttocks'
-			elseif loc = 6 or loc = 7:
+			elseif cloc = 6 or cloc = 7:
 				$part = 'clothes'
 				gs 'cum_cleanup', 'cleanloc', 6
 				gs 'cum_cleanup', 'cleanloc', 7
-			elseif loc = 8:
+			elseif cloc = 8:
 				$part = 'back'
-			elseif loc = 9:
+			elseif cloc = 9:
 				$part = 'legs'
-			elseif loc = 10:
+			elseif cloc = 10:
 				$part = 'arms'
-			elseif loc = 11:
+			elseif cloc = 11:
 				$part = 'face'
-			elseif loc = 14:
+			elseif cloc = 14:
 				$part = 'stomach'
-			elseif loc = 15:
+			elseif cloc = 15:
 				$part = 'breasts'
-			elseif loc = 16:
+			elseif cloc = 16:
 				$part = 'hair'
 			end
 			if rand(0, 1) = 0:
@@ -80,9 +81,10 @@ if $ARGS[0] = 'cumeater':
 			else
 				'You collect the sperm from your <<$part>> with your fingers and lick them, enjoying the tart taste of semen.'
 			end
-			sparr_idx = func 'sparrput', 'Yourself', 13, 100, -1, 10, 0
-			gs 'cum_cleanup', 'cleanloc', loc
+			sparr_idx = func('sparrput', 'Yourself', 13, 100, -1, 10, 0)
+			gs 'cum_cleanup', 'cleanloc', cloc
 		end
+		gs 'stat'
 	end
 end
 
@@ -107,7 +109,7 @@ if $ARGS[0] = '':
 			!{Now it sets up the splatter and actual internal cum. First it sets the array to the spatter end of file. Then it checks for riding bareback. If theres a condom, it gives a chance for the condom to fail in general, slip off and remain in the vagina, or break.}
 			!{Generate default potency potential from a random multiplier of sexvolume. Sexvolume defaults to 40 unless specified otherwise (may need to be higher, I do not know) and ppt can also be overridden by setting sexspecpot directly.}
 			cpt = 0
-			loc = 0
+			cloc = 0
 			add = -1
 			if sexcontra > 2:
 				if sexcontra = 3 or sexcontra = 6 or sexcontra = 7:
@@ -156,7 +158,7 @@ if $ARGS[0] = '':
 					cpt = ppt / rand(10,20)
 					cumcondslip = 1
 					vol = sexvolume / rand(1, 3)
-					loc = 17
+					cloc = 17
 				elseif sexcontra = 6 or sexcontra = 7:
 					!{Someone was naughty. Very naughty. She gets a large portion of the "potential" potency, but we do not continue to add to it over time since presumably the condom is thrown away.}
 					cpt = ppt / rand(2, 6)
@@ -176,13 +178,13 @@ if $ARGS[0] = '':
 				end
 
 				!{Add values to spatter and deposit arrays}
-				cumarr_idx = func 'cumarrput', $boy, sexcontra, ppt, cpt, know
+				cumarr_idx = func('cumarrput', $boy, sexcontra, ppt, cpt, know)
 				if sexcontra = 5:
 					cumcondsanb = cumarr_idx
 				end
 				if vol > 0:
 					!{She might be inseminated by a method that does not leave residue, like a sabotaged condom.}
-					sparr_idx = func 'sparrput', $boy, loc, ppt, know, vol, spread
+					sparr_idx = func('sparrput', $boy, cloc, ppt, know, vol, spread)
 				end
 
 				cumsumbod += vol
@@ -224,7 +226,7 @@ if $ARGS[0] = '':
 				cumsumass += sexvolume
 			end
 			know = sexpartkno ! 0 and sexunaware ! 1
-			sparr_idx = func 'sparrput', $boy, spafinloc, ppt, know, sexvolume, spread
+			sparr_idx = func('sparrput', $boy, spafinloc, ppt, know, sexvolume, spread)
 		end
 	elseif (sexcontra < 3 or sexcontra > 5) and spafinloc = 0:
 		!{And this is the pre ejaculate release talked about above.}
@@ -234,7 +236,7 @@ if $ARGS[0] = '':
 			ppt = 100
 		end
 		cpt = ppt / rand(3, 12)
-		cumarr_idx = func 'cumarrput', $boy, 8, ppt, cpt, 0
+		cumarr_idx = func('cumarrput', $boy, 8, ppt, cpt, 0)
 	end
 
 	sexspecpot = 0
