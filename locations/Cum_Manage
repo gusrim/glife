@@ -81,7 +81,15 @@ if $ARGS[0] = 'cumeater':
 			else
 				'You collect the sperm from your <<$part>> with your fingers and lick them, enjoying the tart taste of semen.'
 			end
-			sparr_idx = func('sparrput', 'Yourself', 13, 100, -1, 10, 0)
+			j = 0
+			:handdeposit
+			if j < arrsize('sparrloc'):
+				if sparrloc[j] = cloc:
+					sparr_idx = func('sparrput', $sparrnam[j], 13, sparrppt[j]/10, -1, 10, 0)
+				end
+				j += 1
+				jump 'handdeposit'
+			end
 			gs 'cum_cleanup', 'cleanloc', cloc
 		end
 		gs 'stat'
@@ -100,10 +108,12 @@ if $ARGS[0] = '':
 	effcontra = sexcontra
 	!{It checks to see if this is flagged as a preejaculate emmission. All vaginal penetrations that flag this as cumprecheck contain preejaculate. Guidelines for calling it: If your boy is likely to have masterbated, had sex, or otherwise encouraged semen to leak out of their urethra in the last 48 hours, they probably have some fertile preejaculate. If in doubt, let it leak. The chances of pregnancy from it are low, and the MC should have been wearing protection.}
 	vol = sexvolume
-	ppt = sexvolume * rand(15, 20)
+	ppt = sexvolume * rand(250, 300)
 	spread = 0
 	know = sexpartkno ! 0 or sexunaware ! 1
-	if cumprecheck ! 1:
+	if cumprecheck ! 0:
+		gs 'cum_manage', 'cumprecheck'
+	else
 		!{Here it checks for vaginal deposit. If it is, it sees if theres a deposit made by someone named the same. If so, it checks if this new act is protected. If it isnt, it overwrites the old deposit.}
 		if spafinloc <= 0 or spafinloc = 17:
 
@@ -231,15 +241,6 @@ if $ARGS[0] = '':
 			end
 			sparr_idx = func('sparrput', $boy, spafinloc, ppt, know, sexvolume, spread)
 		end
-	elseif (sexcontra < 3 or sexcontra > 5) and spafinloc = 0:
-		!{And this is the pre ejaculate release talked about above.}
-		if sexspecpot ! 0:
-			ppt = sexspecpot
-		else
-			ppt = 100
-		end
-		cpt = ppt / rand(3, 12)
-		cumarr_idx = func('cumarrput', $boy, 8, ppt, cpt, 0)
 	end
 
 	sexspecpot = 0
@@ -259,6 +260,41 @@ if $ARGS[0] = '':
 		tmp_idx = arrpos('sparrloc',0)
 		if sparrslc[tmp_idx] <= 0: sparrslc[tmp_idx] += 1
 	end
+end
+
+if $ARGS[0] = 'cumprecheck':
+	gs 'cum_manage', 'cumpushcheck'
+	if sexcontra ! 3 and spafinloc = 0:
+		!{For any vaginal sex without an intact condom, add a very small cum deposit.}
+		if sexspecpot ! 0:
+			ppt = sexspecpot
+		else
+			ppt = 100
+		end
+		cpt = ppt / rand(3, 12)
+		cumarr_idx = func('cumarrput', $boy, 8, ppt, cpt, 0)
+	end
+end
+
+if $ARGS[0] = 'cumpushcheck':
+	!{Cum on labia will be pushed in by any intercourse, and cum leaking from the anus has a chance to be pushed in.}
+	i = 0
+	j = 0
+	:precheckloop
+	if i < arrsize('$sparrnam'):
+		if (sparrloc[i] = 1 or (sparrloc[i] = 3 and sparrslc[i] > 0 and rand(0, 1) = 0)) and arrpos('$cumarrnam', $sparrnam[i]) = -1:
+			ppt = sparrppt[ppt]
+			if ppt > 0:
+				ppt /= 10
+			end
+			cpt = ppt
+			j += 1
+			cumarr_idx = func('cumarrput', $sparrnam[i], 9, ppt, cpt, 0, sparrage[i])
+		end
+		i += 1
+		jump 'precheckloop'
+	end
+	RESULT = j
 end
 
 --- Cum_Manage ---------------------------------
