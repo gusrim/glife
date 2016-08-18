@@ -96,12 +96,14 @@ if $ARGS[0] = '':
 				elseif sparrloc[sparr_idx] = 0:
 					!{Cervix quickly drinks up deposits left unremoved}
 					cumarr_idx = func('cumarrput', $sparrnam[sparr_idx], 2, sparrppt[sparr_idx], (sparrppt[sparr_idx] / (sparrage[sparr_idx] + 1)) * 2, sparridt[sparr_idx], sparrage[sparr_idx])
+					if cumsumvag > 60: sparrslc = 1
 				elseif sparrslc[sparr_idx] > 0 and sparrloc[sparr_idx] = 1:
 					cumarr_idx = func('cumarrput', $sparrnam[sparr_idx], 2, sparrppt[sparr_idx] / 20, sparrppt[sparr_idx]/ ((1000 * sparrage[sparr_idx]) / sparrvol[sparr_idx]), 0, sparrage[sparr_idx])
+				elseif sparrloc[sparr_idx] = 3 and cumsumass > 60:
+					sparrslc = 1
 				end
-				if sparrloc[sparr_idx] = 0 or sparrloc[sparr_idx] = 3 or sparrloc[sparr_idx] = 12:sparrvol[sparr_idx] -= sparrage[sparr_idx]/2
-				if sparrloc[sparr_idx] = 0 and cumsumvag > 60: sparrslc = 1
-				if sparrloc[sparr_idx] = 3 and cumsumass > 60: sparrslc = 1
+				if sparrloc[sparr_idx] = 0 or sparrloc[sparr_idx] = 3:sparrvol[sparr_idx] -= sparrage[sparr_idx]/2
+				if sparrloc[sparr_idx] = 12 and sparrage[sparr_idx] > 0: sparrvol[sparr_idx] = 0
 				if sparrloc[sparr_idx] = 17 and sparrage[sparr_idx] > 48:
 					cumcondslip = 1
 					health -= 3
@@ -234,33 +236,35 @@ if $ARGS[0] = 'cyc2':
 !!{Compute array of unique fathers known to PC and another two arrays of unique total fathers and their individual sperm totals from all entries in cumarrcpt for that father. Also tally all cum present.}
 		:FatherCumAnalyze
 		if can_idx < can_sz:
-			if cumarrkno[can_idx] = 1:
-				if Enable_Android = 0:
-					wpf_in = arrpos(0, '$wombpotfath', $cumarrnam[can_idx])
-				else
-					wpf_in = arrpos('$wombpotfath', $cumarrnam[can_idx])
+			if cumarrppt[can_idx] ! -1:
+				if cumarrkno[can_idx] = 1:
+					if Enable_Android = 0:
+						wpf_in = arrpos(0, '$wombpotfath', $cumarrnam[can_idx])
+					else
+						wpf_in = arrpos('$wombpotfath', $cumarrnam[can_idx])
+					end
+					if wpf_in < 0:
+						wpf_sz = arrsize('$wombpotfath')
+						$wombpotfath[wpf_sz] = $cumarrnam[can_idx]
+						cumtime[wpf_sz] += 1
+					end
 				end
-				if wpf_in < 0:
-					wpf_sz = arrsize('$wombpotfath')
-					$wombpotfath[wpf_sz] = $cumarrnam[can_idx]
-					cumtime[wpf_sz] += 1
-				end
-			end
-			if cumarrkno[can_idx] >= 0:cum_totaltime += 1
+				if cumarrkno[can_idx] >= 0:cum_totaltime += 1
 
-			if Enable_Android = 0:
-				cfn_in = arrpos(0, '$cumfathnames', $cumarrnam[can_idx])
-			else
-				cfn_in = arrpos('$cumfathnames', $cumarrnam[can_idx])
+				if Enable_Android = 0:
+					cfn_in = arrpos(0, '$cumfathnames', $cumarrnam[can_idx])
+				else
+					cfn_in = arrpos('$cumfathnames', $cumarrnam[can_idx])
+				end
+				cfw_sz = arrsize('cumfathwght')
+				if cfn_in < 0:
+					cumfathwght[cfw_sz] = cumarrcpt[can_idx]
+					$cumfathnames[cfw_sz] = $cumarrnam[can_idx]
+				else
+					cumfathwght[cfw_in] += cumarrcpt[can_idx]
+				end
+				cum_total += cumarrcpt[can_idx]
 			end
-			cfw_sz = arrsize('cumfathwght')
-			if cfn_in < 0:
-				cumfathwght[cfw_sz] = cumarrcpt[can_idx]
-				$cumfathnames[cfw_sz] = $cumarrnam[can_idx]
-			else
-				cumfathwght[cfw_in] += cumarrcpt[can_idx]
-			end
-			cum_total += cumarrcpt[can_idx]
 
 			can_idx += 1
 			jump 'FatherCumAnalyze'
