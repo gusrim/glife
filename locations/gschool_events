@@ -252,7 +252,7 @@ if $ARGS[0] = 'rand_scoolboy':
 		elseif grupTipe[i] = 4:
 			'The brazen look on his face betrays <<$npcName[i]>>, it must have been him touching your ass. Knowing him, he probably would''ve gone further if there weren''t so many people here.'
 			if GorSlut > 2 and kotovLoveQW <= 0: 
-			gt 'gschool_events', 'rand_gopnic'
+				gt 'gschool_events', 'rand_gopnic'
 			exit
 			end
 		elseif grupTipe[i] = -1:
@@ -378,6 +378,8 @@ if $ARGS[0] = 'rand_scoolboy':
 					act 'He fucks your pussy':
 						*clr & cla
 						manna += 20
+						stat['vaginal'] += 1
+						if vagina < dick: vagina += 1
 						cumprecheck = 1
 						gs 'cum_call', '', $boy
 						gs'stat'
@@ -385,7 +387,7 @@ if $ARGS[0] = 'rand_scoolboy':
 						$sexstart2orgazm5 = 'Taking you upstairs to a window sill, <<$boy>> tells you to lay down on your back on the ledge. Once you oblige he spreads your legs and slowly slides his cock into your dripping pussy, beginning to fuck you in low, long strokes. Every thrust puts him in a little deeper, and when he bottoms out in you he begins to fuck you in earnest. You''ve given into your pleasure a long time ago; by now are nothing but putty in his hands, letting him fuck you however he wants as long as you get to get off. Before too long you reach your orgasm, and you grasp your arms tightly around his neck to keep yourself from falling out of the window. Your spasming pussy is milking his cock for his sperm, and you can tell he''s getting close.'
 						dynamic $sexstart2
 						act 'Take his load in your mouth':
-							*clr & cla
+							cls
 							stat['bj'] += 1
 							gs 'cum_call', 'mouth', $boy
 							gs 'cum_call', 'breasts', $boy
@@ -399,11 +401,14 @@ if $ARGS[0] = 'rand_scoolboy':
 						end
 					end
 					act 'He fucks your ass':
-						*clr & cla
+						cls
 						if analplugin = 1:
 							analplugin = 0
 							'<<$boy>> plays with your butt plug for a moment before pulling it out. Your anus gapes slightly from being filled for so long. He reassures you, "Don''t worry babe, I''ll be filling that soon enough."'
 						end
+						stat['anal'] += 1
+						if anus < dick: anus += 1
+						gs 'stat'
 						'<center><img src="images/qwest/alter/uroc/boysex_scool4.jpg"></center>'
 						'<<$boy>> wants something a little different today, and carefully rubs the head of his dick against your anus. The head of his cock is quite large, and it''s quite difficult to get in. You tell yourself, "He licked me so good he deserves this."'
 						'You whinge from pain when his cock enters you, and ask him to take it slow for a moment so you can get used to his size. He''s happy to oblige and rubs your pussy slowly in the meantime, occasionally darting a finger in. It feels so good! With him massaging you like this you feel the pain subsiding quickly. It still hurts a little, but when he begins to move his hips you moan loudly - not from pain, but pleasure!'
@@ -416,7 +421,6 @@ if $ARGS[0] = 'rand_scoolboy':
 								*clr & cla
 								spafinloc = 3
 								gs 'cum_manage'
-								stat['anal'] += 1
 								manna += 20
 								orgasm += 1
 								horny = 0
@@ -584,7 +588,7 @@ if $ARGS[0] = 'help':
 		if dom > 30:
 			dom += 1
 			''
-			'You smile at him empathically, and as you put your hand on his shoulder for a brief moment you ask him in a stern voice, "Would you like me to have a talk with her? My father left when I was still a baby your daughter doesn''t know what she''s missing, I would kill to have a good relationship with a father as great as you. I bet I could help her realize that."'
+			'You smile at him empathetically, and as you put your hand on his shoulder for a brief moment you ask him in a stern voice, "Would you like me to have a talk with her? My father left when I was still a baby your daughter doesn''t know what she''s missing, I would kill to have a good relationship with a father as great as you. I bet I could help her realize that."'
 			'<<$teacher>> is grateful for the offer, but declines, "Thank you <<$name>>, but I should really be solving this myself. It''s kind of you to offer though, you''re a good person."'
 			'You give him en encouraging pat on the shoulder before you pull your hand back, and nod, "I suppose you''re right, <<$teacher>>. Don''t worry, everything will be fine."'
 			'He tries to focus on teaching you for the remainder of the class, but you can tell his mind is elsewhere. He must be mulling over what you said.'
@@ -757,8 +761,9 @@ if $ARGS[0] = 'disrupt':
 				''
 				'The guys laugh at your pitiful attempt to quiet them down and then ignore you. Your teacher can''t seem to get them to shut up either, and you don''t end up learning much as a result.'
 			end
-		act 'Wait for the end of the lesson':gt 'gschool_lunch', 'lunch'
+			act 'Wait for the end of the lesson':gt 'gschool_lunch', 'lunch'
 		end
+	end
 	act 'Eavesdrop':
 		*clr
 		cla
@@ -766,9 +771,8 @@ if $ARGS[0] = 'disrupt':
 		'You''re curious about what your classmates are talking about, behind you. You can''t make out much of what they''re saying, but you do hear:'
 		gs 'gschool_events', 'gosip'
 		act 'Wait for the end of the lesson':gt 'gschool_lunch', 'lunch'
-		end
-	act 'Ignore them and wait for the end of the lesson':gt 'gschool_lunch', 'lunch'
 	end
+	act 'Ignore them and wait for the end of the lesson':gt 'gschool_lunch', 'lunch'
 end
 
 if $ARGS[0] = 'rand_class':
@@ -845,13 +849,21 @@ if $ARGS[0] = 'rand_class':
 		
 		elseif scooltiperand = 12:
 			!!IMAGE NEEDED!!
-			
-			'During class, you feel a hand slide around your side and grab one of your boobs. You squeak loudly and try to smack <<$boy>>s hand away, but he jerked it away as soon as you squeaked and all you manage to do is smack your own boob.'
-			'You hear your teacher. "Is there a problem miss <<$surename>>?" You glance around and notice everyone is staring at you for making the noise, <<$boy>> behind you is snickering. The teacher looks at you accusingly.'
+
+			:rnd_boy_loop
+			i = rand(0,55)
+			if i > 47:
+				$rand_boy = 'some boy'
+			elseif npcPol[i] = 1 or i = 26 or grupTipe[i] = 1 or grupTipe[i] = -1:
+				jump 'rnd_boy_loop'
+			end
+			$rand_boy = $npcName[i]
+			'During class, you feel a hand slide around your side and grab one of your boobs. You squeak loudly and try to smack <<$rand_boy>>s hand away, but he jerked it away as soon as you squeaked and all you manage to do is smack your own boob.'
+			'You hear your teacher. "Is there a problem miss <<$surename>>?" You glance around and notice everyone is staring at you for making the noise, <<$rand_boy>> behind you is snickering. The teacher looks at you accusingly.'
 			
 			act 'Nothing is wrong':
 				cla
-				'You shake your head no to the teacher and desperately want to turn around and strangle <<$boy>>, but you don''t dare with the teacher now keeping a eye on you.'
+				'You shake your head no to the teacher and desperately want to turn around and strangle <<$rand_boy>>, but you don''t dare with the teacher now keeping a eye on you.'
 				
 				act 'Wait for the end of the lesson':
 					if n_tanga = 3:
@@ -866,22 +878,31 @@ if $ARGS[0] = 'rand_class':
 				end
 			end
 			
-			act 'Slap <<$boy>>':
+			act 'Slap <<$rand_boy>>':
 				cla
-				'You ignore the teacher and turn around and slap <<$boy>> with all your force. <<$boy>> recoils, his hand going to his cheek. Students start murmuring about what happened, while some laugh.'
+				'You ignore the teacher and turn around and slap <<$rand_boy>> with all your force. <<$rand_boy>> recoils, his hand going to his cheek. Students start murmuring about what happened, while some laugh.'
 				'The teachers voice cuts through the noise. "That''s enough of that miss <<$surename>>, go to the principals office."'
 				act 'Go to the Principals office': gt 'gschool_lessons', 'principal'
 			end
-		!!add code to use a random name of a gopnik, cool guy, or jock, with a chance of a unknown <<$boy>>.!!
+		!!add code to use a random name of a gopnik, cool guy, or jock, with a chance of a unknown <<$rand_boy>>.!!
 
 		elseif scooltiperand = 13:
 			!!IMAGE NEEDED
-			'During class, you feel a hand grab and pull your bra strap away from your body and before you can turn or protest they let go, causing it to snap back painfully. You let out a little yelp and turn to glare at <<$boy>> behind you.'
-			'Then you hear your teacher. "Is there a problem miss <<$surename>>?" You glance around and notice everyone is staring at you for making the noise, <<$boy>> behind you is snickering. The teacher looks at you accusingly.'
+
+			:rnd_boy_loop
+			i = rand(0,55)
+			if i > 47:
+				$rand_boy = 'some boy'
+			elseif npcPol[i] = 1 or i = 26 or grupTipe[i] = 1 or grupTipe[i] = -1:
+				jump 'rnd_boy_loop'
+			end
+			$rand_boy = $npcName[i]
+			'During class, you feel a hand grab and pull your bra strap away from your body and before you can turn or protest they let go, causing it to snap back painfully. You let out a little yelp and turn to glare at <<$rand_boy>> behind you.'
+			'Then you hear your teacher. "Is there a problem miss <<$surename>>?" You glance around and notice everyone is staring at you for making the noise, <<$rand_boy>> behind you is snickering. The teacher looks at you accusingly.'
 			
 			act 'Nothing is wrong':
 				cla
-				'You shake your head no to the teacher and desperately want to turn around and strangle <<$boy>>, but you don''t dare with the teacher now keeping a eye on you.'
+				'You shake your head no to the teacher and desperately want to turn around and strangle <<$rand_boy>>, but you don''t dare with the teacher now keeping a eye on you.'
 				
 				act 'Wait for the end of the lesson':
 					
@@ -899,26 +920,35 @@ if $ARGS[0] = 'rand_class':
 				end
 			end
 			
-			act 'Slap <<$boy>>':
+			act 'Slap <<$rand_boy>>':
 				cla
-				'You ignore the teacher and turn around and slap <<$boy>> with all your force. <<$boy>> recoils, his hand going to his cheek. Students start murmuring about what happened, while some laugh.'
+				'You ignore the teacher and turn around and slap <<$rand_boy>> with all your force. <<$rand_boy>> recoils, his hand going to his cheek. Students start murmuring about what happened, while some laugh.'
 				'The teachers voice cuts through the noise. "That''s enough of that miss <<$surename>>, go to the principals office."'
 				
 				act 'Go to the Principals office': gt 'gschool_lessons', 'principal'
 			
 			end
-		!!add code to use a random name of a gopnik, cool guy, or jock, with a chance of a unknown <<$boy>>.
+		!!add code to use a random name of a gopnik, cool guy, or jock, with a chance of a unknown <<$rand_boy>>.
 		
 		elseif scooltiperand = 14:
 			!!IMAGE NEEDED
 			'During class there is a loud crashing sound from the back of the class, you along with everyone else in the class turn to look, in the back <<$boy>> is still sitting at his desk, but now the desk is laying on it''s side on the floor. The whole class bursts out laughing at him.'
-			'<<$boy>> blushing quickly gets out of the desk and gets it back upright and sits back down in it. After making sure he is ok, the teacher gets the class back under control and finishes the lesson.'
-			!!add code to use a random name of a gopnik, cool guy, Nerd or jock, with a chance of a unknown <<$boy>>.
+			'<<$rand_boy>> blushing quickly gets out of the desk and gets it back upright and sits back down in it. After making sure he is ok, the teacher gets the class back under control and finishes the lesson.'
+			!!add code to use a random name of a gopnik, cool guy, Nerd or jock, with a chance of a unknown <<$rand_boy>>.
 		
 		elseif scooltiperand = 15:
 			!!IMAGE NEEDED
-			'Glancing over you notice <<$boy>> reaching around and grabbing the boob of the girl in front of him. At first she tries to fend him off and tell him to stop, but after a few looks from the teacher at her making noise she just gives up and tries to ignore his groping hands.'
-			!!add code to use a random name of a gopnik, cool guy, or jock, with a chance of a unknown <<$boy>>.
+
+			:rnd_boy_loop
+			i = rand(0,55)
+			if i > 47:
+				$rand_boy = 'some boy'
+			elseif npcPol[i] = 1 or i = 26 or grupTipe[i] = 1 or grupTipe[i] = -1:
+				jump 'rnd_boy_loop'
+			end
+			$rand_boy = $npcName[i]
+			'Glancing over you notice <<$rand_boy>> reaching around and grabbing the boob of the girl in front of him. At first she tries to fend him off and tell him to stop, but after a few looks from the teacher at her making noise she just gives up and tries to ignore his groping hands.'
+			!!add code to use a random name of a gopnik, cool guy, or jock, with a chance of a unknown <<$rand_boy>>.
 		
 		elseif scooltiperand = 16:
 			!!IMAGE NEEDED
@@ -1039,16 +1069,25 @@ if $ARGS[0] = 'fiz_rand':
 			'Unfortunately for the Igor his underwear went with the shorts and he his standing there half naked in front of you and the other girls. You girls gasp and several point at his very small penis and you all start giggling and soon the whole class is laughing, as he desperately tries to pull up his shorts, while calling the other guy all kinds of names. You almost feel sorry for him, not only is he a terrible flirt, but the whole class has seen is very tiny penis.'
 		elseif fizperand = 9:
 			!!IMAGE NEEDED
-			'During a break during gym, you are talking with several other girls. When you feel someones hands reach down the back of your shorts and grab ahold of your panties and yank them up. <<$boy>> yanks up so hard on your panties it actually for a moment lifts your feet off the ground. You cry out in pain and turn around quickly to see <<$boy>> laughing and several watching and laughing as well.'
+
+			:rnd_boy_loop
+			i = rand(0,55)
+			if i > 47:
+				$rand_boy = 'some boy'
+			elseif npcPol[i] = 1 or i = 26 or grupTipe[i] = 1 or grupTipe[i] = -1:
+				jump 'rnd_boy_loop'
+			end
+			$rand_boy = $npcName[i]
+			'During a break during gym, you are talking with several other girls. When you feel someones hands reach down the back of your shorts and grab ahold of your panties and yank them up. <<$rand_boy>> yanks up so hard on your panties it actually for a moment lifts your feet off the ground. You cry out in pain and turn around quickly to see <<$rand_boy>> laughing and several watching and laughing as well.'
 			act 'kick him':
-				'He starts to back up but you manage to kick him hard in the shin, causing him to hop around on one leg holding his shin, which just got the other <<$boy>>s laughing harder. A couple of the other girls move over to give you moral support and give the guys dirty looks. Plus they use their bodies to shield you from the rest of the class so you can pull your panties out of your ass and twat, getting everything back in place.'
+				'He starts to back up but you manage to kick him hard in the shin, causing him to hop around on one leg holding his shin, which just got the other <<$rand_boy>>s laughing harder. A couple of the other girls move over to give you moral support and give the guys dirty looks. Plus they use their bodies to shield you from the rest of the class so you can pull your panties out of your ass and twat, getting everything back in place.'
 			end
 			act 'Beat his ass':
 				'You catch him with your first kick in the shin, causing him to hop around. Not expecting any more he doesn''t pay attention to you and doesn''t see you charging him. You run into him and knock him to the floor, your quickly on top of him, sitting on his chest, while you start punching him in the face.'
-				'He is a bit stunned by this sudden attack and at first just covers up to block some of your hits, finally he starts to fight back, just as the coach arrives. The coach grabs you by the back of the neck and with one powerful yank, pulls you off <<$boy>> and nearly offer your feet. He steps between the two of you, stopping <<$boy>> and you from going at it and he says to you. "Go to the principals office now!" You try and protest but he doesn''t want to hear it and points at the door.'
+				'He is a bit stunned by this sudden attack and at first just covers up to block some of your hits, finally he starts to fight back, just as the coach arrives. The coach grabs you by the back of the neck and with one powerful yank, pulls you off <<$rand_boy>> and nearly offer your feet. He steps between the two of you, stopping <<$rand_boy>> and you from going at it and he says to you. "Go to the principals office now!" You try and protest but he doesn''t want to hear it and points at the door.'
 				act 'Go to the principals offices': gt 'gschool_lessons', 'principal'
 			end
-		!!add code to use a random name of a gopnik, cool guy, or jock, with a chance of a unknown <<$boy>>.
+		!!add code to use a random name of a gopnik, cool guy, or jock, with a chance of a unknown <<$rand_boy>>.
 		elseif fizperand = 10:
 			!!IMAGE NEEDED
 			:rnd_girl_loop
@@ -1059,7 +1098,11 @@ if $ARGS[0] = 'fiz_rand':
 			!!random girl from class or unknown.
 		elseif fizperand = 11:
 			!!IMAGE NEEDED
-			'During class one of <<$girl1>> apparently doesn''t believe in sports bras. The top of her boob pops out of her tank top, showing her nipple off for everyone to see. <<$girl2>> quickly points it out to her. She blushes and quickly covers her nipple up, trying to ignore the laughs and staring boys.'
+			:rnd_girl_loop
+			i = rand(0,47)
+			if npcPol[i] = 0: jump 'rnd_girl_loop'
+			$rand_girl = $npcName[i]
+			'During class one of <<$rand_girl>> apparently doesn''t believe in sports bras. The top of her boob pops out of her tank top, showing her nipple off for everyone to see. <<$girl2>> quickly points it out to her. She blushes and quickly covers her nipple up, trying to ignore the laughs and staring boys.'
 			!!girls can be random of any girls in school or unknown girls.
 		elseif fizperand = 12:
 			!!IMAGE NEEDED
