@@ -30,6 +30,105 @@
        6 = 'The condom was sabotaged by someone else'
        7 = 'You sabotaged the condom'
        8 = 'Precum had sperm in it'}
+
+if $ARGS[0] = 'autoinseminate':
+	aloc = ARGS[1]
+	if aloc = 17:
+		idx = arrpos('sparrloc', aloc)
+		if idx >= 0:
+			cumarr_idx = func('cumarrput', $sparrnam[idx], 9, sparrppt[i]/2, sparrppt[i]/3, -1, sparrage[idx])
+			sparrvol[idx] /= 2
+			sparrloc[idx] = 0
+			'You pull the condom of <<$sparrnam[idx]>>''s sperm out of your pussy and look at it appreciatively. Then you lie down and begin stroking your clitoris with your free hand while looking at the contents of the used condom in fascination. As your pussy begins to flush and open with arousal, you push the opening of the condom inside your vagina and raise your hips, lifting the end of the condom so the sperm inside pours directly into your pussy. The idea of bearing <<$sparrnam>>''s, child without his consent is intoxicating, and you also can''t stop thinking about how having an orgasm helps sperm reach the uterus more quickly... before you know it, you''re screaming mindlessly in as your pussy drinks up the semen that still slowly leaks into it from the condom. Afterwards you admire the empty rubber, and the stream of sperm leaking slowly from your vagina, before throwing it away.'
+			minut += 5
+			gs 'stat'
+		end
+	elseif aloc >= 0:
+		j = 0
+		idx = 0
+		:autoinsemloop
+		if idx < arrsize('sparrloc'):
+			if aloc = sparrloc[idx]:
+				cumarr_idx = func('cumarrput', $sparrnam[idx], 9, (sparrppt[idx]*3)/4, sparrppt[idx]/2, -1, sparrage[idx])
+				j = -1
+			end
+			idx += 1
+			jump 'autoinsemloop'
+		end
+		if j:
+			'You gather as much  sperm from your <<$part>> into one hands as you can. Next you lie down and begin caressing your clitoris with your free hand, using a little bit of the sperm you collected as lubrication. As you become more aroused your vagina begins to open up slightly, until you can push the remaining sperm from your hand into yourself. The danger and perversion of what you''re doing is enough to drive you over the edge and you quickly orgasm, which will probably help the sperm you just put into your vagina make its way into your womb.'
+			orgasm += 1
+			gs 'cum_cleanup', 'cleanloc', cloc
+			minut += 5
+			gs 'stat'
+		end
+	end
+end
+
+if $ARGS[0] = 'cumgather':
+	cloc = ARGS[1]
+	i = arrpos('sparrloc', cloc)
+	if i ! -1 and i < arrsize('sparrloc'):
+		if cloc = 0:
+			$part = 'pussy'
+		elseif cloc = 1:
+			$part = 'pussylips'
+		elseif cloc = 2 or cloc = 5:
+			$part = 'your panties'
+		elseif cloc = 3:
+			$part = 'anus'
+		elseif cloc = 4:
+			$part = 'buttocks'
+		elseif cloc = 6 or cloc = 7:
+			$part = 'clothes'
+		elseif cloc = 8:
+			$part = 'back'
+		elseif cloc = 9:
+			$part = 'legs'
+		elseif cloc = 10:
+			$part = 'arms'
+		elseif cloc = 11:
+			$part = 'face'
+		elseif cloc = 14:
+			$part = 'stomach'
+		elseif cloc = 15:
+			$part = 'breasts'
+		elseif cloc = 16:
+			$part = 'hair'
+		else
+			$part = 'unknown'
+		end
+		if swallow >= 10 and func('sparryoungest') < 5:
+			d = func('pregriskeval', 0)
+			if cloc = 17:
+				if d > 0 and $location_type = 'private':
+					'You''re pretty sure a condom fell off inside your vagina recently. You could <a href="exec:gs ''cum_manage'', ''cumeater'', cloc">drink it</a>, or <a href="exec:gs ''cum_manage'', ''autoinseminate'', cloc"><i>use</i> it</a>'
+				else
+					gs 'cum_manage', 'cumeater', cloc
+				end
+			else
+				if d > 0 and $location_type = 'private' and cloc ! 0 and cloc ! 13:
+					' You could <a href="exec:gs ''cum_manage'', ''cumeater'', cloc">eat</a> the semen from your <<$part>>, or put it to another <a href="exec:gs ''cum_manage'', ''autoinseminate'', cloc">use</a>.'
+				else
+					if cloc = 13:
+					else
+					end
+					gs 'cum_manage', 'cumeater', cloc
+				end
+			end
+		elseif cloc = 17 and $location_type = 'private':
+			'You carefully fish around in your vagina and pull out a condom full of sperm, then throw it away.'
+			minut += 5
+			gs 'stat'
+		elseif salfetka > 0:
+			salfetka -= 1
+			minut += 5
+			'You use a wipe to clean the sperm from your <<$part>>.'
+			gs 'stat'
+		end
+	end
+end
+
 if $ARGS[0] = 'cumeater':
 	cloc = ARGS[1]
 	i = arrpos('sparrloc', cloc)
@@ -39,8 +138,8 @@ if $ARGS[0] = 'cumeater':
 		vaf += 1
 		$part = ''
 		if cloc = 13:
-			'You carefully lick the sperm residue from both hands, enjoying the tart taste of semen.'
 			gs 'cum_cleanup', 'cleanloc', cloc
+			'You carefully lick the sperm residue from both hands, enjoying the tart taste of semen.'
 		elseif cloc = 17:
 			'You fish around in your vagina and pull forth a condom full of <<$sparrnam[i]>>''s semen and drink it.'
 			gs 'cum_cleanup', 'cleandeposit', i
@@ -75,15 +174,26 @@ if $ARGS[0] = 'cumeater':
 				$part = 'breasts'
 			elseif cloc = 16:
 				$part = 'hair'
+			else
+				$part = 'unknown'
 			end
 			if rand(0, 1) = 0:
 				'You collect a handful of sperm from your <<$part>> in your hand and lick it all up, enjoying the tart taste of semen.'
 			else
 				'You collect the sperm from your <<$part>> with your fingers and lick them, enjoying the tart taste of semen.'
 			end
-			sparr_idx = func('sparrput', 'Yourself', 13, 100, -1, 10, 0)
+			j = 0
+			:handdeposit
+			if j < arrsize('sparrloc'):
+				if sparrloc[j] = cloc:
+					sparr_idx = func('sparrput', $sparrnam[j], 13, sparrppt[j]/10, -1, 10, 0)
+				end
+				j += 1
+				jump 'handdeposit'
+			end
 			gs 'cum_cleanup', 'cleanloc', cloc
 		end
+		minut += 5
 		gs 'stat'
 	end
 end
@@ -100,10 +210,12 @@ if $ARGS[0] = '':
 	effcontra = sexcontra
 	!{It checks to see if this is flagged as a preejaculate emmission. All vaginal penetrations that flag this as cumprecheck contain preejaculate. Guidelines for calling it: If your boy is likely to have masterbated, had sex, or otherwise encouraged semen to leak out of their urethra in the last 48 hours, they probably have some fertile preejaculate. If in doubt, let it leak. The chances of pregnancy from it are low, and the MC should have been wearing protection.}
 	vol = sexvolume
-	ppt = sexvolume * rand(15, 20)
+	ppt = sexvolume * rand(250, 300)
 	spread = 0
 	know = sexpartkno ! 0 or sexunaware ! 1
-	if cumprecheck ! 1:
+	if cumprecheck ! 0:
+		gs 'cum_manage', 'cumprecheck'
+	else
 		!{Here it checks for vaginal deposit. If it is, it sees if theres a deposit made by someone named the same. If so, it checks if this new act is protected. If it isnt, it overwrites the old deposit.}
 		if spafinloc <= 0 or spafinloc = 17:
 
@@ -231,15 +343,6 @@ if $ARGS[0] = '':
 			end
 			sparr_idx = func('sparrput', $boy, spafinloc, ppt, know, sexvolume, spread)
 		end
-	elseif (sexcontra < 3 or sexcontra > 5) and spafinloc = 0:
-		!{And this is the pre ejaculate release talked about above.}
-		if sexspecpot ! 0:
-			ppt = sexspecpot
-		else
-			ppt = 100
-		end
-		cpt = ppt / rand(3, 12)
-		cumarr_idx = func('cumarrput', $boy, 8, ppt, cpt, 0)
 	end
 
 	sexspecpot = 0
@@ -259,6 +362,41 @@ if $ARGS[0] = '':
 		tmp_idx = arrpos('sparrloc',0)
 		if sparrslc[tmp_idx] <= 0: sparrslc[tmp_idx] += 1
 	end
+end
+
+if $ARGS[0] = 'cumprecheck':
+	gs 'cum_manage', 'cumpushcheck'
+	if sexcontra ! 3 and spafinloc = 0:
+		!{For any vaginal sex without an intact condom, add a very small cum deposit.}
+		if sexspecpot ! 0:
+			ppt = sexspecpot
+		else
+			ppt = 100
+		end
+		cpt = ppt / rand(3, 12)
+		cumarr_idx = func('cumarrput', $boy, 8, ppt, cpt, 0)
+	end
+end
+
+if $ARGS[0] = 'cumpushcheck':
+	!{Cum on labia will be pushed in by any intercourse, and cum leaking from the anus has a chance to be pushed in.}
+	i = 0
+	j = 0
+	:precheckloop
+	if i < arrsize('$sparrnam'):
+		if (sparrloc[i] = 1 or (sparrloc[i] = 3 and sparrslc[i] > 0 and rand(0, 1) = 0)) and arrpos('$cumarrnam', $sparrnam[i]) = -1:
+			ppt = sparrppt[ppt]
+			if ppt > 0:
+				ppt /= 10
+			end
+			cpt = ppt
+			j += 1
+			cumarr_idx = func('cumarrput', $sparrnam[i], 9, ppt, cpt, 0, sparrage[i])
+		end
+		i += 1
+		jump 'precheckloop'
+	end
+	RESULT = j
 end
 
 --- Cum_Manage ---------------------------------
