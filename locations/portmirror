@@ -1,11 +1,16 @@
 # portmirror
 
 cla
-*clr
-'<center><img src="<<FUNC(''$face_image'')>>"></center>'
-'<<$hair>> <<$mop>> <<$skin>> <<$vnesh>>'
-if daystart < 10 and StoryLine = 0:'In the mirror, you see a strange woman''s face looking back at you that exactly copies all your actions. You can hardly accept the idea that, that is now you.'
-if daystart >= 10 and daystart < 30 and StoryLine = 0:'In the mirror you see a woman''s face, to which you have become accustomed to. But sometimes, you get the feel that it is not your face.'
+clr
+gs 'stat'
+*pl '<center><img src="<<FUNC(''$face_image'')>>"></center>'
+*nl
+if daystart < 10 and StoryLine = 0:'In the mirror, you see a strange woman''s face looking back at you that exactly copies all your actions. You can hardly accept the idea that this is now you.'
+if daystart >= 10 and daystart < 30 and StoryLine = 0:'In the mirror you see a woman''s face to which you have become accustomed to. But sometimes, you get the feel that this is not your face.'
+*pl '<<$hair>>'
+*pl '<<$mop>>. <<$lip>>'
+*pl '<<$skin>>'
+*pl '<<$vnesh>>'
 
 if curly > 0: '<br>Your curly hair will last for another <<curly>> days.'
 if hbraids > 0: '<br>Your braided hair will last for another <<hbraids>> days.'
@@ -23,12 +28,19 @@ if lipbalm > 0: $makeUpString += ' | Lip Balm: <<lipbalm>>'
 if lipbalm = 0: $makeUpString += ' | You have no lip balm left'
 
 *pl $makeUpString
+*nl
+
+set $makeupLight = 'You subtly apply some neutral tones, with a light application of makeup to bring out your natural beauty.'
+set $makeupNatural = 'You apply some mildly vibrant tones and colors of makeup to cover your minor imperfections and enhance your best features.'
+set $makeupHeavy = 'You apply some deeper, richer shades of makeup, thick enough to cover most imperfections, while drawing attention to your eyes and lips.'
+set $brushHair = 'You brush your hair.'
+set $applyLipbalm = 'You apply some moisturizing balm on your lips.'
 
 ! WD: Cheat Unused ~ 'AutoHapri'
 if hapri = 0 and AutoHapri = 1:
 	minut += 3
 	hapri = 1
-	'You brush your hair'
+	*pl $brushHair
 end
 
 ! WD: Cheat Unused ~ 'AutoMakeup'
@@ -38,22 +50,22 @@ if mop = 1 and kosmetica > 0 and AutoMakeup = 1:
 	if kosmetica < 2 and mop = 3:mop = 2
 	if kosmetica < 1 and mop ! 1:
 		mop = 1
-		'You have no make-up left'
+		'You have no make-up left.'
 	else
 		if mop = 2:
-			'Apply light make-up'
+			*pl $makeupLight
 			minut -= 3
 			kosmetica -= 1
 		end
 
 		if mop = 3:
-			'Apply natural make-up'
+			*pl $makeupNatural
 			minut -= 5
 			kosmetica -= 2
 		end
 
 		if mop = 4:
-			'Apply heavy make-up'
+			*pl $makeupHeavy
 			minut -= 10
 			vidageday -= 1
 			kosmetica -= 3
@@ -72,7 +84,7 @@ if lipbalm > 0 and lipbalmstat <= 0 and AutoLipBalm = 1:
 	end
 
 	lipbalmstat += 8
-	'You smear moisturizing balm on your lips.'
+	*pl $applyLipbalm
 end
 
 if hapri = 0:
@@ -80,6 +92,7 @@ if hapri = 0:
 		cla
 		minut += 3
 		hapri = 1
+		*pl $brushHair
 		act 'View results':gt 'portmirror'
 	end
 end
@@ -89,13 +102,16 @@ if mop = 1 and kosmetica > 0:
 		cla
 		*clr
 		'<center><img src="images/etogame/mop.jpg"></center>'
+		*nl
+		*pl 'You consider for a moment which look you want to gor for.'
+		*nl
 		act 'Light make-up':
 			cla
 			minut += 3
 			kosmetica -= 1
 			mop = 2
 			recmop = mop
-			'You subtly apply some neutral tones, with a light application of makeup to bring out your natural beauty.'
+			*pl $makeupLight
 			act 'View results':gt 'portmirror'
 		end
 
@@ -106,7 +122,7 @@ if mop = 1 and kosmetica > 0:
 				kosmetica -= 2
 				mop = 3
 				recmop = mop
-				'You apply some mildly vibrant tones and colors of makeup to cover your minor imperfections and enhance your best features.'
+				*pl $makeupNatural
 				act 'View results':gt 'portmirror'
 			end
 		end
@@ -119,7 +135,7 @@ if mop = 1 and kosmetica > 0:
 				vidageday -= 1
 				mop = 4
 				recmop = mop
-				'You apply some deeper, richer shades of makeup, thick enough to cover most imperfections, while drawing attention to your eyes and lips.'
+				*pl $makeupHeavy
 				act 'View results':gt 'portmirror'
 			end
 		end
@@ -138,7 +154,7 @@ if lipbalm > 0 and lipbalmstat <= 0:
 		end
 
 		lipbalmstat += 8
-		'You smear moisturizing balm on your lips.'
+		*pl $applyLipbalm
 		act 'View results':gt 'portmirror'
 	end
 end

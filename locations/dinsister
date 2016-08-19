@@ -107,58 +107,115 @@ $sischecks = {
 		'Your sister takes a good look at your eyebrow piercing and says, "Nice, but be careful, don''t accidentally get it caught on something!"'
 	end
 	
-	if $clothingworntype = 'nude' and pregTalkSister = 0 and pregtime > 90:
-		'You sister looks at your belly with surprise. "<<$name>>, are you pregnant? And from whom are you pregnant?'
-		if $wombthfath = 'Unknown' or $wombthfath = '':
-			'"Oh, sister, I have no idea whom the father could be!"'
+	if pregTalkSister = 0 and (($clothingworntype = 'nude' and pregtime > 90) or ($clothingworntype ! 'nude' and pregtime > 150)):
+		if $clothingworntype ! 'nude' and pregtime > 150:
+			'With surprise your sister says, "You''re pregnant <<$name>>."'
+			'"How the hell can you tell?"'
+			'With a smile, she says, "I have a bionic eye." As she reaches out and rubs your protruding belly, "So, do you know who the father is?"'
 		else
-			'"Oh, sister, I think the father is <<$wombthfath>>."'
+			'You sister looks at your belly with surprise. "<<$name>>, are you pregnant? And from whom are you pregnant?'
 		end
-		if $wombthfath = 'Roma':
-			'"You mean my Roma?"'
-			'You nod with a forced smile.'
-			'"Oh, I am so sorry, <<$nickname>>! This is probably my fault", she says and hugs you to her strongly.'
-			manna += 50
-		elseif $wombthfath = 'Stepfather':
-			'"Oh, what a slut you are!" she smiles happily. "You do know he will notice it too?"'
-		elseif $wombthfath = 'Kolka':
-			'"Seriously? Our little brother?" she asks with a little shock, then quitely asks you. "So, how is he in the bed?"'
-			'You feel yourself blushing, as you murmur, "He is really good."'
+		$tmpstr = ''
+		$tmpstr2 = ''
+		KILLVAR '$specfath'
+		KILLVAR '$regfath'
+
+		if arrpos('$wombpotfath', 'Unknown') ! -1 or (arrpos('$wombpotfath', '') ! -1 and arrpos('$wombpotfath', '') < arrsize('$wombpotfath')):
+			$tmpstr = 'I slept with a guy and didn''t even know his name, but '
 		end
+
+		idx = 0
+		sz = arrsize('$wombpotfath')
+		:fathlistloop
+		if idx < sz:
+			$fath = $wombpotfath[idx]
+			if $fath = 'Roma' or $fath = 'Kolka' or $fath = 'Stepfather' or $fath = 'Mikhail, your birthfather':
+				if $fath = 'Mikhail, your birthfather': $fath = 'our real father'
+				$specfath[arrsize('$specfath')] = $fath
+			else
+				if $fath = 'Unknown' or $fath = '':
+					$fath = 'someone I don''t know'
+				else
+					if $tmpstr2 ! '': $tmpstr2 = '<<$tmpstr2>> or '
+					$tmpstr2 = '<<$tmpstr2>><<$fath>>'
+				end
+			end
+			idx += 1
+			jump 'fathlistloop'
+		end
+
+		if arrsize('$specfath') > 0 and sister > 50:
+			$tmpa = ''
+			if $tmpstr2 ! '':
+				$tmpa = ' You decide to start by telling her the easy news. "Oh, sister, <<$tmpstr>>it''s possible the father is <<$tmpstr2>>. I think it could also be someone we know.'
+			else
+				$tmpa = ' You look at her for a moment and then say, "Oh, sister, I think the father might be someone we know."'
+			end
+			'You realize that telling her who the father might be could be difficult.<<$tmpa>>'
+			idx = 0
+			sz = arrsize('$specfath')
+			if sz > 1:
+				$tmpb = 'begin by telling her '
+			else
+				$tmpb = 'tell her '
+			end
+			$tmpc = ''
+			:hardfathloop
+			if idx < sz:
+				$fath = $specfath[idx]
+				if $fath = 'Roma':
+					'You <<$tmpb>>the father might <<$tmpc>>be Roma.'
+					'"You mean my Roma?"'
+					'You nod with a forced smile.'
+					'"Oh, I am so sorry, <<$nickname>>! This is probably my fault", she says and hugs you to her strongly.'
+					manna += 50
+				elseif $fath = 'Kolka':
+					'You <<$tmpb>>the father could <<$tmpc>>be Kolka.'
+					'"Seriously? Our little brother?" she asks with a little shock, then quietly asks you. "So, how is he in the bed?"'
+					'You feel yourself blushing, as you murmur, "He is really good."'
+				elseif $fath = 'Stepfather':
+					'You <<$tmpb>>the father could <<$tmpc>>be your stepfather.'
+					'"Oh, what a slut you are!" she smiles happily. "You do think he will notice it too?"'
+				elseif $fath = 'our real father':
+					'You <<$tmpb>> the father might conceivably <<$tmpc>>be your real father.'
+					'Sister looks at you with shock-or maybe a little jealousy? "<<$name>>, how did you even find him?"'
+					'You explain how you tracked him down through the truck drivers to the where he works now, and how your relationship quickly grew into something unexpected for both of you. "I haven''t told him," you tell her. "Maybe I should. I don''t know."'
+					'She listens intently to your story and gives you a hug when you finish. "I don''t know either, <<$name>>, but I hope you take me to meet him someday."'
+				end
+				if idx = 0 and sz > 1:
+					$tmpc = 'also '
+					$tmpb = 'continue your confession by telling her '
+				elseif sz > 2 and idx = sz - 2:
+					$tmpb = 'finish your confession by saying that '
+				end
+				idx += 1
+				jump 'hardfathloop'
+			end
+		else
+			if arrsize('$wombpotfath') = 0:
+				'"Oh, sister, I have no idea who the father could be! I''m not even sure how I got pregnant!"'
+			elseif arrsize('$wombpotfath') = 1:
+				if $wombpotfath[0] = '' or $wombpotfath[0] = 'Unknown':
+					'"Oh, sister, I have no idea whom the father could be!"'
+				else
+					'"Oh, sister, <<$tmpstr>>I think the father is <<$wombpotfath[0]>>."'
+				end
+			else
+				'"Oh, sister, <<$tmpstr>>I think the father is <<$tmpstr2>>"'
+			end
+		end
+
 		pregTalkSister = 1
 	end
 	
-	if $clothingworntype ! 'nude' and pregTalkSister = 0 and pregtime > 150:
-		'With surprise your sister says, "You''re pregnant <<$name>>."'
-		'"How the hell can you tell?"'
-		'With a smile, she says, "I have a bionic eye." As she reaches out and rubs your protruding belly, "So, do you know who the father is?"'
-		if $wombthfath = 'Unknown' or $wombthfath = '':
-			'"Oh, sister, I have no idea whom the father could be!"'
-		else
-			'"Oh, sister, I think the father is <<$wombthfath>>."'
-		end
-		if $wombthfath = 'Roma':
-			'"You mean my Roma?"'
-			'You nod with a forced smile.'
-			'"Oh, I am so sorry, <<$nickname>>! This is probably my fault", she says and hugs you to her strongly.'
-			manna += 50
-		elseif $wombthfath = 'Stepfather':
-			'"Oh, what a slut you are!" she smiles happily. "You do know he will notice it too?"'
-		elseif $wombthfath = 'Kolka':
-			'"Seriously? Our little brother?" she asks with a little shock, then quitely asks you. "So, how is he in the bed?"'
-			'You feel yourself blushing, as you murmur, "He is really good."'
-		end
-		pregTalkSister = 1
-	end
-
 	if spdirtyb > 1 or spdirtyv > 0 or spdirtyc > 0 and gorslut < 3:
 		sisterknowslut = 1
 		'Sister looks at you, "<<$name>>, what is that?". Suddenly, her eyes narrow, "<<$nickname>>, yes it''s sperm! My little sister, well, well! It''s a good thing I noticed, what if it had been Mom?!"'
 	elseif spdirtyb > 1 or spdirtyv > 0 or spdirtyc > 0 and gorslut >= 3 and sisterknowslut = 0:
-	    sisterknowslut = 1
-	    'Sister looks at you, "<<$name>>, so the rumours are true, you are <<$gnikname>>"'
+		sisterknowslut = 1
+		'Sister looks at you, "<<$name>>, so the rumours are true, you are <<$gnikname>>"'
 	elseif spdirtyb > 1 or spdirtyv > 0 or spdirtyc > 0 and gorslut >= 3 and sisterknowslut > 0:
-	    'Sister looks at you, "<<$name>>, up to your usual tricks? You could at least wash yourself."'
+		'Sister looks at you, "<<$name>>, up to your usual tricks? You could at least wash yourself."'
 	end
 }
 
@@ -227,7 +284,7 @@ $d_sister[3]={
 	end
 	if sisterTalk = 2 and trfatherQW = 0:
 		trfatherQW = 1
-		'You ask about your real father, Anya grins, "<<$name>>, I was 4 the year when they broke up. I don''t even remember what he looks like. Mom does not like to talk about him, but as you know, our real father went to live in another town. I also remember, he worked as a long-distance truck driver, maybe sometimes he passes through Pavlovsky."'
+		'You ask about your real father, Anya grins, "<<$name>>, I was 4 years old when they broke up. I don''t even remember what he looks like. Mom does not like to talk about him, but as you know, our real father went to live in another town. I also remember, he worked as a long-distance truck driver, maybe sometimes he passes through Pavlovsky."'
 	elseif sisterTalk = 2 and trfatherQW >= 1:
 		sisterTalk += 1
 	end

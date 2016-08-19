@@ -1,0 +1,47 @@
+# cumarrput
+
+argc = arrsize('ARGS')
+if argc < 5:
+	'ERROR: cumarrput called incorrectly. report this to the maintainers'
+end
+
+cacon = ARGS[1]
+
+i = arrsize('$cumarrnam')
+
+!{Check for existing non-protected deposit by same guy}
+i2 = 0
+:cumarrputloop
+if i2 < i:
+	if $cumarrnam[i2] = $ARGS[0] and cumarrdel[i2] = 0:
+		!{The following little horror lets us not override a "higher priority" contraceptive method with a lower-priority one. So if PC has unprotected sex with a guy once and then uses a condom next time and the condom breaks, the list will still show the cum deposit as being from unprotected sex.}
+		!{In brief, we create an array of contraceptive methods in order of decreasting priority, and set effcontra to the first value matched by either sexcontra or the relevant cumarrcon entry.}
+		cacon = func('sexcontraprio', ARGS[1], cumarrcon[i2])
+		i = i2
+	else
+		i2 += 1
+		jump 'cumarrputloop'
+	end
+end
+
+$cumarrnam[i] = $ARGS[0]
+cumarrcon[i] = cacon
+if cumarrppt[i] < ARGS[2]:
+	cumarrppt[i] = ARGS[2]
+end
+if ARGS[3] < cumarrppt[i] or cumarrcpt[i] = 0:
+	cumarrcpt[i] += ARGS[3]
+end
+if AGRS[4]:
+	cumarrkno[i] = ARGS[4]
+end
+if argc > 5:
+	if cumarrage[i] < ARGS[5]: cumarrage[i] = ARGS[5]
+else
+	cumarrage[i] = 0
+end
+
+RESULT = i
+
+--- cumarrput ---------------------------------
+
