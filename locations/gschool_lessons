@@ -41,23 +41,33 @@ if $ARGS[0] = 'class':
 
 	gs 'stat'
 	'<center><img src="images/qwest/alter/urok<<urand>>.jpg"></center>'
+	
 	if late = 1 and hour = 10: 'Under the disapproving gaze of the teacher you feel guilty for being late' & late=0
 	'You sit in the classroom and listen to the monotonous droning of your teacher, doing your best to not fall asleep.'
+	
 	if GorSlut > 0:'During the class you hear classmates whisper nasty things about you, and sometimes they make lewd gestures when the teacher is not looking.'
+	
 	if soniaPS = 1:soniaPS = 2 & 'Everyone is talking about Sonia today. Apparently, she got very drunk last night at the disco and gave five guys a blowjob, at the same time! Her reputation is ruined now, everyone thinks she''s a whore. No one wants to be seen with her any more. Sonia herself looks distraught.'
 
 	if Enable_skipnoevclass > 0 and ($teacher = 'Ilya Yenotin' or RAND(1,100) > Enable_skipnoevclass):
 		gt 'gschool_lunch', 'lunch' & !skip class ev if 1.not Anatoly E. or 2. rand < set chance by illume
+	
 	else
+		
 		act'Listen attentively to <<$teacher[1]>>':
 			cla
 			Suspeh += 1
+			
 			if $teacher = 'Anatoly E.': grupNPC[26] += 1
+			
 			if RAND(1,2) = 1:
 				$school_class_txtrand = 'You listen attentively to <<$teacher[1]>> for the duration of the class. Today''s lesson was interesting and informative, and you feel you learned from taking part in class.'
+			
 			else
 				$school_class_txtrand = 'You listen attentively to <<$teacher[1]>> for the duration of the class. You particularly enjoy the debate section.'
+			
 			end	
+			
 			act'Ask a question about the lesson':
 				cla
 				if $teacher = 'Anatoly E.': grupNPC[26] += 1
@@ -66,13 +76,18 @@ if $ARGS[0] = 'class':
 					''
 					'You ask a question about the lesson, hoping to learn even more on the subject. Unfortunately, the constant chatter of your classmates drowns out the teacher''s answer, and you don''t catch much of it. Maybe if you didn''t sit so far in the back of the class, it would have been easier to hear.'
 					gt 'gschool_events', 'disrupt'
+				
 				else
 					Suspeh += 1
 					''
 					'<<$teacher>> nods approvingly, always happy to see his students engaged in his class. He happily spends some extra time explaining the topic again, and answers any extra questions you might have. You feel smarter, thoroughly understanding today''s lessons now.'
+				
 				end
+				
 				act'Wait for the end of the lesson':gt 'gschool_lunch', 'lunch'
+			
 			end
+			
 			if $teacher = 'Anatoly E.' and vnesh > 60 and grupNPC[26] >= 40:
 				if grupNPC[26] >= 40 and grupNPC[26] < 60:
 					ivrand = 1
@@ -97,19 +112,28 @@ if $ARGS[0] = 'class':
 				elseif ivrand = 3:
 					$school_class_txtrand = '<<$teacher>> notices you appear to be stuck on one of the assignments and kneels down next to you. He patiently explains to you what you are doing wrong, and slowly but surely you begin to understand.'
 					gt 'gschool_events', 'help'
+				
 				elseif ivrand = 4:
 					grupNPC[26] += 1
+					
 					if RAND(1,2) = 1:
 						$school_class_txtrand = 'You sit at your desk, writing a summary on today''s lesson to help you study later. Suddenly, <<$teacher>> comes up from behind you and puts his hand on your shoulder. He takes his time and patiently corrects your mistakes, leaning in a bit closer than is appropriate from a teacher. You don''t mind though, <<$teacher>> is always nice to you.'
+					
 					else
 						$school_class_txtrand = 'As you are solving some math dilemmas in your text book, you notice <<$teacher>> walking past your desk. When you hear a suspicious *click* you quickly look to your side, and see that he has his phone in his hand, and was quietly trying to make a photo of your legs from the side! He notices you looking at his hand, very embarrassed by the fact that you caught him. As he tries to walk away, you call him towards you and whisper in his ear, "Let me know next time, so I can get into a more elegant pose first." before sending him off with a lewd wink.'
+					
 					end
+				
 				end
+			
 			end
 			''
 			'<<$school_class_txtrand>>'
+			
 			act 'Wait for the end of the lesson':gt 'gschool_lunch', 'lunch'
+		
 		end
+		
 		act'Daydream':
 			cla
 			Suspeh -= 1
@@ -118,60 +142,93 @@ if $ARGS[0] = 'class':
 				'Today''s lessons don''t particularly interest you, and you find yourself drifting off constantly. After a while you notice <<$teacher>> has stopped teaching and is looking at you intently, asking you to pay attention. Apparently this is already the third time he asked; you missed the first two completely while you was lost in your own thoughts. The whole class is looking at you now.'
 				if $teacher = 'Anatoly E.' and vnesh > 60 and grupNPC[26] >= 40 and sub < 30:
 					cla
+					
 					act'Don''t pay attention':
 						cla
+						
 						if dom > 70:
 							''
 							'<<$teacher>> tries to convince you on the importance of todays lesson, "<<$name>>, please pay attention, this is very important. Today''s topic is going to be on the exam for sure."'
 							'"Of course, sir. Please continue your super fascinating lesson. Just keep it a bit up-beat please, if you talk any slower, I might fall asleep!" you answer boldly.'
 							'The whole class bursts into loud laughter, and <<$teacher>> has a rough time getting everyone to quiet down.'
 							'"<<$surname>>, get out of class! I should call your parents, and let the principal know you''re being impossible! Out, now!"'
+							
 							act 'Don''t leave the classroom':
 								''
 								'"What good would that do? Are you trying to get me to start smoking to pass the time? I''m not interrupting your classes, just leave me alone. I''m having some... girl problems. Would you like me to talk about those?" you answer brashly, not having any intentions of getting up.'
 								'Your teacher doesn''t know what to say, and after a while just decides to continue his classes. You obviously don''t learn anything today.'
+								
 								act'Wait for the end of the lesson':gt 'gschool_lunch', 'lunch'
+							
 							end
+							
 							act 'Leave the classroom':school_event_hour = daystart & gt 'gschool_lunch', 'lunch'
+						
 						else
 							''
 							'The eyes of <<$teacher>> grow narrower, and even though you roll your eyes at him, you sit through the rest of the lesson in silence, at least pretending to pay attention sometimes. You don''t learn anything today.'
+							
 							act'Wait for the end of the lesson':gt 'gschool_lunch', 'lunch'
+						
 						end
+					
 					end
+					
 					act'Try to focus on the lesson':
 						cla
+						
 						act'Wait for the end of the lesson':gt 'gschool_lunch', 'lunch'
+					
 					end
+				
 				end
+				
 				act'Try to focus on the lesson':
 					cla
+					
 					act'Wait for the end of the lesson':gt 'gschool_lunch', 'lunch'
+				
 				end
+			
 			else
+				
 				act'Wait for the end of the lesson':gt 'gschool_lunch', 'lunch'
+			
 			end
+		
 		end
+		
 		act'Play with your phone':
 			cla
 			Suspeh -= 1
+			
 			if RAND(1,3) = 1:
 				$school_class_txtrand = 'This lesson is so boring, you have to do something to keep yourself entertained. You take out your phone and begin to play a mobile game, hoping the lesson will be over soon.'
+			
 			elseif RAND(1,2) = 1:
 				$school_class_txtrand = '<<$teacher>> notices you''re not listening at all, and asks you to put your phone away. You decide not to make things worse, and put your phone back in your pocket. The lesson feels like it takes forever to end, and you''re glad when it''s finally over.'
+			
 			else
 				$school_class_txtrand = 'This lesson is so boring, you have to do something to keep yourself entertained. You take out your phone and begin to play a mobile game, hoping the lesson will be over soon.'
+			
 			end
+			
 			if $teacher = 'Anatoly E.' and vnesh > 60 and grupNPC[26] >= 40:
 				cla
+				
 				gt 'gschool_events', 'phone'
+			
 			else
 				''
 				'<<$school_class_txtrand>>'
 			end
-			act'Wait for the end of the lesson': gt 'gschool_lunch', 'lunch'
+			
+			act 'Wait for the end of the lesson': gt 'gschool_lunch', 'lunch'
+		
 		end
+	
 	end
+
 end
 
 if $ARGS[0] = 'afternoon':
