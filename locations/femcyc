@@ -73,70 +73,125 @@ if $ARGS[0] = '':
 		killvar 'succycletmp'
 	end
 
-	cumsumvag = 0
-	cumsumass = 0
-	cumsumbod = 0
+	cumarrtemp = 0
 	if arrsize('sparrvol') > 0:
-		sparr_idx = 0
 		:cumspaloop
-		if sparr_idx < arrsize('$sparrnam'):
-			!!Succubus absorption for internal locations other than womb
-			if succubusflag = 1:
-				if sparrloc[sparr_idx] = 3 or sparrloc[sparr_idx] = 12:
-					sexnutrition += 25*succublvl
-					succubxp += 3
-					sucabscum = 1
-					if sparrvol[sparr_idx] > 0: sparrvol[sparr_idx] = 0
-				end
+		!!Succubus absorption for internal locations other than womb
+		if succubusflag = 1:
+			if sparrloc[cumarrtemp] = 3 or sparrloc[cumarrtemp] = 12:
+				sexnutrition += 25*succublvl
+				succubxp += 3
+				sucabscum = 1
+				if sparrvol[cumarrtemp] > 0: sparrvol[cumarrtemp] = 0
 			end
-			!!{if sparrloc[sparr_idx] = 0 or sparrloc[sparr_idx] = 3 or sparrloc[sparr_idx] = 12:
-				sexnutrition += 30*succublvl
-				sparrvol[sparr_idx] -= 30*succublvl
-				if sparrvol[sparr_idx] < 0 : sexnutrition += sparrvol[sparr_idx] & sparrvol[sparr_idx] = 0
-			end}
-			if sparrvol[sparr_idx] > 0 and (sparrage[sparr_idx] < 5 or sparrloc[sparr_idx] = 17 or sparrloc[sparr_idx] = 2 or sparrloc[sparr_idx] = 5 or sparrloc[sparr_idx] = 6 or sparrloc[sparr_idx] = 7):
-				!{Cum dries up and flakes off or flows out pretty fast, but stains on clothes have to be washed off and condoms must be removed}
-				cumarr_idx = arrsize('$cumarrnam')
-				if sparrloc[sparr_idx] = 17:
-					!{Cum flows out of the condom into the vagina slowly until PC removes it.}
-					cumarr_idx = func('cumarrput', $sparrnam[sparr_idx], 5, sparrppt[sparr_idx] / 2, (sparrppt[sparr_idx] / (sparrage[sparr_idx] + 1)), sparridt[sparr_idx], sparrage[sparr_idx])
-				elseif sparrloc[sparr_idx] = 0:
-					!{Cervix quickly drinks up deposits left unremoved}
-					cumarr_idx = func('cumarrput', $sparrnam[sparr_idx], 2, sparrppt[sparr_idx], (sparrppt[sparr_idx] / (sparrage[sparr_idx] + 1)) * 2, sparridt[sparr_idx], sparrage[sparr_idx])
-					if cumsumvag > 60: sparrslc = 1
-				elseif sparrslc[sparr_idx] > 0 and sparrloc[sparr_idx] = 1:
-					cumarr_idx = func('cumarrput', $sparrnam[sparr_idx], 2, sparrppt[sparr_idx] / 20, sparrppt[sparr_idx]/ ((1000 * sparrage[sparr_idx]) / sparrvol[sparr_idx]), 0, sparrage[sparr_idx])
-				elseif sparrloc[sparr_idx] = 3 and cumsumass > 60:
-					sparrslc = 1
-				end
-				if sparrloc[sparr_idx] = 0 or sparrloc[sparr_idx] = 3:sparrvol[sparr_idx] -= sparrage[sparr_idx]/2
-				if sparrloc[sparr_idx] = 12 and sparrage[sparr_idx] > 0: sparrvol[sparr_idx] = 0
-				if sparrloc[sparr_idx] = 17 and sparrage[sparr_idx] > 48:
-					cumcondslip = 1
-					health -= 3
-					'You feel nauseous.'
-					if rand(0,5) < 5: health -= 2
-				else
-					cumcondslip = 0
-				end
-				if sparrloc[sparr_idx] ! 0 and sparrloc[sparr_idx] ! 3 and sparrloc[sparr_idx] ! 12 and isprok = 0 and sparrage < 5: sparrslc[sparr_idx] += 1
-				sparrage[sparr_idx] += 1
-				sparr_idx += 1
-				cumsumbod += sparrvol[sparr_idx]
-				if sparrloc[sparr_idx] = 0: cumsumvag += sparrvol[sparr_idx]
-				if sparrloc[sparr_idx] = 3: cumsumass += sparrvol[sparr_idx]
-			else
-				KILLVAR 'spafinloc',sparr_idx
-				KILLVAR 'sparrage',sparr_idx
-				KILLVAR 'sparrloc',sparr_idx
-				KILLVAR '$sparrnam',sparr_idx
-				KILLVAR 'sparrppt',sparr_idx
-				KILLVAR 'sparridt',sparr_idx
-				KILLVAR 'sparrvol',sparr_idx
-				KILLVAR 'sparrslc',sparr_idx	
-			end
-			jump 'cumspaloop'
 		end
+		!!{if sparrloc[cumarrtemp] = 0 or sparrloc[cumarrtemp] = 3 or sparrloc[cumarrtemp] = 12:
+			sexnutrition += 30*succublvl
+			sparrvol[cumarrtemp] -= 30*succublvl
+			if sparrvol[cumarrtemp] < 0: sexnutrition += sparrvol[cumarrtemp] & sparrvol[cumarrtemp] = 0
+		end}
+		if sparrvol[cumarrtemp] > 0:
+			sparrtmpv = arrsize('$cumarrnam')
+			if sparrloc[cumarrtemp] = 17:
+				sparrtmpv = arrpos('$cumarrnam',$sparrnam[cumarrtemp])
+				if sparrage[cumarrtemp] < 4:
+					cumarrcpt[sparrtmpv] += sparrppt[cumarrtemp]/5
+				elseif sparrage[cumarrtemp] < 10:
+					cumarrcpt[sparrtmpv] += sparrppt[cumarrtemp]/30
+				end
+			elseif sparrloc[cumarrtemp] = 0:
+				sparrtmpv = arrpos('$cumarrnam',$sparrnam[cumarrtemp])
+				if sparrage[cumarrtemp] < 4:
+					cumarrcpt[sparrtmpv] += sparrppt[cumarrtemp]/40
+				elseif sparrage[cumarrtemp] < 10:
+					cumarrcpt[sparrtmpv] += sparrppt[cumarrtemp]/60
+				end
+			elseif sparrslc[cumarrtemp] = 1 and sparrage < 5:
+				if sparrloc[cumarrtemp] = 1:
+					cumarrcpt[sparrtmpv] = sparrppt[cumarrtemp]/1000*sparrage[cumarrtemp]/sparrvol[cumarrtemp]
+					cumarrppt[sparrtmpv] = sparrppt[cumarrtemp]
+					$cumarrnam[sparrtmpv] = $sparrnam[cumarrtemp]
+					cumarrage[sparrtmpv] = sparrage[cumarrtemp]
+					cumarrdel[sparrtmpv] = 1
+					cumarrkno[sparrtmpv] = 0
+					cumarrcon[sparrtmpv] = 0
+				end
+			elseif sparrslc[cumarrtemp] = 3 and sparrage < 5:
+				if sparrloc[cumarrtemp] = 2:
+					cumarrcpt[sparrtmpv] = sparrppt[cumarrtemp]/1000*sparrage[cumarrtemp]/sparrvol[cumarrtemp]
+					cumarrppt[sparrtmpv] = sparrppt[cumarrtemp]
+					$cumarrnam[sparrtmpv] = $sparrnam[cumarrtemp]
+					cumarrage[sparrtmpv] = sparrage[cumarrtemp]
+					cumarrdel[sparrtmpv] = 3
+					cumarrkno[sparrtmpv] = 0
+					cumarrcon[sparrtmpv] = 0
+				elseif sparrloc[cumarrtemp] = 4:
+					cumarrcpt[sparrtmpv] = sparrppt[cumarrtemp]/1000*sparrage[cumarrtemp]/sparrvol[cumarrtemp]
+					cumarrppt[sparrtmpv] = sparrppt[cumarrtemp]
+					$cumarrnam[sparrtmpv] = $sparrnam[cumarrtemp]
+					cumarrage[sparrtmpv] = sparrage[cumarrtemp]
+					cumarrdel[sparrtmpv] = 2
+					cumarrkno[sparrtmpv] = 0
+					cumarrcon[sparrtmpv] = 0
+				end
+			elseif sparrslc[cumarrtemp] = 5 and sparrage < 5:
+				if sparrloc[cumarrtemp] = 3:
+					cumarrcpt[sparrtmpv] = sparrppt[cumarrtemp]/1000*sparrage[cumarrtemp]/sparrvol[cumarrtemp]
+					cumarrppt[sparrtmpv] = sparrppt[cumarrtemp]
+					$cumarrnam[sparrtmpv] = $sparrnam[cumarrtemp]
+					cumarrage[sparrtmpv] = sparrage[cumarrtemp]
+					cumarrdel[sparrtmpv] = 2
+					cumarrkno[sparrtmpv] = 0
+					cumarrcon[sparrtmpv] = 0
+				elseif sparrloc[cumarrtemp] = 5:
+					cumarrcpt[sparrtmpv] = sparrppt[cumarrtemp]/1000*sparrage[cumarrtemp]/sparrvol[cumarrtemp]
+					cumarrppt[sparrtmpv] = sparrppt[cumarrtemp]
+					$cumarrnam[sparrtmpv] = $sparrnam[cumarrtemp]
+					cumarrage[sparrtmpv] = sparrage[cumarrtemp]
+					cumarrdel[sparrtmpv] = 3
+					cumarrkno[sparrtmpv] = 0
+					cumarrcon[sparrtmpv] = 0
+				elseif sparrloc[cumarrtemp] = 6:
+					cumarrcpt[sparrtmpv] = sparrppt[cumarrtemp]/1000*sparrage[cumarrtemp]/sparrvol[cumarrtemp]
+					cumarrppt[sparrtmpv] = sparrppt[cumarrtemp]
+					$cumarrnam[sparrtmpv] = $sparrnam[cumarrtemp]
+					cumarrage[sparrtmpv] = sparrage[cumarrtemp]
+					cumarrdel[sparrtmpv] = 3
+					cumarrkno[sparrtmpv] = 0
+					cumarrcon[sparrtmpv] = 0
+				end
+			end
+			if sparrloc[cumarrtemp] = 0 or sparrloc[cumarrtemp] = 3 or sparrloc[cumarrtemp] = 12:sparrvol[cumarrtemp] -= sparrage[cumarrtemp]/2
+			if sparrloc[cumarrtemp] = 0 and cumsumvag > 60: sparrslc = 1
+			if sparrloc[cumarrtemp] = 3 and cumsumass > 60: sparrslc = 1
+			if sparrloc[cumarrtemp] = 17 and sparrage[cumarrtemp] > 48:
+				cumcondslip = 1
+				health -= 3
+				'You feel nauseous.'
+				if rand(0,5) < 5: health -= 2
+			else
+				cumcondslip = 0
+			end
+			if sparrloc[cumarrtemp] ! 0 and sparrloc[cumarrtemp] ! 3 and sparrloc[cumarrtemp] ! 12 and isprok = 0 and sparrage < 5: sparrslc[cumarrtemp] += 1
+			sparrage[cumarrtemp] += 1
+			cumarrtemp += 1
+			ctemp += sparrvol[cumarrtemp]
+			if sparrloc[cumarrtemp] = 0: ctemp[1] += sparrvol[cumarrtemp]
+			if sparrloc[cumarrtemp] = 3: ctemp[2] += sparrvol[cumarrtemp]
+		else
+			KILLVAR 'spafinloc',cumarrtemp
+			KILLVAR 'sparrage',cumarrtemp
+			KILLVAR 'sparrloc',cumarrtemp
+			KILLVAR '$sparrnam',cumarrtemp
+			KILLVAR 'sparrppt',cumarrtemp
+			KILLVAR 'sparridt',cumarrtemp
+			KILLVAR 'sparrvol',cumarrtemp
+			KILLVAR 'sparrslc',cumarrtemp	
+		end
+		if cumarrtemp < arrsize('sparrvol'): jump 'cumspaloop'
+		cumsumbod = ctemp
+		cumsumvag = ctemp[1]
+		cumsumass = ctemp[2]
 	end
 
 	if lactate > 0:

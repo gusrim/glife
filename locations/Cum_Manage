@@ -1,403 +1,612 @@
 # Cum_Manage
 
-!{     Locations to be defined by 'spafinloc'
-       0 = 'In your Vagina'
-       1 = 'On your labia'
-       2 = 'On your panties over your vagina'
-       3 = 'In your anus'
-       4 = 'On your butt'
-       5 = 'On your panties over your butt'
-       6 = 'On your clothes in your groin area'
-       7 = 'On your clothes'
-       8 = 'On your back'
-       9 = 'On your legs'
-       10 = 'On your arms'
-       11 = 'On your face'
-       12 = 'Inside your mouth'
-       13 = 'On your hands'
-       14 = 'On your stomach'
-       15 = 'On your breasts'
-       16 = 'In your hair'
-       17 = 'In a condom in your vagina'}
-
-!{ values of 'sexcontra'
-       0 = 'No contraception used'
-       1 = 'You lied about being on the pill'
-       2 = 'You were on the pill'
-       3 = 'You used a condom'
-       4 = 'The condom broke'
-       5 = 'The condom slipped off inside you'
-       6 = 'The condom was sabotaged by someone else'
-       7 = 'You sabotaged the condom'
-       8 = 'Precum had sperm in it'}
-
-if $ARGS[0] = 'autoinseminate':
-	aloc = ARGS[1]
-	if aloc = 17:
-		idx = arrpos('sparrloc', aloc)
-		if idx >= 0:
-			cumarr_idx = func('cumarrput', $sparrnam[idx], 9, sparrppt[i]/2, sparrppt[i]/3, -1, sparrage[idx])
-			sparrvol[idx] /= 2
-			sparrloc[idx] = 0
-			'You pull the condom of <<$sparrnam[idx]>>''s sperm out of your pussy and look at it appreciatively. Then you lie down and begin stroking your clitoris with your free hand while looking at the contents of the used condom in fascination. As your pussy begins to flush and open with arousal, you push the opening of the condom inside your vagina and raise your hips, lifting the end of the condom so the sperm inside pours directly into your pussy. The idea of bearing <<$sparrnam>>''s, child without his consent is intoxicating, and you also can''t stop thinking about how having an orgasm helps sperm reach the uterus more quickly... before you know it, you''re screaming mindlessly in as your pussy drinks up the semen that still slowly leaks into it from the condom. Afterwards you admire the empty rubber, and the stream of sperm leaking slowly from your vagina, before throwing it away.'
-			minut += 5
-			gs 'stat'
-		end
-	elseif aloc >= 0:
-		j = 0
-		idx = 0
-		:autoinsemloop
-		if idx < arrsize('sparrloc'):
-			if aloc = sparrloc[idx]:
-				cumarr_idx = func('cumarrput', $sparrnam[idx], 9, (sparrppt[idx]*3)/4, sparrppt[idx]/2, -1, sparrage[idx])
-				j = -1
-			end
-			idx += 1
-			jump 'autoinsemloop'
-		end
-		if j:
-			'You gather as much  sperm from your <<$part>> into one hands as you can. Next you lie down and begin caressing your clitoris with your free hand, using a little bit of the sperm you collected as lubrication. As you become more aroused your vagina begins to open up slightly, until you can push the remaining sperm from your hand into yourself. The danger and perversion of what you''re doing is enough to drive you over the edge and you quickly orgasm, which will probably help the sperm you just put into your vagina make its way into your womb.'
-			orgasm += 1
-			gs 'cum_cleanup', 'cleanloc', cloc
-			minut += 5
-			gs 'stat'
-		end
-	end
-end
-
-if $ARGS[0] = 'cumgather':
-	cloc = ARGS[1]
-	i = arrpos('sparrloc', cloc)
-	if i ! -1 and i < arrsize('sparrloc'):
-		if cloc = 0:
-			$part = 'pussy'
-		elseif cloc = 1:
-			$part = 'pussylips'
-		elseif cloc = 2 or cloc = 5:
-			$part = 'your panties'
-		elseif cloc = 3:
-			$part = 'anus'
-		elseif cloc = 4:
-			$part = 'buttocks'
-		elseif cloc = 6 or cloc = 7:
-			$part = 'clothes'
-		elseif cloc = 8:
-			$part = 'back'
-		elseif cloc = 9:
-			$part = 'legs'
-		elseif cloc = 10:
-			$part = 'arms'
-		elseif cloc = 11:
-			$part = 'face'
-		elseif cloc = 14:
-			$part = 'stomach'
-		elseif cloc = 15:
-			$part = 'breasts'
-		elseif cloc = 16:
-			$part = 'hair'
-		else
-			$part = 'unknown'
-		end
-		if swallow >= 10 and func('sparryoungest') < 5:
-			d = func('pregriskeval', 0)
-			if cloc = 17:
-				if d > 0 and $location_type = 'private':
-					'You''re pretty sure a condom fell off inside your vagina recently. You could <a href="exec:gs ''cum_manage'', ''cumeater'', cloc">drink it</a>, or <a href="exec:gs ''cum_manage'', ''autoinseminate'', cloc"><i>use</i> it</a>'
-				else
-					gs 'cum_manage', 'cumeater', cloc
-				end
-			else
-				if d > 0 and $location_type = 'private' and cloc ! 0 and cloc ! 13:
-					' You could <a href="exec:gs ''cum_manage'', ''cumeater'', cloc">eat</a> the semen from your <<$part>>, or put it to another <a href="exec:gs ''cum_manage'', ''autoinseminate'', cloc">use</a>.'
-				else
-					if cloc = 13:
-					else
-					end
-					gs 'cum_manage', 'cumeater', cloc
-				end
-			end
-		elseif cloc = 17 and $location_type = 'private':
-			'You carefully fish around in your vagina and pull out a condom full of sperm, then throw it away.'
-			minut += 5
-			gs 'stat'
-		elseif salfetka > 0:
-			salfetka -= 1
-			minut += 5
-			'You use a wipe to clean the sperm from your <<$part>>.'
-			gs 'stat'
-		end
-	end
-end
-
-if $ARGS[0] = 'cumeater':
-	cloc = ARGS[1]
-	i = arrpos('sparrloc', cloc)
-	if i ! -1 and i < arrsize('sparrloc'):
-		spdirtyb = 1
-		fbreath = 0
-		vaf += 1
-		$part = ''
-		if cloc = 13:
-			gs 'cum_cleanup', 'cleanloc', cloc
-			'You carefully lick the sperm residue from both hands, enjoying the tart taste of semen.'
-		elseif cloc = 17:
-			'You fish around in your vagina and pull forth a condom full of <<$sparrnam[i]>>''s semen and drink it.'
-			gs 'cum_cleanup', 'cleandeposit', i
-		else
-			if cloc = 0:
-				$part = 'pussy'
-			elseif cloc = 1:
-				$part = 'pussylips'
-			elseif cloc = 2 or cloc = 5:
-				$part = 'your panties'
-				gs 'cum_cleanup', 'cleanloc', 2
-				gs 'cum_cleanup', 'cleanloc', 5
-			elseif cloc = 3:
-				$part = 'anus'
-			elseif cloc = 4:
-				$part = 'buttocks'
-			elseif cloc = 6 or cloc = 7:
-				$part = 'clothes'
-				gs 'cum_cleanup', 'cleanloc', 6
-				gs 'cum_cleanup', 'cleanloc', 7
-			elseif cloc = 8:
-				$part = 'back'
-			elseif cloc = 9:
-				$part = 'legs'
-			elseif cloc = 10:
-				$part = 'arms'
-			elseif cloc = 11:
-				$part = 'face'
-			elseif cloc = 14:
-				$part = 'stomach'
-			elseif cloc = 15:
-				$part = 'breasts'
-			elseif cloc = 16:
-				$part = 'hair'
-			else
-				$part = 'unknown'
-			end
-			if rand(0, 1) = 0:
-				'You collect a handful of sperm from your <<$part>> in your hand and lick it all up, enjoying the tart taste of semen.'
-			else
-				'You collect the sperm from your <<$part>> with your fingers and lick them, enjoying the tart taste of semen.'
-			end
-			j = 0
-			:handdeposit
-			if j < arrsize('sparrloc'):
-				if sparrloc[j] = cloc:
-					sparr_idx = func('sparrput', $sparrnam[j], 13, sparrppt[j]/10, -1, 10, 0)
-				end
-				j += 1
-				jump 'handdeposit'
-			end
-			gs 'cum_cleanup', 'cleanloc', cloc
-		end
-		minut += 5
-		gs 'stat'
-	end
-end
+!!
+!!	THIS IS A CORE FILE TO GAME MECHANICS. Please edit CAREFULLY, and leave as many comments as possible!!
+!!
+!!	The comments in this file serve as tutorial to managing cum/sperm during scene writing and game-play. Please read them.
+!!	
+!!	spafinloc and cum array naming takes precident over other naming schemes. Always import and export variables by their cum array names
+!!
+!!------------------------------------------------------------------------------------------------------------
+!!
+!!	Cum Array indices:
+!!
+!!	cumarrnam : Sperm Owner
+!!	cumarrppt : Sperm Potential Potency (max sperm delivery)
+!!	cumarrcpt : Sperm Current Potency	(current amount of sperm)
+!!	cumarrdel : Sperm "Delivery" (method of *VAGINAL ONLY* acquisition)
+!!	cumarrcon :	Contraception typ used
+!!	cumarrage : Sperm age in hours
+!!	cumarrkno : Did you know/realize who did it?
+!!	
+!!	
+!!	
+!!	Values of 'cumarrdel' as defined by the cum_arr:
+!!	
+!!	cumarrdel = 0 : 'Vaginal intercourse'
+!!	cumarrdel = 1 : 'From spatter on labia'
+!!	cumarrdel = 2 : 'From the anal area'
+!!	cumarrdel = 3 : 'From sperm on clothing'
+!!	cumarrdel = 4 : 'From sperm on fingers'
+!!	cumarrdel = 5 : 'From sperm on wipes'
+!!	cumarrdel = 6 : 'Unknown'
+!!	
+!!	
+!!	
+!!	Values of 'cumarrcon' as defined by the cum_arr:
+!!	
+!!	cumarrcon = 0: 'No contraception used'
+!!	cumarrcon = 1: 'You lied about being on the pill'
+!!	cumarrcon = 2: 'You were on the pill'
+!!	cumarrcon = 3: 'You used a condom'
+!!	cumarrcon = 4: 'The condom broke'
+!!	cumarrcon = 5: 'The condom slipped off inside you'
+!!	cumarrcon = 6: 'The condom was sabotaged by someone else'
+!!	cumarrcon = 7: 'You sabotaged the condom'
+!!	cumarrcon = 8: 'Precum had sperm in it'
+!!	cumarrcon = 9: 'You believe are sterile'
+!!
+!!	
+!!	
+!!	Values of 'cumarrkno' as defined by the cum_arr:
+!!	
+!!	cumarrkno = -2 : 'You know somebody got sperm in you, but you don''t know that person'
+!!	cumarrkno = -1 : 'Precum'
+!!	cumarrkno =  0 : 'You were unaware there was sperm in you'
+!!	cumarrkno =  1 : 'You know who got sperm in you'
+!!	
+!!
+!!	
+!!	Locations to be defined by 'spafinloc'
+!!
+!!	0 = 'In your Vagina'
+!!	1 = 'On your labia'
+!!	2 = 'On your panties over your vagina'
+!!	3 = 'In your anus'
+!!	4 = 'On your butt'
+!!	5 = 'On your panties over your butt'
+!!	6 = 'On your clothes in your groin area'
+!!	7 = 'On your clothes'
+!!	8 = 'On your back'
+!!	9 = 'On your legs'
+!!	10 = 'On your arms'
+!!	11 = 'On your face'
+!!	12 = 'Inside your mouth'
+!!	13 = 'On your hands'
+!!	14 = 'On your stomach'
+!!	15 = 'On your breasts'
+!!	16 = 'In your hair'
+!!	17 = 'In a condom in your vagina'
+!!	
+!!	
+!!	   
+!!------------------------------------------------------------------------------------------------------------
 
 
 if $ARGS[0] = '':
-	!{Sets the cum array temp to the current size of the cum array, to add a new entry to the end of file. Then checks to see if you are on the pill. If you are and there is no contraception used, it flags this as a "done with pill" act, which means a pregnancy will be a pill failure.}
-	cumarr_idx = -1
-	sparr_idx = -1
-	if sexcontra = 0 and pillcon > 0: sexcontra = 2
-	if sexvolume <= 1: sexvolume = 40
-	if vibratorIN = 1 and spafinloc = 0 and replace_vib = 0: vibratorIN = 0
-	if analplugIN = 1 and spafinloc = 3 and replace_analplug = 0: analplugIN = 0
-	effcontra = sexcontra
-	!{It checks to see if this is flagged as a preejaculate emmission. All vaginal penetrations that flag this as cumprecheck contain preejaculate. Guidelines for calling it: If your boy is likely to have masterbated, had sex, or otherwise encouraged semen to leak out of their urethra in the last 48 hours, they probably have some fertile preejaculate. If in doubt, let it leak. The chances of pregnancy from it are low, and the MC should have been wearing protection.}
-	vol = sexvolume
-	ppt = sexvolume * rand(250, 300)
-	spread = 0
-	if cumprecheck ! 0:
-		gs 'cum_manage', 'cumprecheck'
-	else
-		know = sexpartkno	
-		if sexunaware = 1:know = -2
-		!{Here it checks for vaginal deposit. If it is, it sees if theres a deposit made by someone named the same. If so, it checks if this new act is protected. If it isnt, it overwrites the old deposit.}
-		if spafinloc <= 0 or spafinloc = 17:
 
-			!{Now it sets up the splatter and actual internal cum. First it sets the array to the spatter end of file. Then it checks for riding bareback. If theres a condom, it gives a chance for the condom to fail in general, slip off and remain in the vagina, or break.}
-			!{Generate default potency potential from a random multiplier of sexvolume. Sexvolume defaults to 40 unless specified otherwise (may need to be higher, I do not know) and ppt can also be overridden by setting sexspecpot directly.}
-			cpt = 0
-			cloc = 0
-			add = -1
+!!{	Here we define our important variables.}
+
+	if sexvolume <= 0: sexvolume = 40
+
+	if vibratorIN = 1 and spafinloc = 0 and replace_vib = 0: vibratorIN = 0
+
+	if analplugIN = 1 and spafinloc = 3 and replace_analplug = 0: analplugIN = 0
+
+!!{	Set the cum array temp to the current size of the cum array to add a new entry to the end of file. Then checks to see if you are on the pill. If you are and there is no contraception used, it flags this as a "done with pill" act, which means a pregnancy will be a pill failure.}
+
+	cumarrtemp = arrsize('$cumarrnam')
+
+	if sexcontra = 0 and pillcon > 1000: sexcontra = 2
+
+!!{	Check to see if this is flagged as a preejaculate emmission. All vaginal penetrations that flag this as cumprecheck contain preejaculate. Guidelines for calling it: If your boy is likely to have masterbated, had sex, or otherwise encouraged semen to leak out of their urethra in the last 48 hours, they probably have some fertile preejaculate. If in doubt, let it leak. The chances of pregnancy from it are low, and the MC should have been wearing protection.}
+
+	if cumprecheck ! 1:
+
+!!{	Here it checks for vaginal deposit.}
+
+		if spafinloc <= 0:
+			
+!!{	Next it sets the variables in the array. The cumming boys name is first and cum age to 0.
+!!	The cum delivery location is set to vaginally, and we check to see if this is an unknowing sex act. 
+!!	If it is, it makes it so the MC doesnt know who did it. 
+!!	If the boy has a custom specified potency 'sexspecpot', it flags the potency. Otherwise it sets it to the default.
+!!	Default potency potential is generated from a random multiplier of sexvolume. 
+!!	Sexvolume defaults to 40 (4 mL), but may be overwritten with 'sexvolume'.}
+
+			$cumarrnam[cumarrtemp] = $boy
+			cumarrage[cumarrtemp] = 0
+			cumarrdel[cumarrtemp] = 0
+
+			if sexunaware > 0:
+				cumarrkno[cumarrtemp] = 0
+
+			elsif sexpartkno = 0:
+				cumarrkno[cumarrtemp] = -2
+
+			else
+				cumarrkno[cumarrtemp] = 1
+
+			end
+
+			if sexspecpot ! 0:
+				cumarrppt[cumarrtemp] = sexspecpot
+
+			else
+				cumarrppt[cumarrtemp] = sexvolume * rand(250, 300)
+
+			end
+
+!!{	Now it sets up the splatter and actual internal cum. 
+!!	First it sets the array to the spatter end of file.	Then it checks for riding bareback. 
+!!	If theres a condom, it gives a chance for the condom to fail in general, slip off and remain in the vagina, or break.}
+
+			if sparrppt[0] = 0 and cumarrtemp2 = 1: cumarrtemp2 = 0
+			
 			if sexcontra > 2:
-				if sexcontra = 3 or sexcontra = 6 or sexcontra = 7:
-					!{For condoms, determine if it broke or not}
+				
+				if sexcontra = 3:
+					temprand = rand(0,1000)
 					dick_wid = 3
+					
 					if $dick_girth = 'skinny': dick_wid = 2
+					
 					if $dick_girth = 'slim': dick_wid = 3
+					
 					if $dick_girth = 'well proportioned': dick_wid = 3
+					
 					if $dick_girth = 'thicker than average': dick_wid = 4
+					
 					if $dick_girth = 'thick': dick_wid = 4
+					
 					if $dick_girth = 'massive': dick_wid = 5
+					
 					if $dick_girth = 'monstrous': dick_wid = 6
 
-					!{More likely to break with big dicks and tight pussies}
 					break_thresh = dick_wid * 2
 					break_thresh -= vagina / 4
 					break_thresh += dick / 4
-
-					!{More likely to slip with skinny dicks and tight pussies}
 					slip_thresh = 18 - (dick_wid * 2)
 					slip_thresh -= (vagina / 2)
 					slip_thresh -= dick / 4
 
 					if break_thresh < 4: break_thresh = 4
+					
 					if slip_thresh < 1: slip_thresh = 1
-					!{Much more likely to break if sabotaged}
-					if sexcontra = 6 or sexcontra = 7: break_thresh += 10
 					break_thresh += slip_thresh
 
-					temprand = rand(0,1000)
-					if temprand <= slip_thresh:
+					if temprand = 0:
+						cumarrcpt[cumarrtemp] = cumarrppt[cumarrtemp]/4
+						cumarrcon[cumarrtemp] = 3
+					
+					elseif temprand < slip_thresh:
+						cumarrcpt[cumarrtemp] = cumarrppt[cumarrtemp]/200
+						cumarrcon[cumarrtemp] = 5
+						cumcondslip = 1
+						cumcondsanb = cumarrtemp
 						sexcontra = 5
+						sparrage[cumarrtemp2] = 0
+						sparrloc[cumarrtemp2] = 17
+						$sparrnam[cumarrtemp2] = $boy
+						
+						if sexspecpot ! 0:
+							sparrppt[cumarrtemp2] = sexspecpot
+						
+						else
+							sparrppt[cumarrtemp2] = sexvolume * rand(250, 300)
+						
+						end
+						
+						sparrvol[cumarrtemp2] += sexvolume
+						cumsumbod += sexvolume
+						cumsumvag += sexvolume
+						
+						if sexvolume <= 0: sparrvol[cumarrtemp2] += 40 & cumsumbod += 40 & cumsumvag += 40
+						
+						sparridt[cumarrtemp2] = sexpartkno
+						sparrslc[cumarrtemp2] = 0
+					
 					elseif temprand <= break_thresh:
+						cumarrcpt[cumarrtemp] = cumarrppt[cumarrtemp]/2
+						cumarrcon[cumarrtemp] = 4
 						sexcontra = 4
-					end
-				end
-				!{Take final value of sexcontra and compute cum potency, age, etc. as appropriate.}
-				if sexcontra = 3:
-					!{The condom did its job. No spatter, no cum deposit.}
-					add = 0
+						sparrage[cumarrtemp2] = 0
+						sparrloc[cumarrtemp2] = 0
+						$sparrnam[cumarrtemp2] = $boy
+						
+						if sexspecpot ! 0:
+							sparrppt[cumarrtemp2] = sexspecpot
+						
+						else
+							sparrppt[cumarrtemp2] = sexvolume * rand(250, 300)
+						
+						end
+						
+						sparrvol[cumarrtemp2] += sexvolume
+						cumsumbod += sexvolume
+						cumsumvag += sexvolume
+						
+						if sexvolume <= 0: sparrvol[cumarrtemp2] += 40 & cumsumbod += 40 & cumsumvag += 40
+						
+						sparridt[cumarrtemp2] = sexpartkno
+						sparrslc[cumarrtemp2] = 0
+					
+					else
+						cumarrcpt[cumarrtemp] = 5
+						cumarrcon[cumarrtemp] = 3
+					
+					end	
+
+!!{	Next it checks to see if the event is calling specifically for a burst or slipped off condom. 
+!!	It treats them the same as if the condom above had a failure.}
+
 				elseif sexcontra = 4:
-					!{Broke. Nearly as bad as no protection.}
-					cpt = ppt/rand(3,5)
+					cumarrcpt[cumarrtemp] = cumarrppt[cumarrtemp]/2
+					cumarrcon[cumarrtemp] = 4
+					sparrage[cumarrtemp2] = 0
+					sparrloc[cumarrtemp2] = 0
+					$sparrnam[cumarrtemp2] = $boy
+					
+					if sexspecpot ! 0:
+						sparrppt[cumarrtemp2] = sexspecpot
+					
+					else
+						sparrppt[cumarrtemp2] = sexvolume * rand(250, 300)
+					
+					end
+					
+					sparrvol[cumarrtemp2] += sexvolume
+					cumsumbod += sexvolume
+					cumsumvag += sexvolume
+					
+					if sexvolume <= 0: sparrvol[cumarrtemp2] += 40 & cumsumbod += 40 & cumsumvag += 40
+					
+					sparridt[cumarrtemp2] = sexpartkno
+					sparrslc[cumarrtemp2] = 0
+				
 				elseif sexcontra = 5:
-					!{Fell off.}
-					cpt = ppt / rand(10,20)
+					cumarrcpt[cumarrtemp] = cumarrppt[cumarrtemp]/200
+					cumarrcon[cumarrtemp] = 5
 					cumcondslip = 1
-					vol = sexvolume / rand(1, 3)
-					cloc = 17
-				elseif sexcontra = 6 or sexcontra = 7:
-					!{Someone was naughty. Very naughty. She gets a large portion of the "potential" potency, but we do not continue to add to it over time since presumably the condom is thrown away.}
-					cpt = ppt / rand(2, 6)
-					ppt = 0
-					vol = 0
-				end
+					cumcondsanb = cumarrtemp
+					sparrage[cumarrtemp2] = 0
+					sparrloc[cumarrtemp2] = 17
+					$sparrnam[cumarrtemp2] = $boy
+					
+					if sexspecpot ! 0:
+						sparrppt[cumarrtemp2] = sexspecpot
+					
+					else
+						sparrppt[cumarrtemp2] = sexvolume * rand(250, 300)
+					
+					end
+					
+					sparrvol[cumarrtemp2] += sexvolume
+					cumsumbod += sexvolume
+					cumsumvag += sexvolume
+					
+					if sexvolume <= 0: sparrvol[cumarrtemp2] += 40 & cumsumbod += 40 & cumsumvag += 40
+					
+					sparridt[cumarrtemp2] = sexpartkno
+					sparrslc[cumarrtemp2] = 0	
+
+!!{	Next, check for sabotaged condoms. First sabotaged by you, then sabotaged by the guy.
+!!	If they were sabotaged, it acts similar to a condom failure, but worse.}
+
+				elseif sexcontra = 6:
+					cumarrcpt[cumarrtemp] = cumarrppt[cumarrtemp]/3
+					cumarrcon[cumarrtemp] = 6
+				
+				elseif sexcontra = 7:
+					cumarrcpt[cumarrtemp] = cumarrppt[cumarrtemp]/3
+					cumarrcon[cumarrtemp] = 7
+				
+				end					
+!!{	If you have no protection, you get a nice, full load of semen.}
+
 			else
-				!{If you have no protection, you get a nice full load of semen. Note that in ALL cases, cpt does not start out at 100% so washing out sperm quickly can still reduce but not negate chance of pregnancy.}
-				cpt = ppt/rand(2,5)
-				vol = sexvolume
-			end
-
-			if add:
-				!{sexspecpot overrides computed value}
+				sparrage[cumarrtemp2] = 0
+				sparrloc[cumarrtemp2] = 0
+				$sparrnam[cumarrtemp2] = $boy
+				
 				if sexspecpot ! 0:
-					ppt = sexspecpot
+					sparrppt[cumarrtemp2] = sexspecpot
+				
+				else
+					sparrppt[cumarrtemp2] = 10000
+				
 				end
-
-				!{Add values to spatter and deposit arrays}
-				cumarr_idx = func('cumarrput', $boy, sexcontra, ppt, cpt, know)
-				if sexcontra = 5:
-					cumcondsanb = cumarr_idx
-				end
-				if vol > 0:
-					!{She might be inseminated by a method that does not leave residue, like a sabotaged condom.}
-					sparr_idx = func('sparrput', $boy, cloc, ppt, know, vol, spread)
-				end
-
-				cumsumbod += vol
-				cumsumvag += vol
+				
+				sparrvol[cumarrtemp2] += sexvolume
+				cumsumbod += sexvolume
+				cumsumvag += sexvolume
+				
+				if sexvolume <= 0: sparrvol[cumarrtemp2] += 40 & cumsumbod += 40 & cumsumvag += 40
+				
+				sparridt[cumarrtemp2] = sexpartkno
+				sparrslc[cumarrtemp2] = 0
+				cumarrcpt[cumarrtemp] = cumarrppt[cumarrtemp]/5*4
+				cumarrcon[cumarrtemp] = sexcontra
+			
 			end
 
-			!{If you arent getting it in the vagina, and the boy isnt pumping it into a condom, a spatter is made and applied. If you arent wearing any panties and it was called to hit your panties, it goes directly to your groin. If you are naked and it calls for a clothing strike, it will go to your body instead.}
-		elseif spafinloc > 0 and spafinloc ! 17 and sexcontra < 3:
-
+!!{	If you arent getting it in the vagina, and the boy isnt pumping it into a condom, a spatter is made and applied. 
+!!	If you arent wearing any panties and it was called to hit your panties, it goes directly to your groin. 
+!!	If you are naked and it calls for a clothing strike, it will go to your body instead.}
+			
+		elseif spafinloc > 0 and sexcontra < 3:
+				
+			sparrage[cumarrtemp2] = 0
+			
 			if tanga = 0:
+				
 				if spafinloc = 2:
 					spafinloc = 1
+				
 				elseif spafinloc = 5: 
 					spafinloc = 4
+				
 				end
+			
 			end
+			
 			if $clothingworntype = 'nude':
+				
 				if spafinloc = 2:
 					spafinloc = 1
+				
 				elseif spafinloc = 5:
 					spafinloc = 4
+				
 				elseif spafinloc = 6:
+					
 					if rand(0,1) = 0:
 						spafinloc = 1
+					
 					else
 						spafinloc = 4
+					
 					end
+				
 				elseif spafinloc = 7:
+					
 					if rand(0,1) = 0:
 						spafinloc = 14
+					
 					else
 						spafinloc = 15
+					
 					end
+				
 				end
+			
 			end
+			
+			sparrloc[cumarrtemp2] = spafinloc
+			
 			if spafinloc = 12 and swallow >= 10 and rand(0,3) = 0: energy += 2
+			
+			$sparrnam[cumarrtemp2] = $boy
+			
+			if sexspecpot ! 0:
+				sparrppt[cumarrtemp2] = sexspecpot
+			
+			else
+				sparrppt[cumarrtemp2] = sexvolume * rand(250, 300)
+			
+			end
+			
+			sparrvol[cumarrtemp2] += sexvolume
 			cumsumbod += sexvolume
+			
+			if sexvolume <= 0: sparrvol[cumarrtemp2] += 40 & cumsumbod += 40 & cumsumvag += 40
+			
 			if spafinloc = 3:
 				cumsumass += sexvolume
+				
+				if sexvolume <= 0: cumsumass += 40
+			
 			end
-			if sexspecpot ! 0:
-				ppt = sexspecpot
-			end
-			sparr_idx = func('sparrput', $boy, spafinloc, ppt, know, sexvolume, spread)
+			
+			sparridt[cumarrtemp2] = sexpartkno
+			sparrslc[cumarrtemp2] = 0
+		
 		end
+		
+		sexpartkno = 0
+		sexunaware = 0
+		sexspecpot = 0
+
+!!{	And this is the pre ejaculate release talked about above.}
+		
+	elseif sexcontra < 3 and spafinloc = 0:
+		
+		$cumarrnam[cumarrtemp] = $boy
+		cumarrage[cumarrtemp] = 0
+		cumarrdel[cumarrtemp] = 0
+		cumarrkno[cumarrtemp] = -1
+		
+		if sexspecpot ! 0:
+			cumarrppt[cumarrtemp] = sexspecpot
+		
+		else
+			cumarrppt[cumarrtemp] = sexvolume * rand(250, 300)
+		
+		end
+		
+		cumarrcon[cumarrtemp] = sexcontra
+		cumarrcpt[cumarrtemp] = cumarrppt[cumarrtemp]/12
+	
 	end
 
 	sexspecpot = 0
 	cumprecheck = 0
 	spafinloc = 0
 	sexvolume = 0
-	tmp_idx = 0
-	sexpartkno = 0
-	sexunaware = 0
-	sexspecpot = 0
+
 	dynamic $din_Update_Condom_Counts
+	
 	if cumsumass >= 60:
-		tmp_idx = arrpos('sparrloc',3)
-		if sparrslc[tmp_idx] <= 0: sparrslc[tmp_idx] += 1
+		arrmodtmp = arrpos('sparrloc',3)
+		
+		if sparrslc[arrmodtmp] <= 0: sparrslc[arrmodtmp] += 1
+	
 	end
+	
 	if cumsumvag >= 60:
-		tmp_idx = arrpos('sparrloc',0)
-		if sparrslc[tmp_idx] <= 0: sparrslc[tmp_idx] += 1
+		arrmodtmp = arrpos('sparrloc',0)
+		
+		if sparrslc[arrmodtmp] <= 0: sparrslc[arrmodtmp] += 1
+	
 	end
+
 end
 
-if $ARGS[0] = 'cumprecheck':
-	gs 'cum_manage', 'cumpushcheck'
-	if sexcontra ! 3 and spafinloc = 0:
-		!{For any vaginal sex without an intact condom, add a very small cum deposit.}
-		if sexspecpot ! 0:
-			ppt = sexspecpot
+
+if $ARGS[0] = 'cumgather':
+	cloc = ARGS[1]
+	i = arrpos('sparrloc', cloc)
+	
+	if i ! -1 and i < arrsize('sparrloc'):
+		
+		if cloc = 0:
+			$part = 'pussy'
+		
+		elseif cloc = 1:
+			$part = 'pussylips'
+		
+		elseif cloc = 2 or cloc = 5:
+			$part = 'your panties'
+		
+		elseif cloc = 3:
+			$part = 'anus'
+		
+		elseif cloc = 4:
+			$part = 'buttocks'
+		
+		elseif cloc = 6 or cloc = 7:
+			$part = 'clothes'
+		
+		elseif cloc = 8:
+			$part = 'back'
+		
+		elseif cloc = 9:
+			$part = 'legs'
+		
+		elseif cloc = 10:
+			$part = 'arms'
+		
+		elseif cloc = 11:
+			$part = 'face'
+		
+		elseif cloc = 14:
+			$part = 'stomach'
+		
+		elseif cloc = 15:
+			$part = 'breasts'
+		
+		elseif cloc = 16:
+			$part = 'hair'
+		
 		else
-			ppt = 100
+			$part = 'unknown'
+		
 		end
-		cpt = ppt / rand(3, 12)
-		cumarr_idx = func('cumarrput', $boy, 8, ppt, cpt, -1)
+		
+		if salfetka > 0:
+			salfetka -= 1
+			minut += 5
+			'You use a wipe to clean the sperm from your <<$part>>.'
+			gs 'stat'
+		
+		end
+	
 	end
+
 end
 
-if $ARGS[0] = 'cumpushcheck':
-	!{Cum on labia will be pushed in by any intercourse, and cum leaking from the anus has a chance to be pushed in.}
-	i = 0
-	j = 0
-	:precheckloop
-	if i < arrsize('$sparrnam'):
-		if (sparrloc[i] = 1 or (sparrloc[i] = 3 and sparrslc[i] > 0 and rand(0, 1) = 0)) and arrpos('$cumarrnam', $sparrnam[i]) = -1:
-			ppt = sparrppt[ppt]
-			if ppt > 0:
-				ppt /= 10
+
+if $ARGS[0] = 'cumeater':
+	cloc = ARGS[1]
+	i = arrpos('sparrloc', cloc)
+	
+	if i ! -1 and i < arrsize('sparrloc'):
+		spdirtyb = 1
+		fbreath = 0
+		vaf += 1
+		$part = ''
+		
+		if cloc = 13:
+			gs 'cum_cleanup', 'cleanloc', cloc
+			'You carefully lick the sperm residue from both hands, enjoying the tart taste of semen.'
+		
+		else
+			
+			if cloc = 0:
+				$part = 'pussy'
+			
+			elseif cloc = 1:
+				$part = 'pussylips'
+			
+			elseif cloc = 2 or cloc = 5:
+				$part = 'your panties'
+				gs 'cum_cleanup', 'cleanloc', 2
+				gs 'cum_cleanup', 'cleanloc', 5
+			
+			elseif cloc = 3:
+				$part = 'anus'
+			
+			elseif cloc = 4:
+				$part = 'buttocks'
+			
+			elseif cloc = 6 or cloc = 7:
+				$part = 'clothes'
+				gs 'cum_cleanup', 'cleanloc', 6
+				gs 'cum_cleanup', 'cleanloc', 7
+			
+			elseif cloc = 8:
+				$part = 'back'
+			
+			elseif cloc = 9:
+				$part = 'legs'
+			
+			elseif cloc = 10:
+				$part = 'arms'
+			
+			elseif cloc = 11:
+				$part = 'face'
+			
+			elseif cloc = 14:
+				$part = 'stomach'
+			
+			elseif cloc = 15:
+				$part = 'breasts'
+			
+			elseif cloc = 16:
+				$part = 'hair'
+			
+			else
+				$part = 'unknown'
+			
 			end
-			cpt = ppt
-			j += 1
-			cumarr_idx = func('cumarrput', $sparrnam[i], 9, ppt, cpt, -1, sparrage[i])
+			
+			if rand(0, 1) = 0:
+				'You collect a handful of sperm from your <<$part>> in your hand and lick it all up, enjoying the tart taste of semen.'
+			
+			else
+				'You collect the sperm from your <<$part>> with your fingers and lick them, enjoying the tart taste of semen.'
+			
+			end
+			
+			gs 'cum_cleanup', 'cleanloc', cloc
+		
 		end
-		i += 1
-		jump 'precheckloop'
+		
+		minut += 5
+		gs 'stat'
+	
 	end
-	RESULT = j
+
 end
 
 --- Cum_Manage ---------------------------------
