@@ -1,0 +1,474 @@
+# therapist
+
+'<center><b><font color="maroon">Psychologist</font></b></center>'
+CLOSE ALL
+if sound = 0:PLAY 'sound/Clock.mp3',80
+$location_type = 'public_indoors'
+if $ARGS[0] = '':
+	'<center><img src="images/_nuki/therapist/room.jpg"></center>'
+	'You step into the office of <a href="exec:dynamic $pavlov">Dr. Pavlov</a>, who invites you in with a warm smile.'
+	'The room looks like a study room, appearing warm and inviting. There is desk with a chair at the end of the room, but it appears seldom used. On the desk there are an older <a href="exec: VIEW ''images/_nuki/therapist/PavlovFamily.jpg''">photograph of Dr. Pavlov''s family</a>, on which he appears to be about two decades younger.'
+	'"Come in, Miss <<$surname>>! Please, tell me what can I help you with today?"'
+	gs 'stat'
+	act 'Raise your mood':
+		cls
+		'<center><img src="images/_nuki/therapist/therapy1.jpg"></center>'
+		money -= 1000
+		minut += 60
+		willpower = intel * 5 + will * 5 + 1000
+		manna = (intel * magik) + magik * 100 + vital * 10 + rikudo
+		gs 'stat'
+		'You talk about your problems for a while, and in a few places Dr. Pavlov asks you some pointed questions. Although he makes you look at your own actions and desires closely, making you aware of your own issues, it somehow makes you feel better about yourself.'
+		'"Please, visit me again if you have any further problems, I will be glad to help!" Says Dr. Pavlov, as he escort you out of his door.'
+		act 'Leave':gt $loc
+	end	
+	act 'Raise your confidance':
+		cla
+		*clr
+		'<center><img src="images/_nuki/therapist/room.jpg"></center>'
+		$therapy = 'confidance'
+		'"I would like some help in raising my <<$therapy>>," you say.'
+		'"There are two ways to do that, Miss <<$surname>>. I can offer you traditional therapy. This one is slow, but just as effective, as my second offer, the hypnotherapy. I would recommend the hynosis, but some people doesn''t like the thought of me inside their head that much. The choice is yours."'
+		act 'Just talk':
+			cls
+			'<center><img src="images/_nuki/therapist/therapy1.jpg"></center>'
+			money -= 1000
+			minut += 60
+			gs 'stat'
+			'You talk about your selfconfidance problem, and Dr. Pavlov makes some suggestions, and asks some pointed questions. Although he makes you look at your own actions and desires closely, making you aware of your own issues, it somehow makes you feel better about yourself.'
+			'"Please, visit me again if you have any further problems, I will be glad to help!" Says Dr. Pavlov, as he escort you out of his door.'
+			act 'Leave':gt $loc
+		end
+		act 'Hypnotherapy':gt 'therapist', 'hypno'
+	end
+	act 'Raise your dominance':
+		cla
+		*clr
+		'<center><img src="images/_nuki/therapist/room.jpg"></center>'
+		money -= 1000
+		gs 'stat'
+		$therapy = 'dominance'
+		'"I would like some help in raising my <<$therapy>>," you say.'
+		'"There are two ways to do that, Miss <<$surname>>. I can offer you traditional therapy. This one is slow, but just as effective, as my second offer, the hypnotherapy. I would recommend the hynosis, but some people doesn''t like the thought of me inside their head that much. The choice is yours."'
+		act 'Just talk':
+			cls
+			'<center><img src="images/_nuki/therapist/therapy1.jpg"></center>'
+			money -= 1000
+			minut += 60
+			dom += 2
+			gs 'stat'
+			'You talk about your submissiveness, and Dr. Pavlov makes some suggestions, and asks some pointed questions. Although he makes you look at your own actions and desires closely, making you aware of your own issues, it somehow makes you feel better about yourself.'
+			'"Please, visit me again if you have any further problems, I will be glad to help!" Says Dr. Pavlov, as he escort you out of his door.'
+			act 'Leave':gt $loc
+		end
+		act 'Hypnotherapy':gt 'therapist', 'hypno'
+	end
+	act 'Lower your dominance':
+		cla
+		*clr
+		'<center><img src="images/_nuki/therapist/room.jpg"></center>'
+		$therapy = 'submission'
+		'"I would like some help in raising my <<$therapy>>," you say.'
+		'"There are two ways to do that, Miss <<$surname>>. I can offer you traditional therapy. This one is slow, but just as effective, as my second offer, the hypnotherapy. I would recommend the hynosis, but some people doesn''t like the thought of me inside their head that much. The choice is yours."'
+		act 'Just talk':
+			cls
+			'<center><img src="images/_nuki/therapist/therapy1.jpg"></center>'
+			money -= 1000
+			minut += 60
+			sub += 2
+			gs 'stat'
+			'You talk about your strong dominance issues, and Dr. Pavlov makes some suggestions, and asks some pointed questions. Although he makes you look at your own actions and desires closely, making you aware of your own issues, it somehow makes you feel better about yourself.'
+			'"Please, visit me again if you have any further problems, I will be glad to help!" Says Dr. Pavlov, as he escort you out of his door.'
+			act 'Leave':gt $loc
+		end
+		act 'Hypnotherapy':gt 'therapist', 'hypno'
+	end
+!{	act 'Hypnotherapy to fight addiction':
+		cls
+		money -= 1000
+		minut += 60
+		gs 'stat'
+		gt 'therapist', 'hypno'
+	end
+	act 'Hypnotherapy for personality change':
+		cls
+		money -= 1000
+		minut += 60
+		gs 'stat'
+		gt 'therapist', 'hypno'
+	end}
+	act 'You need no help right now':gt $loc
+end
+
+
+if $ARGS[0] = 'hypno':
+	hypnoWithdrawal = 0
+	minut += 15
+	if firsthypno = 0:
+		firsthypno = 1
+		guy += 1
+		$firsthypno = 'While you are Under, I will call you <i>Cunt</i>, and you will respond to it. You will also call me Master.<br>You reply, "yes, <i>Master</i>."'
+		$firsthypno2 = '"Miss <<$surname>>, everything that happens while you are in the black room you will not remember. Understand it?"<br>"Yes, Dr. Pavlov."'
+	else
+		$firsthypno = ''
+		$firsthypno2 = '"<i>Cunt</i>, what do you know about the black room?"<br>"I know that everything that happens here I will not remember, <i>Master</i>."'
+	end
+	CLOSE 'sound/Clock.mp3'
+	if sound = 0:PLAY 'sound/Rainstorm.mp3',40 & PLAY 'sound/Clock.mp3',80
+	'"All right, then. Please, lay on the couch, and try to get comfortable."'
+	'While he waits for you to lay down ot the couch as you wish, he starts a CD player, that plays the soothing sounds of raining. After you are comfortable, he starts to talk in a strangely hypnotic voice.'
+	'"Please, close your eyes."'
+	'He waits a little, the only sound in the room is the clock ticking, and the sound of rain.'
+	'"You are standing in front of a house. This house has three rooms, but each of them can only be reached through the one before. The first room is the green room, then the blue room, and at last the black room..."'
+	''
+	'You mind tries to imagine the things the doctor tells you, and this is your last concious memory.'
+	act 'Continue':
+		cla
+		*clr
+		PLAY 'sound/Rainstorm.mp3',30 & PLAY 'sound/Clock.mp3',60
+		minut += 15
+		'<center><img width=700 src="images/_nuki/therapist/hypnotism<<rand(1,4)>>.jpg"></center>'
+		hypnoStrength += 14
+		if hypnoTime < 15:
+			if hypnoStrength >= 20:hypnoStrength = hypnoStrength-20 & hypnoTime += 1
+		elseif hypnoStrength > 20:
+			hypnoStrength = 20
+		end
+		if $therapy = 'confidance':
+			willpower += 5
+			$session = 'You will feel more confident. You are smart, beautiful, and if other people has other opinions, that is their problem. You know what you want, and do not fear to act upon your desires."<br>...<br>...<br>...'
+		elseif $therapy = 'dominance':
+			dom += 4
+			$session = 'You like to do what you want to do. It pleases you if people do what you tell them to do, or act according to your wishes, and you like to couse them pleasure this way. You have to be in control constantly, but that means others around you can relax."<br>...<br>...<br>...'
+		elseif $therapy = 'submission':
+			sub += 4
+			$session = 'You want to be told what to do and what to think, what to feel and whom to please. Obeying to others pleases you because it pleases them, and for a while you do not have to take responsibility for you actions."<br>...<br>...<br>...'
+		end
+		'<font color=brown>'
+			$firsthypno2
+			'"Good. <<$firsthypno>>"'
+			'"All right <i>Cunt</i>, let''s work on your <<$therapy>>. <<$session>>'
+			'"And now let''s play. You will enjoy the play, <i>Cunt</i>, but you will not remeber anything about it whan you are Awake. Understand?"'
+			'"Yes, <i>Master</i>."'
+			'"Perfect! Now take off your clothes."</font>'
+		gs 'stat'
+		act 'Taking off clothes':
+			minut += 5
+			cla
+			*clr
+			if sound = 0:PLAY 'sound/Rainstorm.mp3',20 & PLAY 'sound/Clock.mp3',40
+			cumprecheck = 0
+			dick = 13
+			$dick_girth = 'massive'
+			if hypnoTime < 4:
+				$hypnoact = 'I want you to suck me!'
+				act 'Continue':gt 'therapist', 'hypnoSuck'
+			else
+	!			if hypnoTime < 10:
+					if rand(0,2) > 0:
+						$hypnoact = 'I want to fuck your pussy!'
+						act 'Continue':gt 'therapist', 'hypnoFuck'
+					else
+						$hypnoact = 'I want to fuck your ass!'
+						act 'Continue':gt 'therapist', 'hypnoAnal'
+					end
+	!			elseif rand(0,3) = 0:
+	!				$hypnoact = 'I thought of something special for you.'
+	!				act 'Continue':gt 'therapist', 'hypnoPerv'
+	!			else 
+	!				if rand(0,2) > 0:
+	!					$hypnoact = 'I want to fuck your pussy!'
+	!					act 'Continue':gt 'therapist', 'hypnoFuck'
+	!				else
+	!					$hypnoact = 'I want to fuck your ass!'
+	!					act 'Continue':gt 'therapist', 'hypnoAnal'
+	!				end
+	!			end
+			end
+			'<center><img width=500 src="images/_nuki/therapist/stripping<<rand(1,3)>>.gif"></center>'
+			'<font color=brown>'
+			'You stand up from the couch and start to take off all of you clothing. While you do this, Dr. Pavlov opens up his pants and takes out his dick, slowly masturbating as he watches you. After a while he stops you, and motions you closer to him.'
+			'"Come here, <i>Cunt</i>, <<$hypnoact>>"</font>'			
+		end
+	end
+end
+
+
+if $ARGS[0] = 'hypnoSuck':
+	minut += 20
+	if sound = 0:PLAY 'sound/Rainstorm.mp3',10 & PLAY 'sound/Clock.mp3',20 & PLAY 'sound/sucking.mp3',200
+	cls
+	'<center><img width=500 src="images/_nuki/therapist/hypnoBlow<<rand(1,3)>>.gif"></center>'
+	gs 'cum_call', 'mouth', 'Dr. Pavlov', 60, '', 15000, 1
+	'<font color=brown>'
+	'You kneel to suck off Dr. Pavlov. You feel yourself getting moist between your legs, the sight of his massive dick, and taking it all in your mouth excites you greatly. You continue to pleasure him enthusiastically, and judging from the breathing of your <i>Master</i> you appear to be doing a great job.'
+	'Finally Dr. Pavlov groans, grabs your head, and pushes himself deep, filling your mouth with his seed.'
+	''
+	'<center><img width=300 src="images/_nuki/therapist/hypnoBlowCum.gif"></center>'
+	''
+	'"Come on, <i>Cunt</i>, cum now!" he groans, still shooting spurt after spurt of warm cum down your throat.'
+	'His order is all you need, it pushes you over the edge, and you scream around his cock still thobbing in your mouth.'
+	'He waits for you to lick him clean, then starts to dress himself.'
+	if hypnoTime < 10:
+		'"Get dressed, <i>Cunt</i>. Do it erotically, as much as you can."'
+		'He watches you getting dressed with a small smile in his face.</font>'
+	elseif tanga = 1:
+		'"Get dressed, <i>Cunt</i>, but forget the underwear. You didn''t wear one when you come, and you do not like to wear them. You enjoy the thought that people may notice that you do not wear underwear, maybe catch a glimpse of your naked pussy or ass."'
+		'He watches you getting dressed with a small smile in his face, especially enjoying the sight of you completely ignoring your underwear.</font>'
+		tanga = 0
+	else
+		'"Get dressed, <i>Cunt</i>. I see you didn''t wear underwear. Very good, you do not like to wear them. You enjoy the thought that people may notice that you do not wear underwear, maybe catch a glimpse of your naked pussy or ass."'
+		'He watches you getting dressed with a small smile in his face, especially enjoying the sight of you completely ignoring your underwear.</font>'
+	end	
+	'<center><img width=300 src="images/_nuki/therapist/dressup.gif"></center>'
+	horny = 0
+	orgasm += 1
+	stat['bj'] += 1
+	gs 'stat'
+	act 'Wake up':gt 'therapist', 'hypnoEnd'
+end
+
+
+if $ARGS[0] = 'hypnoFuck':
+	minut += 20
+	if sound = 0:PLAY 'sound/Rainstorm.mp3',10 & PLAY 'sound/Clock.mp3',20 & PLAY 'sound/sex<<rand(1,3)>>.mp3',100
+	cls
+	sub += 1
+	$cumdesciption3 = 'cum filled pussy'
+	$cumdesciption2 = 'pussy is full with fresh sperm, leaking out of you'
+	gs 'cum_call', 0, 'Dr. Pavlov', 60, '', 15000, 1
+	randpos = rand(0,3)
+	if randpos = 0:
+	!on your back
+		'<center><img width=500 src="images/_nuki/therapist/hypnoFuckBack<<rand(1,2)>>.gif"></center>'
+		$hypnofuck = 'You walk to him, and he takes your hand and pushes you on your back.<br>"You look beautiful. I will fuck you so hard like a teenage boy," he says. "You will take it like a trooper. Unfortunately my wife lost all of her appeal, so I have to satisfy myself with your wet cunt."<br>He grabs your legs and genty pushes your legs apart, then kneeling between your legs he forces his dick into your folds.'
+		$hypnofuck2 = 'He pounds deep into your body, and the hard surface does not make it comfortable for you. You wince a few times while his balls rithmically slap your ass, laboring above you. You feel his sweat dripping down on your tits as you spread your leg as wide as possible to give him as much access as possible.'
+	elseif randpos = 1:
+	!on your back, couch
+		'<center><img width=500 src="images/_nuki/therapist/hypnoFuckCouchBack<<rand(1,2)>>.gif"></center>'
+		$hypnofuck = 'You walk to him, but he changes his mind.<br>"No, lay back on the couch, I will fuck you there."<br>Doing as he says you watch him as he walks up to you, looks down on your naked body, examining you possessively.<br>"You have a beautiful body. Unfortunately my wife lost all of her appeal, so I have to satisfy myself with girls like you."<br>He grabs your legs and genty pushes your legs apart, then kneels between your legs he forces his dick into your body.'
+		$hypnofuck2 = 'He pounds you deep into the couch, his balls rithmically slapping your ass, as he labors above you. You feel his sweat dripping down on your tits as you spread your leg as wide as possible to give him as much access as possible.'
+	elseif randpos = 2:
+	!kneel, couch
+		'<center><img width=500 src="images/_nuki/therapist/hypnoFuckCouchKneel<<rand(1,2)>>.gif"></center>'
+		$hypnofuck = '"Stop, just kneel on the couch. I want to fuck you from behind."<br>You turn back, kneeling on the couch, placing your hands on the backrest, and wait for <i>Master</i> to take your body. You soon feel his hands touching your breasts, your neck, your back and your legs, playing a little with your pussy.<br>"Good girl, stay like this."<br>He pushes his fingers into your pussy, playing with your clit for a few minutes, causing you to get aroused.'
+		$hypnofuck2 = 'You cry out from the pain as he starts to fuck you, fast, deep and hard, without any regard of the fact that his girth is massive, and you would need some adjustment time.'
+	else
+	!ride
+		'<center><img width=500 src="images/_nuki/therapist/hypnoFuckSit<<rand(1,2)>>.gif"></center>'
+		$hypnofuck = '"Yes, sit on my lap, I want you to do the work for now."<br>He masturbates a little, then takes his hands away from his massive dick. "I want you to take it into your hands and lower yourself onto it. Take it deep into your pussy."<br>You do as he says, stepping above him with spread legs, then taking his massive pole into your hands you fit his tool into the entrance of your body. You feel yourself getting wet according to <i>Master</i>''s instruction, then take a deep breath and push your body onto his pole.'
+		$hypnofuck2 = 'He grabs your hips, moving your body to the rithm he wants you to ride him, and it is fast. Fast, deep and hard, without any regard to you, or that he actually bumps into your cervix in this position. You just ride him like a cowboy, or in this case cowgirl.'
+	end
+	'<font color=brown>'
+	$hypnofuck
+	'As soon as he is inside your pussy, he starts to fuck you.'
+	if vagina = 0:pain['vaginal'] +=5 & vagina += 1 & 'You feel a sharp pain as your <i>Master</i> pushes through your maidenhead, taking it away. He doesn''t seem to care about it, he just pushes himself deeper in your unexplored depth, enjoyinghimself immensly.'
+	$hypnofuck2
+	'"Oh yes, my little <i>Cunt</i>, I am so close! I will blow a huge wad of sperm in your beautiful pussy! And you won''t even know about it!"<br>He finally groans, jabbing his hips deep, jetting all of his sperm as deep in your pussy as he possibly can.<br>"Cum, little <i>Cunt</i>, suck all of my seed deep in your body!"'
+	if randpos <= 1:
+		'<center><img width=300 src="images/_nuki/therapist/Creampie1.gif"></center>'
+	elseif randpos = 2:
+		'<center><img width=300 src="images/_nuki/therapist/Creampie3.gif"></center>'
+	else
+		'<center><img width=300 src="images/_nuki/therapist/Creampie2.gif"></center>'
+	end
+	'He groans and you feel cock contracting inside of you. "Cum, <i>Cunt</i>, cum now!" Holding your hips he forces himself as deep into your body as possible, pushing everything he has into you, while you obey his order and orgasm on his tool. And he certainly has quite a lot to let out.'
+	'Finally he is done, and he pulls out of you. "That was amazing, <i>Cunt</i>."'
+	if hypnoTime < 10:
+		'"Get dressed, <i>Cunt</i>. Do it erotically, as much as you can."'
+		'He watches you getting dressed with a small smile in his face.</font>'
+	elseif tanga = 1:
+		'"Get dressed, <i>Cunt</i>, but forget the underwear. You didn''t wear one when you come, and you do not like to wear them. You enjoy the thought that people may notice that you do not wear underwear, maybe catch a glimpse of your naked pussy or ass."'
+		'He watches you getting dressed with a small smile in his face, especially enjoying the sight of you completely ignoring your underwear.</font>'
+		tanga = 0
+	else
+		'"Get dressed, <i>Cunt</i>. I see you didn''t wear underwear. Very good, you do not like to wear them. You enjoy the thought that people may notice that you do not wear underwear, maybe catch a glimpse of your naked pussy or ass."'
+		'He watches you getting dressed with a small smile in his face, especially enjoying the sight of you completely ignoring your underwear.</font>'
+	end
+	'<center><img width=300 src="images/_nuki/therapist/dressup.gif"></center>'
+	horny = 0
+	orgasm += 1
+	stat['vaginal'] += 1
+	gs 'stat'
+	act 'Wake up':gt 'therapist', 'hypnoEnd'
+end
+
+
+if $ARGS[0] = 'hypnoAnal':
+	minut += 20
+	if sound = 0:PLAY 'sound/Rainstorm.mp3',10 & PLAY 'sound/Clock.mp3',20 & PLAY 'sound/sex<<rand(1,3)>>.mp3',100
+	cls
+	sub += 1
+	$cumdesciption3 = 'cum filled ass'
+	$cumdesciption2 = 'ass is full of fresh sperm, slowly leaking out of you'
+	gs 'cum_call', 'anus', 'Dr. Pavlov', 60, '', 15000, 1
+	randpos = rand(0,3)
+	'<font color=brown>'
+	$hypnofuck
+	'As soon as he is inside your ass, he starts to fuck you.'
+	$hypnofuck2
+	'"Oh yes, my little <i>Cunt</i>, I am so close! I will blow a huge wad of sperm in your beautiful ass! And you won''t even know about it!"<br>He finally groans, jabbing his hips deep, jetting all of his sperm as deep in your colon as he possibly can.<br>"Cum, little <i>Cunt</i>, suck all of my seed deep in your body!"'
+	if randpos = 0:
+	!on your back
+		'<center><img width=500 src="images/_nuki/therapist/hypnoAnalBack<<rand(1,2)>>.gif"></center>'
+		$hypnofuck = 'You walk to him, and he takes your hand and pushes you on your back.<br>"You look beautiful. I will fuck you so hard like a teenage boy," he says. "You will take it like a trooper. Unfortunately my wife lost all of her appeal, so I have to satisfy myself with your little rosebud."<br>He grabs your legs and genty pushes your legs apart, then kneeling between your legs he forces his dick through your muscles.'
+		$hypnofuck2 = 'He pounds deep into your ass, and the hard surface does not make it comfortable for you. You wince a few times while his balls rithmically slap your asscheeks, laboring above you. You feel his sweat dripping down on your tits as you spread your leg as wide as possible to give him as much access as possible.'
+	elseif randpos = 1:
+	!on your back, couch
+		'<center><img width=500 src="images/_nuki/therapist/hypnoAnalCouchBack<<rand(1,2)>>.gif"></center>'
+		$hypnofuck = 'You walk to him, but he changes his mind.<br>"No, lay back on the couch, I will fuck you there."<br>Doing as he says you watch him as he walks up to you, looks down on your naked body, examining you possessively.<br>"You have a beautiful body. Unfortunately my wife lost all of her appeal, so I have to satisfy myself with girls like you."<br>He grabs your legs and genty pushes your legs apart, then kneels between your legs he forces his dick into your body.'
+		$hypnofuck2 = 'He pounds you deep into the couch, his balls rithmically slapping your ass, as he labors above you. You feel his sweat dripping down on your tits as you spread your leg as wide as possible to give him as much access as possible.'
+	elseif randpos = 2:
+	!kneel, couch
+		'<center><img width=500 src="images/_nuki/therapist/hypnoAnalCouchKneel<<rand(1,2)>>.gif"></center>'
+		$hypnofuck = '"Stop, just kneel on the couch. I want to fuck you from behind."<br>You turn back, kneeling on the couch, placing your hands on the backrest, and wait for <i>Master</i> to take your body. You soon feel his hands touching your breasts, your neck, your back and your legs, playing a little with your pussy.<br>"Good girl, stay like this."<br>He pushes his fingers into your ass, trying to make you more accessible, causing you to get aroused.'
+		$hypnofuck2 = 'You cry out from the pain as he starts to fuck you, fast, deep and hard, without any regard of the fact that his girth is massive, and you would need some adjustment time.'
+	end
+	$hypnofuck2
+	'"Oh yes, my little <i>Cunt</i>, I am so close! I will blow a huge wad of sperm in your beautiful ass! And you won''t even know about it!"<br>He finally groans, jabbing his hips deep, jetting all of his sperm as deep in your colon as he possibly can.<br>"Cum, little <i>Cunt</i>, suck all of my seed deep in your body!"'
+	if randpos <= 2:
+		'<center><img width=300 src="images/_nuki/therapist/CreampieA1.gif"></center>'
+	else
+		'<center><img width=300 src="images/_nuki/therapist/CreampieA3.gif"></center>'
+	end
+	'He groans and you feel cock contracting inside of you. "Cum, <i>Cunt</i>, cum now!" Holding your hips he forces himself as deep into your body as possible, pushing everything he has into you, while you obey his order and orgasm on his tool. And he certainly has quite a lot to let out.'
+	'Finally he is done, and he pulls out of you. "That was amazing, <i>Cunt</i>."'
+	if hypnoTime < 10:
+		'"Get dressed, <i>Cunt</i>. Do it erotically, as much as you can."'
+		'He watches you getting dressed with a small smile in his face.</font>'
+	elseif tanga = 1:
+		'"Get dressed, <i>Cunt</i>, but forget the underwear. You didn''t wear one when you come, and you do not like to wear them. You enjoy the thought that people may notice that you do not wear underwear, maybe catch a glimpse of your naked pussy or ass."'
+		'He watches you getting dressed with a small smile in his face, especially enjoying the sight of you completely ignoring your underwear.</font>'
+		tanga = 0
+	else
+		'"Get dressed, <i>Cunt</i>. I see you didn''t wear underwear. Very good, you do not like to wear them. You enjoy the thought that people may notice that you do not wear underwear, maybe catch a glimpse of your naked pussy or ass."'
+		'He watches you getting dressed with a small smile in his face, especially enjoying the sight of you completely ignoring your underwear.</font>'
+	end
+	'<center><img width=300 src="images/_nuki/therapist/dressup.gif"></center>'
+	horny = 0
+	orgasm += 1
+	stat['anal'] += 1
+	gs 'stat'
+	act 'Wake up':gt 'therapist', 'hypnoEnd'
+end
+
+
+if $ARGS[0] = 'hypnoEnd':
+	minut += 5
+	CLOSE ALL
+	'<center><img src="images/_nuki/therapist/room.jpg"></center>'
+	'<font color=brown>"All right, <i>Cunt</i>, now listen to me. You will not remember any of this. You do not feel any discomfort from any of our activities, and you do not notice anything related to what happened here. No taste, no smell, no aches, no fluids. Nothing. You will not respont to Cunt while you are Awake, just while you are Under. You will wake up feeling good, but responsive to all of my commands. Understand, <i>Cunt</i>?"'
+	'"Yes, <i>Master</i>."'
+	'"Oh, I almost forgotten. While you are Awake, you will call me Dr. Pavlov, you will not have any desire to call me Master. Now, you are sitting in the black room. Stand up, and start walking through the door. As you close the door of the black room, you forget..."</font>'
+	'...'
+	'...'
+	if hypnoTime < 4:
+		'When you wake up, you see your therapist looking at you.'
+		'"How do you feel, Miss <<$surname>>?"'
+		'You have a nagging feeling that you have forgotten somehing you should remember, but it is quickly forgotten, when you realize that you feel better about your problem. The therapy helped you a lot.'
+		'You certainly do not notice that your mouth tastes like sperm.'
+	elseif hypnoTime < 7:
+		'When you wake up, you see your therapist smiling.'
+		'"Very good, Miss <<$surname>>. How do you feel?"'
+		'You ponder about it for a while, then you realize, that you feel better about your problem. The therapy certainly helped a lot.'
+		'You don''t even notice that your <<$cumdesciption2>>.'
+	elseif hypnoTime < 10:
+		hypnoAddict = 1
+		hypnoDay = daystart
+		if exhibi < 2: exhibi += 1
+		pain['vaginal'] -= 5
+		pain['asshole'] -= 5
+		horny = 40
+		'When you wake up, you see your therapist smiling.'
+		'"Very good, Miss <<$surname>>. How do you feel?"'
+		'You didn''t even have to ponder about it, you immediately answer that you feel better. The therapy certainly helped a lot.'
+		'You are also unconsciously aroused when you feel your therapist''s sperm slowly leaking out of your <<$cumdesciption3>>.'
+	else
+		hypnoAddict = 2
+		hypnoDay = daystart
+		if exhibi < 5: exhibi += 1
+		pain['vaginal'] -= 5
+		pain['asshole'] -= 5
+		horny = 60
+		'When you wake up, you see your therapist fixing his shirt.'
+		'"Miss <<$surname>>, how do you feel right now?"'
+		'Without hesitation, you reply.'
+		'"I feel wounderful, Dr. Pavlov."'
+		'"Good, just as expected," nods the doctor, as he escorts you aout of his office.'
+		'You feel aroused, and you try to close your legs as you walk out, unconsciously trying to keep you psychologist''s sperm inside your <<$cumdesciption3>> as long as possible.'
+	end
+	'The doctor smiles jovially, his hand on your shoulder as he slowly escort you out of his office.'
+	'"Please, visit me again if you have any further problems, I will be glad to help!" Says Dr. Pavlov as a goodbye, taking your hands in his, patting them, then closes his door.'
+	act 'Leave':gt $loc
+end
+
+$hypnoDaychange = {	
+	!you visited the therapist too long ago
+	if daystart-hypnoDay > 7: 
+		if hypnoAddict = 1:
+			hypnoWithdrawal = 1
+		elseif hypnoAddict = 2:
+			hypnoWithdrawal = 2
+		end
+	end
+	!daily weaning of therapist influence
+	if hypnoStrength > 0: hypnoStrength -= 1
+	if hypnoTime > 0 and hypnoStrength = 0:
+		if hypnoAddict = 0:
+			hypnoStrength = 19
+			hypnoTime -= 1
+		elseif hypnoAddict = 1:
+			if rand(0,1) = 0:
+				hypnoStrength = 19
+				hypnoTime -= 1
+				if hypnoTime < 7:hypnoAddict = 0 & hypnoWithdrawal = 0
+			end
+		else
+			if rand(0,4) = 0: 
+				hypnoStrength = 19
+				hypnoTime -= 1
+				if hypnoTime < 10:hypnoAddict = 1 & hypnoBlock = 0 & hypnoWithdrawal = 1
+			end
+		end
+	end
+}
+
+$hypnoAddiction = {
+	if hypnoAddict = 1:
+		if cumloc[0] > 0 or cumloc[3] > 0: 
+			horny += 2
+			if horny < 30:horny = 30
+		else
+			manna -= 5
+		end
+	elseif hypnoAddict = 2:
+		if cumloc[0] > 0 or cumloc[3] > 0:
+			horny += 5
+			if horny < 50:horny = 50
+		else
+			manna -= 10
+		end
+	end
+	if hypnoWithdrawal = 1:
+		if cumloc[0] = 0 and cumloc[3] = 0:if will > 0: will -= 1
+	elseif hypnoWithdrawal = 2:
+		if cumloc[0] = 0 and cumloc[3] = 0:if will > 0: will -= 2
+	end
+}
+
+$pavlov = {
+	*clr
+	cla
+	VIEW 'images/_nuki/therapist/Pavlov.jpg'
+	'Dr. Pavlov appears to be a few years over sixty, slightly overweight, but still fit. He still looks charming, but in a grandfatherly way. His hair, or what is left of it is gray, but thinning. He usually wears a dress shirt and sharply ironed pants, with dress shoes.'
+	'He is always helpful and has a lot of patience, which likely had been helpful to raising five children.'
+	if firsthypno = 0:
+		'He seems to like you, but he would never flirt. He appears to consider you like a troubled grandchild.'
+	else
+		'He also has a dark side, because he appears to use his hypnotized female patients to satisfy his own needs with their body. He especially seems to like you. Not that you would know anything about this, since you do not remember anything about what happened to you during these sessions.'
+	end
+	act 'Back':gt 'therapist'
+}
+
+--- therapist ---------------------------------
+

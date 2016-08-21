@@ -2,43 +2,42 @@
 
 if $ARGS[0] = '':
 	!{Hourly reduction in semen potency}
-	!{First it sets the array index to the first index, then it checks to be sure the array tracking the age is less than 200 hours. If it is 200 hours old, it kills that index, which should shift the index up. If it is less than 200 hours old, it sets a current potency drop. The drop is 2x or 3x regularly, but during ovulation it is only 1x, to represent the better environment from fertile cervical mucus.}
+	!{First it sets the array index to the first index, then it checks to be sure the array tracking the age is less than 144 hours. If it is 144 hours old, it kills that index, which should shift the index up. If it is less than 144 hours old, it sets a current potency drop. The drop is 2x or 3x regularly, but during ovulation it is only 1x, to represent the better environment from fertile cervical mucus.}
+	!{144 hours was selected due to that being approximately the maximum amount of time sperm is viable in the womb (120 would be more accurate, but there is leeway). PLEASE DO NOT CHANGE IT.}
+	!{The potency drop may seem small in game-time, but is meant to be a reasonable approximation to real life. Avoid unprotected sex within 5 days of ovulation if you want to mitigate your risk.}
+	!{the 'rcntorgzm' variable is set to determine whether Sveta has orgasmed within the last hour. If she has, a small potency boost for the guys she has slept with in that hour.}
+	
 	if rcntorgzm = 1:
 		if rcntorgzmtmp = 1: rcntorgzm = 0 & rcntorgzmtmp = 0
 		if rcntorgzmtmp = 0: rcntorgzmtmp = 1
+	
 	end
-	ctemp = 0
-	ctemp[1] = 0
-	ctemp[2] = 0
-	cumarrtemp = 0
-	:cummarrpdloop1
-	:cummarrpdloop2
-	if cumarrage[cumarrtemp] < 190 and cumarrcpt[cumarrtemp] > 0:
-		if rcntorgzm = 1 and cumarrcpt[cumarrtemp] < cumarrppt[cumarrtemp] and cumarrage[cumarrtemp] < 1 and cumarrcon[cumarrtemp]: cumarrcpt[cumarrtemp] += cumarrppt[cumarrtemp] / 12
-		CumPDrop = cumarrcpt[cumarrtemp] / (200 - cumarrage[cumarrtemp])
-		if ovulate <= 0:
-			Temprand = rand(0,3)
-			if temprand <= 0:
-				CumPDrop = CumPDrop*3
-			elseif temprand = 1:
-				CumPDrop = CumPDrop*2
-			end
+
+	cumarr_idx = 0
+	
+	:cumarrloop
+	if cumarr_idx < arrsize('$cumarrnam'):
+		if cumarrcpt[cumarr_idx] > 0 and cumarrage[cumarr_idx] < 144:
+			if rcntorgzm = 1 and cumarrcpt[cumarr_idx] < cumarrppt[cumarr_idx] and cumarrage[cumarr_idx] < 1: cumarrcpt[cumarr_idx] += cumarrppt[cumarr_idx] / 12
+			cumpdrop = cumarrcpt[cumarr_idx] / (144 - cumarrage[cumarr_idx])
+			if cycle ! 2: cumpdrop += cumpdrop * rand(0, 2)
+			cumarrcpt[cumarr_idx] -= cumpdrop
+			cumarrage[cumarr_idx] += 1
+	
+		else
+			KILLVAR 'cumarrcpt',cumarr_idx
+			KILLVAR 'cumarrppt',cumarr_idx
+			KILLVAR '$cumarrnam',cumarr_idx
+			KILLVAR 'cumarrage',cumarr_idx
+			KILLVAR 'cumarrdel',cumarr_idx
+			KILLVAR 'cumarrkno',cumarr_idx
+			KILLVAR 'cumarrcon',cumarrte_idx
+		
 		end
-		cumarrcpt[cumarrtemp] -= CumPDrop
-		cumarrage[cumarrtemp] += 1
-		cumarrtemp += 1
-		arrmodtmp = arrsize('$cumarrnam')
-		if arrmodtmp > cumarrtemp: jump 'cummarrpdloop1'
-	else
-		KILLVAR 'cumarrcpt',cumarrtemp
-		KILLVAR 'cumarrppt',cumarrtemp
-		KILLVAR '$cumarrnam',cumarrtemp
-		KILLVAR 'cumarrage',cumarrtemp
-		KILLVAR 'cumarrdel',cumarrtemp
-		KILLVAR 'cumarrkno',cumarrtemp
-		KILLVAR 'cumarrcon',cumarrtemp    
-		arrmodtmp = arrsize('$cumarrnam')
-		if arrmodtmp > cumarrtemp: jump 'cummarrpdloop2'
+		
+		cumarr_idx += 1
+		jump 'cumarrloop'	
+	
 	end
 
 	!!Succubus absorption of sperm in womb
@@ -258,6 +257,7 @@ end
 !{Follicular to Ovulation. It checks to see if you are on the Follicular phase. If you are, it checks to see if you are ready to ovulate. If you arent, it increases your ovulation ticker by 1, then gives a random chance to increase it again. Then it checks to see if you have ovarian problems, and if you do, decreases your ovulation ticker. When all that is done, it checks to see if you have any birth control chemical, and if its above a certain amount, it reduces your ovulation ticker.}
 
 if $ARGS[0] = 'cyc1':
+	FertEgg = 0
 	if FocH <= 150:
 		EggRH +=1
 		FocH +=1
@@ -293,36 +293,41 @@ if $ARGS[0] = 'cyc2':
 	if Ovulate > 0 and can_sz > 0 and UnfertEgg > 0:
 		KILLVAR 'cumfathwght'
 		KILLVAR '$cumfathnames'
+		KILLVAR 'cumtime'
 		can_idx = 0
 		cum_total = 0
 !!{Compute array of unique fathers known to PC and another two arrays of unique total fathers and their individual sperm totals from all entries in cumarrcpt for that father. Also tally all cum present.}
 		:FatherCumAnalyze
 		if can_idx < can_sz:
-			if cumarrkno[can_idx] = 1:
-				if Enable_Android = 0:
-					wpf_in = arrpos(0, '$wombpotfath', $cumarrnam[can_idx])
-				else
-					wpf_in = arrpos('$wombpotfath', $cumarrnam[can_idx])
+			if cumarrppt[can_idx] ! -1:
+				if cumarrkno[can_idx] = 1:
+					if Enable_Android = 0:
+						wpf_in = arrpos(0, '$wombpotfath', $cumarrnam[can_idx])
+					else
+						wpf_in = arrpos('$wombpotfath', $cumarrnam[can_idx])
+					end
+					if wpf_in < 0:
+						wpf_sz = arrsize('$wombpotfath')
+						$wombpotfath[wpf_sz] = $cumarrnam[can_idx]
+						cumtime[wpf_sz] += 1
+					end
 				end
-				if wpf_in < 0:
-					wpf_sz = arrsize('$wombpotfath')
-					$wombpotfath[wpf_sz] = $cumarrnam[can_idx]
-				end
-			end
+				if cumarrkno[can_idx] >= 0:cum_totaltime += 1
 
-			if Enable_Android = 0:
-				cfn_in = arrpos(0, '$cumfathnames', $cumarrnam[can_idx])
-			else
-				cfn_in = arrpos('$cumfathnames', $cumarrnam[can_idx])
+				if Enable_Android = 0:
+					cfn_in = arrpos(0, '$cumfathnames', $cumarrnam[can_idx])
+				else
+					cfn_in = arrpos('$cumfathnames', $cumarrnam[can_idx])
+				end
+				cfw_sz = arrsize('cumfathwght')
+				if cfn_in < 0:
+					cumfathwght[cfw_sz] = cumarrcpt[can_idx]
+					$cumfathnames[cfw_sz] = $cumarrnam[can_idx]
+				else
+					cumfathwght[cfw_in] += cumarrcpt[can_idx]
+				end
+				cum_total += cumarrcpt[can_idx]
 			end
-			cfw_sz = arrsize('cumfathwght')
-			if cfn_in < 0:
-				cumfathwght[cfw_sz] = cumarrcpt[can_idx]
-				$cumfathnames[cfw_sz] = $cumarrnam[can_idx]
-			else
-				cumfathwght[cfw_in] += cumarrcpt[can_idx]
-			end
-			cum_total += cumarrcpt[can_idx]
 
 			can_idx += 1
 			jump 'FatherCumAnalyze'
@@ -364,7 +369,7 @@ if $ARGS[0] = 'cyc2':
 !!{fert_thresh is the chance this specific egg is fertilized. Its modified by being on the pill, being sterilized, the brood curse, and so on. If it computes to less than the cum total calculated above, the egg is fertilized by a father randomly drawn from the lotto array.}
 			fert_thresh = rand(1,250000)
 			if pillcon < 0: pillcon = 0
-			fert_thresh += pillcon
+			!!fert_thresh += pillcon
 			if steriletu = 1: fert_thresh += fert_thresh*30
 			if fert_thresh > 0 and broodcurse > 0: fert_thresh = fert_thresh / 2
 			if fert_thresh <= cum_total:
@@ -417,58 +422,84 @@ end
 
 
 !{Luteal to Menstration or Pregnancy. First it verifies this is the Luteal phase. Then it adds an hour to the age of the eggs. Then if there is a fertized egg, it rolls a random chance. if the egg age is low, it checks for risk of an entopic pregnancy. This is increased with older age and if you have a tubal ligation sterilization.}
+!{If there is a ectopic pregnancy, it sets the first unborn baby in the array to this. Ectopic pregnancies occur when the fertilized egg implants "too early" after fertlization (and therefore in the fallopian tube). The risk is higher with age, but this is also a common complication with certain forms of birth control, notably tubal ligation. Each egg could be different. It then removes the fertilized egg, adds an embryo, Then it adds some pregnancy hormone if you arent already pregnant, and calls you officially pregnant.}
+!{Otherwise, it adds your womb sterility factor to the imp_rand. Then it checks if your imp_rand crosses a threshold for implantation. Younger women implant easier. It then sets the next baby to the next unimplanted baby in your kid array. It registers the kid as a normal pregnancy, removes a fertilized egg and adds an embryo. Then it adds some pregnancy hormone if you arent already pregnant, and calls you officially pregnant.}
 
 if $ARGS[0] = 'cyc3':
 	ferteggage += 1
-	if FertEgg >= 1:
-		temprand = rand(0,100000)
-		if ferteggage < 120 and broodcurse <= 0:
-			temprand += 170
-			temprand -= age*10
-			if steriletu = 1: temprand -= 200
-			!{if there is a entopic pregnancy, it sets the first unborn baby in the array to this. Each egg could be different. It then removes the fertilized egg, adds an embryo, Then it adds some pregnancy hormone if you arent already pregnant, and calls you officially pregnant.}
-			if temprand <= 0:
-				tempbabyi  = ARRPOS('Babyptype',0)
-				Babyptype[tempbabyi] = 2
-				FertEgg -= 1
-				BabyEmbryo += 1
-				PregChem = rand(0,30)
-				if preg = 0: preg = 1
+	implant_idx = 0
+	implant_sz = arrsize('Babyptype')
+	
+	:implant_loop
+	if implant_idx < implant_sz:
+	
+		if Babyptype[implant_idx] = 0:
+			imp_rand = rand(0,120000)
+			
+			if ferteggage < 120 and broodcurse <= 0:
+				imp_rand += 170
+				imp_rand -= age * 10
+				if steriletu = 1: imp_rand -= 200
+				
+				if imp_rand <= 0:
+					Babyptype[implant_idx] = 2
+					FertEgg -= 1
+					babyembryo += 1
+					PregChem = rand(10,30)
+					if preg = 0: preg = 1
+					implant_day = daystart
+					implant_hour = hour
+				
+				end
+			
+			else
+				imp_rand += sterilewb
+				imp_rand -= tempwbbonus
+				if broodcurse > 0 and ferteggage >= 120: imp_rand = 0
+				
+				if imp_rand <= (1200 - (age * 7)):
+					Babyptype[implant_idx] = 1
+					FertEgg -= 1
+					babyembryo += 1
+					PregChem = rand(10,30)
+					if preg = 0: preg = 1
+					implant_day = daystart
+					implant_hour = hour
+				
+				end
+				tempwbbonus = 0
+			
 			end
-		else
-			!{Otherwise, it adds your womb sterilie factor to the temprand. Then it checks if your temprand crosses a threshold for implantation. Younger women implant easier. It then sets the next baby to the next unimplanted baby in your kid array. It registers the kid as a normal pregnancy, removes a fertilized egg and adds an embryo. Then it adds some pregnancy hormone if you arent already pregnant, and calls you officially pregnant.}
-			temprand += sterilewb
-			temprand -= tempwbbonus
-			if broodcurse > 0 and ferteggage >= 120: Temprand = 0
-			if temprand <= (1200-(Age*7)):
-				tempbabyi = ARRPOS('Babyptype',0)
-				Babyptype[tempbabyi] = 1
-				FertEgg -= 1
-				BabyEmbryo += 1
-				PregChem += rand(0,30)
-				if preg = 0: preg = 1
-			end
-			tempwbbonus = 0
-		end		
+		
+		end
+		
+		implant_idx += 1
+		jump 'implant_loop'
+	
 	end
+	
 !!{Then, it progresses the Luteal phase. It checks to see if you are pregnant. If you are, it ends the cycle and sets preg if your Luteal hormone is at the max as well as cleans out any unimplanted eggs. Otherwise, it just progresses pregnancy chemical and Luteal Hormone. If you arent pregnant, it checks your Luteal hormone. If its at the maximum, it adds 3-5 days of bleeding, clears out your unimplanted eggs, and clears out your Luteal hormone, or ends your cycle if you are past your menopausal age. Otherwise it will just progress the Luteal hormone.}
 	if LutH > 300:
+		rej_idx = 0
+		rej_sz = arrsize('Babyptype')
 		:lutcycloop
-		if FertEgg > 0:
-			tempbabyi = ARRPOS('Babyptype',0)
-			KILLVAR 'polkid',tempbabyi
-			KILLVAR '$kidname',tempbabyi
-			KILLVAR 'kidage',tempbabyi
-			KILLVAR 'daykid',tempbabyi
-			KILLVAR 'monthkid',tempbabyi
-			KILLVAR 'yearkid',tempbabyi
-			KILLVAR 'Babyptype',tempbabyi
-			KILLVAR '$ChildFath',tempbabyi
-			KILLVAR '$ChildThFath',tempbabyi
-			KILLVAR 'hairkid',tempbabyi
-			KILLVAR 'eyeskid',tempbabyi
-			KILLVAR 'cumarrcon',tempbabyi
-			FertEgg -= 1
+		if rej_idx < rej_sz:
+			if Babyptype[rej_idx] = 0:
+				KILLVAR 'polkid',tempbabyi
+				KILLVAR '$kidname',tempbabyi
+				KILLVAR 'kidage',tempbabyi
+				KILLVAR 'daykid',tempbabyi
+				KILLVAR 'monthkid',tempbabyi
+				KILLVAR 'yearkid',tempbabyi
+				KILLVAR 'Babyptype',tempbabyi
+				KILLVAR '$ChildFath',tempbabyi
+				KILLVAR '$ChildThFath',tempbabyi
+				KILLVAR 'hairkid',tempbabyi
+				KILLVAR 'eyeskid',tempbabyi
+				KILLVAR 'cumarrcon',tempbabyi
+				FertEgg -= 1
+			end
+			rej_idx += 1
 			jump 'lutcycloop'
 		end
 		LutH = 0

@@ -570,18 +570,22 @@ if $ARGS[0] = 'karinsuctalk':
 	act 'Ask her if she has learned anything new about Succubae':
 		cla
 !!		Nothing after info level 6 here, because Karin will tell the PC automatically
-		if sucpcinfo >= 4 and sucinfoday ! 0 and sucinfoday <= daystart:
-			 '"Actually, I have gotten some more information about Succubae."'
-			 if sucpcinfo = 4 and succublvl >= 2:
+		if sucinfoday ! 0 and sucinfoday <= daystart:
+			if sucpcinfo = 4 and succublvl >= 2:
+				'"Actually, I have gotten some more information about Succubae."'
 				'"I heard from one of my mage contacts, in Sydney, Australia of all places, and he passed on some more details."'
 				sucpcinfo = 5
 				sucinfoday = daystart + 10 + rand(0,7)
 				act 'Ask her to tell you': gt 'succubus', 'karinask', 1
 			elseif sucpcinfo = 5:
+				'"Actually, I have gotten some more information about Succubae."'
 				'"I heard from an old friend of mine who is now living in Morocco and she actually has a Succubus for a lover. She said that after they had been together for some time, they discovered that with her help, her Succubus lover learned something new."'
 				sucpcinfo = 6
 				sucinfoday = daystart + 10 + rand(0,7)
 				act 'Ask her to tell you': gt 'succubus', 'karinask', 2
+			else
+				'No, I havn''t.'
+				act 'Continue': gt 'lab', 'karinsuctalk'
 			end
 		else
 			'No, I havn''t.'
@@ -700,6 +704,7 @@ if $ARGS[0] = 'suctraining':
 		'She stares at you for several seconds, then demands, "What the hell happened to you!?!?"'
 		'You start to answer her when she holds up her hand and says, "Wait, come sit on the couch and tell me."'
 		'She turns away from you and walks toward the couch.'
+
 		act 'Follow her': gt 'lab', 'karinsuctalk'
 		exit
 	elseif sucpcinfo >= 6 and sucskill < 3 and sctrainprep = 1:
@@ -710,10 +715,10 @@ if $ARGS[0] = 'suctraining':
 			'<center><b><font color="maroon">Karin</font></b></center>'
 			'<center><img src="images/picpre/karinpre.jpg"></center>'
 			'You attempt to enter Karin''s lab but an invisible barrier stops you, but Karin apparently heard you as she rushes over and says, "What''s wrong? Do we need to cancel?"'
-			act 'Yes, I need to cancel.':
+			act 'Yes, I need to cancel':
 				cla
 				'"Are you sure?"'
-				act 'Yes, I''m sure.':
+				act 'Yes, I''m sure':
 					cla
 					if karinsucsexday = daystart + 7:
 						sctrainprep = 0

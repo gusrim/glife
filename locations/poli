@@ -22,7 +22,9 @@ if $ARGS[0] = 'start':
 	'For hospital admissions arrive Monday, prior to 10th of the month.'
 	''
 	'Abortion at the woman''s request can be made up to 84th day of pregnancy - 20,000 <b>₽</b>.'
-	'Be warned, abortions are dangerous to health. There is always a risk of complications and the possibility of sterility.'
+	'Be warned, improperly performed abortions can by dangerous to your health. There is a risk of complications and the possibility of damage to your uterus.'
+	''
+	'(At first you thought the warning was only health department boiler-plate. However, no sooner do you finish thinking that then you noticed a nurse pushing a cart of freshly sterlized coat hangers down the hallway and begin to wonder how competent this facility really is in terms of women''s health...)'
 	''
 	'Near the entrance is an advertisement for cosmetic surgeon and directions to his office.'
 
@@ -95,22 +97,26 @@ if $ARGS[0] = 'start':
 			pregtime = 0
 			pregtalk = 0
 			preg = 0
+			thinkpreg = 0
+			knowpreg = 0
 			cycle = 4
 			RecovH += pregchem
 			knowpregloss = 2
 			abortrand = rand(0, 10)
 
 			if age > 18:
-				if abortrand < 10:sterilewb += 2
-				if abortrand = 10:sterilewb += 20
+				if abortrand < 10:sterilewb += 1
+				if abortrand = 10:sterilewb += 10
 			else
-				if abortrand < 4:sterilewb += 2
-				if abortrand >= 5:sterilewb += 20
+				if abortrand < 7:sterilewb += 2
+				if abortrand >= 7:sterilewb += 10
 			end
 
 			'<center><img src="images/add-on/abort.jpg"></center>'
-			'You spread out on a gynecological chair, from which angle you are fortunate not to be able to see what is going on. You feel nauseous and violated.'
+			'You spread out on a gynecological chair, from which angle you are fortunate not to be able to see what is going on. You feel nauseous and violated. A nurse hands you a single aspirin and a glass of muddy-looking water to down it with.'
 			preg = 0
+			thinkpreg = 0
+			knowpreg = 0
 			nextbaby = arrsize('yearkid')
 			:poliabortloop
 			if Babyptype[nextbaby] < 200:
@@ -126,6 +132,7 @@ if $ARGS[0] = 'start':
 				KILLVAR 'hairkid',nextbaby
 				KILLVAR 'eyeskid',nextbaby
 				KILLVAR 'cumarrcon',nextbaby
+				KILLVAR '$wombpotfath',nextbaby
 				BabyEmbryo -= 1
 				nextbaby -= 1
 			end
@@ -225,12 +232,15 @@ if $ARGS[0] = 'start':
 
 	if katjob > 0:act 'Visit the chief doctor':gt 'poli', 'glavdoc'
 
-	if zub > 0:
+	if zub > -1:
 		act 'Go to the dentist':
 			cls
 			zubpay = zub * 30000
 			gs 'stat'
-			if zub = 1:
+			if zub = 0:
+				zubpay = 30000
+				'The dentist examines you and says, it will cost you <<zubpay>> <b>₽</b> to straighten and polish your teeth.'
+			elseif zub = 1:
 				'The dentist examines you and says, it will cost you <<zubpay>> <b>₽</b> to replace your tooth'
 			else
 				'The dentist examines you and says, it will cost you <<zubpay>> <b>₽</b> to fill the gaps'
@@ -241,9 +251,15 @@ if $ARGS[0] = 'start':
 					cls
 					money -= zubpay
 					minut += 60
-					zub = 0
+					gs 'body_shape', 'basebeautycalc', 1
 					gs 'stat'
-					'You pay the dentist to fix your teeth, within an hour he has restored your winning smile.'
+					if zub > 0:
+						zub = 0
+						'You pay the dentist to fix your teeth, within an hour he has restored your winning smile.'
+					else
+						zub = -1
+						'You pay the dentist to straighten and polish your teeth, an hour later your smile is much brighter and more attractive.'
+					end
 
 					act 'Leave the clinic':gt 'street'
 				end
@@ -1278,6 +1294,7 @@ if $ARGS[0] = 'lipPlus':
 	minut += 60
 	lip += 1
 	money -= 25000
+	gs 'body_shape', 'basebeautycalc', 1
 	gs 'stat'
 	'<center><img src="images/etogame/cosmeticsur.jpg"></center>'
 	'Surgeon has you strip, put on a gown and lie down on the table. He gives you a mask and tells you to breathe in. By the time you wake up procedure is complete.'
@@ -1290,6 +1307,7 @@ if $ARGS[0] = 'lipMin':
 	minut += 60
 	lip -= 1
 	money -= 25000
+	gs 'body_shape', 'basebeautycalc', 1
 	gs 'stat'
 	'<center><img src="images/etogame/cosmeticsur.jpg"></center>'
 	'Surgeon has you strip, put on a gown and lie down on the table. He gives you a mask and tells you to breathe in. By the time you wake up procedure is complete.'
@@ -1302,6 +1320,7 @@ if $ARGS[0] = 'eyePlus':
 	minut += 60
 	glaraz += 1
 	money -= 30000
+	gs 'body_shape', 'basebeautycalc', 1
 	gs 'stat'
 	'<center><img src="images/etogame/cosmeticsur.jpg"></center>'
 	'Surgeon has you strip, put on a gown and lie down on the table. He gives you a mask and tells you to breathe in. By the time you wake up procedure is complete.'
@@ -1314,6 +1333,7 @@ if $ARGS[0] = 'eyeMin':
 	minut += 60
 	glaraz -= 1
 	money -= 30000
+	gs 'body_shape', 'basebeautycalc', 1
 	gs 'stat'
 	'<center><img src="images/etogame/cosmeticsur.jpg"></center>'
 	'Surgeon has you strip, put on a gown and lie down on the table. He gives you a mask and tells you to breathe in. By the time you wake up procedure is complete.'

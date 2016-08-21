@@ -9,6 +9,7 @@ day += 1
 week += 1
 hour -= 24
 gs 'daystart'
+dynamic $hypnoDaychange
 
 !!Party refresh if you didn''t see sis
 if sisboyparty_day + 1 > daystart and sisboyparty = -1: sisboyparty = 1
@@ -50,6 +51,8 @@ Clothingstock[i] = rand (0,500)
 i += 1
 if i <= 147:jump 'loopprice'
 
+if coatH[defaultcoat] <= 0: defaultcoat = 0
+
 !!SECTION: Bimbo (daily status update checks)
 !!A Succubus cannot be a Bimbo
 if succubusflag = 1 and bimbo > 0: bimbo -= succublvl * 2
@@ -71,10 +74,11 @@ if bimbo >= 40: bimbo = 40
 !!Bimbo levels. They use custom variables so they wont permanently change character stats
 vneshtemp = (3*(9 + lip + tanKoef + skin + resnic + glaraz + bodykoef + vidagebonus - (zub * 2) + tatKeof))
 
-if bimbolevel = 0:bimbobeauty = 0 & bimbostupidity = 0
-if bimbolevel = 1:bimbobeauty = (vneshtemp / 10) & bimbostupidity = (intel / 6)
-if bimbolevel = 2:bimbobeauty = (vneshtemp / 6) & bimbostupidity = (intel / 4)
-if bimbolevel = 3:bimbobeauty = (vneshtemp / 5) & bimbostupidity = (intel / 3)
+!!Bimbo levels. They use custom variables so they wont permanently change character stats
+if bimbolevel = 0: supnatvnesh = 0 & bimbostupidity = 0
+if bimbolevel = 1: supnatvnesh = 2 & bimbostupidity = (intel / 6)
+if bimbolevel = 2: supnatvnesh = 4 & bimbostupidity = (intel / 4)
+if bimbolevel = 3: supnatvnesh = 8 & bimbostupidity = (intel / 3)
 
 if bimbocl = 1 and succubusflag = 0:
 	bimbocl = 0
@@ -94,22 +98,22 @@ if succubusflag = 1:
 		succublvl = 1
 		$sucself1 = 'that feeling'
 		sucstorecap = 0
-		if bimbolevel <= 0: bimbobeauty = (vneshtemp / 5) & bimbostupidity = (intel / 3)
+		if bimbolevel <= 0: supnatvnesh = 1
 	elseif succubxp < 150:
 		succublvl = 2
 		$sucself1 = 'the power'
 		sucstorecap = 0
-		if bimbolevel <= 0: bimbobeauty = (vneshtemp / 4) & bimbostupidity = (intel / 4)
+		if bimbolevel <= 0: supnatvnesh = 3
 	elseif succubxp < 270:
 		succublvl = 3
 		$sucself1 = 'your other self'
 		sucstorecap = 100
-		if bimbolevel <= 0: bimbobeauty = (vneshtemp / 3) & bimbostupidity = (intel / 6)
+		if bimbolevel <= 0: supnatvnesh = 6
 	else
 		succublvl = 4
 		$sucself1 = 'your true self'
 		sucstorecap = 200
-		if bimbolevel <= 0: bimbobeauty = (vneshtemp / 2) & bimbostupidity = 0
+		if bimbolevel <= 0: supnatvnesh = 10
 	end
 	if sucskill >= 2 and succublvl >= 2: sucstorecap += 100
 	if sucskill >= 3 and succublvl >= 2: sucstorecap += (sucstorecap * 2) / 10
@@ -128,9 +132,12 @@ if succubusflag = 1:
 		if vital < 250: vital += 1 & sucexcess -= 12
 		if will < 250: will += 1 & sucexcess -= 12
 		if intel < 250: intel += 1 & sucexcess -= 12
-		if succhungry > (0 - 2 - succublvl): succhungry -= 1 & sucexcess -= 12
-		if vidageday < 720 and vidage >= 18: vidageday += 2 & sucexcess -= 4
-		if vidageday >= 720 and vidage > 18:
+		if succhungry > (0 - 2 - succublvl): succhungry -= 1 & sucexcess -= 10
+		if skinvan < 100: skinvan += 1 & sucexcess -= 2
+!!		This is to drive the Succubus vidage into the max appearance range
+		if vidageday < 720 and vidage >= 28: vidageday += 2 & sucexcess -= 2
+		if vidageday > 0 and vidage <= 20: vidageday -= 2 & sucexcess -= 2
+		if vidageday >= 720 and vidage > 28:
 			vidageday -= 360
 			vidage -= 1
 		end
@@ -215,9 +222,9 @@ if tabletkicheck = 2:
 		else
 			shotdue -= 1
 		end
-		'The chemicals regulating your fertility cycle are wearing off. You need to get your shot in <<shotdue>> days.'
+		'The chemicals regulating your fertility cycle are wearing off, you need to get your shot in <<shotdue>> days.'
 	elseif shotdays > 1 and shotdays < 5:
-		'You are due for a birth control shot soon. If you do not get one, you might get pregnant.'
+		'You are due for a birth control shot soon if you do not get one, you might get pregnant.'
 	elseif shotdays = 1:
 		'Your birth control shot is due for renewal tomorrow.'
 	end
@@ -234,7 +241,7 @@ if tabletkicheck = 1:
 		'You are out of birth control pills.'
 		tabletkipi = -5
 	elseif tabletki < 5:
-		'You are running out of birth control pills. You only have a few left.'
+		'You are running out of birth control pills, you only have a few left.'
 	end
 end
 
@@ -260,11 +267,11 @@ if tabletkicheck = 1 and tabletkichday < daystart:
 	if tabletkiap < 300:
 		if tabletkipd > -10:
 			if willpower < willpowermax / 4:
-				'You stare at your bottle of birth control pills. You know you should take one, but you can''t quite work up enough effort to care.'
+				'You stare at your bottle of birth control pills, you know you should take one but you can''t quite work up enough effort to care.'
 			elseif manna < mannamax / 10:
-				'You stare at your bottle of birth control pills, but don''t open it.'
+				'You stare at your bottle of birth control pills, but you don''t open it.'
 			elseif son < 10:
-				'You fumble with the cap on your birth control pills, trying to get it open. You finally give up, too tired to manage it.'
+				'You fumble with the cap on your birth control pills, trying to get it open. You finally give up too tired to manage it.'
 			else
 				'You just realized you forgot to take your birth control pill today.'
 			end
@@ -289,7 +296,7 @@ if tabletkicheck = 1 and tabletkichday < daystart:
 				tabletkipi = -3
 			end
 			if tabletkipd > -10:
-				'You find yourself holding the bottle of birth control pills. You cannot remember if you took one or not.'
+				'You find yourself holding the bottle of birth control pills, you cannot remember if you took one or not.'
 			end
 			if tabletkipd > 0:
 				if rand(0,9) = 0:
@@ -325,8 +332,6 @@ if tabletkicheck = 1 and tabletkichday < daystart:
 		end
 	end		
 end
-
-if skinvan >= 20:skinvan -= 20 & skin += 1
 
 if lashair ! 1:
 	leghair += 1
@@ -818,6 +823,7 @@ gs 'outdoors', 'weather'
 
 if storyline = 1 and SchoolAtestat = 0:
 	$holyday = ''
+	$backtoschool = '<b>, back to school tomorrow.</b>'
 	kanikuli = 0
 
 	!holiday countdown (kanicont) by illume. countdown in [cikl], summer vacation pre-set in [startalt]
@@ -830,7 +836,7 @@ if storyline = 1 and SchoolAtestat = 0:
 		if month = 10 and day = 27:kanicont = 9
 		$holyday = '<b>Autumn holidays</b>'
 		kanikuli = 1
-		if month = 11 and day = 4:$holyday += ' <b>Back to school tomorrow.</b>'
+		if month = 11 and day = 4:$holyday += $backtoschool
 	elseif (month = 12 and day >= 29) or (month = 1 and day <= 13):
 		if month = 1:
 			kanicont = 14 - day
@@ -839,12 +845,12 @@ if storyline = 1 and SchoolAtestat = 0:
 		end
 		$holyday = '<b>Winter Break</b>'
 		kanikuli = 2
-		if month = 1 and day = 13:$holyday += ' <b>Back to school tomorrow.</b>'
+		if month = 1 and day = 13:$holyday += $backtoschool
 	elseif (month = 3 and day >= 25):
 		if kanicount = 0:kanicont = monthsEnd[3] - day + 1
 		$holyday = '<b>Spring Break</b>'
 		kanikuli = 3
-		if month = 3 and day = 31:$holyday += ' <b>Back to school tomorrow.</b>'
+		if month = 3 and day = 31:$holyday += $backtoschool
 	elseif (month = 5 and day >= 25) or month = 6 or month = 7 or month = 8:
 		if month = 5 and day = 25 and age = 17:
 			$holyday = '<b>Your graduation is today. Be there by 8h.</b>'
@@ -861,7 +867,7 @@ if storyline = 1 and SchoolAtestat = 0:
 			end
 			$holyday = '<b>Summer holidays</b>'
 			kanikuli = 4
-			if month = 8 and day = 31:$holyday += ' <b>Back to school tomorrow.</b>'
+			if month = 8 and day = 31:$holyday += $backtoschool
 		end
 	elseif month = 1 and day = 1:
 		$holyday = '<b>New Year!</b>'
@@ -903,6 +909,9 @@ elseif mentats_dose > 1:
 end
 if breastpumped = 0 and breastcount > 0: breastcount -= 1
 if breastpumped = 1:breastpumped = 0
+
+!!Appearance base calculation call
+gs 'body_shape', 'basebeautycalc'
 
 --- cikl ---------------------------------
 
