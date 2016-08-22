@@ -1,30 +1,42 @@
-# house
+# tanhouse
 CLOSE ALL
 
 $metka = $ARGS[0]
 $loc = $CURLOC
 $metkaM = $ARGS[0]
 $locM = $CURLOC
-$location_type = 'private'
 
-! WD: stop infinite loop ~ gt 'house', 'razb'
+! WD: stop infinite loop ~ gt 'tanhouse', 'razb'
 if $ARGS[0] = '' or $ARGS[0] = 'start':
 cla
 *clr
 tanhouse1 = 1
 minut += 5
 gs 'stat'
-'<center><b>Apartment</b></center>'
+'<center><b>Nicholas'' Apartment</b></center>'
 '<center><img src="images/img/centr/house.jpg"></center>'
 
-if tanwork = 1:'This is Tanyas stepfathers apartment, you work here.'
-if nik > 30 and niksvid = 2 and hour > 12 and hour < 19 and dayrazb < daystart:gt 'house', 'razb'
+if MaidWorkDay ! daystart:
+	MaidWorkDay = daystart
+	MaidWork = 0
+	TanHallClean = 0
+	TanRoomClean = 0
+	TanBathClean = 0
+	TanMasterClean = 0
+	TanLivingClean = 0
+	TanMaidRoomClean = 0
+	TanKitchenClean = 0
+	TanMadeBreakfast = 0
+end
+
+if tanwork = 1:'This is the apartment of Tanya''s stepfather Nicholas, you work and live here together with him, Tanya and her mother.'
+if nik > 30 and niksvid = 2 and hour > 12 and hour < 19 and dayrazb < daystart:gt 'tanhouse', 'razb'
 
 	act 'Goto the bathroom':gt 'tanvanr'
-	act 'Goto the kitchen':gt 'kitchen'
-	act 'Goto your bedroom':gt 'spalnya'
-	act 'Goto the master bedroom':gt 'hozspal'
-	act 'Goto the living room':gt 'housezal'
+	act 'Goto the kitchen':gt 'tankitchen'
+	act 'Goto your bedroom':gt 'tanspalnya'
+	act 'Goto the master bedroom':gt 'tanhozspal'
+	act 'Goto the living room':gt 'tanhousezal'
 	act 'Goto Tanyas room':gt 'tanroom'
 	act 'Outside':
 		if $clothingworntype ! 'nude':
@@ -36,9 +48,9 @@ if nik > 30 and niksvid = 2 and hour > 12 and hour < 19 and dayrazb < daystart:g
 	end
 
 	if tanwork = 1:
-		act 'Resign':
+		act 'Quit your Maid Job':
 			cla
-			'<font color=red>Are you Sure? You can not live here anymore.</font>'
+			'<font color=red>Are you sure? You won''t be able to live here anymore if you quit and there''s no telling how Tanya is going to react.</font>'
 			act '<font color=red>Yes, quit this job</font>':
 				tanuvol = 1
 				tanwork = 0
@@ -46,7 +58,27 @@ if nik > 30 and niksvid = 2 and hour > 12 and hour < 19 and dayrazb < daystart:g
 				gt 'down'
 			end
 			act 'No, I will carry on working here':
-				gt 'house'
+				gt 'tanhouse'
+			end
+		end
+	end
+	
+	if $clothingworntype ! 'uniform':
+		nl
+		'Your contract requires that you wear a <b>maid uniform</b> while you work in the house.'
+	end
+	
+	if $clothingworntype = 'uniform' and PCloStyle2 = 1 and TanHallClean = 0:
+		act 'Clean the Hallway':
+			cla
+			minut += 30
+			TanHallClean = 1
+			MaidWork += 1
+			gs 'stat'
+			nl
+			'You spend some time wet wiping, dusting and polishing all the surfaces and objects in the hallway. You do so quickly and efficiently and are a little surprised when you look at the clock and realize you are done after only half an hour.'
+			act 'Finish cleaning':
+				gt 'tanhouse'
 			end
 		end
 	end
@@ -116,7 +148,7 @@ gs 'cum_manage'
 							'You open your mouth and the guard puts his cock to your lips, she holds your head by the hair, but you can not do anything, and she takes the member. "The bitch." Cursed mistress and putting the cock in her hand right into her own mouth. She sucks his dick at the same time as holding your head with her other hand, she soon releases his cock and points it at your face. A jet of sperm hits you in the face, some goes into your mouth.'
 							'With that she lets your head fall to the floor, the mistress takes several more photographs with her phone, of you all covered in semen from the security guard. You lay on the floor, until some time later when you came to your senses and put on your clothes.'
 
-							act 'Goto the corridor':gt 'house'
+							act 'Goto the corridor':gt 'tanhouse'
 						end
 					end
 				end
@@ -127,5 +159,5 @@ end
 
 if rand (0,2) ! 0:gs 'din_bad' & dynamic $mobile_check
 
---- house ---------------------------------
+--- tanhouse ---------------------------------
 
