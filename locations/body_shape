@@ -128,7 +128,7 @@ if $ARGS[0] = '':
 
 !!This controls the movement of salo to/from bust in order of precedence
 	if salobustdo = 0 and nbsize < genbsize and salocatnow > 2:
-		'<b>Your breasts seem fuller.</b>'
+		if sftrstflag = 0:'<b>Your breasts seem fuller.</b>'
 		nbsize += 1
 		salo -= 3
 		salobustdo = 1
@@ -136,7 +136,7 @@ if $ARGS[0] = '':
 	end
 
 	if salobustdo = 0 and magf2bdo = 1 and salocatnow > salocatlast and manna >= mannamax / 2:
-		'<b>Your breasts seem fuller.</b>'
+		if sftrstflag = 0:'<b>Your breasts seem fuller.</b>'
 		magicf2b += 1
 		salo -= 3
 		salobustdo = 1
@@ -150,7 +150,7 @@ if $ARGS[0] = '':
 	end
 
 	if salobustdo = 0 and salocatnow < 2 and salocatlast >= 2 and magicf2b > 0:
-		'<b>Your breasts seem to be getting smaller.</b>'
+		if sftrstflag = 0:'<b>Your breasts seem to be getting smaller.</b>'
 		magicf2b -= 1
 		salo += 3
 		salobustdo = 1
@@ -159,7 +159,7 @@ if $ARGS[0] = '':
 	end
 
 	if salobustdo = 0 and salocatnow < 2 and salocatlast >= 2 and nbsize > 0:
-		'<b>Your breasts seem to be getting smaller.</b>'
+		if sftrstflag = 0:'<b>Your breasts seem to be getting smaller.</b>'
 		nbsize -= 1
 		salo += 3
 		salobustdo = 1
@@ -269,6 +269,8 @@ if $ARGS[0] = 'softreset':
 		gs 'body_shape'
 		jump 'resetloop'
 	end
+!!Updates vneshbase after a reset
+	gs 'body_shape', 'basebeautycalc', 1
 !!Clears the warning and reset status flags if they were set
 	sftrstflag = 0
 	btwarn = 0
@@ -306,6 +308,7 @@ if $ARGS[0] = 'hardreset':
 		killvar 'dounsplkil'
 		newbdsp = 1
 		dounspell = 0
+		gs 'body_shape', 'basebeautycalc', 1
 		gs 'body_shape'
 		gs 'stat'
 	else
@@ -330,6 +333,77 @@ if $ARGS[0] = 'initial':
 	killvar 'gmstrtflag'
 	newbdsp = 1
 	gs 'stat'
+end
+
+!!This is the calculation for the base appearance
+if $args[0] = 'basebeautycalc':
+!!	Setting vidagebonus
+	vidagebonus = 100
+	if vidage < 20: vidagebonus = 100 - 2 * (20 - vidage)
+	if vidage > 30: vidagebonus = 100 - 2 * (vidage - 30)
+
+!!	Setting Eyelashes bonus
+	if resnic = 1:
+		resnicbonus = 2
+	elseif resnic = 2:
+		resnicbonus = 5
+	else
+		resnicbonus = 0
+	end
+
+!!	Setting Eye Size bonus
+	if glaraz = 1:
+		glarazbonus = 1
+	elseif glaraz = 2:
+		glarazbonus = 3
+	elseif glaraz = 3:
+		glarazbonus = 2
+	else
+		glarazbonus = 0
+	end
+
+!!	Setting the Lip size bonus
+	if lip = 0:
+		lipbonus = -2
+	elseif lip = 1:
+		lipbonus = 0
+	elseif lip = 2:
+		lipbonus = 3
+	elseif lip = 3:
+		lipbonus = 5
+	else
+		lipbonus = 3
+	end
+
+!!	Preforming the calculation
+	vneshtemp = vidagebonus * ((skinvan * 2 / 5) + (3 * (2 + bodykoef)) + (agil / 10) + (vital / 10) + resnicbonus + glarazbonus + lipbonus - (5 * zub)) / 100
+!!	skinvan = skin condition, corrected to a 0 to 40 range; bodykoef set in main body_shape; zub is missing teeth or cosmetically improved teeth (-1)
+
+!!	This is the first limiter
+	if vneshtemp > 100: vneshtemp = 100
+
+!!	This adds the supernatural vnesh bonus; currently Bimbo and Succubus
+	vneshtemp += supnatvnesh
+
+!!	This is the rate of change limiter
+	if vneshbase > vneshtemp: vneshbase -= 1
+	if vneshbase < vneshtemp: vneshbase += 1
+
+!!	This is for use when a reset is called for by setting args[1] = 1
+	if args[1] = 1: vneshbase = vneshtemp
+
+!!	This is to clean up variables only used here
+	killvar 'vidagebonus'
+	killvar 'resnicbonus'
+	killvar 'glarazbonus'
+	killvar 'lipbonus'
+	killvar 'vneshtemp'
+
+!!	This is to unload old variables
+	killvar 'CloNaturalBeauty'
+	killvar 'CloBaseBeauty'
+	killvar 'skin'
+	killvar 'bimbobeauty'
 end
 
 --- body_shape ---------------------------------

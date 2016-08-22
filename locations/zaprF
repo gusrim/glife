@@ -1,5 +1,7 @@
 # zaprF
+
 if $ARGS[0] = 'start':
+
 	$metka = $ARGS[0]
 	$loc = $CURLOC
 	cla
@@ -11,6 +13,9 @@ if $ARGS[0] = 'start':
 	'<center><img src="images/etogame/zapr.jpg"></center>'
 	'Announcement, in connection with the features of the device gas stations, all cars to refuel a full tank.'
 	'Cost of 1 liter of petrol 30 <b>₽</b>.'
+
+	act 'Wash car windows (1:00)':gt 'zaprFWash', 'start'
+	act 'Go to the toilet':gt 'zaprF', 'toilet'
 
 	if car > 0:
 		if cardrive = 6 or cardrive = 21:'On refueling costs your <a href="exec:GS ''carF'', ''start''"><<$car>></a>.'
@@ -54,6 +59,8 @@ if $ARGS[0] = 'start':
 		end
 	end
 
+
+
 	act 'Leave':
 		if cardrive = 6:
 			gt 'nord'
@@ -63,6 +70,57 @@ if $ARGS[0] = 'start':
 			gt 'nord'
 		elseif litltown = 1:
 			gt 'pavCommercial'
+		end
+	end
+end
+
+if $ARGS[0] = 'toilet':
+		CLOSE ALL
+		cla
+		*clr
+		$locM = 'zaprF'
+		$metka = 'toilet'
+		$metkaM = 'toilet'
+		$loc = 'zaprF'
+		$location_type = 'bathroom'
+		$gt1 = 'zaprF'
+		$gt2 = 'toilet'
+		minut += 2
+
+		'<center><h4>Gas station toilet</h4></center>'
+		'<center><img src="images/lakecafe/toilet.jpg"></center>'
+		'You are in a dirty gas station toilet. At least it provides some privacy.'
+		act 'Change your clothes':gt 'clothing_QV', 'list'
+
+		act 'Look in the mirror':
+			cla
+			gt 'portmirror'
+
+			act 'Move away from the mirror':
+				cla
+				gt 'zaprF', 'toilet'
+			end
+		end
+
+		if spdirtyc > 0:
+			act 'Wipe the cum off your clothes (0:10)':
+				cla
+				*clr
+				cumspclnt = 6
+				gs 'cum_cleanup'
+				minut += 10
+				'<center><img src="images/etogame/frotsp.jpg"></center>'
+				'You spend ten minutes wiping and rinsing the cum stains out of your clothes. By the end, all that remain of them are some damp spots that should dry up in a few minutes.'
+
+				act 'Continue':gt 'zaprF', 'toilet'
+			end
+		end
+
+		dynamic $tampon
+		dynamic $quickwash
+		dynamic $basin
+
+		act 'Leave the restroom':gt 'zaprF', 'start'
 		end
 	end
 end

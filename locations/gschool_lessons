@@ -1,0 +1,618 @@
+# gschool_lessons
+
+if $ARGS[0] = 'morning':
+	act 'Go to class':gt 'gschool_lessons', 'class'
+
+	act 'Skip one of your classes':
+		cla
+		''
+		'You don''t feel like attending all of your classes this morning, no one will miss you if you skip one of your three afternoon classes.'
+		act 'Go to girl''s bathroom': gt 'gschool_events', 'girls bathroom'
+!!		act 'Go to boy''s bathroom': gt
+!!		act 'Go to old school building': gt
+	end
+end
+
+if $ARGS[0] = 'class':
+	if hour = 10:
+		minut += 60 * 2
+		school_lunch = 0
+		urand = rand(0, 12)
+		if lernHome = 0: Suspeh += 2
+		if lernHome > 0: Suspeh -= 1
+		if Suspeh > 100: Suspeh = 100
+		if Suspeh < 0: Suspeh = 0
+		lernSkill += 1
+		lernHome += 1
+		if schoolSorev = 1: schoolSorev = 0
+	elseif school_lunch = 1 and hour ! 16:
+		gt 'gschool_lessons', 'afternoon2'
+	end
+	cla
+	if hour <= 12 and (week = 2 or week = 4):
+		$teacher = 'Anatoly E.'
+		$teacher[1] = 'Anatoly E.'
+		$teacher[2] = 'Anatoly E.'
+	else
+		$teacher =  'Ilya Yenotin'
+		$teacher[1] = 'Ilya Yenotin'
+		$teacher[2] = 'Ilya Yenotin'
+	end
+
+	gs 'stat'
+	'<center><img src="images/qwest/alter/urok<<urand>>.jpg"></center>'
+	
+	if late = 1 and hour = 10: 'Under the disapproving gaze of the teacher you feel guilty for being late' & late=0
+	'You sit in the classroom and listen to the monotonous droning of your teacher, doing your best to not fall asleep.'
+	
+	if GorSlut > 0:'During the class you hear classmates whisper nasty things about you, and sometimes they make lewd gestures when the teacher is not looking.'
+	
+	if soniaPS = 1:soniaPS = 2 & 'Everyone is talking about Sonia today. Apparently, she got very drunk last night at the disco and gave five guys a blowjob, at the same time! Her reputation is ruined now, everyone thinks she''s a whore. No one wants to be seen with her any more. Sonia herself looks distraught.'
+
+	if Enable_skipnoevclass > 0 and ($teacher = 'Ilya Yenotin' or RAND(1,100) > Enable_skipnoevclass):
+		gt 'gschool_lunch', 'lunch' & !skip class ev if 1.not Anatoly E. or 2. rand < set chance by illume
+	
+	else
+		
+		act'Listen attentively to <<$teacher[1]>>':
+			cla
+			Suspeh += 1
+			
+			if $teacher = 'Anatoly E.': grupNPC[26] += 1
+			
+			if RAND(1,2) = 1:
+				$school_class_txtrand = 'You listen attentively to <<$teacher[1]>> for the duration of the class. Today''s lesson was interesting and informative, and you feel you learned from taking part in class.'
+			
+			else
+				$school_class_txtrand = 'You listen attentively to <<$teacher[1]>> for the duration of the class. You particularly enjoy the debate section.'
+			
+			end	
+			
+			act'Ask a question about the lesson':
+				cla
+				if $teacher = 'Anatoly E.': grupNPC[26] += 1
+
+				if RAND(1,4) = 1:
+					''
+					'You ask a question about the lesson, hoping to learn even more on the subject. Unfortunately, the constant chatter of your classmates drowns out the teacher''s answer, and you don''t catch much of it. Maybe if you didn''t sit so far in the back of the class, it would have been easier to hear.'
+					gt 'gschool_events', 'disrupt'
+				
+				else
+					Suspeh += 1
+					''
+					'<<$teacher>> nods approvingly, always happy to see his students engaged in his class. He happily spends some extra time explaining the topic again, and answers any extra questions you might have. You feel smarter, thoroughly understanding today''s lessons now.'
+				
+				end
+				
+				act'Wait for the end of the lesson':gt 'gschool_lunch', 'lunch'
+			
+			end
+			
+			if $teacher = 'Anatoly E.' and vnesh > 60 and grupNPC[26] >= 40:
+				if grupNPC[26] >= 40 and grupNPC[26] < 60:
+					ivrand = 1
+				elseif grupNPC[26] >= 60 and grupNPC[26] < 80:
+					ivrand = RAND (1,3)
+				elseif grupNPC[26] >= 80:
+					ivrand = RAND (1,4)
+				end
+				if ivrand = 1:
+					grupNPC[26] += 1
+					if RAND(1,3) = 1:
+						$school_class_txtrand = 'Today, there''s a test about the homework you hopefully did. Anatoly E. calls you forward a lot, having you write your answers down on the board. When he asks you for the fourth time today, you begin to suspect he keeps asking you just because of how cute you look in your school uniform, and blush a little as you pick up the chalk once more.'
+					elseif RAND(1,2) = 1:
+						$school_class_txtrand = 'Today, school turns out to be quite interesting. Instead of just teaching, <<$teacher>> spends the hours engaging the students in a discussion about all sorts of topics. Whenever you say anything, he compliments the eloquent way you engage in discussion and uses you as an example for the rest of the class.'
+					else
+						$school_class_txtrand = 'Today, you had to work hard at school. It certainly payed off though, and <<$teacher>> does his best to involve you in the lessons.'
+					end
+				elseif ivrand = 2:
+					grupNPC[26] += 1
+					$school_class_txtrand = 'You listen closely to every word <<$teacher[1]>> says, doing your best to learn. You are however somewhat distracted by the way he keeps glancing at you when he thinks you''re not looking. You notice he keeps looking at your legs, which stick out from under your desk.'
+					gt 'gschool_events', 'legs'
+				elseif ivrand = 3:
+					$school_class_txtrand = '<<$teacher>> notices you appear to be stuck on one of the assignments and kneels down next to you. He patiently explains to you what you are doing wrong, and slowly but surely you begin to understand.'
+					gt 'gschool_events', 'help'
+				
+				elseif ivrand = 4:
+					grupNPC[26] += 1
+					
+					if RAND(1,2) = 1:
+						$school_class_txtrand = 'You sit at your desk, writing a summary on today''s lesson to help you study later. Suddenly, <<$teacher>> comes up from behind you and puts his hand on your shoulder. He takes his time and patiently corrects your mistakes, leaning in a bit closer than is appropriate from a teacher. You don''t mind though, <<$teacher>> is always nice to you.'
+					
+					else
+						$school_class_txtrand = 'As you are solving some math dilemmas in your text book, you notice <<$teacher>> walking past your desk. When you hear a suspicious *click* you quickly look to your side, and see that he has his phone in his hand, and was quietly trying to make a photo of your legs from the side! He notices you looking at his hand, very embarrassed by the fact that you caught him. As he tries to walk away, you call him towards you and whisper in his ear, "Let me know next time, so I can get into a more elegant pose first." before sending him off with a lewd wink.'
+					
+					end
+				
+				end
+			
+			end
+			''
+			'<<$school_class_txtrand>>'
+			
+			act 'Wait for the end of the lesson':gt 'gschool_lunch', 'lunch'
+		
+		end
+		
+		act'Daydream':
+			cla
+			Suspeh -= 1
+			if RAND(1,2) = 1:
+				''
+				'Today''s lessons don''t particularly interest you, and you find yourself drifting off constantly. After a while you notice <<$teacher>> has stopped teaching and is looking at you intently, asking you to pay attention. Apparently this is already the third time he asked; you missed the first two completely while you was lost in your own thoughts. The whole class is looking at you now.'
+				if $teacher = 'Anatoly E.' and vnesh > 60 and grupNPC[26] >= 40 and sub < 30:
+					cla
+					
+					act'Don''t pay attention':
+						cla
+						
+						if dom > 70:
+							''
+							'<<$teacher>> tries to convince you on the importance of todays lesson, "<<$name>>, please pay attention, this is very important. Today''s topic is going to be on the exam for sure."'
+							'"Of course, sir. Please continue your super fascinating lesson. Just keep it a bit up-beat please, if you talk any slower, I might fall asleep!" you answer boldly.'
+							'The whole class bursts into loud laughter, and <<$teacher>> has a rough time getting everyone to quiet down.'
+							'"<<$surname>>, get out of class! I should call your parents, and let the principal know you''re being impossible! Out, now!"'
+							
+							act 'Don''t leave the classroom':
+								''
+								'"What good would that do? Are you trying to get me to start smoking to pass the time? I''m not interrupting your classes, just leave me alone. I''m having some... girl problems. Would you like me to talk about those?" you answer brashly, not having any intentions of getting up.'
+								'Your teacher doesn''t know what to say, and after a while just decides to continue his classes. You obviously don''t learn anything today.'
+								
+								act'Wait for the end of the lesson':gt 'gschool_lunch', 'lunch'
+							
+							end
+							
+							act 'Leave the classroom':school_event_hour = daystart & gt 'gschool_lunch', 'lunch'
+						
+						else
+							''
+							'The eyes of <<$teacher>> grow narrower, and even though you roll your eyes at him, you sit through the rest of the lesson in silence, at least pretending to pay attention sometimes. You don''t learn anything today.'
+							
+							act'Wait for the end of the lesson':gt 'gschool_lunch', 'lunch'
+						
+						end
+					
+					end
+					
+					act'Try to focus on the lesson':
+						cla
+						
+						act'Wait for the end of the lesson':gt 'gschool_lunch', 'lunch'
+					
+					end
+				
+				end
+				
+				act'Try to focus on the lesson':
+					cla
+					
+					act'Wait for the end of the lesson':gt 'gschool_lunch', 'lunch'
+				
+				end
+			
+			else
+				
+				act'Wait for the end of the lesson':gt 'gschool_lunch', 'lunch'
+			
+			end
+		
+		end
+		
+		act'Play with your phone':
+			cla
+			Suspeh -= 1
+			
+			if RAND(1,3) = 1:
+				$school_class_txtrand = 'This lesson is so boring, you have to do something to keep yourself entertained. You take out your phone and begin to play a mobile game, hoping the lesson will be over soon.'
+			
+			elseif RAND(1,2) = 1:
+				$school_class_txtrand = '<<$teacher>> notices you''re not listening at all, and asks you to put your phone away. You decide not to make things worse, and put your phone back in your pocket. The lesson feels like it takes forever to end, and you''re glad when it''s finally over.'
+			
+			else
+				$school_class_txtrand = 'This lesson is so boring, you have to do something to keep yourself entertained. You take out your phone and begin to play a mobile game, hoping the lesson will be over soon.'
+			
+			end
+			
+			if $teacher = 'Anatoly E.' and vnesh > 60 and grupNPC[26] >= 40:
+				cla
+				
+				gt 'gschool_events', 'phone'
+			
+			else
+				''
+				'<<$school_class_txtrand>>'
+			end
+			
+			act 'Wait for the end of the lesson': gt 'gschool_lunch', 'lunch'
+		
+		end
+	
+	end
+
+end
+
+if $ARGS[0] = 'afternoon':
+	act 'Go to class':gt 'gschool_lessons', 'afternoon2'
+
+	act 'Skip one of your classes':
+		cla
+		''
+		'You don''t feel like attending all of your classes this afternoon, no one will miss you if you skip one of your three afternoon classes.'
+		act 'Go to girl''s bathroom': gt 'gschool_events', 'girls bathroom'
+!!		act 'Go to boy''s bathroom': gt
+!!		act 'Go to old school building': gt
+	end
+end
+
+if $ARGS[0] = 'afternoon2':
+	cls
+	minut += 60 * 3
+	hour = 16
+	minut = 0
+	schoolprogul -= 1
+	school_event_hour = daystart - 1
+
+	if week ! 3 and week ! 5:
+		urand = rand(0, 12)
+		lernSkill += 1
+		lernHome += 1
+		BeInSchool += 1
+		gt 'gschool_lessons', 'class'
+	elseif week = 3 or week = 5:
+		gs 'stat'
+		'<center><img src="images/qwest/alter/fizra.jpg"></center>'
+		'On Wednesdays and Fridays, you have gym class as always. After everyone gets dressed and gets ready for gym class, Viktor Pavlovich conducts a roll call to ensure everyone is there.'
+		fizrarand = rand(0, 4)
+
+		if fizrarand = 0:
+			speed += rand(1, 3)
+			manna -= 5
+			fat -= 5
+			sweat += 30
+			beg += rand(0, 2)
+			'After the roll call, Mr. Pavlovich announces that you will be going on a run today.'
+			act 'Run':
+				*clr
+				cla
+				if temper >= 18 and sunWeather = 1:
+					'<center><img src="images/qwest/alter/fizra/fizra2.jpg"></center>'
+					'Since the weather is nice outside, Mr. Pavlovich decides to stage the run outside, on a nearby forest track he set out before the lesson.'
+					if horny =>90 and npcSex[3] = 1:
+						'As you run through the forest, you feel a hand on your ass. It''s Ivan; he''s much faster than you, and sprints past you to show you how fast he can be when he wants. He then pauses and lets you catch up, and you run together for a while.'
+						act 'Show him your tits':
+							cla & *clr
+							'<center><img src="images/qwest/alter/fizra/fizra3.jpg"></center>'
+							'Making sure no one else is near you, you pull up your shirt and reveal your <<$titsize>> boobs to Ivan. You almost immediately notice his erection growing in his tight shorts, and he awkwardly tries to hide his boner. As you pull your shirt back where it belongs you give him a sweet smile and say, "Try hiding that while you''re running past everyone!"'
+							'He grimaces as he sprints away from you, carefully checking to make sure no one is near him. You have a knowing smile on your face when, at the end of the class, his friends ask him why his lap time was so much slower than usual.'
+							act 'Finish run':gt 'gschool_lessons', 'postphys'
+						end
+						act 'Laugh it off and let him go':
+							cla
+							'"Very funny, Ivan" you tell him as you give him a wink. He salutes you theatrically as he sprints off again, finishing the run well before anyone else.'
+							act 'Finish run':gt 'gschool_lessons', 'postphys'
+						end
+					end
+				else
+					'<center><img src="images/qwest/alter/fizra/fizra1.jpg"></center>'
+				end
+				'You join the class in running laps around the gymnasium. Half-way into the fourteenth lap, you wonder if there''s any way gym class could be more boring than this.'
+				act 'Finish run':gt 'gschool_lessons', 'postphys'
+			end
+		elseif fizrarand = 1:
+			agil += rand(1, 3)
+			fat -= 5
+			manna -= 5
+			sweat += 30
+			'After the roll call, Mr. Pavlovich announces that you will be taking turns performing vaults.'
+			gs 'gschool_events', 'fiz_rand'
+			act 'End of lesson':gt 'gschool_lessons', 'postphys'
+		elseif fizrarand = 2:
+			stren += rand(1, 3) + (steroid_dose - rand(0,steroid_dose)) & gs 'obj_din', 'steroids'
+			manna -= 5
+			fat -= 2
+			sweat += 30
+			'After the roll call, Mr. Pavlovich announces that you will all be doing pull-ups today.'
+			act 'Pull ups':
+				*clr
+				cla
+				if temper >= 18 and sunWeather = 1:
+					'<center><img src="images/qwest/alter/fizra/fizra5.jpg"></center>'
+					'Since the weather is nice, the class will be having their gym class outside today.'
+				else
+					'<center><img src="images/qwest/alter/fizra/fizra6.jpg"></center>'
+				end
+				'You wait for your turn and then do your best to do as many pull-ups as you can.'
+
+				gs 'gschool_events', 'fiz_rand'
+				act 'End of lesson':gt 'gschool_lessons', 'postphys'
+			end
+		elseif fizrarand = 3:
+			vital += rand(1, 3) + (steroid_dose - rand(0,steroid_dose)) & gs 'obj_din', 'steroids'
+			manna -= 5
+			fat -= 2
+			sweat += 30
+			'After the roll call, Mr. Pavlovich announces that you will all be doing abdominal exercises today.'
+			gs 'gschool_events', 'fiz_rand'
+			act 'End of lesson':gt 'gschool_lessons', 'postphys'
+		elseif fizrarand = 4:
+			cls
+			stren += rand(1, 3) + (steroid_dose - rand(0,steroid_dose)) & gs 'obj_din', 'steroids'
+			manna -= 5
+			fat -= 2
+			sweat += 30
+			horny += 10
+			gs 'stat'
+			'<center><img src="images/qwest/alter/rope.jpg"></center>'
+			'On Wednesdays and Fridays, you have gym class as always. After everyone gets dressed and gets ready for gym class, Viktor Pavlovich conducts a roll call to ensure everyone is there.'
+			'After the roll call, he announces that you will all be taking turns climbing the ropes today.'
+
+			if horny >= 100:
+				horny = 0
+				orgasm += 1
+				rope_orgasm += 1
+				'You climb the rope as instructed, and can''t help but feel the rough robe rubbing against your pussy through your clothes. You do your best to climb up, but the rubbing of the rope against your pussy gets more and more intense as you try to climb higher. After a few seconds the stimulation from the rope against your clit brings you to orgasm, and you have to do everything in your power to not fall down as you quiver against the rope, stifling your moans. Your teacher looks up to you and says, "Why are you shaking, <<$surname>>? Are you tired or something? Go ahead, come down then."'
+			elseif horny >= 50 and horny < 100:
+				horny += 20
+				'You climb the rope as instructed, and can''t help but feel the rough robe rubbing against your pussy through your clothes. You do your best to climb up, but the rubbing of the rope against your pussy gets more and more intense as you try to climb higher. You manage to reach the top, but the rubbing of the rope has got you all worked up. With a bright blush on your face you slide back down, making sure the rope doesn''t rub against your most sensitive spots.'
+			end
+			gs 'gschool_events', 'fiz_rand'
+			act 'End of lesson':gt 'gschool_lessons', 'postphys'
+		end
+	end
+end
+
+if $ARGS[0] = 'postphys':
+	if week = 5 and LocalRun = 0:
+		if schoolSorev = 0:schoolSorev = 1
+
+		'Mr. Pavlovich announces that the inter-school running competition will be held this Saturday at 11:00. If you want to participate, you should come to school between 10:00 and 11:00.'
+	elseif week = 5 and LocalRun = 1:
+		if schoolSorev = 0:schoolSorev = 2
+
+		'Mr. Pavlovich announces that the inter-school running competition will be held this Saturday at 11:00. If you want to participate, you should come to school between 10:00 and 11:00.'
+	end
+
+	if fizrukSex > 0 and kristinaSex > 0:
+		'When the class is dismissed, Christina approaches you, "<<$nickname>>, sweetie, Mr. Pavlovich wants you to join me again in his office. He wants us to ''entertain him'', if you know what I mean. Want to join me?"'
+
+		act 'Entertain Mr. Pavlovich with Christina':
+			cls
+			stat['bj'] += 1
+			!!spafinloc = 12
+			gs 'cum_manage'
+
+			if fizrukSex = 0:fizrukSex = 1 & guy += 1
+			if kristinaSex = 0:kristinaSex = 1
+
+			grupNPC[18] = 100
+			gs 'stat'
+			'<center><img src="images/qwest/alter/ev/fiz.jpg"></center>'
+			'You follow Christina, and follow her lead as she squats before your teacher. She diligently takes off his clothes and takes his penis in her hand, sucking on it for a little while before offering it to you. You follow her lead and obediently take his cock in your mouth, sucking on it and trying to take it down as far down your throat as you are comfortable with. After a while she pushes your face away and closes her lips around it, sucking him off until he shoots his load inside her mouth. Unwilling to share, she swallows it and then goes to the changing room to get dressed.'
+
+			act 'Change and leave the school':gt 'gschool_grounds', 'main'
+		end
+	end
+	if zverRageQW = 10:
+		cla
+		!!Christina broke SG
+		act 'In the locker room.':gt 'gKristinaZv'
+
+		exit
+	end
+
+	!!if zverevaQW = 2:end
+	!!if zverevaQW = 3 and fizrukSex = 0:end
+
+	if zverevaQW = 1:
+		'After class, Mr. Pavlovich returns to his office. For some reason, Christina Zvereva is following him while all other students go to the locker rooms as usual.'
+
+		act 'Listen in on Christina and Mr. Pavlovich':
+			cls
+			gs 'stat'
+			'You quietly move up to Mr. Pavlovich''s office, to listen to what they''re talking about. You hear Christina saying, "Please sir, you can''t let <<$name>> go to the regional competition!"'
+			'He replies, "<<$name>> beat you fair and square, Christina. There''s not a whole lot I can do about it."'
+			'Christina''s voice again, "But you promised! Please? I''ll make it worth your while if you choose me over her, sir..."'
+			'After a few seconds of silence, you hear him smirk, "Is that so, Christina? You know what to do then, this is not your first time here." Seconds later you hear a gasp from your teacher, and then soft moaning from him.'
+
+			act 'Try to see what''s happening':
+				cls
+				zverevaQW = 2
+				horny += 10
+				gs 'stat'
+				'<center><img src="images/qwest/alter/ev/zver.jpg"></center>'
+				'You lean over and try to look through the keyhole. You''re flabbergasted by what you see: Christina is on her knees in front of Mr. Pavlovich, and is sucking him off like her life depended on it.'
+
+				act 'Burst into the room':
+					cls
+					zverevaQW = 3
+					gs 'stat'
+					!!'<center><img src="images/qwest/alter/ev/zver.jpg"></center>'
+					if GorSlut = 0:
+						'You open the door and enter Mr. Pavlovich''s room. Christine is startled, jumping up from her kneeling position and desperately wiping her mouth while your teacher quickly stuffs his erection back into his shorts. "<<$surname>>, has no one taught you you should knock!? Me and Christina were just discussing some important matters!" he exclaims, pretending to be insulted by your sudden intrusion.'
+						'You can''t believe he''s even trying! You tell him just that, "Christina was using her mouth, but it certainly wasn''t for talking! You''re letting her suck you off so she can go to the regional competition instead of me!"'
+						'He drops the charade, but has a confident grin on his face, "Who would believe you? It''s your word against mine, and the word of our school''s star athlete Christina Zvereva. The principal would consider it slander! Your parents would be outraged! Face it you don''t have shit on me, get out of my office. Christina, get back on your knees, we''re not done." The last part was directed at Christina.'
+						'Christina obliges, rubbing his cock through his shorts as she looks you in the eye. Having regained her confidence in knowing that she''ll be your school''s admission for the contest, she parrots, "Face it bitch, you can''t prove a thing. Now get the fuck out, Mr. Pavlovich and I have more to discuss."'
+					elseif GorSlut > 0:
+						'You open the door and burst into Mr. Pavlovich''s room. Christina pulls off her teacher''s dick in a panic reaction, but regains her confidence when she sees it''s you, "Look what the cat dragged in, it''s <<$name>> the <<$gnikname>>. I recognize that look, you want to suck him off too, don''t you? That''s okay, we can share."'
+
+						act 'Give him a blowjob with Christina':
+							cls
+							stat['bj'] += 1
+
+							if fizrukSex = 0:fizrukSex = 1 & guy += 1
+							if kristinaSex = 0:kristinaSex = 1
+
+							grupNPC[18] = 100
+							gs 'stat'
+							'<center><img src="images/qwest/alter/ev/fiz.jpg"></center>'
+							'You nod and get down on your knees next to Christina, thinking maybe if you outperform her, he will still pick you for the competition. She diligently takes off his clothes and takes his penis in her hand, sucking on it for a little while before offering it to you. You follow her lead and obediently take his cock in your mouth, sucking on it and trying to take it down as far down your throat as you are comfortable with. After a while she pushes your face away and closes her lips around it, sucking him off until he shoots his load inside her mouth. Unwilling to share, she swallows it and then goes to the changing room to get dressed. You might be faster than Christina, but she definitely outperformed you here.'
+
+							act 'Change and leave the school':gt 'gschool_grounds', 'main'
+						end
+					end
+
+					act 'Change and leave the school':gt 'gschool_grounds', 'main'
+				end
+
+				act 'Keep looking':
+					cls
+					horny += 10
+					gs 'stat'
+					'<center><img src="images/qwest/alter/ev/zver.jpg"></center>'
+					'Mr. Pavlovich groans, and after a few minutes he can''t hold back any more shoots his load in Christina''s mouth. She diligently swallows his sperm without even taking her mouth off his cock, giving it a thorough tongue bath before tucking it back into his shorts. You hear her ask, "Did I do a good job, sir? Did I earn my spot in the regional championships?"'
+					'He groans, petting her head as he instructs her to stay on her knees for a while longer, "Absolutely babe, as long as you keep taking care of me, I''ll make sure you''ll be running those championships. Don''t get up, stay there and keep nuzzling. I think I can go again in a minute."'
+
+					act 'Admit defeat and go get changed':
+						cls
+						gs 'stat'
+						'As you see Christina happily dig her face into his groin, you quietly close the door and leave. It looks like, despite being the better runner, you won''t be going to the regional championships.'
+
+						act 'Leave the school':gt 'gschool_grounds', 'main'
+					end
+				end
+
+				act 'Admit defeat and go get changed':
+					cls
+					gs 'stat'
+					'Yea, you''re not willing to do that. As you see Christina happily dig her face into his groin, you quietly close the door and leave. It looks like, despite being the better runner, you won''t be going to the regional championships.'
+
+					act 'Leave the school':gt 'gschool_grounds', 'main'
+				end
+			end
+		end
+	end
+
+	gs 'stat'
+	'<center><img src="images/qwest/alter/school/gym/postphys.jpg"></center>'
+
+	act 'Change and leave the school':gt 'gschool_grounds', 'main'
+end
+
+if $ARGS[0] = 'principal':
+    '<center><b><font color="maroon">Principal''s Office</font></b></center>'
+    '<center><img src="images/qwest/alter/school/principal/office.jpg"></center>'
+	'The office in a word is impressive, it must have cost a full years worth of the schools budget to decorate it. At least now you know why so much of the rest of the school has cracked and faded paint, Or is in need of repair, that never seems to happen, they spend all the money on this office.'
+	if demerit > 20:
+		'You take a seat at her desk and wait for her to address you with a exacerbated tone "What did you do this time? No I don''t want to know. I really don''t care. You obviously have no respect for me or your teachers." She looks over your file some more and shakes her head slightly. "You have been here enough, you know what comes next. So what will it be this time? Spanking, Saturday detention perhaps." She seems more than a bit annoyed that you seem immune to her punishment system or are just that troubled of a student.'
+		act 'Choose detention':gt 'gschool_lessons', 'class' & !!triggers Saturday detention on Saturday morning.
+		act 'Choose spanking': gt 'gschool_lessons', 'spanked'
+		if demerit >= 50:act 'Choose suspension': gt 'gschool_lessons', 'suspension'
+		!!act 'Call Parents': gt 'gschool_lessons', 'Call Parents' - I will add this one in later as it will be a bit of work to write and tie in events at home.
+	elseif demerit > 10:
+		'You take a seat at her desk and wait for her to address you. "This is becoming a routine with you, I feel like I am seeing you every day. What has changed? You use to be such a good girl, perhaps a bit quiet, but now. This is not the way to get attention." She looks over your file some more and shakes her head slightly.'
+		'"We can''t have you keep getting in trouble like this, this is going to require a form of punishment." She looks directly at you for a moment to make sure you understand when you cause problems you will be getting punished. "I believe in giving the students a voice in their future. So I will let you decided, Saturday detention or a spanking now. Which will it be?"'
+
+		act 'Choose detention': gt 'gschool_lessons', 'class' & !!triggers Saturday detention on Saturday morning.
+		act 'Choose spanking': gt 'gschool_lessons', 'spanked'
+	else
+		'You take a seat at her desk and wait for her to address you. "You know why you are here <<$surname>>?", before you have a chance to reply she continues on. "It was a rhetorical question, we both know why you are here. You are here because you got in trouble." She pauses to look over at the folder in front of her. "It shows you have mostly stayed out of trouble until now. I hope this is only a minor lapse in judgement and not a new trend from you. We won''t get into what you did, just understand this is a warning. Straighten yourself out or their will be consequences. Now return to class."'
+		act 'Go to class':gt 'gschool_lessons', 'class'
+	end
+end
+
+if $ARGS[0] = 'spanked':
+	'<center><b><font color="maroon">Principal''s Office</font></b></center>'
+	'<center><img src="images/qwest/alter/school/principal/principal.jpg"></center>'
+	'No way are you coming back to school on a Saturday. "Uh, I would rather just get it over with, so spanking."'
+	'"Very well, come over here." She says as she gets up and pulls a chair out and sits down on it. You get up and walk over to her.'
+	principal_spank += 1
+	if principal_spank <= 5:
+	!!there is different levels of spanking, first 5 times is Spanked, next 5 is Bare Spanked, next 5 times is Leather Paddle, after that all future ones is Wooden Paddle. If flirt is selected it automatic jumps to the next level, regardless of number of times.
+		act 'Take Punishment':
+			cls
+			gs 'pain', 1, 'asscheeks', 'spank'
+			gs 'stat'
+			'<center><img src="images/qwest/alter/school/principal/schoolspank.jpg"></center>'
+			'Once you walk over to her, she pulls you down across her knees, with you laying across her knees she pulls up your skirt and using her hand to smack your ass. You jerk a bit in reflex, she is a strong woman and her smacks sting a bit. She is obviously trying to smack your butt with enough force to teach you a lesson.'
+			'You silently take your punishment, even if it is not all that bad and a bit of you actually likes it. Regardless you don''t want her to know this isn''t bother you all that much. So you play along, withering around and whimpering as she spanks you for a good solid minute.'
+			'Then she lifts you back to your feet and rubs your arm. "I hope this has taught you a lesson and I don''t want to see you in my office any more. Ok return to your classes." With that she goes back to her desk and you head back to class.'
+			act 'Go to class':gt 'gschool_lessons', 'class'
+		end
+		act 'Flirt/rebel':
+			principal_spank = 6
+			cls
+			gs 'pain', 2, 'asscheeks', 'spank'
+			gs 'stat'
+			'<center><img src="images/qwest/alter/school/principal/schoolspank.jpg"></center>'
+			'Once you walk over to her, she pulls you down across her knees, pulls up your skirt she uses her hand to smack your ass. You jerk a bit in reflex, she is a strong woman and her smacks sting a bit. She is obviously trying to smack your butt with enough force to teach you a lesson.'
+			'With each smack you start to moan, softly. "Stop that!" She says and gives you the hardest smack on your ass yet. You moan even louder and wiggle your butt a bit.'
+			'"Oh yes Miss (surname here), yes please harder, harder." You say as if your on the verge of a orgasm. "Yes spank me, spank me, harder and I promise to be your special bad little girl." You say with a giggle.'
+			'To her credit she doesn''t relent and even manages to spank you harder. Once she has spanked you for a minute or so, she roughly lifted you off her knees and back on your feet. She points at the door. "Back to class now, before I give you detention as well." Not wanting detention, you don''t say anymore. Heading instead for the door, putting a bit of extra sway into your hips as you do.'
+			act 'Go to class':gt 'gschool_lessons', 'class'
+		end
+	elseif principal_spank <= 10:
+!!Spanked Bare Bottom
+		act 'Take Punishment':
+			cls
+			gs 'pain', 2, 'asscheeks', 'spank'
+			gs 'stat'
+			'<center><img src="images/qwest/alter/school/principal/schoolbarespank.jpg"></center>'
+			'Once you walk over to her, she pulls you down across her knees, with you laying across her knees she pulls up your skirt and pulls your panties down to your knees, exposing your base ass. She smacks you hard across your bare ass, you jerk a bit in reflex, she is a strong woman and her smacks sting a bit. She is obviously trying to smack your butt with enough force to teach you a lesson.'
+			'You silently take your punishment, even if it is not all that bad and a bit of you actually likes it. Regardless you don''t want her to know this isn''t bother you all that much. So you play along, withering around and whimpering as she spanks you for a good solid minute, which leaves your butt a nice shade of red.'
+			'Then she lifts you back to your feet and rubs your arm. "I hope this has taught you a lesson and I don''t want to see you in my office any more. Ok return to your classes." With that she goes back to her desk and you pull up your panties, before heading back to class.'
+			act 'Go to class':gt 'gschool_lessons', 'class'
+		end
+		act 'Flirt/rebel':
+			principal_spank = 11
+			cls
+			gs 'pain', 3, 'asscheeks', 'spank'
+			gs 'stat'
+			'<center><img src="images/qwest/alter/school/principal/schoolbarespank.jpg"></center>'
+			'Once you walk over to her, she pulls you down across her knees, with you laying across her knees she pulls up your skirt and pulls your panties down to your knees, exposing your base ass. She smacks you hard across your bare ass, you jerk a bit in reflex, she is a strong woman and her smacks sting a bit. She is obviously trying to smack your butt with enough force to teach you a lesson.'
+			'With each smack you start to moan, softly. "Stop that!" She says and gives you the hardest smack on your ass yet. You moan even louder and wiggle your butt a bit.'
+			'"Oh yes Miss (surname here), yes please harder, harder." You say as if your on the verge of a orgasm. "Yes spank me, spank me, harder and I promise to be your special bad little girl." You say with a giggle.'
+			'To her credit she doesn''t relent and even manages to spank you harder. Once she has spanked you for a minute or so, which leaves your butt a nice shade of red. She roughly lifts you off her knees and back on your feet. She points at the door. "Back to class now, before I give you detention as well." Not wanting detention you slowly pulling your panties back up, giving her a extra long look at your cherry red butt cheeks. As  you head for the door you add a bit of extra sway into your hips.'
+			act 'Go to class':gt 'gschool_lessons', 'class'
+		end
+	elseif principal_spank <= 15:
+!!Spanked Leather Paddle
+		act 'Take Punishment':
+			cls
+			gs 'pain', 4, 'asscheeks', 'spank'
+			gs 'stat'
+			'<center><img src="images/qwest/alter/school/principal/schoolpaddle2.jpg"></center>'
+			'Once you walk over to her, she pulls you down across her knees, with you laying across her knees she pulls up your skirt and pulls your panties down to your knees, exposing your base ass. This time she pulls out a leather paddle and gives you a hard smack across your bare ass, you jerk a bit in reflex, she is a strong woman and her smacks sting. She is obviously trying to smack your butt with enough force to teach you a lesson and it is kinda working.'
+			'You silently take your punishment, it almost brings you to tears but a part of you gets turned on by it as well. Regardless you don''t want her to know that you are actually getting turned on by this. You don''t have to play along much, this really stings even if you are enjoying it too, you wither around and whimpering as she spanks you for a good solid minute.'
+			'Then she lifts you back to your feet and rubs your arm. "I hope this has taught you a lesson and I don''t want to see you in my office any more. Ok return to your classes." With that she goes back to her desk and you pull up your panties, before heading back to class.'
+			act 'Go to class':gt 'gschool_lessons', 'class'
+		end
+		act 'Flirt/rebel':
+			principal_spank = 16
+			cls
+			gs 'pain', 5, 'asscheeks', 'spank'
+			gs 'stat'
+			'<center><img src="images/qwest/alter/school/principal/schoolpaddle2.jpg"></center>'
+			'You walk over to her, swaying your hips. You pull your panties down to your knees and lay across her legs, looking back up her expectantly. You bite your lower lip, looking at her like you might a lover. She tries to ignore your look and picks up a leather paddle, she smacks you hard across your bare ass, you jerk a bit in reflex, she is a strong woman and her smacks really sting, yet you moan softly. She is obviously trying to smack your butt with enough force to teach you a lesson.'
+			'With each smack you start to moan, softly. She smacks your ass even harder, really putting her shoulder into it. You moan even louder and wiggle your butt a bit. She looks a little troubled like she is unsure this is working, but the troubled look only lasts a second and her face hardens into a stern resolve.'
+			'"Oh yes Miss (surname here), yes please harder, harder." You say as if your on the verge of a orgasm. "Yes spank me, spank me, harder and I promise to be your special bad little girl. Oh god you are making me so wet." You say in a husky tone.'
+			'To her credit she doesn''t relent and even manages to spank you harder. Once she has spanked you for a minute or so, she roughly lifted you off her knees and back on your feet. She points at the door. "Back to class now, before this gets worse for you." You head for the door, putting a bit of extra sway into your hips as you go, and very slowly pulling your panties back up, giving her a extra long look at your cherry red butt cheeks.'
+			act 'Go to class':gt 'gschool_lessons', 'class'
+		end
+	else
+!!Spanked Wooden Paddle
+		act 'Take Punishment':
+			cls
+			gs 'pain', 5, 'asscheeks', 'spank'
+			gs 'stat'
+			'<center><img src="images/qwest/alter/school/principal/schoolpaddle1.jpg"></center>'
+			'Once you walk over to her, she pulls you down across her knees, with you laying across her knees she pulls up your skirt and pulls your panties down to your knees, exposing your base ass. This time she pulls out a large wooden paddle and gives you a hard smack across your bare ass, you jerk as it stings your bare butt cheeks, she is a strong woman and her smacks really sting a lot. She is obviously trying to smack your butt with enough force to teach you a lesson and it is sorta working.'
+			'You silently take your punishment, it almost brings you to tears but a part of you gets turned on by it as well. Regardless you don''t want her to know that you are actually getting turned on by this. You don''t have to play along much, this really stings even if you are enjoying it too, you wither around and whimpering as she spanks you for a good solid minute.'
+			'Then she lifts you back to your feet and rubs your arm. "I hope this has taught you a lesson and I don''t want to see you in my office any more. Ok return to your classes." With that she goes back to her desk and you pull up your panties, before heading back to class.'
+			act 'Go to class':gt 'gschool_lessons', 'class'
+		end
+		act 'Flirt/rebel':
+			cls
+			gs 'pain', 6, 'asscheeks', 'spank'
+			gs 'stat'
+			'<center><img src="images/qwest/alter/school/principal/schoolpaddle1.jpg"></center>'
+			'You walk over to her, swaying your hips. You pull your panties down to your knees and lay across her legs, looking back up her expectantly. You bite your lower lip, looking at her like you might a lover. She tries to ignore your look and picks up a leather paddle, she smacks you hard across your bare ass, you jerk a bit in reflex, she is a strong woman and her smacks really sting, yet you moan softly. She is obviously trying to smack your butt with enough force to teach you a lesson.'
+			'With each smack you start to moan, softly. She smacks your ass even harder, really putting her shoulder into it. You moan even louder and wiggle your butt a bit. She looks a little troubled like she is unsure this is working, but the troubled look only lasts a second and her face hardens into a stern resolve.'
+			'"Oh yes Miss (surname here), yes please harder, harder." You say as if your on the verge of a orgasm. "Yes spank me, spank me, harder and I promise to be your special bad little girl. Oh god you are making me so wet." You say in a husky tone.'
+			'To her credit she doesn''t relent and even manages to spank you harder. Once she has spanked you for a minute or so, she roughly lifted you off her knees and back on your feet, her hands rest on your hips, as she stands up to face you, one hand slips down to your bare ass and stays there just a moment. She removes her hands and then points at the door. "You are playing a dangerous game young lady, get back to class." You head for the door, putting a bit of extra sway into your hips as you go and very slowly pulling your panties back up, giving her a extra long look at your cherry red butt cheeks.'
+			act 'Go to class':gt 'gschool_lessons', 'class'
+		end
+	end
+end
+
+--- gschool_lessons ---------------------------------
+
