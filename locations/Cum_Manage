@@ -50,9 +50,9 @@
 !!	
 !!	Values of 'cumarrkno' as defined by the cum_arr:
 !!	
-!!	cumarrkno = -2 : 'You know somebody got sperm in you, but you don''t know that person'
+!!	cumarrkno = -2 : 'You were unaware there was sperm in you'
 !!	cumarrkno = -1 : 'Precum'
-!!	cumarrkno =  0 : 'You were unaware there was sperm in you'
+!!	cumarrkno =  0 : 'You know somebody got sperm in you, but you don''t know that person'
 !!	cumarrkno =  1 : 'You know who got sperm in you'
 !!	
 !!
@@ -99,12 +99,16 @@ if $ARGS[0] = '':
 
 	if sexcontra = 0 and pillcon > 1000: sexcontra = 2
 
+!{Check for previous deposit, and if it was by the same guy and precum, it sets cumarrtemp back by one}
+	if $cumarrnam[cumarrtemp-1] = $boy and cumarrkno[cumarrtemp-1] = -1:cumarrtemp -= 1 & sexspecpot = cumarrppt[cumarrtemp]
+
 !!{	Check to see if this is flagged as a preejaculate emmission. All vaginal penetrations that flag this as cumprecheck contain preejaculate. Guidelines for calling it: If your boy is likely to have masterbated, had sex, or otherwise encouraged semen to leak out of their urethra in the last 48 hours, they probably have some fertile preejaculate. If in doubt, let it leak. The chances of pregnancy from it are low, and the MC should have been wearing protection.}
 
 	if cumprecheck ! 1:
 
 !!{	Here it checks for vaginal deposit.}
 
+			
 		if spafinloc <= 0:
 			
 !!{	Next it sets the variables in the array. The cumming boys name is first and cum age to 0.
@@ -119,10 +123,10 @@ if $ARGS[0] = '':
 			cumarrdel[cumarrtemp] = 0
 
 			if sexunaware > 0:
-				cumarrkno[cumarrtemp] = 0
+				cumarrkno[cumarrtemp] = -2
 
 			elsif sexpartkno = 0:
-				cumarrkno[cumarrtemp] = -2
+				cumarrkno[cumarrtemp] = 0
 
 			else
 				cumarrkno[cumarrtemp] = 1
@@ -176,11 +180,11 @@ if $ARGS[0] = '':
 					break_thresh += slip_thresh
 
 					if temprand = 0:
-						cumarrcpt[cumarrtemp] = cumarrppt[cumarrtemp]/4
+						cumarrcpt[cumarrtemp] += cumarrppt[cumarrtemp]/4
 						cumarrcon[cumarrtemp] = 3
 					
 					elseif temprand < slip_thresh:
-						cumarrcpt[cumarrtemp] = cumarrppt[cumarrtemp]/200
+						cumarrcpt[cumarrtemp] += cumarrppt[cumarrtemp]/200
 						cumarrcon[cumarrtemp] = 5
 						cumcondslip = 1
 						cumcondsanb = cumarrtemp
@@ -207,7 +211,7 @@ if $ARGS[0] = '':
 						sparrslc[cumarrtemp2] = 0
 					
 					elseif temprand <= break_thresh:
-						cumarrcpt[cumarrtemp] = cumarrppt[cumarrtemp]/2
+						cumarrcpt[cumarrtemp] += cumarrppt[cumarrtemp]/2
 						cumarrcon[cumarrtemp] = 4
 						sexcontra = 4
 						sparrage[cumarrtemp2] = 0
@@ -232,7 +236,7 @@ if $ARGS[0] = '':
 						sparrslc[cumarrtemp2] = 0
 					
 					else
-						cumarrcpt[cumarrtemp] = 5
+						cumarrcpt[cumarrtemp] += 5
 						cumarrcon[cumarrtemp] = 3
 					
 					end	
@@ -241,7 +245,7 @@ if $ARGS[0] = '':
 !!	It treats them the same as if the condom above had a failure.}
 
 				elseif sexcontra = 4:
-					cumarrcpt[cumarrtemp] = cumarrppt[cumarrtemp]/2
+					cumarrcpt[cumarrtemp] += cumarrppt[cumarrtemp]/2
 					cumarrcon[cumarrtemp] = 4
 					sparrage[cumarrtemp2] = 0
 					sparrloc[cumarrtemp2] = 0
@@ -265,7 +269,7 @@ if $ARGS[0] = '':
 					sparrslc[cumarrtemp2] = 0
 				
 				elseif sexcontra = 5:
-					cumarrcpt[cumarrtemp] = cumarrppt[cumarrtemp]/200
+					cumarrcpt[cumarrtemp] += cumarrppt[cumarrtemp]/200
 					cumarrcon[cumarrtemp] = 5
 					cumcondslip = 1
 					cumcondsanb = cumarrtemp
@@ -294,11 +298,11 @@ if $ARGS[0] = '':
 !!	If they were sabotaged, it acts similar to a condom failure, but worse.}
 
 				elseif sexcontra = 6:
-					cumarrcpt[cumarrtemp] = cumarrppt[cumarrtemp]/3
+					cumarrcpt[cumarrtemp] += cumarrppt[cumarrtemp]/3
 					cumarrcon[cumarrtemp] = 6
 				
 				elseif sexcontra = 7:
-					cumarrcpt[cumarrtemp] = cumarrppt[cumarrtemp]/3
+					cumarrcpt[cumarrtemp] += cumarrppt[cumarrtemp]/3
 					cumarrcon[cumarrtemp] = 7
 				
 				end					
@@ -325,7 +329,7 @@ if $ARGS[0] = '':
 				
 				sparridt[cumarrtemp2] = sexpartkno
 				sparrslc[cumarrtemp2] = 0
-				cumarrcpt[cumarrtemp] = cumarrppt[cumarrtemp]/5*4
+				cumarrcpt[cumarrtemp] += cumarrppt[cumarrtemp]/5*4
 				cumarrcon[cumarrtemp] = sexcontra
 			
 			end
@@ -412,7 +416,7 @@ if $ARGS[0] = '':
 			sparrslc[cumarrtemp2] = 0
 		
 		end
-		
+		if cumarrppt[cumarrtemp] < cumarrcpt[cumarrtemp]:cumarrcpt[cumarrtemp] = cumarrppt[cumarrtemp]
 		sexpartkno = 0
 		sexunaware = 0
 		sexspecpot = 0
@@ -420,23 +424,17 @@ if $ARGS[0] = '':
 !!{	And this is the pre ejaculate release talked about above.}
 		
 	elseif sexcontra < 3 and spafinloc = 0:
-		
 		$cumarrnam[cumarrtemp] = $boy
-		cumarrage[cumarrtemp] = 0
-		cumarrdel[cumarrtemp] = 0
-		cumarrkno[cumarrtemp] = -1
-		
 		if sexspecpot ! 0:
 			cumarrppt[cumarrtemp] = sexspecpot
-		
 		else
 			cumarrppt[cumarrtemp] = sexvolume * rand(250, 300)
-		
 		end
-		
+		cumarrage[cumarrtemp] = 0
+		cumarrdel[cumarrtemp] = 0
 		cumarrcon[cumarrtemp] = sexcontra
-		cumarrcpt[cumarrtemp] = cumarrppt[cumarrtemp]/12
-	
+		cumarrcpt[cumarrtemp] += cumarrppt[cumarrtemp]/12
+		if cumarrppt[cumarrtemp] < cumarrcpt[cumarrtemp]:cumarrcpt[cumarrtemp] = cumarrppt[cumarrtemp]
 	end
 
 	sexspecpot = 0
