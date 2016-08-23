@@ -277,16 +277,52 @@ $Phone_contactlist = {
 
 $Phone_notebook = {
 	clr
+	pl'<center><font size=6>Planner</font></center>'
+	rent = -1
+	if BuyHous = 2 and ArendHouseSL > 0:rent = ArendHouseSL
+	preg1 = pregtime
 	d1 = day
 	w1 = week
 	m1 = month
 	i = 0
 	:pnotebook
-		if pfilmday[i] > 0:	
-			pl '<b><<$monthName[m1]>> <<d1>>, <<$week[w1]>>:</b>'
-			pl '&emsp;<b>•</b> Porn shoot: <i><<$porndesc[pfilmday[i]]>></i>'
-		end				
+		$calendarday = ''
+		if preg1 = 280:$calendarday += '<br>&emsp;<b>•</b> <font color=''red''><b>Birthing day!</b></font>'
+		if storyline = 1 and SchoolAtestat = 0 and kanikuli = 1:
+			if m1 = 10 and d1 = 27:$calendarday += '<br>&emsp;<b>•</b> Start of Autumn break.'
+			if m1 = 11 and d1 = 4:$calendarday += '<br>&emsp;<b>•</b> End of Autumn break.'
+			if m1 = 12 and d1 = 29:$calendarday += '<br>&emsp;<b>•</b> Start of Winter break.'
+			if m1 = 1 and d1 = 13:$calendarday += '<br>&emsp;<b>•</b> End of of Winter break.'
+			if m1 = 3 and d1 = 25:$calendarday += '<br>&emsp;<b>•</b> Start of Spring break.'
+			if m1 = 3 and d1 = 31:$calendarday += '<br>&emsp;<b>•</b> End of Spring break.'
+			if m1 = 5 and d1 = 25 and (age = 17 or (age = 16 and birthmonth <= 5 and birthday <= 25)):
+				$calendarday += '<br>&emsp;<b>•</b> Graduation Day!'
+			elseif m1 = 6 and d1 = 1:
+				$calendarday += '<br>&emsp;<b>•</b> Start of Summer break.'
+			end
+			if m1 = 8 and d1 = 31:$calendarday += '<br>&emsp;<b>•</b> End of Summer break.'
+		end
+		if d1 = 31 and m1 = 12 and (year - year_start) < 2 and StoryLine = 1:$calendarday += '<br>&emsp;<b>•</b> New Year''s party at 14:00!'
+		if m1 = 1 and d1 = 1:$calendarday += '<br>&emsp;<b>•</b> New year!'
+		if w1 < 5 and (workSec >= 1 or PersSecWork = 1):$calendarday += '<br>&emsp;<b>•</b> Working as a secretary. <i>(9:00 - 17:00)</i>'
+		if w1 < 5 and workFabrika = 1:
+			$calendarday += '<br>Working as a seamstress. '
+			if age < 18:$calendarday += '<i>(16:00 - 20:00)</i>' else $calendarday += '<i>(8:00 - 16:00)</i>'
+		end
+		if w1 > 1 and w1 <= 5 and workhosp = 1:$calendarday += '<br>&emsp;<b>•</b> Working as nurse. <i>(8:00 - 16:00)</i>'
+		if worksalon = 1 and (w1 = 1 or w1 = 3 or w1 = 5):$calendarday += '<br>&emsp;<b>•</b> Working as masseuse. <i>(9:00 - 17:00)</i>'
+		if pfilmday[i] > 0:$calendarday += '<br>&emsp;<b>•</b> Porn shoot: <i><<$porndesc[pfilmday[i]]>></i>'
+		if d1 = 25 and (PersSecWork = 1 or workKafe = 1 or workhosp = 1 or worksalon = 1 or tanwork = 1 or workSec = 1 or workFabrika = 1):$calendarday += '<br>&emsp;<b>•</b> <i>Pay day.</i>'
+		if rent = 0:$calendarday += '<br>&emsp;<b>•</b> Rent on apartment expires!'
+		if birthday = d1 and birthmonth = m1:$calendarday += '<br>&emsp;<b>•</b> My birthday!'
+		
+		if $calendarday ! '':
+			p '<b><<$monthName[m1]>> <<d1>>, <<$week[w1]>>:</b>'
+			pl $calendarday
+		end
 	if i < 14:
+		preg1 += 1
+		rent -= 1
 		i += 1
 		w1 += 1
 		if w1 > 7:w1 = 1
@@ -294,7 +330,12 @@ $Phone_notebook = {
 		if monthsend[m1] < d1: m1 += 1 & d1 = 1
 		jump 'pnotebook'
 	end
-	
+	killvar 'calendarday'
+	killvar 'rent'
+	killvar 'preg1'
+	killvar 'd1'
+	killvar 'w1'
+	killvar 'm1'
 	pl'<center><a href="exec:dynamic $Phone_menu"><img src="images/pic/icon/back.png"></a></center>'
 }
 
