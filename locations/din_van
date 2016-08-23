@@ -8,7 +8,7 @@ $showerdin = {
 
 $douche = {
 	if doucheday ! daystart or (arrpos('sparrloc', 0) < arrsize('sparrloc') and arrpos('sparrloc', 0) ! -1) or arrpos('sparrloc', 17) ! -1:
-		act 'Clean your vagina with a douche (0.15)':
+		act 'Clean your vagina with a douche (0:15)':
 			cla
 			*clr
 			minut += 15
@@ -17,6 +17,7 @@ $douche = {
 			gs 'cum_cleanup'
 			fbreath = 1
 			'<center><img src="images/pics/douche.jpg"></center>'
+			*nl
 			'For several minutes you pump warm water into your pussy, cleaning it thoroughly.'
 			act 'Finish':gt $locM, $metkaM
 		end
@@ -51,7 +52,6 @@ $dryOff = {
 }
 
 $shower = {
-
 	act 'Take a shower (0:15)':
 		cla
 		*clr
@@ -525,12 +525,6 @@ if $ARGS[0] = 'private':
 		'You have <b><<tampon>></b> tampons.'
 	end
 
-    if dirtbelo > 0 and BuyHous = 0 and $loc = 'vanrPar':
-        'In the bathroom you find the laundry Mom washed for you.'
-        clrbelo += dirtbelo
-        dirtbelo = 0
-    end
-
     if dirtbelo > 0 and poroshok > 0 and $loc ! 'vanrPar':
         act 'Wash clothes':
             cla
@@ -541,6 +535,7 @@ if $ARGS[0] = 'private':
             dirtbelo = 0
             manna = manna - 10
             '<center><img src="images/etogame/stir.jpg"></center>'
+            *nl
             'You soak the clothes in the basin and pour in washing powder, then you wash your clothes until they are finally clean.'
 
             act 'Finish':gt $locM, $metkaM
@@ -560,18 +555,28 @@ if $ARGS[0] = 'private':
     	shampoo = 1
 		'You can use Tanyas shampoo.'
     else
-    	'You''ve run out of shampoo and will have to buy some more before you can wash yourself.'
+    	'<font color="red">You''ve run out of shampoo and will have to buy some more before you can wash yourself.</font>'
     end
 
-    if pain['killer'] = 0 and painkiller > 0:
-        'You have <<painkiller>> painkillers.'
-        act 'Take a painkiller':
-            pain['killer'] += 1
-            painkiller -= 1
-            *nl
-            'You take a painkiller.'
-        end
-    end
+	if painkiller > 0:
+		$pluralS = 's'
+		if painkiller = 1:$pluralS = ''
+		'You have <<painkiller>> painkiller<<$pluralS>>.'
+		if pain['total'] > 0 and pain['killer'] = 0:
+			act 'Take a painkiller':
+				cla
+				pain['killer'] += 1
+				painkiller -= 1
+				water += 20
+				gs 'stat'
+
+				*nl
+				'You take a painkiller and gulp it down with a glass of water.'
+
+				act 'Finish':gt $locM, $metkaM
+			end
+		end
+	end
 
     if pirsA + pirsB + pirsC + pirsD + pirsE + pirsF + pirsN + pirsG + pirsGL > 0:'<a href="exec:dynamic $pirManage">Manage Piercings</a>'
 
@@ -590,14 +595,23 @@ if $ARGS[0] = 'private':
     dynamic $wearpan
     dynamic $basin
 
+    if dirtbelo > 0 and BuyHous = 0 and $loc = 'vanrPar':
+    	*nl
+        'In the bathroom you find the laundry Mom washed for you.'
+        clrbelo += dirtbelo
+        dirtbelo = 0
+    end
+
     if spdirtyc > 0:
         act 'Wipe the cum off your clothes (0:10)':
             cla
+            *clr
             cumspclnt = 6
             gs 'cum_cleanup'
             minut += 10
             gs 'stat'
             '<center><img src="images/etogame/frotsp.jpg"></center>'
+            *nl
             'You remove the traces of cum from your clothes.'
 
             act 'Finish':gt $locM, $metkaM
@@ -613,6 +627,7 @@ if $ARGS[0] = 'private':
             horny += 5
             stanok -= 1
             '<center><img src="images/pics/shave.jpg"></center>'
+            *nl
             'You lather your legs up with some soapy water and shave your legs. After a few swift movements, your legs are smooth as silk. The feeling of your smooth legs turns you on a little.'
 
             act 'Return to showering':gt $locM, $metkaM
@@ -628,6 +643,7 @@ if $ARGS[0] = 'private':
             horny += 5
             stanok -= 1
             '<center><img src="images/pics/shave3.jpg"></center>'
+            *nl
             'You lather your crotch with some soapy water and carefully shave your pubic hair. After shaving you can''t help but run your fingers over your pussy, enjoying the smooth feeling and getting slightly more aroused by the touch.'
 
             act 'Return to showering':gt $locM, $metkaM
@@ -644,7 +660,7 @@ if $ARGS[0] = 'private':
             if anus < 30:anus += 1
 
             '<center><img src="images/body/analplug.jpg"></center>'
-
+			*nl
             'You squat and tug gently at the butt plug, gasping as you push it out of you. You can''t help but feel a bit empty, now that it''s out.' & !!0.2.6: Removed unneccessary var check
 
             act 'Finish':gt $locM, $metkaM
@@ -661,7 +677,7 @@ if $ARGS[0] = 'private':
             if anus >= 20 and anus < 30:anus += rand(0, 1)
 
             '<center><img src="images/body/analplug.jpg"></center>'
-
+			*nl
             if butpluguse > 0:'You squat and gently rub the butt plug against your anus, after lubricating it with a bit of saliva. After a short while, you''ve relaxed enough to be able to push it in. Once it''s in you give it a few gentle tugs, wondering if anyone will catch you wearing it today.'
             if butpluguse = 0:butpluguse = 1 & '"If I''m not going to use it, then why did I buy it?" you ask yourself. You look at the butt plug for a while, thinking "It is necessary to start developing my ass, so I could have great adventures someday... you could even say huge and thick adventures with crimson heads, uh, now I got carried away..." You''re slightly embarrassed at the thought for a second, but are then overcome by your horny fantasies. Determined to get the plug all the way in, you slowly press it against your asshole after lubricating it with a bit of saliva. It hurts a bit at first, but once the thickest part is in the rest follows rather easily. Patting yourself on your ass once it''s in, you wonder if anyone will notice you''re wearing it today and then immediately feel naughty for even having thought that.'
 
@@ -678,7 +694,9 @@ if $ARGS[0] = 'private':
             minut += 5
             klismaday = daystart
             klismaday1 = 1
+
             '<center><img src="images/picv/klisma.jpg"></center>'
+            *nl
             'You give yourself an enema, feeling clean down there. Your ass is now ready for anal sex without any awkward surprises.'
 
             act 'Finish':gt $locM, $metkaM
@@ -695,6 +713,7 @@ if $ARGS[0] = 'private':
             if vagina < 30:vagina += 1
 
             '<center><img src="images/etogame/vibrator.jpg"></center>'
+            *nl
             'You spread your legs and take the vibrator out of your pussy, letting out a slight moan as you do so. You feel somewhat empty now.'
 
             act 'Finish':gt $locM, $metkaM
@@ -709,6 +728,7 @@ if $ARGS[0] = 'private':
             if vagina < 30:vagina += 2
 
             '<center><img src="images/etogame/vibrator.jpg"></center>'
+            *nl
             'You spread your legs and slowly insert the vibrator in your pussy, wondering if anyone will notice you wearing it today.'
 
             act 'Finish':gt $locM, $metkaM
@@ -758,8 +778,11 @@ if $ARGS[0] = 'misery':
         poroshok -= 1
         dirtbelo = 0
         manna -= 10
+
         '<center><img src="images/etogame/stir.jpg"></center>'
+        *nl
         'You soak your dirty clothes in a basin and then pour washing powder on them. You wash them until they are finally clean.'
+
         if $curloc = 'vanr':
             act 'Hang the laundry out to dry':gt 'korr'
         elseif $curloc = 'vanr2x':
@@ -826,6 +849,7 @@ if $ARGS[0] = 'misery':
             huspolday = daystart
             manna -= 25
             !!'<center><img src="images/pics/cook.jpg"></center>'
+            *nl
             'You take a rag and start cleaning the apartment.'
 
             act 'Finish':gt $curloc
