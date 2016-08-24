@@ -6,10 +6,10 @@ $ARGS[0] the action causing arousal can be when receiving any of the following:
 also when giving any of the following:
 'flash_breasts' 'flash_pussy' 'flash_ass' 'kiss_give' 'breasts_give' 'massage_give' 'foreplay_give' 'cuni_give' 'rimming_give' 'anal_finger_give' 'anal_fist_give' 'anal_dildo_give' 'anal_vibe_give' 'anal_strap_give'
 'vaginal_finger_give' 'vaginal_fist_give' 'vaginal_dildo_give' 'vaginal_strap_give' 'vaginal_vibe_give' 'hj' 'bj' 'footjob'
-In cases of both giving and receiving, receiving should be used.
+All acts are from Sveta''s perspective and in cases of both giving and receiving, receiving should be used.
 ARGS[1] for time taken in minutes
 $ARGS[2] - [9] Are optional but can be upto 7 fetishes involved in the act and can be any of the following:
-'maso' 'bound' 'beast' 'exhibitionism' 'rough' 'prostitution' 'dom' 'sub' 'incest' 'feet' 'lesbian' 'group' 'gangbang' 'humiliation' 'deepthroat'
+'maso' 'bound' 'beast' 'exhibitionism' 'rough' 'prostitution' 'dom' 'sub' 'incest' 'feet' 'lesbian' 'group' 'gangbang' 'humiliation' 'deepthroat' 'unknown'
 Format to use: gs 'arousal', 'act', 'duration', 'fetish', 'fetish', 'fetish', 'fetish', 'fetish', 'fetish', 'fetish', 'fetish'
 eg: gs 'arousal', 'trib', 10, 'bound', 'sub'
 In this case lesbianism is automatically added, much as feet would be applied to 'footjob'
@@ -91,6 +91,7 @@ if $ARGS[0] ! 'end' and $ARGS[0] ! 'checks':
 		counter['trib'] = 1
 		stim['mag'] += 3
 		stim['act'] = 70
+		stim_les = 1
 	elseif $ARGS[0] = 'anal':
 		temp_anal = 1
 		counter['anal'] = 1
@@ -246,6 +247,7 @@ if $ARGS[0] ! 'end' and $ARGS[0] ! 'checks':
 	elseif $ARGS[0] = 'cuni_give':
 		counter['cuni_give'] = 1
 		stim['act'] = 30
+		stim_les = 1
 	elseif $ARGS[0] = 'rimming_give':
 		counter['rimming_give'] = 1
 		stim['act'] = 25
@@ -267,18 +269,23 @@ if $ARGS[0] ! 'end' and $ARGS[0] ! 'checks':
 	elseif $ARGS[0] = 'vaginal_finger_give':
 		counter['vaginal_finger_give'] = 1
 		stim['act'] = 60
+		stim_les = 1
 	elseif $ARGS[0] = 'vaginal_fist_give':
 		counter['vaginal_fist_give'] = 1
 		stim['act'] = 50
+		stim_les = 1
 	elseif $ARGS[0] = 'vaginal_dildo_give':
 		counter['vaginal_dildo_give'] = 1
 		stim['act'] = 60
+		stim_les = 1
 	elseif $ARGS[0] = 'vaginal_strap_give':
 		counter['vaginal_strap_give'] = 1
 		stim['act'] = 70
+		stim_les = 1
 	elseif $ARGS[0] = 'vaginal_vibe_give':
 		counter['vaginal_vibe_give'] = 1
 		stim['act'] = 60
+		stim_les = 1
 	elseif $ARGS[0] = 'hj':
 		counter['hj'] = 1
 		stim['act'] = 25
@@ -286,6 +293,7 @@ if $ARGS[0] ! 'end' and $ARGS[0] ! 'checks':
 		counter['bj'] = 1
 		stim['act'] = 45
 		if dick > throat: throat += 1
+		stim_foot = 1
 	elseif $ARGS[0] = 'footjob':
 		counter['footjob'] = 1
 		stim['act'] = 25
@@ -301,9 +309,27 @@ if $ARGS[0] ! 'end' and $ARGS[0] ! 'checks':
 	stim['kinkno'] = 0
 	stim['kink'] = 0
 
+!! Auto adding of lesbian and foot fetishes for acts that must involve them
+	if stim_les = 1:
+		stim['kink'] += lesbian['exp']
+		stim['pref'] += lesbian['pref']
+		stim['kinkno'] += 1
+		stim['lesbian'] = 1
+	end
+
+	if stim_foot = 1:
+		stim['kink'] += feet['exp']
+		stim['pref'] += feet['pref']
+		stim['kinkno'] += 1
+		stim['feet'] = 1
+	end
+
 	i = 2
 	:stimloop
 	if $ARGS[i] ! '':
+!!Skipping lesbian and foot where auto added to avoid duplication
+		if stim_les = 1 and $ARGS[i] = 'lesbian':i += 1 & jump 'stimloop'
+		if stim_foot = 1 and $ARGS[i] = 'feet':i += 1 & jump 'stimloop'
 		if $ARGS[i] = 'bound':
 			stim['kink'] += bondage['exp']
 			stim['pref'] += bondage['pref']
@@ -379,19 +405,26 @@ if $ARGS[0] ! 'end' and $ARGS[0] ! 'checks':
 			stim['pref'] += deepthroat['pref']
 			stim['kinkno'] += 1
 			stim['deepthroat'] = 1
+!!unknown is for sex with an unknown partner, this could be a gloryhole or unconscious
+		elseif $ARGS[i] = 'unknown':
+			stim['kink'] += unknown['exp']
+			stim['pref'] += unknown['pref']
+			stim['kinkno'] += 1
+			stim['unknown'] = 1
 		end
 
 		i += 1
 		jump 'stimloop'
 	end
 
-	!Fetishes are divided by total number of fetishes
+!!Fetishes are divided by total number of fetishes
 	if stim['kinkno'] ! 0:
 		stim['kink'] = stim['kink']/stim['kinkno']
 		stim['pref'] = (stim['pref']/stim['kinkno'])
 		stim['kinkno'] = 0
 	end
 
+!!Bonus from fetishes, randomised chance for each level of bonus
 	if rand(0,100) < stim['kink']:
 		stim['kink'] = 120
 	elseif rand(0,80) < stim['kink']:
@@ -404,9 +437,10 @@ if $ARGS[0] ! 'end' and $ARGS[0] ! 'checks':
 		stim['kink'] = 80
 	end
 
-	!arousal calculation
+!!arousal calculation
 	stim['total'] = ((stim['mag']*stim['act']*stim['kink']/100) + stim['pref'])/60*stim['time'] / 2
 
+!!Reduction in arousal linked to pain, masochism helps to deal with this
 	if pain['total'] > 0:
 		if maso['pref'] <= 0 and pain['total'] < 50:
 			if pain['total'] - (maso['exp'] + 1 / 6) > 0:stim['total'] -= (pain['total'] - (maso['exp'] / 6))
@@ -431,8 +465,8 @@ if $ARGS[0] ! 'end' and $ARGS[0] ! 'checks':
 	if sucvagorg ! 0 and sucvagorg ! vagina: vagina = sucvagorg & killvar 'sucvagorg'
 	if sucanusorg ! 0 and sucanusorg ! anus: anus = sucanusorg & killvar 'sucanusorg'
 
-	!!-------------------Orgasm-------------------
-	!!This is intended to be hidden and the stats and calculations should not appear in game.
+!!-------------------Orgasm-------------------
+!!This is intended to be hidden and the stats and calculations should not appear in game.
 
 	orgasm['total'] += stim['total']
 
@@ -449,10 +483,14 @@ if $ARGS[0] ! 'end' and $ARGS[0] ! 'checks':
 	end
 end
 
+!!-----------------------------------------------
+
 if $ARG[0] = 'end':
 	if stim['lesbian'] = 1: lesbian += 1
 	if stim['gang'] = 1 or stim['group'] = 1: gang += 1
 	if $orgasm_or = 'no': $orgasm_or = ''
+
+!!Updating fetish exp for acts carried out and clearing data
 	gs 'arousal', 'checks', 'maso'
 	gs 'arousal', 'checks', 'bound'
 	gs 'arousal', 'checks', 'beast'
@@ -468,9 +506,11 @@ if $ARG[0] = 'end':
 	gs 'arousal', 'checks', 'gangbang'
 	gs 'arousal', 'checks', 'humiliation'
 	gs 'arousal', 'checks', 'deepthroat'
+	gs 'arousal', 'checks', 'unknown'
 
 	stim['event'] = 0
 
+!!Adding to counters for character stats
 	if counter['mast'] = 1:
 		stat['mast'] += 1
 	if counter['porn'] = 1
