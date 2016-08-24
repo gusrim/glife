@@ -1,11 +1,10 @@
-# spalnya
+# tanspalnya
 CLOSE ALL
 
 $metka = $ARGS[0]
 $loc = $CURLOC
-$metkaM = ''
-$locM = 'spalnya'
-$location_type = 'private'
+$metkaM = $ARGS[0]
+$locM = $CURLOC
 
 minut += 5
 tanhouse1 = 1
@@ -27,13 +26,60 @@ if bookYog > 0:'A yoga mat is rolled up in a corner. '
 
 if mishka > 0:'On a shelf is <<mishka>> teddy bear'
 
-gs 'events', 'sport'
+sports = 0
+$sportStringPrefix = ''
+
+if obruch > 0 and obruchday ! daystart:
+	$sitrobr = $sportStringPrefix + ' <a href="exec:dynamic $sitrobrd">twist hoop</a>'
+	sports = 1
+	$sportStringPrefix = ', '
+else
+	$sitrobr = ''
+end
+
+if bookYog > 0 and bookYogday ! daystart:
+	$sitryog = $sportStringPrefix + ' <a href="exec:dynamic $sitryogd">meditation</a>'
+	sports = 1
+	$sportStringPrefix = ', '
+else
+	$sitryog = ''
+end
+
+if skak > 0 and skakday ! daystart:
+	$sitrskak = $sportStringPrefix + ' <a href="exec:dynamic $sitrskakd">jumping rope</a>'
+	sports = 1
+	$sportStringPrefix = ', '
+else
+	$sitrskak = ''
+end
+
+if pressday ! daystart:
+	$sitrpress = $sportStringPrefix + ' <a href="exec:dynamic $sitrpressd">abdominal exercises</a>'
+	sports = 1
+	$sportStringPrefix = ', '
+else
+	$sitrpress = ''
+end
+
+if pushday ! daystart:
+	$sitrpush = ' <a href="exec:dynamic $sitrpushd">push-ups</a>'
+	sports = 1
+	$sportStringPrefix = ', '
+else
+	$sitrpush = ''
+end
+
+
+if sports = 1:
+	$sportsitr = '<<$sitrpush>><<$sitrpress>><<$sitrskak>><<$sitrobr>><<$sitr_tread>><<$sitryog>>'
+	'The room has enough space for a variety of sporting activities:<<$sportsitr>>.'
+end
 
 if suhbelo2 > 0:'<br>Lying on the table are <<suhbelo2>> pieces of dried laundry, that need <a href="exec:dynamic $gladbelo">to be ironed</a>.'
 
 act 'Goto the corridor':
 	if $clothingworntype ! 'nude':
-		gt 'house'
+		gt 'tanhouse'
 		else
 		msg'<b><font color = red>You need to get dressed.</font></b>'
 		gt $CURLOC
@@ -43,10 +89,10 @@ end
 act 'Study (2:00)':
 	cla
 	minut += 120
-	intel += 1 + (mentats_dose - rand(0,mentats_dose))
+	intel += 1
 	'You spend two hours studying and now feel a little smarter.'
 
-	act 'Finish':gt 'spalnya'
+	act 'Finish':gt 'tanspalnya'
 end
 
 if student > 0 and kursovik < 100:
@@ -62,7 +108,7 @@ if student > 0 and kursovik < 100:
 		'<center><img src="images/etogame/study.jpg"></center>'
 		'You work on your course work and have now completed <<kursovik>> percent.'
 
-		act 'Finish':gt 'spalnya'
+		act 'Finish':gt 'tanspalnya'
 	end
 end
 
@@ -79,7 +125,7 @@ if sick >= 1:
 		if sick < 0:sick = 0
 		gs'stat'
 
-		'<center><img src="images/inbed/sick+rand(11,17)+.jpg"></center>'
+		'<center><img src="images/inBed/sick+rand(11,17)+.jpg"></center>'
 
 		'You lie in bed, coughing, sneezing and blowing your nose'
  
@@ -93,19 +139,19 @@ if horny >= 50:
 	end
 end
 
-if pornMagazine > 0:'Under your mattress you hide a porn magazine.' & gs 'events', 'read_porn'
+if pornMagazine > 0:'Under your mattress you hide a porn magazine.' & dynamic $d_read_porn
 
 if tanga = 0 and clrbelo > 0:
 	act 'Wear underwear':
 		cla
 		tanga = 1
-		gt'spalnya'
+		gt'tanspalnya'
 	end
 else
 	act 'Remove underwear':
 		cla
 		tanga = 0
-		gt'spalnya'
+		gt'tanspalnya'
 	end
 end
 
@@ -130,5 +176,21 @@ if dur > 0 and narkday ! daystart:
 	end
 end
 
---- spalnya ---------------------------------
+if TanMaidRoomClean = 0:
+	act 'Clean your Room':
+		cla
+		minut += 30
+		TanMaidRoomClean = 1
+		MaidWork += 1
+		gs 'stat'
+		nl
+		'You vacuum, wet wipe, dust and polish all the surfaces and objects in your room, knowing well that, if a guest wanted to take a look inside, you''d embarrass Nicholas if this room wasn''t in as perfect a condition as is expected of all the others.' 
+		'At least you are free to wear whatever you want while you clean your room, you think.'
+		act 'Finish cleaning':
+			gt 'tanspalnya'
+		end
+	end
+end
+
+--- tanspalnya ---------------------------------
 
