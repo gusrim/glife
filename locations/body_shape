@@ -13,11 +13,16 @@
 !!magf2bdo = flag for magic bust increase; 0, ready; 1, do it; 2, ask; 3, no
 !!mgf2bnocnt = used to count the number of times a bust increase was turned down and stop asking after 3
 !!magtarcup = set in the dream code as the target cup size 
-!!normbuffpick = sets the status of using normal or buff body images and calculation
-!!nrmbfpckct = used to count the number of times a switch to buff was turned down and stop asking after 3
 !!btwarn = used to flag if to display the gaining/losing weight message when bathing
 !!salolast = used when doing a soft rest to control the cycling of the main code
 !!sftrstflag = used to prevent a code chunk from firing on a soft reset
+!!Image set variables
+!! bodset = body image and descriptor control variable, used to indicate which image and descriptor set is in use
+!! $bodimgsets[x] = body shape descriptors, tens place is the set (using bodset), 0 - 7 the descriptors (using salocatnow), 8 filler, 9 is the folder name
+!! bdsetlock = flag to indicate set control override, 0 is use the formula to pick a set, 1 is use a fixed set
+!! fixbodset = the identification number of the fixed image set
+!! bodsetcnt = the number of sets present
+!! imgset6ovr[x] and imgset7ovr[x] = a flag to indicate that an image set (x) has its own image 6 and/or 7
 
 if $ARGS[0] = '':
 !!Fall of muscularity over time
@@ -114,9 +119,9 @@ if $ARGS[0] = '':
 
 	killvar 'hrtemp'
 
-!!Salo Handling
-	if salo > fat: salo -= 1
-	if salo < fat: salo += 1
+!!Salo Handling; the plus/minus 2 is to give working room
+	if salo > fat + 2: salo -= 1
+	if salo < fat - 2: salo += 1
 
 !!This calculates the current salo category; ranges are 20 points, seemed to balance best if the range is x10 the hip devisor
 	:salocatloop
@@ -158,7 +163,7 @@ if $ARGS[0] = '':
 		jump 'salocatloop'
 	end
 
-	if salobustdo = 0 and salocatnow < 2 and salocatlast >= 2 and nbsize > 0:
+	if salobustdo = 0 and salocatnow < 1 and salocatlast >= 1 and nbsize > 0:
 		if sftrstflag = 0:'<b>Your breasts seem to be getting smaller.</b>'
 		nbsize -= 1
 		salo += 3
@@ -166,21 +171,26 @@ if $ARGS[0] = '':
 		jump 'salocatloop'
 	end
 
-!!This is for switching to and from the normal and buff image sets (& vital resisting salo w/ buff set)
-	if normbuffpick = 0 and salocatnow <= 2 and (strenbuf + agilbuf) >= 50: normbuffpick = 1
-	if normbuffpick = 1 and nrmbfpckct >= 3: normbuffpick = -1
-	if normbuffpick >= 1 and salocatnow > 2 and vitalbuf >= 25:
-		if vitalbuf / 25 > tempvct:
-			tempvct += 1
-			salo -= 1
-			jump 'salocatloop'
+!!This sets which image set is to be used when the override is not set
+	if bdsetlock = 0:
+		if strenbuf >= 70:
+			bodset = 2
+		elseif strenbuf <= 40:
+			bodset = 0
 		else
-			normbuffpick = 0
+			bodset = 1
 		end
+	else
+		bodset = fixbodset
 	end
-!!Note: normbuffpick = 1 will trigger the bathing option scene and three nos there will set normbuffpick = -1; until a choice is made, will behave as =2
 
-!!This is if salo is still < 1 (will add code for Succubus here later)
+!!This is if a Succubus has salo < 1
+	if succubusflag = 1 and salo < 1:
+		sucexcess -= 1
+		salo += 3
+	end
+
+!!This is if salo is still < 1
 	if salo < 1:
 		if fat >= 1:
 			salo = 1
@@ -204,11 +214,8 @@ if $ARGS[0] = '':
 	killvar 'tempvct' & killvar 'salobustdo'
 
 !!This is the hip calcs, 80 is the center of the current max-min range (10 - 130)
-	if normbuffpick = 2:
-		vhtmp = (strenbuf - agilbuf) / 2
-	else
-		vhtmp = (salo - 80) / 2
-	end
+	vhtmp = (salo - 80) / 2
+	
 	if vhips > vhtmp: vhips -= 1
 	if vhips < vhtmp: vhips += 1
 
@@ -255,6 +262,17 @@ if $ARGS[0] = '':
 			fat = salo - 5
 		end
 	end
+	
+!!This modifies bodykoef for high or low salo values
+	if salocatnow = 0 or salocatnow >= 7:
+		bodykoef -= 8
+	elseif salocatnow = 1 or salocatnow = 6:
+		bodykoef -= 4
+	end
+	if vofat > 0: bodykoef -= vofat
+
+!!This is to clean up unused variables
+	killvar 'normbuffpick' & killvar 'nrmbfpckct'
 	killvar 'vmeat' & killvar 'vfat' & killvar 'Kves' & killvar 'krost'
 	killvar 'koefvesbt' & killvar 'koefbt'
 end
