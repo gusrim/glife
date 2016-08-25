@@ -36,11 +36,9 @@ if $ARGS[0] = 'descrip':
 	pl 'Your date of birth is <<$birthdayD>>'
 	nl
 
-	pl 'You are <<rost>> cm tall and weigh <<ves>> kg.'
-	pl '<<$body>>'
-	pl 'Your body measurements are <a href="exec:gs ''obj_din'', ''body''"><<grudi>> - <<talia>> - <<bedra>></a> with <a href="exec:gs ''obj_din'', ''show_tits''"><<$titsize>> breasts</a>.'
+	pl 'You are <<rost>>cm tall and <a href="exec:gs ''obj_din'', ''body''"><<$body>></a>.'
+	pl 'You have <a href="exec:gs ''obj_din'', ''show_tits''"><<$titsize>> breasts</a>.'
 	pl '<<$nipplesize>>'
-	pl 'The difference between your hips and waist is <<bedra-talia>> cm.'
 	pl '<<$vnesh>>'
 	nl
 	if avatar_hair = 1:
@@ -62,8 +60,8 @@ if $ARGS[0] = 'descrip':
 	pl '<<$anus>>'
 	nl
 
-	if salo = 0 and musle > 0 and dounspell = 0:pl '<b><font color="red">You are showing signs of malnourishment. You should probably eat more and more often.</font></b>'
-	if salo = 0 and musle = 0 and dounspell = 0:pl '<b><font color="red">You are dangerously malnourished, which has led to a loss in muscle mass. You''re in a critical condition and likely to pass out!</font></b>'
+	if salo < 10 and musle > 0 and dounspell = 0:pl '<b><font color="red">You are showing signs of malnourishment. You should probably eat more and more often.</font></b>'
+	if salo < 10 and musle = 0 and dounspell = 0:pl '<b><font color="red">You are dangerously malnourished, which has led to a loss in muscle mass. You''re in a critical condition and likely to pass out!</font></b>'
 	if zub = 1:$zuba = ' tooth'
 	if zub >= 2:$zuba = ' teeth'
 	if zub > 0:pl 'You have lost <<zub>><<$zuba>>.'
@@ -117,7 +115,7 @@ if $ARGS[0] = 'skills':
 	pl 'Intelligence <<intel>>'
 	pl 'Spirit <<will>>'
 	pl 'Reaction <<react>>'
-	pl '<<$fat>>'
+	pl 'You are <<$body>>.'
 
 	nl
 	pl '<b>Sexual characteristics</b>'
@@ -989,40 +987,28 @@ if $ARGS[0] = 'clothes':
 end
 
 if $ARGS[0] = 'body':
-	if musle >= salo:
-		!!muscular type
-		if bedra < 60:view 'images/body/fit.jpg'
-		if bedra >= 60 and bedra < 70:view 'images/body/fit1.jpg'
-		if bedra >= 70 and bedra < 80:view 'images/body/fit2.jpg'
-		if bedra >= 80 and bedra < 90:view 'images/body/fit3.jpg'
-		if bedra >= 90 and bedra < 100:view 'images/body/fit4.jpg'
-		if bedra >= 100 and bedra < 110:view 'images/body/fit5.jpg'
-		if bedra >= 110 and bedra < 120:view 'images/body/fit6.jpg'
-		if bedra >= 120:view 'images/body/fit7.jpg'
-	else
-		!!bold type
-		! Updated to be consistent with current images
-		if bedra < 60:
-			view 'images/body/fat.jpg'
-		elseif bedra < 70:
-			view 'images/body/fat1.jpg'
-		elseif bedra < 80:
-			view 'images/body/fat2.jpg'
-		elseif bedra < 90:
-			view 'images/body/fat3.jpg'
-		elseif bedra < 100:
-			view 'images/body/fat4.jpg'
-		elseif bedra < 110:
-			view 'images/body/fat5.jpg'
-		elseif bedra < 120:
-			view 'images/body/fat6.jpg'
+!!	This displays the body image; $bodimgsets[x9] is the folder name
+	if salocatnow >= 1 and salocatnow <= 5:
+		view 'images/body/shape/<<$bodimgsets[((bodset * 10) + 9)]>>/<<salocatnow>>.jpg'
+	elseif salocatnow <= 0:
+		view 'images/body/shape/0.jpg'
+	elseif salocatnow = 6:
+		if imgset6ovr[bodset] = 1:
+			view 'images/body/shape/<<$bodimgsets[((bodset * 10) + 9)]>>/6.jpg'
 		else
-			view 'images/body/fat7.jpg'
+			view 'images/body/shape/6.jpg'
+		end
+	else
+		if imgset7ovr[bodset] = 1:
+			view 'images/body/shape/<<$bodimgsets[((bodset * 10) + 9)]>>/7.jpg'
+		else
+			view 'images/body/shape/7.jpg'
 		end
 	end
 end
 
 
+!!Image displays for tattoos
 if $ARGS[0] = 'tattooarm':
 	view 'images/body/arms/tatarm<<tatarm>>.jpg'
 end
