@@ -1152,6 +1152,8 @@ $cheatmenu = {
 	pl'<a href="exec:dynamic $cheatmenu[''display'']"><b>Status Display</b></a>'
 	if StoryLine = 0:pl'<a href="exec:dynamic $cheatmenu[''magic'']"><b>Magic</b></a>'
 	nl
+	pl '<a href="exec:dynamic $cheatmenu[''bdimmain'']"><b>Body Image Controls</b></a>'
+	nl
 	pl'<a href="exec:health = vital*10 + stren*5+1000 & willpower = intel*5 + will*5+1000 & manna = (intel*magik) + magik*100 + vital*10 + rikudo & vgape = 0 & agape = 0 & nippain = 0 & dynamic $cheatmenu">Full restoration of health, manna, Reason.</a>'
 	pl'<a href="exec:dynamic $cheatmenu[''money'']">Change money</a>'
 	pl'<a href="exec:money = 0 & dynamic $cheatmenu">Zero money</a>'
@@ -1235,6 +1237,256 @@ $cheatmenu['vartracker'] = {
 	pl'mirabrosextime: <<mirabrosextime>>'
 	pl'momslut: <<momslut>>'
 
+}
+
+$cheatmenu['bdimmain'] = {
+	gs 'stat'
+	clr
+	pl '<center><a href="exec:dynamic $cheatmenu"><b>Cheat menu</b></a></center>'
+	nl
+	pl '<center><b>Body Image Controls</b></center>'
+	nl
+	pl 'You are currently using set: <<$bodimgsets[((bodset * 10) + 9)]>>'
+	if bdsetlock = 1:
+		pl 'The set used is locked to current.'
+	else
+		pl 'The set used is unlocked.'
+	end
+	nl
+	pl 'This is the current default and custom (if any) body image sets:'
+	nl
+	pl '<a href="exec:chmbodset = 0 & dynamic $cheatmenu[''bdimdisplay'']"><b><<$bodimgsets[9]>></b></a>'
+	nl
+	pl '<a href="exec:chmbodset = 1 & dynamic $cheatmenu[''bdimdisplay'']"><b><<$bodimgsets[19]>></b></a>'
+	nl
+	pl '<a href="exec:chmbodset = 2 & dynamic $cheatmenu[''bdimdisplay'']"><b><<$bodimgsets[29]>></b></a>'
+	nl
+	if bodsetcnt >= 3:
+		pl 'You may edit aspects of a custom image set by clicking on their folder names below.'
+		nl
+		pl '<a href="exec:chmbodset = 3 & dynamic $cheatmenu[''bdimdisplay'']"><b><<$bodimgsets[39]>></b></a>'
+		nl
+	elseif bodsetcnt = 2:
+		pl '<a href="exec:dynamic $cheatmenu[''bdimcstadd'']"><b>Add new set</b></a>'
+		nl
+	end
+	if bodsetcnt >= 4:
+		pl '<a href="exec:chmbodset = 4 & dynamic $cheatmenu[''bdimdisplay'']"><b><<$bodimgsets[49]>></b></a>'
+		nl
+	elseif bodsetcnt = 3:
+		pl '<a href="exec:dynamic $cheatmenu[''bdimcstadd'']"><b>Add new set</b></a>'
+		nl
+	end
+	if bodsetcnt >= 5:
+		pl '<a href="exec:chmbodset = 5 & dynamic $cheatmenu[''bdimdisplay'']"><b><<$bodimgsets[59]>></b></a>'
+		nl
+	elseif bodsetcnt = 4:
+		pl '<a href="exec:dynamic $cheatmenu[''bdimcstadd'']"><b>Add new set</b></a>'
+		nl
+	end
+	if bodsetcnt >= 6:
+		pl '<a href="exec:chmbodset = 6 & dynamic $cheatmenu[''bdimdisplay'']"><b><<$bodimgsets[69]>></b></a>'
+		nl
+	elseif bodsetcnt = 5:
+		pl '<a href="exec:dynamic $cheatmenu[''bdimcstadd'']"><b>Add new set</b></a>'
+		nl
+	end
+	if bodsetcnt >= 7:
+		pl '<a href="exec:chmbodset = 7 & dynamic $cheatmenu[''bdimdisplay'']"><b><<$bodimgsets[79]>></b></a>'
+		nl
+	elseif bodsetcnt = 6:
+		pl '<a href="exec:dynamic $cheatmenu[''bdimcstadd'']"><b>Add new set</b></a>'
+		nl
+	end
+	if bodsetcnt >= 8:
+		pl '<a href="exec:chmbodset = 8 & dynamic $cheatmenu[''bdimdisplay'']"><b><<$bodimgsets[89]>></b></a>'
+		nl
+	elseif bodsetcnt = 7:
+		pl '<a href="exec:dynamic $cheatmenu[''bdimcstadd'']"><b>Add new set</b></a>'
+		nl
+	end
+	if bodsetcnt >= 9:
+		pl '<a href="exec:chmbodset = 9 & dynamic $cheatmenu[''bdimdisplay'']"><b><<$bodimgsets[99]>></b></a>'
+		nl
+	elseif bodsetcnt = 8:
+		pl '<a href="exec:dynamic $cheatmenu[''bdimcstadd'']"><b>Add new set</b></a>'
+		nl
+	end
+
+}
+
+$cheatmenu['bdimdisplay'] = {
+	gs 'stat'
+	clr
+	pl '<center><a href="exec:dynamic $cheatmenu"><b>Cheat menu</b></a></center>'
+	nl
+	pl '<center><b>Body Image Set Display</b></center>'
+	pl '<a href="exec:killvar ''chmbodset'' & dynamic $cheatmenu[''bdimmain'']"><b>Go Back</b></a>'
+	nl
+	if bdsetlock = 1 and chmbodset = fixbodset:
+		pl 'This is the currently locked set.'
+		pl '<a href="exec:bdsetlock = 0 & bodset = 1 & killvar ''fixbodset'' & dynamic $cheatmenu[''bdimdisplay'']"><b>Clear the lock.</b></a>'
+	else
+		pl '<a href="exec:bdsetlock = 1 & bodset = chmbodset & fixbodset = chmbodset & dynamic $cheatmenu[''bdimdisplay'']"><b>Use this set only.</b></a>'
+	end
+	nl
+	if chmbodset <= 2:
+		pl 'Folder: <<$bodimgsets[((chmbodset * 10) + 9)]>>'
+		pl 'Descriptors:'
+		pl '<a href="exec:view ''images/body/shape/0.jpg''"><<$bodimgsets[((chmbodset * 10) + 0)]>></a>'
+		nl
+		pl '<a href="exec:view ''images/body/shape/<<$bodimgsets[((chmbodset * 10) + 9)]>>/1.jpg''"><<$bodimgsets[((chmbodset * 10) + 1)]>></a>'
+		nl
+		pl '<a href="exec:view ''images/body/shape/<<$bodimgsets[((chmbodset * 10) + 9)]>>/2.jpg''"><<$bodimgsets[((chmbodset * 10) + 2)]>></a>'
+		nl
+		pl '<a href="exec:view ''images/body/shape/<<$bodimgsets[((chmbodset * 10) + 9)]>>/3.jpg''"><<$bodimgsets[((chmbodset * 10) + 3)]>></a>'
+		nl
+		pl '<a href="exec:view ''images/body/shape/<<$bodimgsets[((chmbodset * 10) + 9)]>>/4.jpg''"><<$bodimgsets[((chmbodset * 10) + 4)]>></a>'
+		nl
+		pl '<a href="exec:view ''images/body/shape/<<$bodimgsets[((chmbodset * 10) + 9)]>>/5.jpg''"><<$bodimgsets[((chmbodset * 10) + 5)]>></a>'
+		nl
+		pl '<a href="exec:view ''images/body/shape/6.jpg''"><<$bodimgsets[((chmbodset * 10) + 6)]>></a>'
+		nl
+		pl '<a href="exec:view ''images/body/shape/7.jpg''"><<$bodimgsets[((chmbodset * 10) + 7)]>></a>'
+		nl
+	else
+		pl 'Folder: <<$bodimgsets[((chmbodset * 10) + 9)]>>'
+		pl 'Descriptors: (Displayed as "You are:")'
+		pl '<a href="exec:view ''images/body/shape/0.jpg''"><<$bodimgsets[((chmbodset * 10) + 0)]>></a>'
+		nl
+		pl '<a href="exec:view ''images/body/shape/<<$bodimgsets[((chmbodset * 10) + 9)]>>/1.jpg''"><<$bodimgsets[((chmbodset * 10) + 1)]>></a> -- <a href="exec:chmbddes = 1 & dynamic $cheatmenu[''bdimcstdesed'']">Edit this</a>'
+		nl
+		pl '<a href="exec:view ''images/body/shape/<<$bodimgsets[((chmbodset * 10) + 9)]>>/2.jpg''"><<$bodimgsets[((chmbodset * 10) + 2)]>></a> -- <a href="exec:chmbddes = 2 & dynamic $cheatmenu[''bdimcstdesed'']">Edit this</a>'
+		nl
+		pl '<a href="exec:view ''images/body/shape/<<$bodimgsets[((chmbodset * 10) + 9)]>>/3.jpg''"><<$bodimgsets[((chmbodset * 10) + 3)]>></a> -- <a href="exec:chmbddes = 3 & dynamic $cheatmenu[''bdimcstdesed'']">Edit this</a>'
+		nl
+		pl '<a href="exec:view ''images/body/shape/<<$bodimgsets[((chmbodset * 10) + 9)]>>/4.jpg''"><<$bodimgsets[((chmbodset * 10) + 4)]>></a> -- <a href="exec:chmbddes = 4 & dynamic $cheatmenu[''bdimcstdesed'']">Edit this</a>'
+		nl
+		pl '<a href="exec:view ''images/body/shape/<<$bodimgsets[((chmbodset * 10) + 9)]>>/5.jpg''"><<$bodimgsets[((chmbodset * 10) + 5)]>></a> -- <a href="exec:chmbddes = 5 & dynamic $cheatmenu[''bdimcstdesed'']">Edit this</a>'
+		nl
+		if imgset6ovr[chmbodset] = 1:
+			pl '<a href="exec:view ''images/body/shape/<<$bodimgsets[((chmbodset * 10) + 9)]>>/6.jpg''"><<$bodimgsets[((chmbodset * 10) + 6)]>></a> -- <a href="exec:chmbddes = 6 & dynamic $cheatmenu[''bdimcstdesed'']">Edit this</a>'
+			nl
+			pl 'You are using a <a href="exec:imgset6ovr[chmbodset] = 0 & dynamic $cheatmenu[''bdimdisplay'']">custom image 6</a> for this set.'
+			nl
+		else
+			pl '<a href="exec:view ''images/body/shape/6.jpg''"><<$bodimgsets[((chmbodset * 10) + 6)]>></a>'
+			nl
+			pl 'You are using the <a href="exec:imgset6ovr[chmbodset] = 1 & dynamic $cheatmenu[''bdimdisplay'']">default image 6</a> for this set.'
+			nl
+		end
+		if imgset7ovr[chmbodset] = 1:
+			pl '<a href="exec:view ''images/body/shape/<<$bodimgsets[((chmbodset * 10) + 9)]>>/7.jpg''"><<$bodimgsets[((chmbodset * 10) + 7)]>></a> -- <a href="exec:chmbddes = 7 & dynamic $cheatmenu[''bdimcstdesed'']">Edit this</a>'
+			nl
+			pl 'You are using a <a href="exec:imgset7ovr[chmbodset] = 0 & dynamic $cheatmenu[''bdimdisplay'']">custom image 7</a> for this set.'
+			nl
+		else
+			pl '<a href="exec:view ''images/body/shape/7.jpg''"><<$bodimgsets[((chmbodset * 10) + 7)]>></a>'
+			nl
+			pl 'You are using the <a href="exec:imgset7ovr[chmbodset] = 1 & dynamic $cheatmenu[''bdimdisplay'']">default image 7</a> for this set.'
+			nl
+		end
+		pl '<a href="exec:dynamic $cheatmenu[''bdimcstdel'']">Delete this set.</a>'
+	end
+}
+
+$cheatmenu['bdimcstdel'] = {
+	clr
+	pl '<center><b>Body Image Set Removal</b></center>'
+	pl '<a href="exec:killvar ''klsetask'' & dynamic $cheatmenu[''bdimdisplay'']"><b>Go Back</b></a>'
+	nl
+	pl 'This is where you remove a body image set from use, please note it does not delete anything, it just clears the custom set from this game instance/save.'
+	if klsetask = 1:
+		pl '<a href="exec:klsetask = 2 & dynamic $cheatmenu[''bdimcstdel'']"><b>Are you sure you want to remove set <<$bodimgsets[((chmbodset * 10) + 9)]>>?</b></a>'
+	elseif klsetask = 2:
+		if chmbodset <= 2:
+			pl 'You have encoutered error 1'
+			pl '<a href="exec:killvar ''klsetask'' & dynamic $cheatmenu[''bdimdisplay'']"><b>Go Back</b></a>'
+			exit
+		end
+		if bdsetlock = 1 and fixbodset >= chmbodset: bdsetlock = 0 & killvar 'fixbodset'
+		if bodsetcnt > chmbodset:
+			cyci1 = 0
+			cyci2 = chmbodset
+
+			:overwriter1
+
+			$bodimgsets[((cyci2 * 10) + cyci1)] = $bodimgsets[(((cyci2 + 1) * 10) + cyci1)]
+			cyci1 += 1
+			if cyci1 < 10: jump 'overwriter1'
+			imgset6ovr[cyci2] = imgset6ovr[(cyci2 + 1)]
+			imgset7ovr[cyci2] = imgset7ovr[(cyci2 + 1)]
+			cyci1 = 0
+			cyci2 += 1
+			if cyci2 < bodsetcnt: jump 'overwriter1'
+			killvar 'cyci1' & killvar 'cyci2'
+		elseif bodsetcnt < chmbodset:
+			pl 'You have encoutered error 2'
+			pl '<a href="exec:killvar ''klsetask'' & dynamic $cheatmenu[''bdimdisplay'']"><b>Go Back</b></a>'
+			exit
+		end
+		cyci1 = 9
+		
+		:poofer1
+		
+		killvar 'bodimgsets', ((bodsetcnt * 10) + cyci1)
+		cyci1 -= 1
+		if cyci1 >= 0: jump 'poofer1'
+		killvar 'cyci1'
+		killvar 'imgset6ovr', bodsetcnt
+		killvar 'imgset7ovr', bodsetcnt
+		bodsetcnt -= 1
+		killvar 'klsetask'
+		dynamic $cheatmenu['bdimmain']
+	else
+		pl '<a href="exec:klsetask = 1 & dynamic $cheatmenu[''bdimcstdel'']">Remove set <<$bodimgsets[((chmbodset * 10) + 9)]>>?</a>'
+	end
+}
+
+$cheatmenu['bdimcstadd'] = {
+	clr
+	pl '<center><b>Body Image Set Addition</b></center>'
+	pl '<a href="exec:killvar ''klsetask'' & dynamic $cheatmenu[''bdimmain'']"><b>Go Back</b></a>'
+	nl
+	pl 'This is where you can add a new image set to a game.'
+	pl 'To add an image set, create a folder in \images\body\shape\ and name it anything you want (shorter will be easier to remember). Then put in it any images you want named 1.jpg, 2.jpg, etc. up 5, 6, or 7. Just make sure it contains images 1 to 5. Once you have done that, click the link below and put in your folder name to add that set.'
+	pl 'Note: This will only be for this instance/save of the game and you will have to redo the click the link step if you want to add the same folder to a different instance/save.'
+	nl
+	pl '<a href="exec:dynamic $cheatmenu[''bdimcstaddpro'']">Add Image Set</a>'
+}
+
+$cheatmenu['bdimcstaddpro'] = {
+	$tmpstrg = input("Enter folder name, do not include ''\''")
+	if $tmpstrg = '':
+		killvar '$tmpstrg'
+		dynamic $cheatmenu['bdimcstadd']
+	else
+		bodsetcnt += 1
+		cyci1 = 0
+		:addcyc
+		$bodimgsets[((bodsetcnt * 10) + cyci1)] = $bodimgsets[(10 + cyci1)]
+		cyci1 += 1
+		if cyci1 < 9: jump 'addcyc'
+		$bodimgsets[((bodsetcnt * 10) + 9)] = $tmpstrg
+		imgset6ovr[bodsetcnt] = 0
+		imgset7ovr[bodsetcnt] = 0
+		killvar '$tmpstrg'
+		killvar 'cyci1'
+		dynamic $cheatmenu['bdimmain']
+	end
+}
+
+$cheatmenu['bdimcstdesed'] = {
+	$tmpstrg = input("Enter a new descriptor")
+	if $tmpstrg = '':
+		killvar 'chmbddes'
+		killvar '$tmpstrg'
+	else
+		$bodimgsets[((chmbodset * 10) + chmbddes)] = $tmpstrg
+		killvar 'chmbddes'
+		killvar '$tmpstrg'
+		dynamic $cheatmenu['bdimdisplay']
+	end
 }
 
 --- Cheatmenu_din ---------------------------------
