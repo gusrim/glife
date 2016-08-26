@@ -119,9 +119,14 @@ if $ARGS[0] = '':
 
 	killvar 'hrtemp'
 
-!!Salo Handling; the plus/minus 2 is to give working room
-	if salo > fat + 2: salo -= 1
-	if salo < fat - 2: salo += 1
+!!Salo Handling; the plus/minus 2 is to give working room normally, but exact on reset
+if sftrstflag = 1:
+   if salo > fat: salo -= 1
+   if salo < fat: salo += 1
+else
+   if salo > fat + 2: salo -= 1
+   if salo < fat - 2: salo += 1
+end
 
 !!This calculates the current salo category; ranges are 20 points, seemed to balance best if the range is x10 the hip devisor
 	:salocatloop
@@ -282,7 +287,7 @@ if $ARGS[0] = 'softreset':
 !!cycling the main code the number of times it would have normally w/ a change in fat
 	sftrstflag = 1
 	:resetloop
-	if salo > fat + 2 or salo < fat - 2:
+	if salo ! fat:
 		if gmstrtflag = 1: salobustdo = 1
 		gs 'body_shape'
 		jump 'resetloop'
