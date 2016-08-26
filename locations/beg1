@@ -10,50 +10,60 @@ if $ARGS[0] = 'start':
 	begmon = month
 
 	if razradbeg = 0:
-		'You write in a group beginners.'
+		'You''re registered for a beginner''s race.'
 
-		act 'Go to the track':gt 'beg1', 'br'
+		act 'Go to the stadium':gt 'beg1', 'br'
 	elseif razradbeg = 1:
-		'You write in a group treterazryadnikov.'
+		'You''re registered for a club ranking race.'
 
-		act 'Go to the track':gt 'beg1', '3'
+		act 'Go to the stadium':gt 'beg1', '3'
 	elseif razradbeg = 2:
-		'You recorded in the second group of bits. City Championship.'
+		'You''re registered as your club''s representative at the Saint Petersburg City Championship.'
 
-		act 'Go to the track':gt 'beg1', '2'
+		act 'Go to the stadium':gt 'beg1', '2'
 	elseif razradbeg = 3:
-		'You recorded in the first group of bits. Championship field.'
+		'You qualified as Saint Petersburg''s representative at the Leningrad Oblast Championship, held in Saint Petersburg.'
 
-		act 'Go to the track':gt 'beg1', '1'
+		act 'Go to the stadium':gt 'beg1', '1'
 	elseif razradbeg = 4:
-		'You write in the CCM group. Championship region.'
+		'You qualified for the Northwest District Championship, held in Saint Petersburg, representing the Leningrad Oblast.'
 
-		act 'Go to the track':gt 'beg1', 'kms'
+		act 'Go to the stadium':gt 'beg1', 'kms'
 	elseif razradbeg = 5:
-		'You write in the group Masters of Sports. Russian Championship.'
+		'You are one of the best track athletes in Russia and thus qualified for the Russian National Championship.'
 
-		act 'Go to the track':gt 'beg1', 'ross'
+		act 'Go to the stadium':gt 'beg1', 'ross'
 	elseif razradbeg >= 6 and razradbeg < 16:
-		'You write in the group International Master of Sports. Qualifying competition for access to the European Championship.'
+		'As one of the best Russian athletes, you can take part in a series of international qualifying races. Winning seven out of nine would qualify you for the European and World Championships, but even if you could no longer qualify, the prize money is nothing to sneeze at.'
+		nl
+		'Qualifying Races Attended: <<razradbeg - 6>>' 
+		'Qualifying Races Won: <<razradbegK>>'
 
-		act 'Go to the track':gt 'beg1', 'kval'
+		act 'Go to the stadium':gt 'beg1', 'kval'
 	elseif razradbeg = 16:
-		if razradbegK < 8:
+		if razradbegK < 7:
 			cla
 			razradbegK = 0
 			razradbeg = 6
-			'You have not been qualified for the European Championship.'
+			'You were unable to qualify for the European Championship.'
 
 			! WD: Argument is 'dressing room'
-			act 'Leave':gt 'fit', 'dressing room'
-		elseif razradbegK >= 8:
+			act 'Go back to the dressing room':gt 'fit', 'dressing room'
+		elseif razradbegK >= 7:
 			cla
 			razradbegK = 0
-			razradbeg = 6
-			'You write for the European Championship.'
+			razradbegInt = 1
+			'You qualified for the <<year>> European Championship in Athletics, held in Saint Petersburg.'
 
-			act 'Go to the track':gt 'beg1', 'evro'
+			act 'Go to the stadium':gt 'beg1', 'evro'
 		end
+	elseif razradbegInt = 1:
+		cla
+		razradbegInt = 0
+		razradbeg = 6
+		'You qualified for the <<year>> World Championship in Athletics, held in Saint Petersburg.'
+		
+		act 'Go to the stadium':gt 'beg1', 'Int'
 	end
 end
 
@@ -65,17 +75,20 @@ if $ARGS[0] = 'br':
 	begminus = salo/2 + rand(1, 20)
 	begresult = begplus - begminus
 	'<center><img src="images/etogame/begsor.jpg"></center>'
-	'Women''s 400 meters race. You change clothes and go out on the track. Get up at the start. Distributed starting shot.'
+	'Your discipline: The Women''s 400 Meter Dash.' 
+	'After changing into your running gear, you spend some time warming up in the empty stadium before the race starts.' 
+	'When you and the other runners are called, you walk to your starting position, tense but ready.' 
+	'You get in position. Then, you hear the starting shot: The race begins!'
 
-	if begresult <= 0:'You barely managed to reach the finish line, what place is really there, of course you are the last.'
-	if begresult > 0 and begresult < 10:'You are not bad ran for dilettante course, as ranked last 8th place.'
-	if begresult >= 10 and begresult < 20:'You fought hard, but managed to take only 7 penultimate place.'
+	if begresult <= 0:'Sadly, you barely managed to reach the finish line, walking the last 100 meters. Of course, you came in last - but you also made a bit of a fool of yourself.'
+	if begresult > 0 and begresult < 10:'You performed well for an amateur but still only came in last (8th place).'
+	if begresult >= 10 and begresult < 20:'You fought hard, but managed to only take the penultimate place (7th place).'
 	if begresult >= 20 and begresult < 30:'You fought hard, but only managed to take 6th place.'
 	if begresult >= 30 and begresult < 40:'You fought hard, but only managed to take 5th place.'
 	if begresult >= 40 and begresult < 50:'You fought hard, but only managed to take 4th place.'
-	if begresult >= 50 and begresult < 60:bronzebeg += 1 & money += 100 & 'You fought hard and managed to take 3rd place prize. You get a bronze medal and a prize of 100 <b>₽</b>'
-	if begresult >= 60 and begresult < 70:silverbeg += 1 & money += 500 & 'You fought hard and managed to take the 2nd place prize. You get a silver medal and a prize of 500 <b>₽</b>'
-	if begresult >= 70:razradbeg = 1 & goldbeg += 1 & money += 1000 & 'You fought hard and managed to take 1st place. You get a gold medal, a prize of 1, 000 <b>₽</b> and third sports category on the run.'
+	if begresult >= 50 and begresult < 60:bronzebeg += 1 & money += 100 & 'You fought hard and managed to take 3rd place, earning a prize: You receive a bronze bade and a prize of 100 <b>₽</b>'
+	if begresult >= 60 and begresult < 70:silverbeg += 1 & money += 500 & 'You fought hard and managed to take 2nd place, earning a prize: You receive a silver badge and a prize of 500 <b>₽</b>'
+	if begresult >= 70:razradbeg = 1 & goldbeg += 1 & money += 1000 & 'You fought hard and managed to take 1st place! You receive a gold badge, a prize of 1, 000 <b>₽</b> and are now part of your club''s junior squad.'
 
 	act 'Leave':gt 'fit', 'dressing room'
 end
@@ -88,17 +101,20 @@ if $ARGS[0] = '3':
 	begminus = salo/2 + rand(1, 20)
 	begresult = begplus - begminus
 	'<center><img src="images/etogame/begsor.jpg"></center>'
-	'You change clothes and go out on the track. Get up at the start. Distributed starting shot.'
+	'Your discipline: The Women''s 400 Meter Dash.' 
+	'After changing into your running gear, you spend some time warming up in the empty stadium before the race starts.' 
+	'When you and the other runners are called, you walk to your starting position, tense but ready.' 
+	'You get in position. Then, you hear the starting shot: The race begins!'
 
-	if begresult <= 0:'You barely managed to reach the finish line, what place is really there, of course you are the last.'
-	if begresult > 0 and begresult < 70:'You are not bad ran for dilettante course, as ranked last 8th place.'
-	if begresult >= 70 and begresult < 80:'You fought hard, but managed to take only 7 penultimate place.'
+	if begresult <= 0:'But you barely managed to reach the finish line, walking the last 100 meters. Of course, you came in last - but you also made a bit of a fool of yourself.'
+	if begresult > 0 and begresult < 70:'You fought hard but still have a lot of work ahead of you if you want to be better than your competition. You only came in last (8th place).'
+	if begresult >= 70 and begresult < 80:'You fought hard, but managed to only take the penultimate place (7th place).'
 	if begresult >= 80 and begresult < 90:'You fought hard, but only managed to take 6th place.'
 	if begresult >= 90 and begresult < 100:'You fought hard, but only managed to take 5th place.'
 	if begresult >= 100 and begresult < 110:'You fought hard, but only managed to take 4th place.'
-	if begresult >= 110 and begresult < 120:bronzebeg += 1 & money += 500 & 'You fought hard and managed to take 3rd place prize. You get a bronze medal and a prize of 500 <b>₽</b>'
-	if begresult >= 120 and begresult < 130:silverbeg += 1 & money += 1000 & 'You fought hard and managed to take the 2nd place prize. You get a silver medal and a prize of 1, 000 <b>₽</b>'
-	if begresult >= 130:razradbeg = 2 & goldbeg += 1 & money += 2000 & 'You fought hard and managed to take 1st place. You get a gold medal, a prize of 2, 000 <b>₽</b> and 2nd sports category on the run.'
+	if begresult >= 110 and begresult < 120:bronzebeg += 1 & money += 500 & 'You fought hard and managed to take 3rd place, earning a prize: You receive a bronze badge and a prize of 500 <b>₽</b>'
+	if begresult >= 120 and begresult < 130:silverbeg += 1 & money += 1000 & 'You fought hard and managed to take 2nd place, earning a prize: You reveice a silver badge and a prize of 1, 000 <b>₽</b>'
+	if begresult >= 130:razradbeg = 2 & goldbeg += 1 & money += 2000 & 'You fought hard and managed to take 1st place! You receive a gold badge, a prize of 2, 000 <b>₽</b> and are now part of your club''s senior squad, representing it at the next city championship!'
 
 	act 'Leave':gt 'fit', 'dressing room'
 end
@@ -111,17 +127,20 @@ if $ARGS[0] = '2':
 	begminus = salo/2 + rand(1, 20)
 	begresult = begplus - begminus
 	'<center><img src="images/etogame/begsor.jpg"></center>'
-	'Women''s 400 meters race. You change clothes and go out on the track. Get up at the start. Distributed starting shot.'
+	'Your discipline: The Women''s 400 Meter Dash.' 
+	'After changing into your running gear, you spend some time warming up in the stadium before the race starts, only a hundred people or so on the ranks watching you but with how big the stadium is, you can barely even see them.' 
+	'When you and the other runners are called, you walk to your starting position, tense but ready.' 
+	'You get in position. Then, you hear the starting shot: The race begins!'
 
-	if begresult <= 0:'You barely managed to reach the finish line, what place is really there, of course you are the last.'
-	if begresult > 0 and begresult < 130:'You are not bad ran for dilettante course, as ranked last 8th place.'
-	if begresult >= 130 and begresult < 140:'You fought hard, but managed to take only 7 penultimate place.'
+	if begresult <= 0:'But you barely managed to reach the finish line, walking the last 100 meters. Of course, you came in last - but you also made a bit of a fool of yourself.'
+	if begresult > 0 and begresult < 130:'You fought hard but still have a lot of work ahead of you if you want to be better than your competition. You only came in last (8th place).'
+	if begresult >= 130 and begresult < 140:'You fought hard, but managed to only take the penultimate place (7th place).'
 	if begresult >= 140 and begresult < 150:'You fought hard, but only managed to take 6th place.'
 	if begresult >= 150 and begresult < 160:'You fought hard, but only managed to take 5th place.'
 	if begresult >= 160 and begresult < 170:'You fought hard, but only managed to take 4th place.'
-	if begresult >= 170 and begresult < 185:bronzebeg += 1 & money += 1000 & 'You fought hard and managed to take 3rd place prize. You get a bronze medal and a prize of 1, 000 <b>₽</b>'
-	if begresult >= 185 and begresult < 200:silverbeg += 1 & money += 2000 & 'You fought hard and managed to take the 2nd place prize. You get a silver medal and a prize of 2, 000 <b>₽</b>'
-	if begresult >= 200:razradbeg = 3 & goldbeg += 1 & money += 3000 & 'You fought hard and managed to take 1st place. You get a gold medal, a prize of 3000 <b>₽</b> and 1st sports category on the run. You become the champion of the city on the run.'
+	if begresult >= 170 and begresult < 185:bronzebeg += 1 & money += 1000 & 'You fought hard and managed to take 3rd place, earning a prize: You get a bronze medal and a prize of 1, 000 <b>₽</b>'
+	if begresult >= 185 and begresult < 200:silverbeg += 1 & money += 2000 & 'You fought hard and managed to take 2nd place, earning a prize: You get a silver medal and a prize of 2, 000 <b>₽</b>'
+	if begresult >= 200:razradbeg = 3 & goldbeg += 1 & money += 3000 & 'You fought hard and managed to take 1st place! You get a gold medal, a prize of 3000 <b>₽</b> and became the "Track Champion of the City of Saint Petersburg", which qualifies you for the next oblast championship!'
 
 	act 'Leave':gt 'fit', 'dressing room'
 end
@@ -134,17 +153,21 @@ if $ARGS[0] = '1':
 	begminus = salo/2 + rand(1, 20)
 	begresult = begplus - begminus
 	'<center><img src="images/etogame/begsor.jpg"></center>'
-	'Women''s 400 meters race. You change clothes and go out on the track. Get up at the start. Distributed starting shot.'
+	'Your discipline: The Women''s 400 Meter Dash.' 
+	'After changing into your running gear, you spend some time warming up in the stadium before the race starts.' 
+	'Only 1,000 people came to watch the city championship, spread out over the large stadium.' 
+	'When you and the other runners are called, you walk to your starting position, tense but ready.' 
+	'You get in position. Then, you hear the starting shot: The race begins!'
 
-	if begresult <= 0:'You barely managed to reach the finish line, what place is really there, of course you are the last.'
-	if begresult > 0 and begresult < 200:'You are not bad ran for dilettante course, as ranked last 8th place.'
-	if begresult >= 200 and begresult < 210:'You fought hard, but managed to take only 7 penultimate place.'
+	if begresult <= 0:'But you barely managed to reach the finish line, walking the last 100 meters. Of course, you came in last - but you also made of a fool of yourself. People on the ranks seem to be asking themselves how you even managed to make it this far. Maybe they are right?'
+	if begresult > 0 and begresult < 200:'You fought hard but still have a lot of work ahead of you if you want to be better than your competition. You only came in last (8th place).'
+	if begresult >= 200 and begresult < 210:'You fought hard, but managed to only take the penultimate place (7th place).'
 	if begresult >= 210 and begresult < 220:'You fought hard, but only managed to take 6th place.'
 	if begresult >= 230 and begresult < 240:'You fought hard, but only managed to take 5th place.'
 	if begresult >= 240 and begresult < 250:'You fought hard, but only managed to take 4th place.'
-	if begresult >= 250 and begresult < 260:bronzebeg += 1 & money += 2000 & 'You fought hard and managed to take 3rd place prize. You get a bronze medal and a prize of 2, 000 <b>₽</b>'
-	if begresult >= 260 and begresult < 270:silverbeg += 1 & money += 3000 & 'You fought hard and managed to take the 2nd place prize. You get a silver medal and a prize of 3, 000 <b>₽</b>'
-	if begresult >= 270:razradbeg = 4 & goldbeg += 1 & money += 4000 & 'You fought hard and managed to take 1st place. You get a gold medal, a prize of 4000 <b>₽</b> and the title of the CCM on the run. You become a champion of the region.'
+	if begresult >= 250 and begresult < 260:bronzebeg += 1 & money += 2000 & 'You fought hard and managed to take 3rd place, earning a prize: You get a bronze medal and a prize of 2, 000 <b>₽</b>'
+	if begresult >= 260 and begresult < 270:silverbeg += 1 & money += 3000 & 'You fought hard and managed to take 2nd place, earning a prize: You get a silver medal and a prize of 3, 000 <b>₽</b>'
+	if begresult >= 270:razradbeg = 4 & goldbeg += 1 & money += 4000 & 'You fought hard and managed to take 1st place! You get a gold medal, a prize of 4000 <b>₽</b> and became the "Track Champion of the Leningrad Oblast", not only putting you on the list of the 50 best track athletes in the Russian Federation but also qualifying you for the next district championship!'
 
 	act 'Leave':gt 'fit', 'dressing room'
 end
@@ -157,17 +180,21 @@ if $ARGS[0] = 'kms':
 	begminus = salo/2 + rand(1, 20)
 	begresult = begplus - begminus
 	'<center><img src="images/etogame/begsor.jpg"></center>'
-	'Women''s 400 meters race. You change clothes and go out on the track. Get up at the start. Distributed starting shot.'
+	'Your discipline: The Women''s 400 Meter Dash.' 
+	'After changing into your running gear, you spend some time warming up in the stadium before the race starts.' 
+	'Maybe 5,000 people came to watch the district championship, the stadium far from full.' 
+	'When you and the other runners are called, you walk to your starting position, tense but ready.' 
+	'You get in position. Then, you hear the starting shot: The race begins!'
 
-	if begresult <= 0:'You barely managed to reach the finish line, what place is really there, of course you are the last.'
-	if begresult > 0 and begresult < 270:'You are not bad ran for dilettante course, as ranked last 8th place.'
-	if begresult >= 270 and begresult < 280:'You fought hard, but managed to take only 7 penultimate place.'
+	if begresult <= 0:'But you barely managed to reach the finish line, walking the last 100 meters. Of course, you came in last - but you also made of a fool of yourself. People on the ranks seem to be asking themselves how you even managed to make it this far. Maybe they are right?'
+	if begresult > 0 and begresult < 270:'You fought hard but still have a lot of work ahead of you if you want to be better than your competition. You only came in last (8th place).'
+	if begresult >= 270 and begresult < 280:'You fought hard, but managed to only take the penultimate place (7th place).'
 	if begresult >= 280 and begresult < 290:'You fought hard, but only managed to take 6th place.'
 	if begresult >= 290 and begresult < 300:'You fought hard, but only managed to take 5th place.'
 	if begresult >= 300 and begresult < 310:'You fought hard, but only managed to take 4th place.'
-	if begresult >= 310 and begresult < 320:bronzebeg += 1 & money += 3000 & 'You fought hard and managed to take 3rd place prize. You get a bronze medal and a prize of 3, 000 <b>₽</b>'
-	if begresult >= 320 and begresult < 330:silverbeg += 1 & money += 4000 & 'You fought hard and managed to take the 2nd place prize. You get a silver medal and a prize of 4, 000 <b>₽</b>'
-	if begresult >= 330:razradbeg = 5 & goldbeg += 1 & money += 5000 & 'You fought hard and managed to take 1st place. You get a gold medal, a prize of 5000 <b>₽</b> and the title of Master of Sports in the run. You become a champion of the region.'
+	if begresult >= 310 and begresult < 320:bronzebeg += 1 & money += 3000 & 'You fought hard and managed to take 3rd place, earning a prize: You get a bronze medal and a prize of 3, 000 <b>₽</b>'
+	if begresult >= 320 and begresult < 330:silverbeg += 1 & money += 4000 & 'You fought hard and managed to take 2nd place, earning a prize: You get a silver medal and a prize of 4, 000 <b>₽</b>'
+	if begresult >= 330:razradbeg = 5 & goldbeg += 1 & money += 5000 & 'You fought hard and managed to take 1st place! You get a gold medal, a prize of 5000 <b>₽</b> and became the "Track Champion of the Northwest District". You are now one of the 8 best track athletes in the Russian Federation and qualified for the next national championship!'
 
 	act 'Leave':gt 'fit', 'dressing room'
 end
@@ -180,17 +207,21 @@ if $ARGS[0] = 'ross':
 	begminus = salo + rand(1, 20)
 	begresult = begplus - begminus
 	'<center><img src="images/etogame/begsor.jpg"></center>'
-	'Women''s 400 meters race. You change clothes and go out on the track. Get up at the start. Distributed starting shot.'
+	'Your discipline: The Women''s 400 Meter Dash.' 
+	'After changing into your running gear, you spend some time warming up in the stadium before the race starts.' 
+	'At least 30,000 people came to national championship, putting the stadium at a little less than half capacity.' !! Took the Krestovsky Stadium for reference.
+	'When you and the other runners are called, you walk to your starting position, tense but ready.' 
+	'You get in position. Then, you hear the starting shot: The race begins!'
 
-	if begresult <= 0:'You barely managed to reach the finish line, what place is really there, of course you are the last.'
-	if begresult > 0 and begresult < 330:'You are not bad ran for dilettante course, as ranked last 8th place.'
-	if begresult >= 330 and begresult < 340:'You fought hard, but managed to take only 7 penultimate place.'
+	if begresult <= 0:'But you barely managed to reach the finish line, walking the last 100 meters. Of course, you came in last - but you also made of a fool of yourself. People on the ranks seem to be asking themselves how you even managed to make it this far. Maybe they are right?'
+	if begresult > 0 and begresult < 330:'You fought hard but still have a lot of work ahead of you if you want to be better than your competition. You only came in last (8th place).'
+	if begresult >= 330 and begresult < 340:'You fought hard, but managed to only take the penultimate place (7th place).'
 	if begresult >= 340 and begresult < 350:'You fought hard, but only managed to take 6th place.'
 	if begresult >= 350 and begresult < 360:'You fought hard, but only managed to take 5th place.'
 	if begresult >= 360 and begresult < 370:'You fought hard, but only managed to take 4th place.'
-	if begresult >= 370 and begresult < 380:bronzebeg += 1 & money += 4000 & 'You fought hard and managed to take 3rd place prize. You get a bronze medal and a prize of 4, 000 <b>₽</b>'
-	if begresult >= 380 and begresult < 390:silverbeg += 1 & money += 5000 & 'You fought hard and managed to take the 2nd place prize. You get a silver medal and a prize of 5, 000 <b>₽</b>'
-	if begresult >= 390:razradbeg = 6 & goldbeg += 1 & money += 6000 & 'You fought hard and managed to take 1st place. You get a gold medal, a prize of 6000 <b>₽</b> and the title of International Master of Sports on the run. You become the champion of Russia.'
+	if begresult >= 370 and begresult < 380:bronzebeg += 1 & money += 4000 & 'You fought hard and managed to take 3rd place, earning a prize: You get a bronze medal and a prize of 4, 000 <b>₽</b>'
+	if begresult >= 380 and begresult < 390:silverbeg += 1 & money += 5000 & 'You fought hard and managed to take 2nd place, earning a prize: You get a silver medal and a prize of 5, 000 <b>₽</b>'
+	if begresult >= 390:razradbeg = 6 & goldbeg += 1 & money += 6000 & 'You fought hard and managed to take 1st place! You get a gold medal, a prize of 6000 <b>₽</b> and became the "Track Champion of the Russian Federation". You are the single best track athlete in Russia - maybe you should try to qualify for the European championship?'
 
 	act 'Leave':gt 'fit', 'dressing room'
 end
@@ -204,17 +235,20 @@ if $ARGS[0] = 'kval':
 	begminus = (salo * 2) + rand(1, 20)
 	begresult = begplus - begminus
 	'<center><img src="images/etogame/begsor.jpg"></center>'
-	'Women''s 400 meters race. You change clothes and go out on the track. Get up at the start. Distributed starting shot.'
+	'Your discipline: The Women''s 400 Meter Dash.' 
+	'After changing into your running gear, you spend some time warming up in the empty stadium before the race starts.' 
+	'When you and the other runners are called, you walk to your starting position, tense but ready.' 
+	'You get in position. Then, you hear the starting shot: The race begins!'
 
-	if begresult <= 0:'You barely managed to reach the finish line, what place is really there, of course you are the last.'
-	if begresult > 0 and begresult < 450:'You are not bad ran for dilettante course, as ranked last 8th place.'
-	if begresult >= 450 and begresult < 500:'You fought hard, but managed to take only 7 penultimate place.'
+	if begresult <= 0:'But you barely managed to reach the finish line, walking the last 100 meters. Of course, you came in last - but you also made of a fool of yourself.'
+	if begresult > 0 and begresult < 450:'You fought hard but still have a lot of work ahead of you if you want to be better than your competition. You only came in last (8th place).'
+	if begresult >= 450 and begresult < 500:'You fought hard, but managed to only take the penultimate place (7th place).'
 	if begresult >= 500 and begresult < 550:'You fought hard, but only managed to take 6th place.'
 	if begresult >= 550 and begresult < 600:'You fought hard, but only managed to take 5th place.'
 	if begresult >= 600 and begresult < 650:'You fought hard, but only managed to take 4th place.'
-	if begresult >= 650 and begresult < 700:razradbegK += 1 & bronzebeg += 1 & money += 5000 & 'You fought hard and managed to take 3rd place prize. You get a bronze medal and a prize of 5, 000 <b>₽</b>'
-	if begresult >= 700 and begresult < 800:razradbegK += 1 & silverbeg += 1 & money += 10000 & 'You fought hard and managed to take the 2nd place prize. You get a silver medal and a prize of 10, 000 <b>₽</b>'
-	if begresult >= 800:razradbegK += 1 & goldbeg += 1 & money += 15000 & 'You fought hard and managed to take 1st place. You get a gold medal, a prize of 15 thousand <b>₽</b>.'
+	if begresult >= 650 and begresult < 700:razradbegK += 1 & bronzebeg += 1 & money += 5000 & 'You fought hard and managed to take 3rd place, earning a prize. You get a bronze badge and a prize of 5,000 <b>₽</b>, but sadly, only the 1st place adds to your qualification for the European championship.'
+	if begresult >= 700 and begresult < 800:razradbegK += 1 & silverbeg += 1 & money += 10000 & 'You fought hard and managed to take 2nd place, earning a prize. You get a silver medal and a prize of 10,000 <b>₽</b>, but sadly, only the 1st place adds to your qualification for the European championship.'
+	if begresult >= 800:razradbegK += 1 & goldbeg += 1 & money += 15000 & 'You fought hard and managed to take 1st place! You get a gold medal, a prize of 15,000 <b>₽</b> and are one step closer to qualifying for the European championship.'
 
 	act 'Leave':gt 'fit', 'dressing room'
 end
@@ -228,14 +262,18 @@ if $ARGS[0] = 'evro':
 	begminus = (salo * 3) + rand(1, 20)
 	begresult = begplus - begminus
 	'<center><img src="images/etogame/begsor.jpg"></center>'
-	'Women''s 400 meters race. You change clothes and go out on the track. Get up at the start. Distributed starting shot.'
+	'Your discipline: The Women''s 400 Meter Dash.' 
+	'After changing into your running gear, you spend some time warming up in the stadium before the race starts.' 
+	'The stadium is well-attended - about 50,000 people, you''d wager - here to watch athletics competitions between the best European athletes, you one of them.' !! Took the Krestovsky Stadium for reference.
+	'When you and the other runners are called, you walk to your starting position, tense but ready.' 
+	'You get in position. Then, you hear the starting shot: The race begins!'
 
 	if begresult <= 0:
-		'You barely managed to reach the finish line, what place is really there, of course you are the last.'
+		'But you barely managed to reach the finish line, walking the last 100 meters. Of course, you came in last - but you also made of a fool of yourself. People on the ranks seem to be asking themselves how you even managed to make it this far. Maybe they are right?'
 	elseif begresult < 450:
-		'You are not bad ran for dilettante course, as ranked last 8th place.'
+		'You fought hard but still have a lot of work ahead of you if you want to be better than your competition. You only came in last (8th place).'
 	elseif begresult < 600:
-		'You fought hard, but managed to take only 7 penultimate place.'
+		'You fought hard, but managed to only take the penultimate place (7th place).'
 	elseif begresult < 800:
 		'You fought hard, but only managed to take 6th place.'
 	elseif begresult < 1000:
@@ -245,15 +283,58 @@ if $ARGS[0] = 'evro':
 	elseif begresult < 1800:
 		razradbegEB += 1
 		money += 10000
-		'You fought hard and managed to take 3rd place prize. You get a bronze medal and a prize of 10 thousand <b>₽</b>'
+		'You fought hard and managed to take 3rd place, earning a prize. You get a bronze medal and a prize of 10,000 <b>₽</b>'
 	elseif begresult < 2500:
 		razradbegES += 1
 		money += 15000
-		'You fought hard and managed to take the 2nd place prize. You get a silver medal and a prize of 15, 000 <b>₽</b>'
+		'You fought hard and managed to take 2nd place, earning a prize. You get a silver medal and a prize of 15,000 <b>₽</b>'
 	else
 		razradbegEG += 1
 		money += 20000
-		'You fought hard and managed to take 1st place. You get a gold medal, a prize of 20 thousand <b>₽</b>. You are the champion of Europe.'
+		'You fought hard and managed to take 1st place. You get a gold medal, a prize of 20,000 <b>₽</b> and are now the "European Track Champion"!'
+	end
+
+	act 'Leave':gt 'fit', 'dressing room'
+end
+
+if $ARGS[0] = 'Int':
+	cla
+	beg += 1
+	fat -= 10
+	razradbeg += 1
+	begplus = beg + speed + vital + rand(1, 20)
+	begminus = (salo * 3) + rand(1, 20)
+	begresult = begplus - begminus
+	'Your discipline: The Women''s 400 Meter Dash.' 
+	'After changing into your running gear, you spend some time warming up in the stadium before the race starts.' 
+	'The stadium is full, almost bursting with people. There must be 70,000 people here to watch athletics competitions with competitors from all over the world. Only the best of the best even made it here and you are proud to be one of them.' !! Took the Krestovsky Stadium for reference.
+	'When you and the other runners are called, you walk to your starting position, tense but ready.' 
+	'You get in position. Then, you hear the starting shot: The race begins!'
+	
+		if begresult <= 0:
+		'But you barely managed to reach the finish line, walking the last 100 meters. Of course, you came in last - but you also made of a fool of yourself. People on the ranks seem to be asking themselves how you even managed to make it this far. Maybe they are right?'
+	elseif begresult < 1000:
+		'You fought hard but still have a lot of work ahead of you if you want to be better than your competition. You only came in last (8th place).'
+	elseif begresult < 1300:
+		'You fought hard, but managed to only take the penultimate place (7th place).'
+	elseif begresult < 1600:
+		'You fought hard, but only managed to take 6th place.'
+	elseif begresult < 2000:
+		'You fought hard, but only managed to take 5th place.'
+	elseif begresult < 2500:
+		'You fought hard, but only managed to take 4th place.'
+	elseif begresult < 3000:
+		razradbegIB += 1
+		money += 30000
+		'You fought hard and managed to take 3rd place, earning a prize. You get a bronze medal and a prize of 30,000 <b>₽</b>'
+	elseif begresult < 4000:
+		razradbegIS += 1
+		money += 50000
+		'You fought hard and managed to take 2nd place, earning a prize. You get a silver medal and a prize of 50,000 <b>₽</b>'
+	else
+		razradbegIG += 1
+		money += 100000
+		'You fought hard and managed to take 1st place. You get a gold medal, a prize of 100,000 <b>₽</b> and the title "World Track Champion" - YOU are the fastest woman alive!'
 	end
 
 	act 'Leave':gt 'fit', 'dressing room'
