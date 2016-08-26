@@ -10,7 +10,12 @@ gs 'stat'
 $boy = 'Nicholas'
 $boytemp = 'Nicholas'
 '<center><b>Nicholas</b></center>'
-!! IMAGE NEEDED '<center><img of Nicholas"></center>'
+! '<center><img of Nicholas.jpg></center>'
+
+if NaughtyMaidDay ! daystart:
+	NaughtyMaidDay = daystart
+	NaughtyMaidSex = 0
+end
 
 if tan_work_rep > 20:
 	tan_work_rep = 20
@@ -21,208 +26,209 @@ dynamic $TanWorkRep
 if $clothingworntype ! 'uniform':
 	'Nicholas gives you a disapproving look.'
 	'"Our contract states that you are to wear the uniform when you are moving around the house or addressing your masters. If you want to speak to me, go and get changed."'
+	
 	act 'Leave the Livingroom':gt 'tanhouse'
 end
 
 if $clothingworntype = 'uniform':
 	'Nicholas looks onto your maid uniform with an approving nod.'
 	'"The uniform suits you, <<$name>>."'
-	if MaidWork = 8:
+	'His eyes wander up and down your body, lingering on your chest and hips, but you don''t move an inch until he speaks again.'
+	if MaidWork >= 8:
 		tan_work_rep += 1
-		'Approval, keep it up, good job and such.'
+		nl
+		'"You did well today", he states. The rooms were cleaned to his satisfaction and you went above and beyond to satisfy this household''s needs and present it in the best possible light.'
 		
 		act 'Leave the Livingroom':gt 'tanhouse'
 		
-		if NaughtyMaid = 1:
-			'Nicholas says he can overlook some of your "imperfections" at your job if you have sex with him.'
+		if NaughtyMaid = 1 and NaughtyMaidSex = 0:
+			nl
+			'"However", Nicholas continues, "nobody is perfect." The way his eyes undress you makes you wonder if he doesn''t find you about perfect right now. "I can overlook some of your small <i>imperfections</i> if you satisfy me one more need of mine."'
 			
-			act 'No way':gt 'tanhouse'
+			act 'Not today - Leave the Livingroom':gt 'tanhouse'
 			
-			act 'Sure':
-				cla
-				*clr
-				NaughtyMaid = 1
-				'Nicholas undoes his pants and looks at you expectantly.'
-				
-				act 'Blowjob':
-					cla
-					*clr
-					minut += 10
-					tan_work_rep += 1
-					stat['bj'] += 1
-					'You give Nicholas a blowjob.'
-					act 'Leave the Livingroom':gt 'tanhouse'
-				end
-				
-				act 'Sex':
-					cla
-					*clr
-					minut += 15
-					tan_work_rep += 1
-					stat['vaginal'] += 1
-					'You have sex with Nicholas.'
-					act 'Leave the Livingroom':gt 'tanhouse'
-				end
-				
-				act 'Anal':
-					cla
-					*clr
-					minut += 20
-					tan_work_rep += 1
-					stat['anal'] += 1
-					'You have anal sex with Nicholas.'
-					act 'Leave the Livingroom':gt 'tanhouse'
-				end
-			end
+			act 'Anything to please him - Accept':gt 'tanNicholas','proposition'
 		end
 		
-	elseif MaidWork > 5:
-		'Not completely unsatisfying but with a lot of room for improvement. Needs to be more thorough.'
+	elseif MaidWork > 5 and MaidWork < 8:
+		tan_work_rep -= 1
+		'"Your work today wasn''t entirely unsatisfying", Nicholas begins, "but there is a lot of room for improvement. Your line of work requires perfection and I expect nothing but. Everything you do has to be done with thought, care and diligence. Remember: Not only do the rooms need to be cleaned but you always have to stand ready to attend our other needs."'
+		'Even though he didn''t raise his voice and his words were not unkind, you are fairly certain that anything but a perfect performance will lower your standing with him.'
 		
 		act 'Leave the Livingroom':gt 'tanhouse'
 		
-		if NaughtyMaid = 1:
-			'Nicholas says that he might be willing to overlook your performance today if you were ready to have sex with him.'
+		if NaughtyMaid = 1 and NaughtyMaidSex = 0:
+			nl
+			'Nicholas pauses to take a sip of his whiskey, then looks you up and down again, his eyes pointedly resting on your breasts.'
+			'"I may be willing to overlook your mistakes today, though, if you show me you can seize an opportunity to please when it presents itself..."'
 			
-			act 'No way':gt 'tanhouse'
+			act 'Not today - Leave the Livingroom':gt 'tanhouse'
 			
-			act 'Sure':
-				cla
-				*clr
-				NaughtyMaid = 1
-				'Nicholas undoes his pants and looks at you expectantly.'
-				
-				act 'Blowjob':
-					cla
-					*clr
-					minut += 10
-					tan_work_rep += 1
-					stat['bj'] += 1
-					'You give Nicholas a blowjob.'
-					act 'Leave the Livingroom':gt 'tanhouse'
-				end
-				
-				act 'Sex':
-					cla
-					*clr
-					minut += 15
-					tan_work_rep += 1
-					stat['vaginal'] += 1
-					'You have sex with Nicholas.'
-					act 'Leave the Livingroom':gt 'tanhouse'
-				end
-				
-				act 'Anal':
-					cla
-					*clr
-					minut += 20
-					tan_work_rep += 1
-					stat['anal'] += 1
-					'You have anal sex with Nicholas.'
-					act 'Leave the Livingroom':gt 'tanhouse'
-				end
-			end
+			act 'Anything to please him - Accept':gt 'tanNicholas','proposition'
 		end
 		
 		
 	elseif MaidWork <= 5:
-		tan_work_rep -= 1
-		'Disappointing performance, too many of the rooms were in a pitiful state when it was your job to make ALL of them look perfect AND look after the family''s needs in the morning. If you keep working like that, you will get fired eventually.'
+		tan_work_rep -= 2
+		'"Your performance today was disappointing. Highly disappointing, in fact." His authority as a successful businessman is audible and adds a gravitas to his statement that instinctively causes you to lower your gaze. "Several rooms were in an abject state. May I remind you, <<$name>>, that it is your job to make ALL of them look perfect AND look after the family''s needs in the morning? Look at me."'
+		'You do so immediately. There is a hardness in his eyes that scares you a little bit, but his domineering demeanor is also strangely exciting, even at a time like this.'
+		'"I have no use for a maid who won''t do her job. A man in my position cannot allow his house to look like a pigsty."'
+		if tan_work_rep > 0:
+			'"Remember that well. I am a very patient man, <<$name>>, but even my patience runs out eventually."'
 		
-		if tan_work_rep = 0:
+		else tan_work_rep <= 0:
 			tanwork = 0
 			work = 0
-			'Nicholas fires you.'
+			'"You are not unattractive in that uniform", he admits, "but you are too much of a liability to this household to keep you. I want you out of the house, right now. Let me know where you''re moving so I can have your belongings sent there."'
+			'It takes you a few moments to process what just happened and it doesn''t really hit you until you are standing outside:'
+			'You have just been fired. And kind of lost your home, too.'
 			
 			act 'Leave the apartment':gt 'down'
 		end
 		
-		if NaughtyMaid = 1:
-			'Nicholas offers you to improve your standing with him through sex.'
+		elseif NaughtyMaid = 1 and NaughtyMaidSex = 0:
+			'"But you know I''m not unreasonable", Nicholas meets your eyes as he says that. "I''m willing to grant you more time to convince me of your adequacy for this position, if you show me you really want me to."'
 			
-			act 'No way':gt 'tanhouse'
+			act 'Not today - Leave the Livingroom':gt 'tanhouse'
 			
-			act 'Sure':
-				cla
-				*clr
-				NaughtyMaid = 1
-				'Nicholas undoes his pants and looks at you expectantly.'
-				
-				act 'Blowjob':
-					cla
-					*clr
-					minut += 10
-					tan_work_rep += 1
-					stat['bj'] += 1
-					'You give Nicholas a blowjob.'
-					act 'Leave the Livingroom':gt 'tanhouse'
-				end
-				
-				act 'Sex':
-					cla
-					*clr
-					minut += 15
-					tan_work_rep += 1
-					stat['vaginal'] += 1
-					'You have sex with Nicholas.'
-					act 'Leave the Livingroom':gt 'tanhouse'
-				end
-				
-				act 'Anal':
-					cla
-					*clr
-					minut += 20
-					tan_work_rep += 1
-					stat['anal'] += 1
-					'You have anal sex with Nicholas.'
-					act 'Leave the Livingroom':gt 'tanhouse'
-				end
-			end
+			act 'Anything to please him - Accept':gt 'tanNicholas','proposition'
+		end
 		
 		elseif NaughtyMaid = 0 and tan_work_rep <= 5 and nikslut > 0 or niksex > 0 or niksvid > 0:
-			'Nicholas offers you to improve your standing with him through sex.'
+			'"That said", Nicholas meets your eyes, "I am not unreasonable. As a father and entrepreneur, I know that isn''t always easy to meet expectations set by others, especially when they are demanding. You have already showed me that you have", he smiles, "other qualities. I''d be willing to compromise and grant you more time to convince me of your adequacy for this position, if you prove that you''ll go the extra mile."'
 			
-			act 'No way':gt 'tanhouse'
+			act 'No, this goes too far - Leave the Livingroom':gt 'tanhouse'
 			
-			act 'Sure':
-				cla
-				*clr
+			act 'Anything to please him - Accept':
 				NaughtyMaid = 1
-				'Nicholas undoes his pants and looks at you expectantly.'
-				
-				act 'Blowjob':
-					cla
-					*clr
-					minut += 10
-					tan_work_rep += 1
-					stat['bj'] += 1
-					'You give Nicholas a blowjob.'
-					act 'Leave the Livingroom':gt 'tanhouse'
-				end
-				
-				act 'Sex':
-					cla
-					*clr
-					minut += 15
-					tan_work_rep += 1
-					stat['vaginal'] += 1
-					'You have sex with Nicholas.'
-					act 'Leave the Livingroom':gt 'tanhouse'
-				end
-				
-				act 'Anal':
-					cla
-					*clr
-					minut += 20
-					tan_work_rep += 1
-					stat['anal'] += 1
-					'You have anal sex with Nicholas.'
-					act 'Leave the Livingroom':gt 'tanhouse'
-				end
+				gt 'tanNicholas','proposition'
 			end
 		end
 	end
 end
+
+if $ARGS[0] = 'proposition':
+	cla
+	*clr
+	NaughtyMaidSex = 1
+	'<<$boy>> undoes his pants and looks at you expectantly.'
+				
+				act 'Blowjob':
+					cla
+					*clr
+					minut += 5
+					tan_work_rep += 1
+					stat['bj'] += 1
+					gs 'arousal', 'bj', 5
+					'You give <<$boy>> a blowjob.'
+						
+						act 'Further'
+						cla
+						*clr
+						minut += 3
+						gs 'arousal', 'bj', 3
+						'You keep giving <<$boy>> a blowjob.'
+						
+							act 'Further'
+							cla
+							*clr
+							minut += 2
+							gs 'arousal', 'bj', 2
+							'Still giving <<$boy>> a blowjob'
+							
+								act 'Further'
+								cla
+								*clr
+								gs 'arousal', 'end'
+								spafinloc = 12
+								gs 'cum_manage'
+								'<<$boy>> came in your mouth'
+								
+								if tan_work_rep >= 20:
+									money += 1000
+									'Since you are already in the best possible standing with him, Nicholas hands you 1000 <b>₽</b> to reward you for satisfying him so thoroughly once again.'
+							
+									act 'Leave the Livingroom':gt 'tanhouse'
+				end
+				
+				act 'Sex':
+					cla
+					*clr
+					minut += 5
+					tan_work_rep += 2
+					gs 'arousal', 'foreplay', 5
+					'You have foreplay with Nicholas.'
+							
+						act 'Further'
+						cla
+						*clr
+						minut += 5
+						stat['vaginal'] += 1
+						gs 'arousal', 'vaginal', 5
+						'You keep having sex with Nicholas.'
+						
+							act 'Further'
+							cla
+							*clr
+							minut += 5
+							gs 'arousal', 'vaginal', 5
+							'Still having sex with Nicholas but getting close.'
+							
+								act 'Further'
+								cla
+								*clr
+								gs 'arousal', 'end'
+								spafinloc = 0
+								sexpartkno = 1
+								cumprecheck = 1
+								gs 'cum_manage'
+								'Nicholas came in your pussy'
+								
+								if tan_work_rep >= 20:
+									money += 2000
+									'Since you are already in the best possible standing with him, Nicholas hands you 1000 <b>₽</b> to reward you for satisfying him so thoroughly once again.'
+							
+									act 'Leave the Livingroom':gt 'tanhouse'
+				end
+				
+				act 'Anal':
+					cla
+					*clr
+					minut += 5
+					tan_work_rep += 3
+					gs 'arousal', 'foreplay', 5
+					'You have foreplay with Nicholas.'
+												
+						act 'Further'
+						cla
+						*clr
+						minut += 5
+						stat['anal'] += 1
+						gs 'arousal', 'anal', 5
+						'You have anal sex with Nicholas.'
+						
+							act 'Further'
+							cla
+							*clr
+							minut += 5
+							gs 'arousal', 'anal', 5
+							'Still having anal sex with Nicholas.'
+							
+								act 'Further'
+								cla
+								*clr
+								gs 'arousal', 'end'
+								spafinloc = 3
+								gs 'cum_manage'
+								'Nicholas came in your ass.'
+								
+								if tan_work_rep >= 20:
+									money += 3000
+									'Since you are already in the best possible standing with him, Nicholas hands you 1000 <b>₽</b> to reward you for satisfying him so thoroughly once again.'
+							
+									act 'Leave the Livingroom':gt 'tanhouse'
+				end	
+end	
 
 $TanWorkRep = {
 	if tan_work_rep = 0:'Nicholas thinks you are the worst maid he''s ever seen - the apartment has never been in worse condition than under your care.'
@@ -231,7 +237,6 @@ $TanWorkRep = {
 	if tan_work_rep => 10 and tan_work_rep < 15:'Nicholas thinks are a decent maid. You need to work hard, though, to be better than just "decent".'
 	if tan_work_rep => 15 and tan_work_rep < 20:'Nicholas thinks are a good maid. Your family is pleased with you but there is still room for improvement.' 
 	if tan_work_rep = 20:'Nicholas thinks are the perfect maid - the apartment is always clean and their needs always satisfied.'
-	''
 }
 
 --- tanNicholas ---------------------------------
