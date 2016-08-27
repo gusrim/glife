@@ -236,6 +236,27 @@ $bath = {
 	end
 }
 
+$condslip = {
+	if cumcondslip > 0 and cumcondslip_aware > 0:
+		act 'Try to pull out the condom slipped inside (0:30)':
+			cla
+			minut += 30
+
+			if cumcondslip_deep > (vagina / 2):
+				'The condom is slipped too deep inside to be pulled out by your hand. You need to ask for professional help!'
+
+			else
+				gs 'cum_cleanup', 'cumloc', 17
+				cumcondslip = 0
+				gs 'stat'
+				'With some effort, you managed to remove the condom.'
+			end
+			act 'Leave':gt $curloc
+
+		end
+	end
+}
+
 $brit = {
 	cla
 	'You rinse the razor blade which looks in good enough shape for <b><<stanok>></b> more shaves.'
@@ -570,7 +591,8 @@ if $ARGS[0] = 'private':
     dynamic $bteeth
 
     dynamic $tampon
-	dynamic $douche
+
+    dynamic $condslip
 
     if clrbelo <= 4 and $loc = 'vanrPar': clrbelo = 5
 
