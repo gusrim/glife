@@ -1,10 +1,10 @@
 # tanNicholas
 CLOSE ALL
 
-$metka = $ARGS[0]
-$loc = $CURLOC
-$metkaM = $ARGS[0]
-$locM = $CURLOC
+$metka = ''
+$loc = 'tanNicholas'
+$metkaM = ''
+$locM = 'tanNicholas'
 
 gs 'stat'
 $boy = 'Nicholas'
@@ -50,7 +50,7 @@ if $clothingworntype = 'uniform':
 			act 'Anything to please him - Accept':gt 'tanNicholas','proposition'
 		end
 		
-	elseif MaidWork > 5 and MaidWork < 8:
+	elseif MaidWork > 5:
 		tan_work_rep -= 1
 		'"Your work today wasn''t entirely unsatisfying", Nicholas begins, "but there is a lot of room for improvement. Your line of work requires perfection and I expect nothing but. Everything you do has to be done with thought, care and diligence. Remember: Not only do the rooms need to be cleaned but you always have to stand ready to attend our other needs."'
 		'Even though he didn''t raise his voice and his words were not unkind, you are fairly certain that anything but a perfect performance will lower your standing with him.'
@@ -64,11 +64,11 @@ if $clothingworntype = 'uniform':
 			
 			act 'Not today - Leave the Livingroom':gt 'tanhouse'
 			
-			act 'Anything to please him - Accept':gt 'tanNicholas','proposition'
+			act 'Anything to please him - Accept':tan_work_rep += 1 & gt 'tanNicholas','proposition'
 		end
 		
 		
-	elseif MaidWork <= 5:
+	else
 		tan_work_rep -= 2
 		'"Your performance today was disappointing. Highly disappointing, in fact." His authority as a successful businessman is audible and adds a gravitas to his statement that instinctively causes you to lower your gaze. "Several rooms were in an abject state. May I remind you, <<$name>>, that it is your job to make ALL of them look perfect AND look after the family''s needs in the morning? Look at me."'
 		'You do so immediately. There is a hardness in his eyes that scares you a little bit, but his domineering demeanor is also strangely exciting, even at a time like this.'
@@ -86,20 +86,21 @@ if $clothingworntype = 'uniform':
 			act 'Leave the apartment':gt 'down'
 		end
 		
-		elseif NaughtyMaid = 1 and NaughtyMaidSex = 0:
+		if NaughtyMaid = 1 and NaughtyMaidSex = 0:
 			'"But you know I''m not unreasonable", Nicholas meets your eyes as he says that. "I''m willing to grant you more time to convince me of your adequacy for this position, if you show me you really want me to."'
-			
+
 			act 'Not today - Leave the Livingroom':gt 'tanhouse'
-			
-			act 'Anything to please him - Accept':gt 'tanNicholas','proposition'
+
+			act 'Anything to please him - Accept':tan_work_rep += 2 & gt 'tanNicholas','proposition'
 		end
-		
+
 		elseif NaughtyMaid = 0 and tan_work_rep <= 5 and nikslut > 0 or niksex > 0 or niksvid > 0:
 			'"That said", Nicholas meets your eyes, "I am not unreasonable. As a father and entrepreneur, I know that isn''t always easy to meet expectations set by others, especially when they are demanding. You have already showed me that you have", he smiles, "other qualities. I''d be willing to compromise and grant you more time to convince me of your adequacy for this position, if you prove that you''ll go the extra mile."'
-			
+
 			act 'No, this goes too far - Leave the Livingroom':gt 'tanhouse'
-			
+
 			act 'Anything to please him - Accept':
+				tan_work_rep += 2
 				NaughtyMaid = 1
 				gt 'tanNicholas','proposition'
 			end
@@ -112,71 +113,63 @@ if $ARGS[0] = 'proposition':
 	*clr
 	NaughtyMaidSex = 1
 	'<<$boy>> undoes his pants and looks at you expectantly.'
+
+		act 'Blowjob':
+			cls
+			tan_work_rep += 1
+			'You give <<$boy>> a blowjob.'
+			gs 'arousal', 'bj', 5
+			gs 'stat'
 				
-				act 'Blowjob':
-					cla
-					*clr
-					minut += 5
-					tan_work_rep += 1
-					stat['bj'] += 1
-					gs 'arousal', 'bj', 5
-					'You give <<$boy>> a blowjob.'
+				act 'Further':
+				cls
+				'You keep giving <<$boy>> a blowjob.'
+				gs 'arousal', 'bj', 3
+				gs 'stat'
+				
+					act 'Further':
+					cls
+					'Still giving <<$boy>> a blowjob'
+					gs 'arousal', 'bj', 2
+					gs 'stat'
+					
+						act 'Further':
+						cls
+						gs 'arousal', 'end'
+						spafinloc = 12
+						gs 'cum_manage'
+						'<<$boy>> came in your mouth'
 						
-						act 'Further'
-						cla
-						*clr
-						minut += 3
-						gs 'arousal', 'bj', 3
-						'You keep giving <<$boy>> a blowjob.'
-						
-							act 'Further'
-							cla
-							*clr
-							minut += 2
-							gs 'arousal', 'bj', 2
-							'Still giving <<$boy>> a blowjob'
-							
-								act 'Further'
-								cla
-								*clr
-								gs 'arousal', 'end'
-								spafinloc = 12
-								gs 'cum_manage'
-								'<<$boy>> came in your mouth'
-								
-								if tan_work_rep >= 20:
-									money += 1000
-									'Since you are already in the best possible standing with him, Nicholas hands you 1000 <b>₽</b> to reward you for satisfying him so thoroughly once again.'
-							
-									act 'Leave the Livingroom':gt 'tanhouse'
+						if tan_work_rep >= 20:
+							money += 1000
+							'Since you are already in the best possible standing with him, Nicholas hands you 1000 <b>₽</b> to reward you for satisfying him so thoroughly once again.'
+						end
+						gs 'stat'
+						act 'Leave the Livingroom':gt 'tanhouse'
+					end
 				end
 				
 				act 'Sex':
-					cla
-					*clr
-					minut += 5
+					cls
 					tan_work_rep += 2
-					gs 'arousal', 'foreplay', 5
 					'You have foreplay with Nicholas.'
-							
+					gs 'arousal', 'foreplay', 5
+					gs 'stat'
+
 						act 'Further'
-						cla
-						*clr
-						minut += 5
-						stat['vaginal'] += 1
-						gs 'arousal', 'vaginal', 5
+						cls
 						'You keep having sex with Nicholas.'
-						
+						gs 'arousal', 'vaginal', 5
+						gs 'stat'
+
 							act 'Further'
-							cla
-							*clr
-							minut += 5
-							gs 'arousal', 'vaginal', 5
+							cls
 							'Still having sex with Nicholas but getting close.'
+							gs 'arousal', 'vaginal', 5
+							gs 'stat'
 							
 								act 'Further'
-								cla
-								*clr
+								cls
 								gs 'arousal', 'end'
 								spafinloc = 0
 								sexpartkno = 1
@@ -187,36 +180,34 @@ if $ARGS[0] = 'proposition':
 								if tan_work_rep >= 20:
 									money += 2000
 									'Since you are already in the best possible standing with him, Nicholas hands you 1000 <b>₽</b> to reward you for satisfying him so thoroughly once again.'
-							
-									act 'Leave the Livingroom':gt 'tanhouse'
+								end
+							gs 'stat'
+							act 'Leave the Livingroom':gt 'tanhouse'
+						end
+					end
 				end
 				
 				act 'Anal':
-					cla
-					*clr
-					minut += 5
+					cls
 					tan_work_rep += 3
-					gs 'arousal', 'foreplay', 5
 					'You have foreplay with Nicholas.'
+					gs 'arousal', 'foreplay', 5
+					gs 'stat'
 												
 						act 'Further'
-						cla
-						*clr
-						minut += 5
-						stat['anal'] += 1
-						gs 'arousal', 'anal', 5
+						cls
 						'You have anal sex with Nicholas.'
+						gs 'arousal', 'anal', 5
+						gs 'stat'
 						
 							act 'Further'
-							cla
-							*clr
-							minut += 5
-							gs 'arousal', 'anal', 5
+							cls
 							'Still having anal sex with Nicholas.'
+							gs 'arousal', 'anal', 5
+							gs 'stat'
 							
 								act 'Further'
-								cla
-								*clr
+								cls
 								gs 'arousal', 'end'
 								spafinloc = 3
 								gs 'cum_manage'
@@ -225,10 +216,16 @@ if $ARGS[0] = 'proposition':
 								if tan_work_rep >= 20:
 									money += 3000
 									'Since you are already in the best possible standing with him, Nicholas hands you 1000 <b>₽</b> to reward you for satisfying him so thoroughly once again.'
-							
-									act 'Leave the Livingroom':gt 'tanhouse'
-				end	
-end	
+								end
+							gs 'stat'
+							act 'Leave the Livingroom':gt 'tanhouse'
+						end
+					end
+				end
+			end
+		end
+	end
+end
 
 $TanWorkRep = {
 	if tan_work_rep = 0:'Nicholas thinks you are the worst maid he''s ever seen - the apartment has never been in worse condition than under your care.'
