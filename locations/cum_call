@@ -3,8 +3,11 @@
 !{$ARGS[0] is for the location and should be set for all but vaginal:
 'labia' - 'pantyfront' - 'anus' - 'butt' - 'pantyrear' - 'clothesgroin' - 'clothes' - 'back' - 'legs'
 'arms' - 'face' - 'mouth' - 'hands' - 'stomach' - 'breasts' - 'hair' - 'internalcondom'
-$ARGS[1] is for the name of the sexual partner, set as '' (blank) if PC should not know name
-ARGS[2] is volume, default is 40 (4ml)
+$ARGS[1] is for the name of the sexual partner
+ARGS[2] is a for knowing the partner. Defaults to 0.
+	0 - unknown sex partner (his name may be known, but she newer saw him before, and likely won't ever again, or she won't remeber it)
+	1 - sex partner is known for MC (classmate, neighbor, someone she new beforehand)
+	2 - MC is unaware of the act (like unconscious sex)
 ARGS[3] is contraception, if left blank it will use the default, if you want to force a particular type:
 	1 - he thought you were on the pill but you weren't.
 	2 - you are on the Pill
@@ -14,15 +17,16 @@ ARGS[3] is contraception, if left blank it will use the default, if you want to 
 	6 - the condom was Sabotaged but the main character shouldn't know that
 	7 - the Condom was Sabotaged by the main character.
 ARGS[4] is for changing the potency, -1 for unable to impregnate, default is 10,000
-ARGS[5] is a special unaware, for things like unconscious sex, set to 1 for on
-For a simple call you only need the first 2, ie:
-gs 'cum_call', 'anus', 'Kolka' - for a known partner
-gs 'cum_call', 'anus' - for an unknown partner}
+ARGS[5] is volume, default is 40 (4ml)
+For a simple call you only need the first 3, ie:
+gs 'cum_call', 'anus', 'Kolka', 1 - for a known partner
+gs 'cum_call', 'anus' - for an unknown partner named "unknown", or
+gs 'cum_call', 'anus', 'plumber' - for an unknown partner named "plumber"}
 
-!{'ARGS loc <<$ARGS[0]>> name <<$ARGS[1]>> vol <<ARGS[2]>> con <<ARGS[3]>> ppt <<ARGS[4]>> unaware <<ARGS[5]>>'}
+$cumboy = $boy
 
-if ARGS[5] = 1:
-	sexunaware = 1
+if ARGS[5] ! 0:
+	sexvolume = ARGS[5]
 end
 
 if ARGS[4] ! 0:
@@ -45,11 +49,18 @@ elseif ARGS[3] = 7:
 	sexcontra = 7
 end
 
-if ARGS[2] ! 0:
-	sexvolume = ARGS[2]
+if ARGS[2] = 2:
+	sexunaware = 1
+elseif ARGS[2] = 1:
+	sexpartkno = 1
 end
 
-if $ARGS[1] ! '': sexpartkno = 1 & $cumboy = $boy & $boy = $ARGS[1]
+if $ARGS[1] = '':
+	$boy = 'unknown'
+	sexpartkno = 0
+else
+	$boy = $ARGS[1]
+end
 
 if $ARGS[0] = 'labia':
 	spafinloc = 1
