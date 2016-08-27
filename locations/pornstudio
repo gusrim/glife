@@ -785,9 +785,11 @@ if $ARGS[0] = 'medical':
 				sweat = 0
 				hapri = 1
 				mop = 4
-				lipbalmKoef = 1
+				lipbalmstat += 8
+				fbreath = 1
 				gs 'stat'
-				pornvnesh = 3*(9 + curlykoef + lip + tanKoef + skin + mop + resnic + glaraz + bodykoef + legkoef + hapri + bonusZ + lipbalmKoef + fbreath - sweatKoef + vidagebonus - (zub * 2) + tatKeof - glassvnesh + bimbobeauty)
+!!				pornvnesh uses the same calc as vnesh except the clothing bonus is hard coded (to 900 and then reduced) and the glasses penalty is removed
+				pornvnesh = vneshbase + (vneshbase * 3 / 5) + mopkoef + (hapri * 10) + lipbalmKoef + (fbreath * 5) - sweatKoef - dyevmod - hairkoef - legkoef
 				'In the dressing room a skinny whiter-haired woman is waiting for you.'
 				'You take a thorough shower, carefully washing yourself, and getting an enema too, then you put on some makeup and get your hair done.'
 
@@ -869,18 +871,23 @@ if $ARGS[0] = 'postvideo':
 	end
 	
 	acting += actbonus
-	
-	if ppreg = -4:
-		pornfilmpreg[film] = 1
-	end
+
 	if pfType ! 0:
 		unprotfilm = -1
-		if ppreg > -1:
+		if succubusflag = 1:
+!!			May add a check to clear unprotfilm based on sucpcinfo (the PC knows Succubae are immune to STD''s)
+			if pfcash > 0:
+				$tmp = '"I almost can''t believe <i>they</i> paid <i>me</i> <<pfcash>><b>?</b> for a wonderful meal!"'
+			else
+				$tmp = '"And they think I''m doing this for free, when really they''re paying in other coin!"'
+			end
+			'You let slip a satisfied smirk and think to yourself, <<$tmp>>'
+		elseif knowpreg = 0 and thinkpreg = 0:
 			pornDanger[film] = 1
-
+!!			Left "ppreg" pending its eventual use
 			if ppreg = 0:
 				if pfcash > 0:
-					$tmp = ' Was <<pfcash>> <b>₽</b> worth the risk of getting pregnant by porn actor you''ll probably never see again?'
+					$tmp = ' Was <<pfcash>> <b>?</b> worth the risk of getting pregnant by porn actor you''ll probably never see again?'
 				else
 					$tmp = ' You didn''t even get paid to risk pregnancy by a porn actor you''ll never see again.'
 				end
@@ -888,7 +895,7 @@ if $ARGS[0] = 'postvideo':
 			else
 				!{If she has birth control and deliberately isn''t using it, obviously she wants to get pregnant or just doesn''t care.}
 				if pfcash > 0:
-					$tmp = ' Either way, <<pfcash>> <b>₽</b> will definitely help make a better life for you and your baby if you end up pregnant.'
+					$tmp = ' Either way, <<pfcash>> <b>?</b> will definitely help make a better life for you and your baby if you end up pregnant.'
 				else
 					$tmp = ' The fact that you weren''t even paid to take this risk excites you more than you''d like to admit.'
 				end
@@ -896,6 +903,7 @@ if $ARGS[0] = 'postvideo':
 				horny += 10
 			end
 		end
+		killvar '$tmp'
 	end
 	
 	if pfactor = 50:
