@@ -57,10 +57,8 @@ if coatH[defaultcoat] <= 0: defaultcoat = 0
 !!A Succubus cannot be a Bimbo
 if succubusflag = 1 and bimbo > 0: bimbo -= succublvl * 2
 
-if bimbo < 0:
-	bimbo = 0
-elseif bimbo < 10:
-	bimbolevel = 0
+!!Once bimbolevel is set to 1, must use the withdrawal in stat to return to 0
+if bimbo > 0 and bimbo < 10:
 	bimbo -= 1
 elseif bimbo < 20:
 	bimbolevel = 1
@@ -70,11 +68,6 @@ else
 	bimbolevel = 3
 end
 if bimbo >= 40: bimbo = 40
-
-if bimbolevel > 0 and bimbo <= 0: bimbolevel = 0
-
-!!Bimbo levels. They use custom variables so they wont permanently change character stats
-vneshtemp = (3*(9 + lip + tanKoef + skin + resnic + glaraz + bodykoef + vidagebonus - (zub * 2) + tatKeof))
 
 !!Bimbo levels. They use custom variables so they wont permanently change character stats
 if bimbolevel = 0: supnatvnesh = 0 & bimbostupidity = 0
@@ -92,7 +85,12 @@ end
 !Succubus Level & hunger calcs 
 if succubusflag = 1:
 	cheatHealth = 1
-	dynamic $cheatmenu['std_cure']
+		dynamic $cheatmenu['std_cure']
+
+!!	A Succubus cannot be a Bimbo
+	if bimbolevel > 0 and bimbo <= 0: bimbowithdrawal = 40
+
+!!	Hunger handling
 	if sucxpsnapshot >= succubxp: succhungry += 1
 	sucxpsnapshot = succubxp
 	if succubxp < 0: succubxp = 0
@@ -168,21 +166,24 @@ if succubusflag = 1:
 			anus += 2
 		end
 	end
-else
-	!!Checks how often sex has occured in the last 24 hours and for drops in bimbo score, for calculating withdrawal
-	if bimbolevel >= 1:
-		bimbo += ((stat['vaginal'] + stat['bj'] + stat['anal']) - snapshotX) - 3
-		if snapshotY - bimbo <= 1:
-			bimbowithdrawal = 0
-		else
-			bimbowithdrawal += 1
-		end
+end
+
+!!Bimbo second half, after Succubus so changes there can be reflected here if still bimbo and Succubus
+!!Checks how often sex has occured in the last 24 hours and for drops in bimbo score, for calculating withdrawal
+if bimbolevel >= 1:
+	bimbo += ((stat['vaginal'] + stat['bj'] + stat['anal']) - snapshotX) - 3
+	if snapshotY - bimbo <= 1:
+		bimbowithdrawal = 0
+	else
+		bimbowithdrawal += 1
 	end
 end
 
 snapshotX = (stat['vaginal'] + stat['bj'] + stat['anal'])
 snapshotY = bimbo
+if bimbo < 0 and bimbolevel <= 0: bimbo = 0
 
+!!***************
 
 if curly > 0:curly -= 1
 
