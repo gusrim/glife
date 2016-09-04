@@ -24,6 +24,14 @@ $mobile_check = {
 		end
 	end
 
+	if leonidSlaveDay = daystart and hour >= 6 and hour <= 10 and leonidVisit = 0:
+		'<b><font color="red">Your phone is ringing</font></b>'
+		$caller = 'Leonid Vostov'
+		$callerid = 'images/leonid/leonidphone.jpg'
+		dynamic $phone_ring
+		pl'<center><a href="exec:gt ''leonid'', ''call''"><img src="images/pic/phone/call_accept.png"></a>         <a href="exec:leonidSlaveDay = daystart & gt $locM, $metkaM"><img src="images/pic/phone/decline.png"></a></center>'
+	end
+
 	if QWdogreiqTimer = 0 and QWdogReiq = 2 and week = 7 and qwdogiventday ! daystart and hour >= 12:
 		'<b><font color="red">Your phone is ringing</font></b>'
 		$caller = 'Margaret'
@@ -277,67 +285,16 @@ $Phone_contactlist = {
 
 $Phone_notebook = {
 	clr
-	pl'<center><font size=6>Planner</font></center>'
-	rent = -1
-	if BuyHous = 2 and ArendHouseSL > 0:rent = ArendHouseSL
-	preg1 = pregtime
 	d1 = day
 	w1 = week
 	m1 = month
 	i = 0
 	:pnotebook
-		daynum = daystart+i
-		$calendarday = ''
-		if preg1 = 280:$calendarday += '<br>&emsp;<b>•</b> <font color=''red''><b>Birthing day!</b></font>'
-		if storyline = 1 and SchoolAtestat = 0 and kanikuli = 1:
-			if m1 = 10 and d1 = 27:$calendarday += '<br>&emsp;<b>•</b> Start of Autumn break.'
-			if m1 = 11 and d1 = 4:$calendarday += '<br>&emsp;<b>•</b> End of Autumn break.'
-			if m1 = 12 and d1 = 29:$calendarday += '<br>&emsp;<b>•</b> Start of Winter break.'
-			if m1 = 1 and d1 = 13:$calendarday += '<br>&emsp;<b>•</b> End of of Winter break.'
-			if m1 = 3 and d1 = 25:$calendarday += '<br>&emsp;<b>•</b> Start of Spring break.'
-			if m1 = 3 and d1 = 31:$calendarday += '<br>&emsp;<b>•</b> End of Spring break.'
-			if m1 = 5 and d1 = 25 and (age = 17 or (age = 16 and birthmonth <= 5 and birthday <= 25)):
-				$calendarday += '<br>&emsp;<b>•</b> Graduation Day!'
-			elseif m1 = 6 and d1 = 1:
-				$calendarday += '<br>&emsp;<b>•</b> Start of Summer break.'
-			end
-			if m1 = 8 and d1 = 31:$calendarday += '<br>&emsp;<b>•</b> End of Summer break.'
-		end
-		if w1 < 5 and (workSec >= 1 or PersSecWork = 1):$calendarday += '<br>&emsp;<b>•</b> Working as a secretary. <i>(9:00 - 17:00)</i>'
-		if w1 < 5 and workFabrika = 1:
-			$calendarday += '<br>Working as a seamstress. '
-			if age < 18:$calendarday += '<i>(16:00 - 20:00)</i>' else $calendarday += '<i>(8:00 - 16:00)</i>'
-		end
-		if w1 > 1 and w1 <= 5 and workhosp = 1:$calendarday += '<br>&emsp;<b>•</b> Working as nurse. <i>(8:00 - 16:00)</i>'
-		if worksalon = 1 and (w1 = 1 or w1 = 3 or w1 = 5):$calendarday += '<br>&emsp;<b>•</b> Working as masseuse. <i>(9:00 - 17:00)</i>'
-!		if maidqw > 0:$calendarday += '<br>&emsp;<b>•</b> Working as maid. <i>(16:00 - 19:00)</i>'
-		if pfilmday[i] > 0:$calendarday += '<br>&emsp;<b>•</b> Porn shoot: <i><<$porndesc[pfilmday[i]]>></i>'
-		if d1 = 25 and (PersSecWork = 1 or workKafe = 1 or workhosp = 1 or worksalon = 1 or tanwork = 1 or workSec = 1 or workFabrika = 1):$calendarday += '<br>&emsp;<b>•</b> <i>Pay day.</i>'
-		if d1 = 31 and m1 = 12 and (year - year_start) < 2 and StoryLine = 1:$calendarday += '<br>&emsp;<b>•</b> New Year''s party at 14:00!'
-		if m1 = 1 and d1 = 1:$calendarday += '<br>&emsp;<b>•</b> New year!'
-		if (sisboyQW-2) mod 2 = 1 and sisboyday+1 = daynum:
-			if sisboytrioQW = 1:
-				$calendarday += '<br>&emsp;<b>•</b> <font color="orange">Threesome with Anja and Roma at 18:00</font>'
-			else
-				$calendarday += '<br>&emsp;<b>•</b> <font color="orange">Anja having sex with Roma at 18:00</font>'
-			end
-		end
-		if rent = 0:$calendarday += '<br>&emsp;<b>•</b> Rent on apartment expires!'
-		if birthday = d1 and birthmonth = m1:$calendarday += '<br>&emsp;<b>•</b> My birthday!'
-		if kid > 0:
-			k1 = kid
-			:kiddieloop
-				if daykid[k1] = d1 and monthkid[k1] = m1:$calendarday += '<br>&emsp;<b>•</b> Birthday of my <<$polreb[k1]>> <<$kidname[k1]>>, my <<kid>>. baby!'
-			if k1 > 1:k1 -= 1 & jump 'kiddieloop'
-		end
-		
-		if $calendarday ! '':
-			p '<b><<$monthName[m1]>> <<d1>>, <<$week[w1]>>:</b>'
-			pl $calendarday
-		end
+		if pfilmday[i] > 0:	
+			pl '<b><<$monthName[m1]>> <<d1>>, <<$week[w1]>>:</b>'
+			pl '&emsp;<b>•</b> Porn shoot: <i><<$porndesc[pfilmday[i]]>></i>'
+		end				
 	if i < 14:
-		preg1 += 1
-		rent -= 1
 		i += 1
 		w1 += 1
 		if w1 > 7:w1 = 1
@@ -345,13 +302,7 @@ $Phone_notebook = {
 		if monthsend[m1] < d1: m1 += 1 & d1 = 1
 		jump 'pnotebook'
 	end
-	killvar 'calendarday'
-	killvar 'rent'
-	killvar 'preg1'
-	killvar 'd1'
-	killvar 'w1'
-	killvar 'm1'
-	killvar 'daynum'
+	
 	pl'<center><a href="exec:dynamic $Phone_menu"><img src="images/pic/icon/back.png"></a></center>'
 }
 
@@ -478,7 +429,7 @@ $Phone_calendar = {
 	pl'<center><img src="images/pic/icon/icon_statusbar.png"><br></center>'
 	pl'<center><font size=6>Calendar</font></center>'
 	pl'<center><img src="images/pic/icon/icon_calendar.png"><br></center>'
-	pl'<center><B>Today: </B><font size=5><<$week[week]>>, <i><font size=6><<day>></font></i> <<$month>> <i><font size=6><<year>></font></i> year.</font></center>'
+	pl'<center><B>Today: </B><font size=5><<$week>>, <i><font size=6><<day>></font></i> <<$month>> <i><font size=6><<year>></font></i> year.</font></center>'
 	pl'<center><a href="exec:dynamic $Phone_menu"><img src="images/pic/icon/back.png"></a></center>'
 }
 
@@ -904,21 +855,29 @@ $d_cycreport_actor = {
 		pl 'Currently: <<pertemp>>'
 		pl '<a href="exec: pertemp += 1 & clr & dynamic $d_cycreport_actor, 6">+1</a> <a href="exec: pertemp += 5 & clr & dynamic $d_cycreport_actor, 6">+5</a> <a href="exec: pertemp += 10 & clr & dynamic $d_cycreport_actor, 6">+10</a> <a href="exec: pertemp = 0 & clr & dynamic $d_cycreport_actor, 6">Reset</a> <a href="exec: daylastperiod = daystart - pertemp & dynamic $d_cycreport_update & gs ''stat''">Accept</a>'
 	elseif ARGS[0] = 7:
-		tempmax = arrsize('$wombpotfath')
-		tempcurr = 0
-		cumknown = 0
-		pl 'Total number of cumshots in your womb: <<cum_totaltime>>'
-		:potfathloop
-		if tempcurr < tempmax-1:
-			if cumtime[tempcurr] > 1:$cum = 'cumshots' else $cum = 'cumshot'
-			pl '<a href="exec: $wombthfath = ''<<$wombpotfath[tempcurr]>>'' & dynamic $d_cycreport_actor, 2"><<$wombpotfath[tempcurr]>></a> - <<cumtime[tempcurr]>> <<$cum>>'
-			cumknown += cumtime[tempcurr]
-			tempcurr += 1
-			jump 'potfathloop'
-		else
-			cumunknown = cum_totaltime - cumknown
-			if cumunknown > 1:$cum = 'cumshots' else $cum = 'cumshot'
-			pl '<a href="exec: $wombthfath = ''<<$wombpotfath[tempcurr]>>'' & dynamic $d_cycreport_actor, 2"><<$wombpotfath[tempcurr]>></a> - <<cumunknown>> <<$cum>>'
+		temp = arrsize('$wombpotfath')
+		if temp <= 0: 
+			$wombpotfath[0] = 'Unknown'
+			FathpotAdd = 1
+			Fathpotcheck = 0
+			temp = arrsize('$cumarrnam')
+			:potfakefathaddLoop
+			if temp > Fathpotcheck:
+				if cumarrkno[Fathpotcheck] = 1:
+					$wombpotfath[Fathpotadd] = $cumarrnam[Fathpotcheck]
+					Fathpotadd += 1
+				end
+				Fathpotcheck += 1
+				Jump 'potfakefathaddloop'
+			end
+			temp = arrsize('$wombpotfath')
+		end
+		pl '<a href="exec: $wombthfath = ''<<$wombpotfath[temp]>>'' & dynamic $d_cycreport_actor, 2"><<$wombpotfath[temp]>></a>'
+		:cyccustfathchoice
+		if temp => 0:
+			pl '<a href="exec: $wombthfath = ''<<$wombpotfath[temp]>>'' & dynamic $d_cycreport_actor, 2"><<$wombpotfath[temp]>></a>'
+			temp -= 1
+			jump 'cyccustfathchoice'
 		end
 	elseif ARGS[0] = 10:
 		temp = arrsize('Babyptype')
