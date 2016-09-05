@@ -111,6 +111,17 @@ if $ARGS[0] = '':
 	else
 		cumarrkno[cumarrtemp] = 0
 	end
+
+!!{ If a condom slipped in the vagina, it will pushed deeper inside the vagina during vaginal sex.}
+
+	if spafinloc <= 0 and cumcondslip > 0:
+		if dick > cumcondslip_deep:
+			cumcondslip_deep = dick + rand (0,2)
+		else:
+			cumcondslip_deep += rand (0,2)
+		end
+	end
+
 	cumarrtemp2 = arrsize('sparrvol')
 !!{	Check to see if this is flagged as a preejaculate emmission. All vaginal penetrations that flag this as cumprecheck contain preejaculate. Guidelines for calling it: If your boy is likely to have masterbated, had sex, or otherwise encouraged semen to leak out of their urethra in the last 48 hours, they probably have some fertile preejaculate. If in doubt, let it leak. The chances of pregnancy from it are low, and the MC should have been wearing protection.}
 			
@@ -169,20 +180,20 @@ if $ARGS[0] = '':
 					break_thresh = dick_wid * 2
 					break_thresh -= vagina / 4
 					break_thresh += dick / 4
-					slip_thresh = 18 - (dick_wid * 2)
+					slip_thresh = 36 - (dick_wid * 2)
 					slip_thresh -= (vagina / 2)
-					slip_thresh -= dick / 4
+					slip_thresh -= dick / 2
 
-					if break_thresh < 4: break_thresh = 4
+					if break_thresh < 1: break_thresh = 1
 					
-					if slip_thresh < 1: slip_thresh = 1
+					if slip_thresh < 4: slip_thresh = 4
 					break_thresh += slip_thresh
 
 					if temprand = 0:
 						cumarrcpt[cumarrtemp] += cumarrppt[cumarrtemp]/4
 						cumarrcon[cumarrtemp] = 3
 					
-					elseif temprand < slip_thresh:
+					elseif temprand <= slip_thresh:
 						cumarrcpt[cumarrtemp] += cumarrppt[cumarrtemp]/200
 						cumarrcon[cumarrtemp] = 5
 						cumcondslip = 1
@@ -208,7 +219,11 @@ if $ARGS[0] = '':
 						
 						sparridt[cumarrtemp2] = cumarrkno[cumarrtemp]
 						sparrslc[cumarrtemp2] = 0
-					
+
+						cumcondslip += 1
+						if cumcondslip_deep <= 0:cumcondslip_deep = rand(1, dick)
+						if sparridt[cumarrtemp2] >= 0:cumcondslip_aware = 1
+
 					elseif temprand <= break_thresh:
 						cumarrcpt[cumarrtemp] += cumarrppt[cumarrtemp]/2
 						cumarrcon[cumarrtemp] = 4
@@ -291,7 +306,11 @@ if $ARGS[0] = '':
 					if sexvolume <= 0: sparrvol[cumarrtemp2] += 40 & cumsumbod += 40 & cumsumvag += 40
 					
 					sparridt[cumarrtemp2] = cumarrkno[cumarrtemp]
-					sparrslc[cumarrtemp2] = 0	
+					sparrslc[cumarrtemp2] = 0
+
+					cumcondslip += 1
+					if cumcondslip_deep <= 0:cumcondslip_deep = rand(1, dick)
+					if sparridt[cumarrtemp2] >= 0:cumcondslip_aware = 1
 
 !!{	Next, check for sabotaged condoms. First sabotaged by you, then sabotaged by the guy.
 !!	If they were sabotaged, it acts similar to a condom failure, but worse.}

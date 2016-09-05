@@ -75,6 +75,7 @@ if $ARGS[0] = '':
 
 	cumarrtemp = 0
 	cumcondslip = 0
+	cumcondslip_aware = 0
 	if arrsize('sparrvol') > 0:
 		:cumspaloop
 		!!Succubus absorption for internal locations other than womb
@@ -207,12 +208,14 @@ if $ARGS[0] = '':
 			if sparrloc[cumarrtemp] = 3 and cumsumass > 60: sparrslc = 1
 			if sparrloc[cumarrtemp] = 17: 
 				cumcondslip += 1
-				if sparrage[cumarrtemp] > 48:
-					health -= rand(3,sparrage[cumarrtemp] - 45)
-					'You feel nauseous.'
+				if sparridt[cumarrtemp] >= 0:
+					cumcondslip_aware = 1
 				end
-			!!else
-				!!cumcondslip = 0
+				if sparrage[cumarrtemp] > 48:
+					cumcondslip_aware = 1
+					health -= rand(3,sparrage[cumarrtemp] - 45)
+					'<br><b><font color="red">You feel nauseous.</font></b>'
+				end
 			end
 			if sparrloc[cumarrtemp] ! 0 and sparrloc[cumarrtemp] ! 3 and sparrloc[cumarrtemp] ! 12 and isprok = 0 and sparrage < 5: sparrslc[cumarrtemp] += 1
 			sparrage[cumarrtemp] += 1
