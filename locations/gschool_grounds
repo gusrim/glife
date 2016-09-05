@@ -9,7 +9,7 @@ if $ARGS[0] = 'main':
     $location_type = 'public_outdoors'
 	cls
 	gs 'stat'
-	'<center><b><font color="maroon">School</font></b></center>'
+	'<center><b><font color="maroon">Outside School</font></b></center>'
 	if month > 3 and month < 10:
 		'<center><img src="images/qwest/alter/gschool.jpg"></center>'
 	else
@@ -33,7 +33,7 @@ if $ARGS[0] = 'main':
 		elseif hour < 10 :
 			if $clothingworntype = 'school' or Enable_sforma = 1:
 
-				act '<font color = green><b>Go to school</b></font>':
+				act '<font color = green><b>Go into the school Building</b></font>':
 					cla
 					!one line late from 1.2.4, timerange check by illume
 					if hour = 9: late = 1
@@ -43,7 +43,8 @@ if $ARGS[0] = 'main':
 					if hour < 10:jump 'school_start'
 					hour = 10
 					minut = 0
-					gs 'gschool_lessons', 'morning'
+					gs 'gschool_grounds', 'bulding'
+!!					gs 'gschool_lessons', 'morning'   !This skips all the teacher morning interactions.
 				end
 			else
 				'You''re not allowed to attend any classes at school if you''re not wearing your school uniform.'
@@ -138,7 +139,10 @@ if $ARGS[0] = 'main':
 				gs'show_table','<a href="exec:minut += 15 & gt ''dimaRudeEv''">Dimka Nosov</a>','5'
 			end
 			if IgorLoverQW > 0 and igorkruglovday ! daystart and IdorBlock = 0:gs'show_table','<a href="exec:minut += 15 & gt ''IgorEv''">Igor Kruglov</a>.','5'
-			if st_count > 0 :'Near school yard, you see <TABLE BORDER=1><<$show_table>></TR></TABLE>'
+			if st_count > 0 :
+	            'Near school yard, you see:'
+	            '<TABLE BORDER=1><<$show_table>></TR></TABLE>'
+	        end
 		end
 		if albinaCarday ! daystart:
 			if AlbFrend >= 1 and albrideday ! daystart:'<a href="exec:minut += 15 & gt ''albinaRide''">Albina Barlovskaya</a> is waiting behind the wheel of a large black SUV, parked near the school.'
@@ -151,7 +155,6 @@ if $ARGS[0] = 'main':
 		'A Mitsubishi Pajero and a BMW drive up to the school gates. Strong, muscular guys in leather jackets and tracksuits get out of the cars. They have came to meet Vitek, Dan and Vasily. You watch them talk about something, though you''re not close enough to hear what it''s about. Then you notice Fedor Kozlov leaving school; his face all swollen and bruised. Fedor waves his hand at you, "<<$name>>! Come here, you''re my witness!"'
 
 		act 'Go and see what Fedor needs':gt 'strela'
-
 		exit
 	end
 end
@@ -160,6 +163,7 @@ end
 if $ARGS[0] = 'sports':
 
 	$loc = 'gschool_grounds'
+    $location_type = 'public_outdoors'
 	$metka = 'sports'
 	cls
 	gs 'stat'
@@ -205,14 +209,19 @@ end
 
 !!School building
 if $ARGS[0] = 'bulding':
+	$loc = 'gschool_grounds'
+	$metka = 'bulding'
+    $location_type = 'public_indoors'
 	fcolor = rgb(0, 0, 0)
 	bcolor = rgb(255, 255, 255)
 	lcolor = rgb(106, 90, 205)
-	gs 'indoors'
+	cls
 	gs 'stat'
-	'<center><b><font color="maroon">School</font></b></center>'
-	'<center><img src="images/qwest/alter/gschool2.jpg"></center>'
+	'<center><b><font color="maroon">Inside School</font></b></center>'
+	'<center><img src="images/qwest/alter/gschool_hall0<<Rand(0,2)>>.jpg"></center>'
 	'The hallways of the school building are painted with a cheap green paint, which you think may be toxic. Budget cuts.'
+	
+	act 'Return to town':gt 'pavResidential'
 
 	if zverSlutQW = 1 and week = 1 and lariskaQwestDay < daystart and lariskaQwestDay ! 0 and zverRageQW = 2:
 		zverSlutQW = 2
@@ -242,25 +251,15 @@ if $ARGS[0] = 'bulding':
 		'Christina Zvereva approaches you:'
 		'"What do you want, bitch? Have you recovered from your ass-kicking yet? At least you understand your place now.<<$text_end>>"'
 		lariskaQwestDay += 99999
-	else
-		if hour <= 8:
-			if rand(0,1) = 0:	
-				gs 'gschool_lessons', 'morning'
-			else
-				gt 'gschool_events', 'teacher_greet'
-			end
-		end
-	end
+	end	
 	act 'Continue':
-		if hour <= 8:
-			if rand(0,1) = 0:	
-				gs 'gschool_lessons', 'morning'
-			else
-				gt 'gschool_events', 'teacher_greet'
-			end
+		if hour >= 8 and RAND(0,1) = 0:
+			gt 'gschool_lessons', 'morning'
+		else
+			gt 'gschool_events', 'teacher_greet'
 		end
 	end
-end
+end	
 
 if $ARGS[0] = 'KristinaFight':
     $location_type = 'event_outdoors'
