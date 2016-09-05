@@ -23,7 +23,7 @@ end
 if $ARGS[0] = 'abdRoomFirstEntry':
 	'<center><img src="images\abd\downstairs1.jpg"></center>'
 	'The car stopped. Someone openned the door.'
-	'Sooner than you manage to overcome the sudden flow of daylight, you are taken by a strong man and carried to a house.'
+	'Sooner than you manage to overcome the sudden flow of daylight, you are taken by a strong man and carried to a house.'	
 	'He''s carrying you downstairs.'
 	act 'Continue':gt 'abduction', 'abdRoomFirstChaining'
 end
@@ -31,7 +31,7 @@ end
 if $ARGS[0] = 'abdRoomFirstChaining':
 	i = rand(1, 5)
 	'<center><img src="images\abd\shackled<<i>>.jpg"></center>'
-	'You are thrown on a dirty bed. The man forcibly removes your clothes, puts on you wrist and ankle shackles. he slaps a collar on your neck and leashes you to the wall. Finally he takes a scary injection and stabs you in you arm, pushing the contents inside you.'
+	'You are thrown on a dirty bed. The man forcibly removes your clothes, puts on you wrist and ankle shackles. he slaps a collar on your neck and leashes you to the wall.'
 	'"You must have pissed off someone really a lot, girl." he says.'
 	'"What is this place? What are you going to do to me?" you reply.'
 	'"This is place where girls are brought to be trained as sex slaves"'
@@ -58,6 +58,10 @@ if $ARGS[0] = 'abdRoomFirstChaining':
 	tabletkicheck = 2
 	pillcon = 40000
 
+	broken = 0
+	rapeCount = 0
+	tortureCount = 0
+
 	money = 0
 	gs 'stat'
 	gs 'clothing', 'strip'
@@ -72,7 +76,7 @@ if $ARGS[0] = 'abdRoom':
 	act 'Look around':gt 'abduction', 'abdFood'
 
 	eventChance = rand(1,100)
-	if eventChance > 50:
+	if eventChance <= 60:
 		act 'Take a nap (4:00)':gt 'abduction', 'abdSomeoneComing'
 	else
 		act 'Take a nap (4:00)':gt 'abduction', 'abdSleep'
@@ -96,24 +100,139 @@ if $ARGS[0] = 'abdSomeoneComing':
 		horny += 5
 	end
 
-	if broken = 0:
-		'You start to tremble in fear of what is going to happen to you next.'
-		act 'Cower in panic on your bed':gt 'abduction', 'abdRape'
-	end
-	if rapeCount >= 5 and broken = 0:
-		act 'Beg you cannot bear anymore rough treatment':gt 'abduction', 'abdBreak1'
-	end
-	if broken >= 1:
-		saleChance = rand(1, 100)
-		if broken < 10:
-			act 'Welcome back, master.':gt 'abduction', 'abdBrokenAsk'
-		elseif broken >= 20 and saleChance <= 99:
-			'Master: "I have some good news for you slave."'
-			act 'Yes master?':gt 'abduction', 'abdSoldSauna'
-		else
-			act 'Welcome back, master':gt 'abduction', 'abdBrokenGivePainkiller'
+	if broken = 0 and rapeCount = 0 and tortureCount = 0 and examed = 0:
+		''
+		'The man comes to you, takes your leash and puts a blindfold on your head.'
+		'As a fresh air touches your bare skin, you can say that you are led somewhore up the stairs from the basement.'
+		act 'Continue':gt 'abduction', 'abdExamStart'
+	else
+		if broken = 0:
+			'You start to tremble in fear of what is going to happen to you next.'
+			act 'Cower in panic on your bed':gt 'abduction', 'abdRape'
+		end
+
+		if rapeCount >= 5 and broken = 0:
+			act 'Beg you cannot bear anymore rough treatment':gt 'abduction', 'abdBreak1'
+		end
+
+		saleChance = (broken + tortureCount + rapeCount + abdCustomerCount) - 20
+		if broken >= 1:
+			saleChanceRand = rand(1, 100)
+			customerChance = rand(1, 100)
+			painkillerChance = rand(1, 100)
+			buyoutChance = rand(1, 100)
+			if broken < 10:
+				act 'Welcome back, master.':gt 'abduction', 'abdBrokenAsk'
+			elseif (broken >= 10 and abdTools = 0):
+				act 'Welcome back, master.':gt 'abduction', 'abdBrokenGiveTools'
+			else
+				if customerChance <= 50:
+					act 'Welcome back, master.':gt 'abductionCustomer', 'abdCustomerGate'
+					abdCustomerCount += 1
+				elseif abdCustomerCount > 5 and buyoutChance <= (2 * abdCustomerCount):
+					act 'Welcome back, master.':gt 'abductionCustomer', 'abdCustomerGateBuyout'
+				else
+					if abdCustomerCount > 5 and saleChanceRand <= (2 * abdCustomerCount):
+						'Master: "I have some good news for you slave."'
+						act 'Yes master?':gt 'abduction', 'abdBeSold'
+					else
+						if painkillerChance <= 30:
+							act 'Welcome back, master':gt 'abduction', 'abdBrokenGivePainkiller'
+						else
+							act 'Welcome back, master.':gt 'abduction', 'abdBrokenAsk'
+						end
+					end
+				end
+			end
 		end
 	end
+end
+
+if $ARGS[0] = 'abdExamStart':
+	durr = 5
+	minut += durr
+	'<center><img src="images\abd\examroom.jpg"></center>'
+	'You are unblinded in a very bright room, at first not being able to see anything.'
+	'As your eyes adjust, you can see that it is some kind of a examination room, distantly reminding you of a gynecologists office.'
+	'The man orders you to sit in the chair.'
+	act 'Resist':gt 'abduction', 'abdExamResist'
+	act 'Obey':gt 'abduction', 'abdExamObey'
+end
+if $ARGS[0] = 'abdExamResist':
+	'<center><img src="images\abd\examslap.gif"></center>'
+	'Being scared of what they''ll do to you, you start yelling and shaking to get loose of the leash.'
+	'Your captor is very strong and your leash and cuffs make your attempt futile.'
+	'He catches you, knocks you on the ground and slaps your face hard.'
+	'"You''re making it only harder, bitch."'
+	'With these words he grabs you like you weight nothing and throws you on the chair and chains you.'
+	'The he sits in the chair located in the far corner of the room.'
+	act 'Continue':gt 'abduction', 'abdExam1'
+end
+if $ARGS[0] = 'abdExamObey':
+	'<center><img src="images\abd\examsit.jpg"></center>'
+	'Willingly, like a slave you obviously just become, you climb up the chair and lie there, expecting what perverse things are going to happen to you.'
+	'The man ties you anyway, probably to make sure you don''t leave after they start with you. It makes you even more nervous.'
+	'Then he sits in the chair located in the far corner of the room.'
+	act 'Continue':gt 'abduction', 'abdExam1'
+end
+if $ARGS[0] = 'abdExam1':
+	'<center><img src="images\abd\exam1.jpg"></center>'
+	'A man dressed like a doctor comes through the door.'
+	'Obviously not speaking to you but the man sitting in the chair, he says: "Wow, a nice catch indeed."'
+	'Putting on a rubber gloves he sits on a small chair, looking on your spread legs and what''s in between them.'
+	''
+	'He continues to speak to the man: "She''s about <<age>> years old."'
+	if age < 18:
+		'"Geez, you like them really young, do you?"'
+		'"Sure doctor, who wants to fuck some old meat? And customers just love how the young ones squeal."'
+		'"Heh, I see."'
+		'He continues in the usual report of his findings.'
+	end
+	"Regarding her usage levels, her throat is <<$throattipe>>. <<$anus>>."
+	'He puts his finger out of your ass and finally reaches for your pussy.'
+	if vag = 0:
+		'"Oh, and you''ll like that. Her pussy is a virgin one."'
+		'"Looks like we hit the jackpot once again, dear doctor." says the man with happy smile.'
+	else
+		'"And her pussy is <<$vaginatipe>>.'
+	end
+	'Doctor leaves your body alone and takes several needles filled with some fluids.'
+
+	act 'Continue':gt 'abduction', 'abdExam2'
+end
+if $ARGS[0] = 'abdExam2':
+	'<center><img src="images\abd\exam2.jpg"></center>'
+	'Doctor leaves your body alone for now and instead takes several needles filled with some fluids.'
+	'"Now our little slave, we will make sure you are healthy and ready to be trained."'
+	'He injects all the injections into you.'
+	'The examination is at an end. Doctor leaves, you are untied, blindfolded again and led back to the basement.'
+	venera = 0
+	GerpesOnce = 0
+	Gerpes = 0
+	SifacOnce = 0
+	Sifilis = 0
+	TriperOnce = 0
+	Triper = 0
+	KandidozOnce = 0
+	Kandidoz = 0
+
+	examed = 1
+	act 'Continue':gt 'abduction', 'abdRoom'
+end
+
+
+
+if $ARGS[0] = 'abdBrokenGiveTools':
+	abdTools = 1
+	'<center><img src="images\abd\slavewhoreDildosBag.jpg"></center>'
+	'Master approches you with something big in his hands.'
+	'When comes out of the dark you can see he is bringing some very large dildos.'
+	'"Hello, my newly broken slave. I have a gift for you." says.'
+	'You are rather quiet, because the fear of having this terribly big dildos shoved anywhere into you makes you puke.'
+	'"Aren''t you glad, whore? These dildos are here for you to train on, so you can later perform better in "live" experience."'
+	'"Uhmm...thank you, master."'
+	'He puts the stuff next to your bed and leaves without another word.'
+	act 'Continue':gt 'abduction', 'abdRoom'
 end
 
 if $ARGS[0] = 'abdBreak1':
@@ -124,7 +243,7 @@ if $ARGS[0] = 'abdBreak1':
 	'"You don''t understand bitch. You will leave this place, in the end. As a broken sex slave or as a dead body."'
 	'"But..."'
 	'"You will be sold to someone as a slave. Or if you won''t accept that role, you will be utilized for more perverted needs of our customers. And such need the girls usually don''t survive.'
-	'{you nervously gulb}'
+	'(you nervously gulb)'
 	'"Now show me what sex slave you are."'
 
 	tortureType = rand(1,3)
@@ -133,16 +252,15 @@ if $ARGS[0] = 'abdBreak1':
 	if rapeCount <= 10:
 		act 'Say nothing and crawl back to your bed':gt 'abduction', 'abdRape'
 	end
-	'Broken: '+broken
-	'Torture: '+tortureCount
-	'Rape: '+rapeCount
 
 	if tortureCount >= 5 or rapeCount >= 10:
-		if broken = 1:
+		if broken = 1 and vagina > 0:
 			act 'Please fuck my pussy master':gt 'abduction', 'abdBreak2FuckA1'
 			act 'Please fuck my mouth master':gt 'abduction', 'abdBreak2FuckB1'
-		else
+		elseif vagina > 0:
 			act 'You..you are my master. Please use me..':gt 'abduction', 'abdBreak2FuckA1'
+		else
+			act 'You..you are my master. Please use me..':gt 'abduction', 'abdBreak2FuckB1'
 		end
 	end
 end
@@ -190,13 +308,12 @@ if $ARGS[0] = 'abdBrokenGivePainkillerNo':
 end
 
 if $ARGS[0] = 'abdBrokenAsk':
-	'Broken: '+broken
-	'Torture: '+tortureCount
-	'Rape: '+rapeCount
 	'Master: "Good. What do you want me to do to you, slaveslut?"'
 	sub += 5
 	gs 'stat'
-	act 'Please fuck my pussy master':gt 'abduction', 'abdBreak2FuckA1'
+	if vagina > 0:
+		act 'Please fuck my pussy master':gt 'abduction', 'abdBreak2FuckA1'
+	end
 	act 'Please fuck my mouth master':gt 'abduction', 'abdBreak2FuckB1'
 	if broken >= 3 and sub >= 70:
 		sub += 3
@@ -211,7 +328,8 @@ if $ARGS[0] = 'abdBrokenAsk':
 end
 
 if $ARGS[0] = 'abdBreak2FuckA1':
-	minut += 15
+	durr = 15
+	minut += durr
 	vagina += 1
 	sub += 5
 	stat['vaginal'] += 1
@@ -223,12 +341,14 @@ if $ARGS[0] = 'abdBreak2FuckA1':
 	'Putting your legs wide apart, you spit on your hand and smear it on your pussy, saying: "Come, take me master."'
 	'"I like my bitches restrained." says master and ties your hands to your feet, thus securing your position.'
 	'His dick penetrates your pussy easily, as previously smeared saliva does it''s job.'
+	gs 'arousal', 'vaginal', durr, 'sub', 'bound'
 	act 'Continue':gt 'abduction', 'abdBreak2FuckA2'
 end
 
 if $ARGS[0] = 'abdBreak2FuckA2':
-	minut += 5
-	mouth += 1
+	durr = 5
+	minut += durr
+	throat += 1
 	stat['mouth'] += 1
 	gs 'cum_call', 'mouth', 'master', 0,'', spot, svol
 	gs 'stat'
@@ -237,20 +357,29 @@ if $ARGS[0] = 'abdBreak2FuckA2':
 	'He unties your hands from legs and instead ties your hands behind your back.'
 	'Knowing what expects you to do, you open your mout wide and await his cock.'
 	'After some mouthfuck and gagging, he comes in your mouth'
-	if broken = 0:
+	if broken = 1:
+		''
 		'"Very good, slave. You are on a path to redeem yourself." With these words he unties you, secures you back to your place and leaves.'
 	end
 	broken += 1
+	gs 'arousal', 'bj', durr, 'sub', 'bound'
 	act 'Continue':gt 'abduction', 'abdRoom'
 end
 
 if $ARGS[0] = 'abdBreak2FuckB1':
-	minut += 20
-	vagina += 1
+	durr = 20
+	minut += durr
+	throat += 1
 	broken += 1
 	sub += 5
+<<<<<<< HEAD
 	stat['vaginal'] += 1
 	gs 'cum_call', '', 'master', 0,'', spot, svol
+=======
+	stat['throat'] += 1
+	dynamic $CatName, 'Master'
+	gs 'cum_call', 'mouth', $boy, svol,'', spot
+>>>>>>> 5728eb15995614cfe606beae94e50407f7abca3f
 	gs 'stat'
 	'<center><img src="images\abd\brokenB1.jpg"></center>'
 	'Tormentor unchains you and leads you to a device.'
@@ -258,11 +387,13 @@ if $ARGS[0] = 'abdBreak2FuckB1':
 	'You want to please your master, so you lie on it straight away and dutifully await attaching the restraints.'
 	'After master ties you, he goes to your head. Your already open mouth is then roughly fucked by his member.'
 	'When he''s about to cum, his dick is pointed towards your face. You welcome the flying sperm with open mouth and open eyes.'
+	gs 'arousal', 'bj', durr, 'sub', 'bound', 'rough'
 	act 'Continue':gt 'abduction', 'abdBreak2FuckB2'
 end
 
 if $ARGS[0] = 'abdBreak2FuckB2':
-	minut += 20
+	durr = 20
+	minut += durr
 	pain['asshole'] += 1
 	anus += 1
 	spafinloc = 3
@@ -275,6 +406,7 @@ if $ARGS[0] = 'abdBreak2FuckB2':
 	'Fucking you furiously for some time, master cums deep inside you.'
 
 	broken += 1
+	gs 'arousal', 'anal', durr, 'sub', 'bound'
 	act 'Continue':gt 'abduction', 'abdRoom'
 end
 
@@ -403,6 +535,10 @@ if $ARGS[0] = 'abdFood':
 		act 'Get back':gt 'abduction', 'abdFood'
 	end
 
+	if abdTools = 1:
+		act 'Train with dildos':gt 'abduction', 'abdTrainDildos'
+	end
+
 	if vitamin > 0:
 		'You have <<vitamin>> vitamin pills.'
 
@@ -464,14 +600,19 @@ if $ARGS[0] = 'abdRape':
 	rapeCount += 1
 	rapeType = rand(1, 5)
 	sub += 3
+	gs 'stat'
+	if broken < 10:
+		Manna = 0
+		gs 'stat'
+	end
 	
 	if rapeType = 1:
-		
-		minut += 30
-		mouth += 1
+		durr = 30
+		minut += durr
+		throat += 1
 		stat['mouth'] += 1
 		pain['mouth'] += 2
-		gs 'cum_call', 'mouth', 'torturer', 0,'', spot, svol
+		gs 'cum_call', 'mouth', 'torturer'
 		gs 'stat'
 		i = rand(1, 4)
 		gifornot = rand (1, 100)
@@ -482,22 +623,26 @@ if $ARGS[0] = 'abdRape':
 		end
 		'Your hands are tied. A metal ring is fastened inside your mouth.'
 		'You have to endure a very rough mouthfuck. The guy knows no limits and gags you as he wants. He does let you breath from time to time, but most of the experience you feel like passing out. Your saliva is both all over his dick and your tits and belly.'
+		gs 'arousal', 'bj', durr, 'sub', 'bound', 'maso'
 		act 'Continue':gt 'abduction', 'abdRoom'
-	elseif rapeType = 2:
-		minut += 30
+	elseif rapeType = 2 and vagina > 0:
+		durr = 30
+		minut += durr
 		vagina += 1
 		stat['vaginal'] += 1
-		pain['vaginal'] += 5
-		gs 'cum_call', '', 'torturer', 0,'', spot, svol
+		pain['vaginal'] += 10
+		gs 'cum_call', '', 'torturer', 0
 		gs 'stat'
 		i = rand(1, 5)
 		'<center><img src="images\abd\fucktiedpussy<<i>>.jpg"></center>'
 		'Your hands are tied, you are bend on the bed.'
 		'The guy starts to penetrate your pussy without warning. Sharp pain goes through your belly as your pussy is not wet enough to receive a dick.'
+		gs 'arousal', 'vaginal', durr, 'sub', 'bound', 'maso'
 		act 'Continue':gt 'abduction', 'abdRoom'
 	elseif rapeType = 3:
-		minut += 30
-		pain['asshole'] += 5
+		durr = 30
+		minut += durr
+		pain['asshole'] += 10
 		anus += 1
 		gs 'cum_call', 'anal', 'torturer', 0,'', spot, svol
 		stat['anal'] += 1
@@ -510,28 +655,32 @@ if $ARGS[0] = 'abdRape':
 		end
 		'Your hands are tied, you are bend on the bed.'
 		'The guy starts to penetrate your ass without warning. Sharp pain goes through your anus as your ass is not relaxed and wet enough to receive a dick.'
+		gs 'arousal', 'anal', durr, 'sub', 'bound', 'maso'
 		act 'Continue':gt 'abduction', 'abdRoom'
 	elseif rapeType = 4:
-		minut += 30
+		durr = 30
+		minut += durr
 		pain['asshole'] += 8
 		stat['anal_fist'] += 1
 		anus += 1
 		gs 'stat'
-		'<center><img src="images\abd\fistanal'+rand(1,4)+'.jpg"></center>'
+		'<center><img src="images\abd\fistanal'+rand(1,5)+'.jpg"></center>'
 		'Your hands and feet are tied, your ass is reaching high above your head.'
 		'The guy starts pushing his thick fist inside your anus. At least he used a bit of lubricant..'
 		'When your sphincter fails to resist anymore, you can hear loud pop as his fist quickly penetrates your insides.'
 		'He doesnt stop there and pushes his hand deep. You can feel your stomach expanding as he opens his fist inside you.'
 		'The pain is unbearable, but he doesn''t care.'
+		gs 'arousal', 'anal_fist', durr, 'sub', 'bound', 'maso'
 		act 'Continue':gt 'abduction', 'abdRoom'
-	elseif rapeType = 5:
-		minut += 30
+	elseif rapeType = 5 and vagina > 0:
+		durr = 30
+		minut += durr
 		pain['vaginal'] += 5
 		pain['cervix'] += 10
 		stat['vaginal_fist'] += 1
 		vagina += 1
 		gs 'stat'
-		'<center><img src="images\abd\fistvaginal'+rand(1,4)+'.jpg"></center>'
+		'<center><img src="images\abd\fistvaginal'+rand(1,5)+'.jpg"></center>'
 		'Your hands and feet are tied, your ass is reaching high above your head.'
 		'The guy starts pushing his thick fist inside your pussy. At least he used a bit of lubricant..'
 
@@ -539,28 +688,59 @@ if $ARGS[0] = 'abdRape':
 		'Hes pinching and pressing your cervix inside you. You cry aloud and try to shake him off your ass. But you are bound so there''s no hope of success..'
 		'"What bitch, you like it I see?" He stops pressing it but you can feel a finger pointing towards the cervix entry: "Should we penetrate another hole, girl?"'
 		'"No, please stop, just stop!"'
+		gs 'arousal', 'vaginal_fist', durr, 'sub', 'bound', 'maso'
+		act 'Continue':gt 'abduction', 'abdRoom'
+	else
+		durr = 30
+		minut += durr
+		throat += 1
+		stat['mouth'] += 1
+		pain['mouth'] += 2
+		dynamic $CatName, 'Torturer'
+		gs 'cum_call', 'mouth', $boy
+
+		gs 'stat'
+		i = rand(1, 4)
+		gifornot = rand (1, 100)
+		if gifornot > 50:
+			'<center><img src="images\abd\mouthgagblow<<i>>.jpg"></center>'
+		else
+			'<center><img src="images\abd\mouthgagblow1.gif"></center>'
+		end
+		'Your hands are tied. A metal ring is fastened inside your mouth.'
+		'You have to endure a very rough mouthfuck. The guy knows no limits and gags you as he wants. He does let you breath from time to time, but most of the experience you feel like passing out. Your saliva is both all over his dick and your tits and belly.'
+		gs 'arousal', 'bj', durr, 'sub', 'bound', 'maso'
 		act 'Continue':gt 'abduction', 'abdRoom'
 	end
 end
 
 if $ARGS[0] = 'abdTorture':
 	sub += 5
-	tortureType = rand(1,3)
+	tortureType = rand(1,4)
 	tortureCount += 1
 	gs 'stat'
 	if tortureType = 1:
 		gt 'abduction', 'abdTortureA1'
-	elseif tortureType = 2:
+	elseif tortureType = 2 and vagina > 0:
 		gt 'abduction', 'abdTortureB1'
 	elseif tortureType = 3:
 		gt 'abduction', 'abdTortureC1'
+	elseif tortureType = 4 and vagina > 0:
+		gt 'abduction', 'abdTortureD1'
+	else
+		gt 'abduction', 'abdTortureC1'
+	end
+	if broken < 10:
+		Manna = 0
+		gs 'stat'
 	end
 end
 
 if $ARGS[0] = 'abdTortureA1':
 	pain['feet'] += 5
 	pain['hands'] += 5
-	minut += 10
+	durr = 10
+	minut += durr
 	gs 'stat'
 	'<center><img src="images\abd\tortureA1.jpg"></center>'
 	'You are taken from your bed and led to a far side of the cellar. Suspicious rings and straps can be seen on the wall.'
@@ -572,44 +752,51 @@ end
 
 if $ARGS[0] = 'abdTortureA2':
 	pain['nipples'] += 5
-	minut += 10
+	durr = 10
+	minut += durr
 	gs 'stat'
 	'<center><img src="images\abd\tortureA2.jpg"></center>'
 	'Tormentor secures a rope around your neck and starts to play with your idle nipples.'
 	'As your nipples arouse he firmly attaches the rope on them and tightens it around your neck.'
 	'"Oouch! It hurts, please remove it!"'
 	'Instead of that, the tormentor slaps a gag in your mouth.'
+	gs 'arousal', 'foreplay', durr, 'sub', 'bound', 'maso'
 	act 'Continue':gt 'abduction', 'abdTortureA3'
 end
 
 if $ARGS[0] = 'abdTortureA3':
 	pain['asshole'] += 2
 	anus += 1
-	minut += 10
+	durr = 30
+	minut += durr
 	gs 'stat'
 	'<center><img src="images\abd\tortureA3.jpg"></center>'
 	'After a while the tormentor comes back and brings a dildo on a stick.'
 	'"Mmmphh!" Is the only sound you are able to shout as protest on what''s coming to you.'
-	'Without a word he sticks the dildo inside your ass, so deep you can feel it touch your stomach.'
+	'Without a word he sticks the dildo inside your ass, so deep that you can feel it touch your stomach.'
 	'He secures the stick on a ground and leaves.'
 	'You swing on the rope left and right, trying to push it out of your ass. But it is too deep inside you and the stick does not move.'
+	gs 'arousal', 'anal_dildo', durr, 'sub', 'bound', 'maso', 'humiliation'
 	act 'Continue':gt 'abduction', 'abdTortureA4'
 end
 
 if $ARGS[0] = 'abdTortureA4':
 	pain['tummy'] += 5
-	minut += 10
+	durr = 10
+	minut += durr
 	gs 'stat'
 	'<center><img src="images\abd\tortureA4.jpg"></center>'
 	'After what seems as eternity the tormentor comes back.'
 	'Pleased to find you with tears and saliva all over your tits and stomach, he unscrews the stick.'
 	'As a last sign of torture he pushes the stick inside you with one stroke even deeper and than swiftly takes it out.'
 	'You start to shake alot, but you know it is finally over.'
+	gs 'arousal', 'foreplay', durr, 'sub', 'bound', 'maso', 'humiliation'
 	act 'Continue':gt 'abduction', 'abdRoom'
 end
 
 if $ARGS[0] = 'abdTortureB1':
-	minut += 10
+	durr = 10
+	minut += durr
 	gs 'stat'
 	'<center><img src="images\abd\tortureB1.jpg"></center>'
 	'You are forced on the ground, lying on your stomach.'
@@ -620,12 +807,14 @@ end
 
 if $ARGS[0] = 'abdTortureB2':
 	pain['asscheeks'] += 10
-	minut += 10
+	durr = 10
+	minut += durr
 	gs 'stat'
 	'<center><img src="images\abd\tortureB2.jpg"></center>'
 	'You can hear tormentor going back to you.'
 	'"UUMmmphh!" Your gagged mouth makes this sound as a cane whips your ass.'
 	'You are given thorough ass whipping.'
+	gs 'arousal', 'foreplay', durr, 'sub', 'bound', 'maso', 'humiliation'
 	act 'Continue':gt 'abduction', 'abdTortureB3'
 end
 
@@ -634,17 +823,20 @@ if $ARGS[0] = 'abdTortureB3':
 	pain['vaginal'] += 2
 	vagina += 1
 	anus += 1
-	minut += 10
+	durr = 10
+	minut += durr
 	gs 'stat'
 	'<center><img src="images\abd\tortureB3.jpg"></center>'
 	'As soon as the whipping stops you can feel pain in your arse and pussy.'
 	'Something is being pushed inside both of your holes.'
 	'You are given no time to adjust and both holes are fucked viciously fast and deep.'
+	gs 'arousal', 'vaginal_dildo', durr, 'sub', 'bound', 'maso', 'humiliation'
 	act 'Continue':gt 'abduction', 'abdTortureB4'
 end
 
 if $ARGS[0] = 'abdTortureB4':
-	minut += 10
+	durr = 10
+	minut += durr
 	gs 'stat'
 	'<center><img src="images\abd\tortureB4.jpg"></center>'
 	'Finally your pussy and anus are left alone, whatever was inside you was taken out.'
@@ -652,24 +844,27 @@ if $ARGS[0] = 'abdTortureB4':
 end
 
 if $ARGS[0] = 'abdTortureC1':
-	minut += 10
+	durr = 10
+	minut += durr
 	gs 'stat'
 	'<center><img src="images\abd\tortureC1.jpg"></center>'
 	'Tormentor looks angry. Your hands are tied behind your back, legs too..'
 	'He attaches a rope on your feet - you are lifted like a pig to be cleaned!'
 	'After some minutes of just hanging, tormetor comes with a leather whip.'
 	'He spins you around and whips whatever comes before him. Ass, back, belly, pussy, legs, tits.'
+	gs 'arousal', 'foreplay', durr, 'sub', 'bound', 'maso', 'humiliation'
 	act 'Continue':gt 'abduction', 'abdTortureC2'
 end
 
 if $ARGS[0] = 'abdTortureC2':
-	minut += 10
-	pain['asscheeks'] += 15
-	pain['back'] += 15
-	pain['thighs'] += 15
-	pain['chest'] += 15
-	pain['breasts'] += 25
-	pain['tummy'] += 15
+	durr = 10
+	minut += durr
+	pain['asscheeks'] += 60
+	pain['back'] += 50
+	pain['thighs'] += 25
+	pain['chest'] += 25
+	pain['breasts'] += 50
+	pain['tummy'] += 25
 	gs 'stat'
 	'<center><img src="images\abd\tortureC2.jpg"></center>'
 	'Twenty minutes of thourough whipping leaves your body trembling.'
@@ -677,12 +872,98 @@ if $ARGS[0] = 'abdTortureC2':
 	act 'Continue':gt 'abduction', 'abdRoom'
 end
 
-if $ARGS[0] = 'abdSoldSauna':
+if $ARGS[0] = 'abdTortureD1':
+	durr = 10
+	minut += durr
+	gs 'stat'
+	'<center><img src="images\abd\tortureD1.jpg"></center>'
+	'Tormentor brings a crude rope..'
+	'You tremble of what he''s going to do with it.. Will he spank you, or is he tired of you and wants to hang you?'
+	'You almost sigh in relief when he ''just'' ties you up.'
+	act 'Continue':gt 'abduction', 'abdTortureD2'
+end
+
+if $ARGS[0] = 'abdTortureD2':
+	durr = 10
+	minut += durr
+	anus += 1
+	gs 'stat'
+	'<center><img src="images\abd\tortureD2.jpg"></center>'
+	'You are forced on your knees on some kind of weird bench. The ropes are fixed so you cannot move an inch.'
+	'Not able to see what is going on behind you, suddenly you feel something cold reaching your asshole.'
+	'With single trust something is shoved too deep inside your anus.'
+	'Tears pop up on your face and you cry aloud..'
+	gs 'arousal', 'anal_dildo', durr, 'sub', 'bound', 'maso', 'humiliation'
+	act 'Continue':gt 'abduction', 'abdTortureD3'
+end
+
+if $ARGS[0] = 'abdTortureD3':
+	durr = 60
+	minut += durr
+	vagina += 1
+	throat += 1
+	gs 'stat'
+	'<center><img src="images\abd\tortureD3.jpg"></center>'
+	'Next is your tender pussy. Not giving you any time to adjust, the dildo is shoved in.'
+	'Last comes your mouth and finally you can see what is being inserted into your every hole.'
+	'Dildos put up on long wooden sticks.'
+	'The sticks are fixed tightly to the device - if you move just a bit, any one of those gets shoved even deeper, bringing you even more discomfort and pain.'
+	'Tormentor leaves and leaves you in this state for an hour. It seems like eternity.'
+	gs 'arousal', 'vaginal_dildo', durr, 'sub', 'bound', 'maso', 'humiliation'
+	act 'Continue':gt 'abduction', 'abdTortureD4'
+end
+
+if $ARGS[0] = 'abdTortureD4':
+	durr = 60
+	minut += durr
+	gs 'stat'
+	'<center><img src="images\abd\tortureD4.jpg"></center>'
+	'Finally he comes back.'
+	'You are unplugged, but your torture is far from end.'
+	'He says: "Suck me, and then this will end. For now."'
+	'You have no choice but to do what he orders you to.'
+	gs 'arousal', 'bj', durr, 'sub', 'bound', 'maso', 'humiliation'
+	act 'Continue':gt 'abduction', 'abdTortureD5'
+end
+
+if $ARGS[0] = 'abdTortureD5':
+	durr = 60
+	minut += durr
+	pain['asshole'] += 2
+	pain['vaginal'] += 2
+	vagina += 1
+	anus += 1
+	dynamic $CatName, 'Torturer'
+	gs 'cum_call', 'mouth', $boy
+	gs 'stat'
+	'<center><img src="images\abd\tortureD5.gif"></center>'
+	'Even though your head is spinning and everything is aching you, you are able to make him cum in few minutes.'
+	'Being bound he takes no remorse and fucks you raw, cumming inside your very throat.'
+	gs 'arousal', 'bj', durr, 'sub', 'bound', 'maso', 'humiliation'
+	act 'Continue':gt 'abduction', 'abdRoom'
+end
+
+if $ARGS[0] = 'abdBeSold':
 	'Master: "We have a buyer for you."'
-	'"But.. who?"'
+	act 'I do not want to be sold':gt 'abduction', 'abdConsiderSold'
+	act 'I want to leave':gt 'abduction', 'abdSoldSauna'
+end
+
+if $ARGS[0] = 'abdConsiderSold':
+	'Master: "Are you sure slave? You will stay here and continue to be used.."'
+	act 'Yes, that''s what I want':gt 'abduction', 'abdNotSold'
+	act 'On second thought, I want to leave this place':gt 'abduction', 'abdSoldSauna'
+end
+
+if $ARGS[0] = 'abdNotSold':
+	'Master: "Very well. We will see each other soon again.."'
+	act 'Continue':gt 'abduction', 'abdRoom'
+end
+
+if $ARGS[0] = 'abdSoldSauna':
 	'"A nice lady from an established business" he smiles.'
-	'You are blindfolded and lead away, into a car.'
-	'After some time you are lead through doors and finally you can see. You are in a backroom of a brothel.'
+	'You are blindfolded and led away, into a car.'
+	'After some time you are led through doors and finally you can see. You are in a backroom of a brothel.'
 	'"Madame: "I paid 20 000 for you, bitch. Don''t make me regret this."'
 	'"Yes madame."'
 	'"I am not a bad person. If you earn me at least five times more, I may let you go."'
@@ -698,5 +979,665 @@ if $ARGS[0] = 'abdSoldSauna':
 	act 'Continue':gt 'saunaroom'
 end
 
---- abduction ---------------------------------
+if $ARGS[0] = 'abdFailedCustomer':
+	abdCustomerFailCount += 1
+	durr = 5
+	minut += durr
+	gs 'stat'
+	'<center><img src="images\abd\slavewhoreFailed.gif"></center>'
+	'With anger you are led back to the basement.'
+	act 'Continue':gt 'abduction', 'abdFailedCustomer1'
+end
 
+if $ARGS[0] = 'abdFailedCustomer1':
+	durr = 15
+	minut += durr
+	gs 'stat'
+	'<center><img src="images\abd\slavewhoreFailed1.gif"></center>'
+	'Master is looking very upset.'
+	'First he takes some ropes and ties you up. Your breast start to turn purple from the lack of blood movement, so tightly roped they are.'
+	gs 'arousal', 'foreplay', durr, 'sub', 'bound', 'maso', 'humiliation'
+	act 'Continue':gt 'abduction', 'abdFailedCustomer2'
+end
+
+if $ARGS[0] = 'abdFailedCustomer2':
+	durr = 5
+	minut += durr
+	pain['asshole'] += 2
+	gs 'stat'
+	'<center><img src="images\abd\slavewhoreFailed2.gif"></center>'
+	'Being tied up and unable to resist in any way, a considerably big plug is forced into your anus without any warning.'
+	gs 'arousal', 'anal_dildo', durr, 'sub', 'bound', 'maso', 'humiliation'
+	act 'Continue':gt 'abduction', 'abdFailedCustomer3'
+end
+
+if $ARGS[0] = 'abdFailedCustomer3':
+	durr = 15
+	minut += durr
+	pain['mouth'] += 5
+	pain['throat'] += 10
+	throat += 1
+	'<center><img src="images\abd\slavewhoreFailed3.gif"></center>'
+	'Even your eyes are blinded with a fold, ring gag exposes your mouth. You are completele helpless and at disposal to any use or torture.'
+	'After a while of relative quiet, you hear someone coming. In a matter of seconds, someone grabs your head and pushes a warm cock through your mouth down the throat.'
+	'You panic and freak out, but he doesn''t let go. You are suffocating.'
+	endRand = rand(1,3)
+	if endRand = 1:
+		act 'Continue':gt 'abduction', 'abdFailedCustomerElectro1'
+	elseif endRand = 2:
+		act 'Continue':gt 'abduction', 'abdFailedCustomerHook1'
+	elseif endRand = 3:
+		act 'Continue':gt 'abduction', 'abdFailedCustomerWhip1'
+	end
+	Manna = 0
+	gs 'arousal', 'bj', durr, 'sub', 'bound', 'maso', 'humiliation'
+	gs 'stat'
+end
+
+if $ARGS[0] = 'abdFailedCustomerElectro1':
+	durr = 30
+	minut += durr
+	pain['pubic'] += 20
+	pain['nipples'] += 20
+	pain['breasts'] += 20
+	gs 'stat'
+	'<center><img src="images\abd\slavewhoreFailedElectro1.gif"></center>'
+	'Next your restraints are removed, but you are led to a wall and chained anew, to a different device.'
+	'This time, you can see everything - but you probably rather wouldn''t.'
+	'On your nipples and groin are put a sticky electrodes.'
+	'Master goes few steps back and pushes a button on a remote - in that moment an electrict shock goes through your whole body, making you shake like a pudding.'
+	'You moan aloud and beg him to stop.'
+	gs 'arousal', 'foreplay', durr, 'sub', 'bound', 'maso', 'humiliation'
+	act 'Continue':gt 'abduction', 'abdFailedCustomerElectro2'
+end
+
+if $ARGS[0] = 'abdFailedCustomerElectro2':
+	durr = 30
+	minut += durr
+	pain['asshole'] += 20
+	pain['tummy'] += 20
+	gs 'stat'
+	'<center><img src="images\abd\slavewhoreFailedElectro2.gif"></center>'
+	'Your legs are put in the air and restrained to a wall - you are hanging by your hands, both your holes being at full disposal.'
+	'The first plugs is violently taken out with a loud "FLOP".'
+	'However your anus isn''t left empty for long as in a few moments a new plug is inserted. As you were afraid - wires are hanging out of its end.'
+	'Remote button is pushed again and this time you can feel it all inside your intestines and anus.'
+	'You have strong feeling that your belly will pop up like a popcorn.'
+	gs 'arousal', 'anal_dildo', durr, 'sub', 'bound', 'maso', 'humiliation'
+	act 'Continue':gt 'abduction', 'abdFailedCustomerElectro3'
+end
+
+if $ARGS[0] = 'abdFailedCustomerElectro3':
+	durr = 240
+	minut += durr
+	pain['feet'] += 10
+	pain['hands'] += 10
+	pain['back'] += 10
+	Manna = 0
+	gs 'stat'
+	'<center><img src="images\abd\slavewhoreFailedElectro3.jpg"></center>'
+	'Finally your torment is at an end.'
+	'"Remember this lesson slave. If it comes to failing a customer again, more severe punishment may be forced upon you."'
+	'"And if you are found to be more trouble than you are worth, one of our more perverse customer will pay us well to be allowed to torture you to death."'
+	'You just nod that you agree and remain silent.'
+	''
+	'Master leaves without another word - and you are left hanging like that!'
+	'You are tired, everything hurts and there seems to be no sign of when or wheter at all will you be removed from this terrible bondage.'
+	act 'Continue':gt 'abduction', 'abdFailedCustomerChainedBack'
+end
+
+if $ARGS[0] = 'abdFailedCustomerHook1':
+	durr = 10
+	minut += durr
+	pain['asshole'] += 5
+	gs 'stat'
+	'<center><img src="images\abd\slavewhoreFailedHook1.gif"></center>'
+	'You are put on all four and chained. Your ass is high in the air, showing both your holes to anyone standing behind you.'
+	'Somebody you don''t see comes from behind, removes the buttplug with loud "FLOP" and right away, very violently shoves something cold inside your anus.'
+	'You cry both in pain and surprise.'
+	gs 'arousal', 'anal_dildo', durr, 'sub', 'bound', 'maso', 'humiliation'
+	act 'Continue':gt 'abduction', 'abdFailedCustomerHook2'
+end
+
+if $ARGS[0] = 'abdFailedCustomerHook2':
+	durr = 30
+	minut += durr
+	pain['labia'] += 20
+	pain['clitoris'] += 20
+	gs 'stat'
+	'<center><img src="images\abd\slavewhoreFailedHook2.gif"></center>'
+	'Trying to look behind you, you can see master bringing something in his hands.'
+	'He puts it on your pussy and suddenly it starts to vibrate.'
+	'The intensity is too big and instead of pleasure it feels like a evil mix of intense pain and orgasmic pulses.'
+	'After a while, you piss yourself while experiecing something like a very painful orgasm.'
+	$orgasm_or = 'yes'
+	gs 'arousal', 'vaginal_vibe', durr, 'sub', 'bound', 'maso', 'humiliation'
+	act 'Continue':gt 'abduction', 'abdFailedCustomerHook3'
+end
+
+if $ARGS[0] = 'abdFailedCustomerHook3':
+	durr = 20
+	minut += durr
+	pain['vaginal'] += 10
+	vagina += 1
+	pain['cervix'] += 20
+	gs 'stat'
+	'<center><img src="images\abd\slavewhoreFailedHook3.gif"></center>'
+	'Your pussy is very sensitive after the vibrator treatment - and master knows that very well.'
+	'He slams his dick deep inside you, hitting your cervix. It seems he does it on purpose.'
+	'You try to beg for mercy, but he just doesn''t care. He wants you to suffer - this is your punishment.'
+	gs 'arousal', 'vaginal', durr, 'sub', 'bound', 'maso', 'humiliation', 'rough'
+	act 'Continue':gt 'abduction', 'abdFailedCustomerHook4'
+end
+
+if $ARGS[0] = 'abdFailedCustomerHook4':
+	durr = 240
+	minut += durr
+	pain['asshole'] += 30
+	anus += 1
+	Manna = 0
+	gs 'stat'
+	'<center><img src="images\abd\slavewhoreFailedHook4.gif"></center>'
+	'Finally you faint from all the abuse.'
+	'You wake up alone in the room, but your position has been changed when you were gone.'
+	'You are bound on some kind of a stool, hands tied together, and most importantly your ass is lifted in the air and hanging by the hook.'
+	'You start to realize the pain of hanging by your asshole - so you try to push your legs to move your ass even higher.'
+	'But you can stand like that only for a while and soon you get tired, having to sit on the hook again with all the pain included.'
+	'Noone is near and you already know too well that noone will take pity on you anyway..'
+	''
+	'You just have to wait, hoping this part of punishment will end soon.'
+	act 'Wait':gt 'abduction', 'abdFailedCustomerChainedBack'
+end
+
+if $ARGS[0] = 'abdFailedCustomerWhip1':
+	durr = 10
+	minut += durr
+	pain['labia'] += 5
+	pain['citoris'] += 5
+	gs 'stat'
+	'<center><img src="images\abd\slavewhoreWhip1.gif"></center>'
+	'Master removes your bondage and in anger pushes you on the ground, spreading your legs.'
+	'"You fucking whore, I''ll teach you to be obedient!"'
+	'He starts to spank your pussy with his big strong manly hand.'
+	gs 'arousal', 'foreplay', durr, 'sub', 'bound', 'maso', 'humiliation'
+	act 'Continue':gt 'abduction', 'abdFailedCustomerWhip2'
+end
+
+if $ARGS[0] = 'abdFailedCustomerWhip2':
+	durr = 20
+	minut += durr
+	pain['labia'] += 10
+	pain['citoris'] += 10
+	pain['asscheeks'] += 20
+	gs 'stat'
+	'<center><img src="images\abd\slavewhoreWhip2.gif"></center>'
+	'After a while he cools down but your pussy is already red as a tomato.'
+	'He grabs your hair and leads you to another device. You have to lie down on your shoulders and put your ass high in the air.'
+	'He fixes you in this uncomfortable position with some straps and pipes.'
+	''
+	'Being content with your looks, how helpless and at disposal you are, he grabs a rubber baton.'
+	'His hits target especially your exposed labia, slapping it very sharply and causing you intense pain.'
+	'From time to time, he gives even tougher hit to your asscheeks.'
+	gs 'arousal', 'foreplay', durr, 'sub', 'bound', 'maso', 'humiliation'
+	act 'Continue':gt 'abduction', 'abdFailedCustomerWhip3'
+end
+
+if $ARGS[0] = 'abdFailedCustomerWhip3':
+	durr = 20
+	minut += durr
+	pain['labia'] += 10
+	pain['citoris'] += 10
+	pain['asshole'] += 10
+	anus += 1
+	gs 'stat'
+	'<center><img src="images\abd\slavewhoreWhip3.gif"></center>'
+	'As if it wasn''t hard enough, master brings a long dildo on a stick.'
+	'With one stroke he penetrates your dry ass and fixes the stick to the wall. The stick is not wooden, it is metal and very heavy - on its own weight it pushes down your intestines and presses your intestinal walls.'
+	''
+	'Then he brings different weapon - a cat-o-nine made of leather.'
+	'His target is the same - your poor labia and citoris.'
+	gs 'arousal', 'anal', durr, 'sub', 'bound', 'maso', 'humiliation', 'rough'
+	act 'Continue':gt 'abduction', 'abdFailedCustomerWhip4'
+end
+
+if $ARGS[0] = 'abdFailedCustomerWhip4':
+	durr = 240
+	minut += durr
+	pain['labia'] += 20
+	pain['citoris'] += 20
+	pain['asshole'] += 20
+	Manna = 0
+	anus += 1
+	gs 'stat'
+	'<center><img src="images\abd\slavewhoreWhip4.gif"></center>'
+	'After this even rougher punishment you are on a brink of a fainting.'
+	'Master brings another devices on a stick - it is a vibrator with large head.'
+	'Your position is ideal for this - he buries the head nicely deep between your labia, touching your citoris directly.'
+	''
+	'When the device is turned on, you realize it must be on the highest setting. It almost makes you go crazy right away!'
+	'Master leaves and you are left alone with this device turned on, anal dildo still pushing deep into your ass and everything aching from this unhuman position.'
+	'You faint every now and then, you have a strong orgasms mixed with lot of pain, you shake like a pudding.'
+	'And you can hear only your moans and humming of the vibrator..'
+	gs 'arousal', 'vaginal_vibe', durr, 'sub', 'bound', 'maso', 'humiliation'
+	act 'Endure':gt 'abduction', 'abdFailedCustomerChainedBack'
+end
+
+if $ARGS[0] = 'abdFailedCustomerChainedBack':
+	durr = 5
+	minut += durr
+	'<center><img src="images\abd\chainedBack.jpg"></center>'
+	'After what seems as eternity, your unbound and let back to your place, chained back again to the wall.'
+	act 'Continue':gt 'abduction', 'abdRoom'
+end
+
+if $ARGS[0] = 'abdTrainDildos':
+	dildoSmall = 10
+	dildoRegular = 20
+	dildoBig = 30
+	dildoHorse = 40
+	'<center><img src="images\abd\slavewhoreDildos1.jpg"></center>'
+	'You take the dildos from the ground and clean them up a bit in the shower.'
+	'There are four of them: small, regular, big and one in a horse size.'
+
+
+	
+	act 'Train your ass':gt 'abduction', 'abdTrainDildosAnalGate'
+	act 'Train your mouth':gt 'abduction', 'abdTrainDildosMouthGate'
+	if vagina > 0:
+		act 'Train your pussy':gt 'abduction', 'abdTrainDildosVaginaGate'
+	end
+	act 'Go back':gt 'abduction', 'abdRoom'
+end
+
+
+if $ARGS[0] = 'abdTrainDildosVaginaGate':
+	'<center><img src="images\abd\slavewhoreDildos1.jpg"></center>'
+	act 'Pick the small dildo':gt 'abduction', 'abdTrainDildosSmall'
+	act 'Pick the regular dildo':gt 'abduction', 'abdTrainDildosRegular'
+	act 'Pick the big dildo':gt 'abduction', 'abdTrainDildosBig'
+	act 'Pick the horse sized dildo':gt 'abduction', 'abdTrainDildosHorse'
+	act 'Go back':gt 'abduction', 'abdTrainDildos'
+end
+
+if $ARGS[0] = 'abdTrainDildosAnalGate':
+	'<center><img src="images\abd\slavewhoreDildos1.jpg"></center>'
+	act 'Pick the small dildo':gt 'abduction', 'abdTrainDildosAnalSmall'
+	act 'Pick the regular dildo':gt 'abduction', 'abdTrainDildosAnalRegular'
+	act 'Pick the big dildo':gt 'abduction', 'abdTrainDildosAnalBig'
+	act 'Pick the horse sized dildo':gt 'abduction', 'abdTrainDildosAnalHorse'
+	act 'Go back':gt 'abduction', 'abdTrainDildos'
+end
+
+if $ARGS[0] = 'abdTrainDildosMouthGate':
+	'<center><img src="images\abd\slavewhoreDildos1.jpg"></center>'
+	act 'Pick the small dildo':gt 'abduction', 'abdTrainDildosMouthSmall'
+	act 'Pick the regular dildo':gt 'abduction', 'abdTrainDildosMouthRegular'
+	act 'Pick the big dildo':gt 'abduction', 'abdTrainDildosMouthBig'
+	act 'Pick the horse sized dildo':gt 'abduction', 'abdTrainDildosMouthHorse'
+	act 'Go back':gt 'abduction', 'abdTrainDildos'
+end
+
+if $ARGS[0] = 'abdTrainDildosSmall':
+	if vagina > dildoSmall:
+		'You feel that your pussy can accomodate this dildo easily.'
+	else
+		'You feel that this dildo will stretch your pussy, making it a bit deeper and wider.'
+	end
+	act 'Use it':gt 'abduction', 'abdTrainDildosSmallUse'
+	act 'Choose different dildo':gt 'abduction', 'abdTrainDildosVaginaGate'
+	act 'Go back to your bed':gt 'abduction', 'abdRoom'
+end
+if $ARGS[0] = 'abdTrainDildosSmallUse':
+	durr = 60
+	if vagina > dildoSmall:
+		'<center><img src="images\abd\slavewhoreDildosSmall.gif"></center>'
+		'You start fucking the dildo with ease, your pussy swallows it whole without any problem.'
+		gs 'arousal', 'vaginal_dildo', durr
+	else
+		'<center><img src="images\abd\slavewhoreDildosSmallHurt.gif"></center>'
+		'You start to fuck yourself with this dildo, knowing it is bigger than what you can handle.'
+		'It hurts but you can feel that some progress was made.'
+		pain['vaginal'] += 5
+		vagina += 1
+		gs 'stat'
+		gs 'arousal', 'vaginal_dildo', durr, 'rough'
+	end
+	act 'Continue':gt 'abduction', 'abdTrainDildosSmall'
+end
+
+if $ARGS[0] = 'abdTrainDildosRegular':
+	if vagina >= dildoRegular:
+		'You feel that your pussy can accomodate this dildo easily.'
+		act 'Use it':gt 'abduction', 'abdTrainDildosRegularUse'
+	elseif vagina <= dildoRegular and vagina > dildoSmall:
+		'You feel that this dildo will stretch your pussy, making it a bit deeper and wider.'
+		act 'Use it':gt 'abduction', 'abdTrainDildosRegularUse'
+	else
+		'You can clearly see that this dildo will tear your pussy apart if inserted all the way in.'
+	end
+	act 'Choose different dildo':gt 'abduction', 'abdTrainDildosVaginaGate'
+	act 'Go back to your bed':gt 'abduction', 'abdRoom'
+end
+if $ARGS[0] = 'abdTrainDildosRegularUse':
+	durr = 60
+	if vagina > dildoRegular:
+		'<center><img src="images\abd\slavewhoreDildosRegular.gif"></center>'
+		'You start fucking the dildo with ease, your pussy swallows it whole without any problem.'
+		gs 'arousal', 'vaginal_dildo', durr
+	else
+		'<center><img src="images\abd\slavewhoreDildosRegularHurt.gif"></center>'
+		'You start to fuck yourself with this dildo, knowing it is bigger than what you can handle.'
+		'It hurts but you can feel that some progress was made.'
+		pain['vaginal'] += 5
+		vagina += 1
+		gs 'stat'
+		gs 'arousal', 'vaginal_dildo', durr, 'rough'
+	end
+	act 'Continue':gt 'abduction', 'abdTrainDildosRegular'
+end
+
+if $ARGS[0] = 'abdTrainDildosBig':
+	if vagina >= dildoBig:
+		'You feel that your pussy can accomodate this dildo easily.'
+		act 'Use it':gt 'abduction', 'abdTrainDildosBigUse'
+	elseif vagina <= dildoBig and vagina > dildoRegular:
+		'You feel that this dildo will stretch your pussy, making it a bit deeper and wider.'
+		act 'Use it':gt 'abduction', 'abdTrainDildosBigUse'
+	else
+		'You can clearly see that this dildo will tear your pussy apart if inserted all the way in.'
+	end
+	act 'Choose different dildo':gt 'abduction', 'abdTrainDildosVaginaGate'
+	act 'Go back to your bed':gt 'abduction', 'abdRoom'
+end
+if $ARGS[0] = 'abdTrainDildosBigUse':
+	durr = 60
+	if vagina > dildoBig:
+		'<center><img src="images\abd\slavewhoreDildosBig.gif"></center>'
+		'You start fucking the dildo with ease, your pussy swallows it whole without any problem.'
+		gs 'arousal', 'vaginal_dildo', durr
+	else
+		'<center><img src="images\abd\slavewhoreDildosBigHurt.gif"></center>'
+		'You start to fuck yourself with this dildo, knowing it is bigger than what you can handle.'
+		'It hurts but you can feel that some progress was made.'
+		pain['vaginal'] += 5
+		vagina += 1
+		gs 'stat'
+		gs 'arousal', 'vaginal_dildo', durr, 'rough'
+	end
+	act 'Continue':gt 'abduction', 'abdTrainDildosBig'
+end
+
+if $ARGS[0] = 'abdTrainDildosHorse':
+	if vagina >= dildoHorse:
+		'You feel that your pussy can accomodate this dildo easily.'
+		act 'Use it':gt 'abduction', 'abdTrainDildosHorseUse'
+	elseif vagina <= dildoHorse and vagina > dildoBig:
+		'You feel that this dildo will stretch your pussy, making it a bit deeper and wider.'
+		act 'Use it':gt 'abduction', 'abdTrainDildosHorseUse'
+	else
+		'You can clearly see that this dildo will tear your pussy apart if inserted all the way in.'
+	end
+	act 'Choose different dildo':gt 'abduction', 'abdTrainDildosVaginaGate'
+	act 'Go back to your bed':gt 'abduction', 'abdRoom'
+end
+if $ARGS[0] = 'abdTrainDildosHorseUse':
+	durr = 60
+	if vagina > dildoHorse:
+		'<center><img src="images\abd\slavewhoreDildosHorse.gif"></center>'
+		'You start fucking the dildo with ease, your pussy swallows it whole without any problem.'
+		gs 'arousal', 'vaginal_dildo', durr
+	else
+		'<center><img src="images\abd\slavewhoreDildosHorseHurt.gif"></center>'
+		'You start to fuck yourself with this dildo, knowing it is bigger than what you can handle.'
+		'It hurts but you can feel that some progress was made.'
+		pain['vaginal'] += 5
+		vagina += 1
+		gs 'stat'
+		gs 'arousal', 'vaginal_dildo', durr, 'rough'
+	end
+	act 'Continue':gt 'abduction', 'abdTrainDildosHorse'
+end
+
+
+if $ARGS[0] = 'abdTrainDildosAnalSmall':
+	if anus > dildoSmall:
+		'You feel that your anus can accomodate this dildo easily.'
+	else
+		'You feel that this dildo will stretch your anus, making it a bit deeper and wider.'
+	end
+	act 'Use it':gt 'abduction', 'abdTrainDildosAnalSmallUse'
+	act 'Choose different dildo':gt 'abduction', 'abdTrainDildosAnalGate'
+	act 'Go back to your bed':gt 'abduction', 'abdRoom'
+end
+if $ARGS[0] = 'abdTrainDildosAnalSmallUse':
+	durr = 60
+	if anus > dildoSmall:
+		'<center><img src="images\abd\slavewhoreDildosAnalSmall.gif"></center>'
+		'You start fucking the dildo with ease, your anus swallows it whole without any problem.'
+		gs 'arousal', 'anal_dildo', durr
+	else
+		'<center><img src="images\abd\slavewhoreDildosAnalSmallHurt.gif"></center>'
+		'You start to fuck yourself with this dildo, knowing it is bigger than what you can handle.'
+		'It hurts but you can feel that some progress was made.'
+		pain['asshole'] += 5
+		anus += 1
+		gs 'stat'
+		gs 'arousal', 'anal_dildo', durr, 'rough'
+	end
+	act 'Continue':gt 'abduction', 'abdTrainDildosAnalSmall'
+end
+
+if $ARGS[0] = 'abdTrainDildosAnalRegular':
+	if anus >= dildoRegular:
+		'You feel that your anus can accomodate this dildo easily.'
+		act 'Use it':gt 'abduction', 'abdTrainDildosAnalRegularUse'
+	elseif anus <= dildoRegular and anus > dildoSmall:
+		'You feel that this dildo will stretch your anus, making it a bit deeper and wider.'
+		act 'Use it':gt 'abduction', 'abdTrainDildosAnalRegularUse'
+	else
+		'You can clearly see that this dildo will tear your anus apart if inserted all the way in.'
+	end
+	act 'Choose different dildo':gt 'abduction', 'abdTrainDildosAnalGate'
+	act 'Go back to your bed':gt 'abduction', 'abdRoom'
+end
+if $ARGS[0] = 'abdTrainDildosAnalRegularUse':
+	durr = 60
+	if anus > dildoRegular:
+		'<center><img src="images\abd\slavewhoreDildosAnalRegular.gif"></center>'
+		'You start fucking the dildo with ease, your anus swallows it whole without any problem.'
+		gs 'arousal', 'anal_dildo', durr
+	else
+		'<center><img src="images\abd\slavewhoreDildosAnalRegularHurt.gif"></center>'
+		'You start to fuck yourself with this dildo, knowing it is bigger than what you can handle.'
+		'It hurts but you can feel that some progress was made.'
+		pain['asshole'] += 5
+		anus += 1
+		gs 'stat'
+		gs 'arousal', 'anal_dildo', durr, 'rough'
+	end
+	act 'Continue':gt 'abduction', 'abdTrainDildosAnalRegular'
+end
+
+if $ARGS[0] = 'abdTrainDildosAnalBig':
+	if anus >= dildoBig:
+		'You feel that your anus can accomodate this dildo easily.'
+		act 'Use it':gt 'abduction', 'abdTrainDildosAnalBigUse'
+	elseif anus <= dildoBig and anus > dildoRegular:
+		'You feel that this dildo will stretch your anus, making it a bit deeper and wider.'
+		act 'Use it':gt 'abduction', 'abdTrainDildosAnalBigUse'
+	else
+		'You can clearly see that this dildo will tear your anus apart if inserted all the way in.'
+	end
+	act 'Choose different dildo':gt 'abduction', 'abdTrainDildosAnalGate'
+	act 'Go back to your bed':gt 'abduction', 'abdRoom'
+end
+if $ARGS[0] = 'abdTrainDildosAnalBigUse':
+	durr = 60
+	if anus > dildoBig:
+		'<center><img src="images\abd\slavewhoreDildosAnalBig.gif"></center>'
+		'You start fucking the dildo with ease, your anus swallows it whole without any problem.'
+		gs 'arousal', 'anal_dildo', durr
+	else
+		'<center><img src="images\abd\slavewhoreDildosAnalBigHurt.gif"></center>'
+		'You start to fuck yourself with this dildo, knowing it is bigger than what you can handle.'
+		'It hurts but you can feel that some progress was made.'
+		pain['asshole'] += 5
+		anus += 1
+		gs 'stat'
+		gs 'arousal', 'anal_dildo', durr, 'rough'
+	end
+	act 'Continue':gt 'abduction', 'abdTrainDildosAnalBig'
+end
+
+if $ARGS[0] = 'abdTrainDildosAnalHorse':
+	if anus >= dildoHorse:
+		'You feel that your anus can accomodate this dildo easily.'
+		act 'Use it':gt 'abduction', 'abdTrainDildosAnalHorseUse'
+	elseif anus <= dildoHorse and anus > dildoBig:
+		'You feel that this dildo will stretch your anus, making it a bit deeper and wider.'
+		act 'Use it':gt 'abduction', 'abdTrainDildosAnalHorseUse'
+	else
+		'You can clearly see that this dildo will tear your anus apart if inserted all the way in.'
+	end
+	act 'Choose different dildo':gt 'abduction', 'abdTrainDildosAnalGate'
+	act 'Go back to your bed':gt 'abduction', 'abdRoom'
+end
+if $ARGS[0] = 'abdTrainDildosAnalHorseUse':
+	durr = 60
+	if anus > dildoBig:
+		'<center><img src="images\abd\slavewhoreDildosAnalHorse.gif"></center>'
+		'You start fucking the dildo with ease, your anus swallows it whole without any problem.'
+		gs 'arousal', 'anal_dildo', durr
+	else
+		'<center><img src="images\abd\slavewhoreDildosAnalHorseHurt.gif"></center>'
+		'You start to fuck yourself with this dildo, knowing it is bigger than what you can handle.'
+		'It hurts but you can feel that some progress was made.'
+		pain['asshole'] += 5
+		anus += 1
+		gs 'stat'
+		gs 'arousal', 'anal_dildo', durr, 'rough'
+	end
+	act 'Continue':gt 'abduction', 'abdTrainDildosAnalHorse'
+end
+
+if $ARGS[0] = 'abdTrainDildosMouthSmall':
+	if throat > dildoSmall:
+		'You feel that your throat can accomodate this dildo easily.'
+	else
+		'You feel that this dildo will stretch your throat, making it a bit deeper.'
+	end
+	act 'Use it':gt 'abduction', 'abdTrainDildosMouthSmallUse'
+	act 'Choose different dildo':gt 'abduction', 'abdTrainDildosMouthGate'
+	act 'Go back to your bed':gt 'abduction', 'abdRoom'
+end
+if $ARGS[0] = 'abdTrainDildosMouthSmallUse':
+	durr = 60
+	if throat > dildoSmall:
+		'<center><img src="images\abd\slavewhoreDildosMouthSmall.gif"></center>'
+		'You start sucking the dildo with ease, your throat swallows it whole without any problem.'
+		gs 'arousal', 'deepthroat', durr
+	else
+		'<center><img src="images\abd\slavewhoreDildosMouthSmallHurt.gif"></center>'
+		'You start to suckign the dildo, knowing it is bigger than what you can handle and pushing it as deep as possible, trying not to suffocate.'
+		'It hurts but you can feel that some progress was made.'
+		pain['throat'] += 5
+		throat += 1
+		gs 'stat'
+		gs 'arousal', 'deepthroat', durr, 'rough'
+	end
+	act 'Continue':gt 'abduction', 'abdTrainDildosMouthSmall'
+end
+
+if $ARGS[0] = 'abdTrainDildosMouthRegular':
+	if throat >= dildoRegular:
+		'You feel that your throat can accomodate this dildo easily.'
+		act 'Use it':gt 'abduction', 'abdTrainDildosMouthRegularUse'
+	elseif throat <= dildoRegular and throat > dildoSmall:
+		'You feel that this dildo will stretch your throat, making it a bit deeper.'
+		act 'Use it':gt 'abduction', 'abdTrainDildosMouthRegularUse'
+	else
+		'You can clearly see that this dildo will tear your throat apart if inserted all the way in.'
+	end
+	act 'Choose different dildo':gt 'abduction', 'abdTrainDildosMouthGate'
+	act 'Go back to your bed':gt 'abduction', 'abdRoom'
+end
+if $ARGS[0] = 'abdTrainDildosMouthRegularUse':
+	durr = 60
+	if throat > dildoRegular:
+		'<center><img src="images\abd\slavewhoreDildosMouthRegular.gif"></center>'
+		'You start sucking the dildo with ease, your throat swallows it whole without any problem.'
+		gs 'arousal', 'deepthroat', durr
+	else
+		'<center><img src="images\abd\slavewhoreDildosMouthRegularHurt.gif"></center>'
+		'You start to suckign the dildo, knowing it is bigger than what you can handle and pushing it as deep as possible, trying not to suffocate.'
+		'It hurts but you can feel that some progress was made.'
+		pain['throat'] += 5
+		throat += 1
+		gs 'stat'
+		gs 'arousal', 'deepthroat', durr, 'rough'
+	end
+	act 'Continue':gt 'abduction', 'abdTrainDildosMouthRegular'
+end
+
+if $ARGS[0] = 'abdTrainDildosMouthBig':
+	if throat >= dildoBig:
+		'You feel that your throat can accomodate this dildo easily.'
+		act 'Use it':gt 'abduction', 'abdTrainDildosMouthBigUse'
+	elseif throat <= dildoBig and throat > dildoRegular:
+		'You feel that this dildo will stretch your throat, making it a bit deeper.'
+		act 'Use it':gt 'abduction', 'abdTrainDildosMouthBigUse'
+	else
+		'You can clearly see that this dildo will tear your throat apart if inserted all the way in.'
+	end
+	act 'Choose different dildo':gt 'abduction', 'abdTrainDildosMouthGate'
+	act 'Go back to your bed':gt 'abduction', 'abdRoom'
+end
+if $ARGS[0] = 'abdTrainDildosMouthBigUse':
+	durr = 60
+	if throat > dildoBig:
+		'<center><img src="images\abd\slavewhoreDildosMouthBig.gif"></center>'
+		'You start sucking the dildo with ease, your throat swallows it whole without any problem.'
+		gs 'arousal', 'deepthroat', durr
+	else
+		'<center><img src="images\abd\slavewhoreDildosMouthBigHurt.gif"></center>'
+		'You start to suckign the dildo, knowing it is bigger than what you can handle and pushing it as deep as possible, trying not to suffocate.'
+		'It hurts but you can feel that some progress was made.'
+		pain['throat'] += 5
+		throat += 1
+		gs 'stat'
+		gs 'arousal', 'deepthroat', durr, 'rough'
+	end
+	act 'Continue':gt 'abduction', 'abdTrainDildosMouthBig'
+end
+
+if $ARGS[0] = 'abdTrainDildosMouthHorse':
+	if throat >= dildoHorse:
+		'You feel that your throat can accomodate this dildo easily.'
+		act 'Use it':gt 'abduction', 'abdTrainDildosMouthHorseUse'
+	elseif throat <= dildoHorse and throat > dildoBig:
+		'You feel that this dildo will stretch your throat, making it a bit deeper.'
+		act 'Use it':gt 'abduction', 'abdTrainDildosMouthHorseUse'
+	else
+		'You can clearly see that this dildo will tear your throat apart if inserted all the way in.'
+	end
+	act 'Choose different dildo':gt 'abduction', 'abdTrainDildosMouthGate'
+	act 'Go back to your bed':gt 'abduction', 'abdRoom'
+end
+if $ARGS[0] = 'abdTrainDildosMouthHorseUse':
+	durr = 60
+	if throat > dildoHorse:
+		'<center><img src="images\abd\slavewhoreDildosMouthHorse.gif"></center>'
+		'You start sucking the dildo with ease, your throat swallows it whole without any problem.'
+		gs 'arousal', 'deepthroat', durr
+	else
+		'<center><img src="images\abd\slavewhoreDildosMouthHorseHurt.gif"></center>'
+		'You start to suckign the dildo, knowing it is bigger than what you can handle and pushing it as deep as possible, trying not to suffocate.'
+		'It hurts but you can feel that some progress was made.'
+		pain['throat'] += 5
+		throat += 1
+		gs 'stat'
+		gs 'arousal', 'deepthroat', durr, 'rough'
+	end
+	act 'Continue':gt 'abduction', 'abdTrainDildosMouthHorse'
+end
+--- abduction ---------------------------------

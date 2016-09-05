@@ -1,0 +1,407 @@
+# leonid
+
+$bName = 'Leonid'
+$bSurname = 'Nosov'
+dynamic $CatName, $bName+' '+$bSurname
+
+if leonidInFavour < -5:
+	$slaveTitle = 'slave slut'
+elseif leonidInFavour >= -5 and leonidInFavour <= 5:
+	$slaveTitle = 'slave girl'
+elseif leonidInFavour > 5:
+	$slaveTitle = 'slave darling'
+end
+
+
+if $ARGS[0] = 'firstTime':
+	minut += 30
+	'<center><img src="images\leonid\office.jpg"></center>'
+	'You are in the office with label <<$bName>> <<$bSurname>>, lawyer.'
+	'<<$bName>> orders you to kneel in front of his desk.'
+	'"So <<$name>>, I have taken out of that hole. Do you already see why?"'
+	'"I''m not sure mister <<$bSurname>>"'
+	'"Then let me explain. I love my wife, but I have certain needs. Long time I have neglected myself, but things got even worse. When I got the opportunity, I got in touch with the ''Haulers''. You know them, those are the people that abducted you and made you a what you are now."'
+	'"What? What do you mean by ''what am I now?''"'
+	'"A slave. My slave."'
+	'"How do you imagine this? You''ll keep me locked in this room or what?"'
+	'"No, of course not <<$name>>. I''m not a monster. I just want a tool to ventilate my urges. That tool is you."'
+	'"What do you mean mean?"'
+	'"As beautiful you are so slow your thinking is. I will do to you whatever I want to. And it does not matter if you agree or not, you are my slave after all."'
+	'"If you won''t keep me locked how will you prevent me from running to the police and telling them everything?"'
+	''
+	'He slaps your face.'
+	''
+	'"Do you think I am stupid? The authorities are under my grasp. I own them. Do it and nobody will see you ever again."'
+	'You get up back to your knees.'
+	'"All right mister <<$bSurname>>, I''ve got the idea. I promise to keep quiet and be your...slave."'
+	'"Very well. I will call you if I require your presence. Until then you are free to leave."'
+	if SchoolAtestat = 0:
+		'"But mister <<$bSurname>>, what do I tell to my mom? How do I explain my absence from the school and everything?"'
+		'"Do not care about the school. I will take care of it. As for your mom, if she asks, tell her you ran from home to a friend but reconsidered and went back."'
+		'"Yes mister <<$bSurname>>."'
+		schoolprogul = 0
+	end
+	leonidSlave = 1
+	leonidSlaveDay = (daystart + 1)
+	leonidInFavour = 0
+
+	painkiller = painkiller_bak
+	prezik = prezik_bak
+	vitamin = vitamin_bak
+	kosmetica = kosmetica_bak
+	lipbalm = lipbalm_bak
+
+	gs 'stat'
+	act 'Leave':gt 'pavCommercialOffices'
+end
+
+if $ARGS[0] = 'hall':
+	minut += 1
+	'<center><img src="images\leonid\officehall.jpg"></center>'
+	'You are in the hallway leading to several offices. One of the doors has a doorsign <a href="exec:gt ''leonid'', ''office''"><<$bName>> <<$bSurname>>, lawyer.</a>'
+	gs 'stat'
+	act 'Get back':gt 'pavCommercialOffices'
+end
+
+if $ARGS[0] = 'office':
+	minut += 1
+	if $clothingworntype = 'nude':
+		'<b>You are naked.</b>'
+	end
+	if (hour >= 10 and hour <= 18) and leonidVisit = 0:
+		'<center><img src="images\leonid\office.jpg"></center>'
+		'You are in the office of <<$bName>> <<$bSurname>>. There are three other doors inside the office, one leading to a small <a href="exec:gt ''leonid'', ''officeKitchen''">kitchen</a>, second leading to a conference room and third leading to a <a href="exec:gt ''leonid'', ''toilet''">toilet</a>.'
+		'<a href="exec:gt ''leonid'', ''officeLeonidGate''"><<$bName>> <<$bSurname>></a> is sitting behind his desk, working.'
+		if slaveEventCount > 0:
+			'In the middle of the bookcase, there are hidden doors to a <a href="exec:gt ''leonid'', ''secretRoom''">bondage rooms</a>.'
+		end
+	elseif (hour >= 19 and hour =< 21) and leonidVisit = 1:
+		'<center><img src="images\leonid\office.jpg"></center>'
+		'You are in the office of <<$bName>> <<$bSurname>>. There are three other doors inside the office, one leading to a small <a href="exec:gt ''leonid'', ''officeKitchen''">kitchen</a>, second leading to a conference room and third leading to a <a href="exec:gt ''leonid'', ''toilet''">toilet</a>.'
+		'<a href="exec:gt ''leonid'', ''officeLeonidGate''"><<$bName>> <<$bSurname>></a> is sitting behind his desk, waiting for you to come.'
+		if slaveEventCount > 0:
+			'In the middle of the bookcase, there are hidden doors to a <a href="exec:gt ''leonid'', ''secretRoom''">bondage rooms</a>.'
+		end
+	else
+		'The office is locked, you cannot enter.'
+	end 
+
+	gs 'stat'
+
+	act 'Get back':gt 'leonid', 'hall'
+end
+
+if $ARGS[0] = 'officeKitchen':
+	minut += 2
+	'<center><img src="images\leonid\kitchen.jpg"></center>'
+	'Small office kitchen, equipped with all that is needed for a regular working day.'
+	if taskCoffee = 1:
+		'You can use the coffee maker to <a href="exec:gt ''leonid'', ''officeKitchenMakeCoffe''">prepare a coffee</a>.'
+	end
+	gs 'stat'
+	act 'Get back to office':gt 'leonid', 'office'
+end
+
+if $ARGS[0] = 'officeKitchenMakeCoffe':
+	minut += 10
+	'<center><img src="images\leonid\coffeemaker.jpg"></center>'
+	'You''ve put some coffee in the maker, poured water in the tank and put it on.'
+	'After few minutes the drink is ready.'
+	gs 'stat'
+	act 'Continue':gt 'leonid', 'officeKitchenBringCoffee'
+end
+
+if $ARGS[0] = 'officeKitchenBringCoffee':
+	minut += 2
+	'You are about to bring coffee to mister <<$bSurname>>. You decide to:'
+	taskCoffee = 0
+	gs 'stat'
+	act 'Strip and bring it naked':gt 'leonid', 'officeKitchenBringCoffeeNaked'
+	act 'Just bring it, nothing special':gt 'leonid', 'officeKitchenBringCoffeeNormal'
+end
+if $ARGS[0] = 'officeKitchenBringCoffeeNaked':
+	minut += 5
+	tanga = 0
+	gs 'stat'
+	gs 'clothing', 'strip'
+	'<center><img src="images\leonid\bringcoffeenaked.jpg"></center>'
+	'You strip down even your panties and take the coffee. Slowly you walk through the door inside <<$bName>>''s office, trying to look as arousing as possible.'
+	fuckCh = rand(1, 100)
+	if fuckCh <= 30:
+		'<<$bName>> looks up to you and sees that you are naked.'
+		'There is a flash of surprise in his eyes, but you can see he is delighted by this pleasant improvement of his otherwise regular working day.'
+		'You place the cup on his desk, showing him even more of your beautiful breasts, and giving him a teasing look.'
+		'He reaches for your tits and starts to enjoy himself.'
+		act 'Give in to him':gt 'leonid', 'officeFuck'
+	else
+		'<<$bName>> looks up to you and sees that you are naked.'
+		'He''s sliding his eyes all over your body but soon he gets back to his paperwork.'
+		'You put the cup on his desk and trying to tease him you wait a few seconds, but he''s still working, paying you no attention.'
+		act 'Give up and get back':gt 'leonid', 'office'
+	end
+	leonidInFavour += 1
+	gs 'stat'
+end
+if $ARGS[0] = 'officeKitchenBringCoffeeNormal':
+	minut += 5
+	tanga = 0
+	gs 'stat'
+	gs 'clothing', 'strip'
+	'<center><img src="images\leonid\bringcoffee.jpg"></center>'
+	'You take the cup and bring it to his desk, putting next to the papers <<$bName>> is working on.'
+	'He briefly looks on the cup and frowns.'
+	'You take it as a sign of approval.'
+	gs 'stat'
+	act 'Leave':gt 'leonid', 'office'
+end
+
+if $ARGS[0] = 'officeFuck':
+	durr = 45
+	minut += durr
+	assOrPussy = rand(1, 2)
+	if assOrPussy = 1:
+		'<center><img src="images\leonid\pussy'+rand(1, 5)+'.gif"></center>'
+		'<<$bName>> bends you over his desk, pushing the paperwork away.'
+		'You angle your ass for better access, just like his true <<$slaveTitle>>.'
+		'<<$bName>> takes his hard cock out of his pants and pushes it into your already wet pussy.'
+		gs 'arousal', 'vaginal', durr, 'sub'
+		act 'Continue':gt 'leonid', 'cumPussy'
+	elseif assOrPussy = 2:
+		'<center><img src="images\leonid\anal'+rand(1, 2)+'.gif"></center>'
+		'<<$bName>> bends you over his desk, pushing the paperwork away.'
+		'You angle your ass for better access, just like his true <<$slaveTitle>>.'
+		'<<$bName>> takes his hard cock out of his pants, spits some of his own saliva on it and pushes it into your dry anus.'
+		gs 'arousal', 'anal', durr, 'sub'
+		act 'Continue':gt 'leonid', 'cumAnal'
+	end
+	gs 'stat'
+end
+if $ARGS[0] = 'cumAnal':
+	durr = 10
+	minut += durr
+	gs 'cum_call', 'anus', $boy
+	gs 'stat'
+	'<center><img src="images\leonid\cumanal'+rand(1, 2)+'.gif"></center>'
+	'<<$bName>> cums deep in your intestines.'
+	act 'Thank him and leave':gt 'leonid', 'office'
+end
+if $ARGS[0] = 'cumPussy':
+	durr = 10
+	minut += durr
+	gs 'cum_call', 'pussy', $boy
+	gs 'stat'
+	'<center><img src="images\leonid\cumpussy'+rand(1, 1)+'.gif"></center>'
+	'<<$bName>> cums deep in your vagina.'
+	act 'Thank him and leave':gt 'leonid', 'office'
+end
+
+if $ARGS[0] = 'secretRoom':
+	if slaveEventCount = 0:
+		'<center><img src="images\leonid\secretdoor.jpg"></center>'
+		'<<$bName>> opens up a secret door behind a bookcase. It leads to a several other rooms - one has a large bed with various straps and cuffs, other contains various bondage equipment.'
+		'Come, <<$slaveTitle>>, come to my kingdom.'
+		'In fear you step through the secret door and look around on all the stuff that is prepared for you.'
+		'<<$bName>> closes the door behind you and grabs you by the arm.'
+		act 'Continue':gt 'leonid', 'secretRoomGate'
+	elseif slaveEventCount > 0 and leonidVisit = 1:
+		'<center><img src="images\leonid\kneeling1.jpg"></center>'
+		'You are in the secret room, ready to serve your master.'
+		act 'Continue':gt 'leonid', 'secretRoomGate'
+	else
+		'<center><img src="images\leonid\secretroom.jpg"></center>'
+		'You are in the secret room, full of bondage equipment.'
+		act 'Get back':gt 'leonid', 'office'
+	end
+end
+
+if $ARGS[0] = 'secretRoomGate':
+	actionType = rand(1, 1)
+	if actionType = 1:
+		gs 'leonid', 'fuckBound'
+	end
+	slaveEventCount += 1
+	leonidVisit = 0
+	leonidSlaveDay = (daystart + rand(1, 5))
+end
+
+if $ARGS[0] = 'fuckBound':
+	durr = 60
+	minut += durr
+	assOrPussy = rand(1, 2)
+	
+	if assOrPussy = 1:
+		'<center><img src="images\leonid\pussybound'+rand(1, 5)+'.gif"></center>'
+		'<<$bName>> ties you up and positions you as he will.'
+		'Then he takes his hard cock and shoves it into your unprepared pussy.'
+		gs 'arousal', 'vaginal', durr, 'sub', 'rough', 'maso', 'bound'
+		pain['vaginal'] += 3
+		gs 'stat'
+		act 'Continue':gt 'leonid', 'cumPussy'
+	elseif assOrPussy = 2:
+		'<center><img src="images\leonid\analbound'+rand(1, 5)+'.gif"></center>'
+		'<<$bName>> ties you up and positions you as he will.'
+		'Then he takes his hard cock and shoves it into your unprepared anus.'
+		gs 'arousal', 'anal', durr, 'sub', 'rough', 'maso', 'bound'
+		pain['asshole'] += 3
+		gs 'stat'
+		act 'Continue':gt 'leonid', 'cumAnal'
+	end
+end
+
+if $ARGS[0] = 'officeLeonidGate':
+	minut += 2
+	'<center><img src="images\leonid\leonid.jpg"></center>'
+	if leonidVisit = 1:
+		'Hello <<$name>>, my <<$slaveTitle>>.'
+		if slaveEventCount = 0:
+			act 'Hello mister <<$bSurname>>, you called me?':gt 'leonid', 'secretRoom'
+		else
+			act 'Hello mister <<$bSurname>>, you called me?':gt 'leonid', 'secretRoom'
+		end
+	elseif leonidVisit = 0:
+		'What do you want <<$name>>? I''m working, can''t you see?'
+		act 'I want to serve my master':gt 'leonid', 'officeLeonidHasTime'
+		act 'Appologize and leave':gt 'leonid', 'office'
+	end
+	gs 'stat'
+end
+
+if $ARGS[0] = 'officeLeonidHasTime':
+	minut += 2
+	leoHasTime = rand(1, 100)
+	if leoHasTime <= 50:
+		gs 'leonid', 'officeLeonidVoluntaryServeGate'
+	else
+		'I said I''m working, <<$slaveTitle>>. Do you want to be punished for causing trouble?'
+		act 'I want to be punished':gt 'leonid', 'officeLeonidPunishmentGate'
+		act 'Appologize and leave':gt 'leonid', 'office'		
+	end
+	gs 'stat'
+end
+
+if $ARGS[0] = 'officeLeonidVoluntaryServeGate':
+	minut += 2
+	serveType = rand(1, 100)
+	if serveType <= 50:
+		taskCoffee = 1
+		'Go and make me a coffee.'
+		act 'Go make it':gt 'leonid', 'officeKitchen'
+	elseif serveType > 50 and serveType <= 100:
+		'Then crawl under the desk and suck my dick.'
+		act 'Do it':gt 'leonid', 'officeLeonidSuckUnderTable'
+	end
+	gs 'stat'
+end
+
+if $ARGS[0] = 'officeLeonidSuckUnderTable':
+	'<center><img src="images\leonid\suckundertable'+rand(1,4)+'.gif"></center>'
+	durr = 20
+	minut += durr
+	gs 'stat'
+	gs 'arousal', 'bj', durr, 'sub'
+	act 'Let him cum in your mouth':gt 'leonid', 'officeLeonidSuckUnderTable1'
+	act 'Let him cum on your face':gt 'leonid', 'officeLeonidSuckUnderTable2'
+end
+if $ARGS[0] = 'officeLeonidSuckUnderTable1':
+	durr = 3
+	minut += durr
+	gs 'cum_call', 'mouth', $boy
+	gs 'stat'
+	'<center><img src="images\leonid\cummouth'+rand(1,4)+'.gif"></center>'
+	'As <<$bName>> cums, you let the tip of his cock point into your mouth and catch all the sperm.'
+	'Then you stick your head up, show him your mouth full of his sperm and with smile you swallow it.'
+	act 'Continue':gt 'leonid', 'office'
+end
+if $ARGS[0] = 'officeLeonidSuckUnderTable2':
+	durr = 3
+	minut += durr
+	gs 'cum_call', 'face', $boy
+	gs 'stat'
+	'<center><img src="images\leonid\cumface'+rand(1,5)+'.gif"></center>'
+	'As <<$bName>> cums, you let the tip of his cock point towards your face, letting him spray all over your face.'
+	'Then you stick your head up, showing him your face cowered in sperm.'
+	act 'Continue':gt 'leonid', 'office'
+end
+
+if $ARGS[0] = 'officeLeonidPunishmentGate':
+	minut += 2
+	serveType = rand(1, 100)
+	if serveType <= 100:
+		gs 'leonid', 'officeLeonidPunishmentSpank'
+	elseif:
+
+	end
+	leonidInFavour -= 1
+end
+
+if $ARGS[0] = 'officeLeonidPunishmentSpank':
+	'<center><img src="images\leonid\spank'+rand(1,5)+'.gif"></center>'
+	'<<$bName>> strips down your clothes and gives you a harsh spanking.'
+	minut += 30
+	pain['asscheeks'] += 10
+	durr = 10
+	minut += durr
+	gs 'stat'
+	gs 'arousal', 'foreplay', durr, 'sub', 'maso', 'humiliation'
+	act 'Thank you master':gt 'leonid', 'office'
+end
+
+if $ARGS[0] = 'call':
+	minut += 2
+	'<<$name>>, be at 20:00 at the office. Understood?'
+	leonidVisit = 1
+	minut += 1
+	gs 'stat'
+	act 'Yes mister <<$bSurname>>.':gt $locM, $metkaM
+end
+
+if $ARGS[0] = 'toilet':
+	CLOSE ALL
+	cla
+	*clr
+	$locM = 'leonid'
+	$metka = 'toilet'
+	$metkaM = 'toilet'
+	$loc = 'leonid'
+	$location_type = 'bathroom'
+	$gt1 = 'leonid'
+	$gt2 = 'toilet'
+	minut += 2
+
+	'<center><h4>Office toilet</h4></center>'
+	'<center><img src="images/leonid/toilet.jpg"></center>'
+	'You are in an office toilet.'
+	act 'Change your clothes':gt 'clothing_QV', 'list'
+
+	act 'Look in the mirror':
+		cla
+		gt 'portmirror'
+
+		act 'Move away from the mirror':
+			cla
+			gt 'leonid', 'toilet'
+		end
+	end
+
+	if spdirtyc > 0:
+		act 'Wipe the cum off your clothes (0:10)':
+			cla
+			*clr
+			cumspclnt = 6
+			gs 'cum_cleanup'
+			minut += 10
+			'<center><img src="images/etogame/frotsp.jpg"></center>'
+			'You spend ten minutes wiping and rinsing the cum stains out of your clothes. By the end, all that remain of them are some damp spots that should dry up in a few minutes.'
+
+			act 'Continue':gt 'leonid', 'toilet'
+		end
+	end
+
+	dynamic $tampon
+	dynamic $quickwash
+	dynamic $basin
+
+	act 'Leave the restroom':gt 'leonid', 'office'
+end
+
+--- leonid ---------------------------------
