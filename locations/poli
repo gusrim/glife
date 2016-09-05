@@ -238,16 +238,10 @@ if $ARGS[0] = 'start':
 	end
 
 	if cumcondslip > 0 and cumcondslip_aware > 0:
-		act 'Visit the doctor for the missing condom':
-			cla
-			minut += 15
-			cumspclnt = 8
-			gs 'cum_cleanup'
-			cumcondslip = 0
-			gs 'stat'
-			'The doctor quickly examines you, and establishes that you are suffering from toxic shock from a spent condom in your body. He removed it as soon as he found it. If you were feeling sick, it should slowly subside.'
-
-			act 'Leave':gt $curloc
+		act 'See a Doctor':
+				cla
+				*clr
+				gt 'poli', 'drPP'
 		end
 	end
 
@@ -647,25 +641,50 @@ if $ARGS[0] = 'drPP':
 		'"Hello, doctor."'
 		'"What are the symptoms?"'
 
-		act 'Explain':
-			cla
-			*clr
-			minut += 5
-			'"Well, Doctor, I think it''s a cold, blocked nose, sore throat and a cough."'
-			'"Do you have a temperature?'
-			'"Yes, a little hot."'
-			'"Well, let''s take a look at you."'
-
-			act 'Get examined':
+		if cumcondslip > 0 and cumcondslip_aware > 0:
+			act 'Explain':
 				cla
-				minut += 20
-				! WD: Correct Image path ~ "images/images/inbed/ninel03"
-				'<center><img src="images/inbed/ninel03.jpg"></center>'
-				'The doctor listens to your lungs, looks down your throat and sticks a thermometer in your mouth. 60 seconds later, he removes the thermometer and says,'
-				'"Don''t worry is just a common cold. Buy small pills in the drugstore, have a couple of days bed rest and everything will be alright. Make sure to keep warm."'
-				'You thank the Doctor.'
+				*clr
+				minut += 5
+				'"Well, Doctor, I feel nauseous during the day."'
+				'"Do you have a ghostly sensation deep inside?"'
+				'"Yes, a little."'
+				'"Well, let''s take a look at you."'
 
-				act 'Go home':gt 'street'
+				act 'Get examined':
+					cla
+					minut += 15
+					gs 'cum_cleanup', 'cumloc', 17
+					cumcondslip = 0
+					gs 'stat'
+					'The doctor quickly examines you, and establishes that you are suffering from toxic shock from a spent condom in your body.'
+					'"I removed it as soon as I found it. If you were feeling sick, it should slowly subside."'
+					'You thank the Doctor.'
+
+					act 'Go home':gt 'street'
+				end
+			end
+		else
+			act 'Explain':
+				cla
+				*clr
+				minut += 5
+				'"Well, Doctor, I think it''s a cold, blocked nose, sore throat and a cough."'
+				'"Do you have a temperature?'
+				'"Yes, a little hot."'
+				'"Well, let''s take a look at you."'
+
+				act 'Get examined':
+					cla
+					minut += 20
+					! WD: Correct Image path ~ "images/images/inbed/ninel03"
+					'<center><img src="images/inbed/ninel03.jpg"></center>'
+					'The doctor listens to your lungs, looks down your throat and sticks a thermometer in your mouth. 60 seconds later, he removes the thermometer and says,'
+					'"Don''t worry is just a common cold. Buy small pills in the drugstore, have a couple of days bed rest and everything will be alright. Make sure to keep warm."'
+					'You thank the Doctor.'
+
+					act 'Go home':gt 'street'
+				end
 			end
 		end
 	end
