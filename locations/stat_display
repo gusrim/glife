@@ -487,25 +487,50 @@ if body_write > 0 or face_write > 0:
 end
 
 $cumdescribe = {
-	if sparridt[cumres_idx] >= 0:
-		cumres_idx2 = cumres_idx + 1
-		if Enable_Android = 1:
-			cumres_idx3 = arrpos('sparrloc',i,cumres_idx2)
-			!May need to use this after Quest player 6+
-		else
-			cumres_idx3 = arrpos(cumres_idx2,'sparrloc',i)
-		end  
-		if cumres_idx3 > 0 and sparrvol[cumres_idx3] > 0 and sparrloc[cumres_idx3] = i and $sparrnam[cumres_idx3] ! $sparrnam[cumres_idx]:
-			$cumres['name'] = 'Multiple men'
-		else
-			$cumres['name'] = $sparrnam[cumres_idx]
+	idx = 0
+	killvar 'temparray'
+	strangecum = 0
+	tempstrage = 2
+	tempage = 2
+	tempvol = 0
+	idxmax = arrsize('sparrloc')-1
+	:idxloop
+		if sparrloc[idx] = i:
+			if sparridt[idx] >= 0 and ((arrcomp('temparray',$sparrnam[idx]) = -1) or strcomp($sparrnam[idx],'.*\p{Lu}.*') = 0):
+				$temparray[] = $sparrnam[idx]	
+				if sparrage[idx] < cumres['new_thresh'] and tempage > 0:
+					tempage = 0
+				elseif sparrage[idx] < cumres['crusty_thresh'] and tempage > 1:
+					tempage = 1
+				else
+					tempage = 2	
+				end
+			elseif sparridt[idx] = -2:
+				strangecum = 1
+				if sparrage[idx] < cumres['new_thresh'] and tempstrage > 0:
+					tempstrage = 0
+				elseif sparrage[idx] < cumres['crusty_thresh'] and tempstrage > 1:
+					tempstrage = 1
+				else
+					tempstrage = 2	
+				end
+			end
 		end
-	else
-		$cumres['name'] = 'Somebody'
+	if idx < idxmax: idx += 1 & jump 'idxloop'
+	killvar 'idxmax'
+	killvar 'idx'
+	
+	if arrsize('temparray') > 1:
+		$cumres['name'] = 'Multiple men'
+	elseif arrsize('temparray') = 1:
+		$cumres['name'] = $temparray[0]
+	elseif arrsize('temparray') = 0 and strangecum = 1:
+		$cumres['name'] = 'Something that looks like somebody'
 	end
-	if sparrage[cumres_idx] < cumres['new_thresh']:
+	
+	if tempage = 0 or (tempstrage = 0 and strangecum = 1):
 		$cumres['desc'] = 'fresh '
-	elseif sparrage[cumres_idx] < cumres['crusty_thresh']:
+	elseif tempage = 1 or (tempstrage = 1 and strangecum = 1):
 		$cumres['desc'] = ''
 	else
 		if sparrloc[cumres_idx] ! 0 and sparrloc[cumres_idx] ! 3:
@@ -514,7 +539,12 @@ $cumdescribe = {
 			$cumres['desc'] = 'stale '
 		end
 	end
+	killvar 'tempage'
+	killvar 'tempstrage'
+	killvar 'strangecum'
+	killvar 'temparray'
 }
+
 if arrsize('sparrvol') > 0:
 	!{index for use in dynamic}
 	i = 0
@@ -522,7 +552,7 @@ if arrsize('sparrvol') > 0:
 	cumres['new_thresh'] = 4
 	cumres['crusty_thresh'] = 10
 	cumres_idx = arrpos('sparrloc',i)
-	if cumres_idx >= 0 and sparrloc[cumres_idx] = i and sparrvol[cumres_idx] > 0:
+	if cumres_idx >= 0 and sparrvol[cumres_idx] > 0:
 		dynamic $cumdescribe
 		if vibratorIN = 1:
 			$stat_msg += '<BR><b><font color="red"><<$cumres[''name'']>>''s <<$cumres[''desc'']>>sperm fills your pussy, corked in by your vibrator.</font></b>'
@@ -546,7 +576,7 @@ if arrsize('sparrvol') > 0:
 	cumres['new_thresh'] = 1
 	cumres['crusty_thresh'] = 5
 	cumres_idx = arrpos('sparrloc',i)
-	if cumres_idx >= 0 and sparrloc[cumres_idx] = i and sparrvol[cumres_idx] > 0:
+	if cumres_idx >= 0 and sparrvol[cumres_idx] > 0:
 		dynamic $cumdescribe
 		if swallow >= 10 and sparrage[cumres_idx] < 5:
 			$stat_msg += '<BR><b><font color="red"><<$cumres[''name'']>>''s <<$cumres[''desc'']>><a href="exec:gs ''cum_manage'', ''cumeater'', 1"><b><font color="blue">sperm</font></b></a><b> is smeared across your pussy lips.</font></b>.'
@@ -559,7 +589,7 @@ if arrsize('sparrvol') > 0:
 	end
 	i = 2
 	cumres_idx = arrpos('sparrloc',i)
-	if cumres_idx >= 0 and sparrloc[cumres_idx] = i and sparrvol[cumres_idx] > 0:
+	if cumres_idx >= 0 and sparrvol[cumres_idx] > 0:
 		dynamic $cumdescribe
 		if swallow >= 10 and sparrage[cumres_idx] < 5:
 			$stat_msg += '<BR><b><font color="red">You have <<$cumres[''name'']>>''s <<$cumres[''desc'']>><a href="exec:gs ''cum_manage'', ''cumeater'', 2"><b><font color="blue">semen</font></b></a><b> stains on the crotch of your panties.</font></b>.'
@@ -573,7 +603,7 @@ if arrsize('sparrvol') > 0:
 	cumres['new_thresh'] = 4
 	cumres['crusty_thresh'] = 10
 	cumres_idx = arrpos('sparrloc',i)
-	if cumres_idx >= 0 and sparrloc[cumres_idx] = i and sparrvol[cumres_idx] > 0:
+	if cumres_idx >= 0 and sparrvol[cumres_idx] > 0:
 		dynamic $cumdescribe
 		if analplugin = 1:
 			$stat_msg += '<BR><b><font color="red"><<$cumres[''name'']>>''s <<$cumres[''desc'']>>sperm is stuffed in your ass, corked in by your anal plug.</font></b>'
@@ -597,7 +627,7 @@ if arrsize('sparrvol') > 0:
 	cumres['new_thresh'] = 1
 	cumres['crusty_thresh'] = 5
 	cumres_idx = arrpos('sparrloc',i)
-	if cumres_idx >= 0 and sparrloc[cumres_idx] = i and sparrvol[cumres_idx] > 0:
+	if cumres_idx >= 0 and sparrvol[cumres_idx] > 0:
 		dynamic $cumdescribe
 		if swallow >= 10 and sparrage[cumres_idx] < 5:
 			$stat_msg += '<BR><b><font color="red"><<$cumres[''name'']>>''s <<$cumres[''desc'']>><a href="exec:gs ''cum_manage'', ''cumeater'', 4"><b><font color="blue">sperm</font></b></a><b> is smeared across your <a href="exec:view''images/body/cumass.jpg''">ass</a>.</font></b>.'
@@ -610,7 +640,7 @@ if arrsize('sparrvol') > 0:
 	end
 	i = 5
 	cumres_idx = arrpos('sparrloc',i)
-	if cumres_idx >= 0 and sparrloc[cumres_idx] = i and sparrvol[cumres_idx] > 0:
+	if cumres_idx >= 0 and sparrvol[cumres_idx] > 0:
 		dynamic $cumdescribe
 		if swallow >= 10 and sparrage[cumres_idx] < 5:
 			$stat_msg += '<BR><b><font color="red">You have <<$cumres[''name'']>>''s <<$cumres[''desc'']>><a href="exec:gs ''cum_manage'', ''cumeater'', 5"><b><font color="blue">semen</font></b></a><b> stains on the ass of your panties.</font></b>.'
@@ -622,7 +652,7 @@ if arrsize('sparrvol') > 0:
 	end
 	i = 6
 	cumres_idx = arrpos('sparrloc',i)
-	if cumres_idx >= 0 and sparrloc[cumres_idx] = i and sparrvol[cumres_idx] > 0:
+	if cumres_idx >= 0 and sparrvol[cumres_idx] > 0:
 		dynamic $cumdescribe
 		if swallow >= 10 and sparrage[cumres_idx] < 5:
 			$stat_msg += '<BR><b><font color="red">You have <<$cumres[''name'']>>''s <<$cumres[''desc'']>><a href="exec:gs ''cum_manage'', ''cumeater'', 6"><b><font color="blue">semen</font></b></a><b> stains on the crotch of your <a href="exec:view''images/body/cumfrot.jpg''">clothes</a>.</font></b>.'
@@ -634,7 +664,7 @@ if arrsize('sparrvol') > 0:
 	end
 	i = 7
 	cumres_idx = arrpos('sparrloc',i)
-	if cumres_idx >= 0 and sparrloc[cumres_idx] = i and sparrvol[cumres_idx] > 0:
+	if cumres_idx >= 0 and sparrvol[cumres_idx] > 0:
 		dynamic $cumdescribe
 		if swallow >= 10 and sparrage[cumres_idx] < 5:
 			$stat_msg += '<BR><b><font color="red">You have <<$cumres[''name'']>>''s <<$cumres[''desc'']>><a href="exec:gs ''cum_manage'', ''cumeater'', 7"><b><font color="blue">semen</font></b></a><b> stains on your <a href="exec:view''images/body/cumfrot.jpg''">clothes</a>.</font></b>.'
@@ -646,7 +676,7 @@ if arrsize('sparrvol') > 0:
 	end
 	i = 8
 	cumres_idx = arrpos('sparrloc',i)
-	if cumres_idx >= 0 and sparrloc[cumres_idx] = i and sparrvol[cumres_idx] > 0:
+	if cumres_idx >= 0 and sparrvol[cumres_idx] > 0:
 		dynamic $cumdescribe
 		if swallow >= 10 and sparrage[cumres_idx] < 5:
 			$stat_msg += '<BR><b><font color="red"><<$cumres[''name'']>>''s <<$cumres[''desc'']>><a href="exec:gs ''cum_manage'', ''cumeater'', 8"><b><font color="blue">sperm</font></b></a><b> is smeared across your back.</font></b>.'
@@ -659,7 +689,7 @@ if arrsize('sparrvol') > 0:
 	end
 	i = 9
 	cumres_idx = arrpos('sparrloc',i)
-	if cumres_idx >= 0 and sparrloc[cumres_idx] = i and sparrvol[cumres_idx] > 0:
+	if cumres_idx >= 0 and sparrvol[cumres_idx] > 0:
 		dynamic $cumdescribe
 		if swallow >= 10 and sparrage[cumres_idx] < 5:
 			$stat_msg += '<BR><b><font color="red"><<$cumres[''name'']>>''s <<$cumres[''desc'']>><a href="exec:gs ''cum_manage'', ''cumeater'', 9"><b><font color="blue">sperm</font></b></a><b> is smeared across your legs.</font></b>.'
@@ -672,7 +702,7 @@ if arrsize('sparrvol') > 0:
 	end
 	i = 10
 	cumres_idx = arrpos('sparrloc',i)
-	if cumres_idx >= 0 and sparrloc[cumres_idx] = i and sparrvol[cumres_idx] > 0:
+	if cumres_idx >= 0 and sparrvol[cumres_idx] > 0:
 		dynamic $cumdescribe
 		if swallow >= 10 and sparrage[cumres_idx] < 5:
 			$stat_msg += '<BR><b><font color="red"><<$cumres[''name'']>>''s <<$cumres[''desc'']>><a href="exec:gs ''cum_manage'', ''cumeater'', 10"><b><font color="blue">sperm</font></b></a><b> is smeared across your arms.</font></b>.'
@@ -685,7 +715,7 @@ if arrsize('sparrvol') > 0:
 	end
 	i = 11
 	cumres_idx = arrpos('sparrloc',i)
-	if cumres_idx >= 0 and sparrloc[cumres_idx] = i and sparrvol[cumres_idx] > 0:
+	if cumres_idx >= 0 and sparrvol[cumres_idx] > 0:
 		dynamic $cumdescribe
 		if swallow >= 10 and sparrage[cumres_idx] < 5:
 			$stat_msg += '<BR><b><font color="red"><<$cumres[''name'']>>''s <<$cumres[''desc'']>><a href="exec:gs ''cum_manage'', ''cumeater'', 11"><b><font color="blue">sperm</font></b></a><b> is smeared across your <a href="exec:view''images/body/cumface.jpg''">face</a>.</font></b>.'
@@ -699,7 +729,7 @@ if arrsize('sparrvol') > 0:
 	end
 	i = 12
 	cumres_idx = arrpos('sparrloc',i)
-	if cumres_idx >= 0 and sparrloc[cumres_idx] = i and sparrvol[cumres_idx] > 0:
+	if cumres_idx >= 0 and sparrvol[cumres_idx] > 0:
 		dynamic $cumdescribe
 		$stat_msg += '<BR><b><font color="red">Your mouth smells like <<$cumres[''name'']>>''s sperm.</a></font></b>'
 		cumloc[12] = 1
@@ -709,7 +739,7 @@ if arrsize('sparrvol') > 0:
 	end
 	i = 13
 	cumres_idx = arrpos('sparrloc',i)
-	if cumres_idx >= 0 and sparrloc[cumres_idx] = i and sparrvol[cumres_idx] > 0:
+	if cumres_idx >= 0 and sparrvol[cumres_idx] > 0:
 		dynamic $cumdescribe
 		if swallow >= 10 and sparrage[cumres_idx] < 5:
 			$stat_msg += '<BR><b><font color="red"><<$cumres[''name'']>>''s <<$cumres[''desc'']>><a href="exec:gs ''cum_manage'', ''cumeater'', 13"><b><font color="blue">sperm</font></b></a><b> is smeared across your hands.</font></b>.'
@@ -724,7 +754,7 @@ if arrsize('sparrvol') > 0:
 	end
 	i = 14
 	cumres_idx = arrpos('sparrloc',i)
-	if cumres_idx >= 0 and sparrloc[cumres_idx] = i and sparrvol[cumres_idx] > 0:
+	if cumres_idx >= 0 and sparrvol[cumres_idx] > 0:
 		dynamic $cumdescribe
 		if swallow >= 10 and sparrage[cumres_idx] < 5:
 			$stat_msg += '<BR><b><font color="red"><<$cumres[''name'']>>''s <<$cumres[''desc'']>><a href="exec:gs ''cum_manage'', ''cumeater'', 14"><b><font color="blue">sperm</font></b></a><b> is smeared across your <a href="exec:view''images/body/cumbelly.jpg''">stomach</a>.</font></b>.'
@@ -737,7 +767,7 @@ if arrsize('sparrvol') > 0:
 	end
 	i = 15
 	cumres_idx = arrpos('sparrloc',i)
-	if cumres_idx >= 0 and sparrloc[cumres_idx] = i and sparrvol[cumres_idx] > 0:
+	if cumres_idx >= 0 and sparrvol[cumres_idx] > 0:
 		dynamic $cumdescribe
 		if swallow >= 10 and sparrage[cumres_idx] < 5:
 			$stat_msg += '<BR><b><font color="red"><<$cumres[''name'']>>''s <<$cumres[''desc'']>><a href="exec:gs ''cum_manage'', ''cumeater'', 15"><b><font color="blue">sperm</font></b></a><b> is smeared across your breasts.</font></b>.'
@@ -750,7 +780,7 @@ if arrsize('sparrvol') > 0:
 	end
 	i = 16
 	cumres_idx = arrpos('sparrloc',i)
-	if cumres_idx >= 0 and sparrloc[cumres_idx] = i and sparrvol[cumres_idx] > 0:
+	if cumres_idx >= 0 and sparrvol[cumres_idx] > 0:
 		dynamic $cumdescribe
 		if swallow >= 10 and sparrage[cumres_idx] < 5:
 			$stat_msg += '<BR><b><font color="red"><<$cumres[''name'']>>''s <<$cumres[''desc'']>><a href="exec:gs ''cum_manage'', ''cumeater'', 16"><b><font color="blue">sperm</font></b></a><b> is smeared in your hair.</font></b>.'
@@ -764,7 +794,7 @@ if arrsize('sparrvol') > 0:
 	end
 	i = 17
 	cumres_idx = arrpos('sparrloc',i)
-	if cumres_idx >= 0 and sparrloc[cumres_idx] = i and sparrvol[cumres_idx] > 0:
+	if cumres_idx >= 0 and sparrvol[cumres_idx] > 0:
 		dynamic $cumdescribe
 		if sparrage[cumres_idx] < 1:
 			$cumtemp = 'freshly buried'
@@ -787,8 +817,6 @@ if arrsize('sparrvol') > 0:
 end
 !{should kill all temp values}
 cumres_idx = 0
-cumres_idx2 = 0
-cumres_idx3 = 0
 cumfrot = 0
 cumpussy = 0
 cumbelly = 0
