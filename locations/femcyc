@@ -339,12 +339,32 @@ if $ARGS[0] = 'cyc2':
 		KILLVAR 'cumfathwght'
 		KILLVAR '$cumfathnames'
 		KILLVAR 'cumtime'
+		KILLVAR 'cumfthname'
+		$cumfthname[0] = 'unknown'
 		can_idx = 0
 		cum_total = 0
 !!{Compute array of unique fathers known to PC and another two arrays of unique total fathers and their individual sperm totals from all entries in cumarrcpt for that father. Also tally all cum present.}
 		:FatherCumAnalyze
 		if can_idx < can_sz:
-			if cumarrppt[can_idx] ! -1:
+			if cumarrppt[can_idx] > 0:
+				if cumarrcon[can_idx] ! 3 and cumarrcon[can_idx] ! 6 and cumarrcon[can_idx] ! 2 and cumarrcon[can_idx] < 8 and cumarrdel[can_idx] = 0:
+					if cumarrkno[can_idx] = 1:
+						if arrcomp('$cumfthname',$cumarrnam[can_idx]) = -1:
+							i = arrsize('$cumfthname')
+							$cumfthname[i] = $cumarrnam[can_idx]
+							cumtime[i] = 1
+						else
+							if Enable_Android = 0:
+								i = arrpos(0, '$cumfthname', $cumarrnam[can_idx])
+							else
+								i = arrpos('$cumfthname', $cumarrnam[can_idx])
+							end
+							cumtime[i] += 1
+						end
+					elseif cumarrkno[can_idx] = 0:
+						cumtime[0] += 1
+					end
+				end
 				if cumarrkno[can_idx] = 1:
 				!{if the current record is a known person}
 					if Enable_Android = 0:
@@ -355,12 +375,7 @@ if $ARGS[0] = 'cyc2':
 					if wpf_in < 0:
 						wpf_sz = arrsize('$wombpotfath')
 						$wombpotfath[wpf_sz] = $cumarrnam[can_idx]
-						cumtime[wpf_sz] += 1
 					end
-					cum_totaltime += 1
-				elseif cumarrkno[can_idx] = 0:
-				!{if the current record is an unknown person, but the act itself is known}
-					cum_totaltime += 1
 				end
 
 				if Enable_Android = 0:
