@@ -23,6 +23,8 @@ if $ARGS[0] = 'start':
 	''
 	'<a href=' + iif(money >= 500, '"exec:gt ''hairsalon'', ''curlhair''"', '') + '>Get your hair curled - 500 <b>₽</b></a>'
 	''
+	'<a href=' + iif(money >= 500, '"exec:gt ''hairsalon'', ''straighthair''"', '') + '>Get your hair straightened - 500 <b>₽</b></a>'
+	''
 	'<a href=' + iif(money >= 1000, '"exec:gt ''hairsalon'', ''dyehair''"', '') + '>Get your hair dyed - 1000 <b>₽</b></a>'
 	''
 	'<a href=' + iif(money >= 1250, '"exec:gt ''hairsalon'', ''braidhair''"', '') + '>Get your hair braided - 1250 <b>₽</b></a>'
@@ -358,6 +360,48 @@ if $ARGS[0] = 'cuthair':
 	end
 end
 
+if $ARGS[0] = 'straighthair':
+	cls
+	if hairlength <= 80:
+		'"Sorry, your hair is too short to straightened."'
+		act 'Move away':gt 'hairsalon', 'start'
+	elseif straight >= 10 or (defcurly = 0 and curly = 0):
+		'"Your hair is already as straight as I can make it."'
+		act 'Move away':gt 'hairsalon', 'start'
+	elseif hbraids > 0:
+		'"Your hair is in braids right now, to straighten it I would have to remove them. Is that what you want me to do?"'
+		act 'Yes':
+			cla
+			minut += 20
+			hbraids = 0
+			money -= 500
+			curly = 0
+			if defcurly = 0:
+				'Your braids were removed and your hair was straightened back to its original shape.'
+			else
+				straight = rand(14,21)
+				'Your braids were removed and your hair was straightened instead.'
+			end
+			gs 'stat'
+			act 'Look in the mirror':gt 'hairsalon', 'mirror'
+		end
+
+		act 'No':gt 'hairsalon', 'start'
+	else
+		minut += 20
+		curly = 0
+		if defcurly = 0:
+			'Your hair is straightened back to its original shape.'
+		else
+			straight = rand(14,21)
+			'Your hair is straightened.'
+		end
+		money -= 500
+		gs 'stat'
+		act 'Look in the mirror':gt 'hairsalon', 'mirror'
+	end
+end
+
 if $ARGS[0] = 'curlhair':
 	cls
 	if hairlength <= 80:
@@ -372,9 +416,14 @@ if $ARGS[0] = 'curlhair':
 			cla
 			minut += 20
 			hbraids = 0
-			curly = rand(14,21)
 			money -= 500
-			'Your braids were removed and your hair was curled instead.'
+			if defcurly = 0:
+				curly = rand(14,21)
+				'Your braids were removed and your hair was curled instead.'
+			else
+				curly = 2147483647
+				'Your braids were removed and your hair was curled back to its original shape.'
+			end
 			gs 'stat'
 			act 'Look in the mirror':gt 'hairsalon', 'mirror'
 		end
@@ -382,9 +431,14 @@ if $ARGS[0] = 'curlhair':
 		act 'No':gt 'hairsalon', 'start'
 	else
 		minut += 20
-		curly = rand(14,21)
 		money -= 500
-		'You have your hair curled.'
+		if defcurly = 0:
+			curly = rand(14,21)
+			'You have your hair curled.'
+		else
+			curly = 2147483647
+			'You have your hair curled back to its original shape.'
+		end
 		gs 'stat'
 		act 'Look in the mirror':gt 'hairsalon', 'mirror'
 	end

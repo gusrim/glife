@@ -20,7 +20,13 @@ if $ARGS[0] = 'start':
 	if money >= 300 and hairlength > 80:'<a href="exec:gt ''barbershop'', ''perm''">Curl your hair - 300 <b>₽</b></a>'
 	if money < 300:'You cannot afford curling your hair, as it costs 300 <b>₽</b>, which you do not have at the moment.'
 	if hairlength <= 80:'Your hair is not long enough to be curled.'
+	
+	''
 
+	if money >= 300 and hairlength > 80:'<a href="exec:gt ''barbershop'', ''perm2''">Straighten your hair - 300 <b>₽</b></a>'
+	if money < 300:'You cannot afford straightening your hair, as it costs 300 <b>₽</b>, which you do not have at the moment.'
+	if hairlength <= 80:'Your hair is not long enough to be straightened.'
+	
 	''
 
 	if money >= 750:'<a href="exec:gt ''barbershop'', ''dyehair''">Dye your hair - 750 <b>₽</b></a>'
@@ -398,11 +404,32 @@ end
 if $ARGS[0] = 'perm':
 	cla
 	*clr
-	gs 'stat'
 	minut += 20
-	curly = rand(12,16)
 	money -= 300
-	'You get your hair curled. It should hold for around 2 weeks.'
+	if defcurly = 0:
+		curly = rand(12,16)
+		'You get your hair curled. It should hold for around 2 weeks.'
+	else
+		curly = 2147483647
+		'You get your hair curled, as it should be naturally.'
+	end
+	gs 'stat'
+	act 'Leave': gt 'barbershop', 'start'
+end
+
+if $ARGS[0] = 'perm2':
+	cla
+	*clr
+	minut += 20
+	money -= 300
+	curly = 0
+	if defcurly = 0:
+		'You get your hair straightened, as it should be naturally.'
+	else
+		straight = rand(12,16)
+		'You get your hair straightened. It should hold for around 2 weeks.'	
+	end
+	gs 'stat'
 	act 'Leave': gt 'barbershop', 'start'
 end
 
