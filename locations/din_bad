@@ -921,10 +921,18 @@ $d_cycreport_actor = {
 	elseif ARGS[0] = 7:
 		tempmax = arrsize('$cumfthname')-1
 		tempcurr = 0
+		sumcum = 0
+		''
 		:potfathloop
 			if cumtime[tempcurr] > 1:$cum = 'cumshots' else $cum = 'cumshot'
-			if cumtime[tempcurr] > 0:pl '<a href="exec: $wombthfath = ''<<$wombpotfath[tempcurr]>>'' & dynamic $d_cycreport_actor, 2"><<$cumfthname[tempcurr]>></a> - <<cumtime[tempcurr]>> <<$cum>>'
+			if cumtime[tempcurr] > 0:pl '   <a href="exec: $wombthfath = ''<<$wombpotfath[tempcurr]>>'' & dynamic $d_cycreport_actor, 2"><<$cumfthname[tempcurr]>></a> - <<cumtime[tempcurr]>> <<$cum>>' & sumcum += cumtime[tempcurr]
 		if tempcurr < tempmax:tempcurr += 1 & jump 'potfathloop'
+		if sumcum > 1:$cum = 'cumshots' else $cum = 'cumshot'
+		pl 'You think you have had <<sumcum>> load of <<$cum>> in your womb alltogether that could have gotten you pregnant.'
+		killvar 'sumcum'
+		killvar 'cum'
+		killvar 'tempmax'
+		killvar 'tempcurr'
 	elseif ARGS[0] = 10:
 		temp = arrsize('Babyptype')
 		temp -= 1
