@@ -26,13 +26,13 @@ if $ARGS[0] = 'cleanloc' and arrsize('ARGS') > 1:
 	if i < arrsize('$sparrnam'):
 		if sparrloc[i] = ARGS[1]:
 			gs 'cum_cleanup', 'cleandeposit', i
+		else
+			i += 1
 		end
-		i += 1
 		jump 'cleanlocloop'
 	end
 elseif $ARGS[0] = 'cleandeposit' and arrsize('ARGS') > 1:
 	cumsumbod -= sparrvol[ARGS[1]]
-	KILLVAR 'spafinloc',ARGS[1]
 	KILLVAR 'sparrage',ARGS[1]
 	KILLVAR 'sparrloc',ARGS[1]
 	KILLVAR '$sparrnam',ARGS[1]
@@ -40,6 +40,16 @@ elseif $ARGS[0] = 'cleandeposit' and arrsize('ARGS') > 1:
 	KILLVAR 'sparridt',ARGS[1]
 	KILLVAR 'sparrvol',ARGS[1]
 	KILLVAR 'sparrslc',ARGS[1]
+	KILLVAR 'sparrcnt',ARGS[1]
+elseif $ARGS[0] = 'cleanwomb' and arrsize('ARGS') > 1:
+	KILLVAR 'cumarrcpt',ARGS[1]
+	KILLVAR 'cumarrppt',ARGS[1]
+	KILLVAR '$cumarrnam',ARGS[1]
+	KILLVAR 'cumarrage',ARGS[1]
+	KILLVAR 'cumarrdel',ARGS[1]
+	KILLVAR 'cumarrkno',ARGS[1]
+	KILLVAR 'cumarrcnt',ARGS[1]
+	KILLVAR 'cumarrcon',ARGS[1]
 elseif $ARGS[0] = 'cumcondslip':
 	if cumcondslip_deep > (vagina / 2):
 		'The condom is slipped too deep inside to be pulled out by your hand. You need to ask for professional help!'
@@ -49,6 +59,24 @@ elseif $ARGS[0] = 'cumcondslip':
 		gs 'stat'
 		'With some effort, you managed to remove the condom.'
 	end
+elseif $ARGS[0] = 'reset':
+	!!{ Used in cheat and when giving birth.}
+	KILLVAR 'cumarrcpt'
+	KILLVAR 'cumarrppt'
+	KILLVAR '$cumarrnam'
+	KILLVAR 'cumarrage'
+	KILLVAR 'cumarrdel'
+	KILLVAR 'cumarrkno'
+	KILLVAR 'cumarrcnt'
+	KILLVAR 'cumarrcon'
+	KILLVAR 'sparrage'
+	KILLVAR 'sparrloc'
+	KILLVAR '$sparrnam'
+	KILLVAR 'sparrppt'
+	KILLVAR 'sparridt'
+	KILLVAR 'sparrvol'
+	KILLVAR 'sparrslc'
+	KILLVAR 'sparrcnt'
 elseif $ARGS[0] = '':
 	cumsumbod = 0
 	cumsumvag = 0
@@ -152,6 +180,7 @@ elseif $ARGS[0] = '':
 		KILLVAR 'sparridt'
 		KILLVAR 'sparrvol'
 		KILLVAR 'sparrslc'
+		KILLVAR 'sparrcnt'
 	end
 
 	i = 0
@@ -162,13 +191,7 @@ elseif $ARGS[0] = '':
 
 		tmp = arrpos('toclean', sparrloc[i])
 		if tmp ! -1 and tmp < arrsize('toclean'):
-			KILLVAR 'sparrage',i
-			KILLVAR 'sparrloc',i
-			KILLVAR '$sparrnam',i
-			KILLVAR 'sparrppt',i
-			KILLVAR 'sparridt',i
-			KILLVAR 'sparrvol',i
-			KILLVAR 'sparrslc',i
+			gs 'cum_cleanup', 'cleandeposit', i
 		else
 			i += 1
 			cumsumbod += sparrvol[i]
