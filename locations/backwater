@@ -1,0 +1,286 @@
+# backwater
+$location_type = 'secluded'
+$metka = $ARGS[0]
+$loc = $CURLOC
+gs 'gadukino_event', 'sound'
+cls
+gs'stat'
+!gs'time'
+
+!events before everything
+if $clothingworntype = 'nude' and hantersKnowSlut = 0 and hanters = 1 and hour > 8 and hour < 20:
+    cla
+	*clr
+	minut += 5
+    gs 'stat'
+    '<center><B>Backwater</B></center>'
+	'<center><img src="images/qwest/gadukino/Swamp/hunter_looks.jpg"></center>'
+	'Nanodesu backwater in the buff, you suddenly realize that you are not alone here. Turning around, you saw someone from the hunters. He just stood and watched, almost indistinguishable in your camouflage on a background of bushes and trees.'    
+		
+	if clothesbackwater = 1 and clearclothes = 0 and $lastwornclothingtype ! 'nude':
+	    act'Dress':
+		    cls
+			clothesbackwater = 0
+			minut += 5
+			tanga = flag_tanga
+			gs 'clothing', 'wear', $lastwornclothingtype, lastwornclothingnumber
+
+		    '<center><img src="images/qwest/gadukino/Swamp/swampbackwaternude1.jpg"></center>'
+		    'You, headlong, rushed to his clothes and pace began to get dressed. When already dressed, you looked back, except you have a backwater nobody else had.'
+		    act'Further':gt $loc, $metka
+		end    
+    else
+        act'Hide':
+            cls
+            minut += 1
+		    '<center><img src="images/qwest/gadukino/Swamp/swampbackwaternude2.jpg"></center>'
+		    'You somehow covering her Breasts and crotch slipped into the nearest Bush. When, to cope with the fear and confusion, you looked out there, except you have a backwater nobody else had.'
+		    act'Further':gt $loc, $metka
+		end
+    end
+    act'Stay naked':
+        cls
+        hanterslut += 1
+        hanterknowday = day
+        gs'stat'
+        '<center><img src="images/qwest/gadukino/Swamp/swampbackwaternude3.jpg"></center>'
+        'You have decided that you have nothing to hesitate, and left before mujcinovic AK is completely Nude. Male another minute or looked at you, then expelling a `Hmph` like that, turned around and walked away.'
+        act'Further':gt $loc, $metka
+    end
+	exit
+end  
+
+!start location
+'<center><B>Backwater</B></center>'
+	
+if month >= 4 and month <= 10:
+	if hour >= 6 and hour < 22:
+		'<center><img src="images/qwest/gadukino/Swamp/backwater.jpg"></center>'
+	else
+		'<center><img src="images/qwest/gadukino/Swamp/backwater_night.jpg"></center>'
+	end
+else
+	if hour >= 8 and hour < 18:
+		'<center><img src="images/qwest/gadukino/Swamp/backwater_winter.jpg"></center>'
+	else
+		'<center><img src="images/qwest/gadukino/Swamp/backwater_winter_night.jpg"></center>'
+	end
+end
+
+'Quiet pool with relatively clean water, which in warm weather to wash. Also, pre-stripped, then you can wash clothes if it is dirty.'
+if clothesbackwater = 1:'On the shore lies your cloth.'
+
+!re-arrange it, there should be no logic error now by illume
+if clothesbackwater = 0:
+	if $clothingworntype ! 'nude' and temper >= 20:
+		act'Undress':
+			if hantersKnowSlut > 0 or hanters = 0 or hour < 8 or hour >= 20 or modelfoto > 0 or film > 0 or stripdance > 0 or stripdancesum > 0 or exhibi > 0 or guy > 4 or girl > 2:
+				cla
+				*clr			 
+				!clothing remains on location
+				clothesbackwater = 1
+				minut+=5
+				flag_tanga = tanga
+				tanga = 0			
+				if hantersRape = 1: hantersRape = 2
+				 
+				if CloSkirtShortness > 0:
+					'<center><img src="images/qwest/gadukino/Swamp/backwaterundress_ski.jpg"></center>'
+				else
+					'<center><img src="images/qwest/gadukino/Swamp/backwaterundress.jpg"></center>'			
+				end
+				gs 'clothing', 'strip'	
+				'You do not hesitate undressed, left in the buff.'
+				act'Back':gt'backwater'		
+			else
+				cla
+				*clr
+				'<center><img src="images/qwest/gadukino/Swamp/noundress.jpg"></center>'
+				'You hesitate to undress, and suddenly someone sees?'
+				act'Back':gt'backwater'
+			end
+		end
+	end
+else
+	if $clothingworntype = 'nude':
+		act 'pick up your cloth':
+			cla
+			*clr
+			clothesbackwater = 0
+			'You took your clothes.'
+			act 'Back': gt $loc, $metka
+		end	
+	else
+		act 'Dress':
+			gs 'clothing', 'wear', $lastwornclothingtype, lastwornclothingnumber
+			clothesbackwater = 0
+			tanga = flag_tanga
+			gt $loc, $metka
+		end
+	end
+end
+
+if $clothingworntype = 'nude':
+    act 'Wash self':
+		cla
+		*clr
+		dynamic $showerdin
+		face_write = 0
+		body_write = 0
+		minut += 30
+		manna += mannamax/10
+		willpower += 5
+		if hantersRape = 1: hantersRape = 2
+		    
+        if tanga = 0:
+		    '<center><img src="images/qwest/gadukino/Swamp/backwaterswim2.jpg"></center>'  
+		else
+		    '<center><img src="images/qwest/gadukino/Swamp/backwaterswim3.jpg"></center>'
+        end
+		'You washed in backwater.'
+
+		act 'Further':gt 'backwater'     
+    end
+	if dirtyclothes = 1:
+		act 'To wash clothes':
+			cla
+			*clr
+			if hantersRape = 1: hantersRape = 2
+			minut += 60
+			dirtyclothes = 0
+			cumspclnt = 6 & gs 'cum_cleanup'	        
+			gs 'stat'
+				
+			'<center><img src="images/qwest/gadukino/Swamp/backwaterwash.jpg"></center>'
+			'You undressed and washed my dirty clothes. Unfortunately in the cold water she did not fully wash out, but even so.'
+			!fix logic by illume
+	        act 'To hang clothes in the hut':
+	            cla
+		        *clr
+	            minut += 5
+	            clearclothes = 5
+	            clearclothesH = 1
+				clothesswamphouse = 1
+				clothesbackwater = 0
+	            if $clothingworntype = 'nude':
+	                '<center><img src="images/qwest/gadukino/Swamp/basinwash1.jpg"></center>'
+	            else
+	                '<center><img src="images/qwest/gadukino/new/Washclothes2.jpg"></center>'
+	            end        
+	            'You hung clothes out to dry inside the cabin.'
+	            
+	            act 'Further':gt $locM, $metkaM
+	        end
+            if month >= 5 and month <= 9:
+	            act 'Hang on a glade':
+	                cla
+		            *clr
+	                minut += 10
+	                clearclothes = 3
+	                clearclothesH = 0
+					clothesswamphouse = 1
+	                clothesbackwater = 0
+	                if $clothingworntype = 'nude':
+	                    '<center><img src="images/qwest/gadukino/Swamp/basinwash2.jpg"></center>'
+	                else
+	                    '<center><img src="images/qwest/gadukino/new/Washclothes2.jpg"></center>'
+	                end
+	                'You hung the clothes outside to dry.'
+	            
+	                act 'Further':gt'swamp_yard'
+	            end	
+            end			
+		end
+	end
+else
+	!not nude
+	if dirtyclothes = 1 and temper >= 10:
+		act 'To clean clothes from dirt':
+			cla
+			*clr
+			if hantersRape = 1: hantersRape = 2
+			minut += 30
+			dirtyclothes = 0
+			cumspclnt = 6 & gs 'cum_cleanup'	        
+			gs 'stat'
+			
+			'<center><img src="images/qwest/gadukino/Swamp/backwaterwash2.jpg"></center>'
+			'You are undressing he climbed into the water and as he could began to clean your clothes from dirt. Unfortunately in cold water, and without undressing she is very bad cleanse, but even so.'
+			
+			act 'Further':gt'swamp_yard'		        
+		end
+	end   	
+	if arrsize('sparrvol') > 0:	
+		act 'Wash sperm':
+			cla
+			*clr
+			dynamic $showerdin
+			lubonus = 0
+			sweat -= 1
+			minut += 10
+			if hantersRape = 1: hantersRape = 2
+			'<center><img src="images/qwest/gadukino/Swamp/backwaterswim1.jpg"></center>'
+			'You carefully washed the cum in pool.'
+			act 'Further':gt 'backwater'
+		end
+	end
+	if spdirtyc > 0:
+		act 'Clean the sperm from the clothes':
+			cla
+			cumspclnt = 6 & gs 'cum_cleanup'
+			minut += 5
+			if hantersRape = 1: hantersRape = 2
+			gs'stat'
+				'<center><img src="images/pic/frotsp.jpg"></center>'
+			'You zamili the cum stains on their clothes.'
+				act 'Finish':gt 'backwater'
+		end
+	end
+	if temper >= 10:
+		act 'Wash Face':
+			cla
+			*clr
+			mop = 1
+			cumspclnt = 9
+			gs 'cum_cleanup'
+			cumspclnt = 11
+			gs 'cum_cleanup'		
+			cumspclnt = 13
+			gs 'cum_cleanup'
+			if sweat > 19 : sweat -= 5
+			'<center><img src="images/etogame/facesp.jpg"></center>'
+			*nl
+			'You clean your face and get rid of any trace of cum.'
+			face_write = 0
+			
+			'<center><img src="images/pic/facesp.jpg"></center>'
+			'You carefully washed his face and washed away the makeup.'
+			minut += 5
+			gs'stat'
+
+			act 'Further':gt 'backwater'		
+
+			if hantersRape = 1: hantersRape = 2
+		end		
+	end
+end
+
+act 'Go':minut += 5 & gt'swamp_yard'
+
+if hantersRape = 2:
+    cla
+	*clr
+	minut += 5
+	hantersRape = 3
+	gs 'stat'
+	
+	'<center><img src="images/qwest/gadukino/hantersex/backwaterrelax.jpg"></center>'
+	'Making their case you are sitting on the shore to rest.'
+	
+	act 'Further':gt 'hanters'
+end
+
+--- backwater ---------------------------------
+
+
+

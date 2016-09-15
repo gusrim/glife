@@ -1,0 +1,521 @@
+# gadfield
+if $ARGS[0] = 'field':
+	$location_type = 'secluded'
+    $metka = $ARGS[0]
+    $loc = $CURLOC
+    gs 'gadukino_event', 'sound'
+    clr
+    gs'stat'
+    !gs'time'
+
+    '<center><H4>Field</H4></center>'
+
+    if month >= 4 and month <= 10:
+	    if hour >= 6 and hour < 22:
+		    '<center><img src="images/qwest/gadukino/gadfield/gadfield.jpg"></center>'
+	    else
+		    '<center><img src="images/qwest/gadukino/gadfield/gadfield_night.jpg"></center>'
+	    end
+    else
+	    if hour >= 8 and hour < 18:
+		    '<center><img src="images/qwest/gadukino/gadfield/gadfield_winter.jpg"></center>'
+	    else
+		    '<center><img src="images/qwest/gadukino/gadfield/gadfield_winter_night.jpg"></center>'
+	    end
+    end
+    'Field outside the village.'
+    if hour >= 9 and hour <= 19 and week < 6:'On the field grazing grandfather`s horse <a href="exec: gt ''gadfield'',''horse''">Buyan</a>.'
+    if hour >= 9 and hour <= 19 and graze_cow = 0:'On the field you see <a href="exec: gt ''gadfield'',''cow''">a herd of cows</a>.'
+    if hour >= 6 and hour <= 20 and graze_cow = 1:'On the field you see <a href="exec: gt ''gadfield'',''cow''">a herd of cows</a>.'
+    if hour >= 7 and hour <= 20 and haying_time = 1:'On the field you see a crowd of locals.'    
+
+    if hour >= 7 and hour <= 20 and haying_time = 1:
+		act 'Go to the Hayfield':
+			gs 'food', 'm_meal'&!use current one, cls will clear messages
+			cla
+			*clr
+			minut += 360
+			grandmahelp += 1
+	
+			haying_time = 0
+			gs 'stat'
+			
+			if miraQW >= 15:
+			    miraQW += 1
+			    '<center><img src="images/qwest/gadukino/gadfield/haying_time_mira.jpg"></center>'
+			    'On hay sobralsja almost the whole village and you also took active part in the work. The principle was fun, especially considering that most of the time you talked to Mira, lounging on the fresh hay.'
+			else
+			    fat -= 5
+			    stren += 1
+			    agil += 1
+			    vital += 1
+			    sweat += 20			 
+			    '<center><img src="images/qwest/gadukino/gadfield/haying_time.jpg"></center>'
+			    'On hay sobralsja almost the whole village and you also took active part in the work.'   
+            end
+			act 'Further':gt'gadfield','field'   
+		end
+    end     
+        
+
+    act 'To get back on the road':minut += 10 & gt'gadroad'
+end    
+
+if $ARGS[0] = 'horse':
+    $metka = $ARGS[0]
+    $loc = $CURLOC
+    gs 'gadukino_event', 'sound'
+    clr
+    gs'stat'
+    !gs'time'
+    
+    '<center><img src="images/qwest/gadukino/gadfield/horse.jpg"></center>'
+    'Grandfather`s horse Desperado.'
+    
+    if hour = 19:
+		act 'To take the horse home':
+			cla
+			*clr
+			minut += 60
+			grandmahelp += rand(0,1)
+			gs 'stat'
+			
+			'<center><img src="images/qwest/gadukino/new/horse_field'+rand(1,4)+'.jpg"></center>'
+			'Seeing the horse in the field, you decide to help the grandfather, and take Skipper home. Taking the horse by the bridle, you went with him towards the village.'
+
+			act 'Further':gt'Gadsarai'    
+		end
+    end    
+    act 'Back':gt'gadfield','field'
+end 
+
+if $ARGS[0] = 'cow':
+    $metka = $ARGS[0]
+    $loc = $CURLOC
+    gs 'gadukino_event', 'sound'
+    clr
+    temp = rand(1,5)
+    gs'stat'
+    !gs'time'
+    
+    '<center><img src="images/qwest/gadukino/gadfield/cow.jpg"></center>'
+    'The village herd of cows stands in the middle of the field.'
+    if mira = 1: 'Sitting next to you <a href="exec: gt ''Miroslava''">Mira</a>.'    
+    
+    if hour = 19 and graze_cow = 0:
+		act 'To take the cow home':
+			cla
+			*clr		
+			minut += 60
+			grandmahelp += rand(0,1)
+			gs 'stat'
+			
+			'<center><img src="images/qwest/gadukino/new/cow_field.jpg"></center>'
+			'Seeing the herd in the field, you decide to help the grandfather, and take the Dawn home..'
+
+			act 'Further':gt'Gadsarai'    
+		end
+    end
+    if graze_cow = 1:
+        if hour < 10:
+            act 'Wait until gather a herd':
+			    cla
+			    *clr
+                if hour >= 9:minut += 20
+                if hour < 9:minut += 60        
+                gs 'stat'
+                
+                '<center><img src="images/qwest/gadukino/gadfield/graze_cow_wait.jpg"></center>'
+                if graze_cow_exp = 0:'For some time you wait until all the locals bring their cows.'
+                if graze_cow_exp = 1:'For some time you wait until all the locals bring their cows and children return with the Dawn.'
+                
+                act 'Further':gt'gadfield','cow'
+            end
+        end
+        if hour >= 10 and hour < 13:
+            act 'Herding cows with his grandfather':
+			    cla
+			    *clr
+                minut += 60        
+                if temper >= 30 and sunWeather = 1:water -= 12
+                graze_cow_exp = 1
+                grandmahelp += 1
+                gs 'stat'
+                
+                '<center><img src="images/qwest/gadukino/gadfield/graze_cow'+rand(1,4)+'.jpg"></center>'
+                'You within the hour herding the village cows. Rather passing the grandfather, you more part of the fun.'
+                
+                act 'Further':gt'gadfield','cow'
+            end
+            if mira = 0:            
+                act 'To run on the field':
+			        cla
+			        *clr
+			        frost = 0
+		            minut += 60
+		            if salo > 3:salo -= RAND(1,3)
+		            fat -= 5
+		            beg += 1
+		            sweat += 10
+                    manna += mannamax/20       
+                    if temper >= 30 and sunWeather = 1:water -= 24
+                    gs 'stat'
+                
+                    '<center><img src="images/qwest/gadukino/gadfield/graze_cow_run.jpg"></center>'
+                    'You within the hour, nothing to do, was running across the field.'
+                
+                    act 'Further':gt'gadfield','cow'
+                end
+            end
+            if temper >= 20 and sunWeather = 1 and mira = 0:
+                act 'Tan':
+			        cla
+			        *clr
+			        minut += 60
+                    manna += mannamax/10
+                    tan += 1
+                    sweat += 10
+                    gs 'stat'
+                
+                    '<center><img src="images/qwest/gadukino/gadfield/graze_cow_sun.jpg"></center>'
+                    'Within an hour, throwing everything you have tanned.'
+                
+                    act 'Further':gt'gadfield','cow'
+                end               
+                if son < 40:
+                    act 'Take a NAP on the grass':
+			            cla
+			            *clr
+			            minut += 60
+                        manna += mannamax/10
+                        son+= 9
+                        if temper >= 30 and sunWeather = 1:water -= 12
+                        gs 'stat'
+                
+                        '<center><img src="images/qwest/gadukino/gadfield/graze_cow_lying.jpg"></center>'
+                        'You lay down on the grass and did not notice how dozed off, slept for an hour.'
+                
+                        act 'Further':gt'gadfield','cow'
+                    end    
+                end
+                act 'Picking flowers':
+			        cla
+			        *clr
+			        minut += 60
+                    manna += mannamax/5
+                    if temper >= 30 and sunWeather = 1:water -= 12
+                    gs 'stat'
+                
+                    '<center><img src="images/qwest/gadukino/gadfield/graze_cow_flowers.jpg"></center>'
+                    'You within an hour wandering around the field and picked flowers.'
+                
+                    act 'Further':gt'gadfield','cow'
+                end
+			    act 'Read the book':
+			        cla
+			        *clr
+			        minut += 60			        
+                    if temper >= 30 and sunWeather = 1:water -= 12
+                    gs 'stat'				    
+                    
+				    '<center><img src="images/qwest/gadukino/gadfield/graze_cow_book'+rand(1,2)+'.jpg"></center>'
+	                if nerdism > 0: 	                    
+		                lastread = totminut
+		                lastreadday = daystart
+		                nerdism += 1
+		                blizoruk += 1
+		                manna += 100
+		                if stren > 1: stren -= 1
+		                if vital > 5: vital -= 1
+		                gs 'stat'
+		                'Within an hour you avidly read the book to fully live in what is happening.'
+	                else
+	                    blizoruk += 1
+		                manna += 10
+		                'Within the hour you read a book, taken in my grandmother`s trellis.'
+	                end
+				    act 'Close the book':gt $loc, $metka
+		        end   
+            end
+        end
+        if hour >= 13 and hour < 16:
+            cla
+	        *clr
+	        if temper >= 30 and sunWeather = 1:water -= 12
+	        grandmahelp += 1
+            minut += 60
+            gs 'stat'
+
+           '<center><img src="images/qwest/gadukino/gadfield/cow_go.jpg"></center>'            
+           'Looking at his watch, grandpa seemed that lunch and it`s time to drive the herd to the watering hole. Together you began to raise cows lying and guide to the river.'
+            
+            act 'Further':gt'gadfield','cow2'
+        end         
+    end
+    if graze_cow = 0:act 'Back':gt'gadfield','field'    
+end    
+  
+if graze_cow = 1 and miraQW >= 15 and mira = 0 and sunWeather = 1 and hour >= 10 and temp = 1 and Mira_no = 0 and(mitkasextimes < 13 or miragopQW >= 10 or mirasex > 1):
+	cla
+	*clr
+    minut += 5
+    miraQW += 1
+    mira = 1       
+    gs 'stat'
+
+    '<center><img src="images/qwest/gadukino/Mira2.jpg"></center>'   
+    'Airwaves from the contemplation of the cows, you saw approaching you the World. You happily went up to her.'
+    ' - Hi,<<$nickname>>. I decided to visit you and drink to bring, " she said coming up to you. - Miss neboys?'
+    
+    act 'Further':water +=40 & gt'gadfield','cow'   
+end  
+    
+if $ARGS[0] = 'cow2':
+    $metka = $ARGS[0]
+    $loc = $CURLOC
+    gs 'gadukino_event', 'sound'
+    clr
+    gs'stat'
+    !gs'time'
+    
+    '<center>Drink</H4></center>'
+    '<center><img src="images/qwest/gadukino/gadfield/cow_river.jpg"></center>'
+    'The village herd of cows standing by the Nile.'
+    if mira = 1: 'Sitting next to you <a href="exec: gt ''Miroslava''">Mira</a>.'   
+    if temper >= 20 and sunWeather = 1:' - Granddaughter can go swim, while there is time. I`ll keep an eye on the herd, " said you grandfather.'
+
+    if graze_cow = 1:     
+        if hour < 16:
+            act 'Herding cows with his grandfather':
+			    cla
+			    *clr
+                minut += 60        
+                if temper >= 30 and sunWeather = 1:water -= 12
+                grandmahelp += 1
+                graze_cow_exp = 1
+                gs 'stat'
+                
+                '<center><img src="images/qwest/gadukino/gadfield/graze_cow'+rand(1,4)+'.jpg"></center>'
+                'You within the hour herding the village cows. Rather passing the grandfather, you more part of the fun.'
+                
+                act 'Further':gt'gadfield','cow2'
+            end
+            if temper >= 20 and sunWeather = 1 and mira = 0:
+                act 'Swim':
+			        cla
+			        *clr
+			        minut += 15
+			        cumspclnt = 4 & gs 'cum_cleanup'
+			        sweat = 10 + rand(0,4)
+			        manna += 5			    
+			        willpower += 5
+			        if stren < 30:stren += 1
+                    gs 'stat'
+                
+                    '<center><img src="images/qwest/gadukino/gadfield/graze_cow_river.jpg"></center>'
+                    'You will quickly Ecopolis in the Creek, while there is time.'
+                
+                    act 'Further':gt'gadfield','cow2'
+                end
+                act 'Tan':
+			        cla
+			        *clr
+					minut += 30
+					sweat += 10
+					manna += mannamax/20
+					tan += 1
+                    gs 'stat'
+                
+                    '<center><img src="images/qwest/gadukino/gadfield/graze_cow_sun.jpg"></center>'
+                    'You have laid down to sunbathe, while grandpa looks after the herd.'
+                    
+                
+                    act 'Further':gt'gadfield','cow2'
+                end
+			    act 'Read the book':
+			        cla
+			        *clr
+			        minut += 60			        
+                    if temper >= 30 and sunWeather = 1:water -= 12
+                    gs 'stat'				    
+                    
+				    '<center><img src="images/qwest/gadukino/gadfield/graze_cow_book'+rand(1,2)+'.jpg"></center>'
+	                if nerdism > 0: 	                    
+		                lastread = totminut
+		                lastreadday = daystart
+		                nerdism += 1
+		                blizoruk += 1
+		                manna += 100
+		                if stren > 1: stren -= 1
+		                if vital > 5: vital -= 1
+		                gs 'stat'
+		                'Within an hour you avidly read the book to fully live in what is happening.'
+	                else
+	                    blizoruk += 1
+		                manna += 10
+		                'Within the hour you read a book, taken in my grandmother`s trellis.'
+	                end
+				    act 'Close the book':gt $loc, $metka
+		        end
+            end
+        end
+        if hour >= 16 and hour < 19:
+            cla
+	        *clr
+	        grandmahelp += 1
+	        if temper >= 30 and sunWeather = 1:water -= 12
+            minut += 60
+            gs 'stat'
+
+            '<center><img src="images/qwest/gadukino/gadfield/cow_go.jpg"></center>'            
+            'Looking at his watch, grandpa said it`s time to drive the herd back on the field, but now closer to the forest. Together you began to collect scattered and standing in the water the cows and headed toward the forest.'
+            
+            act 'Further':gt'gadfield','cow3'
+        end        
+    end  
+end    
+
+
+
+if $ARGS[0] = 'cow3':
+    $metka = $ARGS[0]
+    $loc = $CURLOC
+    gs 'gadukino_event', 'sound'
+    clr
+    gs'stat'
+    !gs'time'
+    
+    '<center><H4>Field near the forest</H4></center>'
+    '<center><img src="images/qwest/gadukino/gadfield/cow_forest.jpg"></center>'
+    'The village herd of cows standing in a field near the forest.'
+    if mira = 1: 'Sitting next to you <a href="exec: gt ''Miroslava''">Mira</a>.'
+    
+    if graze_cow = 1:        
+        if hour < 19:
+            act 'Herding cows with his grandfather':
+			    cla
+			    *clr
+                minut += 60        
+                if temper >= 30 and sunWeather = 1:water -= 12
+                grandmahelp += 1
+                graze_cow_exp = 1
+                gs 'stat'
+                
+                '<center><img src="images/qwest/gadukino/gadfield/graze_cow'+rand(1,4)+'.jpg"></center>'
+                'You within the hour herding the village cows. Rather passing the grandfather, you more part of the fun.'
+                
+                act 'Further':gt'gadfield','cow3'
+            end
+            if mira = 0:            
+                act 'To run on the field':
+			        cla
+			        *clr
+			        frost = 0
+		            minut += 60
+		            if salo > 3:salo -= RAND(1,3)
+		            fat -= 5
+		            beg += 1
+		            sweat += 10
+                    manna += mannamax/20       
+                    if temper >= 30 and sunWeather = 1:water -= 24
+                    gs 'stat'
+                
+                    '<center><img src="images/qwest/gadukino/gadfield/graze_cow_run.jpg"></center>'
+                    'You within the hour, nothing to do, was running across the field.'
+                
+                    act 'Further':gt'gadfield','cow3'
+                end
+            end           
+            if temper >= 20 and sunWeather = 1 and mira = 0:
+                act 'Picking flowers':
+			        cla
+			        *clr
+			        minut += 60
+                    manna += mannamax/5
+                    if temper >= 30 and sunWeather = 1:water -= 12
+                    gs 'stat'
+                
+                    '<center><img src="images/qwest/gadukino/gadfield/graze_cow_flowers.jpg"></center>'
+                    'You within an hour wandering around the field and picked flowers.'
+                
+                    act 'Further':gt'gadfield','cow3'
+                end                
+                act 'Tan':
+			        cla
+			        *clr
+			        minut += 60
+                    manna += mannamax/10
+                    tan += 1
+                    sweat += 10
+                    gs 'stat'
+                
+                    '<center><img src="images/qwest/gadukino/gadfield/graze_cow_sun.jpg"></center>'
+                    'You within the hour leaving all sunbathed.'
+                
+                    act 'Further':gt'gadfield','cow3'
+                end               
+                if son < 40:
+                    act 'Take a NAP on the grass':
+			            cla
+			            *clr
+			            minut += 60
+                        manna += mannamax/10
+                        son+= 9
+                        if temper >= 30 and sunWeather = 1:water -= 12
+                        gs 'stat'
+                
+                        '<center><img src="images/qwest/gadukino/gadfield/graze_cow_lying.jpg"></center>'
+                        'You lay down on the grass and did not notice how dozed off, slept for an hour.'
+                
+                        act 'Further':gt'gadfield','cow3'
+                    end    
+                end
+			    act 'Read the book':
+			        cla
+			        *clr
+			        minut += 60			        
+                    if temper >= 30 and sunWeather = 1:water -= 12
+                    gs 'stat'				    
+                    
+				    '<center><img src="images/qwest/gadukino/gadfield/graze_cow_book'+rand(1,2)+'.jpg"></center>'
+	                if nerdism > 0: 	                    
+		                lastread = totminut
+		                lastreadday = daystart
+		                nerdism += 1
+		                blizoruk += 1
+		                manna += 100
+		                if stren > 1: stren -= 1
+		                if vital > 5: vital -= 1
+		                gs 'stat'
+		                'Within an hour you avidly read the book to fully live in what is happening.'
+	                else
+	                    blizoruk += 1
+		                manna += 10
+		                'Within the hour you read a book, taken in my grandmother`s trellis.'
+	                end
+				    act 'Close the book':gt $loc, $metka
+		        end
+            end
+        end
+        if hour >= 19:
+            cla
+	        *clr
+	        if temper >= 30 and sunWeather = 1:water -= 12
+            minut += 60
+            mira = 0
+            graze_cow = 0
+            grandmahelp += 1
+            gs 'stat'
+
+            '<center><img src="images/qwest/gadukino/gadfield/cow_go_home.jpg"></center>'            
+            'Looking at his watch, grandpa said that it was late and time to drive the herd home. Cows twice beg you not had, they rushed towards the village, and you barely keep up with them.'
+            
+            act 'Further':gt'gadukino'
+        end        
+    end  
+end    
+
+    
+    
+--- gadfield ---------------------------------
+

@@ -1,0 +1,243 @@
+# bicycle
+$location_type = 'event_outdoors'
+if $ARGS[0] = 'sarai':
+	$metka = $ARGS[0]
+	$loc = $CURLOC
+	cla
+	*clr
+	minut += 1
+	gs 'gadukino_event', 'sound'
+	gs 'stat'
+	!gs'time'
+
+	'<center><img src="images/qwest/gadukino/new/findvel.jpg"></center>'
+	'Old bike. But he looks like he is in good condition, so you can ride.'
+	if sunWeather = 0:'But not in the rain.'
+
+    if hour >= 6 and hour <= 20 and sunWeather = 1 and month >= 4 and month <= 10:
+        if findvelday ! daystart:
+	        act 'Ride a bike':
+		        cls
+		        findvelday = daystart
+	            minut += 60
+		        beg += RAND(0,2)
+		        speed += rand(0,2)
+		        if salo > 0: salo -= 1
+		        fat -= 5
+		        manna += 5
+		        sweat += 2
+		        findvelrand = RAND(0,100)
+		        if $clothingworntype = 'nude':
+			        horny += 20
+			        willpower += 10
+			        gs 'stat'
+			        '<center><img src="images/qwest/gadukino/bike_nude.jpg"></center>'
+			        'You ride galichem, avoiding crowded places and exulting from his courage. It`s hard to say what you more: fear or desire to be noticed.'
+			        act 'Finish the trip':gt $loc, $metka
+			        exit
+		        end
+		        if CloSkirtShortness > 0 and findvelrand > 70:
+			        if tanga=1:
+				        horny += 5
+				        willpower+=5
+				        gs'stat'
+				        '<center><img src="images/qwest/gadukino/bike_tanga_1.jpg"></center>'
+				        'During your stay you have several times lifted the skirt, revealing to passers-by views of your panties and ass'
+			        else
+				        horny += 5
+				        willpower += 10
+				        gs'stat'
+				        '<center><img src="images/qwest/gadukino/bike_tanga_2.jpg"></center>'
+				        'During your stay you have several times lifted the skirt, revealing to passers-by view of your ass is not covered'
+			        end
+			        act 'Finish the trip':gt $loc, $metka
+			        exit
+		        end
+		        if CloSkirtShortness > 0 and findvelrand <= 70:
+			        willpower += 5
+			        gs'stat'
+			        '<center><img src="images/qwest/gadukino/bike_2.jpg"></center>'
+			        'You ride a bike, enjoying the surrounding nature.'
+			        act 'Finish the trip':gt $loc, $metka
+			        exit	
+		        end
+		        if CloSkirtShortness = 0:
+			        willpower += 5
+			        gs'stat'
+			        '<center><img src="images/qwest/gadukino/bike.jpg"></center>'
+			        'You ride a bike, enjoying the surrounding nature.'
+			        act 'Finish the trip':gt $loc, $metka
+			        exit
+		        end
+	        end
+	    end
+	end     
+    if goforest > 0 and sunWeather = 1 and month >= 4 and month <= 10:   
+	    act 'Go to the forest':
+		    cls
+	        minut += 25
+		    manna += 5
+		    findvel = 2
+		    gs'stat'
+		
+            gs 'bicycle', 'clothes_findvel'
+		    'You sat on the bike and went to the forest.'
+			gs 'bicycle', 'ridego', 'gadforest','1'
+		end    
+	end
+    if goswamp = 1 and sunWeather = 1 and month >= 4 and month <= 10:	
+	    act 'To go to the swamp':
+		    cls
+		    minut += 75
+		    beg += RAND(0,1)
+		    speed += rand(0,1)
+		    if salo > 0: salo -= 1
+		    fat -= 1
+		    manna += 5
+		    sweat += 1
+		    findvel = 3
+		    gs'stat'
+		    !gs'time'
+		
+            gs 'bicycle', 'clothes_findvel'
+		    'You sat on the bike and went to the swamp.'
+
+		    gs 'bicycle', 'ridego', 'swamp_yard'
+	    end
+	end
+	act 'Put the bike': gt'Gadsarai'		
+end
+
+if $ARGS[0] = 'forest':
+	$metka = $ARGS[0]
+	$loc = $CURLOC
+	cla
+	*clr
+	minut += 1
+    gs 'gadukino_event', 'sound'	
+	gs 'stat'
+	!gs'time'
+
+	'<center><img src="images/qwest/gadukino/new/findvel.jpg"></center>'
+
+	act 'Go to the village':
+	    if $clothingworntype ! 'nude' or exhibi > 0:
+		    cls	    
+		    manna += mannamax/20
+		    findvel = 1
+		    minut += 25
+		    gs'stat'
+		
+            gs 'bicycle', 'clothes_findvel'
+		    'You sat on the bike and went to the village.'		    
+			gs 'bicycle', 'ridego', 'Gaddvor'
+	    else
+            cls	    
+		    '<center><img src="images/qwest/gadukino/new/findvel_nude.jpg"></center>'
+		    'You can`t appear like this in the village.'
+		    act 'Further':gt'gadforest','1'
+	    end
+	end
+    if goswamp = 1:	
+	    act 'To go to the swamp':
+		    cls
+		    minut += 50
+		    manna += 5
+		    findvel = 3
+		    gs'stat'
+		    !gs'time'
+		
+            gs 'bicycle', 'clothes_findvel'
+		    'You sat on the bike and went to the swamp.'
+
+		    gs 'bicycle', 'ridego', 'swamp_yard'
+	    end
+	end	
+	act 'Put the bike': gt'gadforest','1'	
+end
+
+if $ARGS[0] = 'swamp':
+	$metka = $ARGS[0]
+	$loc = $CURLOC
+	cla
+	*clr
+	minut += 1
+    gs 'gadukino_event', 'sound'
+	gs 'stat'
+	!gs'time'
+
+	'<center><img src="images/qwest/gadukino/new/findvel.jpg"></center>'
+	
+	act 'Go to the village':	   
+        if $clothingworntype ! 'nude' or exhibi > 0:	   
+		    cls
+	        minut += 75
+		    beg += RAND(0,1)
+		    speed += rand(0,1)
+		    if salo > 0: salo -= 1
+		    fat -= 1
+		    sweat += 1
+		    manna += mannamax/10
+		    findvel = 1
+		    hanters = 0
+		    gs'stat'
+		    !gs'time'
+		
+            gs 'bicycle', 'clothes_findvel'
+		    'You sat on the bike and went to the village.'
+			
+		    gs 'bicycle', 'ridego', 'Gaddvor'
+	    else
+            cls	    
+		    '<center><img src="images/qwest/gadukino/new/findvel_nude.jpg"></center>'
+		    'You can`t appear like this in the village.'
+		    act 'Further':gt'swamp_yard'
+	    end 	
+	end	
+	act 'Go to the forest':
+		cls
+	    minut += 50
+		manna += 5
+        hanters = 0		    
+		findvel = 2
+		gs'stat'
+		!gs'time'
+		
+        gs 'bicycle', 'clothes_findvel'
+		'You sat on the bike and went to the forest.'
+		gs 'bicycle', 'ridego', 'gadforest','1'
+	end
+    act 'Put the bike': gt'swamp_yard'		
+end
+
+if $ARGS[0] = 'clothes_findvel':
+	if $clothingworntype = 'nude':
+		'<center><img src="images/qwest/gadukino/bike_nude.jpg"></center>'
+	elseif CloSkirtShortness > 0:
+		'<center><img src="images/qwest/gadukino/bike_2.jpg"></center>'
+	else
+		'<center><img src="images/qwest/gadukino/bike.jpg"></center>'
+	end
+end
+
+if $ARGS[0] = 'ridego':
+	!make this args, add a warning, and allow 30% alive by illume
+	$metkaM = $ARGS[2]
+	$locM = $ARGS[1]
+	if hour >= 6 and hour < 22:
+		act 'Further':gt $locM, $metkaM
+	else
+		'<B><font color=red>Are You sure? It''s still quiet dark outside.</font></B>'
+		act '<font color=red>Yes, Let''s go</font>':
+			if rand(1,10)>3:
+				over = 12 & gt'gameover'
+			else
+				gt $locM, $metkaM
+			end
+		end
+		act 'Put the bike': gt $loc, $metka
+	end
+end
+
+--- bicycle ---------------------------------
+
