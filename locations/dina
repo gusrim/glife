@@ -141,10 +141,11 @@ $rexpot = {
 !	end
 }
 
+!! therapist values/dynamics:
+timeTresh = 300
+
 $hypnoDaychange = {	
-	if daystartfuck = stat['vaginal'] + stat['anal'] and hypnoAddict = 2:fuckWithdrawal = 1
-	daystartfuck = stat['vaginal'] + stat['anal']
-	!you visited the therapist too long ago
+	!Therapist - missed visitation effect
 	if daystart-hypnoDay > 7: 
 		if hypnoAddict = 1:
 			hypnoWithdrawal = 1
@@ -175,29 +176,27 @@ $hypnoDaychange = {
 }
 
 $hypnoAddiction = {
-	if preziktype = 0: prezikcount = prezik
-	if preziktype = 2: preziksabo = prezik
-	prezik = 0
-	preziktype = 1
-	if spdirtyi = 1 and hypnoAddict = 1:
-		manna += 2
-	elseif spdirtyi = 1:
-		manna += 5
-	elseif hypnoAddict = 1:
-		manna -= 5
-		horny += 5
+	if spdirtyi = 1:
+		if hypnoAddict = 1:
+			manna += 2
+		else
+			manna += 5
+		end
 	else
-		manna -= 10
-		horny += 10
+		missCum += hypnoTime
 	end
 	
-	if hypnoAddict = 1:
-		if horny < 30:horny = 30
-	else
-		if horny < 50:horny = 50
+	if missCum >= timeTresh:
+		if hypnoAddict = 1:
+			manna -= 5
+			horny += 5
+		else
+			manna -= 10
+			horny += 10
+		end
 	end
 	
-	if hypnoWithdrawal > 0 and spdirtyi = 0 and will > 0:
+	if hypnoWithdrawal > 0 and missCum >= timeTresh and will > 0:
 		if hypnoWithdrawal = 1:
 			will -= 1
 		else
@@ -205,5 +204,6 @@ $hypnoAddiction = {
 		end
 	end
 }
+
 --- dina ---------------------------------
 
