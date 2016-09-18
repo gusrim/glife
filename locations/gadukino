@@ -5,20 +5,52 @@ if $ARGS[0] = '':
 	$loc = $CURLOC
     $location_type = 'public_outdoors'
 	CLOSE ALL
-	if sound = 0:
-		if month >=11 and month <= 12 or month >=1 and month <=3:
-			if hour >= 8 and hour <= 23: PLAY 'sound/zima2.mp3',30
-			if hour >= 0 and hour <= 7: PLAY 'sound/zima2.mp3',30
-		else
-			if hour >= 8 and hour <= 23: PLAY 'sound/ptica.mp3',30
-			if hour >= 0 and hour <= 7: PLAY 'sound/ptica.mp3',30
+	gs 'gadukino_event', 'gadukino'
+	!125s
+	!exec before everything
+	if mitkaday ! daystart:
+		mitkarand = rand(1,12)
+		!lower chance (1/3 to 1/12) and once per day by illume
+		if mitka = 0 and hour >= 7 and hour < 20 and mitkarand = 1: 
+			cls
+			minut += 5
+			gs 'stat'
+			'<center><b><font color = maroon>Mitka Pin</font></b></center>'
+			'<center><img src="images/qwest/alter/npc/mitka.jpg"></center>'
+			'In the village you are approached by your old friend Mitka.'
+			act 'Further':gt 'mitka'
+			exit
+		end
+		if mitka = 1 and hour >= 17 and hour < 20 and mitkarand = 1 and mitkaday ! daystart and mitkasextimes < 13:
+			cls
+			minut += 5
+			gs 'stat'
+			'<center><b><font color = maroon>Mitka Pin</font></b></center>'	
+			'<center><img src="images/qwest/alter/npc/mitka.jpg"></center>'
+			'In the village you are approached by your old friend Mitka.'
+			act 'Further':gt 'mitka'    
+			exit
 		end
 	end
+	mitkarand = rand(1,20)
+	if gadriver_gang < 3: 
+		if mitkarand = 1 and mitkasextimes >= 13 and hour >= 7 and hour <= 16 and month >= 4 and month <= 10 and mitkaday ! daystart: gt 'gadukino_event', 'gadukino_mitka'
+		if mitkarand = 2 and mitkasextimes >= 13 and hour >= 7 and hour <= 16 and month >= 4 and month <= 10 and kolyambaday ! daystart: gt 'gadukino_event', 'gadukino_kolyamba'
+		if mitkarand = 3 and mitkasextimes >= 13 and hour >= 7 and hour <= 16 and month >= 4 and month <= 10 and vasyanday ! daystart: gt 'gadukino_event', 'gadukino_vasyan'
+		if mitkarand = 4 and mitkasextimes > 15 and hour >= 17 and hour <= 19 and month >= 4 and month <= 10 and gadboyday ! daystart and week <= 5: gt 'gadukino_event', 'gadukino_2boys'
+		if mitkarand <= 5 and mitkasextimes > 15 and hour >= 7 and hour <= 19 and month >= 4 and month <= 10 and gadboyday ! daystart and week > 5: gt 'gadukino_event', 'gadukino_2boys'
+	end    
+	if gadriver_gang = 1 and hour >= 6 and hour <= 21 and gadboyday ! daystart: gt 'gadukino_event', 'gang_apologise'
+	if gadriver_gang = 3 and hour >= 6 and hour <= 21 and gadboyday ! daystart: gt 'gadukino_event', 'mitka_apologise'
+	if gadriver_gang = 4  and mirasex = 1 and miralick = 0 and hour >= 8 and hour <= 20 and gadboyday ! daystart: gt 'gadukino_event', 'mira_apologise'
+	if mitkasextimes > 13 and mirasex = 1 and miragopQW < 11 and mitkarand >= 6 and miraday ! day:gt 'Meadow_event','mira_lesb_talk4'
+	
+	!125e
 	clr
 	gs 'stat'
 	'<center><h4>Gadyukino Village</h4></center>'
 
-	if month >= 5 and month <= 9:
+	if month >= 4 and month <= 10:
 		if hour >= 6 and hour < 22:
 			'<center><img src="images/qwest/gadukino/street.jpg"></center>'
 		else
@@ -40,44 +72,64 @@ if $ARGS[0] = '':
 
 	if StoryLine = 1:'In one of the <a href="exec:minut += 5 & gt ''Gaddvor''">hovels live your grandparents</a>.'
 	if miraQW > 0: 'Just down the road from your grandparents house is <a href="exec:minut += 5 & gt ''MiroslavaHome''">Miroslava''s</a> house.'
+	!125s
+	if hour >= 9 and hour <= 11 and month >= 6 and month <= 9:
+		'In season the village comes to mobile <a href="exec: gt ''gadukino'',''collection_point''">item</a> harvesting of mushrooms and berries.'
+	else
+		'Season, with 9.00 to 12.00, in the village comes to mobile point of preparation of mushrooms and berries.'
+	end
 
+	if hour >= 17 and hour < 20:'Not far from the house scared <a href="exec:GT ''mitka''">Mitka Pin</a>'
+	if hour >= 20 and sunWeather = 1 and month >= 4 and month <= 10:
+		miraingop = 0
+		'Not far from the house sits a rustic style company <a href="exec:GT ''mitkabuh''">youth</a>'
+	end	
+	!125e
 	if hour >= 6 and hour < 20:
-		if month >= 5 and month <= 9:
+		if month >= 4 and month <= 10:
 			act 'Walking through the village':
 
                 cls
                 minut += 15
                 gs 'stat'
-                temp = RAND(0,100)
-                if temp < 4 and meadow = 0:
+				if Mira_no = 0:
+					temp = RAND(0,100)
+				else
+					temp = RAND(37,100)
+				end
+				!skip mira events if Mira_no not 0. maybe a break up for future version?
+				!re-arrange random chance by illume, during 1.2.5 importation
+                if temp > 95 and meadow = 0:
+					!find meadow
                     gt 'gadukino', '1'
-                elseif temp >= 4 and temp < 10:
+                elseif meadow = 1 and temp < 10 and Mira_no = 0:
+					!meet mira, must find meadow first. Mira_no may used for break off, but not in game yet in 1.2.5
                     gt 'gadukino', '2'
-                elseif temp >= 10 and temp < 30 and temper >= 30 and sunWeather = 1 and miragopQW = 7:
+                elseif miragopQW = 7 and temp < 30 and temper >= 30 and sunWeather = 1:
                     gt 'gadukino', '3'
-                elseif miragopQW >= 11 and temp = 30 and temper >= 25 and sunWeather = 1:
+                elseif miragopQW >= 11 and temp <= 30 and temper >= 25 and sunWeather = 1:
                     gt 'gadukino', '4'
-                elseif miragopQW >= 11 and temp = 31 and temper >= 25 and sunWeather = 1:
+                elseif miragopQW >= 11 and temp <= 31 and temper >= 25 and sunWeather = 1:
                     gt 'gadukino', '5'
-                elseif miragopQW >= 11 and temp = 32 and temper >= 20 and sunWeather = 1:
+                elseif miragopQW >= 11 and temp <= 32 and temper >= 20 and sunWeather = 1:
                     gt 'gadukino', '6'
-                elseif miragopQW >= 15 and temp = 33 and temper >= 20 and sunWeather = 1:
+                elseif miragopQW >= 15 and temp <= 33 and temper >= 20 and sunWeather = 1:
                     gt 'gadukino', '7'
-                elseif miragopQW >= 20 and temp = 34 and temper >= 20 and sunWeather = 1:
+                elseif miragopQW >= 20 and temp <= 34 and temper >= 20 and sunWeather = 1:
                     gt 'gadukino', '8'
-                elseif miragopQW >= 20 and temp = 35 and temper >= 20 and sunWeather = 1:
+                elseif miragopQW >= 20 and temp <= 35 and temper >= 20 and sunWeather = 1:
                     gt 'gadukino', '9'
-                elseif miragopQW >= 30 and mirasextimes > 50 and temp = 36 and temper >= 20 and sunWeather = 1:
+                elseif miragopQW >= 30 and mirasextimes > 50 and temp <= 36 and temper >= 20 and sunWeather = 1:
                     gt 'gadukino', '10'
-                elseif miragopQW >= 20 and temp = 36 and temper >= 20 and sunWeather = 1:
+                elseif miragopQW >= 20 and temp <= 36 and temper >= 20 and sunWeather = 1:
                     gt 'gadukino', '11'
-                elseif temp = 37 and temper >= 20:
+                elseif temp <= 40:
                     gt 'gadukino', '12'
-                elseif temp = 38 and temper >= 20:
+                elseif temp <= 55:
                     gt 'gadukino', '13'
-                elseif temp >= 39 and temp < 50:
+                elseif temp <= 70:
                     gt 'gadukino', '14'
-                elseif temp = 50 and temper >= 25 and sunWeather = 1:
+                elseif temp <= 85 and temper >= 25 and sunWeather = 1:
                     gt 'gadukino', '15'
                 else
                     gt 'gadukino', '16'
@@ -85,6 +137,9 @@ if $ARGS[0] = '':
             end
 		end
 	end
+	act 'Go to the river':minut += 20 & gt 'gadriver', 'start'
+	act 'Go to outskirt':minut += 20 & gt'gadroad'
+	act 'Exit the highway':minut += 30 & nroad = 15 & gt 'road'
 end
 
 if $ARGS[0] = '1':
@@ -141,19 +196,7 @@ if $ARGS[0] = '2':
 			miraQW = 1
 			minut += 15
 			gs 'stat'
-			if miragopQW = 0:
-				'<center><img src="images/qwest/gadukino/mira.jpg"></center>'
-			elseif miragopQW > 0 and miragopQW < 4:
-				'<center><img src="images/qwest/gadukino/mira3.jpg"></center>'
-			elseif miragopQW >= 4 and miragopQW < 8:
-				'<center><img src="images/qwest/gadukino/mira0,<<rand(0,5)>>.jpg"></center>'
-			elseif miragopQW >= 8 and miragopQW < 12:
-				'<center><img src="images/qwest/gadukino/mira1,<<rand(0,2)>>.jpg"></center>'
-			elseif miragopQW >= 12 and miragopQW < 20:
-				'<center><img src="images/qwest/gadukino/mira2,<<rand(0,5)>>.jpg"></center>'
-			elseif miragopQW >= 20:
-				'<center><img src="images/qwest/gadukino/mira3,<<rand(0,3)>>.jpg"></center>'
-			end
+			'<center><img src="images/qwest/gadukino/Mira.jpg"></center>'
 			'You decide to lend a hand to help the girl with the calf.  Your lonely in the village, maybe this girl, if you get to know her, could make it seem to the other villagers that you are not a complete stranger in Gadyukino.  You walk over to the girl and introduce yourself and ask if she wants help.  She nods and resumes pulling on the rope, while you walk over behind the calf and give it a load slap on the rump.  The calf is surprised and immediately to moves forward away from you. The girl smiles in thanks and tells you her name is Miroslava.'
 			'Together you are able to guide the calf back into its pen.  Miroslava turns out to be quite a sociable girl and conversationalist.  You learn that her family was recently forced to move to the village from the city.  Her father''s huge gambling debts to some questionable men forced him to eventually sell the family''s property in the city to pay them back.  Mira is having a rough time adjusting to the life in a small village.  She misses the apartment in the center of the city and the money to buy nice dresses and makup with. After selling everything and paying off the debt, her father was told to leave the city "or else...", so they were destitute and could only afford to buy a house in this seedy dust covered village.  You walk with her and chat until you reach her house, which is only a few away from your grandparents place.  Mira invites you to come and visit her at any time.  She is just as bored in the village as you are.'
 			act 'Finish': gt 'gadukino'
@@ -477,9 +520,45 @@ if $ARGS[0] = '16':
 	'You kill time, walking through the village.'
 	act 'Leave': gt 'gadukino'
 end
-
-act 'Go to the river':minut += 20 & gt 'gadriver', 'start'
-act 'Exit the highway':minut += 30 & nroad = 15 & gt 'road'
+!125s
+if $ARGS[0] = 'collection_point':
+	cla
+	*clr
+	minut += 5
+	gs 'stat'
+	
+	'<center><img src="images/qwest/gadukino/new/collection_point.jpg"></center>'
+	'Mobile procurement item mushrooms and berries.'
+	
+	if boletus > 0:
+	    act'sell mushrooms':
+		    cla
+		    *clr
+		    minut += 30
+		    money += boletus*150
+            gs 'stat'
+            
+            '<center><img src="images/qwest/gadukino/new/collection_point.jpg"></center>'
+		    'You pass the mushrooms on <b><<boletus*150>></b> rubles.'
+		    act'Further':boletus = 0 & gt 'gadukino','collection_point'
+		end    
+	end
+	if bilberry > 0:
+	    act'sell berries':
+		    cla
+		    *clr
+		    minut += 30
+		    money += bilberry*75
+            gs 'stat'
+            
+            '<center><img src="images/qwest/gadukino/new/collection_point.jpg"></center>'
+		    'You pass the mushrooms on <b><<bilberry*75>></b> rubles.'
+		    act'Further':bilberry = 0 & gt 'gadukino','collection_point'
+		end    
+	end	
+	act'Go':gt'gadukino'
+end
+!125e
 
 --- gadukino ---------------------------------
 

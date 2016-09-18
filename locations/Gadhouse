@@ -1,14 +1,372 @@
 # Gadhouse
+if $ARGS[0]='':
+	$location_type = 'indoors'
+	$metkaM = ''
+	$locM = 'Gadhouse'
+	$metka = ''
+	$loc = 'Gadhouse'
 
-$metkaM = ''
-$locM = 'Gadhouse'
-$metka = ''
-$loc = 'Gadhouse'
+	frost = 0
+	CLOSE ALL
 
-frost = 0
-CLOSE ALL
+	!125s
+	!execute before everything
+	if monthbabkapay ! month:
+		monthbabkapay = month
+		money += 2000
+		minut += 10
+		monthgrandmahelp = month
+		gs 'stat'
+		
+		'<center><img src="images/qwest/gadukino/new/grandmahelp.jpg"></center>'
+		'Upon entering the house, you see your favorite Granny and screaming throw myself on her neck. Finally nobypass you off from it. Grandma after seeing you from all sides (of course seeing that you have only skin and bones), start the conversation.'
+		'- As you grew up the granddaughter. Adult almost. And my grandpa keep getting older and older, to help us have, do almost anything and you can not. Come on <<$nickname>> here`s the deal: are you going to help us on the farm as possible, and we will grandfather you denyuzhku to pay any kind of. You to work and adult life to get used to you and us. Agree?'
+		'- Of course I`ll help grandma with gotovnosti answered you.'
+		'- Well, that`s good <<$nickname>>, but first we`ll give a little upfront, grandma said, and handed 2 thousands.'
+		'Thanking bubushka and having kissed on the cheek you`ve gone on the Affairs.'
+			
+		act 'Further': gt 'Gadhouse'
+		exit
+	end
 
-$grandma = {
+	if go_in_boletus = 1 and boletus >= grandpa_boletus and hour >= 6 and hour < 22:
+		cla
+		*clr
+		grandmahelp += 1
+		boletus -= grandpa_boletus
+		minut += 5
+		go_in_boletus = 0
+		gs 'stat'
+		
+		'<center><img src="images/qwest/gadukino/grandpa1.jpg"></center>'
+		'Upon entering the house you immediately come to grandpa.'
+		'- Grandfather, here is the mushrooms!'
+		'- Oh, thank you granddaughter, has pleased the old man, " replied the grandfather. - We then head to the forest is difficult to walk, and mushrooms, sometimes you want.'
+		'- Well, if you want, I can still run, have been happy to tell you.'
+		'- Now do not need <<$nickname>>, - smiled grandfather. - But if anything, I`ll bear that in mind.'
+		'Having kissed grandfather on the cheek, you went on the Affairs.'
+		
+		act 'Further': grandpa_boletus = 0 & gt 'Gadhouse'
+		exit	
+	end
+
+	if go_in_boletus_bilberry = 1 and boletus >= grandpa_boletus and bilberry >= grandpa_bilberry and hour >= 6 and hour < 22:
+		cla
+		*clr
+		grandmahelp += 1
+		boletus -= grandpa_boletus
+		bilberry -= grandpa_bilberry
+		minut += 5
+		go_in_boletus_bilberry = 0
+		gs 'stat'
+		
+		'<center><img src="images/qwest/gadukino/grandpa1.jpg"></center>'
+		'Upon entering the house you immediately come to grandpa.'
+		'- Grandfather, here is mushrooms and berries!'
+		'- Oh, thank you granddaughter, has pleased the old man, " replied the grandfather.'
+		'- If necessary, I can still run, have been happy to tell you.'
+		'- Now do not need <<$nickname>>, - smiled grandfather. - But if anything, I`ll bear that in mind.'
+		'Having kissed grandfather on the cheek, you went on the Affairs.'
+		
+		act 'Further': grandpa_boletus = 0 & grandpa_bilberry = 0 & gt 'Gadhouse'
+		exit	
+	end
+
+	if go_in_bilberry = 1 and bilberry >= grandpa_bilberry and hour >= 6 and hour < 22:
+		cla
+		*clr
+		grandmahelp += 1
+		bilberry -= grandpa_bilberry
+		minut += 5
+		go_in_bilberry = 0
+		gs 'stat'
+		
+		'<center><img src="images/qwest/gadukino/grandpa1.jpg"></center>'
+		'Upon entering the house you immediately come to grandpa.'
+		'- Grandfather, here of the berries!'
+		'- Oh, thank you granddaughter, has pleased the old man, " replied the grandfather. - We with the grandmother it is hard for berries to go, and jam for the winter cooking needs.'
+		'- Well, if you want, I can still run, have been happy to tell you.'
+		'- Now do not need <<$nickname>>, - smiled grandfather. - But if anything, I`ll bear that in mind.'
+		'Having kissed grandfather on the cheek, you went on the Affairs.'
+		
+		act 'Further': grandpa_bilberry = 0 & gt 'Gadhouse'
+		exit	
+	end
+
+	mira_temp = rand(1,5)
+	if mira_temp = 1 and hour >= 9 and hour <= 19 and miraQW >= 15 and Mira_no = 0 and sunWeather = 0 and mira_guestday ! daystart and (mitkasextimes < 13 or miragopQW >= 10 or mirasex > 1):
+		cla
+		*clr
+		mira_guestday = daystart
+		minut += 5
+		mira_guest = 1
+		gs 'stat'
+				
+		dynamic $miraclothes
+		'You were in the house when he noticed the incoming Miroslav.'
+		' - Tuk tuk <<$nickname>> hi, I`ve come to visit. And then got bored all alone at home, " she said smiling.'
+
+		act 'Further':gt'Gadhouse'
+		exit	 
+	end
+
+	!125e
+
+	'<center><H4>Your grandparents'' cottage</H4></center>'
+	'<center><img src="images/qwest/gadukino/izba.jpg"></center>'
+	'A fairly simple home in the village of Gadyukino, but your grandparents call it home.  Inside the main room is a  huge wardrobe (where you can <a href="exec:gt ''clothing'', ''view_clothing_list'', ''wardrobe''">organize your clothes</a> or <a href="exec:gt ''clothing_QV'', ''list''"> pick something to wear</a>) and a <a href="exec:gad = 1 & gt ''bed2''">bed</a> where you can sleep. It''s more comfortable than it looks.'
+	'In the living room they have an old black and white <a href="exec:gt ''tvPar''">television</a>. It''s positioned next to a body length <a href="exec:gt ''mirror'', ''start''">mirror</a>.'
+	if catday = daystart:
+		'On the table by the window <a href="exec: gt ''Gadhouse'',''villagecat''">Boniface</a> lies lazily, soaking in the heat from the rays of sunshine coming through the window.'
+	else
+		if hour < 8:
+			temp = RAND(0,9)
+			if temp = 0:catday = daystart & 'On the table by the window <a href="exec: gt ''Gadhouse'',''villagecat''">Boniface</a> lies lazily, soaking up some rays of sunshine.'
+		elseif hour >= 8 and hour < 12:
+			temp = RAND(0,2)
+			if temp = 1:catday = daystart & 'On the table by the window <a href="exec: gt ''Gadhouse'',''villagecat''">Boniface</a> is busy cleaning himself with his tongue.'
+		elseif hour >= 12 and hour < 18:
+			temp = RAND(0,5)
+			if temp = 3:catday = daystart & 'Next to the table by the window <a href="exec: gt ''Gadhouse'',''villagecat''">Boniface</a> stretches and meows loudly, it''s time for dinner.'
+		elseif hour >= 18 and hour < 22:
+			temp = RAND(0,3)
+			if temp = 0:catday = daystart & '<a href="exec: gt ''Gadhouse'',''villagecat''">Boniface</a> is stalking around the main floor, looking for a nice juicy mouse to play with.'
+		elseif hour >= 22:
+			temp = RAND(0,2)
+			if temp = 1:catday = daystart & 'On the table by the window <a href="exec: gt ''Gadhouse'',''villagecat''">Boniface</a> lies lazily, soaking up some rays of sunshine.'
+		end	
+	end
+
+	if hour >= 6 and hour < 22:
+		'Your <a href="exec: gt ''Gadhouse'',''grandma'' ">grandmother</a> is sitting on her bed. She looks a bit confused, as if she''s not sure where to go.'
+		'Your <a href="exec: gt ''Gadhouse'',''grandpa'' ">grandpa</a> slowly shuffles across the room, using his cane for support.'
+	else
+		'Your grandparents sleep in separate beds.  But talk lovely to each other continously.'
+	end
+
+	if mira_guest = 1:'On the couch next to you, sitting <a href="exec: gt ''Miroslava''">Mira</a>.' 
+
+	clr
+	gs 'stat'
+	fcolor = rgb(0, 0, 0)
+	bcolor = rgb(255, 255, 255)
+	lcolor = rgb(106, 90, 205)
+
+	!125s
+	!{
+	!New family system, skip for now.
+	gs 'zz_family', 'father_sheduler'
+	if $father['location'] = $curloc:
+		'In the room of parents.'
+		gs 'gadukino_event', 'go_home'
+	end
+	}
+	if indorf = 1:
+		'Your parents are relaxing.'
+		gs 'gadukino_event', 'go_home'
+	end	
+	
+	if grandmahelp > 0 and monthgrandmahelp ! month and hour >= 6 and hour < 22:
+		monthgrandmahelp = month
+		money += grandmahelp*50	
+		gs'stat'
+
+		'Grandma gives you <b><<grandmahelp*50>></b> rubles for your help.'
+		grandmahelp = 0
+	end
+	!I am not sure, does anyone really making tissue for money? anyway, copy it here. by illume
+	!{
+	if gobelen > 0:'The finished tapestry <<gobelen>> PCs'
+	if poSkill >= 50 and tkan > 0:'Your fabric will be enough for <<tkan>> lessons'
+	if poSkill >= 50 and tkan <= 0:'You have no tissue'
+	if poSkill >= 200:
+		if newgobelen = 0 and tkan > 0:
+			act'Starting a new tapestry':
+			cls
+			tkan -= 1
+			newgobelen = 1
+			minut += 15
+			gs'stat'
+			'During 15 minutes prepared fabric on which to embroider and in General mark the outline of the pattern.'
+			act'Postpone': gt $curloc
+			end
+		end
+		if newgobelen>=1:
+		'The tapestry is ready to <<newgobelen/10>> percent'
+			act'To embroider tapestry in the next hour':
+			cls
+			minut+=60
+			poSkill+=rand(0,1000)
+			gobramax=poSkill/100
+			gobramin=poSkill/200
+			newgobelen+=rand(gobramin,gobramax)
+			gs'stat'
+			if newgobelen<1000:'You within the hour embroidered tapestry and now he is ready for <<newgobelen/10>> percent'
+				if newgobelen>=1000:
+				newgobelen=0
+				gobelen+=1
+				'You managed to completely embroider tapestry.'
+				end
+			act'Postpone':gt $curloc
+			end
+		end
+	end
+	}
+	!125e
+
+	act 'Go outside':
+		if $clothingworntype ! 'nude':
+			minut += 5 & gt 'Gaddvor'
+		else
+			msg'<b><font color = red>You need to get dressed first.</font></b>'
+			gt $curloc
+		end
+	end
+
+	act 'Eat a full meal (0:30)':gs 'food', 'm_meal'
+
+	act 'Eat a light meal (0:20)':gs 'food', 's_meal'
+
+	act 'Have a snack (0:15)':gs 'food', 'snack'
+
+	act 'Have a cup of tea (0:05)':
+		cls
+		minut += 5
+		if water >= 100:
+			'You don''t need any more tea.'
+		else
+			water += 80
+			cumspclnt = 2
+			gs 'cum_cleanup'
+			fbreath = 0
+			'You have a cup of tea, quenching your thirst.'
+		end
+
+		gs 'stat'
+
+		act 'Get up from the table':gt 'Gadhouse'
+	end
+
+	if pranik > 0:
+		'You brought your <<pranik>> cookies with you.'
+
+		act 'Drink tea with cookies (0:05)':
+			cla
+			*clr
+			minut += 5
+			pranik -= 1
+			health += 30
+			manna += 100
+			energy += 20
+			water += 20
+			cumspclnt = 2
+			gs 'cum_cleanup'
+			fbreath = 0
+			fat += 4
+			frost = 0
+			gs 'stat'
+			'<center><img src="images/pics/food.jpg"></center>'
+			'You enjoy a cup of tea while you eat some cookies. You know they''re too sweet and can''t be good for your figure, but they taste so good!'
+
+			act 'Get up from the table':gt 'Gadhouse'
+		end
+	end
+
+	if edaD > 0:
+		act 'Eat diet food (0:30)':
+			cla
+			*clr
+			frost = 0
+			minut += 30
+			health += 10
+			manna += 20
+			edaD -= 1
+			'<center><img src="images/pics/food.jpg"></center>'
+			if energy >= 100:
+				'You prepare a diet meal and try to eat it, but you''re really not hungry at all. You can''t finish the meal.'
+			elseif energy >= 80:
+				energy += 40
+				'You try to enjoy the diet meal, but half-way in you realize you weren''t all that hungry yet. You manage to finish the meal, but feel like it was kind of a waste to prepare it.'
+			else
+				energy += 80
+				'The diet meal is tasty, and you enjoy eating it.'
+			end
+
+			if water >= 80:
+				'You don''t need any more tea.'
+			else
+				water = 100
+				cumspclnt = 2
+				gs 'cum_cleanup'
+				fbreath = 0
+				'You have a cup of tea, quenching your thirst.'
+			end
+
+			act 'Get up from the table':gt 'Gadhouse'
+		end
+	end
+
+	dynamic $fatdel
+
+	if lekarstvo > 0:
+		'You have <<lekarstvo>> tablet(s).'
+
+		if sick > 0 and lekarday ! daystart:
+			act 'Take a pill (0:05)':
+				cla
+				*clr
+				minut += 5
+				lekarday = daystart
+				lekarstvo -= 1
+				sick -= sick * 20 / 100
+				if water < 50 : water += 30 else water +=15
+				if water > 100: water = 100
+
+				'<center><img src="images/inbed/lekr<<picrand>>.jpg"></center>'
+				'You swallow the pill, and shortly after you feel a bit better.'
+
+				act 'Continue':gt 'Gadhouse'
+			end
+		end
+	end
+
+	if vitamin > 0:
+		'You have <<vitamin>> vitamin pills.'
+
+		if vitaminday ! daystart:
+			act 'Take vitamins (0:05)':
+				cla
+				*clr
+
+				if fat > salo:fat = salo
+
+				minut += 5
+				vitaminday = daystart
+				vitamin -= 1
+				frost = 0
+				if water < 50 : water += 30 else water +=15
+				if water > 100: water = 100
+
+				if KandidozOnce = 1:Kandidoz -= 2
+				if GerpesOnce = 1:Gerpes -= 2
+				if SifacOnce = 1 and Sifilis >= 10:Sifilis -= rand(0, 1)
+
+				skinvan += 1
+
+				'You take some vitamins to stay healthy.'
+
+				act 'Continue':gt 'Gadhouse'
+			end
+		end
+	end
+
+	gs 'events', 'read'
+
+	if rand (0,2) ! 0:gs 'din_bad' & dynamic $mobile_check
+end
+
+
+if $ARGS[0]='grandma':
 	cls
 	minut += 2
 	if grandmatalkday ! daystart:grandmatalk = 0
@@ -16,7 +374,33 @@ $grandma = {
 	
 	'<center><img src="images/qwest/gadukino/grandma.jpg"></center>'
 	'Your grandma is ancient, and almost never leaves her house.  Most of the time she just sits on her bed watching TV, or is slowly cleaning her house.'
-	
+	if grandmahelpday ! daystart:act 'Offer assistance':grandmahelpday = daystart & gt'grandmahelp'
+	!125s
+	if grandmatalkgad = 0:
+		act 'Ask about the village':
+			cla
+			*clr
+			grandmatalkgad = 1
+			minut += 10
+			manna += mannamax/20
+			gs 'stat'
+			
+			'<center><img src="images/qwest/gadukino/grandma.jpg"></center>'
+			'You sat next to grandma, decided to find out more about the village.'
+			' - And you do not remember <<$nickname>>? You visited more than once in our village, " said the grandmother.'
+			' - Well since I was small, the houses are mostly sitting, but with Mitya to the river to swim ran replied you.'
+			' - And now the major has become! Look at her, " laughed grandma. - Well, look.'
+			'And began to tell about the village.'
+			' - The village is small, well you know. About the river and the beach will not tell, remember, with Mitya there was swimming and sunbathing. There are still fishermen can be found if Stepan will be, and can give a fishing rod to go fishing.'
+			' The village itself is nothing interesting there. My only friends are loose, but the evenings drinking moonshine. Oh Yes... remember... recently we new family moved in, the father and his daughter. Imagine? There`s a girl about your age, though, and the city, but hard-working say. If you`re going to walk through the village, you will meet and get to know her.'
+			' Behind the village there is a field where the cattle graze and the forest. In the forest, our local hunter Andrew, all is lost. It as visiting friends will have, so they then for days there climbs. They say there`s a hut there somewhere hunting. So, what if you meet them there, don`t be surprised. But about the forest is that you go to the grandfather to ask.'
+			' If you love sports, then you can run on the road leading into the woods. Or on our old bike ride. By the way, look for it in the shed. And if you watch the figure, then go to the garden, have some fruit, they like your food diet, if not better.'
+			' Well, all granddaughter, run walk, don`t bother me. Now ten thousand stopyatdesyat eighth series "Santa Barbara" will start, don`t want to miss.'
+			
+			act 'Finish':gt 'Gadhouse'
+		end
+	end
+	!125e	
 	if hour >= grandmatalk + 3:
 		act 'Chat with your grandmother':
 			cla
@@ -68,17 +452,32 @@ $grandma = {
 				'"When I finally caught some sleep and woke up the next morning, my father was next to my bed. He said when he cleaned out the furnace of ashes, he found the remains of our dead cat in there!"'
 				'You see her eyes tear up. "No one knew how she got there... no one noticed anything! Except for me. To this day I believe she was trying to warn me, asking for my help..."'
 				'Your grandmother shrugs, wiping a tear from her eye. You put your hand on her knee reassuringly, but don''t really know what to say to comfort her.'
-			end
+			!125s
+			elseif temp = 4:
+				'- Will tell you this time about this case: In the village "Secluded", may day area in which I lived when a couple of years, came a woman from the North from the Arctic. She lived alone and her house wandered handsome dog - white, large, quiet. After a while he died. It is now, but what good to disappear? Stripped him of his shoes and made himself raskalennye collar. It took about two months. She got sick...I came, and everything looked fine. But suddenly a door slammed, there was a draught and as a reaction to the knock and the wind, she had a characteristic of rabies convulsions. It was too late to vaccinate and the woman died... So here was...'
+			elseif temp = 5:
+				'- Somehow in his youth during the Christmas holidays one winter evening we were sitting with friends in the kitchen my girlfriend, starts Granny. - To her came to visit our school friend, so we come then. So the three of us sat. My friend says, well, let`s read on wax, now as the Yuletide time. And began to wonder to himself by turns. I got a male figure in profile, his nose was straight and aquiline. This profile was holding, something like a bouquet of flowers. A friend of my got an abstract figure that looks like a kettle. And her school friend - the image of an infant. Decided to build again, to burn the paper and watch the shadows on the wall. This time I clearly drew a large steamer. My friend - nothing special, but the third girl`s baby again, only this time with a stroller. The school friend was not married and the children she never had. All sat and began to disperse. To me at that time was to drive up my young man. I went downstairs, and he came out of the car and pulls out a beautiful bouquet of roses for me. The reason was not any, he just wanted to please me. I was surprised, because I remembered at once the profile of a man on the wax with a bouquet of flowers. But after 4 months I met another man, your grandfather, whom was released and then married. And he, you know, really has a straight nose with a small hump. It turns out that flowers gave me one, and I got married to another... But the most interesting thing from this high school friend - she really had a baby at the end of the year when we wondered. So do not believe these fortune-telling...'
+			elseif temp = 6:
+			'- I remember sitting as we are, grandma, but then, as if remembering something, sadly sighs. - A match no more...
+You look in astonishment at her grandmother, and FIHM ask what she meant, because he do they match, are in the kitchen, and in the store to buy something grandma you will be responsible:
+- You don`t get it, granddaughter. Now do not match those that were previously. And ended those that I during the war the factory was stolen... Oh and matches were, not like now... Ugh...'
 			
+			elseif temp = 7:
+				'- Somehow my mother, rest her soul, all four of us sent to the forest for berry, tell you grandma. - We, armed with the appropriate packaging, a friendly crowd went there. Reaching the meadow, we dispersed to their cherished places and silently gathered berries. I dostalsya plot around a huge stump, around which grew a dense Bush. Here I saw a very large number of ripe strawberry. I squatted and rejoicing that I collect more than my brothers, slowly gathering the berries and putting it in a Cup tied to the belt. Suddenly I hear some rustling. I turn on the sound, but again silently. Place is dead, there is none. I once again gather berries. So repeated several times. And suddenly... I see on the stump, through the bushes, squatting seated person. His hands parted the bushes and looked at me. I was scared. I ran screaming and crying to the brothers. They tried to stop me, to calm down, but I continued with my running. The brothers ran after me, and they chased us the man. Suddenly the elder brother shouted: «Run on team*!». As a team we have a Central collective farm was called, explains to you grandma. - She was very close to the forest. When we ran out of the woods, this man was not following us. Resorting to the brigade, the brothers told this to the foreman. He immediately grabbed the phone and began to call somewhere. And we were reassured farmers. Then we went home. At home mom us fed, watered and comforted.
+The next day we were informed that not far from the station Ratomka were dismantled railroad rails.
+Apparently it was the man who ran after us. The fact is that before the war we were infiltrated by spies, saboteurs, subversives work, and pronanut was easy, as the territory is covered by forests, stretching to the borders.
+This fear, this terror that I experienced then, in kindergarten, even preschool age, sunk into my soul so that I nezabudu it for the rest of my life...'
+			end
+			!125e
 			act 'You thank your grandmother for the story.':gt 'Gadhouse'
 		end
 	
 	end
 
 	act 'Leave her alone':gt 'Gadhouse'
-}
+end
 
-$grandpa = {
+if $ARGS[0]='grandpa':
 	cls
 	minut += 2
 	if grandpatalkday ! daystart:grandpatalk = 0
@@ -86,7 +485,31 @@ $grandpa = {
 	
 	'<center><img src="images/qwest/gadukino/grandpa.jpg"></center>'
 	'Your grandfather is grumpy old man, who is always complaining about the village elders and how they have allowed the village to become run down and barely habitable.  He can walk, but requires a cane.  He doesn''t really leave the house any more, unless he really has to.'
-	
+	if go_in_boletus = 1:'You promised to bring grandpa <<grandpa_boletus>> kg of mushrooms.'
+	if go_in_bilberry = 1:'You promised to bring grandpa <<grandpa_bilberry>> kg of berries.'
+	if go_in_boletus_bilberry = 1:'You promised to bring grandpa <<grandpa_boletus>> kg mushrooms and <<grandpa_bilberry>> kg of berries.'
+	!125s
+    if grandpahelpday ! daystart:act 'Offer assistance':grandpahelpday = daystart & gt'grandpahelp'	
+	if grandpatalkforest = 0:
+		act 'Ask about the forest':
+			cla
+			*clr
+			grandpatalkforest = 1
+			minut += 10
+			manna += mannamax/20
+			goforest += 1
+			gs 'stat'
+			
+			'<center><img src="images/qwest/gadukino/grandpa1.jpg"></center>'
+			' - And what`s there to tell the granddaughter. Like woods. Really great. If you go back, without the knowledge of the forest can easily get lost. So again it is better not to go, the mushrooms and berries can be found on the edge of the forest. Though not so much. In the middle of the forest there is the forest, the swamp, here there are a lot of things to gather up... and mushrooms, and berries. In the forest at night is generally better not to go, then the wild beast may attack, and really bad.'
+			' If still lost granddaughter, then the dark better than the fire kindle, Yes, sit in one place until morning. The beasts of the forest fire is afraid of something, or even comes close.'
+			' Yes, that`s another... You`re in the woods, especially not to dress up, spoil all my beautiful clothes. Into the woods is better to go to these.... as their... in insah. In!.'
+			' Well, everything <<$nickname>>, run walk, all I knew I told.'
+			
+			act 'Finish':gt 'Gadhouse'
+		end
+	end	
+	!125e
 	if hour >= grandpatalk + 3:
 		act 'Chat with your grandfather':
 			cla
@@ -97,7 +520,7 @@ $grandpa = {
 			manna += mannamax/RAND(10,15)
 			gs 'stat'
 			
-			'<center><img src="images/qwest/gadukino/grandpa.jpg"></center>'
+			'<center><img src="images/qwest/gadukino/grandpa1.jpg"></center>'
 			'Your grandfather stop compaining and smiles at you, he loves telling stories.  He has lived a rich and eventful life, and you enjoy listening to his stories and talking to him. He mostly reminisces about his past, and reflects on his earlier life.'
 			
 			act 'Continue':gt 'Gadhouse'
@@ -105,9 +528,9 @@ $grandpa = {
 	end
 
 	act 'Leave him alone':gt 'Gadhouse'
-}
+end
 
-$villagecat = {
+if $ARGS[0]='villagecat':
 	cls
 	minut += 2
 	gs 'stat'
@@ -129,210 +552,8 @@ $villagecat = {
 	end
 	
 	act 'Leave Boniface alone':minut += 2 & gt 'Gadhouse'
-}
-
-'<center><H4>Your grandparents'' cottage</H4></center>'
-'<center><img src="images/qwest/gadukino/izba.jpg"></center>'
-'A fairly simple home in the village of Gadyukino, but your grandparents call it home.  Inside the main room is a  huge wardrobe (where you can <a href="exec:gt ''clothing'', ''view_clothing_list'', ''wardrobe''">organize your clothes</a> or <a href="exec:gt ''clothing_QV'', ''list''"> pick something to wear</a>) and a <a href="exec:gad = 1 & gt ''bed2''">bed</a> where you can sleep. It''s more comfortable than it looks.'
-'In the living room they have an old black and white <a href="exec:gt ''tvPar''">television</a>. It''s positioned next to a body length <a href="exec:gt ''mirror'', ''start''">mirror</a>.'
-if catday = daystart:
-	'On the table by the window <a href="exec: dynamic $villagecat ">Boniface</a> lies lazily, soaking in the heat from the rays of sunshine coming through the window.'
-else
-	if hour < 8:
-		temp = RAND(0,9)
-		if temp = 0:catday = daystart & 'On the table by the window <a href="exec: dynamic $villagecat ">Boniface</a> lies lazily, soaking up some rays of sunshine.'
-	elseif hour >= 8 and hour < 12:
-		temp = RAND(0,2)
-		if temp = 1:catday = daystart & 'On the table by the window <a href="exec: dynamic $villagecat ">Boniface</a> is busy cleaning himself with his tongue.'
-	elseif hour >= 12 and hour < 18:
-		temp = RAND(0,5)
-		if temp = 3:catday = daystart & 'Next to the table by the window <a href="exec: dynamic $villagecat ">Boniface</a> stretches and meows loudly, it''s time for dinner.'
-	elseif hour >= 18 and hour < 22:
-		temp = RAND(0,3)
-		if temp = 0:catday = daystart & '<a href="exec: dynamic $villagecat ">Boniface</a> is stalking around the main floor, looking for a nice juicy mouse to play with.'
-	elseif hour >= 22:
-		temp = RAND(0,2)
-		if temp = 1:catday = daystart & 'On the table by the window <a href="exec: dynamic $villagecat ">Boniface</a> lies lazily, soaking up some rays of sunshine.'
-	end	
 end
 
-if hour >= 6 and hour < 22:
-	'Your <a href="exec: dynamic $grandma ">grandmother</a> is sitting on her bed. She looks a bit confused, as if she''s not sure where to go.'
-	'Your <a href="exec: dynamic $grandpa ">grandpa</a> slowly shuffles across the room, using his cane for support.'
-else
-	'Your grandparents sleep in separate beds.  But talk lovely to each other continously.'
-end
-
-clr
-gs 'stat'
-fcolor = rgb(0, 0, 0)
-bcolor = rgb(255, 255, 255)
-lcolor = rgb(106, 90, 205)
-
-act 'Go outside':
-	if $clothingworntype ! 'nude':
-		minut += 5 & gt 'Gaddvor'
-	else
-		msg'<b><font color = red>You need to get dressed first.</font></b>'
-		gt $curloc
-	end
-end
-
-act 'Eat a full meal (0:30)':gs 'food', 'm_meal'
-
-act 'Eat a light meal (0:20)':gs 'food', 's_meal'
-
-act 'Have a snack (0:15)':gs 'food', 'snack'
-
-act 'Have a cup of tea (0:05)':
-	cls
-	minut += 5
-	if water >= 100:
-		'You don''t need any more tea.'
-	else
-		water += 80
-		cumspclnt = 2
-		gs 'cum_cleanup'
-		fbreath = 0
-		'You have a cup of tea, quenching your thirst.'
-	end
-
-	gs 'stat'
-
-	act 'Get up from the table':gt 'Gadhouse'
-end
-
-if pranik > 0:
-	'You brought your <<pranik>> cookies with you.'
-
-	act 'Drink tea with cookies (0:05)':
-		cla
-		*clr
-		minut += 5
-		pranik -= 1
-		health += 30
-		manna += 100
-		energy += 20
-		water += 20
-		cumspclnt = 2
-		gs 'cum_cleanup'
-		fbreath = 0
-		fat += 4
-		frost = 0
-		gs 'stat'
-		'<center><img src="images/pics/food.jpg"></center>'
-		'You enjoy a cup of tea while you eat some cookies. You know they''re too sweet and can''t be good for your figure, but they taste so good!'
-
-		act 'Get up from the table':gt 'Gadhouse'
-	end
-end
-
-if edaD > 0:
-	act 'Eat diet food (0:30)':
-		cla
-		*clr
-		frost = 0
-		minut += 30
-		health += 10
-		manna += 20
-		edaD -= 1
-		'<center><img src="images/pics/food.jpg"></center>'
-		if energy >= 100:
-			'You prepare a diet meal and try to eat it, but you''re really not hungry at all. You can''t finish the meal.'
-		elseif energy >= 80:
-			energy += 40
-			'You try to enjoy the diet meal, but half-way in you realize you weren''t all that hungry yet. You manage to finish the meal, but feel like it was kind of a waste to prepare it.'
-		else
-			energy += 80
-			'The diet meal is tasty, and you enjoy eating it.'
-		end
-
-		if water >= 80:
-			'You don''t need any more tea.'
-		else
-			water = 100
-			cumspclnt = 2
-			gs 'cum_cleanup'
-			fbreath = 0
-			'You have a cup of tea, quenching your thirst.'
-		end
-
-		act 'Get up from the table':gt 'Gadhouse'
-	end
-end
-
-dynamic $fatdel
-
-if lekarstvo > 0:
-	'You have <<lekarstvo>> tablet(s).'
-
-	if sick > 0 and lekarday ! daystart:
-		act 'Take a pill (0:05)':
-			cla
-			*clr
-			minut += 5
-			lekarday = daystart
-			lekarstvo -= 1
-			sick -= sick * 20 / 100
-			if water < 50 : water += 30 else water +=15
-			if water > 100: water = 100
-
-			'<center><img src="images/inbed/lekr<<picrand>>.jpg"></center>'
-			'You swallow the pill, and shortly after you feel a bit better.'
-
-			act 'Continue':gt 'Gadhouse'
-		end
-	end
-end
-
-if vitamin > 0:
-	'You have <<vitamin>> vitamin pills.'
-
-	if vitaminday ! daystart:
-		act 'Take vitamins (0:05)':
-			cla
-			*clr
-
-			if fat > salo:fat = salo
-
-			minut += 5
-			vitaminday = daystart
-			vitamin -= 1
-			frost = 0
-			if water < 50 : water += 30 else water +=15
-			if water > 100: water = 100
-
-			if KandidozOnce = 1:Kandidoz -= 2
-			if GerpesOnce = 1:Gerpes -= 2
-			if SifacOnce = 1 and Sifilis >= 10:Sifilis -= rand(0, 1)
-
-			skinvan += 1
-
-			'You take some vitamins to stay healthy.'
-
-			act 'Continue':gt 'Gadhouse'
-		end
-	end
-end
-
-gs 'events', 'read'
-
-if indorf = 1:
-	'Your parents are relaxing.'
-
-	if week = 7:
-		if hour >= 20:gt 'farmhomeride'
-	end
-end
-
-if monthbabkapay ! month:
-	monthbabkapay = month
-	money += 2000
-	gs 'stat'
-	'Out of nowhere, your grandmother gives you 2,000 <b>₽</b>. Wow!'
-end
-
-if rand (0,2) ! 0:gs 'din_bad' & dynamic $mobile_check
 
 --- Gadhouse ---------------------------------
 

@@ -1,36 +1,90 @@
 # Gaddvor
+if $ARGS[0]='':
+	$metka = ''
+	$loc = 'Gaddvor'
+	$location_type = 'public_outdoors'
+	clr
+	gs 'stat'
+	CLOSE ALL
+	gs 'gadukino_event', 'sound'
 
-$metka = ''
-$loc = 'Gaddvor'
-$location_type = 'public_outdoors'
-clr
-gs 'stat'
-CLOSE ALL
-if sound = 0:
-	if month >=11 and month <= 12 or month >=1 and month <=3:
-		if hour >= 8 and hour <= 23:PLAY 'sound/zima2.mp3',30
-		if hour >= 0 and hour <= 7:PLAY 'sound/zima2.mp3',30
+	'<center><h4>Your grandparents'' yard</h4></center>'
+	if month >= 4 and month <= 10:
+		if hour >= 6 and hour < 22:
+			'<center><img src="images/qwest/gadukino/dvor.jpg"></center>'
+		else
+			'<center><img src="images/qwest/gadukino/dvor_night.jpg"></center>'
+		end
 	else
-		if hour >= 8 and hour <= 23:PLAY 'sound/ptica.mp3',30
-		if hour >= 0 and hour <= 7:PLAY 'sound/ptica.mp3',30
+		if hour >= 8 and hour < 18:
+			'<center><img src="images/qwest/gadukino/dvor_winter.jpg"></center>'
+		else
+			'<center><img src="images/qwest/gadukino/dvor_winter_night.jpg"></center>'
+		end
 	end
+	'The fenced yard behind your grandparents'' house.  They have a small junk filled barn and a separate building that is used for bathing and as a sauna.  On the back porch they have a few chairs to sit in.'
+	if hour >= 6 and hour < 20 and month >= 4 and month <= 10:'In the yard there <a href="exec:gt ''Gaddvor'',''chickens''">chickens</a>'
+
+	if mira_guest = 1:'In the yard next to you is your <a href="exec: gt ''Miroslava''">Mira</a>.' 
+
+
+	act 'Enter your grandparents'' house':minut += 5 & gt 'Gadhouse'
+	act 'Enter the barn':minut += 5 & gt 'Gadsarai'
+	act 'Enter the bathing building':minut += 5 & gt 'Gadbana'
+	act 'Enter garden':minut += 5 & gt'Gadgarden','garden'
+	if meadow > 0 and hour >= 6 and hour < 20 and month >= 4 and month <= 10:act 'Go to the meadow':minut += 20 & gt 'Meadow', 'start'
+	act '<b>Go to the village</b>':minut += 5 & gt 'gadukino'
+
+	!removed from 1.2.5
+	if hour >= 17 and hour < 20:
+		if mitkaday!daystart:'<a href="exec:gt ''mitka''">Mitka</a> is hanging out near the barn in your grandparents'' backyard,  he is smoking and watching you.'
+	elseif hour >= 20:
+		'Several <a href="exec:gt ''mitkabuh''">young men</a> are sitting near your grandparents'' backyard, drinking moonshine and talking loudly.'
+	end
+	!125s
+	mira_temp = rand(1,5)
+	if mira_temp = 3 and hour >= 9 and hour <= 19 and miraQW >= 15 and Mira_no = 0 and sunWeather = 1 and mira_guestday ! daystart and (mitkasextimes < 13 or miragopQW >= 10 or mirasex > 1):
+		cla
+		*clr
+		mira_guestday = daystart
+		minut += 5
+		mira_guest = 1
+		gs 'stat'
+				
+		dynamic $miraclothes
+		'You went out into the yard and noticed a meeting going on with Miroslav.'
+		' - Oh, <<$nickname>> hi, I`ve come to visit. Bored all alone at home, " she said smiling.'
+
+		 act 'Further':gt'Gaddvor'
+	end     
 end
 
-'<center><h4>Your grandparents'' yard</h4></center>'
-'<center><img src="images/qwest/gadukino/dvor.jpg"></center>'
-'The fenced yard behind your grandparents'' house.  They have a small junk filled barn and a separate building that is used for bathing and as a sauna.  On the back porch they have a few chairs to sit in.'
+if $ARGS[0]='chickens':
+	cls
+	minut += 5
+	gs 'stat'
+	
+    '<center><img src="images/qwest/gadukino/new/chickens1.jpg"></center>'
+	'Ordinary village chickens.'
+	!job Granny
+	if feed_chickens = 1:
+		act 'To feed the chickens':
+			cla
+			*clr
+			minut += 30
+			grandmahelp += 1
+			feed_chickens = 0
+			gs 'stat'
+			
+			'<center><img src="images/qwest/gadukino/new/chickens2.jpg"></center>'
+			'You put the birds grain and they immediately rushed to bite. Looking at them a bit you went on about their business.'
 
-act 'Enter your grandparents'' house':minut += 5 & gt 'Gadhouse'
-act 'Enter the barn':minut += 5 & gt 'Gadsarai'
-act 'Enter the bathing building':minut += 5 & gt 'Gadbana'
-if meadow > 0 and hour >= 6 and hour < 20:act 'Go to the meadow':minut += 20 & gt 'Meadow', 'start'
-act '<b>Go to the village</b>':minut += 5 & gt 'gadukino'
-
-if hour >= 17 and hour < 20:
-	if mitkaday!daystart:'<a href="exec:gt ''mitka''">Mitka</a> is hanging out near the barn in your grandparents'' backyard,  he is smoking and watching you.'
-elseif hour >= 20:
-	'Several <a href="exec:gt ''mitkabuh''">young men</a> are sitting near your grandparents'' backyard, drinking moonshine and talking loudly.'
+			act 'Finish':gt'Gaddvor'  
+		end
+	end
+	act 'Go': gt'Gaddvor'
 end
-
+	!125e
+	
 --- Gaddvor ---------------------------------
 

@@ -9,124 +9,181 @@ frost = 0
 '<center><h4>bath</h4></center>'
 '<center><img src="images/qwest/gadukino/bana.jpg"></center>'
 'Not a big room with a low oven, water tanks of stainless steel, low smoky ceiling, and blackened wooden shelf.'
+'On the shelf is the grandma`s enema.'
 clr
 gs 'stat'
 fcolor = rgb(0, 0, 0)
 bcolor = rgb(255, 255, 255)
 lcolor = rgb(106, 90, 205)
 
-act 'Go outside':minut += 5 & gt 'Gaddvor'
+if mira = 0:
+	act 'Go outside':
+		if $clothingworntype ! 'nude' or exhibi > 0:
+			minut += 5 & gt'Gaddvor'
+		else
+			cls
+			'<center><img src="images/qwest/gadukino/Swamp/noundress.jpg"></center>'	
+			'You are ashamed to appear like this in the yard.'
+			act 'Back':gt'Gadbana'
+		end	
+	end
 
-if week >= 6:
-	if hour >= 12 and hour <= 18:
-		canpar = 1
-		'bath fired. Somewhere to seven hours can be steamed.'
-	elseif hour > 18 and hour < 22:
-		canpar = 1
-		'In the bath can be steamed'
+	if week >= 6:
+		if hour >= 12 and hour <= 18:
+			canpar = 1
+			'bath fired. Somewhere to seven hours can be steamed.'
+		elseif hour > 18 and hour < 22:
+			canpar = 1
+			'In the bath can be steamed'
 
-		if banaday ! daystart:
-			act 'Steamed in the sauna (2:00)':
+			if banaday ! daystart:
+				act 'Steamed in the sauna (2:00)':
+					cls
+					minut += 120
+					sweat = rand(0,5)
+					dynamic $showerdin
+					hapri = 0
+					mop = 1
+					
+
+					! WD: Missing Var ~ 'banaday'
+					banaday = daystart
+
+					if frost > 0:frost = 0
+
+					skinvan += 5
+
+					gs 'stat'
+
+					'<center><img src="images/qwest/gadukino/par.jpg"></center>'
+					'You soared in the bath, then doused with cold water and finally showered.'
+
+					act 'Go outside':gt 'Gaddvor'
+				end
+			end
+		elseif hour >= 22:
+			canpar = 0
+		end
+	elseif week ! 6:
+		canpar = 0
+	end
+
+	if canpar = 0:
+		act 'Wash (1:00)':
+			cls
+			dynamic $showerdin
+			minut += 60
+			hapri = 0
+			mop = 1
+			
+
+			if frost > 0:frost = 0
+
+			gs 'stat'
+			'<center><img src="images/qwest/gadukino/mit.jpg"></center>'
+			'You began to lather your body washcloth. After washed off the soap and washed her hair with shampoo. Rinse off the shampoo you become completely clean.'
+
+			act 'Leave':gt 'Gaddvor'
+		end
+	end
+
+	dynamic $bteeth
+	dynamic $tampon
+	dynamic $quickwash
+	dynamic $wearpan
+	dynamic $basin
+
+	if spdirtyc > 0:
+		act 'Wipe the cum off your clothes (0:10)':
+			cla
+			cumspclnt = 6
+			gs 'cum_cleanup'
+			minut += 10
+			gs 'stat'
+			'<center><img src="images/etogame/frotsp.jpg"></center>'
+			'You remove traces of cum from your clothes.'
+
+			act 'Finish':gt $curloc
+		end
+	end
+
+	if leghair > 0 and stanok > 0:
+		act 'Shaving legs 15 min':
+			cla
+			*clr
+			minut = minut + 15
+			leghair = -5
+			horny = horny + 5
+			stanok = stanok - 1
+
+			'<center><img src="images/pics/shave.gif"></center>'
+			'You lathered his feet and took a razor. You deftly shaved hair on the legs washed and shaving foam.'
+
+			act 'Takeout machine':gt $curloc
+		end
+	end
+
+	if lobok > 0 and stanok > 0:
+		act 'Shaved 15 min':
+			cla
+			*clr
+			minut = minut + 15
+			lobok = -5
+			horny = horny + 5
+			stanok = stanok - 1
+
+			'<center><img src="images/pics/shave3.gif"></center>'
+			'You lathered pubis and taking a razor deft movements began to shave the pubic area and shave the hair around the pussy. Finally shaving was over and you washed the foam from the pussy.'
+
+			act 'Takeout machine':gt $curloc
+		end
+	end
+else
+	!125st
+	act 'Undress':
+		cls
+		minut += 10
+		horny += 10
+		gs 'stat'
+		'<center><img src="images/qwest/gadukino/MiraBan.jpg"></center>'
+			'You undress, watching through the corner of your eye as Miroslava removes her panties.'
+			act 'Watch Miroslava clean herself':
+			cls
+			minut += 10
+			horny += 15
+			gs 'stat'
+			'<center><img src="images/qwest/gadukino/MiraBan1.jpg"></center>'
+			'You feel the hot steam penetrate into your pores while you blissfully watch Mira lather up. She sometimes throws at you short glances and smiles hesitantly in response...'
+			act 'Steam':
+				!{
+				dynamic $showerdin
+                vidageday += 1
+				horny += 20
+				manna += mannamax/5
+				health += healthmax/20
+				skinvan += 5
+				if skinvan >= 20:skinvan = 0 & skin += 1
+				}
+				!copy from 40~62, different sauna in Russian.
 				cls
 				minut += 120
-				sweat = rand(0,5)
 				dynamic $showerdin
 				hapri = 0
 				mop = 1
 				
-
 				! WD: Missing Var ~ 'banaday'
 				banaday = daystart
-
 				if frost > 0:frost = 0
-
 				skinvan += 5
-
+				
 				gs 'stat'
-
-				'<center><img src="images/qwest/gadukino/par.jpg"></center>'
-				'You soared in the bath, then doused with cold water and finally showered.'
-
-				act 'Go outside':gt 'Gaddvor'
+				'<center><img src="images/qwest/gadukino/MiraBan2.jpg"></center>'
+				'Finally Mira ends her wash and it is your turn to scrub yourself. Then you relax with your friend and the rest of the time you steam yourselves in the bath, occasionally exchanging meaningless comments...'
+				act 'Finish': mira = 0 & gt 'gaddvor'
 			end
 		end
-	elseif hour >= 22:
-		canpar = 0
 	end
-elseif week ! 6:
-	canpar = 0
+	!125ed
 end
-
-if canpar = 0:
-	act 'Wash (1:00)':
-		cls
-		dynamic $showerdin
-		minut += 60
-		hapri = 0
-		mop = 1
-		
-
-		if frost > 0:frost = 0
-
-		gs 'stat'
-		'<center><img src="images/qwest/gadukino/mit.jpg"></center>'
-		'You began to lather your body washcloth. After washed off the soap and washed her hair with shampoo. Rinse off the shampoo you become completely clean.'
-
-		act 'Leave':gt 'Gaddvor'
-	end
-end
-
-dynamic $bteeth
-dynamic $tampon
-dynamic $quickwash
-dynamic $wearpan
-dynamic $basin
-
-if spdirtyc > 0:
-	act 'Wipe the cum off your clothes (0:10)':
-		cla
-		cumspclnt = 6
-		gs 'cum_cleanup'
-		minut += 10
-		gs 'stat'
-		'<center><img src="images/etogame/frotsp.jpg"></center>'
-		'You remove traces of cum from your clothes.'
-
-		act 'Finish':gt $curloc
-	end
-end
-
-if leghair > 0 and stanok > 0:
-	act 'Shaving legs 15 min':
-		cla
-		*clr
-		minut = minut + 15
-		leghair = -5
-		horny = horny + 5
-		stanok = stanok - 1
-
-		'<center><img src="images/pics/shave.gif"></center>'
-		'You lathered his feet and took a razor. You deftly shaved hair on the legs washed and shaving foam.'
-
-		act 'Takeout machine':gt $curloc
-	end
-end
-
-if lobok > 0 and stanok > 0:
-	act 'Shaved 15 min':
-		cla
-		*clr
-		minut = minut + 15
-		lobok = -5
-		horny = horny + 5
-		stanok = stanok - 1
-
-		'<center><img src="images/pics/shave3.gif"></center>'
-		'You lathered pubis and taking a razor deft movements began to shave the pubic area and shave the hair around the pussy. Finally shaving was over and you washed the foam from the pussy.'
-
-		act 'Takeout machine':gt $curloc
-	end
-end
-
 --- Gadbana ---------------------------------
 

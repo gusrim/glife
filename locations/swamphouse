@@ -1,0 +1,1783 @@
+# swamphouse
+$location_type = 'indoors'
+$metkaM = $ARGS[0]
+$locM = $CURLOC
+$metka = $ARGS[0]
+$loc = $CURLOC
+frost = 0
+bonusZ = 0
+clr
+gs'stat'
+FColor = RGB(0,0,0)
+BColor = RGB(255,255,255)
+LColor = RGB(106,90,205)
+hantslutsexrand = rand(1,3)
+temp = rand(1,5)   
+	
+'<center><H4>Hut</H4></center>'
+'<center><img src="images/qwest/gadukino/Swamp/swampizba.jpg"></center>'
+
+'Hunting cabin. In a small room with a low ceiling there <a href="exec:GT ''bed'',''start''">couch</a> where you can sleep.' 
+if bucket > 0:
+	'In the corner is <a href="exec: dynamic $bucket ">bucket</a> water.'
+else
+	'In the corner is an empty bucket.'
+end
+'Near it hangs an old <a href="exec: dynamic $washstand ">sink</a>, and under it is <a href="exec: dynamic $basin">basin</a>.'
+if swamp_enema = 1:'On the shelf you found the syringe.'
+'In another corner is a small <a href="exec: dynamic $stove">stove</a>. It in the presence of water and mushrooms you can cook simple food. Still it is possible to heat water to wash in the basin.'
+'Beside her is a stack of worn <a href="exec: dynamic $stackmagazines">magazines</a>, most likely for ignition.'
+if clothesswamphouse = 1 and clearclothes = 0:'On the shelf is your cloth'
+if clearclothes > 0 and clearclothesH = 1: 'Above the stove drying your clothes.'
+if hour = 20 and hanters = 1 and hantersKnow > 0 or hour = 7 and hanters = 1 and hantersKnow > 0:'Sitting at a table <a href="exec:dynamic $hanterstable">hunters</a>.'
+if hour > 20 and hour < 23 and hanters = 1 and hantersKnow > 0:'In the hut you see <a href="exec:dynamic $hantersrelax">hunters</a>.'
+if hour = 23 and hanters = 1 and hantersKnow > 0 or hour >= 0 and hour < 7 and hanters = 1 and hantersKnow > 0:'On the couch sleeping hunters.'
+
+if edahot > 0:
+    act 'eat a meal':
+		gs 'food', 'm_meal'&!use current one, cls will clear messages
+		cla
+	    *clr
+	    edahot = 0
+	    gs'stat'
+
+	    '<center><img src="images/qwest/gadukino/Swamp/soup.jpg"></center>'
+
+	    if energy >= 100:
+		    fat += 3
+
+		    'You can`t eat anymore.'
+	    elseif energy >= 80:
+		    fat += 1
+		    energy += 30
+
+		    'You force pushed through in the food.'
+	    else
+		    energy += 20
+
+		    'You love to eat cooked food.'
+	    end
+
+	    gs'stat'
+
+	    act 'Get up from the table':gt $locM, $metkaM
+	end    
+end
+!re-arrange it, there should be no logic error now by illume
+if $clothingworntype ! 'nude' or swamp_clothes = 1:
+	!have cloth, or rag on
+	act'Undress':
+		if hantersKnowSlut > 0 or hanters = 0 or hanters = 1 and hour >= 8 and hour < 20 and hantersKnowSlut = 0:
+			cla
+			*clr			 
+			if $clothingworntype ! 'nude':
+				flag_tanga = tanga
+				clothesswamphouse = 1
+				gs 'clothing', 'strip'
+			end
+			swamp_clothes = 0
+			minut+=5
+			tanga = 0
+			minut+=5
+
+			'<center><img src="images/qwest/gadukino/Swamp/swamphouseundress.jpg"></center>'				
+			'You do not hesitate undressed, left in the buff.'
+			act'Back':gt'swamphouse'		
+		else
+			cla
+			*clr
+		    '<center><img src="images/qwest/gadukino/Swamp/noundress.jpg"></center>'
+			'Despite the heat you still too shy to undress, and suddenly someone sees?'
+			act'Back':gt'swamphouse'
+		end
+	end
+end
+if clothesswamphouse = 1 and clearclothes = 0:
+	!clothes are ready
+	if $clothingworntype = 'nude':
+		act 'Dress':
+			gs 'clothing', 'wear', $lastwornclothingtype, lastwornclothingnumber
+			clothesswamphouse = 0
+			swamp_clothes = 0
+			tanga = flag_tanga
+			gt $locM, $metkaM
+		end
+	else
+		act 'pick up your cloth':
+			cla
+			*clr
+			clothesswamphouse = 0
+			'You took your clothes.'
+			act 'Back': gt $loc, $metka
+		end	
+	end
+end
+if horny >= 50 and hanters = 0 or horny >= 50 and hanters = 1 and hour >= 8 and hour < 20:
+	act 'Masturbate':
+		gt'selfplay'
+	end
+end
+if $clothingworntype = 'nude' and swamp_clothes = 0:
+	act 'Looking for clothes':
+		cla
+		*clr
+		minut += 10	
+	    if swamp_enema = 0:
+		    swamp_enema = 1
+		    gs'stat'
+		    '<center><img src="images/qwest/gadukino/Swamp/enema.jpg"></center>'	
+		    'You searched for some clothes, but found an enema... why is it interesting here?.'
+            act 'Further':gt'swamphouse'
+		else
+		    swamp_clothes = 1
+		    !gs 'clothing', 'wear', $lastwornclothingtype, lastwornclothingnumber
+		    '<center><img src="images/qwest/gadukino/Swamp/swamphouse_tkancloth.jpg"></center>'	
+		    'You have found a piece of burlap... Well, at least something.'
+		    act 'Back.':gt'swamphouse'
+		end    
+	end
+end	
+if klismaday ! day and swamp_enema = 1 and analplugin = 0 and hour >= 8 and hour < 20 and hanters = 1 or klismaday ! day and swamp_enema = 1 and analplugin = 0 and hanters = 0:
+	act 'Make yourself an enema 5 min':
+		cla
+		*clr
+		minut += 5
+		klismaday = day
+		'<center><img src="images/qwest/gadukino/Swamp/swamp_enema.jpg"></center>'
+		'You set yourself an enema and cleared my bowel, now your ass is ready for anal sex.'
+		act 'Finish': gt'swamphouse'
+	end
+end
+
+if dirty_swamphouse > 25:act 'To clean the hut':hanterslut -= 1 & dynamic $dirty_swamphouse
+
+act 'Go outside':hanter_refuse = 0 & minut += 5 & gt'swamp_yard'
+!sex with Igor
+if hantersIgorLove > 0 and hour > 8 and hour < 19 and hantersIgorQw >= 10 and temp = 1 and hantersIgorsex = 0:
+	cls
+    minut += 5
+    horny += 5
+ 	hantersIgorsex += rand(12,36)    
+	gs 'stat'
+	
+	'<center><img src="images/qwest/gadukino/Swamp/hanterlove1.4.jpg"></center>'
+	'Entering the hut you see Igor. He smiled and walked over to you and stared at your lips with a passionate kiss.'
+	'- <<$nickname>>, I want you, " he whispered, breaking the kiss.'
+	
+	act 'Agree':
+	    cls
+	    minut += 5
+	    hantersIgorQw += 1
+		gs 'stat'
+		
+		'<center><img src="images/qwest/gadukino/Swamp/hanterflirt2.'+rand(4,6)+'.jpg"></center>'
+		'Smiling you wink Igor. He, all knowing, takes you by the hand and leads.'	
+	    act 'Go':gt'HanterLoveSex'
+    end 
+	act 'Refuse':
+	    cls
+	    minut += 5
+	    hantersIgorQw -= 1
+		gs 'stat'
+		
+        '<center><img src="images/qwest/alter/Ev/otel4.jpg"></center>'
+        ' - No, Igor, not now, you said, and trying not to look at rasteryalsya guy left.' 	
+	    act 'Go':gt $loc, $metka
+    end     
+end
+!sex with Sergei
+if hantersSergeiLove > 0 and horny <= 60 and hantersSergeiQw >= 10 and temp = 1 and hantersSergeisex = 0 and hour > 8 and hour < 19:
+	cls
+    minut += 5
+    horny += 5
+    hantersSergeisex += rand(9,30) 
+	gs 'stat'
+	
+	'<center><img src="images/qwest/gadukino/Swamp/hanterlove1.4.jpg"></center>'
+	'Entering the hut you saw of Sergei. With a smile he walked over and stared at your lips for a long kiss.'
+	'- <<$nickname>>, I want you, " he said, interrupting the kiss.'
+	
+	act 'Agree':
+	    cls
+	    minut += 5
+	    hantersSergeiQw += 1
+		gs 'stat'
+		
+		'<center><img src="images/qwest/gadukino/Swamp/hanterflirt2.'+rand(4,6)+'.jpg"></center>'
+		'Smiling you wink Sergei. He, all knowing, takes you by the hand and leads.'	
+	    act 'Go':gt'HanterLoveSex'
+    end 
+	act 'Refuse':
+	    cls
+	    minut += 5
+	    hantersSergeiQw -= 1
+		gs 'stat'
+		
+        '<center><img src="images/qwest/alter/Ev/otel4.jpg"></center>'
+        ' - No, Sergei, not now, you said, and trying not to look at rasteryalsya guy left.' 	
+	    act 'Go':gt $loc, $metka
+    end     
+end
+! sex with Andrew
+if hantersAndreiLove > 0 and horny <= 60 and hantersAndreiQw >= 10 and temp = 1 and hantersAndreisex = 0 and hour > 8 and hour < 19:
+	cls
+    minut += 5
+    horny += 5
+    hantersAndreisex += rand(6,24)     
+	gs 'stat'
+	
+	'<center><img src="images/qwest/gadukino/Swamp/hanterlove1.4.jpg"></center>'
+	'Entering the hut you saw Andrew. Suddenly, he stared at your lips with a passionate kiss and without a word pulled you with him..'
+	
+	act 'To go with Andrew':
+	    cls
+	    minut += 5
+	    hantersAndreiQw += 1
+	    horny += 5
+		gs 'stat'
+		
+		'<center><img src="images/qwest/gadukino/Swamp/hanterhands.jpg"></center>'
+		'You go with Andrew holding hands, knowing that where he leads you. And you really don`t even mind.'	
+	    act 'Further':gt'HanterLoveSex'
+    end 
+	act 'Refuse':
+	    cls
+	    minut += 5
+	    hantersAndreiQw -= 1
+		gs 'stat'
+		
+        '<center><img src="images/qwest/alter/Ev/otel4.jpg"></center>'
+        ' - No, <<$boy>>, not now, you said, and trying not to look at it left.' 	
+	    act 'Go':gt $loc, $metka
+    end     
+end
+! trio of HS, Andrei and Sergei, if love
+if hanters > 0 and doublehanterlove = 1 and hour >= 8 and hour < 20 and (hantersAndreisex = 0 or hantersSergeisex = 0):
+	cls
+    minut += 5
+    hantersAndreisex += rand(6,24)
+    hantersSergeisex += rand(9,30) 
+	gs 'stat'
+	
+	'<center><img src="images/qwest/gadukino/Swamp/hanterswork1.2.jpg"></center>'
+	'In the hut you saw Andrei with Sergei.'
+	' - It`s time, so to speak, to consummate the marriage, " Andrew said with a joking tone. - Prepare <<$nickname>> ass.'
+	if klismaday ! day:' - Damn, and I ass didn`t cook today, - said the embarrassed you. - Maybe we will not?.'
+	if klismaday ! day:' - Will <<$nickname>>, will, - said Andrew. - You didn`t wash you can deal with it. Next time I will not forget.'
+	' - From the hut only to leave, and the bushes deep enough to hide, - said Sergey. - And Igor, we much correct, you do not understand.'
+	
+	act 'Go with the guys':
+	    cls
+	    minut += 5
+	    hantersAndreiQw += 1
+	    hantersSergeiQw += 1
+	    horny += 5
+	    doublelovesex = 1
+	    hanterslut += 1
+	    temphant = 1
+	    if klismaday ! day:hanterslut += 1
+		gs 'stat'
+		
+		'<center><img src="images/qwest/gadukino/Swamp/doublehanterlove.jpg"></center>'
+		'You go with guys holding hands, knowing full well where and why they are. And you really don`t even mind.'	
+	    act 'Further':gt'hantersex'
+    end 
+	act 'Refuse':
+	    cls
+	    minut += 5
+	    hantersAndreiQw -= 1
+	    hantersSergeiQw -= 1
+		gs 'stat'
+		
+        '<center><img src="images/qwest/alter/Ev/otel4.jpg"></center>'
+        ' - No, guys, something I don`t want, you said, and without looking at them left.' 	
+	    act 'Go':gt $loc, $metka
+    end     
+end
+!hunters are invited to the table
+if hour = 20 and hanters = 1 and hantersKnow > 0 and hantersKnowSlut = 0 and hanter_refuse = 0:
+    cla
+    *clr
+	if hour >= 20 and hour <= 23 :
+        hantersdrink = 1
+    else
+        hantersdrink = 0
+    end     
+	gs'stat'
+	
+    if hantersdrink = 1:
+        cls
+		minut += 1
+		temp = rand(1,4)
+		gs'stat'
+		
+		if temp = 1:		    
+		    '<center><img src="images/qwest/gadukino/Swamp/hanterstable.jpg"></center>'
+		    'You went into the hut and saw the drunk hunters.'
+		    '- Oh, <<$nickname>>, come join us!- started on the failure to invite they.'
+		    act 'To join':dynamic $hanterstable
+            act 'Politely decline':hanter_refuse = 1 & gt $locM, $metkaM		    
+		end
+		if temp = 2:
+		    hantersAndreiQw += 1
+		    '<center><img src="images/qwest/gadukino/Swamp/AndreiHanter.jpg"></center>'
+		    'You went into the hut and saw the drunk hunters.'
+		    '- Oh, <<$nickname>>, come join us!- noticing you suggested Andrew.'
+		    act 'To join':dynamic $hanterstable
+            act 'Politely decline':hanter_refuse = 1 & gt $locM, $metkaM		    
+		end
+		if temp = 3:
+		    hantersSergeiQw += 1
+		    '<center><img src="images/qwest/gadukino/Swamp/SergeiHanter.jpg"></center>'
+		    'You went into the hut and saw the drunk hunters.'
+		    '- Oh, <<$nickname>>, come join us!- noticing called you Sergei.'
+		    act 'To join':dynamic $hanterstable
+            act 'Politely decline':hanter_refuse = 1 & gt $locM, $metkaM		    
+		end
+		if temp = 4:
+		    hantersIgorQw += 1
+		    '<center><img src="images/qwest/gadukino/Swamp/IgorHanter.jpg"></center>'
+		    'You went into the hut and saw the drunk hunters.'
+		    '- Oh, <<$nickname>>, come join us!- shouting over the conversation called Igor.'
+		    act 'To join':dynamic $hanterstable
+            act 'Politely decline':hanter_refuse = 1 & gt $locM, $metkaM
+		end       
+	else
+		'<center><img src="images/qwest/gadukino/Swamp/hanterstable.jpg"></center>'
+		'You went into the hut and saw hunters having Breakfast.'
+		'- Oh, <<$nickname>>, you time, join!- started on the failure to invite they.'
+		
+        act 'To join':dynamic $hanterstable
+        act 'Politely decline':hanter_refuse = 1 & gt $locM, $metkaM
+    end		
+end
+!if GG naked and hunters in the hut
+if $clothingworntype = 'nude' and hanters = 1 and hour >= 20 and hour < 23 and hanterknowday ! day or $clothingworntype = 'nude' and hanters = 1 and hour = 7 and hanterknowday ! day:
+    cla
+    *clr
+    temp =rand(1,3)
+	gs'stat'
+    if hantersKnowSlut = 0: 
+        cla
+        *clr
+        gs'stat'
+        
+        '<center><img src="images/qwest/gadukino/Swamp/swamphousenude.jpg"></center>'
+		'Seeing the hut, the men you onnow began to hide behind the hands...'
+		
+		if clothesswamphouse = 1 and clearclothes = 0:
+	        act'Dress':
+		        cla
+		        *clr
+			    clothesswamphouse = 0
+			    minut += 5
+			    tanga = flag_tanga
+			    gs 'clothing', 'wear', $lastwornclothingtype, lastwornclothingnumber
+		        !tkan_cloth = 0
+
+		        '<center><img src="images/qwest/gadukino/Swamp/swampdvornude1.jpg"></center>'
+		        'And headlong rushed into the hut to dress.'
+		        act'Further':gt'swamphouse'
+		    end    
+        else
+            act'Cover yourself':
+                cla
+                *clr
+                minut+=5
+                swamp_clothes = 1
+		        gs 'clothing', 'wear', $lastwornclothingtype, lastwornclothingnumber
+		        '<center><img src="images/qwest/gadukino/Swamp/tkan_cloth.jpg"></center>'
+		        'And quickly rushed into the hut and hid behind a piece of burlap... Well, at least something.'
+		        act'Further':gt'swamphouse'
+		    end
+        end
+        act'Stay naked':
+            cla
+            *clr
+            hanterslut += 1
+            hanterknowday = day
+            gs'stat'
+            '<center><img src="images/qwest/gadukino/Swamp/swamphousenude1.jpg"></center>'
+            'But then I decided to tickle your nerves and leave it as it is. Men studiously avert their eyes from your naked body.'
+            '- Well, you <<$nickname>>, damn, you just heard the phrase Andrew.'
+            act'Further':gt'swamphouse'
+        end 
+    end   
+    if hantersKnowSlut > 0:    
+        if hantslutsex = 0:
+            cls
+            gs'stat'
+        
+            '<center><img src="images/qwest/gadukino/Swamp/swamphousenude1.jpg"></center>'
+		    'Seeing you naked, you guys excited...'
+            '- <<$nickname>>, come to us, called you one of the guys.'    
+    
+            act'Further':hantersexnude = 1 & gt'hantersex'
+        else
+            hanterknowday = day
+            '<center><img src="images/qwest/gadukino/Swamp/swamphousenude1.jpg"></center>'
+		    'Seeing you naked, guys just shook their heads...'
+            '- Look <<$nickname>>, going from us, if you charms Shine here - jokingly said one of the guys.'    
+    
+            act'Further':gt'swamphouse'
+        end
+    end
+end
+
+! sex if GG whore
+if hanters > 0 and hantersRape = 5 and hantslutsexrand = 1 and hantslutsex = 0 and hour >= 7 and hour < 23:
+	cls
+    minut += 5
+    temphant = rand(1,3)
+    ! the choice of who will fuck GG
+    sluthomesex = 1 
+	gs 'stat'
+	
+	if temphant = 1:'<center><img src="images/qwest/gadukino/Swamp/AndreiHanter.jpg"></center>'
+	if temphant = 2:'<center><img src="images/qwest/gadukino/Swamp/SergeiHanter.jpg"></center>'
+	if temphant = 3:'<center><img src="images/qwest/gadukino/Swamp/IgorHanter.jpg"></center>'
+	if temphant = 1:'You do your business, when to the hut burst into Andrew. " - Went <<$nickname>>," - he said more without saying a word pulled you on the bed.'
+	if temphant = 2:'You do your business, when the hut became Sergey. Noticing you he`s headed your way. " - Let`s go aside <<$nickname>>, something itch," - he said and pulled you on the bed.'	
+	if temphant = 3:'You do your business, when you noticed entered the hut Igor. See you ulybnula and he came. " - <<$nickname>>, I have voltage to throw, come forward please," - he said smiling and took you with him..'
+	if horny < 40:' You obediently followed him, knowing where and why you are.'
+	if horny >= 40 and horny < 70:' - I must, I must, " thought you went out with a guy, knowing where and why you are.'
+	if horny >= 70:' - Well, what you need, the most important time, " you thought, feeling your pussy screaming with desire. You went with a guy, almost overtaking it, and there is not clear who leads.'
+
+    act 'Go':	gt'hantersex' 
+end
+    
+$bucket = {
+	cla
+	*clr
+	if bucket > 10:bucket = 10	
+	minut += 1
+	gs 'stat'
+	'<center><img src="images/qwest/gadukino/Swamp/vedro2.jpg"></center>'	
+	'A bucket of water. It still <<bucket>> liters of water.'
+	 
+    act'To drink water':
+		cla
+		minut+=5
+		cumspclnt = 2 & gs 'cum_cleanup' & fbreath = 0
+		bucket -= 1
+		if water >= 100:
+			'You don''t need any more water.'
+		else
+			water += 80
+			cumspclnt = 2
+			gs 'cum_cleanup'
+			fbreath = 0
+			'You drink from bucket, quenching your thirst.'
+		end
+	    act 'Further':gt $locM, $metkaM
+	end
+    act'Depart':gt $locM, $metkaM         
+        
+}
+
+$washstand = {
+	cla
+	*clr
+	minut += 1
+	gs 'stat'
+	
+	'<center><img src="images/qwest/gadukino/Swamp/washstand.jpg"></center>'	
+	'Old washstand. In the presence of water can wash.'
+	
+	if bucket > 0: 
+		!use current by illume
+		dynamic $wearpan
+		dynamic $basin
+    end
+    act'Depart':gt $locM, $metkaM 
+    
+}
+
+$stove = {
+	cla
+	*clr
+	minut += 1
+	gs 'stat'
+	
+	'<center><img src="images/qwest/gadukino/Swamp/stove.jpg"></center>'	
+	'Unsightly wood stove, but with its functions successfully. In the presence of 5 liters of water can be heated for washing or bathing. Or when you have mushrooms to cook. '
+	
+	if bucket > 0 and boletus > 0 and edahot = 0:
+	    act 'To prepare mushroom soup':
+		    cla
+		    *clr		        
+		    boletus -= 1
+		    minut += 30
+		    bucket -= 1
+		    edahot += 1
+		    gs 'stat'
+ 
+		    '<center><img src="images/qwest/gadukino/Swamp/hotsoup.jpg"></center>'
+		    'You made a simple mushroom soup.'
+
+		    act 'Further':gt $locM, $metkaM
+	    end
+    end
+    if bucket >= 5 and hotwater = 0:  
+        act 'Warm water':
+	        cla
+		    *clr
+	        minut += 30
+	        bucket -= 5
+	        hotwater = 1
+	        gs 'stat'
+	        
+	        '<center><img src="images/qwest/gadukino/Swamp/hotwater.jpg"></center>'
+	        'You heated the water, it is now possible to wash in the basin or to wash clothes.'
+	    
+	        act 'Further':gt $locM, $metkaM	    
+	    end            
+    end
+    act'Depart':gt $locM, $metkaM 
+    
+}
+
+$clothes_read_magazines = {
+    if $clothingworntype ! 'nude':'<center><img src="images/qwest/gadukino/Swamp/readmagazines.jpg"></center>'
+    if $clothingworntype = 'nude' and tanga = 1:'<center><img src="images/qwest/gadukino/Swamp/readmagazines_tanga.jpg"></center>'
+    if $clothingworntype = 'nude' and tanga = 0:'<center><img src="images/qwest/gadukino/Swamp/readmagazines_nude.jpg"></center>'
+}
+
+$stackmagazines = {
+	cla
+	*clr
+	minut += 1
+	gs 'stat'
+	
+	'<center><img src="images/qwest/gadukino/Swamp/stackmagazines.jpg"></center>'	
+	'A stack of variety of magazines, there`s even one with "interesting" pictures.'
+	
+	act 'Read the scientific journal':
+		cla
+		*clr
+		if nerdism > 0:
+			lastread = totminut
+			lastreadday = daystart
+			nerdism += 10
+		end
+		if intel >= 50:intel += RAND(0,1)
+		if intel < 50:intel += RAND(0,2)
+		blizoruk+=1		
+		manna += mannamax/10	        
+		minut += 60
+		gs 'stat'
+
+        dynamic $clothes_read_magazines		
+		'You decided to look through the scientific journal, trying to understand all sorts of clever things and understand the subject matter.'
+
+		act 'Further':dynamic $stackmagazines
+	end
+	act 'To read literary magazine':
+		cla
+		*clr
+		if nerdism > 0:
+			lastread = totminut
+			lastreadday = daystart
+			nerdism += 10
+		end
+		if will >= 50:will += RAND(0,1)
+		if will < 50:will += RAND(0,2)
+		blizoruk+=1		
+		manna += mannamax/10	        
+		minut += 60
+		Suspeh+=1
+		gs 'stat'
+ 
+        dynamic $clothes_read_magazines
+		'You decided to look through the literary magazine...drag rare.'
+
+		act 'Further':dynamic $stackmagazines
+	end
+	act 'Read entertainment magazine':
+		cla
+		*clr
+		if nerdism > 0:
+			lastread = totminut
+			lastreadday = daystart
+			nerdism += 10
+		end
+		if will >= 50:will += RAND(0,1)
+		if will < 50:will += RAND(0,2)
+		blizoruk+=1		
+		manna += 100
+		willpower += 100	        
+		minut += 60
+		gs 'stat'
+ 
+        dynamic $clothes_read_magazines
+		'You flick entertainment magazine, plunging into the world of Mozy and show business.'
+
+		act 'Further':dynamic $stackmagazines
+	end  
+	act 'Read a porn magazine':
+		cla
+		*clr
+		blizoruk+=1		
+		manna += mannamax/10
+		willpower += 100	        
+		minut += 60
+		horny += 50
+		gs 'stat'
+ 
+        if $clothingworntype ! 'nude':'<center><img src="images/qwest/gadukino/Swamp/readpornomag.jpg"></center>'
+        if $clothingworntype = 'nude' and tanga = 1:'<center><img src="images/qwest/gadukino/Swamp/readpornomag_tanga.jpg"></center>'
+        if $clothingworntype = 'nude' and tanga = 0:'<center><img src="images/qwest/gadukino/Swamp/readpornomag_nude.jpg"></center>'
+		'You`re flipping through a porn magazine when reading the stories and looking at pictures, slowly the excitement starts to cover you.'
+
+		act 'Further':dynamic $stackmagazines
+	end 	 
+    act'Depart':gt $locM, $metkaM    
+}
+
+
+$basin = {
+	cla
+	*clr
+	minut += 1
+	gs 'stat'
+	
+	'<center><img src="images/qwest/gadukino/Swamp/basin.jpg"></center>'	
+	'Old pelvis. In the presence of hot water to bathe or wash their clothes.'
+	
+	if hotwater = 1  and ($clothingworntype = 'nude' or $clothingworntype = 'swimwear'):
+	    act 'Wash':
+		    cla
+		    *clr		        
+		    dynamic $showerdin
+		    face_write = 0
+		    body_write = 0
+		    lubonus = 0
+		    manna += mannamax/20
+		    willpower += 10		    
+		    minut += 30
+		    hotwater = 0
+		    gs 'stat'
+ 
+		    '<center><img src="images/qwest/gadukino/Swamp/basinswim.jpg"></center>'
+		    'You are washed clean and pochuvstvovali much better.'
+
+		    act 'Further':gt $locM, $metkaM
+	    end
+    end
+    if hotwater = 1  and dirtyclothes = 1 and $clothingworntype = 'nude' and clothesswamphouse = 1:
+		!fix logic and remove clearclothesH. cloth may only appear in swamphouse or backwater, so fit it. by illume
+        act 'To wash clothes':
+	        cla
+		    *clr
+	        minut += 60
+	        dirtyclothes = 0
+	        hotwater = 0
+		    cumspclnt = 6 & gs 'cum_cleanup'
+	        gs 'stat'
+	        
+	        if $clothingworntype = 'nude':
+	            '<center><img src="images/qwest/gadukino/Swamp/basinwash.jpg"></center>'
+	        else
+                '<center><img src="images/qwest/gadukino/new/Washclothes1.jpg"></center>'
+            end    
+	        'You undressed and washed my dirty clothes.'
+	        
+	        act 'To hang clothes in the hut':
+	            cla
+		        *clr
+	            minut += 5
+	            clearclothes = 5
+	            clearclothesH = 1
+	            if $clothingworntype = 'nude':
+	                '<center><img src="images/qwest/gadukino/Swamp/basinwash1.jpg"></center>'
+	            else
+	                '<center><img src="images/qwest/gadukino/new/Washclothes2.jpg"></center>'
+	            end        
+	            'You hung clothes out to dry inside the cabin.'
+	            
+	            act 'Further':gt $locM, $metkaM
+	        end
+            if month >= 5 and month <= 9:
+	            act 'Hang on a glade':
+	                cla
+		            *clr
+	                minut += 10
+	                clearclothes = 3
+	                clearclothesH = 0
+	                
+	                if $clothingworntype = 'nude':
+	                    '<center><img src="images/qwest/gadukino/Swamp/basinwash2.jpg"></center>'
+	                else
+	                    '<center><img src="images/qwest/gadukino/new/Washclothes2.jpg"></center>'
+	                end
+	                'You hung the clothes outside to dry.'
+	            
+	                act 'Further':gt'swamp_yard'
+	            end	
+            end
+	    end   
+    end
+    act'Depart':gt $locM, $metkaM              
+}
+
+$hanterstableBJ = {
+	cla
+	*clr
+	minut += 1
+	hanterstableBJ = 1
+	dom -= 1
+    gs 'stat'
+
+    '<center><img src="images/qwest/gadukino/Swamp/hanterstable2.jpg"></center>'
+    ' - That same bastards to eat safely and that will not, thought you crawled under the table...'
+    
+    if hanterstableBJA = 0:
+        act 'Sucking Andrew':
+		    cls
+	        $boy = 'Andrew'
+	        dick = 20		    
+		    minut += 5
+		    horny += 10
+		    stat['bj'] += 1
+		    hanterstableBJA = 1
+		    if hanterandreisex = 0:hanterandreisex = 1 & guy += 1
+		    temp = rand(1,2)
+		    gs 'stat'
+            
+            '<center><img src="images/qwest/gadukino/Swamp/hanterstableBJ1.'+rand(1,5)+'.jpg"></center>'
+    	    'You got comfortable under the table and brought his face to his cock....'
+
+			gs'oral','start'
+       
+			'Soon member Andrew stiffened and did you see what he`s about to come...'
+
+            if temp = 1:
+                act 'Suck on':
+		            cls
+		            minut += 1
+		            gs 'cum_call', 'face', $boy
+	                if $clothingworntype = 'nude':gs 'cum_call', 'stomach', $boy
+	                if $clothingworntype ! 'nude':gs 'cum_call', 'clothesgroin', $boy		            		            
+		            gs 'stat'
+		            
+                    '<center><img src="images/qwest/gadukino/Swamp/hanterstableCum1.'+rand(1,5)+'.jpg"></center>'
+                    'Andrew pulled out a member from your mouth and then you hit in the face a jet of hot semen, then another and another until finally he did not stop to cum.'
+                    
+                    act 'Further':dynamic $hanterstableBJ
+                end
+            else
+                act 'Suck on':
+		            cls
+		            minut += 1
+				    gs 'cum_call', 'mouth', $boy
+				    swallow += 1
+                    vaf += 1		            
+		            hanterstableBJA = 1
+		            gs 'stat'
+		            
+                    '<center><img src="images/qwest/gadukino/Swamp/hanterstableBJ1.'+rand(1,5)+'.jpg"></center>'
+                    
+                    dynamic $dinrandswallow
+                    
+                    act 'Further':dynamic $hanterstableBJ
+                end
+	        end	        
+	    end    
+    end
+    if hanterstableBJS = 0:
+        act 'Suck Sergey':
+		    cls
+	        $boy = 'Sergey'
+	        dick = 18		    
+		    minut += 5
+		    horny += 10
+		    stat['bj'] += 1
+		    hanterstableBJS = 1
+		    if hantersergeisex = 0:hantersergeisex = 1 & guy += 1
+		    temp = rand(1,2)
+		    gs 'stat'
+            
+            '<center><img src="images/qwest/gadukino/Swamp/hanterstableBJ1.'+rand(1,5)+'.jpg"></center>'
+    	    'You got comfortable under the table and brought his face to his cock....'
+
+			gs'oral','start'
+       
+			'Soon a member of Sergei stiffened and did you see what he`s about to come...'
+
+            if temp = 1:
+                act 'Suck on':
+		            cls
+		            minut += 1
+		            gs 'cum_call', 'face', $boy
+	                if $clothingworntype = 'nude':gs 'cum_call', 'stomach', $boy
+	                if $clothingworntype ! 'nude':gs 'cum_call', 'clothesgroin', $boy		            		            
+		            gs 'stat'
+		            
+                    '<center><img src="images/qwest/gadukino/Swamp/hanterstableCum1.'+rand(1,5)+'.jpg"></center>'
+                    'Sergei took a member out of your mouth and then you hit in the face a jet of hot semen, then another and another until finally he did not stop to cum.'
+                    
+                    act 'Further':dynamic $hanterstableBJ
+                end
+            else
+                act 'Suck on':
+		            cls
+		            minut += 1
+				    gs 'cum_call', 'mouth', $boy
+				    swallow += 1
+                    vaf += 1		            
+		            hanterstableBJS = 1
+		            gs 'stat'
+		            
+                    '<center><img src="images/qwest/gadukino/Swamp/hanterstableBJ1.'+rand(1,5)+'.jpg"></center>'
+                    
+                    dynamic $dinrandswallow
+                    
+                    act 'Further':dynamic $hanterstableBJ
+                end
+	        end	        
+	    end    
+    end
+    if hanterstableBJI = 0:
+        act 'Sucking Igor':
+		    cls
+	        $boy = 'Igor'
+	        dick = 16		    
+		    minut += 5
+		    horny += 10
+		    stat['bj'] += 1
+		    hanterstableBJI = 1
+		    if hanterigorsex = 0:hanterigorsex = 1 & guy += 1
+		    temp = rand(1,5)
+		    gs 'stat'
+            
+            '<center><img src="images/qwest/gadukino/Swamp/hanterstableBJ1.'+rand(1,5)+'.jpg"></center>'
+    	    'You got comfortable under the table and brought his face to his cock....'
+
+			gs'oral','start'
+       
+			'Soon a member of Igor tightened and you realized that he`s about to come...'
+
+            if temp = 1:
+                act 'Suck on':
+		            cls
+		            minut += 1
+		            gs 'cum_call', 'face', $boy
+	                if $clothingworntype = 'nude':gs 'cum_call', 'stomach', $boy
+	                if $clothingworntype ! 'nude':gs 'cum_call', 'clothesgroin', $boy		            		            
+		            gs 'stat'
+		            
+                    '<center><img src="images/qwest/gadukino/Swamp/hanterstableCum1.'+rand(1,5)+'.jpg"></center>'
+                    'Igor took a member out of your mouth and then you hit in the face a jet of hot semen, then another and another until finally he did not stop to cum.'
+                    
+                    act 'Further':dynamic $hanterstableBJ
+                end
+            else
+                act 'Suck on':
+		            cls
+		            minut += 1
+				    gs 'cum_call', 'mouth', $boy
+				    swallow += 1
+                    vaf += 1		            
+		            hanterstableBJI = 1
+		            gs 'stat'
+		            
+                    '<center><img src="images/qwest/gadukino/Swamp/hanterstableBJ1.'+rand(1,5)+'.jpg"></center>'
+                    
+                    dynamic $dinrandswallow
+                    
+                    act 'Further':dynamic $hanterstableBJ
+                end
+	        end	        
+	    end    
+    end    
+    if hanterstableBJA = 1 and hanterstableBJS = 1 and hanterstableBJI = 1:act'To get out from under the table':edahot = 1 & dynamic $hanterstable     
+        
+}
+
+$hanterstable = {
+	cla
+	*clr
+	if hour >= 20 and hour <= 23 :
+        hantersdrink = 1
+    else
+        hantersdrink = 0
+    end 
+	minut += 1
+	smokertemp = rand(1,3)
+	gs 'stat'
+	
+	'<center><img src="images/qwest/gadukino/Swamp/hanterstable.jpg"></center>'
+	if hantersdrink = 1:
+	    dirty_swamphouse += rand(1,3)
+        'On a makeshift table there are bottles of vodka and beer, laid out the Zakus. Andrei, Sergei and Igor, drink and fun talk.'
+    else
+        dirty_swamp_yard  += rand(0,2)   	
+	    'At a makeshift table, eating slowly and talking hunters.'
+	end
+
+	if hantersdrink = 1 and hour >= 20:
+	    act 'Drink vodka':
+		    cls
+		    minut += 1
+		    alko +=4
+		    gs 'stat'
+ 
+		    '<center><img src="images/zsoft/pod_ezd/shulgahome/kuh/vodka2.jpg"></center>'
+		    'You drank a shot of vodka'
+		    
+		    act 'Further':dynamic $hanterstable
+	    end
+	    act 'Drink beer':
+		    cls
+		    minut += 15
+		    alko +=2
+		    fat += 1
+		    water += 20
+		    gs 'stat'
+ 
+		    '<center><img src="images/zsoft/pod_ezd/shulgahome/kuh/beer2.jpg"></center>'
+		    'You drank beer'
+
+		    act 'Further':dynamic $hanterstable
+	    end
+        act 'Eat Snack':
+			gs 'food', 'snack'&!use current one, cls will clear messages
+			cls
+            minut += 30 
+	        gs 'stat'
+
+	        '<center><img src="images/qwest/gadukino/Swamp/snack1.'+rand(1,2)+'.jpg"></center>'
+    
+	        act 'Further':dynamic $hanterstable	
+		end		
+	    act 'Chat':
+		    cls
+		    minut += 15
+	        if hantersAndreiQw < 10:hantersAndreiQw += 1
+	        if hantersIgorQw < 10:hantersIgorQw += 1
+	        if hantersSergeiQw < 10:hantersSergeiQw += 1		    
+		    gs 'stat'
+ 
+		    '<center><img src="images/qwest/gadukino/Swamp/hanterstable.jpg"></center>'
+		    'You chatted with the guys with the guys on various topics...'
+
+		    act 'Further':dynamic $hanterstable
+	    end
+        act'To exit the table':hantersdrink = 0 & hanter_refuse = 1 & gt $locM, $metkaM	    
+	    if alko > 3 and alko < 8 and smokertemp = 1:
+	        cls
+		    temp = rand(1,4)
+		    gs 'stat'
+		    
+		    if temp = 1:
+		        cls
+		        gs 'stat'
+	            '<center><img src="images/qwest/gadukino/Swamp/hantersmoker1.jpg"></center>'
+                'The guys offer to go out for a smoke.'
+                
+                act 'Agree':
+                    cls
+                    minut += 15
+ 	                smoker += 1
+	                smokeHour = hour
+                    smokeDay = day
+	                smokeminut = minut+5
+	                smokeNeed = 0
+	                manna += 100
+	                willpower += 100
+	                if hantersKnowSlut = 0:hantersAndreiQw += 1
+	                if hantersKnowSlut = 0:hantersIgorQw += 1
+	                if hantersKnowSlut = 0:hantersSergeiQw += 1
+                    gs 'stat'	                 
+
+	                '<center><img src="images/qwest/gadukino/Swamp/hantersmoker2.jpg"></center>'
+                    'You came out of the hut, the guys gave you a cigarette and you smoke, continuing the interrupted conversation.'
+                    
+                    act 'To return to the table':dynamic $hanterstable
+                end
+                act 'Refuse': dynamic $hanterstable   
+ 		    end
+		    if temp = 2:
+		        cls
+		        gs 'stat'
+	            '<center><img src="images/qwest/gadukino/Swamp/AndreiHanter.jpg"></center>'
+                'Andrew offers to go out for a smoke.'
+                
+                if hantersAndreiQw < 15 and hantersKnowSlut = 0 or hantersAndreiLove = 1:
+                    act 'Agree':
+                        cls
+                        minut += 15
+ 	                    smoker += 1
+	                    smokeHour = hour
+                        smokeDay = day
+	                    smokeminut = minut+5
+	                    smokeNeed = 0
+	                    manna += 100
+	                    willpower += 100
+	                    hantersAndreiQw += 1
+                        gs 'stat'	                 
+
+	                    '<center><img src="images/qwest/gadukino/Swamp/hantersmoker2.jpg"></center>'
+                        'You came out of the hut, Andrew gave you a cigarette and you smoke, continuing the interrupted conversation.'                    
+                  
+                        act 'To return to the table':dynamic $hanterstable
+                    end                     
+                end
+                if hantersAndreiQw >= 15 and hantersAndreiLove = 0 and hantersKnowSlut = 0:
+                    if smokbj = 0:
+                        act 'Agree':
+                            cls
+                            minut += 15
+ 	                        smoker += 1
+	                        smokeHour = hour
+                            smokeDay = day
+	                        smokeminut = minut+5
+	                        smokeNeed = 0
+	                        manna += 100
+	                        willpower += 100
+	                        hantersAndreiQw += 1
+                            gs 'stat'	                 
+
+	                        '<center><img src="images/qwest/gadukino/Swamp/AndreiHanter.jpg"></center>'
+                            'You came out of the hut, Andrew gave you a cigarette and you smoke, continuing the interrupted conversation. Suddenly Andrew, putting his hand on his knee and looking in his eyes, said:'
+                            ' - <<$nickname>>, and could you help me?'
+                            ' - Of course, Andrew, I`m glad I replied you, then less confidently added. - And how I can help you?'
+                            ' - As you know <<$nickname>>, I have long been divorced, " began Andrew. - But I`m a normal man, I need occasionally to relieve stress, well, you know what I mean...'
+                            'You with astonishment looked at it.'
+                            ' - Now <<$nickname>>, if you could give me at least occasionally helped to remove it, I would be very grateful to you, " continued Andrew.'
+                            'You watched in disbelief at him, not joking do it. But Andrew was quite serious.'
+                            ' - About this course no one will know, don`t worry, " he added quickly. - Well, as <<$nickname>>, you agree?'
+
+                            act 'Agree':
+                                cls
+                                minut += 10
+	                            horny += 10
+	                            hanterslut += 2
+	                            smokbj = 1
+	                            stat['bj'] += 1 
+	                            hantersAndreiQw += 1
+                                gs 'stat'
+                            
+                                '<center><img src="images/qwest/gadukino/Swamp/thinks'+rand(1,2)+'.jpg"></center>'                            
+                                'Hearing that you thought for a long time. To help a friend is nice, but that`s the way to cause you to have doubts.'
+                                ' - Well Andrew, I agree, you finally decided to answer. - And how to help you and where?'
+                                ' - Damn, <<$nickname>>, I knew you would, " he replied. - Well, at the expense of the way don`t worry, give me your mouth, good enough for me.'
+                                ' - Went for the hut, so no one would see , " he added getting up from the bench.'
+                            
+                                act 'Go':dynamic $hantersmokBJ
+                            end
+                            
+                            if alko < 6:
+                                act 'Refuse':
+                                    cls
+                                    minut += 10
+	                                hanterslut -= 1
+	                                hantersAndreiQw += 1
+                                    gs 'stat'
+                            
+                                    '<center><img src="images/qwest/gadukino/Swamp/thinks'+rand(1,2)+'.jpg"></center>'                            
+                                    'Hearing that you thought for a long time. To help a friend is nice, but that`s the way to cause you to have doubts.'
+                                    ' - No Andrew, I do not agree, you finally decided to answer. - How could you do that to me to offer?'                                   
+                                    'And getting up from the bench and quickly went back to the hut.'
+                            
+                                    act 'To return to the table':dynamic $hanterstable
+                                end                            
+                            end
+                        end   
+                    else
+                        act 'Agree':
+                            cls
+                            minut += 10
+	                        horny += 5
+	                        hanterslut += 1
+	                        hantersAndreiQw += 1
+	                        stat['bj'] += 1
+                            gs 'stat'
+                            
+                            '<center><img src="images/qwest/gadukino/Swamp/AndreiHanter.jpg"></center>'                           
+                            'You came out of the hut to smoke, but Andrew immediately said:'
+                            ' - To hell with the smoke <<$nickname>>, went for the hut.'
+                            
+                            act 'Go':dynamic $hantersmokBJ
+                            if alko < 6:
+                                act 'Refuse':
+                                    cls
+                                    minut += 10
+	                                hanterslut -= 1
+	                                hantersAndreiQw -= 50
+                                    gs 'stat'
+                            
+                                    '<center><img src="images/qwest/gadukino/Swamp/thinks'+rand(1,2)+'.jpg"></center>'                            
+                                    ' - You know Andrew, I`ve changed my mind, you said courage. - I`m happy to help a friend, but I`m not a whore something to suck on gates.'                                  
+                                    'And getting up from the bench and quickly ran back to the hut.'
+                            
+                                    act 'To return to the table':dynamic $hanterstable
+                                end                            
+                            end            
+                        end                          
+                    end                          
+                end
+                if hantersKnowSlut = 1:
+                    act 'Agree':
+                        cls
+                        minut += 10
+	                    horny += 5
+	                    stat['bj'] += 1
+                        gs 'stat'
+                        
+                        '<center><img src="images/qwest/gadukino/Swamp/AndreiHanter.jpg"></center>'                           
+                        'You came out of the hut to smoke, but Andrew immediately said:'
+                        ' - To hell with the smoke <<$nickname>>, went for the hut, it is necessary to remove stress.'
+                        
+                        act 'Go':dynamic $hantersmokBJ                                    
+                    end                          
+                end                
+                act 'Refuse':dynamic $hanterstable                
+ 		    end 
+		    if temp = 3:
+		        cls
+		        gs 'stat'
+	            '<center><img src="images/qwest/gadukino/Swamp/SergeiHanter.jpg"></center>'
+                'Sergei offers to go out for a smoke.'
+                
+                act 'Agree':
+                    cls
+                    minut += 15
+ 	                smoker += 1
+	                smokeHour = hour
+                    smokeDay = day
+	                smokeminut = minut+5
+	                smokeNeed = 0
+	                manna += 100
+	                willpower += 100
+	                if hantersKnowSlut = 0:hantersSergeiQw += 1
+                    gs 'stat'	                 
+
+	                '<center><img src="images/qwest/gadukino/Swamp/hantersmoker2.jpg"></center>'
+                    'You came out of the hut, Sergei gave you a cigarette and you smoke, continuing the interrupted conversation.'
+
+                    
+                    act 'To return to the table':dynamic $hanterstable
+                end
+                act 'Refuse':dynamic $hanterstable   
+ 		    end	
+		    if temp = 4:
+		        cls
+		        gs 'stat'
+	            '<center><img src="images/qwest/gadukino/Swamp/IgorHanter.jpg"></center>'
+                'Igor offers to go out for a smoke.'
+                
+                act 'Agree':
+                    cls
+                    minut += 15
+ 	                smoker += 1
+	                smokeHour = hour
+                    smokeDay = day
+	                smokeminut = minut+5
+	                smokeNeed = 0
+	                manna += 100
+	                willpower += 100
+	                if hantersKnowSlut = 0:hantersIgorQw += 1
+                    gs 'stat'	                 
+
+	                '<center><img src="images/qwest/gadukino/Swamp/hantersmoker2.jpg"></center>'
+                    'You came out of the hut, Igor gave you a cigarette and you smoke, continuing the interrupted conversation.'
+                    
+                    act 'To return to the table':dynamic $hanterstable
+                end
+                act 'Refuse':dynamic $hanterstable   
+ 		    end		    
+		end 
+	    if alko >= 8 and hantersKnowSlut = 0:
+	        cls  
+		    temp = rand(1,6)
+		    gs 'stat'
+	        '<center><img src="images/qwest/gadukino/Swamp/swamphousedrunkgirl.jpg"></center>'
+            'You got really drunk, my brain has almost clueless, and move with difficulty...'		    
+		    
+		    if hanterslut <= 20:                
+                if temp = 1:
+                    act 'Pass out':
+                        cls
+                        minut += 1
+                        if hantersIgorLove <= 1:hanterslut += 1
+                        gs 'stat'
+                        '<center><img src="images/qwest/gadukino/Swamp/swamphousedrunkgirl2.jpg"></center>'
+                        'You passed out and fell asleep right at the table...'
+                        
+                        act 'Wake up':
+                            cls
+                            minut += 180
+                            son += 54
+                        	health -= 15
+	                        manna -= 25
+	                        willpower -=10
+	                        gs 'stat'
+	                        
+	                        '<center><img src="images/zsoft/pod_ezd/shulgahome/bigroom/drunk_ev/pohmel1.jpg"></center>'
+	                        'You slept for hours 3, waking up in the night. Headache and you vaguely remembered what happened yesterday.'
+	                        
+	                        act 'Further': gt $locM, $metkaM
+                        end     
+                    end
+                end
+                if temp = 2:
+                    act 'Pass out':
+                        cls
+                        minut += 3
+                        if hantersIgorLove <= 1:hanterslut += 1
+                        gs 'stat'
+                        '<center><img src="images/zsoft/pod_ezd/shulgahome/bigroom/drunk_ev/sleep7.jpg"></center>'
+                        'You were trying to get to bed, but passed out right on the floor, and before reaching it...'
+                        
+                        act 'Wake up':
+                            cls
+                            minut += 240
+                            son += 24                       
+                        	health -= 20
+	                        manna -= 25
+	                        willpower -=10
+	                        gs 'stat'
+	                        
+	                        '<center><img src="images/zsoft/pod_ezd/shulgahome/bigroom/drunk_ev/pohmel4.jpg"></center>'
+	                        'You slept for hours 4, waking up in the night, harried and barely got up off the floor. Headache and you vaguely remembered what happened yesterday.'
+	                        
+	                        act 'Further': gt $locM, $metkaM
+                        end     
+                    end
+                end
+                if temp = 3:
+                    act 'Pass out':
+                        cls
+                        minut += 5
+                        gs 'stat'
+                        '<center><img src="images/zsoft/pod_ezd/shulgahome/bigroom/drunk_ev/sleep4.jpg"></center>'
+                        'You somehow got to the couch and passed out without undressing...'
+                        
+                        act 'Wake up':
+                            cls
+                            minut += 360
+                            son += 36
+                        	health -= 10
+	                        manna -= 25
+	                        willpower -=10
+	                        gs 'stat'
+	                        
+	                        '<center><img src="images/zsoft/pod_ezd/shulgahome/bigroom/drunk_ev/pohmel2.jpg"></center>'
+	                        'You slept for awhile, waking up disheveled barely tore the head from the pillow. Headache and you vaguely remembered what happened yesterday.'
+	                        
+	                        act 'Further': gt $locM, $metkaM
+                        end     
+                    end
+                end
+                if temp > 3:
+                    act 'To exit the table':
+                        cls
+                        minut += 1
+                        gs 'stat'
+                        '<center><img src="images/zsoft/pod_ezd/shulgahome/bigroom/drunk_ev/Pjanaja5.jpg"></center>'
+                        'Drunk guys asked you to please them and to dance, Andrew turned on the music and you drunkenly swaying out of the table...'
+                        
+                        if hanterslut < 5:
+                            act 'Abandon this idea':
+                                cls
+                                minut += 5
+                                gs 'stat'
+                                '<center><img src="images/zsoft/pod_ezd/shulgahome/bigroom/drunk_ev/sleep11.jpg"></center>'
+                                'But standing on your feet you understand that you are not to dance, you to bed to reach it will be difficult. Therefore, a wave of frustrated guys hand you went to sleep.'                            
+                            
+                                act 'Wake up':
+                                    cls
+                                    minut += 480
+                                    son += 16
+                        	        health -= 5
+	                                manna -= 25
+	                                willpower -=10
+	                                gs 'stat'
+	                        
+	                                '<center><img src="images/zsoft/pod_ezd/shulgahome/bigroom/drunk_ev/pohmel2.jpg"></center>'
+	                                'You slept for awhile, waking up disheveled barely got out of bed. Headache and you vaguely remembered what happened yesterday.'
+	                        
+	                                act 'Further': gt $locM, $metkaM
+	                            end
+                            end
+                        end
+                        if hanterslut >= 5:
+                            act 'Dance':
+                                cls
+                                minut += 10
+                                horny += rand(5,10)
+                                gs 'stat'
+                                '<center><img src="images/qwest/gadukino/Swamp/dance1.'+rand(1,2)+'.jpg"></center>'
+                                'Get out from behind the Desk, you began to depict the rhythmic dance, the applause guys.'
+                                
+                                if hanterslut >= 10:
+                                    act 'Keep dancing':
+                                        cls
+                                        minut += 10
+                                        horny += rand(5,10)
+                                        hanterslut += 1
+                                        if hantersIgorLove > 0:hantersIgorQw -= 1
+                                        if hantersSergeiLove > 0:hantersSergeiQw -= 1
+                                        if hantersSergeiLove > 0:hantersSergeiQw -= 1
+                                        gs 'stat'
+                                        '<center><img src="images/qwest/gadukino/Swamp/dance2.'+rand(1,2)+'.jpg"></center>'
+                                        'In a fit of dance, under the approving applause guys, you tear the top part of the clothes, left only in the bra...'
+
+                                        if hanterslut >= 15:
+                                            act 'Keep dancing':
+                                                cls
+                                                minut += 10
+                                                horny += rand(5,10)
+                                                hanterslut += 1
+                                                if hantersIgorLove > 0:hantersIgorQw -= 1
+                                                if hantersSergeiLove > 0:hantersSergeiQw -= 1
+                                                if hantersSergeiLove > 0:hantersSergeiQw -= 1
+                                                gs 'stat'
+                                                '<center><img src="images/qwest/gadukino/Swamp/dance3.jpg"></center>'
+                                                'Under the cheers guys you undress further, remaining only in underwear...'
+
+                                                act 'Pass out':
+                                                   cls
+                                                   minut += 1
+                                                   gs 'stat'
+                                                   '<center><img src="images/zsoft/pod_ezd/shulgahome/bigroom/drunk_ev/sleep10.jpg"></center>'
+                                                   'You clearly overestimated their strength and capabilities of the body. So a bit of a dance, unexpectedly for the guys passed out on the floor, where danced....'
+                                     
+                                                    act 'Wake up':
+                                                        cls
+                                                        minut += 240
+                                                        son += 24                        
+                        	                            health -= 5
+	                                                    manna -= 25
+	                                                    willpower -=10
+	                                                    gs 'stat'
+	                        
+	                                                    '<center><img src="images/zsoft/pod_ezd/shulgahome/bigroom/drunk_ev/pohmel4.jpg"></center>'
+	                                                    'You slept for hours 4, waking up in the night, harried and barely got up off the floor. Headache and you vaguely remembered what happened yesterday.'
+	                        
+	                                                    act 'Further': gt $locM, $metkaM
+                                                    end     
+                                                end
+                                            end
+                                        end
+                                    end                                                                          
+                                else
+                                    act 'Pass out':
+                                        cls
+                                        minut += 5
+                                        gs 'stat'
+                                        '<center><img src="images/zsoft/pod_ezd/shulgahome/bigroom/drunk_ev/sleep11.jpg"></center>'
+                                        'But a bit of a dance, you realized that you legs no longer hold, so a wave of frustrated guys hand you went to sleep.'
+                                     
+                                        act 'Wake up':
+                                            cls
+                                            minut += 360
+                                            son += 36    
+                        	                health -= 15
+	                                        manna -= 25
+	                                        willpower -=10
+	                                        gs 'stat'
+	                        
+	                                       '<center><img src="images/zsoft/pod_ezd/shulgahome/bigroom/drunk_ev/pohmel2.jpg"></center>'
+	                                       'You slept for awhile, waking up disheveled barely got out of bed. Headache and you vaguely remembered what happened yesterday.'
+	                        
+	                                        act 'Further': gt $locM, $metkaM
+                                        end     
+                                    end
+                                end
+                            end    
+                        end       
+                    end            
+                end
+            end    
+		    if hanterslut > 20:                
+                act 'To exit the table':
+                    cls
+                    minut += 1
+                    gs 'stat'
+                    '<center><img src="images/zsoft/pod_ezd/shulgahome/bigroom/drunk_ev/Pjanaja5.jpg"></center>'
+                    'Drunk guys asked you to please them and to dance, Andrew turned on the music and you drunkenly swaying out of the table...'
+                        
+                    act 'Dance':
+                        cls
+                        minut += 10
+                        horny += rand(5,10)
+                        gs 'stat'
+                        '<center><img src="images/qwest/gadukino/Swamp/dance1.'+rand(1,2)+'.jpg"></center>'
+                        'Get out from behind the Desk, you began to depict the rhythmic dance, the applause guys.'
+                                
+                        act 'Keep dancing':
+                            cls
+                            minut += 10
+                            horny += rand(5,10)
+                            hanterslut += 1
+                            if hantersIgorLove > 0:hantersIgorQw -= 1
+                            if hantersSergeiLove > 0:hantersSergeiQw -= 1
+                            if hantersSergeiLove > 0:hantersSergeiQw -= 1
+                            gs 'stat'
+                            '<center><img src="images/qwest/gadukino/Swamp/dance2.'+rand(1,2)+'.jpg"></center>'
+                            'In a fit of dance, under the cheers of the guys, you tear the top part of the clothes, left only in the bra...'
+
+                            act 'Keep dancing':
+                                cls
+                                minut += 10
+                                horny += rand(5,10)
+                                hanterslut += 1
+                                if hantersIgorLove > 0:hantersIgorQw -= 1
+                                if hantersSergeiLove > 0:hantersSergeiQw -= 1
+                                if hantersSergeiLove > 0:hantersSergeiQw -= 1
+                                gs 'stat'
+                                '<center><img src="images/qwest/gadukino/Swamp/dance3.jpg"></center>'
+                                'Under the cheers of the guys you undress further, remaining only in underwear...'
+                                
+                                act 'Keep dancing':
+                                    cls
+                                    minut += 10
+                                    horny += rand(5,10)
+                                    temp = rand(1,2)
+                                    hanterslut += 1
+                                    if hantersIgorLove > 0:hantersIgorQw -= 1
+                                    if hantersSergeiLove > 0:hantersSergeiQw -= 1
+                                    if hantersSergeiLove > 0:hantersSergeiQw -= 1
+                                    gs 'stat'
+                                    '<center><img src="images/qwest/gadukino/Swamp/dance4.jpg"></center>'
+                                    'You dancing naked on bra flies to the side and under the cheers guys you rock in front of them her Breasts <<tits>> size.'
+                                
+                                    if temp = 1:
+                                        act 'Pass out':
+                                            cls
+                                            minut += 1
+                                            gs 'stat'
+                                            '<center><img src="images/zsoft/pod_ezd/shulgahome/bigroom/drunk_ev/sleep17.jpg"></center>'
+                                            'You clearly overestimated their strength and capabilities of the body. So a bit of a dance, unexpectedly for the guys passed out on the floor, where danced....'
+                                     
+                                            act 'Wake up':
+                                                cls
+                                                minut += 240
+                                                son += 24                        
+                        	                    health -= 20
+	                                            manna -= 25
+	                                            willpower -=10
+	                                            gs 'stat'
+	                        
+	                                            '<center><img src="images/zsoft/pod_ezd/shulgahome/bigroom/drunk_ev/pohmel3.jpg"></center>'
+	                                            'You slept for hours 4, waking up in the night, harried and barely got up off the floor. Headache and you vaguely remembered what happened yesterday.'
+	                        
+	                                            act 'Further': gt $locM, $metkaM
+                                            end     
+                                        end                                                                          
+                                    else
+                                        act 'Keep dancing':
+                                            cls
+                                            minut += 10
+                                            horny += rand(5,10)
+                                            hantdancesex = 1
+                                            gs 'stat'
+                                            '<center><img src="images/qwest/gadukino/Swamp/dance5.jpg"></center>'
+                                            'Dancing undress you further and remain in the buff. Judging by the excited faces of the boys very sexy.'
+	                        
+	                                        act 'Further': gt 'hantersex'
+                                        end     
+                                    end
+                                end
+                            end    
+                        end       
+                    end            
+                end
+            end    
+        end
+	    if alko >= 8 and hantersKnowSlut > 0:
+	        cls  
+		    temp = rand(1,6)
+		    gs 'stat'
+	        '<center><img src="images/qwest/gadukino/Swamp/swamphousedrunkgirl1.jpg"></center>'
+            'You got really drunk, my brain has almost clueless, and move with difficulty...'		    
+		                    
+            if temp = 1:
+                act 'Pass out':
+                    cls
+                    minut += 1
+                    gs 'stat'
+                    '<center><img src="images/qwest/gadukino/Swamp/swamphousedrunkgirl2.jpg"></center>'
+                    'You passed out and fell asleep right at the table...'
+                        
+                    act 'Wake up':
+                        cls
+                        minut += 180
+                        son += 54
+                        health -= 15
+	                    manna -= 25
+	                    willpower -=10
+	                    gs 'stat'
+	                        
+	                    '<center><img src="images/zsoft/pod_ezd/shulgahome/bigroom/drunk_ev/pohmel1.jpg"></center>'
+	                    'You slept for hours 3, waking up in the night. Headache and you vaguely remembered what happened yesterday.'
+	                        
+	                    act 'Further': gt $locM, $metkaM
+                    end     
+                end
+            end
+            if temp = 2:
+                act 'Pass out':
+                    cls
+                    minut += 3
+                    gs 'stat'
+                    '<center><img src="images/zsoft/pod_ezd/shulgahome/bigroom/drunk_ev/sleep7.jpg"></center>'
+                    'You were trying to get to bed, but passed out right on the floor, and before reaching it...'
+                        
+                    act 'Wake up':
+                        cls
+                        minut += 240
+                        son += 24                   
+                        health -= 20
+	                    manna -= 25
+	                    willpower -=10
+	                    gs 'stat'
+	                        
+	                    '<center><img src="images/zsoft/pod_ezd/shulgahome/bigroom/drunk_ev/pohmel4.jpg"></center>'
+	                    'You slept for hours 4, waking up in the night, harried and barely got up off the floor. Headache and you vaguely remembered what happened yesterday.'
+	                        
+	                    act 'Further': gt $locM, $metkaM
+                    end     
+                end
+            end
+            if temp = 3:
+                act 'Pass out':
+                    cls
+                    minut += 5
+                    gs 'stat'
+                    '<center><img src="images/zsoft/pod_ezd/shulgahome/bigroom/drunk_ev/sleep4.jpg"></center>'
+                    'You somehow got to the couch and passed out without undressing...'
+                        
+                    act 'Wake up':
+                        cls
+                        minut += 360
+                        son += 36                        
+                        health -= 10
+	                    manna -= 25
+	                    willpower -=10
+	                    gs 'stat'
+	                        
+	                    '<center><img src="images/zsoft/pod_ezd/shulgahome/bigroom/drunk_ev/pohmel2.jpg"></center>'
+	                    'You slept for awhile, waking up disheveled barely tore the head from the pillow. Headache and you vaguely remembered what happened yesterday.'
+	                        
+	                    act 'Further': gt $locM, $metkaM
+                    end     
+                end
+            end
+            if temp > 3:                
+                act 'To exit the table':
+                    cls
+                    minut += 1
+                    gs 'stat'
+                    '<center><img src="images/zsoft/pod_ezd/shulgahome/bigroom/drunk_ev/Pjanaja5.jpg"></center>'
+                    'Drunk guys asked you to please them and to dance, Andrew turned on the music and you drunkenly swaying out of the table...'
+                        
+                    act 'Dance':
+                        cls
+                        minut += 10
+                        horny += rand(5,10)
+                        gs 'stat'
+                        '<center><img src="images/qwest/gadukino/Swamp/dance1.'+rand(1,2)+'.jpg"></center>'
+                        'Get out from behind the Desk, you began to depict the rhythmic dance, the applause guys.'
+                                
+                        act 'Keep dancing':
+                            cls
+                            minut += 10
+                            horny += rand(5,10)
+                            gs 'stat'
+                            '<center><img src="images/qwest/gadukino/Swamp/dance2.'+rand(1,2)+'.jpg"></center>'
+                            'In a fit of dance, under the cheers of the guys, you tear the top part of the clothes, left only in the bra...'
+
+                            act 'Keep dancing':
+                                cls
+                                minut += 10
+                                horny += rand(5,10)
+                                gs 'stat'
+                                '<center><img src="images/qwest/gadukino/Swamp/dance3.jpg"></center>'
+                                'Under the cheers of the guys you undress further, remaining only in underwear...'
+                                
+                                act 'Keep dancing':
+                                    cls
+                                    minut += 10
+                                    horny += rand(5,10)
+                                    temp = rand(1,2)
+                                    gs 'stat'
+                                    '<center><img src="images/qwest/gadukino/Swamp/dance4.jpg"></center>'
+                                    'You dancing naked on bra flies to the side and under the cheers guys you rock in front of them her Breasts <<tits>> size.'
+                                
+                                    if temp = 1:
+                                        act 'Pass out':
+                                            cls
+                                            minut += 1
+                                            gs 'stat'
+                                            '<center><img src="images/zsoft/pod_ezd/shulgahome/bigroom/drunk_ev/sleep17.jpg"></center>'
+                                            'You clearly overestimated their strength and capabilities of the body. So a bit of a dance, unexpectedly for the guys passed out on the floor, where danced....'
+                                     
+                                            act 'Wake up':
+                                                cls
+                                                minut += 240
+                                                son += 24                        
+                        	                    health -= 20
+	                                            manna -= 25
+	                                            willpower -=10
+	                                            gs 'stat'
+	                        
+	                                            '<center><img src="images/zsoft/pod_ezd/shulgahome/bigroom/drunk_ev/pohmel3.jpg"></center>'
+	                                            'You slept for hours 4, waking up in the night, harried and barely got up off the floor. Headache and you vaguely remembered what happened yesterday.'
+	                        
+	                                            act 'Further': gt $locM, $metkaM
+                                            end     
+                                        end                                                                          
+                                    else
+                                        act 'Keep dancing':
+                                            cls
+                                            minut += 10
+                                            horny += rand(5,10)
+                                            hantdancesex = 3
+                                            gs 'stat'
+                                            '<center><img src="images/qwest/gadukino/Swamp/dance5.jpg"></center>'
+                                            'Dancing undress you further and remain in the buff. Judging by the excited faces of the boys very sexy.'
+	                        
+	                                        act 'Further': gt 'hantersex'
+                                        end     
+                                    end
+                                end
+                            end    
+                        end       
+                    end            
+                end
+            end    
+        end
+    else        
+        act 'eat a meal':
+			gs 'food', 'm_meal'
+      	end
+        act 'Chat': 
+            cls     	
+		    minut += 60
+	        if hantersAndreiQw < 10:hantersAndreiQw += 1
+	        if hantersIgorQw < 10:hantersIgorQw += 1
+	        if hantersSergeiQw < 10:hantersSergeiQw += 1		    
+		    gs 'stat'
+ 
+		    '<center><img src="images/qwest/gadukino/Swamp/hanterstable.jpg"></center>'
+		    'You chatted with the guys with the guys on various topics...'
+
+		    act 'To exit the table':gt $locM, $metkaM
+        end          	
+        act'To exit the table':hanter_refuse = 1 & gt $locM, $metkaM
+    end    
+    if hantersKnowSlut > 0 and hanterstableBJ = 0:
+        if hantersdrink = 0:
+	        cls 
+	        minut += 1
+            gs 'stat'
+
+            '<center><img src="images/qwest/gadukino/Swamp/hanterstable.jpg"></center>'
+            'You wanted to sit at the table and eat with the guys, but there it was...'
+            '- Not so fast <<$nickname>>, - jokingly said Andrew. - You understand that free cheese only in a mousetrap.'
+            '- Want to eat, get a job, " he added with a sardonic grin and pointed under the table.'
+
+            act 'Crawl under the table':dom -= 1 & dynamic $hanterstableBJ   
+            act 'Refuse':gt $locM, $metkaM   
+	    else
+	        cls 
+	        minut += 1
+            gs 'stat'
+
+            '<center><img src="images/qwest/gadukino/Swamp/hanterstable.jpg"></center>'
+            'Seeing you guys wreathed in smiles...'
+            '- About! Our <<$nickname>> came - jokingly said Andrew. - We just didn`t enough, sit at the table.'
+
+            act 'Sit at the table':hanterstableBJ = 1 & dynamic $hanterstable  
+	    end
+	end    
+	if ($clothingworntype = 'nude' and arrsize('sparrvol') > 0) or arrpos('sparrloc',11) ! -1:
+		!face, or naked + visable body cum. may need to fix? by illume
+	    cls 
+	    minut += 1
+        gs 'stat'
+
+        '<center><img src="images/qwest/gadukino/Swamp/hanterstable.jpg"></center>'
+        'You wanted to sit at the table and eat with the guys, but there it was...'
+        '- Ugh, damn, <<$nickname>>, - said Andrew. - Would you even our artistry with faces washed before zastol to sit.'
+  
+        act 'Go':gt $locM, $metkaM   
+	end	 
+
+}
+
+$hantersrelax = {
+	cla
+	*clr
+	minut += 1
+	gs 'stat'
+	
+	'<center><img src="images/qwest/gadukino/Swamp/hantersrelax1.'+rand(1,8)+'.jpg"></center>'
+
+    'In the hut you see Sergei, Andrei and Igor. They are busy in their own business.'
+ 
+    act'To speak with Andrew':gt'AndreiHanter'     
+    act'To speak with Sergey':gt'SergeiHanter'
+    act'Talk to Igor':gt'IgorHanter'   
+    act'Go':gt $locM, $metkaM 
+
+}
+
+$hantersmokBJ = {
+    cls
+	$boy = 'Andrew'
+	dick = 20		    
+    minut += 5
+    horny += 5    
+    if hanterandreisex = 0:hanterandreisex = 1 & guy += 1
+    temp = rand(1,2)
+    gs 'stat'
+            
+    '<center><img src="images/qwest/gadukino/Swamp/hantersmokBJ1.'+rand(1,3)+'.jpg"></center>'
+    if hantersmokBJ = 0:'You got comfortable on my knees and brought my face to his cock...'
+    if hantersmokBJ = 1:'Andrew did not finish, so you continue to suck...'
+	gs'oral','start'       
+
+    if temp = 1:act 'Suck on':hantersmokBJ = 1 & dynamic $hantersmokBJ
+    if temp = 2:
+        act 'Suck on':
+		    cls
+		    minut += 1
+		    gs 'cum_call', 'mouth', $boy
+		    swallow += 1
+            vaf += 1
+            hantersmokBJ = 0		            
+		    gs 'stat'
+		    
+            '<center><img src="images/qwest/gadukino/Swamp/hantersmokCUM.jpg"></center>'                  
+            dynamic $dinrandswallow
+            '- Cool, damn, <<$nickname>>, - said a happy Andrew. - You`re right mistress.'
+            'Clean yourself up you went with Andrew back to the hut'
+           
+            act 'To return to the table':dynamic $hanterstable
+        end
+	end       
+}
+
+$dirty_swamphouse = {
+	cla
+	*clr
+	if dirty_swamphouse > 10:minut += 60 & sweat += 10
+	if dirty_swamphouse >= 10 and dirty_swamphouse < 20:minut += 120 & sweat += 20
+	if dirty_swamphouse >= 20:minut += 180 & sweat += 30
+	if hantersAndreiQw < 15:hantersAndreiQw += 1
+	if hantersIgorQw < 15:hantersIgorQw += 1
+	if hantersSergeiQw < 15:hantersSergeiQw += 1		
+	gs'stat'
+	
+	'<center><img src="images/qwest/gadukino/Swamp/dirty_swamphouse.jpg"></center>'	
+	'Going once again to the hut, you notice that there are many different dust and dirt. " - With this need to do something", - thought you, and finding a broom and a rag and began cleaning. But after some time the hut shone with cleanliness and order.'
+		
+    act 'Further':dirty_swamphouse = 0 & gt'swamphouse'         
+}
+
+--- swamphouse ---------------------------------
+

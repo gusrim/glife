@@ -1,0 +1,1019 @@
+# swamp_yard
+$location_type = 'secluded'
+$metka = $ARGS[0]
+$loc = $CURLOC
+gs 'gadukino_event', 'sound'
+cls
+gs'stat'
+!gs'time'
+!the chance of encountering hunters
+if week = 6 or week = 7:hantersrand = RAND(1,3)
+if week < 6:hantersrand = RAND(1,5)
+if hantersrand = 1:hanters = 1
+!the chance of hitting GG, if she`s a slut
+hantslutsexrand = rand(1,3)
+! to remember were cowards or not 
+!if lost_girl = 0:lost_girl += rand(40,60)
+if StoryLine = 1 and lost_girl = 0 and forest_lostday > 0: lost_girl=daystart+2
+dirty = 0
+temp = rand(1,10)
+
+'<center><B>Clearing with the hut</B></center>'
+if month >= 5 and month <= 9:
+	if hour >= 6 and hour < 22:
+		'<center><img src="images/qwest/gadukino/Swamp/swamp_yard.jpg"></center>'
+	else
+		'<center><img src="images/qwest/gadukino/Swamp/swamp_yard_night.jpg"></center>'
+	end
+else
+	if hour >= 8 and hour < 18:
+		'<center><img src="images/qwest/gadukino/Swamp/swamp_yard_winter.jpg"></center>'
+	else
+		'<center><img src="images/qwest/gadukino/Swamp/swamp_yard_winter_night.jpg"></center>'
+	end
+end
+'Clearing with a hut in a swamp.'
+'Behind the hut there is <a href="exec: gt ''swampspring'' ">spring</a>, a little further there is a small <a href="exec: gt ''backwater'' ">backwater</a> with relatively clean water.'
+if findvel = 3:'Near the hut is an old <a href="exec:gt ''bicycle'',''swamp''">bike</a>.'
+if clearclothes > 0 and clearclothesH = 0: 'In the meadow dring your clothes.'
+if hanters > 0 and hantersKnow = 0:'In a clearing you see an unfamiliar <a href="exec: gt ''hanters'' ">people</a>.'
+if hanters > 0 and hantersKnow > 0 and hour >= 8 and hour < 20:'In a clearing you see a familiar <a href="exec: gt ''hanters'' ">hunters</a>.'
+    
+act 'Go into the house':gt'swamphouse'
+if dirty_swamp_yard > 10:act 'To get out in the yard':hanterslut -= 1 & dynamic $dirty_swamp_yard
+act '<b>Go to the swamp</b>':
+	!add chance to swamped by illume
+    if hanters = 1:
+        if hour >= 6 and hour < 21:
+            minut += 5
+			if rand(1,10)>9:
+				gt 'swamp'
+			else
+				gt 'gadforestswamp','2'
+			end
+        else 
+            cls
+            gs'stat'       
+            '<center><img src="images/qwest/gadukino/Swamp/IgorHanter.jpg"></center>'
+            'Are you going to go in the woods when you called Igor.'
+            '- <<$nickname>>, it`s not the best time to hike in the woods, you better stay here.'
+            act 'Stay':gt 'swamp_yard'
+            act 'Oh well, you get something like':
+				minut += 5
+				if rand(1,10)>8:
+					gt 'swamp'
+				else
+					gt 'gadforestswamp','2'
+				end
+			end
+        end
+    else
+        minut += 5
+		if (hour >= 6 and hour < 21) or rand(1,10)>7:
+			gt 'swamp'
+		else
+			gt 'gadforestswamp','2'
+		end
+    end
+	
+	gt 'gadforestswamp','2'
+	
+end   
+
+! Hunters rescued from a swamp GG
+if hanterhelp = 1:
+    cls
+    minut += 5    
+    gs'stat'
+    
+    if $clothingworntype ! 'nude':
+        '<center><img src="images/qwest/gadukino/Swamp/hanterhelp.jpg"></center>'
+    else
+        '<center><img src="images/qwest/gadukino/Swamp/hanterhelp1.jpg"></center>'
+    end
+    if $clothingworntype = 'nude' and hantersKnow = 0:'- No way we caught a mermaid! - you heard someone surprised voice.'
+    if $clothingworntype = 'nude' and hantersKnow = 1 and hantersKnowSlut = 0:'- <<$nickname>>, again, you`re naked running through the woods! - he shook his head Andrew.' 
+    if $clothingworntype = 'nude' and hantersKnow = 1 and hantersKnowSlut = 1:'- About! Again our slut in a network caught, and in the required form! - laughed Andrew.'   
+    if hantersKnow = 0:'You dragged in a dry place. Some time you understood nothing, just stared blankly ahead and tried to catch my breath. A little rest you decide to still find out where you were and who you saved.'
+    if hantersKnow = 1:'You dragged in a dry place. Some time you understood nothing, just stared blankly ahead and tried to catch my breath. After a short rest you went to the clearing before the hut.'
+    ''    
+    if hantersKnow = 0:act 'Look':hanterhelp = 2 & gt 'swamp_yard'
+    if hantersKnow = 1:act 'Further':hanterhelp = 0 & gt 'swamp_yard'
+end 
+if hanterhelp = 2 and hantersKnow = 0:
+    cls
+    minut += 5
+	hantersKnow = 1
+	hantersAndreiQw += 1
+	hantersIgorQw += 1
+	hantersSergeiQw += 1    
+    gs'stat'
+    
+    if ($clothingworntype ! 'nude' and $clothingworntype ! 'swimwear'):
+        cls
+        gs'stat'
+        '<center><img src="images/qwest/gadukino/Swamp/hanterhelp2.jpg"></center>'
+        
+        'You saw three men talking to each other. Seeing that you more or less came to, they came to meet you.'
+	    if vnesh >= 60:'-Well, better for a while? How to call-dignify you, beautiful?- one of them asked.'
+	    if vnesh < 60:'-Well, better for a while? As a name to call you?- one of them asked.'
+        '- <<$nickname>>, - answered you.'  
+        if gadriver_gang > 0:
+            '-And I`m Andrew, replied replied the older man, and this, my friends, from the center, Igor and Sergei.'
+            '-And your name is not <<$surname>> accidentally? - he asked. You looked at him and nodded.'
+            '-Don`t be surprised <<$nickname>>, you look a lot like her when she was younger. I ... Hmmm... very good to know, I`m also from Gadyukino.- said Andrew.'
+            if sweat > 0 or dirtyclothes = 1:
+                '-You go take a bath and wash clothes, and quite dirty, " continued Andrew.'
+                '-Where?'
+                '-Well, summer is warm, can be washed in the Creek that hut, and you can in itself. There is a basin there, take the water in a spring and heated in the oven, " said Andrew.- But in the cold only in the hut and.'
+                '-It is possible to do Laundry in the cabin. Again, the water in the spring, warm on the stove and wash, " he continued.- You can of course and in the backwaters, but there is just a little to clean off work.'
+            else            
+                '-You`re not shy, have a seat, in the legs there is no truth.- Sergey said, freeing a place for you.'
+            end    
+        else 
+            '- Bah, what the cat dragged in surprise handed the older man is <<$nickname>> <<$surname>>, local slut.'
+            'You looked at him.'
+            '-Don`t be surprised, I`m also from Gadyukino, you look just like her when she was younger, and apparently the same blagovica.- he said.'
+            '-I`m Andrew, " he added further - and this, my friends, from the center, Igor and Sergei.'            
+            if sweat > 3 or dirtyclothes = 1:
+                hantersKnowSlut = 1
+                hantersRape = 1
+                '-You go take a bath and wash clothes and dirty,just like the hobgoblin... look disgusting - continued Andrew. - While we think it as to be with you.'
+                '-Where?'
+                '-Well, summer is warm, can be washed in the Creek that hut, and you can in itself. There is a basin there, take the water in a spring and heated in the oven, " said Andrew.- But in the cold only in the hut and.'
+                '-It is possible to do Laundry in the cabin. Again, the water in the spring, warm on the stove and wash, " he continued.- You can of course and in the backwaters, but there is just a little to clean off work.'
+                
+            else
+                hantersKnowSlut = 1
+                hantersRape = 1              
+                '-You`re not shy, have a seat,in the legs there is no truth.- Sergey said with echidnoyle freeing up a place for you.'
+            end
+                    
+        end        
+    else
+        '<center><img src="images/qwest/gadukino/Swamp/hanterhelp3.jpg"></center>'
+        'You saw three men talking to each other. Seeing that you`re more or less recovered, they headed in your direction. You realizing that you are totally naked before three strange men quietly onnow began to hide behind the owner, any idea where to go from shame'
+        '- Fresher?- one of them asked and handed you a piece of some fabric. - Here at cover up, we have nothing to embarrass her charms.'
+	    '-How to call-dignify you, beautiful?- asked another.'
+        '- <<$nickname>>, - answered you.'  
+        if gadriver_gang > 0:
+            '-And I`m Andrew, replied replied the older man, and this, my friends, from the center, Igor and Sergei.'
+            '-And your name is not <<$surname>> accidentally? - he asked. You looked at him and nodded.'
+            '-Don`t be surprised <<$nickname>>, you look a lot like her when she was younger. I ... Hmmm... very good to know, I`m also from Gadyukino.- said Andrew.'
+            if sweat > 0:
+                '-You go get cleaned up, and we you the clothes what we`ll find, " continued Andrew.'
+                '-Where?'
+                '-Well, in the summer, while the heat can be in the backwater that hut, and you can in itself. There is a basin there, take the water in the spring and heated on the stove, " continued Andrew.- But in the cold only in the hut and.'
+            else    
+                '-You`re not shy, have a seat,in the legs there is no truth.- Sergey said, freeing a place for you.- And we you the clothes what we`ll find.'
+            end    
+        else 
+            '-Bah, what the cat dragged in surprise handed the older man is <<$nickname>> <<$surname>>, local slut.'
+            'You looked at him.'
+            '-Don`t be surprised, I`m also from Gadyukino, you look just like her when she was younger, the same blagovica.- he said.'
+            ' I`m Andrew, " he added further - and this, my friends, from the center, Igor and Sergei.'            
+            if sweat > 0:
+                cls
+                gs'stat'
+                hantersRape = 1
+                hantersKnowSlut = 1
+                '-You go wash up, there is nothing on the pot to smell, " continued Andrew. - While we think it as to be with you.'
+                '-Where?'
+                '-Well, in the summer, while the heat can be in the backwater that hut, and you can in itself. There is a basin there, take the water in the spring and heated on the stove, " continued Andrew.- But in the cold only in the hut and.'                
+            else    
+                '-You`re not shy, have a seat,in the legs there is no truth.- Sergey said, freeing a place for you.- Think about how you be.'
+                hantersKnowSlut = 1
+                hantersRape = 1
+            end                                  
+        end
+    end
+    !swamp_clothes - temporary clothing if he came naked     
+    if $clothingworntype = 'nude' and hantersKnowSlut = 0:
+        act 'Go':
+            cls 
+            hanterhelp = 0
+            swamp_clothes = 1
+            gs 'clothing', 'wear', $lastwornclothingtype, lastwornclothingnumber
+            gs'stat'
+            '<center><img src="images/qwest/gadukino/Swamp/tkan_cloth.jpg"></center>'
+		    'You thanked them, quickly covered with a piece of burlap... Well, at least something.'
+		    act'Further':gt'swamp_yard'
+        end
+        act 'Sit down':
+            cls 
+            hanterhelp = 0
+            swamp_clothes = 1
+            gs 'clothing', 'wear', $lastwornclothingtype, lastwornclothingnumber
+            gs'stat'
+            '<center><img src="images/qwest/gadukino/Swamp/tkan_cloth.jpg"></center>'
+		    'You thanked them, quickly covered with a piece of burlap... Well, at least something.'
+		    act'Further':gt'hanters'
+        end          
+    else
+        act 'Go':hanterhelp = 0 & gt 'swamp_yard'
+        act 'Sit down':hanterhelp = 0 & gt 'hanters'           
+    end
+end
+
+!please hunters cleaning in the house
+if hanters > 0 and hantersKnow = 1 and hour >= 8 and hour < 20 and dirty_swamphouse > 5 and temp = 2:
+    cls
+    temp = rand(1,3)
+    minut += 5
+    if temp = 1:$boy = 'Andrew'
+    if temp = 2:$boy = 'Sergey'
+    if temp = 3:$boy = 'Igor'
+    gs'stat'
+
+	if temp = 1:'<center><img src="images/qwest/gadukino/Swamp/AndreiHanter.jpg"></center>'
+	if temp = 2:'<center><img src="images/qwest/gadukino/Swamp/SergeiHanter.jpg"></center>'
+	if temp = 3:'<center><img src="images/qwest/gadukino/Swamp/IgorHanter.jpg"></center>'
+	'You were walking when you came <<$boy>>.'
+    if hantersKnowSlut = 0:'-<<$nickname>>,- he said. - The house is a mess, can get out? And we guys all once.'
+    if hantersKnowSlut = 1:'-<<$nickname>>,- he said. - The house is a mess, go put your house up.'
+    
+    act 'To clean the hut':hanterslut -= 1 & dynamic $dirty_swamphouse 
+    if hantersKnowSlut = 0:
+        act 'Refuse':
+            cls
+            minut += 5
+            hanterslut += 1
+            dom += 1
+            if temp = 1:hantersAndreiQw -=1
+            if temp = 2:hantersSergeiQw -=1
+            if temp = 3:hantersIgorQw -=1        
+            gs'stat'
+   
+            '<center><img src="images/qwest/alter/Ev/otel4.jpg"></center>'
+            '-Not, <<$boy>>, I have replied you him. - And in General, their namusorili, yourself and remove.' 
+            act 'Further':gt 'swamp_yard'
+        end    
+    end     
+end 
+
+!please hunters of cleaning in the yard
+if hanters > 0 and hantersKnow = 1 and hour >= 8 and hour < 20 and dirty_swamp_yard > 5 and temp = 3:
+    cls
+    temp = rand(1,3)
+    minut += 5
+    if temp = 1:$boy = 'Andrew'
+    if temp = 2:$boy = 'Sergey'
+    if temp = 3:$boy = 'Igor'
+    gs'stat'
+
+	if temp = 1:'<center><img src="images/qwest/gadukino/Swamp/AndreiHanter.jpg"></center>'
+	if temp = 2:'<center><img src="images/qwest/gadukino/Swamp/SergeiHanter.jpg"></center>'
+	if temp = 3:'<center><img src="images/qwest/gadukino/Swamp/IgorHanter.jpg"></center>'
+	'You were walking when you came <<$boy>>.'
+    if hantersKnowSlut = 0:'-<<$nickname>>,- he said. - In the yard is such a mess, can bring order? And we guys all once.'
+    if hantersKnowSlut = 1:'-<<$nickname>>,- he said. - The house is a mess, go take out the trash.'
+    
+    act 'Out in the meadow':hanterslut -= 1 & dynamic $dirty_swamp_yard 
+    if hantersKnowSlut = 0:
+        act 'Refuse':
+            cls
+            minut += 5
+            hanterslut += 1
+            dom += 1
+            if temp = 1:hantersAndreiQw -=1
+            if temp = 2:hantersSergeiQw -=1
+            if temp = 3:hantersIgorQw -=1        
+            gs'stat'
+   
+            '<center><img src="images/qwest/alter/Ev/otel4.jpg"></center>'
+            '-Not, <<$boy>>, I have replied you him. - And in General, their namusorili, yourself and remove.' 
+            act 'Further':gt 'swamp_yard'
+        end    
+    end     
+end 
+
+!the conversation of the hunters, if he did porn, in the Studio, dancing strip tease or a slut in Gadyukino
+if hanters > 0 and hantersKnowSlut = 0 and hantersKnow = 1 and hanters_check = 0 and hour >= 8 and hour < 20:
+    if modelfoto > 0 and hantersknowfoto = 0 and hantersIgorLove = 0:
+        cls
+        minut += 5
+        hanterslut += 5
+        hanters_check = 1
+        hantersknowfoto = 1
+        gs'stat'
+   
+        '<center><img src="images/qwest/gadukino/Swamp/hanterstalk.jpg"></center>'
+        'Appearing in the clearing you saw guys something excitedly discussing.'
+        '-I`ve seen pictures in men`s magazine, I`m telling you, you hear an excited voice of Igor. Then he noticed you guys stopped talking and turned the conversation to another topic.' 
+        act 'Further':gt 'swamp_yard'          
+    elseif stripdancesum > 0 and hantersknowstrip = 0 and hantersSergeiLove = 0:
+        cls
+        minut += 5
+        hanterslut += 10
+        hanters_check = 1
+        hantersknowstrip = 1
+        gs'stat'
+   
+        '<center><img src="images/qwest/gadukino/Swamp/hanterstalk.jpg"></center>'
+        'Appearing in the clearing you saw guys something excitedly discussing.'
+        '-I saw her, I can tell you, you hear an excited voice of Sergei. - she was on the stage dancing.'
+        'Then he noticed you guys stopped talking and turned the conversation to another topic.'
+        
+        act 'Further':gt 'swamp_yard'
+    elseif film > 0 and hantersknowfilm = 0 and hantersAndreiLove = 0:
+        cls
+        minut += 5
+        hanterslut += 15
+        hanters_check = 1
+        hantersknowfilm = 1
+        gs'stat'
+   
+        '<center><img src="images/qwest/gadukino/Swamp/hanterstalk.jpg"></center>'
+        'Appearing in the clearing you saw guys something excitedly discussing.'
+        '-I recently downloaded porn, it was shot there, I`m telling you, it`s <<$pfname>>, - you heard an excited voice of Andrew. Then he noticed you guys stopped talking and turned the conversation to another topic.'
+        
+        act 'Further':gt 'swamp_yard'
+    elseif gadriver_gang > 0:
+        cls
+        minut += 5
+        hantersRape = 1
+        hanters_check = 1
+        gs'stat'
+   
+        '<center><img src="images/qwest/gadukino/Swamp/hanterstalk.jpg"></center>'
+        'Appearing in the clearing you saw guys something excitedly discussing.'
+        '-I`m just telling you, it is all in Gadyukino gives himself recently "tested", - you heard an excited voice of Andrew. Then he noticed you guys stopped talking and turned the conversation to another topic.'
+        
+        act 'Further':gt 'swamp_yard'
+    end
+end
+!if he`s naked and in the clearing there are the hunters    
+if $clothingworntype = 'nude' and swamp_clothes = 0 and hanters = 1 and hour >= 8 and hour < 20 and hanterknowday ! day and hantersKnow = 1:
+    cla
+    *clr
+	gs'stat'
+    if hantersKnowSlut = 0: 
+        cla
+        *clr
+        gs'stat'
+        
+        '<center><img src="images/qwest/gadukino/Swamp/swampdvornude.jpg"></center>'
+		'Seeing yard men, you onnow began to hide behind the hands...'
+		
+		if clothesswamphouse = 1 and clearclothes = 0 and $lastwornclothingtype ! 'nude':
+	        act'Dress':
+		        cls
+			    clothesswamphouse = 0
+			    minut += 5
+			    tanga = flag_tanga
+			    gs 'clothing', 'wear', $lastwornclothingtype, lastwornclothingnumber
+
+		        '<center><img src="images/qwest/gadukino/Swamp/swampdvornude1.jpg"></center>'
+		        'And headlong rushed into the hut to dress.'
+		        act'Further':gt'swamphouse'
+		    end    
+        else
+            act'Dress':
+                cls
+                minut+=5
+           		swamp_clothes = 1
+		        gs 'clothing', 'wear', $lastwornclothingtype, lastwornclothingnumber
+		        '<center><img src="images/qwest/gadukino/Swamp/tkan_cloth.jpg"></center>'
+		        'And quickly rushed into the hut and hid behind a piece of burlap... Well, at least something.'
+		        act'Further':gt'swamphouse'
+		    end
+        end
+        act'Stay naked':
+            cls
+            hanterslut += 1
+            hanterknowday = day
+            gs'stat'
+            '<center><img src="images/qwest/gadukino/Swamp/swampdvornude2.jpg"></center>'
+            'But then I decided to tickle your nerves and leave it as it is.Men studiously avert their eyes from your naked body.'
+            '- Well, you <<$nickname>>, damn, you just heard the phrase Andrew.'
+            act'Further':gt'swamp_yard'
+        end
+    end    
+    if hantersKnowSlut > 0: 
+        if hantslutsex = 0:        
+            '<center><img src="images/qwest/gadukino/Swamp/swampdvornude2.jpg"></center>'
+		    'Seeing you naked, you guys excited...'
+            '- Well, everything <<$nickname>>, ACE, come to us, called you one of the guys.'    
+    
+            act'Further':hantersexnude = 1 & gt'hanters'
+        else
+            hanterknowday = day
+            '<center><img src="images/qwest/gadukino/Swamp/swampdvornude2.jpg"></center>'
+		    'Seeing you naked, guys just shook their heads...'
+            '- Look <<$nickname>>, going from us, if you charms Shine here - jokingly said one of the guys.'   
+    
+            act'Further':gt'swamp_yard'
+        end
+    end
+end
+!the conversation after a drunken Striptease and fuck GG hunters
+if hantdanceslut = 1 and hour >= 8 and hour < 20:
+    cla
+    *clr
+    minut+=5
+	gs'stat'
+	
+	'<center><img src="images/qwest/gadukino/Swamp/AndreiHanter.jpg"></center>'
+    'As soon as you walked in the yard, you immediately went Andrew.'
+    '- <<$nickname>>, have a conversation, " he said. - Do you remember that night happened?'
+    '- Well... uh... Yes, " you replied, blushing and with downcast eyes.'
+    '- I used to say that you look just like your mother, " Andrew stared at you. - So , as it turned out, like you`re not just externally.'
+    'Andrew paused looking at you and you tried to gather my thoughts and understand what he`s getting at.'    
+    '- In short, you`re as slutty as your mother in his youth, the Apple from the tree as they say... - he chuckled. - Take it as a given.'
+    'Stunned you looked at Andrew.'
+    '- And calling Sluts that? - he continued. - Right, to serve men. Agree?'
+   
+    act'Agree':hantdanceslut = 2 & gt'hanters'
+    if dom > 0 and alko < 8:act'Refuse':hantdanceslut = 3 & gt'hanters'    
+end
+!the conversation after the rape GG hunters
+if hantersRape = 4 and hour >= 8 and hour < 20:
+    cla
+    *clr
+    minut+=5
+    hantersKnowSlut = 2
+    hantersRape = 5
+	gs'stat'
+	
+	'<center><img src="images/qwest/gadukino/Swamp/AndreiHanter.jpg"></center>'
+    'As soon as you walked in the yard, you immediately went Andrew.'
+    '- <<$nickname>>, have a conversation, " he said. - Do you understand what happened and how you need to behave now?'
+    'You could not help nodded.'
+    '- What happened to me you`re the one to blame, nefig to fuck, " Andrew looked at you. - Don`t do anything stupid anymore.'   
+    '- The police you would not advise to go, he added. - Sergei there garter. We`ll just cover, and you then a fucking. Okay? .'
+    'Are you afraid of looked at Andrew and nodded.'
+    '- Well done, " he said, and stepped aside he.'
+   
+    act 'Go':gt'swamp_yard'   
+end
+!Declaration of love Igor
+if hanters > 0 and hantersIgorLove = 0 and hantersIgorQw >= 35 and hantersKnowSlut = 0 and bfA < 1 and hour >= 8 and hour < 20:
+    cls
+    minut += 10
+            
+    gs'stat'
+        
+    '<center><img src="images/qwest/gadukino/Swamp/IgorHanter.jpg"></center>'
+    'Coming into the clearing before the hut you notice Igor. He was clearly waiting for you.'
+    '- <<$nickname>>, I wanted to talk to you... - a little embarrassed he began to speak he. You looked at him, waiting for continue...'
+    
+    act 'Further':gt'IgorHanter'
+end 
+!sex with Igor
+if hanters > 0 and hantersIgorLove > 0 and hantersIgorQw >= 10 and temp = 4 and hantersIgorsex = 0 and hour >= 8 and hour < 20:
+	cls
+    minut += 5
+    hantersIgorsex += rand(12,36)
+ 	gs 'stat'
+	
+	'<center><img src="images/qwest/gadukino/Swamp/hanterlove1.4.jpg"></center>'
+	'Appearing in the clearing you saw Igor. With a smile he walked over and stared at your lips with a passionate kiss.'
+	'- <<$nickname>>, I want you, " he whispered, breaking the kiss.'
+	
+	act 'Agree':
+	    cls
+	    minut += 5
+	    hantersIgorQw += 1
+	    horny += 5
+		gs 'stat'
+		
+		'<center><img src="images/qwest/gadukino/Swamp/hanterflirt2.'+rand(4,6)+'.jpg"></center>'
+		'Smiling you wink Igor. He, all knowing, takes you by the hand and leads.'	
+	    act 'Go':gt'HanterLoveSex'
+    end 
+	act 'Refuse':
+	    cls
+	    minut += 5
+	    hantersIgorQw -= 1
+		gs 'stat'
+		
+        '<center><img src="images/qwest/alter/Ev/otel4.jpg"></center>'
+        ' - No, Igor, not now, you said, and trying not to look at rasteryalsya guy left.' 	
+	    act 'Go':gt $loc, $metka
+    end     
+end
+!flowers from Igor
+if hanters > 0 and hantersKnowSlut = 0 and ($clothingworntype ! 'nude' and $clothingworntype ! 'swimwear') and hantersIgorQw >= 20 and temp = 5 and flowersday ! day and hour >= 8 and hour < 20:
+	cls
+    minut += 5
+    horny += 5
+    flowersday = day 
+	gs 'stat'
+	
+	'<center><img src="images/qwest/gadukino/Swamp/hanterflowers1.jpg"></center>'
+	'Appearing in the clearing you saw Igor. He with a mysterious smile walked up to you holding his hands behind his back.'
+	'- <<$nickname>>, this is for you - a little embarrassed he said, handing you a bouquet of wild flowers.'
+	
+	act 'Take':
+	    cls
+	    minut += 5
+	    hanterslut -= 1
+	    hantersIgorQw += 1
+        if hantersAndreiQw >= 10 and hantersKnowSlut = 0:hantersAndreiQw -= 2
+        if hantersSergeiQw >= 10 and hantersKnowSlut = 0:hantersSergeiQw -= 2 	    
+	    manna = mannamax
+		gs 'stat'
+		
+		if hantersIgorLove = 0 and hantersIgorQw >= 20 and hantersIgorQw < 25:
+		    if CloSkirtShortness > 0:'<center><img src="images/qwest/gadukino/Swamp/hanterflowers2_ski.jpg"></center>'
+		    if CloSkirtShortness = 0:'<center><img src="images/qwest/gadukino/Swamp/hanterflowers2.jpg"></center>'
+		    'Smiling you take the bouquet out of his hand and walk away with a wistful face.'
+		end    
+		if hantersIgorLove = 0 and hantersIgorQw >= 25 and hantersIgorQw < 20 or hantersIgorLove > 0:
+		    if CloSkirtShortness > 0:'<center><img src="images/qwest/gadukino/Swamp/hanterflowers3_ski.jpg"></center>'
+		    if CloSkirtShortness = 0:'<center><img src="images/qwest/gadukino/Swamp/hanterflowers3.jpg"></center>'
+		    'Smiling you take the bouquet from his hands and walk away happily.'
+		end
+		if hantersIgorLove = 0 and hantersIgorQw >= 30:
+		    '<center><img src="images/qwest/gadukino/Swamp/hanterflowerskiss.jpg"></center>'
+		    'Smiling you take the bouquet out of his hands, kissing him on the cheek and runs away embarrassed.'
+		end		       	
+	    act 'Further':gt $loc, $metka
+    end 
+	act 'Refuse':
+	    cls
+	    minut += 5
+	    hantersIgorQw -= 2
+		gs 'stat'
+		
+        '<center><img src="images/qwest/alter/Ev/otel4.jpg"></center>'
+        ' - No, Igor, you don`t need this, you said, not taking flowers, and trying not to look at rasteryalsya guy left.' 	
+	    act 'Further':gt $loc, $metka
+    end     
+end
+! communication with Sergey
+if hanters > 0 and hantersKnowSlut = 0 and ($clothingworntype ! 'nude' and $clothingworntype ! 'swimwear') and hantersSergeiQw >= 15 and temp = 6 and hantersSergeiday ! day and hour >= 8 and hour < 20:
+	cls
+    minut += 5
+    hantersSergeiday = day 
+	gs 'stat'
+	
+	'<center><img src="images/qwest/gadukino/Swamp/SergeiHanter.jpg"></center>'
+	'Appearing in a clearing you see Sergei, who smiled and headed in your direction.'
+	'- <<$nickname>>, let`s sit, let`s talk you don`t mind?, - a little embarrassed he asked.'
+	
+	act 'Agree':
+	    cls
+	    minut += 120
+	    hanterslut -= 1
+	    hantersSergeiQw += 1	    
+        if hantersIgorQw >= 10 and hantersKnowSlut = 0:hantersIgorQw -= 2
+        if hantersAndreiQw >= 10 and hantersKnowSlut = 0:hantersAndreiQw -= 2	    
+	    manna = mannamax
+		gs 'stat'
+		
+        '<center><img src="images/qwest/gadukino/Swamp/hanterlove2.jpg"></center>'
+		'Smiling you agree and the next two hours you spend together with Sergey in conversation..'
+	       	
+	    act 'Further':gt $loc, $metka
+    end 
+	act 'Refuse':
+	    cls
+	    minut += 5
+	    hantersSergeiQw -= 2
+		gs 'stat'
+		
+        '<center><img src="images/qwest/alter/Ev/otel4.jpg"></center>'
+        ' - No, Sergey, I told you, and trying not to look at the guy left.' 	
+	    act 'Further':gt $loc, $metka
+    end     
+end 
+! sex with Sergei
+if hanters > 0 and hantersSergeiLove > 0 and hantersSergeiQw >= 10 and temp = 7 and hantersSergeisex = 0 and hour >= 8 and hour < 20:
+	cls
+    minut += 5
+    hantersSergeisex += rand(9,30) 
+	gs 'stat'
+	
+	'<center><img src="images/qwest/gadukino/Swamp/hanterlove1.4.jpg"></center>'
+	'Appeared in the meadow, you saw Sergei. With a smile he walked over and stared at your lips for a long kiss.'
+	'- <<$nickname>>, I want you, " he said, interrupting the kiss.'
+	
+	act 'Agree':
+	    cls
+	    minut += 5
+        horny += 5	    
+	    hantersSergeiQw += 1
+		gs 'stat'
+		
+		'<center><img src="images/qwest/gadukino/Swamp/hanterflirt2.'+rand(4,6)+'.jpg"></center>'
+		'Smiling you wink Sergei. He, all knowing, takes you by the hand and leads.'	
+	    act 'Go':gt'HanterLoveSex'
+    end 
+	act 'Refuse':
+	    cls
+	    minut += 5
+	    hantersSergeiQw -= 1
+		gs 'stat'
+		
+        '<center><img src="images/qwest/alter/Ev/otel4.jpg"></center>'
+        ' - No, Sergei, not now, you said, and trying not to look at rasteryalsya guy left.' 	
+	    act 'Go':gt $loc, $metka
+    end     
+end 
+! sex with Andrew
+if hanters > 0 and hantersAndreiLove > 0 and hantersAndreiQw >= 10 and temp = 8 and hantersAndreisex = 0 and hour >= 8 and hour < 20:
+	cls
+    minut += 5
+    hantersAndreisex += rand(6,24) 
+	gs 'stat'
+	
+	'<center><img src="images/qwest/gadukino/Swamp/hanterlove1.4.jpg"></center>'
+	'Appeared in the meadow, you saw Andrew. Suddenly, he stared at your lips with a passionate kiss and without a word pulled you with him..'
+	
+	act 'To go with Andrew':
+	    cls
+	    minut += 5
+	    hantersAndreiQw += 1
+	    horny += 5
+		gs 'stat'
+		
+		'<center><img src="images/qwest/gadukino/Swamp/hanterhands.jpg"></center>'
+		'You go with Andrew holding hands, knowing that where he leads you. And you really don`t even mind.'	
+	    act 'Further':gt'HanterLoveSex'
+    end 
+	act 'Refuse':
+	    cls
+	    minut += 5
+	    hantersAndreiQw -= 1
+		gs 'stat'
+		
+        '<center><img src="images/qwest/alter/Ev/otel4.jpg"></center>'
+        ' - No, Andrew, not now, you said, and trying not to look at it left.' 	
+	    act 'Go':gt $loc, $metka
+    end     
+end
+! sex if GG whore
+if hanters > 0 and hantersRape = 5 and hantslutsexrand = 1 and hantslutsex = 0 and hour >= 8 and hour < 20:
+	cls
+    minut += 5
+    temphant = rand(1,3)
+    ! the choice of who will fuck GG
+    slutgosex = 1 
+	gs 'stat'
+	
+	if temphant = 1:'<center><img src="images/qwest/gadukino/Swamp/AndreiHanter.jpg"></center>'
+	if temphant = 2:'<center><img src="images/qwest/gadukino/Swamp/SergeiHanter.jpg"></center>'
+	if temphant = 3:'<center><img src="images/qwest/gadukino/Swamp/IgorHanter.jpg"></center>'
+	if temphant = 1:'Appeared in the meadow, you saw Andrew coming your way. " - Went <<$nickname>>," - he said more without saying a word pulled you with him towards the nearest tree.'
+	if temphant = 2:'Appeared in the meadow, you saw Sergei. Noticing you he`s headed your way. " - Let`s go aside <<$nickname>>, something itch," - he said and pulled you along in the direction of the nearest thickets.'	
+	if temphant = 3:'Appearing in the clearing you saw Igor. Noticing you, he ulybnula and came. " - <<$nickname>>, I have voltage to throw, come forward please," - he said smiling and took you with him..'
+	if horny < 40:' You obediently followed him, knowing where and why you are.'
+	if horny >= 40 and horny < 70:' - I must, I must, " thought you went out with a guy, knowing where and why you are.'
+	if horny >= 70:' - Well, what you need, the most important time, " you thought, feeling your pussy screaming with desire. You went with a guy, almost overtaking it, and there is not clear who leads.'
+
+    act 'Go':	gt'hanters' 
+end
+!a choice between lovers
+if hanters > 0 and hantersAndreiLove > 0 and hantersSergeiLove > 0 and hour >= 8 and hour < 20 and temp = 1:
+	cls
+    minut += 15
+    gs 'stat'
+    '<center><img src="images/qwest/gadukino/Swamp/hanterswork1.2.jpg"></center>'
+    'You are approached by Andrew and Sergey. Their faces were serious and you realize that you have a difficult conversation.'
+    ' - <<$nickname>>, we are not boys, to play with toys, and make love with both, started a conversation Sergey. - You have to choose one of us.'
+    if hanterslut >= 10:' - Well, I`m actually against a three-way wouldn`t mind, " grinned Andrew, staring you in the eye. - The choice is yours <<$nickname>>.'
+    'You thought for awhile, then decided...'
+    
+    act 'Choose Sergey':
+    	cls
+        minut += 5
+        hantersAndreiLove = 0
+        hantersAndreiQw -= 100
+        hanterslut -= 1        
+        gs 'stat'
+        
+        '<center><img src="images/qwest/gadukino/Swamp/SergeiHanter.jpg"></center>'
+        'After deliberation, you have decided to choose Sergei. He beamed with joy and then kissed you on the lips.'
+        ' - Well, fair enough, that`s your choice, " said Andrew upset and walked away.'
+        
+        act 'Further':gt'swamp_yard'
+    end
+    act 'Choose Andrew':
+    	cls
+        minut += 5
+        hantersSergeiLove = 0
+        hantersSergeiQw -= 100
+        hanterslut -= 1        
+        gs 'stat'
+        
+        '<center><img src="images/qwest/gadukino/Swamp/AndreiHanter.jpg"></center>'
+        'After deliberation, you have decided to choose Andrew.'
+        ' - Well, that`s clear, " said Andrew, considerably cheered. - Come to me <<$nickname>>.'
+        ' - Well, fair enough, that`s your choice, " said Sergey upset and walked away.'
+        
+        act 'Further':gt'swamp_yard'
+    end
+    if hanterslut >= 10:
+        act 'To meet both':
+    	    cls
+            minut += 5
+            hanterslut += 10
+            doublehanterlove = 1       
+            gs 'stat'
+        
+            '<center><img src="images/qwest/gadukino/Swamp/hanterswork1.7.jpg"></center>'
+            ' - You know, I`d like to try a Threesome - with downcast eyes said you.'
+            ' - A good choice <<$nickname>>, - Sergei smiled. - I like this and expected. Well, Serge, you don`t mind?.'
+            ' - Well, why not, in the end it`s her choice, - said Sergei, looking at you as something completely different.'            
+        
+            act 'Further':gt'swamp_yard'
+        end
+    end        
+    act 'To part with both':
+    	cls
+        minut += 5
+        hantersAndreiLove = 0
+        hantersAndreiQw -= 50        
+        hantersSergeiLove = 0
+        hantersSergeiQw -= 50
+        hanterslut -= 1        
+        gs 'stat'
+        
+        '<center><img src="images/qwest/gadukino/hantersex/fuck.jpg"></center>'
+        ' - Fuck you with your choice - in the hearts cried you and showing them on prmania middle finger went away. - Here`s my choice!'
+        ' - Ohrenet - and could only utter dumbfounded by Sergey.'
+        ' - Ahah, sudden rasmala Sergey. - Well, fair enough, that`s your choice.'
+        
+        act 'Further':gt'swamp_yard'
+    end
+end    
+ 
+if hanters > 0 and hantersAndreiLove > 0 and hantersIgorLove > 0 and hour >= 8 and hour < 20 and temp = 1: 
+	cls
+    minut += 15
+    gs 'stat'
+    '<center><img src="images/qwest/gadukino/Swamp/hanterswork1.2.jpg"></center>'
+    'You are approached by Andrew and Igor. Their faces were serious and you realize that you have a difficult conversation.'
+    ' - <<$nickname>>, we are not boys, to play with toys, and make love with both of them, - started Igor. - You have to choose one of us.'
+    if hanterslut >= 10:' - Well, I`m actually against a three-way wouldn`t mind, " grinned Andrew, staring you in the eye. - The choice is yours <<$nickname>>.'
+    'You thought for awhile, then decided...'
+    
+    act 'Choose Igor':
+    	cls
+        minut += 5
+        hantersAndreiLove = 0
+        hantersAndreiQw -= 100
+        hanterslut -= 1        
+        gs 'stat'
+        
+        '<center><img src="images/qwest/gadukino/Swamp/IgorHanter.jpg"></center>'
+        'After deliberation, you have decided to choose Igor. He beamed with joy.'
+        'I believe that you choose me <<$nickname>>, - Igor said and gently kissed you lips.'
+        ' - Well, fair enough, that`s your choice, " said Andrew upset and walked away.'
+        
+        act 'Further':gt'swamp_yard'
+    end
+    act 'Choose Andrew':
+    	cls
+        minut += 5
+        hantersIgorLove = 0
+        if hantersIgorLove = 2:bfA = 0
+        hantersIgorQw -= 100
+        hanterslut -= 1        
+        gs 'stat'
+        
+        '<center><img src="images/qwest/gadukino/Swamp/AndreiHanter.jpg"></center>'
+        'After deliberation, you have decided to choose Andrew.'
+        ' - Well, that`s clear, " said Andrew, considerably cheered. - Come to me <<$nickname>>.'
+        'Upset Igor silently walked away trying not to look at you.'
+        
+        act 'Further':gt'swamp_yard'
+    end
+    if hanterslut >= 10:
+        act 'To meet both':
+    	    cls
+            minut += 5
+            hantersIgorLove = 0
+            if hantersIgorLove = 2:bfA = 0
+            hantersIgorQw -= 100            
+            hanterslut += 1        
+            gs 'stat'
+        
+            '<center><img src="images/qwest/gadukino/Swamp/hanterswork1.7.jpg"></center>'
+            ' - You know, I`d like to try a Threesome - with downcast eyes said you.'
+            ' - A good choice <<$nickname>>, - Sergei smiled. - I like this and expected. Well, Serge, you don`t mind?.'
+            ' - No, Andrew, I do not like, - said Igor, looking at you as something completely different. - Perhaps I`d better go.'
+            'Upset Igor left trying not to look at you.'            
+        
+            act 'Further':gt'swamp_yard'
+        end
+    end        
+    act 'To part with both':
+    	cls
+        minut += 5
+        hantersAndreiLove = 0
+        hantersAndreiQw -= 50        
+        hantersIgorLove = 0
+        if hantersIgorLove = 2:bfA = 0
+        hantersIgorQw -= 50
+        hanterslut -= 1        
+        gs 'stat'
+        
+        '<center><img src="images/qwest/gadukino/hantersex/fuck.jpg"></center>'
+        ' - Fuck you with your choice - in the hearts cried you and showing them on prmania middle finger went away. - Here`s my choice!'
+        'Dumbfounded by Igor in amazement and looked at you.'
+        ' - Ahah, sudden rasmala Sergey. - Well, fair enough, that`s your choice.'
+        
+        act 'Further':gt'swamp_yard'
+    end
+end 
+
+if hanters > 0 and hantersSergeiLove > 0 and hantersIgorLove > 0 and hour >= 8 and hour < 20 and temp = 1: 
+	cls
+    minut += 15
+    gs 'stat'
+    '<center><img src="images/qwest/gadukino/Swamp/hanterswork1.2.jpg"></center>'
+    'You went to Igor and Sergey. Their faces were serious and you realize that you have a difficult conversation.'
+    ' - <<$nickname>>, we are not boys, to play with toys, and make love with both, started a conversation Sergey. - You have to choose one of us.'
+    'Igor nodded.'
+    'You thought for awhile, then decided...'
+    
+    act 'Choose Sergey':
+    	cls
+        minut += 5
+        hantersIgorLove = 0
+        if hantersIgorLove = 2:bfA = 0
+        hantersIgorQw -= 100 
+        hanterslut -= 1        
+        gs 'stat'
+        
+        '<center><img src="images/qwest/gadukino/Swamp/SergeiHanter.jpg"></center>'
+        'After deliberation, you have decided to choose Sergei. He beamed with joy and then kissed you on the lips.'
+        ' - Did not expect <<$nickname>>, but it`s your choice, " said Igor frustrated and walked away.'
+        
+        act 'Further':gt'swamp_yard'
+    end
+    act 'Choose Igor':
+    	cls
+        minut += 5
+        hantersSergeiLove = 0
+        hantersSergeiQw -= 100
+        hanterslut -= 1        
+        gs 'stat'
+        
+        '<center><img src="images/qwest/gadukino/Swamp/IgorHanter.jpg"></center>'
+        'After deliberation, you have decided to choose Igor. He beamed with joy.'
+        'I believe that you choose me <<$nickname>>, - Igor said and gently kissed you lips.'
+        ' - Well, fair enough, that`s your choice, " said Andrew upset and walked away.'
+        
+        act 'Further':gt'swamp_yard'
+    end       
+    act 'To part with both':
+    	cls
+        minut += 5
+        hantersIgorLove = 0
+        if hantersIgorLove = 2:bfA = 0
+        hantersIgorQw -= 100        
+        hantersSergeiLove = 0
+        hantersSergeiQw -= 100
+        hanterslut -= 1        
+        gs 'stat'
+        
+        '<center><img src="images/qwest/gadukino/hantersex/fuck.jpg"></center>'
+        ' - Fuck you with your choice - in the hearts cried you and showing them on prmania middle finger went away. - Here`s my choice!'
+        'Dumbfounded by Igor in amazement and looked at you.'
+        ' - Blimey - only able to pronounce Sergei.'
+        
+        act 'Further':gt'swamp_yard'
+    end
+end
+! trio of HS, Andrei and Sergei, if love
+if hanters > 0 and doublehanterlove = 1 and hour >= 8 and hour < 20 and (hantersAndreisex = 0 or hantersSergeisex = 0):
+	cls
+    minut += 5
+    hantersAndreisex += rand(6,24)
+    hantersSergeisex += rand(9,30) 
+	gs 'stat'
+	
+	'<center><img src="images/qwest/gadukino/Swamp/hanterswork1.2.jpg"></center>'
+	'In the meadow you saw Andrei with Sergei.'
+	' - It`s time, so to speak, to consummate the marriage, " Andrew said with a joking tone. - Prepare <<$nickname>> ass.'
+	if klismaday ! day:' - Damn, and I ass didn`t cook today, - said the embarrassed you. - Maybe we will not?.'
+	if klismaday ! day:' - Will <<$nickname>>, will, - said Andrew. - You didn`t wash you can deal with it. Next time I will not forget.'
+	' - The bushes need to get only this. - And Igor, we much correct, you do not understand.'
+	
+	act 'Go with the guys':
+	    cls
+	    minut += 5
+	    hantersAndreiQw += 1
+	    hantersSergeiQw += 1
+	    horny += 5
+	    doublelovesex = 1
+	    hanterslut += 1
+	    temphant = 1
+	    if klismaday ! day:hanterslut += 1
+		gs 'stat'
+		
+		'<center><img src="images/qwest/gadukino/Swamp/doublehanterlove.jpg"></center>'
+		'You go with guys holding hands, knowing full well where and why they are. And you really don`t even mind.'	
+	    act 'Further':gt'hantersex'
+    end 
+	act 'Refuse':
+	    cls
+	    minut += 5
+	    hantersAndreiQw -= 1
+	    hantersSergeiQw -= 1
+		gs 'stat'
+		
+        '<center><img src="images/qwest/alter/Ev/otel4.jpg"></center>'
+        ' - No, guys, something I don`t want, you said, and without looking at them left.' 	
+	    act 'Go':gt $loc, $metka
+    end     
+end
+! wind lifts skirt
+skirtsrand = RAND(1,10)
+if hanters > 0 and hantersKnow > 0 and hour >= 8 and hour < 20 and CloSkirtShortness > 0 and tanga = 0 and skirtsrand = 1:
+	cls
+    minut += 15
+    hanterslut += 1
+    gs 'stat' 
+    
+    '<center><img src="images/qwest/gadukino/Swamp/no_tanga.jpg"></center>'
+    'You walked across the meadow, when suddenly the wind lifted you skirt.'
+    ' - Damn, panties..., - you belatedly came to his senses with a flash of the already bare pussy all around.'
+    'Cope finally with the skirt you looked around if anybody had noticed the juicy details of your wardrobe. Guys like always minding my own business, however, Igor and the red in quite a smiling Andrew, you realize that your random the demonstration took place not nezamechena.'
+    act 'Further':gt'swamp_yard'
+end
+
+! trio if GG whore
+if hanters > 0 and hantersRape = 5 and hantslutsexrand = 2 and hantslutsex = 0 and hour >= 8 and hour < 20:
+	cls
+    minut += 5
+    temphant = rand(1,3)
+    slutgosex = 2 
+	gs 'stat'
+	
+	'<center><img src="images/qwest/gadukino/Swamp/hanterswork1.2.jpg"></center>'
+	'In the meadow you saw Andrei with Sergei.'
+	if temphant = 1:'Walking on the meadow, you saw Andrew and Sergei coming in your direction. " - Went <<$nickname>>," - Andrew said more without saying a word pulled you with him towards the nearest tree. Sergei followed it'
+	if temphant = 2:'You walked across the meadow when he saw Andrei and Igor. Noticing you are headed in your direction. " - Let`s go aside <<$nickname>>, something itch," - Andrew said and pulled you along in the direction of the nearest thickets. Igor went behind you.'	
+	if temphant = 3:'Appearing in the clearing you saw Igor and Sergei. Seeing you Igor ulybnula and came. " - <<$nickname>>, us the voltage you need to throw, come forward please," - he said smiling and took you with him.. Then moved and Sergey.'
+	if horny < 40:' You obediently followed him, knowing where and why you are.'
+	if horny >= 40 and horny < 70:' - It must be this way, thought you went with the guys, knowing where and why you are.'
+	if horny >= 70:' - Well, what you need, the most important time, " you thought, feeling your pussy screaming with desire. You went with the guys, almost overtaking it, and there is not clear who leads.'
+	
+	act 'Go with the guys':
+	    cls
+	    minut += 5
+	    horny += 5
+        
+		gs 'stat'
+		
+		'<center><img src="images/qwest/gadukino/Swamp/doublehanterlove.jpg"></center>'
+		'You go with guys holding hands, knowing full well where and why they are. And you really don`t even mind.'	
+	    act 'Further':gt'hantersex'
+    end      
+end
+! wind lifts skirt
+skirtsrand = RAND(1,10)
+if hanters > 0 and hantersKnow > 0 and hour >= 8 and hour < 20 and CloSkirtShortness > 0 and tanga = 0 and skirtsrand = 1:
+	cls
+    minut += 15
+    hanterslut += 1
+    gs 'stat' 
+    
+    '<center><img src="images/qwest/gadukino/Swamp/no_tanga.jpg"></center>'
+    'You walked across the meadow, when suddenly the wind lifted you skirt.'
+    ' - Damn, panties..., - you belatedly came to his senses with a flash of the already bare pussy all around.'
+    'Cope finally with the skirt you looked around if anybody had noticed the juicy details of your wardrobe. Guys like always minding my own business, however, Igor and the red in quite a smiling Andrew, you realize that your random the demonstration took place not nezamechena.'
+    act 'Further':gt'swamp_yard'
+end
+
+!Forester looking for the missing GG
+!if lost_girl < 10:
+!make this trigger after 2 days in swamp house, minus a countdown per hour
+if StoryLine = 1 and lost_girl > 0 and daystart > lost_girl:
+	cls
+    minut += 150
+    lost_girl = 0
+    forest_lostday = 0
+    hanters = 0
+    gs 'stat' 
+    
+    '<center><img src="images/qwest/gadukino/Swamp/forester.jpg"></center>'
+    'You walked across the meadow when he saw a man in the form of a Forester.'
+    ' - And here is our loss, ` he said wearily. - Your grandfather and grandmother have already lost their legs in search of you. I am now asked to help. Going home will take.'
+    '" Oh, how embarrassing" - thought you. "Poor grandparents. Well, how could I forget about them."'
+    'Quickly assembled, you went under the supervision of the Forester home.'
+    act 'Further':gt'Gadhouse'
+end
+$dirty_swamp_yard = {
+	cla
+	*clr
+	if dirty_swamp_yard < 10:minut += 60 & sweat += 10
+	if dirty_swamp_yard >= 10 and dirty_swamp_yard < 20:minut += 120 & sweat += 20
+	if dirty_swamp_yard >= 20:minut += 180 & sweat += 30
+	if hantersAndreiQw < 15:hantersAndreiQw += 1
+	if hantersIgorQw < 15:hantersIgorQw += 1
+	if hantersSergeiQw < 15:hantersSergeiQw += 1		
+	gs'stat'
+	
+	'<center><img src="images/qwest/gadukino/Swamp/dirty_swamp_yard.jpg"></center>'	
+	'Stepping once again into the clearing before the hut, you notice that there are many different dust and dirt. " - With this need to do something", - you thought and began cleaning the yard. But after some time the yard shone pristine.'
+		
+    act 'Further':dirty_swamp_yard = 0 & gt'swamp_yard'         
+}
+
+--- swamp_yard ---------------------------------
+
