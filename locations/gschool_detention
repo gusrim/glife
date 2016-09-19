@@ -1,0 +1,622 @@
+# gschool_detention
+
+!!detention takes place on Saturday between 09:00 and 12:00, when you click on the go to school from the school grounds on Saturday it should take you straight to detention.
+
+if $ARGS[0] = 'start':
+	cls
+	detention_set = 0
+	minut += 60 - minut
+	gs 'stat'
+    '<center><b><font color="maroon">Detention</font></b></center>'
+    '<center><img src="images/qwest/alter/school/detention/detention.jpg"></center>'
+	'You arrive back at school on a Saturday - it sucks. Considering you spent all week here already, what could be worse than wasting part of a Saturday in school too? You go to the library where detention is held, walk in and take a seat at one of the tables. A couple of other students are there and by the time the bell rings, a couple more have trickled in. The teacher is the last to come. He sits behind his desk and, one by one, calls out the names on his list to make sure everyone is there who is suppose to be.'
+	'You too say "here" when he calls your name, cursing the fact that you are stuck here. Once he has finished, he tells everyone to study quietly and use their time to "do homework or whatever"; it would appear he doesn''t want to be here anymore than the rest of you. After giving somebody who was talking to his neighbor a glacial look that made him shut up, the teacher pulls out a laptop and starts using it, pretty much ignoring all of you and probably counting the minutes to noon, just like you.'
+	act 'Study':
+		cla
+		*clr
+	    '<center><b><font color="maroon">Detention</font></b></center>'
+        '<center><img src="images/qwest/alter/school/detention/detention.jpg"></center>'
+		'You spend the next three hours studying and doing your homework. Once the bell rings, you gather up your books and head home.'
+
+		act 'Go home': gt 'gschool_detention', 'end'
+	end
+!!small bonus to grades.
+	act 'Play on phone':
+		cla
+		*clr
+	    '<center><b><font color="maroon">Detention</font></b></center>'
+        '<center><img src="images/qwest/alter/school/detention/detention.jpg"></center>'
+		'You briefly - very briefly - consider doing homework but the thought alone is enough to bore you, so you pull our your phone, surf the net, play a few games on it and even text back and forth with a few friends. It seems to take forever but eventually, the time is up and the bell rings, allowing you to go home.'
+
+		act 'Go home': gt 'gschool_detention', 'end'
+	end
+	if rand(1,100) <= 20:
+		if rand(0,1) = 0:
+!!the above two is always a option, there is a chance a 3rd option will show up. Default chances with no special triggers. 20% chat(if it triggers 50% it is a girl and 50% it is a boy), 15% Friend in need, Strange 15% chance to trigger, and a 50% chance none of them trigger the following are special events they reduce the chance of nothing triggering if they have been activated. Company 15% change to trigger if Sveta had sex with Marcus in the bathroom or has high friendship(level high enough for dating not sure what level that needs to be.), If teacher Serafim Ivanov caught Sveta in the bathroom and they had sex it triggers a follow up event 10%. If Sveta had 3some with Anushka follow up event 25%. Obviously if all three special events have been triggered there there will always 100% be a 3rd option.
+			gs 'gschool_events', 'rand_girl_arg'
+			act 'Chat with <<$rand_girl>>':
+				cls
+				grupNPC[1] += 3
+				gs 'stat'
+				'<center><b><font color="maroon">Detention</font></b></center>'
+				'<center><img src="images/qwest/alter/school/detention/detgchat.jpg"></center>'
+				'You decide to move somewhere else, to an empty seat next to <<$rand_girl>>. The teacher watches you for a while after to see what you''re up to but soon loses interest in you and starts playing something on his phone, following the example of half the students in the room.' 
+				'You turn to <<$rand_girl>> and the two of you start chatting away about school, boys, clothes, makeup, and anything else that strikes your fancy. Occasionally, the two of you get a little noisy and have a fit of giggles, causing the teacher to look up and clear his throat till you quiet back down, but he always returns his attention to his phone or laptop after a few seconds and you begin your chatter once again. Before you know it, the class bell rings. You both stop in surprise but quickly gather your things, part with a smile and head home.'
+
+				act 'Go home': gt 'gschool_detention', 'end'
+			end
+		else
+!!girl should be random girl from your class, raises friendship.
+			gs 'gschool_events', 'rand_boy_arg5'
+			act 'Chat with <<$rand_boy>>':
+				cls
+				grupNPC[1] += 3
+				gs 'stat'
+				'<center><b><font color="maroon">Detention</font></b></center>'
+				'<center><img src="images/qwest/alter/school/detention/detbchat.jpg"></center>'
+				'You decide to move somewhere else, to an empty seat next to <<$rand_boy>>. The teacher watches you for a while after to see what you''re up to but soon loses interest in you and starts playing something on his phone, following the example of half the students in the room.' 
+				'You turn to <<$rand_boy>> and the two of you start chatting away about school, teachers, girls he likes, boys you like, and anything else that strikes your fancy. Occasionally, the two of you get a little noisy and raise your voices a little too much in excitement, causing the teacher to look up and clear his throat till you quiet back down, but he always returns his attention to his phone or laptop after a few seconds and you begin your chatter once again. Before you know it, the class bell rings. You both stop in surprise but quickly gather your things, part with a smile and head home.'        
+
+				act 'Go home': gt 'gschool_detention', 'end'
+			end
+		end
+	end
+!!boy should be random boy from your class, raises friendship.
+	if rand(1,100) <= 15:
+		act 'Help Friends in need':
+			cls
+			gs 'gschool_events', 'rand_girl_arg'
+			i = r
+			:detention_grupmatch
+			gs 'gschool_events', 'rand_boy_arg5'
+			if grupTipe[i] ! grupTipe[r]:jump 'detention_grupmatch'
+			gs 'gschool_events', 'rand_teacher_arg'
+			if $rand_teacher = 'Ivanov': $rand_teacher = 'Tsarev'
+			grupNPC[1] += 3
+			gs 'stat'
+			'<center><b><font color="maroon">Detention</font></b></center>'
+			'<center><img src="images/qwest/alter/school/detention/detflirt.jpg"></center>'
+			'You share a table with <<$rand_girl>> and <<$rand_boy>>. Before long, he is flirting for all he is worth with her and going by her giggles at several things he says, he''s striking the right tone. The teacher shushes them a few times but doesn''t really make much of an effort to silence them. <<$rand_boy>> leans in and whisper something to her that earns him a half hearted smack on the shoulder and you overhear her calling him "bad" - her smile and the way she plays with her hair suggests that she likes "bad".'
+			'They have a whispered argument or discussion - you are not sure which - but when they are done, they both look around and you can tell they are up to something. <<$rand_girl>> leans over to you and whispers: "Can you distract Mr <<$rand_teacher>> for us, so we can slip away?" Both of them give you pleading looks and, feeling that helping out friends in need is probably the best use of your time here, you nod. You get up, approach the teacher and ask him some questions about his last lesson. He is a bit reluctant at first but you manage to make the right inquiries and he cannot resist engaging you in a discussion on his subject.'
+			'You see the two of them slip away successfully and after a bit, you thank your teacher and head back to your table. You think you can faintly hear soft feminine moans of pleasure, but nobody else seems to even notice it.' 
+			'Twenty minutes or so later, the two of them come back with huge grins on their faces, thanking you for your help as they sit back down. The rest of detention goes by uneventfully.'
+
+			act 'Go home': gt 'gschool_detention', 'end'
+		end
+	end
+!!girl and boy should be random from your class, though from same social group. Teacher is random male teacher, but not Serafim Ivanov as he will have a special event when he is in charge of detention.
+!!following scene is random unknown boy from school.
+    act 'Notice something strange': gt 'gschool_detention', 'strange'
+	if Marcus_sextype < 2 and grupNPC[27] > 70:
+		act 'Enjoy some company': gt 'gschool_detention', 'company'
+	elseif Marcus_sextype = 2:
+		act 'Enjoy some company': gt 'gschool_detention', 'company2'
+	end
+	if Ivanov_toilet = 1:
+		act 'Help Mr Ivanov': gt 'gschool_detention', 'Ivanov'
+	end
+	if Anushka_toilet = 1 and rand(0,4) = 0:
+		act 'Be part of a plan': gt 'gschool_detention', 'plan'
+	end
+end
+
+if $ARGS[0] = 'strange':
+	cla
+	*clr
+	'<center><b><font color="maroon">Detention</font></b></center>'
+	'<center><img src="images/qwest/alter/school/detention/det.jpg"></center>'
+	'You take out your phone and play around with it for a while, but when you look up, you notice the boy sitting at the same table as you is hunched over his folder with his arms surrounding it, obviously trying to hide what he''s looking at. He seems very engrossed by it and seems to be acting a little weird, maybe a little tense. Maybe you should take a peek at what he is doing? But then again, not minding your own business is at least part of the reason why you are here in the first place.'
+	act 'Ignore him':
+		cla
+		*clr
+		'<center><b><font color="maroon">Detention</font></b></center>'
+		'<center><img src="images/qwest/alter/school/detention/det.jpg"></center>'
+		'You give the boy one more curious look and then decide to ignore him, going back to playing something on your phone without reacting to the one or two sideways glances he gives you. After a bit he raises his hand and asks to go to the bathroom. When he gets up, you notice the bulge in his pants and his flushed features. He hurries out of the library and comes back some time later, looking... relieved, and the bulge in his pants seems to be gone, too, but since he sits down at a different table, you soon forget about this little "mystery".' 
+		'Time passes really slowly but the bell finally rings and you can gather your stuff and head home.'
+
+		act 'Go home': gt 'gschool_detention', 'end'
+	end
+	act 'Catch him red handed':
+		cla
+		*clr
+		'<center><b><font color="maroon">Detention</font></b></center>'
+		'<center><img src="images/qwest/alter/school/detention/det1.jpg"></center>'
+		'You can''t take it any longer, your curiosity is killing you! You get up and walk over quietly, circle behind him and look over his shoulder. You see that he is engrossed in an adult magazine, looking at the picture of a guy fucking a school girl up her ass. While you stare at the porn picture yourself, he notices your presence, blushing slightly. He covers the image up with his hands moments afterwards and says. "Don''t tell anyone, please."'
+		act 'Ignore it':
+			cla
+			*clr
+			'<center><b><font color="maroon">Detention</font></b></center>'
+			'<center><img src="images/qwest/alter/school/detention/det.jpg"></center>'
+			'You give the boy one more curious look and then decide to ignore him, going back to playing something on your phone without reacting to the one or two sideways glances he gives you. After a bit he raises his hand and asks to go to the bathroom. When he gets up, you notice the bulge in his pants and his flushed features. He hurries out of the library and comes back some time later, looking... relieved, and the bulge in his pants seems to be gone, too, but since he sits down at a different table, you soon forget about this little "mystery".' 
+			'Time passes really slowly but the bell finally rings and you can gather your stuff and head home.'
+
+			act 'Go home': gt 'gschool_detention', 'end'
+		end
+		act 'Report him':
+			cla
+			*clr
+			'<center><b><font color="maroon">Detention</font></b></center>'
+			'<center><img src="images/qwest/alter/school/detention/det1.jpg"></center>'
+			'You call the teacher over and all color leaves the boy''s face. He pleads with you not to tell on him but when the teacher arrives, you let him know what the boy was doing. After a bit of arguing, the teacher grabs the magazine from the boy, looks it over and let''s the boy know that what got him into detention is nothing compared to the trouble he''s in now. He has the boy move to a seat near his desk so he can keep a eye on him, then thanks you and leads the boy to the front of the library.'
+			'As they walk away, the boy gives you a really dirty look. You spend the rest of the time playing on your phone occasionally getting dirty looks from the boy, whenever the teacher is not looking.'
+
+			act 'Go home': gt 'gschool_detention', 'end'
+		end
+		act '"Eat me out"':
+			cls
+			dom += 1
+!!This one should raise dom levels or what ever it is called now. regardless of the path chosen from this point on Sveta is in charge.
+			'<center><b><font color="maroon">Detention</font></b></center>'
+			'<center><img src="images/qwest/alter/school/detention/detlick.jpg"></center>'
+			'You bite your lower lip and pull his hands away so you can see the porn, getting greatly aroused by it. You glance around and see no one is looking your way. Making a split-second decision, you pull the boy to his feet and drag him behind one of the bookshelves, out of sight of the others. At first he is thoroughly confused but once he understands the look on your face, he becomes very eager to follow you.'
+			'Another table, empty, deserted and hidden from view, beckons you, a few stacks of books around it. You lean against it and pull your panties off, letting them drop to the floor, then sit on the table and spread your legs, showing off your glistening wet pussy to the boy as you say: "I won''t tell but you got to do something for me in exchange: Lick my pussy!" He pauses a moment to look around - he seems to expect this to be some kind of elaborate joke - but when all remains silent, he quickly kneels down and starts licking your pussy.'
+			'As he licks your clit and slit, you get the impression that he''s not exactly experienced but he is oh-so-eager to learn and what he lacks in skill, he more than makes up for with effort - you can barely contain your moans! When he slips his tongue inside, you reach down and grab him by the hair and hold his face against your crotch, like so many guys have done to you while you sucked them off. You struggle to keep quiet, rotating your hips to grind your twat against his face while you pull him against you as hard as you can.'
+			'But as you feel your arousal build, you wonder if you couldn''t do more with him. Your original intention was to just make him get you off with his tongue, but now you badly want more. Then again, you love being in control for a change and the idea of getting off while giving nothing in return is appealing too.'
+			$orgasm_or = 'no'
+			gs 'arousal', 'cuni', 10, 'dom'
+			act 'Glaze his face':
+				cls
+				'<center><b><font color="maroon">Detention</font></b></center>'
+				'<center><img src="images/qwest/alter/school/detention/detlick.jpg"></center>'
+				'While licking your pussy, he reaches up and starts to fingerbang you, but you slap his hand, causing him to jerk it away and give you a confused look. "I said lick my pussy, not finger it. So keep licking." You notice a hint of frustration in his expression but he obediently goes back to licking your pussy, sans fingers, just like you told him to. You feel a rush of power, getting a boy to do exactly what you want, the way you want it, and it is perhaps the most exciting feeling of this entire experience.'
+				'You start to pant and moan louder and have to bite the sleeve of your shirt to keep it down, but your arousal is more than a match for the piece of cloth.'
+				$orgasm_txt = 'You end up clamping a hand over your own mouth to keep from crying out as you feel yourself having an earth-shattering orgasm. You lean back on the desk, shaking uncontrollably and desperately trying to swallow your screams as the boy keeps licking you through your orgasm.'
+				$orgasm_or = 'custom'
+				gs 'arousal', 'cuni', 10, 'dom'
+				gs 'arousal', 'end'
+				gs 'stat'
+				'The shudders pass eventually and you feel your strength returning, your breathing returning to normal. Even though your climax couldn''t have been more obvious, you have pull his head away from your pussy so you can slide off the table.'
+				'While you grab your panties and put them back on, he stand up and starts to unbutton his pants. Ignoring him completely, you straighten out your clothes and start to walk back to the main area when you hear him behind you: "Hey, what about me?" You stop and lean against a book shelf, "What about you? I said I wouldn''t tell if you eat me, you did and now I won''t tell. I never said anything about getting you off." You spin and leave him behind as you giggle. You are pretty sure you hear him muttering something about you being a cruel bitch, but you don''t care, especially not after a mind-blowing orgasm like that.'
+				'You return to your seat and start playing on your phone. About ten minutes later, your ''friend'' joins you as well and sits back down. He gives you annoyed looks the whole time but the huge grin you have on your face stays there for the rest of detention, until the bell rings and it even last the whole walk back home.'
+!!Sveta has orgasm for sure and earns dom points or what ever we ended up using for that.
+				act 'Go home': gt 'gschool_detention', 'end'
+			end
+			act 'Suck his cock':
+				cls
+				gs 'boyStat', 72
+				'<center><b><font color="maroon">Detention</font></b></center>'
+				'<center><img src="images/qwest/alter/school/detention/detbj.jpg"></center>'
+				'You pull his head away from your crotch and slide off the table, then squat down in front of him. He immediately start to unbutton his pants but you slap his hands away. "Remember: I''m in charge. Just relax, do as I say and have fun, got it?" He pauses for a moment, maybe to determine whether being submissive is a turn-on or a turn-off, but then, unsurprisingly, nods his head - not that you actually expected him to turn down a blowjob. You finish unbuttoning his pants and pull them and his underwear down to his knees, revealing his erect dick.'
+				'Under his expectant looks, you take the tip of his <<dick>>cm <<$dick_girth>> cock into your mouth and start sucking him, slowly, teasingly. He starts to move his hips to fuck your mouth, or at least go a little deeper, but a quick slap gets him standing still. You are loving feeling completely in control, you reach down and masturbate as you suck his dick, taking more of it into your mouth at your own leisure. He does rest one of his hands on your head but doesn''t try to force you to deep throat him so you let it go.'
+				gs 'arousal', 'bj', 5, 'dom'
+				gs 'arousal', 'masturbate', 5, 'dom'
+				minut -= 5
+				gs 'stat'
+				act '"Fuck my pussy"':
+					cls
+					'<center><b><font color="maroon">Detention</font></b></center>'
+					'<center><img src="images/qwest/alter/school/detention/detvag.jpg"></center>'
+					'Your pussy is soaking wet at this point and you are aching to have something inside it, so you stop sucking him, get back up on the table and spread your legs. "Come over here and fuck me", you command him. He moves over to you at once and slides his <<dick>>cm <<$dick_girth>> dick into your pussy in one stroke, a soft groan escaping both of your mouths as he does. You stop him, remind him with a gesture of your finger that you have to keep it down, but when he nods in acknowledgment, you lean back and he starts fucking you deep and hard, occasionally hitting something inside you, distracting you.'
+					'You place your hand against his chest and he slows down a little and stops going as deep, causing a soft smile to curl your lips - having a willing boytoy following your every whim is intoxicating! After a bit, you feel that familiar boiling sensation well-up within you; you grab his hip and pull him closer until he is ballsdeep inside you, then push him him back and forth as fast as you can. He quickly catches on that you want him to fuck you harder and starts pounding your pussy balls deep, as hard and fast as he can. You start rubbing your clit with one hand, moaning louder and louder. One of his hands clamps over your mouth to muffle your moans and you don''t even care.'
+					$orgasm_txt = 'Before long your muffled cries of ecstasy are barely contained by his hand but the orgasm turns your brain to mush.'
+					$orgasm_or = 'custom'
+					gs 'arousal', 'vaginal', 15, 'dom'
+					gs 'stat'
+					'Still in your dream-like state, you pull him out. You haven''t quite decided what you wanna do with his dick yet but you know you don''t want him coming inside you.'
+					!!Sveta has orgasm for sure.
+					act 'Make him cum': gt 'gschool_detention', 'strange_cum'
+					act 'Let him fuck your ass':
+						'<center><b><font color="maroon">Detention</font></b></center>'
+						'<center><img src="images/qwest/alter/school/detention/detanal.jpg"></center>'
+						'Even after having a mind-blowing orgasm, you are still feeling turned on, maybe because you are completely in control, maybe because there are several other students and a teacher no more than four or five meters away, or maybe because you are just a naturally horny little bitch. You don''t know and you don''t really care either. All you know is that you want to feel him in your ass now, so you touch his chest again to stop his movement. "Fuck my ass!", comes your order, plain and simple.'
+						'He pauses and it takes a moment for him to process what you just said but when when it dawns on him that he can realize his porn magazine fantasy, he wastes no time, perhaps afraid you might change your mind: He climbs up on the table next to you, spooning you, then starts rubbing the tip of his dick against your anus. He rubs it against your pussy again, gathering more juices from there, and repeats the process; you almost didn''t expect him to be this considerate when you stated your desire. When he has your puckered hole lubed up a little with your own fluids, he gently eases his dick into your ass. Eliciting a moan of pleasure and pain from you, he slowly slides his way deeper into your ass, only stopping when he feels you tense up. Then, he start fucking your ass, gingerly at first, savoring the feeling of being inside your other hole.'
+						'He even reaches over and starts rubbing your clit as he moves in and out, and as your moans get louder, you feel yourself building up towards another orgasm, but his slow pace is driving you mad and you can''t take it anymore. You reach back, grab his ass and pull him closer so his dick slides deeper up your ass. Perceptive as ever, he takes the hint and works his way deeper into you butt until he is balls deep. Once there, he starts fucking you faster too, slowly building up speed until he is hammering your ass, giving you exactly what you wanted, what you needed.'
+						$orgasm_txt = 'Another, even more intense orgasm crashes through your body and to your luck, the hand of his that isn''t rubbing your clit clamps tightly over your mouth, muffling your cries.'
+						$orgasm_or = 'no'
+						gs 'arousal', 'vaginal_finger', 10, 'dom'
+						$orgasm_or = 'custom'
+						gs 'arousal', 'anal', 10, 'dom'
+						minut -= 10
+						gs 'stat'
+						'Once the sensation passes, you pull away, pulling him out of your ass. Sliding off the table, you pull him with you, grab his underwear and wipe his dick off really well with it. It was just in your ass, after all, and you want it as clean as possible before you finish him off.'
+						!!second Sveta orgasm
+
+						act 'Make him cum':gt 'gschool_detention', 'strange_cum'
+					end
+				end
+			end
+		end
+	end
+end
+
+if $ARGS[0] = 'strange_cum':
+	cls
+	'<center><b><font color="maroon">Detention</font></b></center>'
+	'<center><img src="images/qwest/alter/school/detention/detcum.jpg"></center>'
+	'You squat down in front of him again and start jerking him off. All things considered, you are surprised and very pleased with how long he''s lasted and you are just about to take the boy''s cock into your mouth again to suck him some more when he groans and shoots his load of sperm across your face. You open wide and some of the follow-up spurts end up in your mouth, but some of the jets still manages to hit your face. You take his dick inside and suck him, swallowing the last few small spurts in your mouth and cleaning him up, relishing the taste of his cum.'
+	gs 'arousal', 'hj', 5, 'dom'
+	gs 'arousal', 'end'
+	gs 'cum_call', 'mouth', $boy
+	gs 'stat'
+	'When his erection starts to deflate, you release him and begin cleaning yourself up, as does he. He even helps you wipe the cum off your face, making sure you don''t miss a spot. Once you are both dressed and presentable once more, you want to head back, but after taking one or two steps in that direction, he grabs your arm and kisses you on the lips. "Thanks for not telling and well... everything. I won''t tell anyone about this, I promise. You''re a cool chick." He gives you a look of longing, lust and admiration, then nods his head once more and heads back out. You follow him a couple of minutes later, taking your seat opposite him again and waiting for detention to end. If detention is always like this, maybe you need to get in trouble more often.'
+	'You spend the rest of the time playing on your phone and occasionally giving the boy a conspiratorial grin which he returns in kind. Once the bell rings, you head home, a huge smile on your face the whole way home. Yep, detention definitely has its perks.'
+
+	act 'Go home': gt 'gschool_detention', 'end'
+end
+
+if $ARGS[0] = 'company':
+!!the following only happens if Sveta has high enough friendship with Marcus and has not had sex in the bathroom.
+	cls
+	minut += 180
+	gs 'stat'
+	'<center><b><font color="maroon">Detention</font></b></center>'
+	'<center><img src="images/qwest/alter/npc/marcus.jpg.jpg"></center>'
+	if Marcus_sextype = 0:
+		'Shortly after the teacher stops paying attention to everyone, Marcus walks over and sits down next to you. "Hey <<$nickname>>, what''s up?"'
+		'You give him a friendly smile. "Doing time for my crime. At least I won''t have to do it alone."'
+		'He laughs a bit, "Is that an invitation for me to stick around and talk?" He seems a bit nervous which is unusual for him.'
+		'"Sure, I would like that", you tell him and soon the two of you are talking. He mostly asks you about you: About what you like, what you do, your favorite movies, books and other bits of information like that. Time flies when you''re having fun and while detention definitely isn''t fun, Marcus certainly makes the time fly. Before you know it, the bell rings and you can pack your things and leave.'
+!!if Sveta had sex in the bathroom already with Marcus, but not anal sex.
+	else
+		'Shortly after the teacher stops paying attention to everyone, Marcus walks over and sits down next to you. "Hey <<$nickname>>, what''s up?"'
+		'You give him a friendly smile. "Doing time for my crime. At least I won''t have to do it alone."'
+		'He laughs a bit, "Yeah, I''ve seen your name on the detention sheet, so I knew you had been a bad girl and would be here." Then his expression gets more serious and he talks softly so no one can overhear him. "I have been wanting to talk to you about the other day, you know, in the bathroom?" He flushes a little bit as he says that.'
+		'You grin - it is funny watching him getting a little embarrassed about it. "What about it? I had fun. Didn''t you?", you ask, feigning indignance to tease him.'
+		'He looks slightly panicked as he reassures you. "No, no, no. It''s not that, I had fun, it was great! I, um... well, I was just wondering if you wanted talk?" He seems a bit nervous which is unusual for him.'
+		'"Sure, I would like that", you tell him and soon the two of you are talking. He mostly asks you about you: About what you like, what you do, your favorite movies, books and other bits of information like that. Time flies when you''re having fun and while detention definitely isn''t fun, Marcus certainly makes the time fly. Before you know it, the bell rings and you can pack your things and leave.'
+	end
+!!both of the above lead to this
+	act 'After detention':
+		cla
+		*clr
+		'<center><img src="images/qwest/alter/npc/marcus.jpg.jpg"></center>'
+		'As you leave the school building, Marcus jogs to catch up to you. "Hey, wait up!" You stop and turn around. He looks down at you for a moment while you both stand there before saying: "I like you, <<$nickname>>. Can I walk you home?"'
+		act '"No"':
+			cla
+			'You put your hand on his chest. "I like you too, Marcus, but I can walk home on my own. Thank you for the offer, though. See you later?"'
+			'He nods and is obviously a little disappointed. "Sure, see you later. Take care." He walks off without another look at you.'
+
+			act 'Go home': gt 'gschool_detention', 'end'
+		end
+		act '"Yes"':
+			cls
+			'<center><img src="images/qwest/alter/school/detention/marcuswalk.jpg"></center>'
+			'You smile to him. "I like you too, Marcus, and I''d love it if you walked me home." He smiles and walks with you. The two of you continue your conversation from earlier, mostly revolving around you. It seems that he wants to know everything about you. The way home takes way longer than usual but you are in no hurry in his company; at one point, he even puts his arm around your shoulders as you walk.'
+			'As you come up to your building, you stop and turn to him. "We''re here. I live on the second floor." You smile at him. "Thank you for walking me home." He returns the smile and when he leans down to kiss you, you feel a warm tingle in your belly.'
+			'Way too quickly, he breaks the kiss, his eyes locked with yours. "Mind if I call you some time?"'
+			gs 'arousal', 'kiss' 2
+			gs 'arousal', 'end'
+			gs 'stat'
+			'"Ye- no! I mean, I would like that." You tell him, still a little dazed from the kiss, and give him your number.'
+			'He grins, both at your reaction and the fact he got your phone number. "Okay, well, I will call you then. Talk to you later." He waits until you go inside before he leaves.'
+!!add a note saying Marcus BF content not finished will be added later. So people know there is nothing further with him for the moment.
+			msg 'Marcus BF content not finished will be added later'
+
+			act 'Home':
+				if hour = 8:
+					minut += 180
+				elseif hour = 9:
+					minut += 120
+				elseif hour = 10:
+					minut += 60
+				end
+				gs 'stat'
+				minut += 70 - minut
+				gt 'pod_ezd', 'etaj_1'
+			end
+		end
+	end
+end
+
+!!following can only happen if Sveta let Marcus fuck her in the ass in the boys bathroom while cutting class.
+if $ARGS[0] = 'company2':
+	cla
+	*clr
+	'<center><b><font color="maroon">Detention</font></b></center>'
+	'<center><img src="images/qwest/alter/npc/marcus.jpg.jpg"></center>'
+	'Shortly after the teacher stops paying attention to everyone, Marcus walks over and sits down next to you. "Hey <<$nickname>>, what''s up?"'
+	'You give him a friendly smile. "Doing time for my crime. At least I won''t have to do it alone."'
+	'He laughs a bit, "Yeah, I''ve seen your name on the detention sheet, so I knew you had been a bad girl and would be here." Then his expression gets more serious and he talks softly so no one can overhear him. "I have been wanting to talk to you about the other day, you know, in the bathroom?" He flushes a little bit as he says that.'
+	'You grin - it is funny watching him getting a little embarrassed about it. "What about it? I had fun. Didn''t you?", you ask, feigning indignance to tease him.'
+	'He looks slightly panicked as he reassures you. "No, no, no. It''s not that, I had fun, it was great! I, um... well, I was just wondering if you wanted to meet me after detention?"'
+	act 'Refuse':
+		cla
+		*clr
+		grupNPC[27] += 2
+		'<center><b><font color="maroon">Detention</font></b></center>'
+		'<center><img src="images/qwest/alter/school/detention/detention.jpg"></center>'
+		'You shake your head. "Sorry Marcus, I don''t have time today."'
+		'He accepts it gracefully. "Naw, that''s cool. Just forget I asked, okay?"'
+		'He starts to get up but you stop him. "Maybe some other time? Either way, we can still talk and make time go by faster. Beats sitting around and doing homework or something, right?"'
+		'He smiles and nods. "Sure, works for me. So, did you hear about what happened in gym yesterday?" After that, the two of you talk the rest of detention about a variety of things. Marcus is polite and nice the whole time. Once detention is over, he walks you out of the school and bids you farewell. On your way home, you wonder if you should just say "yes" next time, or maybe see if you see him cutting class again...'
+!!friendship should go up with Marcus from the talk.
+
+		act 'Go home': gt 'gschool_detention', 'end'
+	end
+	act 'Agree':
+		cla
+		*clr
+		grupNPC[27] += 2
+		'<center><b><font color="maroon">Detention</font></b></center>'
+		'<center><img src="images/qwest/alter/school/detention/detention.jpg"></center>'
+		'You grin and let him wait for a bit, pretending you''re not sure how to answer him. You know exactly what meeting him would be about and you would like that very much. You reach over and grab his crotch, leaving no doubt in his mind as you lean over and whisper to him: "Sure, we can hang out after detention. We can do anything you want."'
+		'You lean back, letting go of him and biting your lower lip at the thought of what''s waiting for you. A grin spreads on his face and he takes a moment to adjust his pants. "Great." Then he looks up at the clock and a frown dampens his excitement. "Fuck me, this is going to be the longest three hours of my life." You can''t help but laugh at his expression when he says that.'
+		'"Well, we would talk; you know, to kill time", you suggest. He nods and soon the two of you are talking about what he likes about Russia and you have him tell you about what it was like living in America.'
+!!friendship should go up with Marcus from the talk.
+		act 'After detention':
+			cls
+			gs 'boyStat', 90
+			'<center><b><font color="maroon">Detention</font></b></center>'
+			'<center><img src="images/qwest/alter/school/detention/detmbj.jpg"></center>'
+			'When the bell rings, you both get up and head out of the library, but instead of heading out of the school, you duck into a side hall. Marcus opens one of the classroom doors and pulls you in with him, closing the door behind the two of you.'
+			'"You said you would do anything I want, right? So, if I tell you to do something, you will?" You roll your eyes slightly but also smile a bit at the little game before nodding. He grins and pulls his dick out of his pants. "Alright: I want you to suck my dick."'
+			'You squat down in front of him without delay, take his <<dick>>cm <<$dick_girth>> cock into your mouth and start sucking it, your tongue swirling around the tip as you bob your head up and down. He cedes complete control of the action to you, content with having his cock in your mouth.'
+			$orgasm_or = 'no'
+			gs 'arousal', 'bj', 5
+			'But after a few minutes, that isn''t enough anymore and touches your chin. "Stop. Get up and strip naked, then bend over the desk." You do as he tells you, finding this perverted game of Simon Says oddly arousing.'
+			act 'Anal':
+				cls
+				'<center><b><font color="maroon">Detention</font></b></center>'
+				'<center><img src="images/qwest/alter/school/detention/detmanal.jpg"></center>'
+				'You strip all of your clothes off and bend over the desk. You look back and see him pull a small bottle of lube out of his pocket and lubing his dick up really well, then spreading some of it on your anus as well.'
+				'"Reach back and spread your ass cheeks. Don''t worry, I used lots of lube and I''ll be gentle." Again, you follow his command and reach back to spread your cheeks. You feel him rub the head of his dick against your asshole for a moment before easing the tip inside. He stops almost at once, giving you a moment to adjust, but with all the lube his <<dick>>cm <<$dick_girth>> cock slides surprisingly easily into your ass.'
+				'Gently and slowly, Marcus fucks your ass, carefully working his way deeper into you, giving you plenty of time to get used to the size of his cock. Before long, you find yourself moaning in pleasure and that familiar feeling building in your groin. All you feel is the intense stimulation from having your puckered hole fucked.'
+				lubonus = 10
+				gs 'arousal', 'anal', 15
+				gs 'stat'
+				act 'Continue':
+					cls
+					'<center><b><font color="maroon">Detention</font></b></center>'
+					'<center><img src="images/qwest/alter/school/detention/detmanal1.jpg"></center>'
+					'He fucks your ass doggy style for awhile but then pulls out and rolls you over on the desk. With your legs spread, he puts his <<dick>>cm <<$dick_girth>> cock back into your ass. This time, it slips right in with no pain at all. The only thing you seem to be capable of feeling right now is lust. "Play with your pussy, fingerbang yourself." He tells you as he picks up the pace.'
+					'You start playing with your clit and feel an intense orgasm building up inside you.'
+					gs 'arousal', 'anal', 10
+					$orgasm_txt = 'Almost as soon as you put two of your fingers inside your dripping cunt, you are overwhelmed by waves of intense ecstasy; you cry out and your whole body shakes as you orgasm.'
+					$orgasm_or = 'custom'
+					gs 'arousal', 'vaginal_finger', 10
+					'During your climax, you don''t even notice him shooting his load in your ass, filling it with his hot sticky sperm as you cum together.'
+					gs 'cum_call', 'anus', $boy
+					gs 'stat'
+!!Sveta should have a orgasm here.
+					act 'Finish':
+						cla
+						*clr
+						'<center><b><font color="maroon">Detention</font></b></center>'
+						'<center><img src="images/qwest/alter/school/detention/detmcum.jpg"></center>'
+						'When you regain your senses, you feel your ass gaping where there should have been a cock. You also feel the cum running out of it and dripping down on the desk underneath. Marcus pulls you up and gives you a long, passionate french kiss.'
+						'Once he finishes the kiss, he steps away to give you room, but when you actually try to get off the desk, he has to hold you for a moment - your legs feel like jelly after this orgasm and you giggle into his chest for a moment until you feel strong enough to stand on your own. He gets dressed and helps you gather your own clothes, waiting patiently until you got yourself cleaned up and dressed as well. Then he leads you out of the school and, once outside, stops and turns to you. "I like you, <<$nickname>>. Can I walk you home?"'
+						act 'No':
+							cla
+							*nl
+							'You put your hand on his chest. "I like you too, Marcus, but I can walk home on my own. Thank you for the offer, though. See you later?"'
+							'He nods and is obviously a little disappointed. "Sure, see you later. Take care." He walks off without another look at you.'
+							act 'Go home': gt 'gschool_detention', 'end'
+						end
+						act 'Yes':
+							cla
+							*clr
+							'<center><img src="images/qwest/alter/school/detention/marcuswalk.jpg"></center>'
+							'You smile to him. "I like you too, Marcus, and I''d love it if you walked me home." He smiles and walks with you. The two of you continue your conversation from earlier, mostly revolving around you. It seems that he wants to know everything about you. The way home takes way longer than usual but you are in no hurry in his company; at one point, he even puts his arm around your shoulders as you walk.'
+							'As you come up to your building, you stop and turn to him. "We''re here. I live on the second floor." You smile at him. "Thank you for walking me home." He returns the smile and when he leans down to kiss you, you feel a warm tingle in your belly.'
+							'Way too quickly, he breaks the kiss, his eyes locked with yours. "Mind if I call you some time?"'
+							'"Ye- no! I mean, I would like that." You tell him, still a little dazed from the kiss, and give him your number.'
+							'He grins, both at your reaction and the fact he got your phone number. "Okay, well, I will call you then. Talk to you later." He waits until you go inside before he leaves.'
+!!add a note saying Marcus BF content not finished will be added later. So people know there is nothing further with him for the moment.
+							msg 'Marcus BF content not finished will be added later'
+
+							act 'Home':
+								if hour = 8:
+									minut += 180
+								elseif hour = 9:
+									minut += 120
+								elseif hour = 10:
+									minut += 60
+								end
+								gs 'stat'
+								minut += 70 - minut
+								gt 'pod_ezd', 'etaj_1'
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+!!The following is the special follow up events that can happen if the previous scene has happened.
+if $ARGS[0] = 'Ivanov':
+	cla
+	*clr
+	'<center><b><font color="maroon">Detention</font></b></center>'
+	'<center><img src="images/qwest/alter/school/detention/teacher.jpg"></center>'
+	'Thirty minutes or so into detention, Mr Ivanov calls your name. "Miss <<$Surename>>, please come with me. I need your help with something." He stands up and waits for you to walk up to him, then leads you out of detention, down the hall to the teachers'' lounge. Once inside, he asks you to "please take a seat over there." You walk over and sit down in the offered chair, more than a little confused - why are you here? For awhile, he seems to ignore you again, then walks out of your view for a bit. Just when you are about to ask him why he brought you here, you hear him walk up close behind you and stop.'
+	'"Miss <<$Surename>>, it''s time that you repay me for keeping your cutting class secret." Turning in your chair, you see his dick sticking out of his pants; the bastard already had sex with you for his silence and now he expects you to keep getting him off!' 
+	'The wheels are turning in your head: On one hand, it''s not like you haven''t already let him have his way with you, so your reluctance at the thought probably isn''t as strong as it should be. But that doesn''t change the fact that he is blackmailing you, and who''s to say where that leads you or when he''ll be satisfied? Should you submit or make a stand?'
+	act 'Tell him to "fuck off"':
+		cla
+		*clr
+		'<center><b><font color="maroon">Detention</font></b></center>'
+		'<center><img src="images/qwest/alter/school/detention/fuckoff.jpg"></center>'
+		'You flip him off and stand up. "Fuck you, I already gave you what you wanted to be silent." You take a few steps toward the door but then stop dead in your tracks when you hear your own voice, offering Mr Ivanov a fuck if he doesn''t tell on you. The bastard recorded you in the bathroom?! You turn around to see him holding his phone, a hard, triumphant look meeting yours as he answers the silent question: "That''s right, I recorded our little chat. I knew you were going to offer sex - right from the first time you entered my class, I knew you were a little whore, and I was right, wasn''t I? So, now, you are going to be my little whore anytime I want, or else I will get you expelled for trying to have sex with one of your teachers... and I''ll make sure your parents will hear about it, too. Just imagine how disappointed they''ll be how their daughter turned out."'
+		'You are completely stunned, shock and fear burning and boiling in your chest like fire and acid. Telling your parents? Getting you expelled from school? You knew he was a twisted motherfucker, but this? You had no idea he was the kind of scum who would threaten to destroy your life so he could own you. A part of you tries to stay rational and thinks that he would get in as much trouble as you, if not more, if the school found out. Problem is, you can''t <b>prove</b> that you had sex, that he took you up on your offer, that he fucked a student. The only recording of the event is his and he''s probably smart enough to cut it so it only has you soliciting him. Would they really expel you? You don''t know.'
+		act 'You can''t take that risk - Suck his cock': gt 'gschool_detention', 'Ivanov_suck'
+		act 'You won''t let him blackmail you - "Fuck you, asshole!"':
+			cla
+			*clr
+			'<center><b><font color="maroon">Detention</font></b></center>'
+			'<center><img src="images/qwest/alter/school/detention/fuckoff.jpg"></center>'
+			'You gather all of your courage in one defiant smirk and flip him off again. "Fuck you, asshole. You hear me? FUCK YOU!!! Do what you gotta do, but I will make sure they know you fucked me and tried to blackmail me, and then we''ll see if they let you keep your job." With that, you walk out and go back towards the library, your heart pounding against your ribs. Several minutes later, Mr Ivanov returns to detention as well and sits back down behind his desk. He doesn''t say anything to you for the rest of the detention, leaving you to contemplate in silence whether your decision was the right one or not. When the bell rings, you quickly gather your stuff and head home.'
+
+			act 'Go home': gt 'gschool_detention', 'end'
+		end
+	end
+
+	act 'Suck his cock': gt 'gschool_detention', 'Ivanov_suck'
+end
+
+if $ARGS[0] = 'Ivanov_suck':
+	gs 'boyStat', 79
+	'<center><b><font color="maroon">Detention</font></b></center>'
+	'<center><img src="images/qwest/alter/school/detention/teacherbj.jpg"></center>'
+	'You give in. You don''t know if this will save you from greater damage or destroy your life in the long run, but as you get on your knees in front of Mr Ivanov, all you feel is defeat. You reach out for his dick and start stroking it while you forward. At least he had the courtesy to wash himself, you think, and wrap your lips tightly around his shaft. Your hand moves up and down in perfect synchronicity with the bobs of your head, up and down, sucking him as well as you can in an attempt to get this over with as quickly as possible. He is not showing any signs of getting close to cumming, though, even after ten minutes of intense blowing.'
+	'Instead of the premature ejaculation you were hoping for, he merely pulls his dick out of your mouth and you to your feet. "Alright, enough of that, girl. Bend over the table."'
+	gs 'arousal', 'bj', 5
+	gs 'stat'
+	act 'Bend over':
+		cls
+		'<center><b><font color="maroon">Detention</font></b></center>'
+		'<center><img src="images/qwest/alter/school/detention/teacherlick.jpg"></center>'
+		'You turn and bend over the table, silently preparing yourself for whatever he has in mind as he pulls your uniform''s skirt up and your panties down. His hands pull your ass cheeks apart and then you feel his tongue against your asshole, wet and warm, the fact that it is his utterly disgusting you. He keeps licking your rosebud, uses his fingers to work his saliva into your anus, then goes back to licking it some more. He does this several times, preparing you for penetration, no doubt, and all you can do is wait in fearful anticipation. Eventually, you hear him rummaging and then something bigger than a finger rubs against your asshole: He rubs the head of his dick around, lining it up.'
+		gs 'arousal', 'rimming', 5
+		gs 'stat'
+		act 'Take his dick up your ass':
+			cls
+			'<center><b><font color="maroon">Detention</font></b></center>'
+			'<center><img src="images/qwest/alter/school/detention/teacheranal.jpg"></center>'
+			'You were bracing for the push, the feeling of him entering. What you didn''t prepare for was his hard spank on your ass, just before he shoves his <<dick>>cm <<$dick_girth>> cock into you butt, causing you to tense up in surprise. He doesn''t let up, though; Mr Ivanov grabs ahold of your hips and drives himself balls deep inside you. All you can do is cry out in pain, but that is nothing compared to the agony that comes next: He starts hammering into your ass in violent thrusts, your thighs banging hard against the edge of the table. Any residual doubt that he does this deliberately to hurt you are eliminated by his words: "That''s right, whore, scream for me! You''re pain is music to my ears."'
+			'Your hands grasp the edge of the table tightly and try to relax, to endure his pounding. It''s kinda working, too, but apparently you are not making enough noises of pain for his liking. He pulls nearly all the way out of you and slams back all the way in, banging your thighs so hard against the table that the pain shoots up your spine and down to your toes. You cry out again and he returns to jackhammering your ass, but you bear it as well as you can; you muffle every sound he wants to hear and swallow your tears so he doesn''t get the satisfaction of seeing you cry: You grit your teeth and endure it.'
+			gs 'arousal', 'anal', 20, 'rough'
+			gs 'stat'
+			act 'Take a facial':
+				cls
+				'<center><b><font color="maroon">Detention</font></b></center>'
+				'<center><img src="images/qwest/alter/school/detention/teachercum.jpg"></center>'
+				'How long he violates your ass with his <<dick>>cm <<$dick_girth>> cock, you cannot tell, other than through the fact that your thighs have been thrust against the edge of the table so many times that your legs really hurt now and you are sure they are badly bruised. It lasts so long that the pain doesn''t seem to let up but only becomes greater, filling you up like a liquid, and you are oh-so-close to the point where you don''t think you can take it anymore when he finally, finally stops and pulls out. He jerks you back and forces you down on your knees, or at least that''s how he acts - in truth, your legs just give away as soon as you no longer have the table to support yourself on.'
+				'"Jerk me off on your face", you hear Mr Ivanov. For a moment, just a moment, you consider ignoring him and his dick hanging over you, but you are almost through this and so decide to tilt your head back and start jerking him off, keeping your eyes closed not only to protect them but also because of your utter exhaustion. Not long after, you feel a hot spurt of sperm land on your face, quickly followed by several more until he has covered most of your face with his cum. Once finished, he moves over, grabs some tissues off the table and cleans up his dick.'
+				'As he does, he says: "Now you know your place, whore. I will have you properly trained before long." Then he breaks into a cruel smile. "We will be seeing a lot more of each other in the future. Now get your ass back to detention, where whores like you belong."'
+				gs 'arousal', 'hj', 5
+				gs 'arousal', 'end'
+				gs 'cum_call', 'mouth', $boy
+				gs 'stat'
+				act 'Back to detention':
+					cls
+					gs 'stat'
+					'<center><b><font color="maroon">Detention</font></b></center>'
+					'<center><img src="images/qwest/alter/school/detention/detention.jpg"></center>'
+					'You clean yourself up, every movement a new world of agony, and then go back to detention, feeling empty inside, walking slowly to keep yourself from limping and sitting down with care - you still almost cry out in pain when you sit down on your abused butt. Several minutes later, Mr Ivanov returns to detention as well and sits back at the front. He doesn''t say anything to you for the rest of the detention, leaving you to quietly nurse your injuries. When the bell rings, you quickly gather your stuff and head home.'
+
+					act 'Go home': gt 'gschool_detention', 'end'
+				end
+			end
+		end
+	end
+end
+
+!!following can only happen if Sveta had sex with Anushka in the bathroom.
+!!<<$rand_teacher>> is for the random male teachers last name.
+if $ARGS[0] = 'plan':
+	cls
+	minut += 120 - minut
+	gs 'stat'
+	gs 'gschool_events', 'rand_teacher_arg'
+	'<center><b><font color="maroon">Detention</font></b></center>'
+	'<center><img src="images/qwest/alter/npc/Anushka.jpg.jpg"></center>'
+	'Valentin sits across from you and Anushka takes the seat next to you, sliding her arm around your shoulders and pulling you close to her. "<<$nickname>>, we need your help with a plan."' 
+	'"What plan?", you ask, looking from her to Valentin and back. Anushka''s answer comes so fast that you are certain she was waiting for that exact question: "We want to drug Mr <<<<$rand_teacher>>>>, you know, so we can go have fun." You are almost certain you misheard her but she casually ignores your shocked expression and explains what part you are to play in this: "I will go up and distract him and when I do, we need you to drop these in his drink." She places several pills in your hand.'
+	'You look at the pills, turning them here and there uncertainly, and then at them again. "What exactly will these do to him?"'
+	'Valentin answers before Anushka can. "Make him tired, is all. He will sleep for a few hours and feel a little groggy for the rest of the day but nothing serious - we''re just wanna make detention less boring, <<$nickname>>, not trying to kill him. So, you going to do it or not?"'
+	act 'This is WAY too sketchy - Refuse':
+		cla
+		*clr
+		Anushka_toilet = -1
+		'<center><b><font color="maroon">Detention</font></b></center>'
+		'<center><img src="images/qwest/alter/school/detention/detention.jpg"></center>'
+		'You shake your head and hand the pills back. "Sorry, guys, but I can''t be part of that. It''s just... wrong."'
+		'Valentin looks at Anushka. "I told you she wouldn''t do it."'
+		'Anushka shakes her head and gives you a disgusted look. "I thought you was cool. Fucking loser." With that, they both get up and move to another table. You spend the rest of the detention playing on your phone, trying to ignore their glares. It''s not easy because you know that you didn''t just "turn down" somebody: You lost a lot of respect with the gopniks today.'
+!!this will block the Anushka bathroom scene from now on and Sveta takes a big hit to gopnik rep.
+		act 'Go home': gt 'gschool_detention', 'end'
+	act 'Well, they did say it''s harmless - Agree':
+		cls
+		minut += 25
+		'<center><b><font color="maroon">Detention</font></b></center>'
+		'<center><img src="images/qwest/alter/school/detention/anushdes.jpg"></center>'
+		'You nod. "Okay, let''s do this." Anushka grabs your face, turns it towards hers and gives you a long, deep, passionate kiss with so much tongue even Valentin seems to feel a little awkward. Once she breaks the kiss, she turns towards him. "See? I told you she would do it." Valentin just shrugs slightly and smirks at you still catching your breath from that kiss. Anushka crushes up the pills into a fine powder in less than a minute, then gets up and motions for you to follow her.'
+		gs 'arousal', 'kiss', 3
+		gs 'stat'
+		'She walks up to the side of the teacher''s desk where Mr <<$rand_teacher>> sits while his unguarded drink is conveniently located at the opposite end. You causally stroll over and sit down on the edge of the table, using your body to block the view of his drink from the rest of the room. Mr <<$rand_teacher>> looks at the two of you. "Can I help you, girls?"'
+		'Anushka leans forward and pulls her shirt and bra slightly down and apart, nearly exposing her nipples but definitely giving clear view of her cleavage. Her mock-anxious anxious tone, however, is what takes the cake: "Sir, what do you think that spot is? Should I be worried?"'
+		'He seems flustered at her actions, but quickly gets himself under control. "What spot? I don''t see anything."'
+		'She leans closer to him, pushing them together even more. "Right there, between my breasts."'
+		'He leans in a little closer to get a better look and as he does, you drop the powdered pills in his drink. Anushka gives you an almost imperceptible nod, looks down and then leans back, letting go of her shirt to hide her cleavage again. "Oh, it''s gone!" She turns to you. "See? I told you it was just a lint." Then she gives Mr <<$rand_teacher>> another look and smile. "Thanks anyways." Then she gets up and walks back to your table, you right behind her. He looks at the two of you for a moment and then shakes his head, obviously unsure what that was all about. He takes a big gulp from his cup, then another one a few minutes later. Within half an hour, he is leaned back in his chair, snoring, saliva running down his chin.'
+		act 'Go to the Teachers'' Lounge':
+			cls
+			gs 'boyStat', 92
+			'<center><b><font color="maroon">Detention</font></b></center>'
+			'<center><img src="images/qwest/alter/school/detention/detcbj.jpg"></center>'
+			'Once the teacher starts snoring, Valentin gets up. "Come on, let''s go." Anushka follows suit and pulls you up as well. You wander down the halls till the three of you reach the teachers'' lounge. Valentin pulls out some picks and quickly unlocks the door with them. You and your companions quickly go inside and he locks the door once you are in. While he does, Anushka pulls you over to a big leather couch. You both flop down on the comfy couch and Valentin sits down between you a few seconds later.'
+			'He pulls out a flask from his jacket and takes a drink of it before passing it to Anushka, who takes a swig and passes it to you. You don''t really have much of a choice, so you take a drink as well. You immediately regret it and start coughing and choking on the burning liquid, which gets them both laughing; whatever it is, it is strong.'
+			'After only a few drinks each, it is empty and you feel pretty buzzed, watching in dazed fascination as he pulls his pants down. Anushka and Valentin make out as she closes her hand around his cock and starts jerking him. After she has him good and hard, she reaches over and grabs you by the top of your head with both her hands.'
+			'She pushes your head down into his lap and you reflexively open your mouth and start sucking his dick. She keeps forcing your head down, gagging you slightly on his length every so often, but she doesn''t really have to force you - you are getting turned on by this dream-like situation pretty quickly.'
+			gs 'arousal', 'bj', 5, 'rough', 'group'
+			act 'Her turn':
+				cls
+				'<center><b><font color="maroon">Detention</font></b></center>'
+				'<center><img src="images/qwest/alter/school/detention/detcbj1.jpg"></center>'
+				'Suddenly, her hands are gone and you can feel her head next to yours, so you stop sucking and make room so she can suck his dick as well. The two of you start taking turns bobbing and licking, passing Valentin''s cock back and forth between you and occasionally licking it at the same time or kissing each other while you jerk him off instead. He seems perfectly content to let the two of you do as you please, as long as you please him.'
+				'While you are sucking his dick again, Anushka unbuttons your shirt, then unzips your skirt, then works on getting you out of the rest of your clothes. Once she has you completely naked, she comes back next to you. You move to let her suck his dick and while she is busy, you return the favor and strip her.'
+				gs 'arousal', 'bj', 10, 'group'
+				gs 'stat'
+				'As soon as her panties are off, she pulls her mouth off Valentin''s manhood with a loud plop and you two now help him undress. Within a minute, all of you are stark naked.'
+				act 'Continue':
+					cls
+					'<center><b><font color="maroon">Detention</font></b></center>'
+					'<center><img src="images/qwest/alter/school/detention/detcvag.jpg"></center>'
+					'She pushes him back till he is laying on the couch and encourages you to straddle his lap, and she is right: You are wet and ready. As you lower yourself down towards his crotch, she guides him into your pussy. You feel his <<dick>>cm <<$dick_girth>> cock stretching and filling you, and you start to moan, the sensation incredible and the alcohol somehow adding to it.'
+					'You lift yourself up and begin riding his dick, and as if that wasn''t enough stimulation, Anushka now leans forward and licks your clit while he buck his hips up, fucking your from below. You are lost in your pleasure, all control over the situation passed to your companions and you feel yourself getting close, the rising tingle in your body threatening to overwhelm your few remaining senses.'
+					'Just then, when release is finally within your grasp, Anushka pulls you off his heavenly cock and takes your place on, impaling herself on him time and time again. You are certain the little bitch did it on purpose, swapping places when you was so close, but you still return the favor of licking her clit while he fucks her.'
+					gs 'arousal', 'vaginal', 15, 'group'
+					gs 'arousal', 'cuni', 15, 'group'
+					minut -= 15
+					gs 'arousal', 'cuni_give', 5, 'group'
+					gs 'stat'
+					act 'Continue':
+						cls
+						'<center><b><font color="maroon">Detention</font></b></center>'
+						'<center><img src="images/qwest/alter/school/detention/detcanal1.jpg"></center>'
+						'Unlike you, she leaves no doubt as to who is in control, not while she''s straddling him and neither when she gets off him and makes him get up. She lays down on the couch instead, spreads her legs, grips her butt cheeks and spreads them as well. Her expectation is obvious and Valentin, being a perfect gentleman, obliges her. He slips his dick into her ass with ease, even without additional lubrication, and begins fucking her practically right away. She lets go of her own butt and motions you over, to straddle her face. Who are you to refuse such an offer?'
+						'Her tongue laps at your clit and slit as soon as they are within reach and every now and then, her tongue darts inside of you as well. Meanwhile, Valentin lays on his side and pounds her ass from behind, allowing him to lick and suck on your nipples while she eats you out. This goes on for some time, all three of you audibly content with this constellation, until Anushka starts making the two of you move again.'
+						gs 'arousal', 'cuni', 10, 'group'
+						gs 'arousal', 'breasts', 10, 'group'
+						minut -= 10
+						gs 'stat'
+						act 'Continue':
+							cls
+							'<center><b><font color="maroon">Detention</font></b></center>'
+							'<center><img src="images/qwest/alter/school/detention/detcanal.jpg"></center>'
+							'She gets up and has you lay down on your back, straddling your face almost at once. After the enthusiasm with which she treated you, you have no reservations about licking her pussy and get to work. Meanwhile, she lifts your legs up and spreads them apart. Valentin kneel between your legs and you can feel the head of his dick rub against your anus for a moment before he shoves his <<dick>>cm <<$dick_girth>> cock into your ass.'
+							'He is slow and gentle for a bit, allowing you to get used to it. As soon as he feels you are, though, he start hammering your ass just as hard as he was hammering Anushka''s. She grinds her twat against your face as he claims your ass, each of them taking turns playing with your nipples, adding another tune to the orchestra of pain and pleasure that is filling your mind. You have completely lost all sense of time by now, but you don''t really care.'
+							gs 'arousal', 'anal', 15, 'group'
+							gs 'arousal', 'cuni_give', 15, 'group'
+							minut -= 15
+							gs 'stat'
+							act 'Finish':
+								cls
+								gs 'cum_call', 'mouth', $boy
+								'<center><b><font color="maroon">Detention</font></b></center>'
+								'<center><img src="images/qwest/alter/school/detention/detccum.jpg"></center>'
+								'You can hear Valentin panting and grunting, so you know he is getting close. So does Anushka, it seems, because she gets off of you right away and pulls him off as well. She has him stand and kneels down in front of him where you join her. Her hand closes around his dick and she rapidly jerks his cock, but not for long: Only a few seconds later, a stream of sperm shoots out and she aims it right at your face. The next spurt she aims at her own face, followed by your tits, then her own tits - she spreads his spunk between the two of you, coating both of your tits and faces with his sticky cum.'
+								'When the well has dried up, she diligently licks you clean, leaving none of his sperm on your body. You return the favor, and when all the cum is collected, she gives you a deep and passionate french kiss, sharing the cum the two of you licked up. With that done, the three of you dress. While Valentin unlocks the lounge door, he smirks and says: "Okay, I admit it, I was wrong about you, <<$nickname>>, and Nush was right: You are a pretty cool chick. Not to mention a damn good fuck." You give Anushka a sideways glance and find her grinning at you.' 
+								gs 'arousal', 'kiss', 5
+								gs 'arousal', 'end'
+								gs 'stat'
+								'Going back to the library, you see that the teacher is still out and all the other students are gone. There is less than a hour of detention left anyways, so the three of your leave the school. Once outside, you each go your separate ways.'
+!!doing this earns gopnik respect as they make sure to tell the others how you drugged the teacher.
+
+								act 'Go home':minut += 15 & gt 'gschool_grounds', 'main'
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+if $ARGS[0] = 'end':
+	if hour = 8:
+		minut += 180
+	elseif hour = 9:
+		minut += 120
+	elseif hour = 10:
+		minut += 60
+	end
+	gs 'stat'
+	minut += 60 - minut
+
+	gt 'gschool_grounds', 'main'
+end
+
+--- gschool_detention ---------------------------------
+

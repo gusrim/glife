@@ -1,6 +1,12 @@
 # gschool_lessons
 
 if $ARGS[0] = 'morning':
+	if detention_set = 1 and week = 1:
+		cls
+		detention_set = 2
+		'<center><img src="images/qwest/alter/school/principal/principal.jpg"></center>'
+		'The principal is waiting for you in the hall and with a simple curl of a finger summons you to follow her to her office.'
+		act 'Follow': gt 'gschool_lessons', 'principal'
 	act 'Go to class':gt 'gschool_lessons', 'class'
 
 	act 'Skip one of your classes':
@@ -610,17 +616,20 @@ if $ARGS[0] = 'principal':
     '<center><b><font color="maroon">Principal''s Office</font></b></center>'
     '<center><img src="images/qwest/alter/school/principal/office.jpg"></center>'
 	'The office in a word is impressive, it must have cost a full years worth of the schools budget to decorate it. At least now you know why so much of the rest of the school has cracked and faded paint, Or is in need of repair, that never seems to happen, they spend all the money on this office.'
-	if demerit > 20:
+	if detention_set = 2:
+		'You take a seat at Principal <<$npcSurName[50]>>''s desk and wait for her to address you with a exacerbated tone "I give pupils the choice of a detention so that I don''t have to punish them personally, but you have abused that leniency so this spanking will have to be much more severe in order to teach you not to insult my kindness." She is clearly very angry and you are already anticipating the pain your butt is about to receive.'
+		act 'Accept the inevitable': gt 'gschool_lessons', 'spanked'
+	elseif demerit > 20:
 		'You take a seat at Principal <<$npcSurName[50]>>''s desk and wait for her to address you with a exacerbated tone "What did you do this time? No I don''t want to know. I really don''t care. You obviously have no respect for me or your teachers." She looks over your file some more and shakes her head slightly. "You have been here enough, you know what comes next. So what will it be this time? Spanking, Saturday detention perhaps." She seems more than a bit annoyed that you seem immune to her punishment system or are just that troubled of a student.'
-!!		act 'Choose detention':gt 'gschool_lessons', 'class' & !!triggers Saturday detention on Saturday morning.
+		act 'Choose detention':gt 'gschool_lessons', 'class' & detention_set = 1
 		act 'Choose spanking': gt 'gschool_lessons', 'spanked'
 !!		if demerit >= 50:act 'Choose suspension': gt 'gschool_lessons', 'suspension'
-		!!act 'Call Parents': gt 'gschool_lessons', 'Call Parents' - I will add this one in later as it will be a bit of work to write and tie in events at home.
+!!		act 'Call Parents': gt 'gschool_lessons', 'Call Parents' - I will add this one in later as it will be a bit of work to write and tie in events at home.
 	elseif demerit > 10:
 		'You take a seat at her desk and wait for Principal <<$npcSurName[50]>> to address you. "This is becoming a routine with you, I feel like I am seeing you every day. What has changed? You use to be such a good girl, perhaps a bit quiet, but now. This is not the way to get attention." She looks over your file some more and shakes her head slightly.'
 		'"We can''t have you keep getting in trouble like this, this is going to require a form of punishment." She looks directly at you for a moment to make sure you understand when you cause problems you will be getting punished. "I believe in giving the students a voice in their future. So I will let you decided, Saturday detention or a spanking now. Which will it be?"'
 
-!!		act 'Choose detention': gt 'gschool_lessons', 'class' & !!triggers Saturday detention on Saturday morning.
+		act 'Choose detention': gt 'gschool_lessons', 'class' & detention_set = 1
 		act 'Choose spanking': gt 'gschool_lessons', 'spanked'
 	else
 		'You take a seat at Principal <<$npcSurName[50]>>''s desk and wait for her to address you. "You know why you are here <<$surname>>?", before you have a chance to reply she continues on. "It was a rhetorical question, we both know why you are here. You are here because you got in trouble." She pauses to look over at the folder in front of her. "It shows you have mostly stayed out of trouble until now. I hope this is only a minor lapse in judgement and not a new trend from you. We won''t get into what you did, just understand this is a warning. Straighten yourself out or their will be consequences. Now return to class."'
@@ -633,10 +642,10 @@ if $ARGS[0] = 'spanked':
 	gs 'stat'
 	'<center><b><font color="maroon">Principal''s Office</font></b></center>'
 	'<center><img src="images/qwest/alter/school/principal/principal.jpg"></center>'
-	'No way are you coming back to school on a Saturday. "Uh, I would rather just get it over with, so spanking."'
+	if detention_set ! 2:'No way are you coming back to school on a Saturday. "Uh, I would rather just get it over with, so spanking."'
 	'"Very well, come over here." She says as she gets up and pulls a chair out and sits down on it. You get up and walk over to her.'
 	principal_spank += 1
-	if principal_spank <= 5:
+	if principal_spank <= 5 and detention_set ! 2:
 	!!there is different levels of spanking, first 5 times is Spanked, next 5 is Bare Spanked, next 5 times is Leather Paddle, after that all future ones is Wooden Paddle. If flirt is selected it automatic jumps to the next level, regardless of number of times.
 		act 'Take Punishment':
 			cls
@@ -660,7 +669,7 @@ if $ARGS[0] = 'spanked':
 			'To her credit she doesn''t relent and even manages to spank you harder. Once she has spanked you for a minute or so, she roughly lifted you off her knees and back on your feet. She points at the door. "Back to class now, before I give you detention as well." Not wanting detention, you don''t say anymore. Heading instead for the door, putting a bit of extra sway into your hips as you do.'
 			act 'Go to class':gt 'gschool_lessons', 'class'
 		end
-	elseif principal_spank <= 10:
+	elseif principal_spank <= 10 and detention_set ! 2:
 !!Spanked Bare Bottom
 		act 'Take Punishment':
 			cls
@@ -684,7 +693,7 @@ if $ARGS[0] = 'spanked':
 			'To her credit she doesn''t relent and even manages to spank you harder. Once she has spanked you for a minute or so, which leaves your butt a nice shade of red. She roughly lifts you off her knees and back on your feet. She points at the door. "Back to class now, before I give you detention as well." Not wanting detention you slowly pulling your panties back up, giving her a extra long look at your cherry red butt cheeks. As  you head for the door you add a bit of extra sway into your hips.'
 			act 'Go to class':gt 'gschool_lessons', 'class'
 		end
-	elseif principal_spank <= 15:
+	elseif principal_spank <= 15 and detention_set ! 2:
 !!Spanked Leather Paddle
 		act 'Take Punishment':
 			cls
@@ -710,6 +719,7 @@ if $ARGS[0] = 'spanked':
 		end
 	else
 !!Spanked Wooden Paddle
+		if detention_set = 2: detention_set = 0
 		act 'Take Punishment':
 			cls
 			gs 'pain', 5, 'asscheeks', 'spank'
