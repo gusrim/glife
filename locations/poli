@@ -33,60 +33,56 @@ if $ARGS[0] = 'start':
 	act 'Leave Clinic':gt 'street'
 	act 'See cosmetic surgeon':gt 'poli','cosmetic1'
 
-	if money >= 1000:
-		if health < (vital * 10 + stren * 5):
-			act 'Treat health (1,000 <b>₽</b>)':
-				cla
-				money -= 1000
-				minut += 60
-				health = vital * 10 + stren * 5 + 1000
-				if pillcon > 0:pillcon -= rand(0,2000)
-				if hosprand = 0:gt 'poli', '0'
-				if hosprand = 1:gt 'poli', '1'
-				if hosprand = 2:gt 'poli', '2'
+	if health < (vital * 10 + stren * 5):
+		act 'Treat health':
+			cla
+			minut += 60
+			health = vital * 10 + stren * 5 + 1000
+			if pillcon > 0:pillcon -= rand(0,2000)
+			if hosprand = 0:gt 'poli', '0'
+			if hosprand = 1:gt 'poli', '1'
+			if hosprand = 2:gt 'poli', '2'
 
-				'The doctor gives you a shot and you immediately feel much better'
+			'The doctor gives you a shot and you immediately feel much better'
 
-				act 'Leave':gt 'poli', 'start'
-			end
+			act 'Leave':gt 'poli', 'start'
 		end
-
-		if willpower < intel * 5 + will * 5:
-			act 'See a therapist (1,000 <b>₽</b>)':
-				cla
-				money -= 1000
-				minut += 60
-				willpower = intel * 5 + will * 5 + 1000
-				manna = (intel * magik) + magik * 100 + vital * 10 + rikudo
-
-				if hosprand = 0:gt 'poli', '0'
-				if hosprand = 1:gt 'poli', '1'
-				if hosprand = 2:gt 'poli', '2'
-				'You lie down on the therapists couch and tell him all about his troubles. You immediately feel much better, your therapist seems to be in a state of shock.'
-
-				act 'Leave':gt 'poli', 'start'
-			end
-		end
-
-
-		if tabletkishot < 5 and money >= 1000:
-			act 'Get a birth control shot':
-				cls
-				minut += 15
-				tabletkishot = rand(84,91)
-				shotdays = 84
-				tabletkicheck = 2
-				pillcon = 40000
-				money -= 1000
-				gs 'stat'
-				'<center><img src="images/etogame/poli.jpg"></center>'
-				'You are escorted into an examination room, where you are told to sit. After almost fifteen minutes a nurse comes in, sticks a needle in your arm, and depresses the plunger. "All done. Have a nice day." she says to you. You gather your things to leave.'
-				act 'Leave':gt 'poli', 'start'
-			end
-		end
-				
-		act 'Go to the STD clinic':gt 'poli', 'stdclinic'
 	end
+
+	if willpower < intel * 5 + will * 5:
+		act 'See a therapist':
+			cla
+			minut += 60
+			willpower = intel * 5 + will * 5 + 1000
+			manna = (intel * magik) + magik * 100 + vital * 10 + rikudo
+
+			if hosprand = 0:gt 'poli', '0'
+			if hosprand = 1:gt 'poli', '1'
+			if hosprand = 2:gt 'poli', '2'
+			'You lie down on the therapists couch and tell him all about his troubles. You immediately feel much better, your therapist seems to be in a state of shock.'
+
+			act 'Leave':gt 'poli', 'start'
+		end
+	end
+
+
+	if tabletkishot < 5 and money >= 1000:
+		act 'Get a birth control shot':
+			cls
+			minut += 15
+			tabletkishot = rand(84,91)
+			shotdays = 84
+			tabletkicheck = 2
+			pillcon = 40000
+			money -= 1000
+			gs 'stat'
+			'<center><img src="images/etogame/poli.jpg"></center>'
+			'You are escorted into an examination room, where you are told to sit. After almost fifteen minutes a nurse comes in, sticks a needle in your arm, and depresses the plunger. "All done. Have a nice day." she says to you. You gather your things to leave.'
+			act 'Leave':gt 'poli', 'start'
+		end
+	end
+			
+	act 'Go to the STD clinic':gt 'poli', 'stdclinic'
 
 	if money >= 20000 and preg = 1 and pregchem < 1863 and knowpreg = 1:
 		act 'Get an abortion (20,000 <b>₽</b>)':
@@ -370,9 +366,9 @@ if $ARGS[0] = 'stdclinic':
 	
 	act 'Leave':gt 'poli', 'start'
 
-	act 'Take STD test (1,000 <b>₽</b>)':gt 'poli', 'stdcheck'
+	act 'Take STD test':gt 'poli', 'stdcheck'
 
-	if GerpesNapr > 0 and GerpesUkolDay ! daystart:
+	if GerpesNapr > 0 and money > 1000 and GerpesUkolDay ! daystart:
 		act 'Get herpes shot (1,000 <b>₽</b>). You need <<GerpesNapr>> more injections to complete the course.':
 			cls
 			money -= 1000
