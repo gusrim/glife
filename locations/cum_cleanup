@@ -25,7 +25,12 @@ if $ARGS[0] = 'cleanloc' and arrsize('ARGS') > 1:
 	:cleanlocloop
 	if i < arrsize('$sparrnam'):
 		if sparrloc[i] = ARGS[1]:
-			gs 'cum_cleanup', 'cleandeposit', i
+			if sparrloc[i] = 0:
+				sparrvol[i] = 0
+				sparrslc[i] = 0
+			else
+				gs 'cum_cleanup', 'cleandeposit', i
+			end
 		else
 			i += 1
 		end
@@ -77,6 +82,14 @@ elseif $ARGS[0] = 'reset':
 	KILLVAR 'sparrvol'
 	KILLVAR 'sparrslc'
 	KILLVAR 'sparrcnt'
+
+	spdirty = 0
+	spdirtyi = 0
+	spdirtyn = 0
+	spdirtyv = 0
+	spdirtyb = 0
+	spdirtyc = 0
+	spdirtyf = 0
 elseif $ARGS[0] = '':
 	cumsumbod = 0
 	cumsumvag = 0
@@ -187,7 +200,7 @@ elseif $ARGS[0] = '':
 	:cumcleanloop
 	if i < arrsize('$sparrnam'):
 		tmp = arrpos('deresidue', sparrloc[i])
-		if tmp ! -1 and tmp < arrsize('deresidue'): sparrslc[i] = 0
+		if tmp ! -1 and tmp < arrsize('deresidue'): sparrslc[i] = 0 & sparrvol[i] = 0
 
 		tmp = arrpos('toclean', sparrloc[i])
 		if tmp ! -1 and tmp < arrsize('toclean'):

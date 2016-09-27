@@ -83,7 +83,8 @@ if $ARGS[0] = '':
 			sparrvol[cumarrtemp] -= 30*succublvl
 			if sparrvol[cumarrtemp] < 0: sexnutrition += sparrvol[cumarrtemp] & sparrvol[cumarrtemp] = 0
 		end}
-		if sparrvol[cumarrtemp] > 0:
+		!!{ Process spatter until it has volume or is too old in vagina. }
+		if sparrvol[cumarrtemp] > 0 or (sparrloc[cumarrtemp] = 0 and sparrage[cumarrtemp] < 10):
 			sparrtmpv = arrsize('$cumarrnam')
 			if sparrloc[cumarrtemp] = 17:
 				sparrtmpv = arrpos('cumarrcnt',sparrcnt[cumarrtemp])
@@ -167,9 +168,12 @@ if $ARGS[0] = '':
 				end
 			end
 
-			if sparrloc[cumarrtemp] = 0 or sparrloc[cumarrtemp] = 3 or sparrloc[cumarrtemp] = 12:sparrvol[cumarrtemp] -= sparrage[cumarrtemp]/2
-			if sparrloc[cumarrtemp] = 0 and cumsumvag > 60: sparrslc = 1
-			if sparrloc[cumarrtemp] = 3 and cumsumass > 60: sparrslc = 1
+			if sparrloc[cumarrtemp] = 0 or sparrloc[cumarrtemp] = 3 or sparrloc[cumarrtemp] = 12:
+				sparrvol[cumarrtemp] -= sparrage[cumarrtemp]/2
+				if sparrvol[cumarrtemp] < 0:sparrvol[cumarrtemp] = 0
+			end
+			if sparrloc[cumarrtemp] = 0 and cumsumvag > 60: sparrslc[cumarrtemp] = 1
+			if sparrloc[cumarrtemp] = 3 and cumsumass > 60: sparrslc[cumarrtemp] = 1
 			if sparrloc[cumarrtemp] = 17: 
 				cumcondslip += 1
 				if sparridt[cumarrtemp] >= 0:
@@ -184,16 +188,17 @@ if $ARGS[0] = '':
 			if sparrloc[cumarrtemp] ! 0 and sparrloc[cumarrtemp] ! 3 and sparrloc[cumarrtemp] ! 12 and isprok = 0 and sparrage < 5: sparrslc[cumarrtemp] += 1
 			sparrage[cumarrtemp] += 1
 			cumarrtemp += 1
-			ctemp += sparrvol[cumarrtemp]
+			ctemp[0] += sparrvol[cumarrtemp]
 			if sparrloc[cumarrtemp] = 0: ctemp[1] += sparrvol[cumarrtemp]
 			if sparrloc[cumarrtemp] = 3: ctemp[2] += sparrvol[cumarrtemp]
 		else
 			gs 'cum_cleanup', 'cleandeposit', cumarrtemp
 		end
 		if cumarrtemp < arrsize('sparrvol'): jump 'cumspaloop'
-		cumsumbod = ctemp
+		cumsumbod = ctemp[0]
 		cumsumvag = ctemp[1]
 		cumsumass = ctemp[2]
+		KILLVAR 'ctemp'
 	end
 
 	if lactate > 0:
