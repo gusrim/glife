@@ -9,7 +9,17 @@ mira_temp = rand(0,15)
 gs'stat'
 !gs'time'
 
-'<center><H4>Miroslava''s Yard</H4></center>'
+'<center><H4>Mira''s Yard</H4></center>'
+
+!MiaLoc tells us where Mira is Located
+!----------------------------------------------
+!MiraLoc = 0 (Mira at home)
+!MiraLoc = 1 (Mira at river)
+!MiraLoc = 2 (Mira at meadow)
+!MiraLoc = 3 (Mira at forest)
+!MiraLoc = 4 (Mira at field)
+!MiraLoc = 5 (Mira with gop)
+!---------------------------------------------
 
 if hour >= 8 and hour <= 22:
     if month >= 4 and month <= 10:
@@ -31,10 +41,10 @@ if hour >= 8 and hour <= 22:
 	else
 		'Near the house <a href="exec: gt ''mirafather'' ">Athanasius</a> is working.'
 	end
-	if month >= 5 and month <= 9 and hour >= 18 and hour <= 21 and temp >= 30:'You hear a motorcycle in the village.  <a href="exec: dynamic $mirabrother ">Miras brother</a> has come in from the city to visit his sister and father.'
+	if month >= 5 and month <= 9 and hour >= 18 and hour <= 21 and temp >= 30:'You hear a motorcycle in the village.  <a href="exec: dynamic $mirabrother ">Miras brother</a> has come in from the city to visit his siblings and father.'
 
 	if miraprost > 0 and miragopQW > 30: 
-		act 'Check on Miroslava':
+		act 'Check on Mira':
 			cls
 			minut += 2
 			gs 'stat'
@@ -49,39 +59,39 @@ if hour >= 8 and hour <= 22:
 	end
 !125s
 	if mira_no_home = 0:
-	    act 'Call Miroslava':
-            if mira_temp >= 10 and sunWeather = 1 and temper >= 20 and hour < 20 and mirainhome = 0 and Mira_no = 0:
+	    act 'Call Mira':
+            if mira_temp >= 10 and sunWeather = 1 and temper >= 20 and hour < 20 and MiraLoc <> 0 and Mira_no = 0:
 	            cls
 	            minut += 2
-	            mirainriver = 1
+	            MiraLoc = 1
 	            mira_no_home += rand(1,4)
 	            gs 'stat'
 	            '<center><img src="images/qwest/gadukino/MiraFather.jpg"></center>'
-	            'Mira`s father told you that she`s not home, she went to the river.'
-	            act 'Go':gt 'miroslavahome'
-            elseif mira_temp >= 10 and sunWeather = 0 and hour < 20 and mirainhome = 0 and Mira_no = 0:
+	            'Mira`s father tells you that she`s not home, she is over at the river.'
+	            act 'Go to river':gt 'gadriver'
+            elseif mira_temp >= 10 and sunWeather = 0 and hour < 20 and MiraLoc <> 0 and Mira_no = 0:
 	            cls
 	            minut += 2
 	            mira_no_home += rand(1,4)
 	            gs 'stat'         
 	            '<center><img src="images/qwest/gadukino/MiraFather.jpg"></center>'
-	            'Mira`s father told you that she`s not home.'
-	            act 'Go':gt 'miroslavahome'
+	            'Mira`s father tells you that she`s isn''t home.'
+	            act 'Leave':gt 'miroslavahome'
 	        else
-	            mirainhome = 1
-                mirainriver = 0
+	            MiraLoc = 0
+                MiraLoc <> 1
                 mira_guest = 0
-                mirainmeadow = 0
-                mirainforest = 0
-                gt 'Miroslava'    
+                MiraLoc <> 2
+                MiraLoc <> 3
+                gt 'Miroslava','Ask for Mira':    
             end
         end
     end   
 else
 	'<center><img src="images/qwest/gadukino/MiraHome.jpg"></center>'
-	'It''s late, most of Miroslava''s family is asleep, no need to wake people up unnecessarily.'
+	'It''s late, most of Mira''s family is asleep, no need to wake people up unnecessarily.'
 end
-act 'Go':mirainhome = 0 & gt 'gadukino'
+act 'Go':MiraLoc <> 0 & gt 'gadukino'
 
 if Mira_no > 0 and mirafathertalk = 0 and miraday ! daystart:
    cls
@@ -90,15 +100,15 @@ if Mira_no > 0 and mirafathertalk = 0 and miraday ! daystart:
    gs'stat'
 
 	'<center><img src="images/qwest/gadukino/MiraFather.jpg"></center>'
-	'See you in the yard, Mira`s father headed in your direction.'
-	' - <<$name>>, wait. To talk to, " he said coming closer to you.'
+	'You are passing Mira''s house when you see Mira`s father headed in your direction.'
+	'"<<$name>>, wait.  I need to speak with you," he said coming closer to you.'
 	'You stopped and looked at him with fright. "Mira is all he told?" - tossed in your head panic thoughts.'
-	' - <<$nickname>>, you don`t know what happens to Mira? - Athanasius asked looking you in the eye.'
-	' - N-no, what about her? - confused you asked, expecting to hear the flow of battle in your favor.'
-	' - Yeah I don`t know. Sitting at home all the time, the yard is not coming out, I blogged, " Mira`s father answered.'
-	' - Oh, I don`t know, " said you, trying to make it sound more believable and making honest eyes. - It may hurt someone local, or had a fight with someone...'
-	' - Okay, I think it will pass soon. But you, <<$nickname>>, come and visit us, I think in your company Mira would be better than one. Can go faster, " said Mira`s father good-bye, and left to study interrupted by work.'
-	'"Carried," - thought you looked him in the trail and exhaling with relief.'
+	'"<<$nickname>>, do you know what happened to Mira?" Athanasius asked looking you in the eye.'
+	'"N-no, what happened to her?"  you asked in a confused voice, expecting him to start shouting any second.'
+	'"I don`t know.  She is just sitting at home all the time.  She doesn''t leave the yard, I''m concerned." Mira`s father answered.'
+	'"Oh, ah...I don`t know," you said, trying to make it sound believable and make your eyes look innocent.  "It may be she was hurt some local boy, or had a fight with someone..."'
+	'"Okay, I think it will pass...soon I hope.  But, I want you come and visit us, I think your company world do Mira a lot of good. It might bring her out of this funk faster." Mira`s father said good-bye, and left resume working around his house.'
+	'"Close call,"  you thought as you watched his retreating back and exhaling with relief.'
 	act 'Further':gt 'miroslavahome'
 end	
    
@@ -106,7 +116,7 @@ end
 if temper >= 20 and sunWeather = 1 and miragopQW = 7 and hour >= 8 and hour <= 18:
 	cls
 	'<center><img src="images/qwest/gadukino/MiraQW7.jpg"></center>'
-	'Entering the courtyard, you notice Miroslav, looking at the garden. She is cancer and, to your amazement, the shining naked crotch...'
+	'Entering the courtyard, you notice Miroslav, working in the garden.  She is bent over and, to your amazement, you see her bare naked crotch...'
 	act 'Approach it':
 	    cls
 		miraQW = 1
@@ -133,6 +143,7 @@ if temper >= 20 and sunWeather = 1 and miragopQW = 7 and hour >= 8 and hour <= 1
 		end
 	end
 end	
+
 !125e
 $mirabrother = {
 	cls
