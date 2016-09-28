@@ -1,151 +1,153 @@
 # MiroslavaHome
 !miratalk, mirafather moved into location
-$metka = $ARGS[0]
-$loc = $CURLOC
-$location_type = 'public_outdoors'
-clr
-minut += 5
-mira_temp = rand(0,15)
-gs'stat'
-!gs'time'
-
-'<center><H4>Mira''s Yard</H4></center>'
-
-!MiaLoc tells us where Mira is Located
-!----------------------------------------------
-!MiraLoc = 0 (Mira at home)
-!MiraLoc = 1 (Mira at river)
-!MiraLoc = 2 (Mira at meadow)
-!MiraLoc = 3 (Mira at forest)
-!MiraLoc = 4 (Mira at field)
-!MiraLoc = 5 (Mira with gop)
-!---------------------------------------------
-
-if hour >= 8 and hour <= 22:
-    if month >= 4 and month <= 10:
-	    if hour >= 6 and hour < 22:
-		    '<center><img src="images/qwest/gadukino/MiraHome.jpg"></center>'
-	    else
-		    '<center><img src="images/qwest/gadukino/MiraHome_night.jpg"></center>'
-	    end
-    else
-	    if hour >= 8 and hour < 18:
-		    '<center><img src="images/qwest/gadukino/MiraHome_winter.jpg"></center>'
-	    else
-		    '<center><img src="images/qwest/gadukino/MiraHome_winter_night.jpg"></center>'
-	    end
-    end
-	temp = RAND(0,30)
-	if MiraFatherQW < 10: 
-		'Near the house you see <a href="exec: gt ''mirafather'' ">Miras father</a> working.'
-	else
-		'Near the house <a href="exec: gt ''mirafather'' ">Athanasius</a> is working.'
-	end
-	if month >= 5 and month <= 9 and hour >= 18 and hour <= 21 and temp >= 30:'You hear a motorcycle in the village.  <a href="exec: dynamic $mirabrother ">Miras brother</a> has come in from the city to visit his siblings and father.'
-
-	if miraprost > 0 and miragopQW > 30: 
-		act 'Check on Mira':
-			cls
-			minut += 2
-			gs 'stat'
-			if month >= 5 and month <= 9 and hour >= 21 and hour >= 0: temp = RAND(0,5)
-			if temp >= 4:
-				'Mira isn''t home.  You think you know where to find her.  Ever sense granting your second wish Mira has been earning money as a prostitute on the highway '
-			else	
-				act 'go to the highway': gt 'gadprostitutes'
-			end
-			act 'Leave': gt 'gadukino'			
-		end
-	end
-!125s
-	if mira_no_home = 0:
-	    act 'Call Mira':
-            if mira_temp >= 10 and sunWeather = 1 and temper >= 20 and hour < 20 and MiraLoc <> 0 and Mira_no = 0:
-	            cls
-	            minut += 2
-	            MiraLoc = 1
-	            mira_no_home += rand(1,4)
-	            gs 'stat'
-	            '<center><img src="images/qwest/gadukino/MiraFather.jpg"></center>'
-	            'Mira`s father tells you that she`s not home, she is over at the river.'
-	            act 'Go to river':gt 'gadriver'
-            elseif mira_temp >= 10 and sunWeather = 0 and hour < 20 and MiraLoc <> 0 and Mira_no = 0:
-	            cls
-	            minut += 2
-	            mira_no_home += rand(1,4)
-	            gs 'stat'         
-	            '<center><img src="images/qwest/gadukino/MiraFather.jpg"></center>'
-	            'Mira`s father tells you that she`s isn''t home.'
-	            act 'Leave':gt 'miroslavahome'
-	        else
-	            MiraLoc = 0
-                MiraLoc <> 1
-                mira_guest = 0
-                MiraLoc <> 2
-                MiraLoc <> 3
-                gt 'Miroslava','Ask for Mira':    
-            end
-        end
-    end   
-else
-	'<center><img src="images/qwest/gadukino/MiraHome.jpg"></center>'
-	'It''s late, most of Mira''s family is asleep, no need to wake people up unnecessarily.'
-end
-act 'Go':MiraLoc <> 0 & gt 'gadukino'
-
-if Mira_no > 0 and mirafathertalk = 0 and miraday ! daystart:
-   cls
-   minut += 10
-   mirafathertalk = 1
-   gs'stat'
-
-	'<center><img src="images/qwest/gadukino/MiraFather.jpg"></center>'
-	'You are passing Mira''s house when you see Mira`s father headed in your direction.'
-	'"<<$name>>, wait.  I need to speak with you," he said coming closer to you.'
-	'You stopped and looked at him with fright. "Mira is all he told?" - tossed in your head panic thoughts.'
-	'"<<$nickname>>, do you know what happened to Mira?" Athanasius asked looking you in the eye.'
-	'"N-no, what happened to her?"  you asked in a confused voice, expecting him to start shouting any second.'
-	'"I don`t know.  She is just sitting at home all the time.  She doesn''t leave the yard, I''m concerned." Mira`s father answered.'
-	'"Oh, ah...I don`t know," you said, trying to make it sound believable and make your eyes look innocent.  "It may be she was hurt some local boy, or had a fight with someone..."'
-	'"Okay, I think it will pass...soon I hope.  But, I want you come and visit us, I think your company world do Mira a lot of good. It might bring her out of this funk faster." Mira`s father said good-bye, and left resume working around his house.'
-	'"Close call,"  you thought as you watched his retreating back and exhaling with relief.'
-	act 'Further':gt 'miroslavahome'
-end	
-   
-
-if temper >= 20 and sunWeather = 1 and miragopQW = 7 and hour >= 8 and hour <= 18:
+if $ARGS[0] = 'start':
+	$metka = $ARGS[0]
+	$loc = $CURLOC
+	$location_type = 'public_outdoors'
 	cls
-	'<center><img src="images/qwest/gadukino/MiraQW7.jpg"></center>'
-	'Entering the courtyard, you notice Miroslav, working in the garden.  She is bent over and, to your amazement, you see her bare naked crotch...'
-	act 'Approach it':
-	    cls
-		miraQW = 1
-		minut += 15
-		gs 'stat'
-		dynamic $miraclothes
-		'You quietly sneak up to her, but she notices you and turns around, immediately blushing rapidly. You a couple seconds of silently staring at her, and then unceremoniously asked why she without panties. Miroslav took the eye, with rumpled feet and legs, explaining that it turned out very hot, so she... You remind her about the second wish and ask to sit down. Miroslav reluctantly agrees, and when he sits down, you tell her, she`ll show you the crotch, you bad considered. The girl mumbles something unintelligible, but then for half a minute lifts up her skirt and gives you a good look at my crotch.'
-		act 'Watch':
-			cls
-			minut += 2
-			horny += 15
-			gs 'stat'
-			'<center><img src="images/qwest/gadukino/Mirawish2.jpg"></center>'
-			'You enjoy the view, then you comes to mind crazy idea, and you decide to make a second wish. Mira Sadly said that you thought this was your second wish, but you answer that just could not resist, after which the speaks her to go for you.'
-			act 'Go out on the road':
-				cls
-				minut += 45
-				miragopQW = 8
-				gs 'stat'
-				'<center><img src="images/qwest/gadukino/Mirawish2_1.jpg"></center>'
-				'Out on the road you say Miroslava, so she posed as a prostitute, this will be the second wish. Mira sadly nods his head, looks around and seeing that the street was quiet, fulfills your desire...'
-				act 'Go':gt'gadukino'
+	minut += 5
+	mira_temp = rand(0,15)
+	gs'stat'
+	!gs'time'
+
+	'<center><H4>Mira''s Yard</H4></center>'
+
+	!!MiaLoc tells us where Mira is Located
+	!!----------------------------------------------
+	!!MiraLoc = 0 (Mira at home)
+	!!MiraLoc = 1 (Mira at river)
+	!!MiraLoc = 2 (Mira at meadow)
+	!!MiraLoc = 3 (Mira at forest)
+	!!MiraLoc = 4 (Mira at field)
+	!!MiraLoc = 5 (Mira with gop)
+	!!---------------------------------------------
+
+	if hour >= 8 and hour <= 22:
+		if month >= 4 and month <= 10:
+			if hour >= 6 and hour < 22:
+				'<center><img src="images/qwest/gadukino/MiraHome.jpg"></center>'
+			else
+				'<center><img src="images/qwest/gadukino/MiraHome_night.jpg"></center>'
+			end
+		else
+			if hour >= 8 and hour < 18:
+				'<center><img src="images/qwest/gadukino/MiraHome_winter.jpg"></center>'
+			else
+				'<center><img src="images/qwest/gadukino/MiraHome_winter_night.jpg"></center>'
 			end
 		end
-	end
-end	
+		temp = RAND(0,30)
+		if MiraFatherQW < 10: 
+			'Near the house you see <a href="exec: gt ''mirafather'' ">Miras father</a> working.'
+		else
+			'Near the house <a href="exec: gt ''mirafather'' ">Athanasius</a> is working.'
+		end
+		if month >= 5 and month <= 9 and hour >= 18 and hour <= 21 and temp >= 30:'You hear a motorcycle in the village.  <a href="exec: gt ''miroslavahome'', ''mirabrother''">Miras brother</a> has come in from the city to visit his siblings and father.'
 
-!125e
-$mirabrother = {
+		if miraprost > 0 and miragopQW > 30: 
+			act 'Check on Mira':
+				cls
+				minut += 2
+				gs 'stat'
+				if month >= 5 and month <= 9 and hour >= 21 and hour >= 0: temp = RAND(0,5)
+				if temp >= 4:
+					'Mira isn''t home.  You think you know where to find her.  Ever sense granting your second wish Mira has been earning money as a prostitute on the highway '
+				else	
+					act 'go to the highway': gt 'gadprostitutes'
+				end
+				act 'Leave': gt 'gadukino'			
+			end
+		end
+	!!125s
+		if mira_no_home = 0:
+			act 'Call Mira':
+				if mira_temp >= 10 and sunWeather = 1 and temper >= 20 and hour < 20 and MiraLoc <> 0 and Mira_no = 0:
+					cls
+					minut += 2
+					MiraLoc = 1
+					mira_no_home += rand(1,4)
+					gs 'stat'
+					'<center><img src="images/qwest/gadukino/MiraFather.jpg"></center>'
+					'Mira`s father tells you that she`s not home, she is over at the river.'
+					act 'Go to river':gt 'gadriver'
+				elseif mira_temp >= 10 and sunWeather = 0 and hour < 20 and MiraLoc <> 0 and Mira_no = 0:
+					cls
+					minut += 2
+					mira_no_home += rand(1,4)
+					gs 'stat'         
+					'<center><img src="images/qwest/gadukino/MiraFather.jpg"></center>'
+					'Mira`s father tells you that she`s isn''t home.'
+					act 'Leave':gt 'miroslavahome', 'start'
+				else
+					MiraLoc = 0
+					MiraLoc <> 1
+					mira_guest = 0
+					MiraLoc <> 2
+					MiraLoc <> 3
+					gt 'Miroslava','Ask for Mira':    
+				end
+			end
+		end   
+	else
+		'<center><img src="images/qwest/gadukino/MiraHome.jpg"></center>'
+		'It''s late, most of Mira''s family is asleep, no need to wake people up unnecessarily.'
+	end
+	act 'Go':MiraLoc <> 0 & gt 'gadukino'
+
+	if Mira_no > 0 and mirafathertalk = 0 and miraday ! daystart:
+	   cls
+	   minut += 10
+	   mirafathertalk = 1
+	   gs'stat'
+
+		'<center><img src="images/qwest/gadukino/MiraFather.jpg"></center>'
+		'You are passing Mira''s house when you see Mira`s father headed in your direction.'
+		'"<<$name>>, wait.  I need to speak with you," he said coming closer to you.'
+		'You stopped and looked at him with fright. "Mira is all he told?" - tossed in your head panic thoughts.'
+		'"<<$nickname>>, do you know what happened to Mira?" Athanasius asked looking you in the eye.'
+		'"N-no, what happened to her?"  you asked in a confused voice, expecting him to start shouting any second.'
+		'"I don`t know.  She is just sitting at home all the time.  She doesn''t leave the yard, I''m concerned." Mira`s father answered.'
+		'"Oh, ah...I don`t know," you said, trying to make it sound believable and make your eyes look innocent.  "It may be she was hurt some local boy, or had a fight with someone..."'
+		'"Okay, I think it will pass...soon I hope.  But, I want you come and visit us, I think your company world do Mira a lot of good. It might bring her out of this funk faster." Mira`s father said good-bye, and left resume working around his house.'
+		'"Close call,"  you thought as you watched his retreating back and exhaling with relief.'
+		act 'Further':gt 'miroslavahome', 'start'
+	end	
+	   
+
+	if temper >= 20 and sunWeather = 1 and miragopQW = 7 and hour >= 8 and hour <= 18:
+		cls
+		'<center><img src="images/qwest/gadukino/MiraQW7.jpg"></center>'
+		'Entering the courtyard, you notice Miroslav, working in the garden.  She is bent over and, to your amazement, you see her bare naked crotch...'
+		act 'Approach it':
+			cls
+			miraQW = 1
+			minut += 15
+			gs 'stat'
+			dynamic $miraclothes
+			'You quietly sneak up to her, but she notices you and turns around, immediately blushing rapidly. You a couple seconds of silently staring at her, and then unceremoniously asked why she without panties. Miroslav took the eye, with rumpled feet and legs, explaining that it turned out very hot, so she... You remind her about the second wish and ask to sit down. Miroslav reluctantly agrees, and when he sits down, you tell her, she`ll show you the crotch, you bad considered. The girl mumbles something unintelligible, but then for half a minute lifts up her skirt and gives you a good look at my crotch.'
+			act 'Watch':
+				cls
+				minut += 2
+				horny += 15
+				gs 'stat'
+				'<center><img src="images/qwest/gadukino/Mirawish2.jpg"></center>'
+				'You enjoy the view, then you comes to mind crazy idea, and you decide to make a second wish. Mira Sadly said that you thought this was your second wish, but you answer that just could not resist, after which the speaks her to go for you.'
+				act 'Go out on the road':
+					cls
+					minut += 45
+					miragopQW = 8
+					gs 'stat'
+					'<center><img src="images/qwest/gadukino/Mirawish2_1.jpg"></center>'
+					'Out on the road you say Miroslava, so she posed as a prostitute, this will be the second wish. Mira sadly nods his head, looks around and seeing that the street was quiet, fulfills your desire...'
+					act 'Go':gt'gadukino'
+				end
+			end
+		end
+	end	
+end
+
+!!125e
+if $ARGS[0] = 'mirabrother':
 	cls
 	minut += 2
 	gs 'stat'
@@ -159,7 +161,7 @@ $mirabrother = {
 
 		'<center><img src="images/qwest/gadukino/mirabrother.jpg"></center>'
 		'You ask Mira''s brother for a ride on his motorcycle.'
-		if vnesh < 80:
+		if hotcat < 7:
 			if miraQW > 20:
 
 				'He looks you up and down appraisingly and tells you, some other time.'
@@ -170,6 +172,7 @@ $mirabrother = {
 		else
 			if tanga > 0:
 				'"No problem", he says to you while looking you up and down with strange glent in his eyes. "But my bike, well he only allows girls without panties to ride on his back and there''s nothing I can do about it, this bike is a little devil"'
+
 				act 'You look shocked and walk away.': gt 'gadukino'
 			else
 
@@ -272,15 +275,14 @@ $mirabrother = {
 
 														spafinloc = 12
 														gs 'cum_manage'
-														swallow += 1
-														bja += 1
+														stat['bj'] += 1
 														if mirabrosextime = 0:mirabrosextime = 1 & guy += 1
 														gs 'stat'
 
 														'<center><img src="images/qwest/gadukino/mirabromoto8.jpg"></center>'
 														'After a couple of minutes you in the mouth strikes unexpectedly warm sticky cum and you quickly begin to swallow. Miroslava brother for another minute stands, blissfully closed his eyes, while you are sucking his cock, and then zips up pants, sits on a motorcycle and drives away...'
 
-														act 'Going home': gt 'Gadhouse'
+														act 'Go home': gt 'Gadhouse'
 													end
 												end
 											end
@@ -290,12 +292,13 @@ $mirabrother = {
 							end
 						end
 					end
-					act 'Takeout': gt 'gadukino'
+					act 'Leave': gt 'gadukino'
 				end
 			end
 		end
 	end
-	act 'Leave': gt 'miroslavahome'
-}
+	act 'Leave': gt 'miroslavahome', 'start'
+end
+
 --- MiroslavaHome ---------------------------------
 
