@@ -1,37 +1,68 @@
 # pharmacy
 !!!0.2.6 addition: Optimized flow of the code, updated descriptions - now lists everything the drugstore has to sell
 !! now lists everything the drugstore has to sell
+!!0.2.7 add item_info, wait in line, new pic
 $location_type = 'public_indoors'
 cls
-set minut += 5
-*pl '<center><b><font color="maroon">Pharmacy</font></b></center>'
-*pl '<center><img src="images/community/pharmacy.jpg"></center>'
+if $ARGS[0] = 'start' :
+	minut += 5
+	gs 'stat' & ! Update the information about the past tense
+	!a time limit of work pharmacies in Pavlovo
+	people = RAND(1,15) & !We define the size of the queue in the pharmacy
+	if people <= 5:
+		*pl '<center><b><font color="maroon">Pharmacy</font></b></center>'
+		'<center><img src="images/qwest/apteka/aptekabusy<<people>>.jpg"></center>'
+		'In the pharmacy queue. Before you <<people>> ' + iif(people < 2 or people > 4, 'people' , 'man' ) + '. Waiting takes time.'
+		act 'Wait for your turn' :
+			minut += RAND(1,4) * people & people = 0
+			gs 'stat'
+			gt 'pharmacy', 'shop'
+		end
+	else
+		gt 'pharmacy', 'shop'
+	end				
+	act 'Leave' : gt $loc, $metka
+end
 
-!! output for purchased item
-*p iif($ARGS[0] = 'start' or $ARGS[0] = '' or $ARGS[0] = 'move', '<br/>', '<center><<$ARGS[0]>></center>')
+if $ARGS[0] = 'shop' or $ARGS[0] = '':
+	gs 'stat'
+	*pl '<center><b><font color="maroon">Pharmacy</font></b></center>'
+	!*pl '<center><img src="images/community/pharmacy.jpg"></center>'
+	!there are 3 pic from russian 1.2.5, Let make it 3 shift
+	if hour>22 or hour < 7:
+		'<center><img src="images/qwest/apteka/apteka_worker_2.jpg"></center>'
+	elseif hour<17:
+		'<center><img src="images/qwest/apteka/apteka_worker_3.jpg"></center>'
+	else
+		'<center><img src="images/qwest/apteka/apteka_worker_4.jpg"></center>'
+	end
+	'The girl behind the counter in a white coat. - Hello, what you need?"'
 
-*pl '<center><table align="center">' + _
-FUNC ('$stock_item', 5, 'condoms', 100, 'prezik', $CURLOC) + _
-FUNC ('$stock_item', 1, 'pregnancy test', 200, 'pregtest', $CURLOC) + _
-FUNC ('$stock_item', 28, 'birth control pills', 500, 'tabletki', $CURLOC) + _
-FUNC ('$single_stock_item', 1, 'enema kit', 500, 'klisma', $CURLOC) + _
-FUNC ('$stock_item', 10, 'antibiotics', 500, 'lekarstvo', $CURLOC) + _
-FUNC ('$stock_item', 20, 'vitamin drinks', 500, 'vitamin', $CURLOC) + _
-FUNC ('$stock_item', 16, 'painkillers', 500, 'painkiller', $CURLOC) + _
-FUNC ('$stock_item', 10, 'ointments for chafing', 600, 'mosolmaz', $CURLOC) + _
-FUNC ('$stock_item', 25, 'lip balm', 100, 'lipbalm', $CURLOC) + _
-FUNC ('$stock_item', 1, 'weight loss pill', 2000, 'fatdel', $CURLOC) + _
-FUNC ('$stock_item', 20, 'Tampons', 200, 'tampon', $CURLOC) + _
-FUNC ('$stock_item', 20, 'Sanitary napkins', 200, 'sanpad', $CURLOC) + _
-'</table></center>'
-if breastpump = 0 and money >= 800:'<center><a href="exec:money - 800 & breastpump = 1 & gt ''pharmacy''"><b>Buy breast pump</b></a> 500 <b>?</b></center>'
+	!! output for purchased item
+	*p iif($ARGS[0] = 'start' or $ARGS[0] = '' or $ARGS[0] = 'move', '<br/>', '<center><<$ARGS[0]>></center>')
 
-!!gs '$stock_item', 1, 'antifungal pills', 600, 'mosolmaz', $CURLOC
-*nl
-clr
-gs 'stat'
+	*pl '<center><table align="center">'
+	*P FUNC ('$stock_item', 5, 'condoms', 100, 'prezik', $CURLOC)
+	*P FUNC ('$stock_item', 1, 'pregnancy test', 200, 'pregtest', $CURLOC)
+	*P FUNC ('$stock_item', 28, 'birth control pills', 500, 'tabletki', $CURLOC)
+	*P FUNC ('$stock_item', 10, 'antibiotics', 500, 'lekarstvo', $CURLOC)
+	*P FUNC ('$stock_item', 20, 'vitamin drinks', 500, 'vitamin', $CURLOC)
+	*P FUNC ('$stock_item', 16, 'painkillers', 500, 'painkiller', $CURLOC)
+	*P FUNC ('$stock_item', 10, 'ointments for chafing', 600, 'mosolmaz', $CURLOC)
+	*P FUNC ('$stock_item', 5, 'lubricant', 300, 'lubri', $CURLOC)
+	*P FUNC ('$stock_item', 25, 'lip balm', 100, 'lipbalm', $CURLOC)
+	*P FUNC ('$stock_item', 1, 'weight loss pill', 2000, 'fatdel', $CURLOC)
+	*P FUNC ('$stock_item', 20, 'Tampons', 200, 'tampon', $CURLOC)
+	*P FUNC ('$stock_item', 20, 'Sanitary napkins', 200, 'sanpad', $CURLOC)
+	*P FUNC ('$single_stock_item', 1, 'enema kit', 500, 'klisma', $CURLOC)
+	*P FUNC ('$single_stock_item', 1, 'breast pump', 800, 'breastpump', $CURLOC)
+	*P '</table></center>'
 
+	!!gs '$stock_item', 1, 'antifungal pills', 600, 'mosolmaz', $CURLOC
+	*nl
 
-act 'Leave': gt $loc
+	act 'Leave': gt $loc, $metka
+end
+
 --- pharmacy ---------------------------------
 

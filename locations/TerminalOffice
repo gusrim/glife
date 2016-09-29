@@ -1,0 +1,357 @@
+# TerminalOffice
+$location_type = 'public_indoors'
+minut += 1
+gs 'stat'
+
+! In the office if he knows we can buy a product or to perform a task boss of bystrousky.
+! About the possibility of the sale of goods GG learns at the train station in Pavlovo in the dynamics $d_vokzal_vera_talk location vokdinvera
+! verakassir > 0 - you can buy the product
+! TerminalPapper = 1 and DayTerminalPapper = day - you can fulfill the order
+!
+! In the office, several offices, one for the purchase of the goods, the second for documents from bystrousky, and the third for a bright future
+!
+! Administration accounting and Director work in better conditions than managery :)))
+! The conditions at the time require elaboration
+!
+
+TerminalOfficeDirWorkTime = 0
+TerminalOfficeBuhWorkTime = 0
+
+if ((hour >= 9 and hour <= 12) or (hour >= 14 and hour <= 17)) and week < 6: TerminalOfficeDirWorkTime = 1
+if ((hour >= 9 and hour <= 12) or (hour >= 14 and hour <= 19)) and week < 6: TerminalOfficeBuhWorkTime = 1
+
+if $ARGS[0] = 'TerminalOfficeScreen':
+	!1 - title
+	!2 - the name of the picture file
+	*clr
+	'<center><b><font color = maroon>'+$ARGS[1]+'</font></b></center>'
+	'<center><img src="images/terminal/'+$ARGS[2]+'.jpg"></center>'
+	''
+end
+
+!==================================================
+!Hall 00
+!==================================================
+if $ARGS[0] = '00':
+	gs 'TerminalOffice', 'TerminalOfficeScreen', 'Hall office space', 'terminal4'
+
+	'You in the lobby, office space.'
+
+	cla
+	act 'Leaving the office': minut += 5 & gt 'Terminal'
+	act 'Go to the sales Department': minut += 1 & gt  'TerminalOffice', '11'
+	act 'Go to the accounting Department': minut += 1 & gt 'TerminalOffice', '21'
+	act 'Go to the Director': minut += 1 & gt 'TerminalOffice', '31'
+end
+
+!==================================================
+!Office a Manager = 1x
+!==================================================
+if $ARGS[0] = '11':
+	
+	!You can buy the item if you know that you can buy
+	!Can try to give the documents from Anatoly Chubais
+	!Can I ask when running accounting
+	!Can I ask when works Director
+	
+	cla
+	gs 'TerminalOffice', 'TerminalOfficeScreen', 'Sales', 'terminal2'
+	*PL '- What can I do to help? - Smiling affably asks you Manager.'
+
+	act 'To leave the office': minut += 1 & gt 'TerminalOffice', '00'
+
+	if verakassir > 0:
+		
+		!Buy goods
+		
+		!Flag zapolanski storage, reduction
+		!this flag allows you to go shopping
+		DoNotBuy = 2
+		
+		!Amount and Quantity that we can buy(store)
+		MaxQuantityA = 0
+		MaxQuantity1 = 0
+		MaxQuantity2 = 0
+		MaxCost = 0
+		
+		!Description size of storage
+		TovarLimitRepository1 = 30
+		TovarLimitRepository2 = 100
+		
+		*NL 'You spoke with the Manager about buying small things...'
+		
+		!Get current balances
+		TovarRepository1 = tovarL
+		if TovarRepository1 => TovarLimitRepository1:
+			*P ' At home you are all full up.'
+		else
+			DoNotBuy -= 1
+			*P ' Now you have kept '+ TovarRepository1 +' PCs., at home you will be able to place only <<TovarLimitRepository1>> PCs.'
+			MaxQuantity1 = TovarLimitRepository1 - TovarRepository1
+		end
+		
+		if YouCanGar > 0:
+			!Get the current balances in the garage
+			TovarRepository2 = GarTorgItem
+			if TovarRepository2 => TovarLimitRepository2:
+				*P ' In the garage there is no space.'
+			else
+				DoNotBuy -= 1
+				*P ' And garage stored '+ TovarRepository2 +' PCs., high in the garage, you will be able to place <<TovarLimitRepository2>> PCs.'
+				MaxQuantity2 = TovarLimitRepository2 - TovarRepository2
+			end
+		end
+		
+		if DoNotBuy = 2:
+			*P ' After some thought, you realized that you just have nowhere to store the goods and decided to abandon the purchase.'
+		else
+			!Produce purchase
+			act 'Buy small goods on 100 rubles, putting a specific number':
+				minut += 13
+				MaxQuantityA = input("How much product you want to buy for the price 100 rubles apiece?")
+				
+				if MaxQuantityA > (MaxQuantity1 + MaxQuantity2):
+					*NL '<b><font color=red>You have nowhere to store the surplus <<MaxQuantityA-(MaxQuantity1 + MaxQuantity2)>> PCs. !!!</front></b>'
+					cla
+					act 'Clear': gt 'TerminalOffice', '11'
+				end
+				
+				MaxCost = MaxQuantityA * 100
+				
+				if MaxCost > money:
+					!If not enough money
+					*NL 'You don`t have enough cash, you will have to withdraw from the purchase.'
+					if (money + karta >= MaxCost) or (karta >= MaxCost):
+						!The player can be plastic money
+						*P ' You have money on the card and you offer the Manager to pay by Bank card.'
+						' - We don`t have a terminal for card payments, says Manager. - Unfortunately, we can only accept cash.'
+					end
+					cla
+					act 'Clear': gt 'TerminalOffice', '11'
+				else
+					!If the money is written off money to fill warehouses
+						
+					money -= MaxCost
+					
+					'You purchased <<MaxQuantityA>> PCs. goods worth <<MaxCost>>'
+					
+					!First populate channelise 1
+					if MaxQuantityA => MaxQuantity1:
+						tovarL = TovarRepository1 + MaxQuantity1
+						MaxQuantityA -= MaxQuantity1
+						if YouCanGar > 0 : *P ', in t.h. <<MaxQuantity1>> PCs. storage room, garage <<MaxQuantityA>> PCs.'
+					else
+						if YouCanGar > 0 : *P ', in t.h. <<MaxQuantityA>> PCs. storage room, garage 0 PCs.'
+						tovarL = TovarRepository1 + MaxQuantityA
+						MaxQuantityA = 0
+					end
+					
+					!Now fill channelise 2
+					if MaxQuantityA > 0:
+						GarTorgItem = TovarRepository2 + MaxQuantityA
+					end
+					
+					if YouCanGar = 0 and money > 100: 
+						*NL 'By purchasing, you thought that would buy more goods, but a place to store it? May try to talk to the stepfather about the allocation of space for items in his garage...'
+					end
+					
+					cla
+					act 'To complete your purchase': gt 'TerminalOffice', '11'
+				end	
+			end
+			
+			act 'Buy small goods on 100 rubles under "eyeballs" - it <<(MaxQuantity1 + MaxQuantity2)>> PCs.':
+				!Purchase spend time
+				minut += 13
+				
+				MaxQuantityA = MaxQuantity1 + MaxQuantity2
+				MaxCost = MaxQuantityA * 100
+				
+				!Hammered warehouses
+				if MaxCost > money:
+					!If not enough money
+					*NL 'You don`t have enough cash, you will have to withdraw from the purchase.'
+					if (money + karta >= MaxCost) or (karta >= MaxCost):
+						!The player can be plastic money
+						*P ' You have money on the card and you offer the Manager to pay by Bank card.'
+						' - We don`t have a terminal for card payments, says Manager. - Unfortunately, we can only accept cash.'
+					end
+					
+					cla
+					act 'Clear': gt 'TerminalOffice', '11'
+				else
+				
+					!If the money is written off money to fill warehouses
+						
+					money -= MaxCost
+					
+					'You purchased <<MaxQuantityA>> PCs. goods worth <<MaxCost>>'
+					
+					!First populate channelise 1
+					if MaxQuantityA => MaxQuantity1:
+						tovarL = TovarRepository1 + MaxQuantity1
+						MaxQuantityA -= MaxQuantity1
+						if YouCanGar > 0 : *P ', in t.h. <<MaxQuantity1>> PCs. storage room, garage <<MaxQuantityA>> PCs.'
+					else
+						if YouCanGar > 0 : *P ', in t.h. <<MaxQuantityA>> PCs. storage room, garage 0 PCs.'
+						tovarL = TovarRepository1 + MaxQuantityA
+						MaxQuantityA = 0
+					end
+					
+					!Now fill channelise 2
+					if MaxQuantityA > 0:
+						GarTorgItem = TovarRepository2 + MaxQuantityA
+					end
+					
+					if YouCanGar = 0 and money > 100: 
+						*NL 'By purchasing, you thought that would buy more goods, but a place to store it? May try to talk to the stepfather about the allocation of space for items in his garage...'
+					end
+					
+					cla
+					act 'To complete your purchase': gt 'TerminalOffice', '11'
+				end	
+			end			
+		end
+	end
+	
+	if YouNotOpenDoorDir = 1:
+		!Where the Director, the Door was closed dir
+		act 'Ask about the Director':
+			'- Please tell me - you ask - how to see your supervisor?'
+			'The Manager barely noticeable grimace meets: Yuri himself is usually from Monday to Friday, 9-00 to 18-00. Well, still can go for lunch 13 to 14'
+			cla
+			act 'Clear': YouNotOpenDoorDir = 0 & gt 'TerminalOffice', '11'
+		end
+	end
+	
+	!Where is the accountant? Buch the door was closed
+	if YouNotOpenDoorBuh = 1:
+		act 'Ask about the accountant':
+			'- Please tell me - I ask you - and how to see your accountant?'
+			'The Manager responds with a smile: Elizabeth is usually in the office Monday through Friday, 9-00 to 20-00. Well, still can go for lunch 13 to 14'
+			cla
+			act 'Clear': YouNotOpenDoorBuh = 0 & gt 'TerminalOffice', '11'
+		end
+	end
+	
+	!He Has papers, but a Manager should say to go to the accounting Department.
+	if AboutDocsManager=0 and TerminalPapper = 1 and DayTerminalPapper = day:
+		*NL '- I`m from Anatoly Chubais from the company "OOO Bystroushka limited", I am directed to request you the documents.'
+		act 'Give documents':
+			'- You better contact the accounts Department to Elizabeth, she needs to know. It is you the next door along the corridor.'
+			cla
+			act 'Clear': AboutDocsManager=1 & gt 'TerminalOffice', '11'
+		end
+	end
+
+	!The GG yet topics of conversation.
+	if verakassir = 0 and YouNotOpenDoorDir = 0 and YouNotOpenDoorBuh = 0 and TerminalPapper = 0: 
+		*NL 'You have nothing to say and nothing left to do how to get out of the office.'
+	end
+end
+
+
+!==================================================
+!The office of the accountant = 2x
+!==================================================
+if $ARGS[0] = '21':
+	! Time control of the work of Buch disconnect until the issue is resolved temporal compatibility of obtaining a job in bystroushka
+
+	if TerminalOfficeBuhWorkTime = 1:
+		!You can give the documents
+		
+		cla
+		gs 'TerminalOffice', 'TerminalOfficeScreen', 'The office of the accountant', 'terminal3'
+		act 'To leave the office': minut += 1 & gt 'TerminalOffice', '00'
+		
+		!GG not a complete idiot, so will limit communication with only Buch documents, then that thread again
+		*PL '- What you want? - Looking up from the monitor and turning to you on the couch asks cute girl.'
+		
+		if TerminalPapper = 1 and DayTerminalPapper = day:
+			*PL '- I`m from Anatoly Chubais from the company "OOO Bystroushka limited", I am directed to request you the documents.'
+			'- Well! I`m really looking forward to those papers, let me know.'
+			act 'Give documents' :
+				*P ' The girl takes out of your hands the folder opens and its contents briefly prokativaet'
+				*P ' - Tell Anatoly Borisovich big thank you from Elizabeth.'
+				' The girl smiled, and losing interest in you turned to the monitor screen.'
+				minut += 1
+				TerminalPapper = 2
+				
+				!the following 2 lines from the original code version 1.2.4 zalem, what they did not understand, simply left
+				gs 'stat'
+				gs 'zz_funcs', 'colorize_day'
+				
+				cla
+				act 'To leave the office': minut += 1 & gt 'TerminalOffice', '00'
+			end
+		else
+			*NL 'You have nothing to say and nothing left to do how to get out of the office.'
+		end
+		
+	else
+		!Accountant is not in place
+		cla
+		gs 'TerminalOffice', 'TerminalOfficeScreen', 'A door with a sign', 'terminal6'
+		act 'Move away from the door': minut += 1 & gt 'TerminalOffice', '00'
+		'You knocked, but silence. Pushing down on the handle of the door you realized that the door was locked. May try to come at a different time or somebody to ask how much of a better approach? - thought you.'
+		
+		YouNotOpenDoorBuh = 1
+		
+	end
+end
+
+!==================================================
+!The Director`s office = 3x
+!==================================================
+if $ARGS[0] = '31':
+
+	if TerminalOfficeDirWorkTime  = 1:
+		!You can try to give the documents
+		!You can try to talk
+		
+		cla
+		gs 'TerminalOffice', 'TerminalOfficeScreen', 'The Director`s office', 'terminal1'
+		act 'To leave the office': minut += 1 & gt 'TerminalOffice', '00'
+		
+		!Before the development of the plot 'Talk' the Director will constantly be on the phone and send he tries out of the office
+		*PL 'You knocked and opened the door. Behind a massive Desk a man. The man was talking on the phone and apparently was not in the mood. You`re obviously not the person the man was expecting, so he dismissively waved his hand, clearly indicating that you need to leave the office.'
+		
+		if AboutBussines = 0: 
+			act 'Talk':
+				gs 'TerminalOffice', 'TerminalOfficeScreen', 'The Director`s office', 'terminal1'
+				
+				*PL '<center><b>Dear player, here`s an elegant place for your story.'
+				'Ideal if it will be the beginning of a good, legitimate and profitable trading business for HS'
+				*NL 'And yet close the door on the other side :)))</b></center>'
+				AboutBussines = 1
+				delact 'Talk'
+			end
+		end
+	
+		if AboutDocs = 0 and TerminalPapper = 1 and DayTerminalPapper = day:
+			act 'Give documents':
+				gs 'TerminalOffice', 'TerminalOfficeScreen', 'The Director`s office', 'terminal1'
+				
+				*PL 'However, you ignored the gestures of men, because you have an important assignment from BOS.'
+				'- I`m from Anatoly Chubais from the company "OOO Bystroushka limited", I am directed to request you the documents.'
+				'The man stopped talking on the phone, frowned, and putting you on the door said - Go accounting.'
+				AboutDocs = 1
+				delact 'Give documents'
+			end
+		end
+		
+		if AboutBussines = 1 or AboutDocs = 1: *NL 'You have nothing left to do how to get out of the office.'
+		
+	else
+		!The Director is not in place
+		cla
+		gs 'TerminalOffice', 'TerminalOfficeScreen', 'A door with a sign', 'terminal5'
+		act 'Move away from the door': minut += 1 & gt 'TerminalOffice', '00'
+		'You knocked, but silence. Pushing down on the handle of the door you realized that the door was locked. May try to come at a different time or somebody to ask how much of a better approach? - thought you.'
+		
+		YouNotOpenDoorDir = 1
+		
+	end
+end
+--- TerminalOffice ---------------------------------
+

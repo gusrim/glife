@@ -220,6 +220,12 @@ if Enable_showrelation = 1:
 	if Dmitry > 0:gs'show_table','<<Dmitry>> Dima','2'
 	if afra > 0:gs'show_table','<<afra>> Blacks','2'
 	if trenerepa > 0:gs'show_table','<<trenerepa>> Mikhail Nikolaevich','2'
+	if JenyaLC > 0:gs'show_table','Eugene: <<JenyaLC>>','2'
+	if serge_shulgin > 0:gs'show_table','Sergei Shulgin: <<serge_shulgin>>','2'
+	if vasya_shulgin > 0:gs'show_table','Vasya Shulgin: <<vasya_shulgin>>','2'
+	if hantersAndreiQw > 0:gs'show_table','Hunter Andrew: <<hantersAndreiQw>>','2'
+	if hantersSergeiQw > 0:gs'show_table','Hunter Sergei: <<hantersSergeiQw>>','2'
+	if hantersIgorQw > 0:gs'show_table','Hunter Igor: <<hantersIgorQw>>','2'
 	if StoryLine > 0:	
 		if mother > 0:gs'show_table','<<mother>> Mother','2'
 		if father > 0:gs'show_table','<<father>> Father','2'
@@ -572,6 +578,11 @@ $cumdescribe = {
 }
 
 if arrsize('sparrvol') > 0:
+	i = 0
+	:selector
+		if sparrloc[i] = 0:tempsparrvol_p[] = sparrvol[i]
+		if sparrloc[i] = 3:tempsparrvol_a[] = sparrvol[i]
+	if i < arrsize('sparrvol'): i += 1 & jump 'selector'
 	!{index for use in dynamic}
 	i = 0
 	!{values for fresh and crusty, only updated where needed}
@@ -581,15 +592,15 @@ if arrsize('sparrvol') > 0:
 	if cumres_idx >= 0 and cumsumvag > 0:
 		dynamic $cumdescribe
 		if vibratorIN = 1:
-			$stat_msg += '<BR><b><font color="red"><<$cumres[''name'']>>''s <<$cumres[''desc'']>>sperm fills your pussy, corked in by your vibrator.</font></b>'
+			$stat_msg += '<BR><b><font color="red">You feel <<$cumres[''name'']>>''s <<$cumres[''desc'']>>sperm filling your pussy, corked in by your vibrator.</font></b>'
 		else
 			$cumres['state'] = 'fills your '
 			if sparrslc[cumres_idx] > 0:
 				$cumres['state'] = 'slowly flows from your '
 				spdirtyn = 1
 			end
-			if swallow >= 10:
-				$stat_msg += '<BR><a href="exec:view''images/body/cumpussy.jpg''"><b><font color="red"><<$cumres[''name'']>>''s <<$cumres[''desc'']>><a href="exec:gs ''cum_manage'', ''cumeater'', 0"><b><font color="blue">sperm</font></b></a><b> <<$cumres[''state'']>>pussy.</a></font></b>'
+			if swallow >= 10 and max('tempsparrvol_p') > 0:
+				$stat_msg += '<BR><a href="exec:view''images/body/cumpussy.jpg''"><b><font color="red">You feel the <<$cumres[''desc'']>><a href="exec:gs ''cum_manage'', ''cumeater'', 0"><b><font color="blue">cum</font></b></a> of <<$cumres[''name'']>> <<$cumres[''state'']>> filling your pussy.</a></font></b>'
 			else
 				$stat_msg += '<BR><b><font color="red"><<$cumres[''name'']>>''s <<$cumres[''desc'']>>sperm <<$cumres[''state'']>><a href="exec:view''images/body/cumpussy.jpg''">pussy.</a></font></b>'
 			end
@@ -598,6 +609,7 @@ if arrsize('sparrvol') > 0:
 		end
 		spdirtyi = 1
 	end
+	killvar 'tempsparrvol_p'
 	i = 1
 	cumres['new_thresh'] = 1
 	cumres['crusty_thresh'] = 5
@@ -639,7 +651,7 @@ if arrsize('sparrvol') > 0:
 				$cumres['state'] = 'slowly flows from your '
 				spdirtyn = 1
 			end
-			if swallow >= 10:
+			if swallow >= 10 and max('tempsparrvol_a') > 0:
 				$stat_msg += '<BR><b><font color="red"><<$cumres[''name'']>>''s <<$cumres[''desc'']>><a href="exec:gs ''cum_manage'', ''cumeater'', 3"><b><font color="blue">sperm</font></b></a><b> <<$cumres[''state'']>><a href="exec:view''images/body/cumanal.jpg''">ass</a>.</font></b>'
 			else
 				$stat_msg += '<BR><b><font color="red"><<$cumres[''name'']>>''s <<$cumres[''desc'']>>sperm <<$cumres[''state'']>><a href="exec:view''images/body/cumanal.jpg''">ass</a>.</font></b>'
@@ -649,6 +661,7 @@ if arrsize('sparrvol') > 0:
 		spdirty = 1
 		spdirtyi = 1
 	end
+	killvar 'tempsparrvol_a'
 	i = 4
 	cumres['new_thresh'] = 1
 	cumres['crusty_thresh'] = 5
