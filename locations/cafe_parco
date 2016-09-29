@@ -1,0 +1,69 @@
+# cafe_parco
+$location_type = 'public_indoors'
+
+if $args[0]= 'start':
+	'<center><h4><font color="maroon">Cafe "Del Parco"</font></h4></center>'
+	'<img src="'+'images/qwest/alter/caffe_del_parco'+iif(hour > 20 or hour < 7,'_night','')+'.jpg'+'">'
+	'The newly opened cafe "Del Parco", with eye-catching facade, lots of tables and a summer terrace. Open 14.00 to 21.00.'
+
+	if hour >= 14 and hour < 21:
+		act 'Go': gt 'cafe_parco', 'inner'
+	end
+	act 'In the square': gt 'gskver'
+	exit
+end
+
+if $args[0]= 'inner':
+	'<img src="images/qwest/alter/caffe_del_parco_in.jpg">'
+
+	act 'Go': gt 'gskver'
+	gs 'family'
+	
+	if (sunWeather = 0 or temper < 5) and week mod 2 = 0 and (hour >= 16 and hour < 20) and mey_vika_qw_day ! day:
+		mey_vika_qw_day = day
+		minut += rand(10,20)
+		'In the cafe sitting at a table, Vika and Ivan.'
+
+		if mey_vika_qw < 3:
+			! monochromatic
+			func('mey_vika_strings', 'park_meet4')
+
+		elseif mey_vika_qw < 5:
+			! hi
+			func('mey_vika_strings', 'park_meet5')
+
+			! connected relationship and response
+			func('mey_vika_strings', iif(mey_vika_relation < 60,'park_meet6','park_meet7'))
+
+		elseif mey_vika_qw >= 5:
+			func('mey_vika_strings', iif(mey_vika_relation < 60,'park_meet8','park_meet9'))
+
+			! something`s going to happen here
+			if mey_vika_relation >= 80:
+				if mey_vika_qw >= 7 and mey_vika_qw < 10: 
+					func('mey_vika_strings', 'park_meet10')
+
+				end
+				if mey_vika_relation >= 80 and mey_vika_qw = 10:
+					cla
+					'Vika and Ivan invited you to join.'
+
+					if money < 300: 
+						act 'Unsubscribe':
+							cla
+							func('mey_vika_strings', 'park_meet12')
+
+							act 'Go': gt 'park'
+						end
+					end
+					act 'Agree':
+						mey_vika_qw = 15
+						gt 'mey_vika_events', 'cafe_qw'
+					end
+				end
+			end
+		end
+	end
+end
+--- cafe_parco ---------------------------------
+

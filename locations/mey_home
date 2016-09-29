@@ -1,0 +1,519 @@
+# mey_home
+*clr & cla
+$loc = $curloc
+FColor = RGB(0,0,0)
+BColor = RGB(255,255,255)
+LColor = RGB(106,90,205)
+$location_type = 'indoors'
+! a crutch for the action in the kitchen
+if val($args[0]) > 0: args[0] = val($args[0])
+! check for availability
+if args[0] < 0:
+	$_str[0] = 'No time to walk-in guests...'
+	$_str[1] = 'You came to the house of Manolidou and rang the doorbell...'
+	$_str[2] = 'But no one opened, you see, there was nobody home.'
+	$_str[3] = 'After a short wait, the lock clicked and the door opened mom Kathy and Vicki: <br><do>Oh, <<$nickname>>, hi! Come in, make yourself at home.</do>'
+	$_str[4] = 'The door opened and Kate quickly dragged you to your room.'
+	$_str[5] = 'You opened the door with the key and entered the house.'
+
+	if mey_vika['key'] = 1:
+		$_str[5]
+
+		act 'Enter': gt 'mey_home', 0
+		exit
+	end
+
+	if hour < 20 and ((week < 6 and hour >= 17) or (week >= 6 and hour > 10)):
+		if mey_vika['mey_vika_qw'] >= 27:
+			if mey_vika['mey_vika_qw'] = 27: gt 'mey_tamara_events', 'next_meet'
+			i = 3
+		else
+			i = 2
+		end
+		if i = 2:
+			cla
+			$_str[1]+ '<br>' +$_str[4]
+
+			act 'Go to Katjas room': 
+				if frost > 0: frost = 0 
+				gt 'KatjaHomeTalk'
+			end
+			exit
+		end
+		if i = 3:
+			'<center><img src="images/qwest/alter/meynolds/tamara_tea1.jpg"></center>'
+			$_str[1]+ '<br>' +$_str[3]
+
+			act 'Enter': gt 'mey_home', 0
+			exit
+		end
+	else
+		'<center><img src="images/qwest/alter/meynolds/tamara_tea0.jpg"></center>'
+		iif(hour < 10 or hour > 20,$_str[0],$_str[1]+ '<br>' +$_str[2])
+
+		act 'Go': minut += 10 & gt 'pavResidential'
+		exit
+	end
+end
+
+killvar '$_str'
+
+mey_loc_id = args[0]
+minut += 1
+gs 'stat'
+! ----- NAV array ----- !
+$mey_desc[0+"_"+'name'] = 'Hall'
+$mey_desc[1+"_"+'name'] = 'Kitchen'
+$mey_desc[2+"_"+'name'] = 'Bathroom'
+$mey_desc[3+"_"+'name'] = 'Guest'
+$mey_desc[4+"_"+'name'] = 'Hall'
+$mey_desc[5+"_"+'name'] = 'Room Katja'
+$mey_desc[6+"_"+'name'] = 'Room Viki'
+$mey_desc[7+"_"+'name'] = 'Room Tamara Mikhailovna'
+$mey_desc[8+"_"+'name'] = 'Veranda'
+$mey_desc[9+"_"+'name'] = 'The yard'
+
+$mey_desc[0+"_"+'image'] = 'corridor'
+$mey_desc[1+"_"+'image'] = 'kitchen'
+$mey_desc[2+"_"+'image'] = 'bathroom'
+$mey_desc[3+"_"+'image'] = 'guestroom'
+$mey_desc[4+"_"+'image'] = 'hall'
+$mey_desc[5+"_"+'image'] = 'katya_room'
+$mey_desc[6+"_"+'image'] = 'vika_room'
+$mey_desc[7+"_"+'image'] = 'tamara_room'
+$mey_desc[8+"_"+'image'] = 'terrace'
+$mey_desc[9+"_"+'image'] = 'courtyard'
+
+$mey_desc[0+"_"+'text'] = 'Large and bright hall, which "hallway" do not dare to call this "hallway" on the bike ride! A half wall is a huge full-body mirror. Out of it exits to the kitchen, where I see a big oval dining table and hall. Here the stairs leading to the second floor. Here there are signs on the doors "Toilet" and "Bathroom".'
+$mey_desc[1+"_"+'text'] = 'The kitchen is huge and luxurious. It is decorated in a minimalist high-tech style. Standing around in the middle of her oval dining room table, as hall, to ride a bike. Appliances are all hidden. The kitchen is sparkly clean.'
+$mey_desc[2+"_"+'text'] = 'Spacious hall with shower cubicle with glass door, toilet with bidet, and a large part of the room is a huge hot tub, more like a small pool.'
+$mey_desc[3+"_"+'text'] = 'Overall it looks like a standard room in any hotel "middling". Bed, small wardrobe, Desk, bedside table, mirror on the wall.'
+$mey_desc[4+"_"+'text'] = 'Spacious room with a sofa and armchairs, on the wall hangs a large plasma TV, located next to the bookcase, and on the opposite side is the fireplace, from the hall there is access to a bright veranda, overgrown with grapes'
+$mey_desc[5+"_"+'text'] = 'In the room Katie feeling that she briefly moved in and will soon move out. Perfect order, mirror the purity and feeling "non-residential premises". "Neobitaemi" dilute only numerous flowers in pots on the windowsill, in pots on the walls and in tubs on the floor that Katina gives the room a kind of greenhouse. In one corner stands a Desk with a computer, opposite the bed. In another corner of the spacious but somehow seeming cramped room, hidden wardrobe. Is standing in front of a bookcase, but it is almost invisible because of wildly overgrown flowers.'
+$mey_desc[6+"_"+'text'] = 'In of Vika`s room is always a mess. It`s clean, but scattered in creative disarray. Everywhere soft toys in absolutely enormous quantities, and all the walls are plastered with posters of pop stars and film actors. On the table by the window is a laptop, as if accidentally brought a degree of orderliness of their presence in Vicino room. Because of the mountains some of the magazines are music speakers. But the main place in the room is the bed is absolutely cyclopean, next to which lay lost on its background and wardrobe. Somewhere in the corner lonely hiding in a lonely chair.'
+$mey_desc[7+"_"+'text'] = 'Room Tamara Mikhailovna is more reminiscent of the office, if not for the bed in the corner. Here is office computer Desk with computer, office chair he had a wardrobe, but big and pretty modest bed. The room is small and cramped. "Decorations" it does not, but hanging on the wall, why then the sword. What is he doing here - is unclear.'
+$mey_desc[8+"_"+'text'] = 'Porch looking into the yard from the neighbors it is obscured by a high fence and all braided grapes. Here is compactly housed a summer kitchen with grill and wicker furniture - a few chairs, table and sun bed, which is mattress-pillow.'	
+$mey_desc[9+"_"+'text'] = 'In the yard is a car mother Tamara Mikhailovna, and there is a small prefabricated pool.'
+
+'<center><h4><font color="maroon">'+$mey_desc[mey_loc_id+'_'+name]+'</font></h4></center>'
+'<center><img src="images/qwest/alter/meynolds/'+$mey_desc[mey_loc_id+"_"+'image'] + '.jpg"></center>'
+$mey_desc[mey_loc_id+"_"+'text']
+
+killvar '$mey_desc'
+! ---------------------- !
+
+! actions
+if mey_loc_id = 0:
+	act '<b>On the street</b>': killvar 'mey_loc_id' & gt 'pavResidential'
+	act 'Patio': gt $curloc, 9
+end
+if mey_loc_id ! 0: act 'Hall': gt $curloc, 0
+if mey_loc_id ! 1: act 'Kitchen': gt $curloc, 1
+if mey_loc_id ! 2: act 'Bathroom': gt $curloc, 2
+act '<center><img src="images/qwest/alter/meynolds/splitter.png" width=100% height=1></center>': exit
+if mey_loc_id ! 3: act 'Guest': gt $curloc, 3
+if mey_loc_id ! 4: act 'Hall': gt $curloc, 4
+if mey_loc_id = 4: act 'Veranda': gt $curloc, 8
+if mey_loc_id ! 5: act 'Room Katja': gt $curloc, 5
+if mey_loc_id ! 6: act 'Room Viki': gt $curloc, 6
+if mey_loc_id ! 7: act 'Room Tamara Mikhailovna': gt $curloc, 7
+
+! corporate only at the end of the month on weekends, check
+if day <= 25 and mey_vika['mey_vika_qw'] > 40: mey_vika['mey_vika_qw'] = 40
+
+if mey_loc_id = 2: 
+	!bathroom
+	*clr & cla
+	minut += 1
+	gs 'stat'
+	$location_type = 'bathroom'	
+	'<center><b><font color = maroon></font></b></center>'
+	'<center><img src="images/nigma/gor/hotel/hotel.room.best1.jpg"></center>'
+	'Luxurious, truly Royal San node.'	
+	!acts copy from [shulgabath]
+	act 'Return to the hallway': gt $loc, $metka
+
+	dynamic $shower
+	dynamic $bteeth
+	dynamic $tampon
+	dynamic $quickwash
+	dynamic $wearpan
+	dynamic $basin
+
+	if spdirtyc > 0:
+		act 'Clean semen stains from your clothing':
+			cls
+			cumspclnt = 6
+			gs 'cum_cleanup'
+			minut = minut + 15
+			gs'stat'
+
+			'<center><img src="images/etogame/frotsp.jpg"></center>'
+			'You take fifteen minutes to thoroughly rinse the semen stains out of your clothes. By the time you''re done, all the evidence that remains of them are some quickly drying damp spots.'
+			act 'Finish': gt 'shulgabath', 'start'
+		end
+	end
+
+    if klisma = 1 and (klismaday ! daystart or arrpos('sparrloc', 3) ! -1):
+		act 'Give yourself an enema (0:05)':
+			cla
+			*clr
+			cumspclnt = 7
+			gs 'cum_cleanup'
+			minut += 5
+			klismaday = daystart
+			klismaday1= 1
+			'<center><img src="images/picv/klisma.jpg"></center>'
+			'You give yourself an enema, feeling clean down there. Your ass is now ready for anal sex without any awkward surprises.'
+			act 'Finish':gt 'shulgabath', 'start'
+		end
+	end
+
+	if analplug = 1 and analplugin = 1:
+		act 'Take out your butt plug (0:05)':
+			cla
+			*clr
+			minut += 5
+			analplugIN = 0
+			if anus < 30:anus += 1
+
+			'<center><img src="images/body/analplug.jpg"></center>'
+			'You squat and tug gently at the butt plug, gasping as you push it out of you. You can''t help but feel a bit empty, now that it''s out.'
+			act 'Finish':gt 'shulgabath', 'start'
+		end
+	elseif analplug = 1 and analplugin = 0 and klismaday = daystart:
+		act 'Wear your butt plug (0:05)':
+			cla
+			*clr
+			minut += 5
+			analplugIN = 1
+			if anus < 10:anus = anus + 5
+			if anus >= 10 and anus < 20:anus += rand(1, 2)
+			if anus >= 20 and anus < 30:anus += rand(0, 1)
+
+			'<center><img src="images/body/analplug.jpg"></center>'
+			if butpluguse > 0:'You squat and gently rub the butt plug against your anus, after lubricating it with a bit of saliva. After a short while, you''ve relaxed enough to be able to push it in. Once it''s in you give it a few gentle tugs, wondering if anyone will catch you wearing it today.'
+			if butpluguse = 0:butpluguse = 1 & '"If I''m not going to use it, then why did I buy it?" you ask yourself. You look at the butt plug for a while, thinking "It is necessary to start developing my ass, so I could have great adventures someday... you could even say huge and thick adventures with crimson heads, uh, now I got carried away..." You''re slightly embarrassed at the thought for a second, but are then overcome by your horny fantasies. Determined to get the plug all the way in, you slowly press it against your asshole after lubricating it with a bit of saliva. It hurts a bit at first, but once the thickest part is in the rest follows rather easily. Patting yourself on your ass once it''s in, you wonder if anyone will notice you''re wearing it today and then immediately feel naughty for even having thought that.'
+
+			act 'Finish':gt 'shulgabath', 'start'
+		end
+	end
+
+	if pregtest > 0:
+		act 'Do a pregnancy test':
+			cla
+			pregtest -= 1
+			gs 'stat'
+			if pregchem > 120:
+				knowpreg = 1
+				thinkpreg = 1
+				'The test shows the two strips: you''re pregnant!'
+			else
+				knowpreg = 0
+				'The test shows one band: you''re not pregnant.'
+			end
+
+			act 'Finish':gt 'shulgabath', 'start'
+		end
+	end
+
+	if vibrator = 1 and vibratorIN = 1:
+		act 'Remove the vibrator (0:05)':
+			cla
+			*clr
+			minut += 5
+			vibratorIN = 0
+			if vagina < 30:vagina += 1
+			'<center><img src="images/etogame/vibrator.jpg"></center>'
+			'You spread your legs and take the vibrator out of your pussy, letting out a slight moan as you do so. You feel somewhat empty now.'
+			act 'Finish':gt 'shulgabath', 'start'
+		end
+	elseif vibrator = 1 and vibratorIN = 0:
+		act 'Insert the vibrator in your vagina (0:05)':
+			cla
+			*clr
+			minut += 5
+			vibratorIN = 1
+			if vagina < 30:vagina += 2
+			'<center><img src="images/etogame/vibrator.jpg"></center>'
+			'You spread your legs and slowly insert the vibrator in your pussy, wondering if anyone will notice you wearing it today.'
+			act 'Finish':gt 'shulgabath', 'start'
+		end
+	end
+end
+
+! hall
+if mey_loc_id = 0:
+	gs 'mey_vika_events', 'case_gift'
+	gs 'mey_vika_events', 'gym0'
+	gs 'mey_vika_events', 'gym1'
+	gs 'mey_vika_events', 'learning0'
+
+	if mey_vika['mey_vika_qw'] >= 32:
+		! welcome to the corporate
+		if week = 7 and hour >= 12 and hour <= 16 and day > 25 and mey_vika['mey_vika_qw'] = 40 and mey_tamara['qw_end'] = 0 and GorSlut < 3:
+			gt 'mey_tamara_events', 'party0'
+		end
+		! check appearance before going to corporate
+		if (hour = 17 or hour = 18) and mey_vika['mey_vika_qw'] = 41:
+			'<br>In the lobby waiting for you <a href="exec: gt''mey_tamara_events'',''check_look''">Tamara Mikhailovna.</a>'
+
+			exit
+		end
+		
+		! need to fuck Katja!
+		if KatjaSex >= 5 and mey_vika['mey_vika_qw'] > 35 and hour = 23 and mey_vika['mey_vika_bang_qw'] = 0:
+			gs 'mey_vika_events', 'bang_katya'
+			exit
+		end
+		
+		! Vic calls in the shower
+		if mesec = 0 and vagina > 0 and mey_vika['bath_qw'] = 1 and mey_vika['bath_qw_day'] ! day and rand(0,10) > 5 and ((week < 6 and hour >= 16) or (week = 6 and hour >= 8)):
+			gs 'mey_vika_events', 'bath_qw1'
+			exit
+		end
+		
+		if ((week < 6 and hour >= 16 and hour < 20) or (week = 6 and hour >= 10 and hour < 20)) and mey_tamara['help_day'] ! day:
+			act 'To clean the house':
+				cla
+				mey_tamara['help_day'] = day
+				mey_tamara['help_count'] += 1
+				minut += rand(50,70)
+				sweat += 3
+				manna -= 5
+				gs 'stat'
+				if mey_vika['bath_qw'] = 0 and mey_vika['bath_qw_day'] ! day:
+					gs 'mey_vika_events', 'bath_qw0'
+				else
+					'<br>You pulled out of the closet hefty a vacuum cleaner, and within an hour had a facial in the house.'
+
+					act 'Finish': gt 'mey_home', 0
+				end
+			end
+		end
+	end
+	if rand (0,2) ! 0:gs 'din_bad' & dynamic $mobile_check	
+end
+
+! kitchen
+if mey_loc_id = 1:
+	cla
+	$loc = $curloc
+	$metka = str(mey_loc_id)
+	if mey_vika['mey_vika_qw'] >= 32 and ((week < 6 and hour >= 16 and hour < 20) or (week = 6 and hour >= 10 and hour < 20)) and mey_tamara['help_day'] ! day:
+		act 'To cook at all':
+			cla
+			mey_tamara['help_day'] = day
+			mey_tamara['help_count'] += 1
+			minut += rand(50,70)
+			gs 'stat'
+			'<br>Did you get the food from the refrigerator, and the hour was busy in the kitchen cooking for all the family.'
+
+			act 'Finish': gt 'mey_home', 0
+		end
+	end
+	!copy acts from [gadhouse]
+	act 'Eat a full meal (0:30)':gs 'food', 'm_meal'
+
+	act 'Eat a light meal (0:20)':gs 'food', 's_meal'
+
+	act 'Have a snack (0:15)':gs 'food', 'snack'
+
+	act 'Have a cup of tea (0:05)':
+		cls
+		minut += 5
+		if water >= 100:
+			'You don''t need any more tea.'
+		else
+			water += 80
+			cumspclnt = 2
+			gs 'cum_cleanup'
+			fbreath = 0
+			'You have a cup of tea, quenching your thirst.'
+		end
+
+		gs 'stat'
+
+		act 'Get up from the table':gt 'Gadhouse'
+	end
+
+	if pranik > 0:
+		'You brought your <<pranik>> cookies with you.'
+
+		act 'Drink tea with cookies (0:05)':
+			cla
+			*clr
+			minut += 5
+			pranik -= 1
+			health += 30
+			manna += 100
+			energy += 20
+			water += 20
+			cumspclnt = 2
+			gs 'cum_cleanup'
+			fbreath = 0
+			fat += 4
+			frost = 0
+			gs 'stat'
+			'<center><img src="images/pics/food.jpg"></center>'
+			'You enjoy a cup of tea while you eat some cookies. You know they''re too sweet and can''t be good for your figure, but they taste so good!'
+
+			act 'Get up from the table':gt 'Gadhouse'
+		end
+	end
+
+	if edaD > 0:
+		act 'Eat diet food (0:30)':
+			cla
+			*clr
+			frost = 0
+			minut += 30
+			health += 10
+			manna += 20
+			edaD -= 1
+			'<center><img src="images/pics/food.jpg"></center>'
+			if energy >= 100:
+				'You prepare a diet meal and try to eat it, but you''re really not hungry at all. You can''t finish the meal.'
+			elseif energy >= 80:
+				energy += 40
+				'You try to enjoy the diet meal, but half-way in you realize you weren''t all that hungry yet. You manage to finish the meal, but feel like it was kind of a waste to prepare it.'
+			else
+				energy += 80
+				'The diet meal is tasty, and you enjoy eating it.'
+			end
+
+			if water >= 80:
+				'You don''t need any more tea.'
+			else
+				water = 100
+				cumspclnt = 2
+				gs 'cum_cleanup'
+				fbreath = 0
+				'You have a cup of tea, quenching your thirst.'
+			end
+
+			act 'Get up from the table':gt 'Gadhouse'
+		end
+	end
+
+	dynamic $fatdel
+
+	if lekarstvo > 0:
+		'You have <<lekarstvo>> tablet(s).'
+
+		if sick > 0 and lekarday ! daystart:
+			act 'Take a pill (0:05)':
+				cla
+				*clr
+				minut += 5
+				lekarday = daystart
+				lekarstvo -= 1
+				sick -= sick * 20 / 100
+				if water < 50 : water += 30 else water +=15
+				if water > 100: water = 100
+
+				'<center><img src="images/inbed/lekr<<picrand>>.jpg"></center>'
+				'You swallow the pill, and shortly after you feel a bit better.'
+
+				act 'Continue':gt 'Gadhouse'
+			end
+		end
+	end
+
+	if vitamin > 0:
+		'You have <<vitamin>> vitamin pills.'
+
+		if vitaminday ! daystart:
+			act 'Take vitamins (0:05)':
+				cla
+				*clr
+
+				if fat > salo:fat = salo
+
+				minut += 5
+				vitaminday = daystart
+				vitamin -= 1
+				frost = 0
+				if water < 50 : water += 30 else water +=15
+				if water > 100: water = 100
+
+				if KandidozOnce = 1:Kandidoz -= 2
+				if GerpesOnce = 1:Gerpes -= 2
+				if SifacOnce = 1 and Sifilis >= 10:Sifilis -= rand(0, 1)
+
+				skinvan += 1
+
+				'You take some vitamins to stay healthy.'
+
+				act 'Continue':gt 'Gadhouse'
+			end
+		end
+	end
+
+	gs 'events', 'read'
+
+	
+	act 'Out': gt 'mey_home', 0
+	if rand (0,2) ! 0:gs 'din_bad' & dynamic $mobile_check
+end
+
+! guestroom
+if mey_loc_id = 3:
+	cla
+	$loc = $curloc
+	$metka = str(mey_loc_id)
+
+	act '<b>Out</b>':
+		if ($clothingworntype = 'nude' or $clothingworntype = 'swimwear'):
+			*clr
+			'<center><img src="'+'images/clothing/'+iif(tanga=0,'0','tanga')+'.jpg'+'"></center>'
+			'<center><font color=red><b>In this form the guests better not to go!</b></font></center>'
+			exit
+		end
+		gt 'mey_home', 0
+	end
+	
+	act 'Cabinet': gt 'loker', 'start'
+
+	act 'Sleep': gs 'bed', 'start'	
+	
+	act 'Wait':
+		cla
+		waiting = input ("How long would you like to wait? (Not more than 120 minutes)")
+
+		if waiting <= 0 or waiting > 120:
+			minut += 15
+		elseif waiting > 0 and waiting <= 120:
+			minut += waiting
+		end
+
+		act 'Take a look at the clock':gt curloc
+	end
+
+	if rand (0,2) ! 0:gs 'din_bad' & dynamic $mobile_check	
+end
+
+! courtyard
+if mey_loc_id = 9:
+	if hour = 7 and minut >= 30 and week < 6:
+		'In the yard in front of a car talking on the phone <a href="exec:gs''mey_tamara_events'',''tamara''">aunt Tamara.</a>'
+
+	end
+end
+
+if mey_loc_id = 5:
+!add room katja
+	cla
+	$loc = $curloc
+	$metka = str(mey_loc_id)
+	if katjaFirstKiss >= 1:
+		if hour >= 17 and week < 6 and kanikuli = 0 and hour < 20 or hour >= 9 and week >= 6 and kanikuli = 0 and hour < 20 or hour >= 9 and kanikuli > 0 and hour < 20:
+			act 'Chat with Katja': gt'KatjaHomeTalk'
+		end
+	else
+		'<font color=red>Your relations are not good enough to just step in her room, better leave as soon as possible.</font>'
+	end
+	act '<b>Out</b>': gt 'mey_home', 0
+end
+--- mey_home ---------------------------------
+

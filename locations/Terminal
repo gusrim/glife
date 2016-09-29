@@ -2,7 +2,7 @@
 
 CLOSE ALL
 minut += 5
-clr
+$location_type = 'public_outdoors'
 gs 'stat'
 '<center><b><font color="maroon">Storage terminal</font></b></center>'
 '<center><img src="images/etogame/terminal.jpg"></center>'
@@ -223,99 +223,18 @@ elseif trfatherQW = 3 and week = 6 and hour = 12:
 	end
 end
 
+act 'Go to the office':
+	minut += 5
+	
+	AboutBussines = 0
+	AboutDocs = 0
+	
+	AboutDocsManager = 0
 
-if TerminalPapper = 1 and DayTerminalPapper = daystart:
-	act 'Classified documents':
-		cls
-		minut += 15
-		TerminalPapper = 2
-		gs 'stat'
-		fcolor = rgb(0, 0, 0)
-		bcolor = rgb(255, 255, 255)
-		lcolor = rgb(106, 90, 205)
-		'You went to the office and gave the documents to the manager.'
-
-		act 'Leave':minut += 5 & gt 'nord'
-	end
+	YouNotOpenDoorDir = 0
+	YouNotOpenDoorBuh = 0
+	gt 'TerminalOffice' , '00'
 end
-
-if money >= 100:
-	act 'Buy small items (100 <b>₽</b>)':
-		cls
-		minut += 15
-		gs 'stat'
-		'You went to the office and spoke with the manager about buying small things.'
-
-		! WD: Uninitialised ~ 'tovarskladlevel' allways true
-		if tovarskladlevel = 0:
-			if tovarL >= 30:
-				'Thinking a bit you realize, you just have nowhere to store the goods and decide to not purchase them.'
-			elseif tovarL < 30:
-				maxtov = 30 - tovarL
-				'Do you have enough storage <<maxtov>> One unit of product.'
-
-				act 'Buy':
-					cls
-					gs 'stat'
-					'Do you have a enough storage <<maxtov>> unit of product.'
-					tovarpokup = input("How much product you want to buy at a price 100 <b>₽</b> apiece?")
-
-					if tovarpokup > maxtov or tovarpokup * 100 > money:
-						'Manager shakes his head "No, this will not work"'
-					else
-						tovarL += tovarpokup
-						money -= tovarpokup * 100
-						gs 'stat'
-						'You bought <<tovarpokup>> unit of small goods and now you have stored <<tovarL>> unit of product.'
-					end
-
-					act 'Leave':minut+=5&gt $curloc
-				end
-			end
-		end
-
-		act 'Leave':minut += 5 & gt 'nord'
-	end
-	if YouCanGar > 0:
-		act 'Buy small items for the car storage (100 <b>₽</b>)':
-			cls
-			minut += 15
-			gs 'stat'
-			'You went to the office and spoke with the manager about buying small things.'
-
-			! WD: Uninitialised ~ 'tovarskladlevel' allways true
-			if tovarskladlevel = 0:
-				if GarTorgItem >= 100:
-					'Thinking a bit you realize, you just have nowhere to store the goods and decide to unsubscribe from the purchase.'
-				elseif GarTorgItem < 100:
-					maxtov = 100 - GarTorgItem
-					'Do you have a place for storage <<maxtov>> One unit of product.'
-
-					act 'Buy':
-						cls
-						gs 'stat'
-						'Do you have a place for storage <<maxtov>> One unit of product.'
-						tovarpokup = input("How much product you want to buy at a price 100 <b>₽</b> apiece?")
-
-						if tovarpokup > maxtov or tovarpokup * 100 > money:
-							'Manager shakes his head "No, so it will not work"'
-						else
-							GarTorgItem += tovarpokup
-							money -= tovarpokup * 100
-							gs 'stat'
-							'You bought <<tovarpokup>> One unit of small goods in the garage and now you have stored <<GarTorgItem>> One unit of product.'
-						end
-
-						act 'Leave':minut += 5 & gt $curloc
-					end
-				end
-			end
-
-			act 'Leave':minut += 5 & gt 'nord'
-		end
-	end
-end
-
 
 --- Terminal ---------------------------------
 

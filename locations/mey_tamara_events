@@ -1,0 +1,604 @@
+# mey_tamara_events
+!{
+mey_tamara['bronson_qw']	mey_tamara['bronson_qw']
+mey_tamara['builder_qw']	mey_tamara['builder_qw']
+mey_tamara['drink_qw']	mey_tamara['drink_qw']
+mey_tamara['qw_end']	mey_tamara['qw_end']
+mey_tamara['reputation_qw']	mey_tamara['reputation_qw']
+}
+! sobsno a subject
+$location_type = 'event'
+if $args[0] = 'tamara':
+	*clr & cla
+	'<center><h4><font color="maroon">Tamara Mikhailovna</font></h4></center>'
+	'<center><img src="images/qwest/alter/meynolds/tamara.jpg"></center>'
+	func('mey_tamara_strings', 'description')
+
+	if $curloc = 'bank': act 'To go home': minut += 30 & gt 'mey_home', 0 
+	if $curloc = 'mey_home' and mey_vika['mey_vika_qw'] >= 32 and mey_tamara['qw_end'] = 0:
+		if week >= 6 or kanikuli > 0: act 'Ask to go to the city': minut += 30 & gt 'down'
+		if GorSlut >= 3 and mey_tamara['reputation_qw'] = 0: act 'To talk about the fall': gt 'mey_tamara_events', 'reputation'
+	end
+	act 'Depart': gt $curloc, iif($curloc = 'mey_home',mey_loc_id,$metka)
+end
+
+! the first meeting
+if $args[0] = 'first_meet':
+	*clr & cla
+	'<center><h4><font color="maroon">Tamara Mikhailovna</font></h4></center>'
+	'<center><img src="images/qwest/alter/meynolds/tamara.jpg"></center>'
+	func('mey_tamara_strings', 'first_meet')
+
+	act 'In the kitchen':
+		*clr & cla
+		minut += 60
+		mey_vika['mey_vika_qw'] = 25
+		gs 'stat'
+		'<center><h4><font color="maroon">Tamara Mikhailovna</font></h4></center>'
+		'<center><img src="images/qwest/alter/meynolds/tamara_first_meet_tea.jpg"></center>'
+		func('mey_tamara_strings', 'first_tea')
+
+		act 'Go with Vika': gs 'mey_vika_events', 'first_visit'
+	end
+end
+
+! the second tea party
+if $args[0] = 'next_meet':
+	*clr & cla
+	minut += 1
+	zz_stage = args[1]
+	mey_vika['qw_day'] = day
+	mey_vika['mey_vika_qw'] = 30
+	gs 'stat'
+	if zz_stage < 1:
+		'<center><img src="images/qwest/alter/meynolds/tamara_tea0.jpg"></center>'
+		func('mey_tamara_strings', 'next_tea0')
+
+		act '...': gt 'mey_tamara_events', 'next_meet', 1
+	else
+		if zz_stage < 8:
+			'<center><img src="images/qwest/alter/meynolds/tamara_tea' + zz_stage + '.jpg"></center>'
+			func('mey_tamara_strings', 'next_tea' + zz_stage)
+
+			act '...': gt 'mey_tamara_events', 'next_meet', zz_stage + 1
+		else
+			energy = 20
+			water = 20
+			manna += 20
+			hour = 22
+			minut = rand(0,59)
+			gs 'stat'
+			func('mey_tamara_strings', 'next_tea8')
+
+			killvar 'zz_stage'
+			act 'Go': gt 'pavResidential'
+			act 'Stay the night': gt 'mey_home'
+		end
+	end
+end
+
+! training, beginning
+if $args[0] = 'learning0':
+	*clr & cla
+	'<center><img src="images/qwest/alter/meynolds/learning10.jpg"></center>'
+	func('mey_tamara_strings', 'learning10')
+
+	act '...':
+		*clr & cla
+		'<center><img src="images/qwest/alter/meynolds/learning11.jpg"></center>'
+		func('mey_tamara_strings', 'learning11')
+
+		act 'Dance':
+			*clr & cla
+			'<center><img src="images/qwest/alter/meynolds/learning10.jpg"></center>'
+			func('mey_tamara_strings', iif(dance < 50,'learning12',iif(dancePRO < 50,'learning13','learning14')))
+
+			act 'Hmm...':
+				*clr & cla
+				'<center><img src="images/qwest/alter/meynolds/learning10.jpg"></center>'
+				func('mey_tamara_strings', 'learning15')
+
+				if vnesh < 15: 
+					func('mey_tamara_strings', 'learning16')
+				end
+
+				if vnesh >= 15 and vnesh < 30: 
+					func('mey_tamara_strings', 'learning17')
+				end
+
+				if vnesh >= 30 and vnesh < 50: 
+					func('mey_tamara_strings', 'learning18')
+				end
+
+				if vnesh >= 50: 
+					func('mey_tamara_strings', 'learning19')
+				end
+
+				act 'Go into the city': gt 'mey_tamara_events', 'learning1'
+			end
+		end
+	end
+end
+
+! training trip to the city
+if $args[0] = 'learning1':
+	*clr & cla
+	minut += 30
+	gs 'stat'
+	func('mey_tamara_strings', 'learning25')
+
+	act '...':
+		cla
+		func('mey_tamara_strings', 'learning26')
+
+		newdress_count = 0
+		newdress_loop = 0
+		!by random cloth, modify from :markbuyclomother. original kitty pussy *2 (average clothes), set to 1 formal 1 average
+
+		:markbuyclotamaraaverage
+		newdress_id = rand(1, 153)
+		
+		if average[newdress_id] = 0:
+			average[newdress_id] = 1
+			averageH[newdress_id] = 100
+			averageB[newdress_id] = bedra
+			*P '<center><img src="images/clothing/2average/average<<newdress_id>>.jpg"></center>'
+		else
+			newdress_loop += 1
+			if newdress_loop > 1000:
+				msg 'ERROR: average cloth loop > 1000'
+			else
+				jump 'markbuyclotamaraaverage'
+			end
+		end
+
+		:markbuyclotamaraformal
+		newdress_id = rand(1, 14)
+		
+		if formal[newdress_id] = 0:
+			formal[newdress_id] = 1
+			formalH[newdress_id] = 35
+			formalB[newdress_id] = bedra
+			*P '<center><img src="images/clothing/4formal/formal<<newdress_id>>.jpg"></center>'
+		else
+			newdress_loop += 1
+			if newdress_loop > 1000:
+				msg 'ERROR: formal cloth loop > 1000'
+			else
+				jump 'markbuyclotamaraformal'
+			end
+		end
+
+		
+		act '...':
+			cla
+			func('mey_tamara_strings', 'learning20')
+
+			act 'Beauty salon':
+				cla
+				func('mey_tamara_strings', 'learning29')
+
+				tan = 10
+				resnic = 2
+				skin = 4
+				if shorthair = 0: curly = 7
+				brow = 10
+				lobok = 0
+				lipbalmstat = 1
+				mop = 3
+				hour = 19
+				minut = 40
+				gs 'stat'
+				act 'Go further':
+					cla
+					func('mey_tamara_strings', 'learning21')
+
+					!check if school uniform exist
+					newdress_loop = 1
+					newdress_id = 0
+					:looptamaraschool
+					if school[newdress_loop] = 1:
+						newdress_id += 1
+					else
+						newdress_loop += 1
+					end
+					
+					if newdress_id = 0 and newdress_loop <= 14:jump 'looptamaraschool'					
+					
+					if newdress_id > 0:
+						func('mey_tamara_strings', 'learning23')
+						
+						killvar 'newdress_id'
+						killvar 'newdress_count'
+						killvar 'newdress_loop'
+						
+						mey_vika['mey_vika_qw'] = 36
+						act 'I have time': gt 'down'
+					else
+						cla
+						minut += 20
+						gs 'stat'
+						func('mey_tamara_strings', 'learning22')
+						
+						newdress_loop = 0
+						!by random cloth, modify from :markbuyclomother. school uniform in scene
+						:markbuyclotamaraschool
+						newdress_id = rand(1, 14)
+						
+						if school[newdress_id] = 0:
+							school[newdress_id] = 1
+							schoolH[newdress_id] = 130
+							schoolB[newdress_id] = bedra
+							'<center><img src="images/clothing/6school/school<<newdress_id>>.jpg"></center>'
+						else	
+							newdress_loop += 1
+							if newdress_loop > 1000:
+								msg 'ERROR: school cloth loop > 1000'
+							else
+								jump 'markbuyclotamaraschool'
+							end						
+						end
+
+						killvar 'newdress_id'
+						killvar 'newdress_loop'
+						
+						act 'To go home': mey_vika['mey_vika_qw'] = 40 & minut += 30 & gt 'mey_home', 0
+						act 'To stay in the city':
+							cla
+							func('mey_tamara_strings', 'learning24')
+
+							act 'I have time': mey_vika['mey_vika_qw'] = 36 & gt 'down'
+							act 'To go home': mey_vika['mey_vika_qw'] = 40 & minut += 30 & gt 'mey_home', 0
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+! TM gg waiting outside the restaurant
+if $args[0] = 'wait_qw':
+	*clr & cla
+	'<center><img src="images/pic/restoran.jpg"></center>'
+	func('mey_tamara_strings', 'learning28')
+
+	act 'To go home': mey_vika['mey_vika_qw'] = 40 & minut += 30 & gt 'mey_home', 0
+end
+
+! crime and punishment
+if $args[0] = 'rebuke':
+	*clr & cla
+	'<center><img src="images/qwest/alter/meynolds/tamara_tea0.jpg"></center>'
+	func('mey_tamara_strings', 'rebuke0')
+
+	act 'Call again...':
+		cla
+		func('mey_tamara_strings', 'rebuke1')
+
+		act '...':
+			*clr & cla
+			'<center><img src="images/qwest/alter/meynolds/learning10.jpg"></center>'
+			func('mey_tamara_strings', 'rebuke2')
+
+			act 'Enter':
+				*clr & cla
+				'<center><img src="images/qwest/alter/meynolds/rebuke3.jpg"></center>'
+				func('mey_tamara_strings', 'rebuke3')
+
+				act '...':
+					*clr & cla
+					'<center><img src="images/qwest/alter/meynolds/rebuke4.jpg"></center>'
+					func('mey_tamara_strings', 'rebuke4')
+
+					act '...':
+						*clr & cla
+						'<center><img src="images/qwest/alter/meynolds/rebuke5.jpg"></center>'
+						func('mey_tamara_strings', 'rebuke5')
+
+						act '...':
+							cla
+							func('mey_tamara_strings', iif(Suspeh < 80,'rebuke6','rebuke7'))
+
+							func('mey_tamara_strings', iif(Suspeh >= 80,'rebuke8','rebuke9'))
+
+							act '...':
+								*clr & cla
+								minut += 30
+								mey_vika['mey_vika_qw'] = 40
+								'<center><img src="images/qwest/alter/meynolds/rebuke10.jpg"></center>'
+								func('mey_tamara_strings', 'rebuke10')
+
+								act 'Go': gt 'mey_home', 0
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+	act 'Go':
+		minut += 10
+		gt 'pavResidential'
+	end
+end
+
+! TM tells SG about corporate
+if $args[0] = 'party0':
+	*clr & cla
+	'<center><img src="images/qwest/alter/meynolds/party0.jpg"></center>'
+	func('mey_tamara_strings', 'party0')
+
+	act 'Unsubscribe':
+		cla
+		! close event until next month
+		mey_vika['mey_vika_qw'] = 50
+		func('mey_tamara_strings', 'party1')
+
+		act 'Depart': gt 'mey_home', 0
+	end
+	act 'Agree':
+		cla
+		! gotta get ready for work
+		mey_vika['mey_vika_qw'] = 41
+		func('mey_tamara_strings', 'party2')
+
+		act 'Depart': gt 'mey_home', 0
+	end
+end
+
+! check appearance
+if $args[0] = 'check_look':
+	*clr & cla
+	! dress, medium black, clean, looks stunning
+	!there need a good glamour dress, change to formal or expensive in ECV (she already give you 1 formal)
+	if ($clothingworntype = 'formal' or $clothingworntype = 'expensive') and (mop = 1 or mop = 2) and sweat <= 20 and vnesh >= 60:
+		! if long hair is desired styling
+		if shorthair = 0 and curly = 0:
+			'<center><img src="images/qwest/alter/meynolds/party0.jpg"></center>'
+			func('mey_tamara_strings', 'party4')
+
+			act 'Depart': gt 'mey_home', 0
+		else
+			'<center><img src="images/qwest/alter/meynolds/party0.jpg"></center>'
+			func('mey_tamara_strings', 'party3')
+
+			act 'To go to the office party': gt 'mey_tamara_events', 'party1'
+		end
+	else
+		'<center><img src="images/qwest/alter/meynolds/party0.jpg"></center>'
+		func('mey_tamara_strings', 'party4')
+
+		act 'Depart': gt 'mey_home', 0
+	end
+end
+
+! corporate, start
+if $args[0] = 'party1':
+	*clr & cla
+	minut += 30
+	'<center><img src="images/pic/restoran.jpg"></center>'
+	func('mey_tamara_strings', 'party5')
+
+	act 'Clear':
+		*clr & cla
+		'<center><img src="images/qwest/alter/meynolds/party6.jpg"></center>'
+		func('mey_tamara_strings', 'party6')
+
+		act 'Look':
+			*clr & cla
+			'<center><img src="images/qwest/alter/meynolds/party7.jpg"></center>'
+			func('mey_tamara_strings', 'party7')
+
+			act 'Walk around the room':
+				*clr & cla
+				alko += 1
+				minut += 10
+				gs 'stat'
+				'<center><img src="images/qwest/alter/meynolds/party8.jpg"></center>'
+				func('mey_tamara_strings', 'party8')
+
+				act '...':
+					*clr & cla
+					'<center><img src="images/qwest/alter/meynolds/party9.jpg"></center>'
+					func('mey_tamara_strings', 'party9')
+
+					act '...':
+						*clr & cla
+						minut += 20
+						alko += 2
+						gs 'stat'
+						'<center><img src="images/qwest/alter/meynolds/party10.jpg"></center>'
+						func('mey_tamara_strings', 'party10')
+
+						act '...': gt 'mey_tamara_events', 'party2'
+					end
+				end
+			end
+		end
+	end
+end
+
+! corporate, second phase
+if $args[0] = 'party2':
+	*clr & cla
+	if hour = 2:
+		'<center><img src="images/pic/restoran.jpg"></center>'
+		func('mey_tamara_strings', 'party32')
+
+		act 'To go home': minut += 30 & gt 'mey_home', 0
+		exit
+	end
+	'<center><img src="images/qwest/alter/meynolds/party'+rand(8,10)+'.jpg"></center>'
+	func('mey_tamara_strings', 'party11')
+
+	act 'Try snacks':
+		*clr & cla
+		if energy < 24:
+			if alko > 0: alko -= 1
+			energy += 1
+		end
+		minut += 10
+		gs 'stat'
+		'<center><img src="images/qwest/alter/meynolds/party12.jpg"></center>'
+		func('mey_tamara_strings', 'party12')
+
+		act 'Step away from your Desk': gt 'mey_tamara_events', 'party2'
+	end
+	act 'Have a glass of champagne':
+		*clr & cla
+		alko += 1
+		minut += 10
+		gs 'stat'
+		'<center><img src="images/qwest/alter/meynolds/party7.jpg"></center>'
+		func('mey_tamara_strings', 'party13')
+
+		act 'Step away from your Desk': gt 'mey_tamara_events', 'party2'
+	end
+	act 'Walk around the room':
+		*clr & cla
+		minut += 10
+		gs 'stat'
+		'<center><img src="images/qwest/alter/meynolds/party9.jpg"></center>'
+		func('mey_tamara_strings', 'party14')
+
+		if alko >= 3:
+			if mesec = 0 and vagina > 0 and mey_tamara['drink_qw'] = 0:
+				act 'Looking for adventure':
+					minut += rand(30,40) 
+					gs 'stat'
+					gt 'mey_tamara_events', 'party4'
+				end
+			else
+				act 'Go out to the car to sleep it off': gt 'mey_tamara_events', 'party3'
+			end
+		else
+			if mey_tamara['builder_qw'] = 0: gt 'mey_tamara_events', 'party5'
+			if mey_tamara['bronson_qw'] = 0: gt 'mey_tamara_events', 'party6'
+			gt 'mey_tamara_events', 'party2'
+		end
+	end
+	if hour = 23 or hour < 2: act 'To go home': minut += 30 & gt 'mey_home', 0
+end
+
+! drunk, sleeping in the car
+if $args[0] = 'party3':
+	*clr & cla
+	'<center><img src="images/qwest/alter/meynolds/party15.jpg"></center>'
+	func('mey_tamara_strings', 'party15')+'<br>'+func('mey_tamara_strings', 'party31')
+
+	mey_vika['mey_vika_qw'] = 50
+	mey_tamara['qw_end'] = 1
+	hour = 23
+	minut = 55
+	manna -= 20
+	son += 3
+	gs 'stat'
+	act '...': gt 'mey_home', 3
+end
+
+! drunk, sekas
+if $args[0] = 'party4':
+	*clr & cla
+	zz_stage = args[1]
+	if zz_stage = 0: zz_stage = 16
+	'<center><img src="images/qwest/alter/meynolds/party'+zz_stage+'.jpg"></center>'
+	func('mey_tamara_strings', 'party'+zz_stage)
+
+	if zz_stage < 24:
+		if zz_stage = 17: 
+			act 'Unsubscribe':
+				mey_tamara['drink_qw'] = 1
+				gt 'mey_tamara_events', 'party2'
+			end
+		end
+		act '...': gt 'mey_tamara_events', 'party4', zz_stage+1
+	else
+		killvar 'zz_stage'
+		act 'Wait...':
+			*clr & cla
+			mey_vika['mey_vika_qw'] = 50
+			mey_tamara['drink_qw'] = 1
+			mey_tamara['qw_end'] = 1
+			hour = 23
+			minut = 55
+			manna -= 20
+			if alko > 0: alko -= 1
+			son += 3
+			gs 'stat'
+			'<center><img src="images/qwest/alter/meynolds/party15.jpg"></center>'
+			func('mey_tamara_strings', 'party31')
+
+			act 'In my room': gt 'mey_home', 3
+		end
+	end
+end
+
+! familiarity with fatso
+if $args[0] = 'party5':
+	*clr & cla
+	'<center><img src="images/qwest/alter/meynolds/party25.jpg"></center>'
+	func('mey_tamara_strings', 'party25')
+
+	act '...':
+		*clr & cla
+		'<center><img src="images/qwest/alter/meynolds/party26.jpg"></center>'
+		func('mey_tamara_strings', 'party26')
+
+		act '...':
+			*clr & cla
+			mey_tamara['builder_qw'] = 1
+			minut += 15
+			'<center><img src="images/qwest/alter/meynolds/party27.jpg"></center>'
+			func('mey_tamara_strings', 'party27')
+
+			act 'Walk around the room': gt 'mey_tamara_events', 'party2'
+		end
+	end
+end
+
+! familiarity with Bronson
+if $args[0] = 'party6':
+	*clr & cla
+	'<center><img src="images/qwest/alter/meynolds/party28.jpg"></center>'
+	func('mey_tamara_strings', 'party28')
+
+	act '...':
+		*clr & cla
+		'<center><img src="images/qwest/alter/meynolds/party29.jpg"></center>'
+		func('mey_tamara_strings', 'party29')
+
+		act 'Go':
+			*clr & cla
+			mey_tamara['bronson_qw'] = 1
+			minut += 15
+			func('mey_tamara_strings', 'party30')
+
+			act 'Walk around the room': gt 'mey_tamara_events', 'party2'
+		end
+	end
+end
+
+! falling reputation
+if $args[0] = 'reputation':
+	cls
+	zz_stage = args[1]
+	'<center><img src="'+'images/qwest/alter/meynolds/reputation'+zz_stage+iif(zz_stage!3,'.jpg','.gif')+'"></center>'
+	func('mey_tamara_strings', 'reputation'+zz_stage)
+
+	if zz_stage < 11:
+		act '...': gt 'mey_tamara_events', 'reputation', zz_stage+1
+		exit
+	else
+		killvar 'zz_stage'
+		act 'Go':
+			mey_tamara['reputation_qw'] = 1
+			minut += rand(20,40)
+			horny = 0
+			spanked = 2
+			gt 'mey_home', 3
+		end
+	end
+end
+--- mey_tamara_events ---------------------------------
+
