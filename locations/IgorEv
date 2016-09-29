@@ -1,38 +1,1421 @@
-# IgorEv
-gs 'stat'
-'<center><b><font color="maroon"><<$npcName[4]>> <<$npcSurName[4]>></font></b></center>'
-'<center><img src="images/qwest/alter/npc/4.jpg"></center>'
+# IgorEV
+!{
+Russian 1.2.5 [igor], combine with [IgorEv]
 
-if fedorKozlovQW >= 10 and $loc = 'gdkin':
-	'To you and Igor suitable Fedor. "Gosh, you do not confused? <<$name>> my girl." Igor blushed "Well Fed, you know, I did not know. But if you insist, then okay, I''m just a joke." Fyodor nodded, "Well, go wherever you go, a practical joker."'
+add: Talk with Igor in his home (only after IgorLove > 0), 
+corresponding table between Russian and ECV:
+none	gt 'igorEv', 'hometalk'
+dynamic $kruglov_desc	gs 'igorEv', 'kruglov_desc'
+dynamic $din_sex	gs 'igorEv', 'din_sex'
+dynamic $din_sisterkom	gs 'igorEv', 'din_sisterkom'
+dynamic $din_sisterkom_krossdress	gs 'igorEv', 'din_sisterkom_krossdress'
+dynamic $din_krossdresssex	gs 'igorEv', 'din_krossdresssex'
+dynamic $din_sexstrapon	gs 'igorEv', 'din_sexstrapon'
+dynamic $din_igor_end	gs 'igorEv', 'din_igor_end'
+dynamic $din_dimanosov	gs 'igorEv', 'din_dimanosov'
+dynamic $din_progulka_dima	gs 'igorEv', 'din_progulka_dima'
 
-	act 'Go with Fedor':IdorBlock = 1 & gt 'FedorEv'
+nomore	igor_nomore
+sexstrapon igor_sexstrapon	
+kdprogulka	igor_kdprogulka
+kdsexday	igor_kdsexday
+krossdresssex	din_krossdresssex
+progulkaday	igor_progulkaday
+DimaNos	igor_DimaNos
+likethis	igor_likethis
+listen	igor_listen
+krossdress	igor_krossdress
+strapday	igor_strapday
+eqwtday	igor_eqwtday
+qweday	igor_qweday
+napoit	igor_napoit
+htday	igor_htday
+tday	igor_tday
+qwday	igor_qwday
+}
+$location_type = 'event'
+$boy = 'Igor Kruglov'
 
-	exit
+if $ARGS[0] = '' or $ARGS[0] = 'start':
+	gs 'stat'
+	'<center><b><font color="maroon"><<$npcName[4]>> <<$npcSurName[4]>></font></b></center>'
+	'<center><img src="images/qwest/alter/npc/4.jpg"></center>'
+
+	if fedorKozlovQW >= 10 and $loc = 'gdkin':
+		'To you and Igor suitable Fedor. "Gosh, you do not confused? <<$name>> my girl." Igor blushed "Well Fed, you know, I did not know. But if you insist, then okay, I''m just a joke." Fyodor nodded, "Well, go wherever you go, a practical joker."'
+
+		act 'Go with Fedor':IdorBlock = 1 & gt 'FedorEv'
+
+		exit
+	end
+
+	if IgorLove > 0:
+		'Igor eagerly tell you, "Well what? Come to my house?".'
+		act 'Go to Igor':
+			!gt 'IgorHome', 'Igorkom'
+			gt 'IgorEv', 'hometalk'
+			!{
+			cls
+			minut += 15
+			gs 'stat'
+			'You came home to Igor.'
+
+			if IgorDominaQW = 0:
+				'Igor starts hugging and kissing you.'
+			elseif IgorDominaQW > 0:
+				'Igor gets up on his knees in front of you, "Madam, I pray for a kiss!"'
+			end
+			}
+		end
+		act 'Refuse and Leave':IgorLove -= 1 & gt 'pavResidential'		
+	elseif IgorLove <= 0:
+		IgorLoverQW = -1
+		'Along the way, Igor began to chant "<<$name>>, I love you so much, but you do not know me, you know, I began to wonder if perhaps we should leave."'
+
+		act 'Leave':gt 'pavResidential'
+	end
 end
 
-'Igor eagerly tell you, "Well what? Come to my house?".'
+if $ARGS[0] = 'hometalk':
+	gs 'igorEv', 'kruglov_desc'
+	*pl $npcText[4]
+	*pl 'Igor belongs to the group of cool.'
 
-if IgorLove > 0:
-	act 'Go to Igor':
-		cls
+	act 'Chat':
+		*clr & cla
+		minut += 5
+		gs 'stat'
+		$zz_str[0] = 'You talk about school'
+		$zz_str[1] = 'You talk about life after high school'
+		$zz_str[2] = 'You listen as he tells some interesting history'
+		$zz_str[3] = 'You talk about any nonsense'
+		$zz_str[4] = 'You talk to him. Igor says that the parents promised to buy him a car if he can go to University.'
+		$zz_str[5] = 'You from the conversation with him learned that his parents own businesses and homes, they are rare.'
+		$zz_str[6] = 'Igor talks about his older sister: "Each week she buys new clothes, but I`m sure she half is not worn yet!"'
+		gs 'igorEv', 'kruglov_desc'
+		'You were talking to Igor.'
+		*pl $zz_str[rand(0,6)]
+		killvar '$zz_str'
+		act 'Further': gt 'IgorEv', 'hometalk'
+	end
+
+	if Igorhorny < 50:
+		act 'Kissing':
+			cls
+			minut += 5
+			manna += 50
+			horny += 5
+			IgorHorny += 15
+			IgorLove += 5
+			gs 'stat'
+			'<center><img src="images/qwest/alter/kruglov/kiss.gif" ></center>'
+			'You kiss'
+			act 'Finish': gt 'IgorEv', 'hometalk'
+		end
+	elseif Igorhorny >= 50 and igor_tday ! day:
+		act 'Passion Kissing':
+			*clr & cla
+			igor_tday = day
+			minut += 5
+			manna += 50
+			horny += 10
+			IgorHorny += 10
+			IgorLove += 10
+			gs 'stat'
+			'<center><img src="images/qwest/alter/kruglov/crossdress/kiss.gif" ></center>'
+			'You kiss, he starts to knead your Breasts, and then stroking your crotch.'
+			act'Agree':IgorLove += 10 & gs 'igorEv', 'din_sex'
+			act 'Stop him':
+				cla
+				igorsub += 1
+				'Please'
+				act 'I said NO': igorsub += 2 & gt 'IgorEv', 'hometalk'
+				act 'Well...': gs 'igorEv', 'din_sex'
+			end
+			if dom >= 30 and igor_krossdresssex >= 1 and igor_sexstrapon < 1 and igor_kdsexday ! day:	
+				act'To offer to have sex "special"':IgorLove += 10 & gs 'igorEv', 'din_krossdresssex'
+			end
+			if igorsub >= 5 and igor_sexstrapon >= 1 and igor_strapday ! day:
+				act'Strapon': gs 'igorEv', 'din_igor_sexstrapon'
+			end
+		end
+	end
+
+	! fitting #1
+	if sistroom >= 1 and igor_eqwtday ! day:
+		act'Ask about sister':
+			*clr & cla
+			sistroom -= 3000
+			gs 'igorEv', 'kruglov_desc'
+			'- Remember, you said your sister buys a lot of things?'
+			'- Well, Yes, but what?'
+			'- You can see that she is there for things?'
+			'- In principle it is possible, while she`s not home. What, do you want something to take? Sure - she won`t even notice!'
+			act'Go Sister`s room': gs 'igorEv', 'din_sisterkom'
+		end
+	end
+
+	! fitting #2
+	if igor_krossdress >= 1 and igor_eqwtday ! day:
+		act'Want to try on clothes':
+			*clr & cla
+			gs 'igorEv', 'kruglov_desc'
+			'- Horusa, I last time liked to measure clothes! Your sister has such cool clothes!'
+			'- Well, che did not take anything myself?'
+			'- Damn, so hard to choose!'
+			'- Then I went again.'
+			act 'Go': gs 'igorEv', 'din_sisterkom_krossdress'
+		end
+	end
+
+	! walk, movie
+	if igorsex >= 1 and Igorkino < 2 and igor_qweday ! day:
+		act 'Offer to walk':
+			*clr & cla
+			igor_qweday = day
+			minut += 15
+			gs 'stat'
+			'<center><img src="images/qwest/alter/artom/walk/walk_'+ rand(1,2) +'.jpg"></center>'
+			'You are walking in Park and talking about nothing. Igor invites you to the movies.'
+			act 'Go to the movies':
+				*clr & cla
+				minut += 60
+				gs 'stat'
+				'<center><img src="images/qwest/alter/artom/walk/kino_'+ rand(1,3) +'.jpg"></center>'
+				'You go to the cinema and watching a movie, sitting in the back row.'
+				igorKino += 1
+				if igorKino > 1:
+					*clr & cla
+					sistroom += 1
+					'You go to the cinema and watching a movie, sitting in the back row.'
+					'<center><img src="images/qwest/alter/artom/walk/kinokiss_'+ rand(1,2) +'.jpg"></center>'
+					'The movie was boring. You leaned over to Igor and kissed him. The rest of the session, you just kissed.'
+				end
+				'After you exit the movie you decided to go back to Igor.'
+				act 'Go to Igor': gt'IgorHome','Igorkom'
+			end
+			act 'Unsubscribe':
+				*clr & cla
+				minut += 30
+				gs 'stat'
+				'"Let`s just even go for a walk."'
+				'You continue to walk.'
+				'After you have decided to go back to Igor, on the way thinking that a movie would be more interesting.'
+				act 'Go to Igor': gt'IgorHome','Igorkom'
+			end	
+		end
+	end
+
+	! a hint of a strap-on
+	if strapon >= 1 and igor_net < 1:
+		act 'Hint':
+			*clr & cla
+			'<center><img src="images/qwest/alter/kruglov/namek.gif"></center>'
+			'You started to stroke the strap on through the dress and said to Igor:'
+			'- Haruna, I have a surprise for you.'
+			'- What is? - he asked.'
+			act 'Show':
+				*clr & cla
+				igor_net += 1
+				igor_napoit += 1
+				'<center><img src="images/qwest/alter/kruglov/namek2.gif"></center>'
+				'You lifted the dress and began to caress strapon.'
+				'- Here it is, my surprise. - said with a smile you.'
+				'- You`re CRAZY? - with wide eyes he.'
+				'- Come on, let`s fool around. - continue to smile, looking at him, you.'
+				'- No, I`m gonna keep it. - he said.'
+				'"Damn, sorry, need to figure something out with this. Hmm, girls usually fluster..."'
+				act 'Remove': gt 'IgorHome', 'Igorkom'
+			end
+		end
+	end
+
+	! Booze and the promise of Igor
+	if igor_napoit >= 1 and wine = 1 and igor_krossdresssex >= 2:
+		act 'Wine with Igor':
+			*clr & cla
+			wine = 0
+			igor_sexstrapon += 1
+			horny += 10
+			minut += 15
+			alko += 4
+			cumlip = 0
+			gs 'stat'
+			'<center><img src="images/qwest/alter/kruglov/drink.jpg"></center>'
+			'You invited Igor to drink wine and he agreed. He brought the corkscrew and you opened a bottle, and then poured wine by the glass. You drank and joked along the way and chatted about different trifles.'
+			act'Kiss him':
+				*clr & cla
+				igor_kdsexday = day
+				'<center><img src="images/qwest/alter/kruglov/drink2.jpg"></center>'
+				'You approached him and whispered:'
+				'- I want you!'
+				'- Sorry <<$nickname>>, something I have touched a little already sleepy. - he said.'
+				'- Damn, but I want you so! - kept you clinging to him.'
+				'- No, but really. Maybe next time. - he began to have sticky eyes.'
+				'You decided to seize the moment:'
+				'- Then I`ll take strapon and have fun with your ass!'
+				'- You`re a queer. - with a grin replied Igor.'
+				'- Well, I agree? - asked you.'
+				'- Yeah, yeah, just give me a little pokemaryu. - he said and lay down on the bed and immediately fell asleep.'
+				'Cool! Even though you are not having sex now, but I made him promise that he will give you in the ass - I thought you. Well now perhaps it`s time to go home.'
+				act 'Go': gt'pavResidential'
+			end
+		end
+	end
+
+	! first sex with a strap-on
+	if dom >= 30 and strapon >= 1 and igor_sexstrapon = 1:
+		act 'To remind about the promise':
+			*clr & cla
+			igor_krossdresssex -= 3000
+			igor_sexstrapon += 1
+			igor_strapday = day
+			'<center><img src="images/qwest/alter/kruglov/sex/ygov.gif"></center>'
+			'- Honey, remember you promised me something? - asked you.'
+			'- What? - not understanding, asked Igor.'
+			'- I`ll fuck you in the ass! - Flirty smiled at you.'
+			'- Would IT IS?? - genuinely surprised he.'
+			'- YES! You promised! You`re not keeping the promises?'
+			'- Ah, remembered... Yes I was drunk!'
+			act 'Further':
+				*clr & cla
+				'<center><img src="images/qwest/alter/kruglov/sex/ygov2.gif"></center>'
+				'- It will be our little secret. - you whispered in his ear.'
+				'- <<$nickname>>, first you dress me in girl, now and in the ass want to fuck. You do something?'
+				'- Gorunescu, let`s make this quick! I won`t tell anyone! - sweetly looking at him, began to beg you. - Come on, take off your pants.'
+				'- No, I can`t shoot.'
+				act 'To threaten':
+					*clr & cla
+					'<center><img src="images/qwest/alter/kruglov/sex/vstal.gif"></center>'
+					'- So Igor, take off your pants! IMMEDIATELY! - you said commanding tone.'
+					'- No! - began to abut it.'
+					'- YOU promised! I WANT all! Either you do it or I`ll tell the school!'
+					'- Well <<$nickname>>, well, calm down please! - timidly started to answer it.'
+					'- IT IS NOT NECESSARY. ME. CALM. - deliberately sternly said you. - Just take off those damn pants!'
+					'- <<$nickname>>... - before he could finish.'
+					'- TAKE OFF YOUR PANTS! ALIVE! - snapped you.'
+					'And he obeyed.'
+					act 'Take off your pants':
+						*clr & cla
+						'<center><img src="images/qwest/alter/kruglov/sex/snimaet.gif"></center>'
+						'- Take off your pants. - ordered you.'
+						'He began to pull down his pants.'
+						act 'Further':
+							*clr & cla
+							'<center><img src="images/qwest/alter/kruglov/sex/topose.gif"></center>'
+							'He wanted to kiss you but you pulled away:'
+							'- Take that attitude, come on. GO, GO, GO! - the last word was an order.'
+							act 'Mash his ass':
+								*clr & cla
+								'<center><img src="images/qwest/alter/kruglov/sex/shlepaet_1.gif"></center>'
+								'You started to knead his ass. - It may not be? - plaintively he turned.'
+								'- It is necessary, Fedya, it is necessary. - you answered him flying phrase from "Operation Y".'
+								act 'Insert':
+									*clr & cla
+									'<center><img src="images/qwest/alter/kruglov/sex/vstavlaet_1.gif"></center>'
+									'You spit in his ass and began to introduce strapon.'
+									'Igor groaned.'
+									act 'Fuck':
+										*clr & cla
+										'<center><img src="images/qwest/alter/kruglov/sex/terpit.gif" ></center>'
+										'You pressed a little harder.'
+										'- Oh, it hurts, stop! Stop! - he cried, gripping the pillow.'
+										act 'Stop':
+											*clr & cla
+											'You decided to stop and feel sorry for his ass.'
+											'- Damn, that hurt! We`ll never do! - he said you. What you think: "Well, we`ll see!".'
+											act 'Finish': gt 'IgorHome', 'Igorkom'
+										end
+										if dom >= 40:
+											act'Continue':
+												*clr & cla
+												'<center><img src="images/qwest/alter/kruglov/sex/strapon.gif" ></center>'
+												'- Hush, hush, don`t worry, my boy! - without stopping, you told him as gently as possible.'
+												'- <<$nickname>>, please! - he begs.'
+												'- Hold on, hold on, my good man, I`ll be finished soon. - like the doctor, putting the shot, trying to persuade you. - Relax your ass!'
+												act 'Finish':
+													*clr & cla
+													'When you have finished it you said, massaging the anus:'
+													'- Damn, it hurts! We`ll never do! - What you think: "Well, we`ll see!"'
+													act'Finish': gt 'IgorHome', 'Igorkom'
+												end
+											end	
+										end	
+									end	
+								end	
+							end
+						end	
+					end
+				end
+			end
+		end
+	end
+
+	if igor_kdprogulka = 1 and igor_nomore < 1 and igor_progulkaday ! day:
+		act 'I want to see my girl':
+			*clr & cla
+			gs 'igorEv', 'kruglov_desc'
+			'- I miss my girl, so let`s get dressed. - said with a smile you.'
+			'- I`m the campaign, and nothing more than can`t refuse... - with sadness he said.'
+			'- And it`s all right, my Boo! Well, don`t be sad, you like it too! - tried to cheer you.'
+			'- Neither would direct that much, but yeah, it pins Maleh. - already with a smile he said.'
+			'- Well, that`s fine! Go pick up the clothes, and I`ll paint your face, tell me how to do it: after all, it`s time to learn. - with a chuckle told you.'
+			act 'Wait':
+				*clr & cla
+				'<center><img src="images/qwest/alter/kruglov/crossdress/makeup.jpg"></center>'
+				'He came already dressed and you polished it.'
+				act 'Ready':
+					*clr & cla
+					'<center><img src="images/qwest/alter/kruglov/crossdress/kd_3.jpg"></center>'
+					'You`re beautiful as always! - you said and he smiled.'
+					'- Thank you. - he said.'
+					'Without hesitation you thought and said biting her lip: - You know, to hide such beauty at home - just a crime!'
+					'- That`s what you want to say? - alert Igor.'
+					'- Let`s go outside and take a walk?! - enthusiastically suggested you.'
+					'- Damn, <<$nickname>>, and if anybody finds out? - he was afraid of.'
+					'- Well, Boo, you said that you can`t refuse me! - you deliberately called him in the feminine.'
+					'- Yes, but can you imagine what would happen if I burn, I shudder to think about it... -  he said and was covered in goosebumps.'
+					'- Yes, nobody is gonna burn, come on, please, please, please, please! - you have started chattering.'
+					'- Well, to hell with you, persuaded. But not for long, and as soon as I say we just leave! - finally he agreed.'
+					'- Of course, of course! Went. - "said you.'
+					act 'To go out for a walk':
+						*clr & cla
+						igor_kdprogulka = 2
+						'<center><img src="images/qwest/alter/kruglov/crossdress/progulka_1.jpg"></center>'
+						'You went for a walk in the Park. Igor was very uncertain, leaning right at you and holding your hand, and were constantly looking around, fearing to see anyone you knew.'
+						'- Yes do you calm down! - you pulled him by the hand.'
+						'- Does not work! It seems to me all the time that now I will burn! - shivering nervously, he replied.'
+						'- All the way, no one will think you`re a boy. - reassured you.'
+						act 'Further':
+							*clr & cla
+							'<center><img src="images/qwest/alter/kruglov/crossdress/progulka_3.jpg"></center>'
+							'You walked by the benches where sat three men, and heard a whistle from one: - Gorgeous ass, beautiful girls!'
+							'- Yeah, especially the one on the right, peach is good! - approvingly has gycol other.'
+							'You smiled back, walking past. Still walking a little you decided to call it a day.'
+							act 'Back to Igor':
+								*clr & cla
+								igor_progulkaday = day
+								'<center><b><font color = maroon>Entrance hall</font></b></center>'
+								'<center><img src="images/qwest/alter/kruglov/kor.jpg"></center>'
+								'When you went back to Igor`s home, he immediately took off his wig and sighed. You smiled and asked: - Well as a walk?'
+								'- Yes, I`m shaking, heart still pounding wildly! - he breathed a sigh of relief.'
+								'- Yes? And when your ass is appreciated by those guys - what was it like? - you asked, playfully biting his lip.'
+								'- Yes, I have a little heart popped! But honestly, it was fun, so much adrenaline!'
+								'- So, it will be necessary to repeat! - you happily hugged him.'
+								act 'Finish': gt'IgorHome','Igorkom'
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+
+	if igor_kdprogulka = 2 and igor_nomore < 1 and igor_progulkaday ! day:
+		act 'Walk dressed?':
+			*clr & cla
+			gs 'igorEv', 'kruglov_desc'
+			'- Let`s get you dressed and go for a walk. - said you painted it, then he got dressed.'
+			act 'Further':
+				*clr & cla
+				'<center><img src="images/qwest/alter/kruglov/crossdress/kd_4.jpg"></center>'
+				'- All right - now are you ready, my beauty.'
+				'- Yes, ready. - with a smile he said.'
+				act 'To go out for a walk':
+					*clr & cla
+					igor_kdprogulka = 3
+					'<center><img src="images/qwest/alter/kruglov/crossdress/progulka_2.jpg"></center>'
+					'You went for a walk in the Park. Igor was a bit build confidence among than last time. Even waved a farewell to one guy, who was staring at him.'
+					act 'Back to Igor':
+						*clr & cla
+						igor_progulkaday = day
+						'<center><b><font color = maroon>Entrance hall</font></b></center>'
+						'<center><img src="images/qwest/alter/kruglov/kor.jpg"></center>'
+						'You went back to Igor`s home. You smiled and asked: - Well as a walk?'
+						'- It was fun! Seen as boyfriend embarrassed when I greet him? - he said and laughed.'
+						'- How was it possible not to notice? - you said and laughed together.'
+						act 'Finish': gt 'IgorHome', 'Igorkom'
+					end
+				end
+			end
+		end
+	end
+
+	if igor_kdprogulka = 3 and igor_nomore < 1 and igor_progulkaday ! day:
+		act 'Walk?':
+			*clr & cla
+			igor_progulkaday = day
+			gs 'igorEv', 'kruglov_desc'
+			'- Let`s get you dressed and go for a walk. - suggested you.'
+			'- And can I try to paint? - Igor asked.'
+			'- Of course you can! - smiled at you in response.'
+			'He`s wearing makeup: it turned out like nothing, then ran to my sister`s room and quickly changed.'
+			act 'Further':
+				*clr & cla
+				'<center><img src="images/qwest/alter/kruglov/crossdress/kd_5.jpg"></center>'
+				'- You look sweet, it would have eaten would you! - told you, licking lips.'
+				'- Well, let`s go. - with an embarrassed smile, he answered.'
+				act 'To go out for a walk':
+					*clr & cla
+					'<center><img src="images/qwest/alter/kruglov/crossdress/progulka_4.jpg"></center>'
+					'You went for a walk in the Park. Igor was much build confidence among. You talked to him about different trifles. I heard that you alikali: "<<$nickname>>, wait".'
+					act 'Turn':
+						*clr & cla
+						'<center><B><font color=maroon>Dima Nosov</font></B></center>'
+						'<center><img src="images/qwest/alter/npc/1.jpg" ></center>'
+						'You turned around and saw Dima Nosov.'
+						'- Hi, <<$nickname>>! - poprivetstvoval you he.'
+						'- Hi. - you said to him and looked at Igor, whose confidence immediately disappeared, he looked very excited.'
+						'- And who`s that with you? - Dima asked.'
+						'- And, it`s just my girlfriend. - hastily answered you.'
+						'- But what she doesn`t say Hello? - he asked.'
+						'- I want you to meet my odnoklassnik. - you said Igor with a smile, with interest looking, how will develop this situation.'
+						act 'Watch':
+							*clr & cla
+							'<center><img src="images/qwest/alter/kruglov/dimanos/kissryky.gif"></center>'
+							'- Hi. - timidly said Igor, trying to change the voice.'
+							'- My name is Dima and you? - handed Igor Nosov hand.'
+							'- Uh... me... Diana. - said Igor, giving his hand in response. It was noticeable that he started very nervous.'
+							'- Beautiful name. - he said, and kissed his hand.'
+							'Igor started even more nervous.'
+							'- Girls can keep me company? Take a walk, get a beer!'
+							act 'Unsubscribe':
+								*clr & cla
+								'You decided not to hurt Igor, and said that much in a hurry and you have time to go. You said goodbye with Dima and quickly left.'
+								act 'Go':
+									*clr & cla
+									igor_nomore = 1
+									'<center><b><font color = maroon>Entrance hall</font></b></center>'
+									'<center><img src="images/qwest/alter/kruglov/kor.jpg"></center>'
+									'You went back to Igor`s home. You smiled and asked: - Well as a walk?'
+									'- Blyayaya... awful! - with a genuine tremor in her voice said Igor. - There was Dimon if he caught me it would be fucked up! And more in this outfit I`m not going to walk!'
+									'- Come on, Diane, " teased you Igor - you have no idea what I lost.'
+									'- Fuck you in the ass! - he was offended.'
+									'- Yes, Yes, in the ass, you quickly stopped by Igor behind her and clutching his ass, began to simulate intercourse.'
+									'- Oh, Yes, Diana, my big cock so closely in your tight ass Oh! This is my ass and I`ll fuck her!'
+									'- You`re sick! - Igor threw your hands and looked at you very good.'
+									'But in response, you made a cute face and smile: - Don`t be such a Downer, I`m kidding!'
+									'And added to himself: - And here nichrome not kidding, and fuck your ass, Diana! If I had the member been fucked b.'
+									act 'Finish': gt 'IgorHome', 'Igorkom'
+								end
+							end
+							act 'Agree':
+								*clr & cla
+								'- Why not? - told you, and immediately your hand pulled Igor and hissed in his ear:'
+								'- WHAT are YOU doing? If he recognises me - it will be fucked up!!!'
+								'- Yes, do not worry you, all the way through. - reassured you.'
+								'- What are you whispering there, girls? - asked noses.'
+								'- Oh, nothing, just Diane I have a very shy. - you replied to him.'
+								'- I hope a couple of Beers will fix it! - he joked.'
+								act 'Further': gs 'igorEv', 'din_dimanosov'
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+
+	if meetDiana >= 1 and meetDianahelp < 1:
+		act 'To say about Dima':
+			*clr & cla
+			meetDiana -= 3000
+			meetDianahelp = 1
+			gs 'igorEv', 'kruglov_desc'
+			'- Honey, I was talking to Dima. And, you know, he loved it "Diana"! - said with a smile you him.'
+			'- And what`s next? From me, that`s what you want? - he cringed.'
+			'- Well that? Let`s arrange for him to meet her!'
+			'- NO! FOR ANYTHING! You`re crazy not to go! - he said firmly.'
+			'- But Egorycha... - you do not have time to finish as he interrupted:'
+			'- No! I said no, means NO! - he snapped.'
+			'- Damn, sorry, okay. - you have been angry.'
+			act 'Finish': gt'IgorHome', 'Igorkom'
+		end
+	end
+
+	if meetDianahelp >= 2:
+		act 'Walk with "Diana"?':
+			*clr & cla
+			meetDianahelp -= 3000
+			gs 'igorEv', 'kruglov_desc'
+			'- Walk? - asked you Igor.'
+			'- Of course. - he said.'
+			'- Well, maybe you "will preteness" for walking? - hinted you.'
+			'- Do <<$nickname>>. - he frowned.'
+			'- Come on, you`re most liked! - you reminded him.'
+			'- Well, yeah, but...'
+			'- Agree, well for me! - coaxed you.'
+			'- Okay, okay, persuaded. - having rumpled, he agreed.'
+			'- URAA, cool! - you happily screamed and kissed him.'
+			act 'To put it':
+				*clr & cla
+				'<center><img src="images/qwest/alter/kruglov/crossdress/makeup.jpg"></center>'
+				'You polished it, and then he dressed.'
+				act 'Further':
+					*clr & cla
+					'<center><img src="images/qwest/alter/kruglov/crossdress/kd_6.jpg"></center>'
+					'- Here she is, my beautiful Diana, I miss you so much! - contentedly looked at you "Diana".'
+					act 'Go for a walk': gs 'igorEv', 'din_progulka_dima'
+				end
+			end
+		end
+	end	
+		
+	if igor_DimaNos >= 1 and week = 1 and igor_likethis < 1 and igor_listen < 1:
+		act 'To know about the weekend':
+			*clr & cla
+			igor_listen = 1
+			gs 'igorEv', 'kruglov_desc'
+			'- Well, you met with Dima at the weekend? - asked you.'
+			'- Yes, I walked. - replied Igor.'
+			'- Nuuu, not Tom, tell me everything to the smallest detail! - have you zatormozilo.'
+			act 'Listen':
+				*clr & cla
+				'<center><img src="images/qwest/alter/kruglov/dimanos/kd.jpg"></center>'
+				'Well, on Saturday, the day I started to prepare for the meeting. Makeup like you taught me, dressed up. And went to the meeting to Dima.'
+				act 'Listen':
+					*clr & cla
+					'<center><img src="images/qwest/alter/kruglov/dimanos/vsheky.gif"></center>'
+					'In General, I came to the square, and he was already there. He saw me and came over to me and kissed me on the cheek.'
+					'- Damn, well why not on the lips!.. - said you regret.'
+					'He looked accusingly at you and you immediately recovered: - All silent, silent. Keep it up.'
+					act 'Further':
+						*clr & cla
+						'<center><img src="images/qwest/alter/kruglov/dimanos/zaryky.jpg"></center>'
+						'Then he took me by the hand and we went for a walk. He told stories, joked with the sense of humor he never had a problem. In General, the time spent is quite good.'
+						'- Wait, you`re, like, went to him to say that he`d never see you again? - asked you.'
+						'- Well, first I thought I was immediately going to tell him, but then decided to do it when we`re done walking. - confused Igor.'
+						'- Clear. And what happened next? - pushed him to continue you.'
+						act 'Listen':
+							*clr & cla
+							'<center><img src="images/qwest/alter/kruglov/dimanos/ozero.jpg"></center>'
+							'Well, we walked past the lake, and suddenly he grabbed me in his arms and wanted to throw me in the water, damn, I`m ashamed to admit it, but from the surprise, I screamed like a girl and grabbed his hands around my neck.'
+							act 'Further':
+								*clr & cla
+								'<center><img src="images/qwest/alter/kruglov/dimanos/ozero2.jpg"></center>'
+								'I clung to him and begged not to do it.'
+								'- And - he listened to you? - he raised an eyebrow you.'
+								'- Well, not really... - confused Igor.'
+								act 'As?':
+									*clr & cla
+									'<center><img src="images/qwest/alter/kruglov/dimanos/ozero3.gif"></center>'
+									'- As? - surprised you.'
+									'- Well, he`s with me, holding my arms, ran into the water. So we both got wet.'
+									act 'Well, what`s next?':
+										*clr & cla
+										'<center><img src="images/qwest/alter/kruglov/dimanos/yshipnyl.gif"></center>'
+										'- Well, what happened then? - did not stop you.'
+										'- When we drain. then went to walk on when we went, damn... he pinched me, but I immediately removed his hand.'
+										'Then we passed by the market, and he asked me to wait a little. And he ran off.'
+										act 'Where did he go?':
+											*clr & cla
+											'<center><img src="images/qwest/alter/kruglov/dimanos/podarok.jpg"></center>'
+											'- He went away and left you alone? - indignantly asked you.'
+											'- Yes, just a couple of minutes. When he came, in his hands was a Teddy bear and he gave it to me!'
+											'- Damn, how cute. I would have never thought that noses could be so romantic! - you chuckled.'
+											'- Well, yeah. - he said '
+											act 'What happened next?':
+												*clr & cla
+												'Igor continued: - Then we walked a little. I only then realized that in fact we now have a date with him.'
+												'It was late afternoon, we walked and found himself near his home. I thought perhaps it is time to finish. I thought to say what was intended from the beginning that he doesn`t see me that we will not be able to meet.'
+												'<<$nickname>>, don`t get me wrong, but I had such a good time with him! I had fun, he was complimenting me, was so sweet, I never knew that side of him. And I reschil to thank him, wanted to kiss.'
+												'- Wait, WHAT? What made you decide to do?? - surprised you.'
+												'- Well, yeah, yeah! I decided to kiss him! - he repeated you.'
+												'- NEITHER of WHICH is currently. I thought you don`t like it when he first kissed you.'
+												'- Yes, not much, but this weekend everything was like something else.'
+												'- So what happened next, let`s continue! - told you Igor.'
+												act 'Listen':
+													*clr & cla
+													'<center><img src="images/qwest/alter/kruglov/dimanos/kiss5.gif"></center>'
+													'I kissed him. We kissed for a few minutes, and then he proposed to go to visit him. I`ve been thinking, agree or not, but I think Dima is already by the hand led me to his home.'
+													'We went to his house, went to his room. There he asked me to sniff a track, but I refused. I know he enjoys himself a couple of times with him sniffing, but at that moment decided not to risk it.'
+													act 'Further':
+														*clr & cla
+														'<center><img src="images/qwest/alter/kruglov/dimanos/kiss.gif"></center>'
+														'Then we sat down on the couch and I kissed him again. And I liked it so much that I started to get excited.'
+														act 'Further':
+															*clr & cla
+															'<center><img src="images/qwest/alter/kruglov/dimanos/spalil.gif"></center>'
+															'He began to tell me:'
+															'- You`re so special, not like the others! God, this is so cool, and my kid is already, I see you`ve...'
+															'I`m tense, damn it: I stood up from kissing him, and he saw my boner. He reached out to me for another kiss, and stopped.'
+															'- Uh... RISER?? What the fuck?'
+															'- No, it`s just clothes so got up and it seems... - I tried to justify I. And then there was the worst - he pulled off my wig!'
+															'- IGOR?'
+															'- Hi. - out of place I said.'
+															act 'Hell no!':
+																*clr & cla
+																'<center><img src="images/qwest/alter/kruglov/dimanos/ybeshal.gif"></center>'
+																'Then I immediately ran away.'
+																act 'And then what happened???':
+																	*clr & cla
+																	'<center><img src="images/qwest/alter/kruglov/dimanos/otkroi.gif"></center>'
+																	'He started banging on the door, screaming. Then kind of calmed down and asked that I opened the door, just to talk.'
+																	act 'And you opened?':
+																		*clr & cla
+																		'<center><img src="images/qwest/alter/kruglov/dimanos/otkril.gif"></center>'
+																		'Yes, but where would I go? I was at his house! So decided and opened the door.'
+																		act 'And that was?':
+																			*clr & cla
+																			'<center><img src="images/qwest/alter/kruglov/dimanos/poimal.gif"></center>'
+																			'He tricked me: grabbed and dragged him, screaming at me, I tried to make excuses, but...'
+																			act'But what?':
+																				*clr & cla
+																				DimaLoveIgor -= 3000
+																				IgorLove -=3000
+																				IgorLoweqw -= 3000
+																				grupNPC[4] = -3000
+																				gs 'igorEv', 'kruglov_desc'
+																				'He still gave me a fucking ass, and told the school about my Hobbies, while remaining silent about himself. And you know what: I just had a thought - IT`s ALL because OF YOU! SO YOU BETTER GET OUT OF HERE AND NEVER SPEAK TO ME AGAIN! - went off on a tantrum he'
+																				'You thought: "Somehow a very bad end... Really is better now not to try to convince him and just walk away. Maybe later when he calms down!"'
+																				act 'Go': gt 'pavResidential'
+																			end
+																		end
+																	end
+																end
+															end
+														end
+													end
+												end
+											end
+										end
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+	
+	if igor_DimaNos >= 1 and week = 1 and igor_likethis >= 1 and igor_listen < 1:
+		act 'To know about the weekend':
+			*clr & cla
+			igor_listen = 1
+			gs 'igorEv', 'kruglov_desc'
+			'- Well, you met with Dima at the weekend? - asked you.'
+			'- Yes, I walked. - replied Igor.'
+			'- Nuuu, not Tom! Tell me how it was!?'
+			'- Well so impatient, then! Right now I tell... - he began.'
+			'- Tell all of malcasa details! - warned you.'
+			act 'Listen':
+				*clr & cla
+				'<center><img src="images/qwest/alter/kruglov/dimanos/kd.jpg"></center>'
+				'Well, on Saturday, the day I started to prepare for the meeting. Makeup like you taught me, dressed up. And went to the meeting to Dima.'
+				act 'Listen':
+					*clr & cla
+					'<center><img src="images/qwest/alter/kruglov/dimanos/vsheky.gif"></center>'
+					'In General, I came to the square, and he was already there. He saw me and came over to me and kissed me on the cheek.'
+					'- Damn. Well, why not on the lips!.. - said you regret.'
+					'He looked accusingly at you and you immediately recovered: - All silent, silent. Keep it up.'
+					act 'Further':
+						*clr & cla
+						'<center><img src="images/qwest/alter/kruglov/dimanos/zaryky.jpg"></center>'
+						'Then he took my hand and we went for a walk. He told stories, joked with the sense of humor he never had a problem. In General, the time spent is quite good.'
+						'- Wait, you`re, like, went to him to say that he`d never see you again? - asked you.'
+						'- Well, first I thought I was immediately going to tell him, but then decided to do it when we`re done walking. - confused Igor.'
+						'- Okay, so what happened next? - asked you.'
+						act 'Listen':
+							*clr & cla
+							'<center><img src="images/qwest/alter/kruglov/dimanos/ozero.jpg"></center>'
+							'Well, we walked past the lake. And suddenly he grabbed me in his arms and wanted to throw me in the water. Damn, ashamed to admit it, but surprise, I screamed like a girl and clasped his hands behind his neck.'
+							act 'Further':
+								*clr & cla
+								'<center><img src="images/qwest/alter/kruglov/dimanos/ozero2.jpg"></center>'
+								'I clung to him and begged not to do it.'
+								'- And - he listened to you? - he raised an eyebrow you.'
+								'- Well, not really... - confused Igor.'
+								act 'As?':
+									*clr & cla
+									'<center><img src="images/qwest/alter/kruglov/dimanos/ozero3.gif"></center>'
+									'- As? - surprised you.'
+									'- Well, he`s with me, holding my arms, ran into the water. So we both got wet.'
+									act 'Well, what`s next?':
+										*clr & cla
+										'<center><img src="images/qwest/alter/kruglov/dimanos/yshipnyl.gif"></center>'
+										'- Well, what happened then? - did not stop you.'
+										'- Drain. when we went on walking, and when we went, damn... he pinched me, but I immediately removed his hand.'
+										'Then we passed by the market, and he asked me to wait a little. And he somewhere fled.'
+										act 'Where did he go?':
+											*clr & cla
+											mishka += 1
+											'<center><img src="images/qwest/alter/kruglov/dimanos/podarok.jpg"></center>'
+											'- He went away and left you alone? - indignantly asked you.'
+											'- Yes, just a couple of minutes. When he came, in his hands was a Teddy bear, and he gave it to me. - Igor got and showed you the bear, then put it on the bed'
+											'- Damn, how cute! Never would have thought that noses can be still romantic! - you chuckled.'
+											'- Well, yeah. - he said '
+											act 'What happened next?':
+												*clr & cla
+												'Igor continued: - After we walked a little. I only then realized that in fact we now have a date with him!'
+												'It was late afternoon, we walked and found himself near his home. I thought perhaps it is time to finish. I thought to say what was intended from the beginning that he doesn`t see me that we will not be able to meet.'
+												'<<$nickname>>, don`t get me wrong! But I had such a good time with him! I had fun, he was complimenting me, was so sweet, I never knew that side of him. And I reschil to thank him, wanted to kiss.'
+												'- Wait, WHAT? What do you make of resil??? - amazed you.'
+												'- Well, yeah, yeah! I decided to kiss him! - he repeated you.'
+												'- Holy shit! And I thought you didn`t like when he first kissed you?'
+												'- Yes, not much, but this weekend was all otherwise.'
+												'- So what happened next, go ahead! - have you zatormozilo Igor.'
+												act 'Listen':
+													*clr & cla
+													'<center><img src="images/qwest/alter/kruglov/dimanos/kiss6.gif"></center>'
+													'I kissed him. We kissed for a few minutes, and then he proposed to go to visit him. I have long thought - to agree or not, but I think Dima is already by the hand led me to his home.'
+													'We went to his house, went to his room. There he asked me to sniff a track, but I refused. I knew he was into it himself a couple of times with him sniffing, but at that moment decided not to risk it.'
+													act 'Further':
+														*clr & cla
+														'<center><img src="images/qwest/alter/kruglov/dimanos/medlyak.gif"></center>'
+														'Then he hugged me and we began to dance. He was complimenting me, saying that has miraculously spent the day.'
+														act 'Further':
+															*clr & cla
+															'<center><img src="images/qwest/alter/kruglov/dimanos/krovat.jpg"></center>'
+															'Then he laid me on the bed and lay down next inside I was quivering.'
+															act 'Further':
+																*clr & cla
+																'<center><img src="images/qwest/alter/kruglov/dimanos/kiss4.gif"></center>'
+																'Then he started to kiss me and said "I want you". And I feel like I really got a shock, I realized that I was lying on the bed, Dima and he intended to fuck me!'
+																'I started to say I couldn`t, and blurted out the first thing that came to my mind: "I`m on my period, I can`t". He stopped, I quickly got ready and left.'
+																act 'And all?':
+																	*clr & cla
+																	gs 'igorEv', 'kruglov_desc'
+																	'- And that`s all? - you asked with disbelief.'
+																	'- Yes, all. - Igor nodded.'
+																	'- Oh, something I think you`re not telling us something! - intently you looked at him.'
+																	'- THIS is where it ended! - with his hands he.'
+																	'- Don`t lie, come on, tell me how it actually! - you stood on your.'
+																	'- OKAY, YOU WANT THE TRUTH??? I GAVE HIM A BLOW JOB! HAPPY now?? - snapped Igor.'
+																	'- WHAT??? WHAT DID YOU DO?? - you started the hysterical laughter.'
+																	'- Why are you laughing at? - irritably he snapped. - Yes! I did! It`s like the boys never sucked, tell me more!'
+																	'- Hahahhah... I believe... hahaha... can`t... Okay we`re having fun, but you blew the GUY?! > Ahahahaaaa! - you could not calm down.'
+																	'- Actually, it`s your fault: all your adventures this happened! - began to start it.'
+																	'- Of course, I`m sorry. - you gradually calmed down, by an effort of will crushing laughter. - Better tell me - how it was.'
+																	act 'Listen':
+																		*clr & cla
+																		'<center><img src="images/qwest/alter/kruglov/dimanos/kiss4.gif"></center>'
+																		'When he whispered in my ear "I want you!"'
+																		'I was frightened, panicked, wondering what to do - he was about to undress me. Well, said the first thing that came to mind: "I`m on my period, I can`t."'
+																		'What he: - Damn, Dianic, I have been there all lit! Well help me!'
+																		act 'And?':
+																			*clr & cla
+																			'<center><img src="images/qwest/alter/kruglov/dimanos/1.gif"></center>'
+																			'I`m confused even more - what to do? - as he pressed on my shoulders and lowered down.'
+																			'He took off his pants and briefs and he was standing, and he was right in front of my face, HIS COCK, DAMN!'
+																			'Dima continued to ask: "Well Dianchik, please, do it!"'
+																			'After several minutes coaxing, I finally opened my mouth. Then wanted to close...'
+																			act 'Further':
+																				*clr & cla
+																				'<center><img src="images/qwest/alter/kruglov/dimanos/2.gif"></center>'
+																				'But he`s already stuck in my mouth his cock. And started fucking me in the mouth. FUCK, I don`t believe I did it. It was disgusting!'
+																				act 'Well, you give!':
+																					*clr & cla
+																					DimaLoveIgor = 2
+																					gs 'igorEv', 'kruglov_desc'
+																					'- Well, you give! - you said. - And than all ended?'
+																					'- Then I turned and walked away. - answered.'
+																					'- Hmm, that`s a story! - shook you with a smile head.'
+																					'- Damn, I was so afraid to tell you... - lowered her eyes, blushing, Igor.'
+																					'- You can tell me absolutely everything. Especially about "Diana" and Dima. - with a smile approvingly patted him on the cheek you.'
+																					'- No more Diana and Dima will not. - firmly said Igor.'
+																					'Oh? Is it really? - thought you talking about yourself.'
+																					act 'Finish': gt 'IgorHome', 'Igorkom'
+																				end
+																			end
+																		end
+																	end	
+																end
+															end
+														end
+													end
+												end
+											end
+										end
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+
+	if hour >= 23:
+		*clr & cla
+		'You looked at the clock and said you should go home.'
+		act 'Say goodbye and go home': gt 'pavResidential'
+	elseif hour >= 20:
+		*clr & cla
+		'Igor looked at his watch and asked: - Go to disco?'
+		act 'To go with Igor': & minut += 20 & gt 'gdkin'
+		act 'Say goodbye and go home': gt 'pavResidential'
+	end
+
+	act '<B>Depart</B>': gt 'IgorHome', 'Igorkom'
+end
+
+!dynamic to args
+if $ARGS[0] = 'kruglov_desc':
+	'<center><h4><font color="maroon">Igor Kruglov</font></h4></center>'
+	'<center><img src="images/qwest/alter/npc/4.jpg"></center>'
+end
+
+if $ARGS[0] = 'din_sex':
+	!if igor_htday ! day:
+		*clr & cla
+		igor_htday = day
+		gs 'stat'
+		'Both of you undressed.'
+		act 'Squat':
+			*clr & cla
+			minut += 5
+			stat['bj'] += 1
+			bja += 1
+			if npcSex[4] = 0: npcSex[4] = 1 & guy += 1
+			gs 'stat'
+			'You sat on his haunches in front of him and took his small cock hand. Slightly sliding the skin on the dick, you lick the head. Your deft tongue began to caress his cock. Igor he was breathing and prayed: "<<$nickname>>, I`m so close!"'
+			act 'Suck':
+				*clr & cla
+				Igorsex += 1
+				gs 'cum_call', 'mouth', $boy
+				minut += 10
+				gs 'stat'
+				'You grabbed the lip member and began to suck it as "Lollipop". Igor groaned, and your mouth hit the jet of sperm.'
+				act 'Sucking swallowing sperm':
+					*clr & cla
+					swallow += 1
+					water -= 10
+					minut += 10
+					gs 'stat'
+					'You continued to suck on the erupting cock and swallow the cum fall into your mouth. Sperm were so many that you do not have time to swallow everything and it flows from your mouth on a member. Finally the flow dried up and you have released member of his mouth. Your <<$liptalk3>> wet from sperm.'
+					gs 'igorEv', 'din_igor_end'
+				end
+				act 'Remove the mouth':
+					cls
+					gs 'cum_call', 'face', $boy
+					minut += 10
+					gs 'stat'
+					'You removed the member from his mouth and a jet of semen immediately struck you in the face. You blinked, fearing that the sperm gets into your eyes, and I felt another jet of hot liquid landed on your face.'
+					gs 'igorEv', 'din_igor_end'
+				end
+			end
+			act 'Substitute the ass':
+				*clr & cla
+				Igorsex += 1
+				minut += 15
+				stat['anal'] += 1
+				gs 'cum_call', 'anus', $boy
+				gs 'stat'
+				'You framed the ass.'
+				gs 'igorEv', 'din_igor_end'
+			end
+			if vagina >= 1 and sex >= 1:
+				act 'Substitute pussy':
+					*clr & cla
+					Igorsex += 1
+					stat['vaginal'] += 1
+					gs 'cum_call', '', $boy
+					minut += 15
+					sexa += 1
+					gs 'stat'
+					'<center><img src="images/qwest/alter/kruglov/sex/pussy.gif"></center>'
+					'Igor spread your legs and into you.'
+					gs 'igorEv', 'din_igor_end'
+				end
+			end
+		end
+		if Igorsex >= 2 and igor_qwday ! day:
+			*clr & cla
+			igor_qwday = day
+			gs 'stat'
+			'Both of you undressed'
+			act 'Cooney':
+				*clr & cla
+				minut += 15
+				igorkuni += 1
+				gs 'stat'
+				'<center><img src="images/qwest/alter/kruglov/sex/kuni_'+ rand(1,8) +'.gif"></center>'
+				'He licks you, expertly working tongue. And jerking his cock.'
+				gs 'igorEv', 'din_igor_end'
+			end
+		end
+	!end
+end
+
+if $ARGS[0] = 'din_sisterkom':
+	*clr & cla
+	'<center><b><font color = maroon>My sister`s room Igor</font></b></center>'
+	'<center><img src="images/qwest/alter/kruglov/crossdress/komsister.jpg"></center>'
+	'You came into the room: here, to put it mildly, a mess.'
+	'- Mdaa... Apparently cleaning is not the favorite activity! - you smiled.'
+	'- That`s for sure. - grinned in response, he.'
+	act 'To open the cupboard':
+		*clr & cla
+		'<center><b><font color = maroon>My sister`s room Igor</font></b></center>'
+		'<center><img src="images/qwest/alter/kruglov/crossdress/chto_nadet.jpg"></center>'
+		'You opened the closet door, and you immediately fell out of the pile of clothes.'
+		'- Hell no! How many! - surprised you.'
+		'- I told you: my sister - the Shopaholic.'
+		act 'Try on clothes':
+			*clr & cla
+			minut += 15
+			gs 'stat'
+			'<center><b><font color = maroon>My sister`s room Igor</font></b></center>'
+			'<center><img src="images/clothing/2average/average'+rand(1,153)+'.jpg"></center>'
+			'You started to wear different things.'
+			'- Me? - you asked, twirling in front of Igor.'
+			act 'Further':
+				*clr & cla
+				minut += 15
+				gs 'stat'
+				'<center><b><font color = maroon>My sister`s room Igor</font></b></center>'
+				'<center><img src="images/clothing/2average/average'+rand(1,153)+'.jpg"></center>'
+				'You put on the following outfit.'
+				'- And this? - did not stop you.'
+				act 'Further':
+					*clr & cla
+					minut += 15
+					gs 'stat'
+					'<center><b><font color = maroon>My sister`s room Igor</font></b></center>'
+					'<center><img src="images/clothing/2average/average'+rand(1,153)+'.jpg"></center>'
+					'You like? - continued you.'
+					act 'Further':
+						*clr & cla
+						minut += 15
+						gs 'stat'
+						'<center><b><font color = maroon>My sister`s room Igor</font></b></center>'
+						'<center><img src="images/clothing/2average/average'+rand(1,153)+'.jpg"></center>'
+						'- And this?'
+						act 'Finish':
+							*clr & cla
+							igor_eqwtday = day
+							minut += 15
+							igor_krossdress = 1
+							gs 'stat'
+							'<center><b><font color = maroon>My sister`s room Igor</font></b></center>'
+							'<center><img src="images/qwest/alter/kruglov/crossdress/ystala.jpg"></center>'
+							'You have to kill to try on countless outfits, perhaps it is time to call it a day. You said goodbye c Igor and was going to leave.'
+							act 'Go': gt'pavResidential'
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+if $ARGS[0] = 'din_sisterkom_krossdress':
+	*clr & cla
+	'<center><b><font color = maroon>My sister`s room Igor</font></b></center>'
+	'<center><img src="images/qwest/alter/kruglov/crossdress/komsister.jpg"></center>'
+	'You came into the room: here is still the same srach.'
+	'- She never cleaned the room?'
+	'- I guess. - with a grin he replied.'
+	act 'To open the cupboard':
+		*clr & cla
+		'<center><b><font color = maroon>My sister`s room Igor</font></b></center>'
+		'<center><img src="images/qwest/alter/kruglov/crossdress/chto_nadet.jpg"></center>'
+		'You opened the wardrobe and began with interest to examine the huge mountain of stuff.'
+		act 'To look for something interesting':
+			*clr & cla
+			minut += 15
+			gs 'stat'
+			'<center><b><font color = maroon>My sister`s room Igor</font></b></center>'
+			'You start looking through the clothes and found beautiful lingerie.'
+			'- Wow, beautiful underwear. - seeing him, appreciated Igor.'
+			'- Well, if you like, can you wear? - joked you.'
+			'- Very funny. - he said.'
+			'- Yeah! - struck you. - Let`s try for you! THESE panties... and... THIS BRA! - have you zatormozilo. It will be such a joke!'
+			'- Yes you drive, or what? - he was indignant.'
+			'- Come on, don`t be boring! Let`s have some fun! - playfully, you giggled sweetly looking at him.'
+			'- <<$nickname>>, you... - finished it as you interrupted him: - Or I will resent you.!'
+			'- Bliiin, well let`s. Only for you, only once and only here! - in the end surrendered Kruglov.'
+			'- Uraaaa! - cried you.'
+			act 'Wear it':
+				*clr & cla
+				dom += 1
+				minut += 5
+				'<center><b><font color = maroon>My sister`s room Igor</font></b></center>'
+				'<center><img src="images/qwest/alter/kruglov/crossdress/odet.jpg"></center>'
+				'You started to wear it, not ceasing to laugh.'
+				act 'Further':
+					*clr & cla
+					'<center><b><font color = maroon>My sister`s room Igor</font></b></center>'
+					'<center><img src="images/qwest/alter/kruglov/crossdress/trysi.jpg"></center>'
+					'- That is fucking insane! - he said.'
+					'- No, that you, you really is! - the smile slipped from your face.'
+					'- Fuck you. - he answered, but he thugmisses.'
+					'- You`re sexy! - you laughed.'
+					'- Well, I`ll get!'
+					act 'Further':
+						*clr & cla
+						minut += 10
+						gs 'stat'
+						'<center><b><font color = maroon>My sister`s room Igor</font></b></center>'
+						'<center><img src="images/qwest/alter/kruglov/crossdress/draka.jpg"></center>'
+						'He grabbed a pillow off her bed and hit you.'
+						'- Hey, bitch, are you nuts or what?! - rolling in laughter, you grabbed a pillow, also hit him. He replied and you started a fight on the pillows.'
+						act 'Further':
+							*clr & cla
+							'<center><b><font color = maroon>My sister`s room Igor</font></b></center>'
+							'<center><img src="images/qwest/alter/kruglov/crossdress/onbed.jpg"></center>'
+							'Panting, you both lay down on the bed.'
+							'- Class! - catching his breath, exhaled you.'
+							'- And you`re cool fight. - said Igor.'
+							'After a short pause you bit his lip and offered: - But come on, we`ll get you necrason and dress wear!'
+							'- What?? You were little or what? - with surprise he answered.'
+							'- Oh please, Oh please, please, please, please! - rattled you.'
+							'- Okay, okay, you still will not leave the same. - he agreed.'
+							'- Cool!'
+							act 'To put it':
+								*clr & cla
+								dom += 1
+								minut += 15
+								gs 'stat'
+								'<center><b><font color = maroon>My sister`s room Igor</font></b></center>'
+								'<center><img src="images/qwest/alter/kruglov/crossdress/makeup.jpg"></center>'
+								'You started to apply makeup.'
+								act 'To find a dress':
+									*clr & cla
+									minut += 10
+									gs 'stat'
+									'<center><b><font color = maroon>My sister`s room Igor</font></b></center>'
+									'<center><img src="images/qwest/alter/kruglov/crossdress/garderob.jpg"></center>'
+									'You started to look for a suitable dress and even unexpectedly found an expensive wig with long natural hair. You gave all found him to put it all.'
+									act 'Look at the result':
+										*clr & cla
+										'<center><b><font color = maroon>My sister`s room Igor</font></b></center>'
+										'<center><img src="images/qwest/alter/kruglov/crossdress/dress.jpg"></center>'
+										'- How do you like me? - he asked.'
+										'- Wow, this is just fantastic! - enthusiastically answered you.'
+										'- Che, is that true? - he was surprised.'
+										'- He look. - you nodded towards the mirror.'
+										'He walked over to the mirror and examined myself.'
+										act 'Further':
+											*clr & cla
+											'<center><b><font color = maroon>My sister`s room Igor</font></b></center>'
+											'<center><img src="images/qwest/alter/kruglov/crossdress/ydivlenie.jpg"></center>'
+											'- Fuck! This is th truth I? - he asked, twirling in front of a mirror.'
+											'- Now you are really sexy baby! - you winked at him.'
+											'- Yes, that`s for sure! - suddenly sardella he, hanging his strange eyes.'
+											act 'Kiss him':
+												*clr & cla
+												'<center><b><font color = maroon>My sister`s room Igor</font></b></center>'
+												'<center><img src="images/qwest/alter/kruglov/crossdress/kiss.gif"></center>'
+												'You started it and could not resist and kissed him'
+												act'Push him on the bed':
+													*clr & cla
+													minut += 15
+													gs 'stat'
+													'<center><b><font color = maroon>My sister`s room Igor</font></b></center>'
+													'<center><img src="images/qwest/alter/kruglov/crossdress/kdsex/dzhulia.gif"></center>'
+													'You pushed him on the bed, and then sat on his face. You reached down to his dick lips and began mutual oral sex. "Although he has a small dick, but a tongue he knows how to work great" - thought you. In a few minutes you both had finished.'
+													act 'Finish':
+														*clr & cla
+														igor_krossdress -= 3000
+														igor_krossdresssex = 1
+														igor_eqwtday = day
+														gs 'stat'
+														'<center><b><font color = maroon>My sister`s room Igor</font></b></center>'
+														'<center><img src="images/qwest/alter/kruglov/crossdress/face.jpg"></center>'
+														'- It was great! It will be necessary then to repeat it. - you said.'
+														'- That`s for sure! - he said.'
+														'- Okay, I`ll go, and you`re not going to change? Look - and then another home will burn!'
+														'- Of course, now change. By the way, you did not think of things?!'
+														'- Some other time, okay so far.'
+														'- Yet.'
+														act 'Go':gt'pavResidential'
+													end	
+												end
+											end
+										end
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+if $ARGS[0] = 'din_krossdresssex':
+	*clr & cla
+	gs 'stat'
+	gs 'igorEv', 'kruglov_desc'
+	'- You know, I wildly liked our sex when you were dressed as a girl! - you told him.'
+	'- And th?'
+	'- Let`s try and? - suggested you.'
+	'- Well, I don`t know... - began to crush it.'
+	'- Well, what you break, like really girl!'
+	'- To hell with you, come on! - agreed Igor.'
+	'- Krutyak! - you happily clapped your hands.'
+	'- Damn, if only from myself with some of it a habit not included - blushed again Kruglov.'
+	if igor_krossdresssex < 2:
+		act 'To put it':
+			*clr & cla
+			'<center><img src="images/qwest/alter/kruglov/crossdress/makeup.jpg"></center>'
+			'You painted him and picked up the clothes.'
+			act 'Further':
+				*clr & cla
+				'<center><img src="images/qwest/alter/kruglov/crossdress/kd_1.jpg" ></center>'
+				'- Here she is, my beauty! - With lust you looked at him.'
+				act 'Kiss him':
+					*clr & cla
+					'You kiss him'
+					act 'Give to lick':
+						*clr & cla
+						IgorHorny = 0
+						igor_kdsexday = day
+						igor_krossdresssex += 1
+						gs 'stat'
+						'<center><img src="images/qwest/alter/kruglov/crossdress/kdsex/lick.gif" ></center>'
+						'He licks you.'
+						act'Finish': gt 'IgorHome', 'Igorkom'
+					end
+				end
+			end
+		end
+	else
+		*clr & cla
+		gs 'igorEv', 'kruglov_desc'
+		'- Put on your clothes, girl. - you said'
+		'- You th - oupla or what? - outraged Igor.'
+		'- Yeah, okay, you`re not the first. - you winked at him.'
+		'- Well, let`s... - he agreed reluctantly.'
+		act 'Make up and disguise it':
+			*clr & cla
+			'<center><img src="images/qwest/alter/kruglov/crossdress/makeup.jpg"></center>'
+			'You painted it and got the.'
+			act'Further':
+				*clr & cla
+				'<center><img src="images/qwest/alter/kruglov/crossdress/rkd_'+ rand(1,9) +'.jpg"></center>'
+				'- Here she is, my beauty! - Lustfully licked you lips.'
+				'- Yes, here I am! - with a chuckle replied Igor.'
+				'- Hah, and you`re already starting to get used to? - you grinned.'
+				'- Nothing like! I was just joking! - replied Igor.'
+				act 'Kiss him':
+					*clr & cla
+					'<center><img src="images/qwest/alter/kruglov/crossdress/kdsex/kiss.gif"></center>'
+					'you kiss him'
+					act 'Further':
+						*clr & cla
+						IgorHorny = 0
+						!progulka += 1
+						igor_kdprogulka = 1 
+						igor_kdsexday = day
+						igor_krossdresssex += 1
+						gs 'stat'
+						'<center><img src="images/qwest/alter/kruglov/crossdress/kdsex/kdsex_'+ rand(1,4) +'.gif"></center>'
+						'You started to suck his cock while he skillfully licked your pussy.'
+						act'Finish':gt'IgorHome','Igorkom'
+					end
+				end
+			end
+		end
+	end
+end
+
+if $ARGS[0] = 'din_igor_sexstrapon':
+	*clr & cla
+	gs 'stat'
+	'- If you want sex, we have it will only be! - you said, showing him a strap-on.'
+	'He looked at you with sad eyes... and agreed.'
+	act 'Further':
+		*clr & cla
+		'He took off his pants and got cancer'
+		act 'Mash his ass':
+			*clr & cla
+			'<center><img src="images/qwest/alter/kruglov/sex/shlepaet_'+ rand(1,2) +'.gif"></center>'
+			if igor_sexstrapon < 3: 
+				'You started to knead his ass: - It may not be? - he turned.'
+			elseif igor_sexstrapon < 8:
+				'You started to knead his ass. - Well, okay, I`m ready. - he said you.'
+			else
+				'You started to knead his ass is what he said: - Come on, get on with it already! Do it.'
+			end
+			
+			act'Insert':
+				*clr & cla
+				'<center><img src="images/qwest/alter/kruglov/sex/vstavlaet_'+ rand(1,4) +'.gif"></center>'
+				'You started to insert a strapon in his ass.'
+				act'Fuck':
+					*clr & cla
+					igor_sexstrapon += 1
+					'<center><img src="images/qwest/alter/kruglov/sex/trahaet_'+ rand(1,7) +'.gif"></center>'
+					if igor_sexstrapon < 5:
+						'You started to fuck him with a strap-on. He loudly groaned: - Oh, it hurts, akuratno!'
+						'And you continued a little softer, so his ass didn`t hurt.'
+						act'Finish':
+							*clr & cla
+							igor_strapday = day
+							'- Damn, finally, you`re done! - wiped the sweat Igor. - Can next time I`ll fuck you?'
+							act'Finish': gt 'IgorHome', 'Igorkom'
+						end
+					elseif igor_sexstrapon < 8:
+						'You started to fuck him with a strap-on. Igor stopped to moan loudly, only slightly sighed: looks like he`s not hurting anymore.'
+						act 'Finish':
+							*clr & cla
+							igor_strapday = day
+							'- You`re done? - Igor asked. - Can next time I`ll fuck you?'
+							act'Finish': gt 'IgorHome', 'Igorkom'
+						end
+					else
+						*clr & cla
+						igor_likethis += 1
+						'<center><img src="images/qwest/alter/kruglov/sex/trahaet_'+ rand(1,7) +'.gif"></center>'
+						'You started to fuck him with a strap-on. He clearly felt like the: he occasionally became his podmahivat ass to you, and moan: - Come on, come on, faster... He`s got a massive erection.'
+						'Suddenly he began to cum, although he does not masturbate, and you never touched his cock. It surprised you.'
+						act'Finish':
+							*clr & cla
+							igor_strapday = day
+							'You`re done? - Igor asked. Can`t wait for the next time!'
+							! hint about meeting Nose
+							if meetDianahelp >= 2: '"Hmm, it seems Diana is ready to meet with Dimon" - you smiled to myself.'
+							act 'Finish': gt 'IgorHome', 'Igorkom'
+						end
+					end	
+				end
+			end
+		end
+	end
+end
+
+if $ARGS[0] = 'din_igor_end':
+	act 'Freshen up':
+		*clr & cla
+		cumface = 0
+		IgorHorny = 0
 		minut += 15
 		gs 'stat'
-		'You came home to Igor.'
-
-		if IgorDominaQW = 0:
-			'Igor starts hugging and kissing you.'
-		elseif IgorDominaQW > 0:
-			'Igor gets up on his knees in front of you, "Madam, I pray for a kiss!"'
-		end
-
-		act 'Leave':IgorLove -= 1 & gt 'pavResidential'
+		'<center><img src="images/qwest/alter/Ev/otel1.gif"></center>'
+		'You started to fix yourself. Igor reached out and fell on the bed. - It was great <<$nickname>>! ' + iif(igorkuni < 1, 'Hmm, and I somehow was not very thought you have to think of something','"Yeah, well thought you"')
+		act 'Finish': gt 'IgorHome', 'Igorkom'
 	end
-elseif IgorLove <= 0:
-	IgorLoverQW = -1
-	'Along the way, Igor began to chant "<<$name>>, I love you so much, but you do not know me, you know, I began to wonder if perhaps we should leave."'
+end
 
-	act 'Leave':gt 'pavResidential'
+if $ARGS[0] = 'din_dimanosov':
+	*clr & cla
+	gs 'stat'
+	'You went for a walk, after a while you bought a beer, found a place where you can have. Dima poured beer in cups. Have you had a drink, chatted about little things, Dima entertained you, but more attention he paid "Diana", interrogating "it" different things from her life, and he came up in the course of different stuff and answered him. When beer is finished, you are going to leave.'
+	act 'Finish':
+		*clr & cla
+		'- Well, it was nice, but we have to go, so bye. - you told him.'
+		'- Yet <<$nickname>>. - replied to your goodbye Dima.'
+		'- Yet, Dima. - told him Igor. As suddenly you saw:'
+		act 'Watch':
+			*clr & cla
+			DimaLoveIgor = 1
+			!set to 1 = inital, replace += 1
+			'<center><img src="images/qwest/alter/kruglov/dimanos/kiss.gif"></center>'
+			'Dima pinned to the wall by Igor, and began to kiss his neck. He began to ask him:'
+			'- Wait, what are you doing, don`t!'
+			'He kissed him on the lips, then you broke down and laughed.'
+			act 'Further':
+				*clr & cla
+				'<center><img src="images/qwest/alter/kruglov/dimanos/kiss2.gif"></center>'
+				'Igor immediately it was tolknul.'
+				act 'Further':
+					*clr & cla
+					'Igor grabbed your hand and you ran quickly, and all this time you never stopped laughing.'
+					act 'In the house to Igor':
+						*clr & cla
+						igor_nomore = 1
+						'<center><b><font color = maroon>Entrance hall</font></b></center>'
+						'<center><img src="images/qwest/alter/kruglov/kor.jpg"></center>'
+						'You went back to Igor`s home. You laughed and asked: - Well as a walk?'
+						'- Awful, it would be fucked up! It... it... HE KISSED ME!!! Blevio... CHH.. - he turned green and nearly puked.'
+						'- And in my opinion it was fun. - with a sneer, said you.'
+						'- Shut up. - he was enraged.'
+						'- Come on, Diane, " teased you Igor - you have no idea what I lost.'
+						'- Fuck you in the ass! - he was offended.'
+						'- Yes, Yes, in the ass, you quickly stopped by Igor behind her and clutching his ass, began to simulate intercourse.'
+						'- Oh, Yes, Diana, my big cock so closely in your tight ass Oh! This is my ass and I`ll fuck her!'
+						'- You`re sick! - Igor threw your hands and looked at you very good.'
+						'But in response, you made a cute face and smile: - Don`t be such a Downer, I`m kidding!'
+						'And added to himself: - And here is nichrome, Diana, and no kidding - I`ll give your ass Dima or she better fuck! The very first around, and then give. Or... That would be my dick... Okay then decide, but Dimon to talk about "girlfriend" not hurt.'
+						act 'Finish': gt 'IgorHome', 'Igorkom'	
+					end
+				end
+			end
+		end
+	end
+end
+
+if $ARGS[0] = 'din_progulka_dima':
+	*clr & cla
+	gs 'stat'
+	'<center><img src="images/qwest/alter/kruglov/crossdress/progulka_1.jpg"></center>'
+	'You went for a walk in the Park. You talked to him about different trifles. How heard you of alikali: - <<$nickname>>, Diana, wait.'
+	act'Turn':
+		*clr & cla
+		'<center><B><font color=maroon>Dima Nosov</font></B></center>'
+		'<center><img src="images/qwest/alter/npc/1.jpg"></center>'
+		'You turned around and saw Dima Nosov.'
+		'- <<$nickname>>, you set me up! - whisper said angrily you, Igor.'
+		'- Come on, don`t worry, everything will be fine. - quietly reassured you.'
+		'- Hey, girls, walking? Do you mind if I join? - Dima asked.'
+		'- Hi, Dim, of course you don`t mind. - answered you.'
+		'- Well, you do not say Hello again? - Dima asked.'
+		'- Hi. - it was poprivetstvoval timidly Igor.'
+		act'Further':
+			*clr & cla
+			'- Maybe a beer will buy? - suggested Dima.'
+			'- Of course, let`s buy. - you said thoughtfully, " maybe the alcohol will liberate Igor.'
+			'You bought a beer and found a place where you can have. Dima poured beer in cups. Have you had a drink, chatted about little things, Dima entertained you.'
+			'When the beer is over, Igor hastened to say:'
+			'- All right, we gotta go <<$nickname>>! - and was going to leave.'
+			act'Well':
+				*clr & cla
+				'<center><img src="images/qwest/alter/kruglov/dimanos/obnimaet.jpg"></center>'
+				'- Well.- you said. And suddenly I saw like Dimka grabbed from behind and pulled me close "Diana". "Diana" at once indignant:'
+				'- WHAT ARE YOU DOING? Let go!'
+				'- I won`t let you go. - said Dima.'
+				'- Please, Dima, well, let me go. - asked plaintively Igor.'
+				'- You know, at school all the girls for me wither! - boasted Dima.'
+				'- I still! Just let go! - continued attempts to escape Igor.'
+				'Well, you were smiling watching this whole situation.'
+				'- Will let go if something I promise. - suggested Dima.'
+				'- That promise? - asked Kruglov-"Diana".'
+				'- That we`ll meet again on the weekend.'
+				'- Well... - Began to crush Igor. - Mmm.. Okay, okay, I promise, now let go.'
+				'- And one more thing.'
+				'- What else?'
+				'- Kiss goodbye!'
+				'- No! - cut Kruglov.'
+				'- Well, at least on the cheek. - said Dima. - Okay so, so be it!'
+				act 'Watch':
+					*clr & cla
+					'Dima let him go. Igor, slightly having rumpled and blushing deeply like the natural girl, after all, kissed-pecked noses in cheek. You, too, bade him farewell, and went along with Igor.'
+					act'Go':
+						*clr & cla
+						'<center><b><font color = maroon>Entrance hall</font></b></center>'
+						'<center><img src="images/qwest/alter/npc/4.jpg"></center>'
+						'You went back to Igor`s home. He immediately took off his wig: the head underneath is completely wet. Then he dropped everything else. You, smiling, looked at him: - You and he were.!'
+						'- Shut up - you set me up! - face Kruglov were filled with bad blood.'
+						'- Come on - don`t be so dramatic. So? You`re going to meet him this weekend?'
+						'- Of course NOT!'
+						'- As "no"?'
+						'- But so! - barked Igor.'
+						act 'Persuade':
+							*clr & cla
+							minut += 23
+							igor_DimaNos = 1
+							gs 'stat'
+							gs 'igorEv', 'kruglov_desc'
+							'- Igor, are you! You`ll have to go! - began to mollify you.'
+							'- Why is that? - he asked in surprise.'
+							'- Well, so he didn`t torture me with questions: "where`s your charming girlfriend? Why not come? And you`re with someone there are generally?". You so I will put up with a very bad hand! Well, going once: tell him to go to the City with parents and more you will not meet - that`s all! It is because you focus not learned! Not know!'
+							'- I said "no"! Will not go!'
+							'You half an hour tried to persuade Igor, and yet it seems he agreed with your arrangements, though with very great reluctance.'
+							'- Well, meet with him, one more time just! And say that between you nothing can be!'
+							'- Well... will meet him and say it.'
+							'- Well, that`s fine. - you sighed with relief and went home.'
+							act 'Finish': gt'pavResidential'
+						end
+					end
+				end
+			end
+		end
+	end
 end
 
 --- IgorEv ---------------------------------
