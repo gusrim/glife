@@ -8,23 +8,31 @@
 !! ARGS 2 is the price
 !! ARGS 3 is the variable name for the item
 !! ARGS 4 is the location to go back to
-!! ARGS 5 > 0 to  force-disable buy link
-$location = $ARGS[4]
+!! ARGS 5 is $metka
+!! ARGS 6 > 0 to  force-disable buy link
+!! ARGS 7 is replacement text for 6
+!$location = $ARGS[4]
 
 !! This will check to see if the item is already owned
-dynamic "$RESULT = iif(<<$ARGS[3]>> >= <<ARGS[0]>>, '', 'not owned')"
-if $RESULT = '':
-	exit
-end
+dynamic 'in_inventory = <<$ARGS[3]>>'
+$in_inventory = iif(in_inventory > 0, '<<in_inventory>>', 'none')
+!dynamic "$in_inventory = iif(<<$ARGS[3]>> > 0, <<$ARGS[3]>>, 'none')"
 
 $RESULT = '<tr>' + _
 '<td align="center"><<FUNC(''$stock_item_info'', $ARGS[3])>></td>' + _
-'<td align="center"><<$ARGS[1]>></td>' + _
-'<td></td>' + _
-'<td align="right">'
-if money >= ARGS[2] and ARGS[5] < 1:
-	$RESULT += '<a href="exec: gs ''$buy_single_item'', <<ARGS[0]>>, ''<<$ARGS[1]>>'', <<ARGS[2]>>, ''<<$ARGS[3]>>'', ''<<$ARGS[4]>>''">buy</a>'
+'<td align="center"><<$ARGS[1]>></td>'
+
+if ARGS[6] > 0:
+	$RESULT += '<td colspan=2 align=center>'+$ARGS[7]+'</td>'
+else
+	$RESULT += 	'<td align="left">(you have <<$in_inventory>>)</td>'
+	if money >= ARGS[2] and in_inventory = 0:
+		$RESULT += '<td align="left"><a href="exec: gs ''$buy_single_item'', <<ARGS[0]>>, ''<<$ARGS[1]>>'', <<ARGS[2]>>, ''<<$ARGS[3]>>'', ''<<$ARGS[4]>>''">buy</a>'
+	else
+		$RESULT += 	'<td></td>'
+	end
 end
+
 $RESULT += '</td><td align="left">for <<ARGS[2]>> <b>₽</b></td></tr>'
 
 --- $single_stock_item ---------------------------------
