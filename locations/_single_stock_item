@@ -14,21 +14,25 @@
 !$location = $ARGS[4]
 
 !! This will check to see if the item is already owned
-dynamic "$RESULT = iif(<<$ARGS[3]>> >= <<ARGS[0]>>, '', 'not owned')"
-if $RESULT = '':
-	exit
-end
+dynamic 'in_inventory = <<$ARGS[3]>>'
+$in_inventory = iif(in_inventory > 0, '<<in_inventory>>', 'none')
+!dynamic "$in_inventory = iif(<<$ARGS[3]>> > 0, <<$ARGS[3]>>, 'none')"
 
 $RESULT = '<tr>' + _
 '<td align="center"><<FUNC(''$stock_item_info'', $ARGS[3])>></td>' + _
 '<td align="center"><<$ARGS[1]>></td>'
+
 if ARGS[6] > 0:
 	$RESULT += '<td colspan=2 align=center>'+$ARGS[7]+'</td>'
-elseif money >= ARGS[2]:
-	$RESULT += '<td>not owned</td><td align="left"><a href="exec: gs ''$buy_single_item'', <<ARGS[0]>>, ''<<$ARGS[1]>>'', <<ARGS[2]>>, ''<<$ARGS[3]>>'', ''<<$ARGS[4]>>''">buy</a>'
 else
-	$RESULT += 	'<td>not owned</td><td></td>'
+	$RESULT += 	'<td align="left">(you have <<$in_inventory>>)</td>'
+	if money >= ARGS[2] and in_inventory = 0:
+		$RESULT += '<td align="left"><a href="exec: gs ''$buy_single_item'', <<ARGS[0]>>, ''<<$ARGS[1]>>'', <<ARGS[2]>>, ''<<$ARGS[3]>>'', ''<<$ARGS[4]>>''">buy</a>'
+	else
+		$RESULT += 	'<td></td>'
+	end
 end
+
 $RESULT += '</td><td align="left">for <<ARGS[2]>> <b>₽</b></td></tr>'
 
 --- $single_stock_item ---------------------------------
