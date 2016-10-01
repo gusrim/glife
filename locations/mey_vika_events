@@ -226,7 +226,8 @@ end
 
 if $args[0] = 'near_school':
 	!*clr & cla
-	if week < 6 and hour = 16 and minut >= 0 and minut <= 15 and kanikuli = 0:
+	!if week < 6 and hour = 16 and minut >= 0 and minut <= 15 and kanikuli = 0:
+		!check condition before gs
 		if week mod 2 = 0:
 			func('mey_vika_strings', 'near_school0')
 
@@ -252,7 +253,9 @@ if $args[0] = 'near_school':
 					act 'To trace': minut += rand(5,15) & gt 'gskver'
 				end
 			else
-				if mey_vika['mey_vika_qw'] >= 20 and mey_vika['mey_vika_qw'] < 27 and mey_vika['qw_day'] ! day:
+				if mey_vika['mey_vika_qw'] >= 18 and mey_vika['mey_vika_qw'] < 20 and mey_vika['qw_day'] ! day:			
+					gs 'mey_vika_events', 'park_qw'
+				elseif mey_vika['mey_vika_qw'] >= 20 and mey_vika['mey_vika_qw'] < 27 and mey_vika['qw_day'] ! day:
 					! goto Meynolds home
 					cla
 					func('mey_vika_strings', 'near_school7')
@@ -280,11 +283,12 @@ if $args[0] = 'near_school':
 			func('mey_vika_strings', 'near_school6')
 
 		end
-	end
+	!end
 end
 
 if $args[0] = 'park_meet':
 	minut += rand(10,20)
+	gs 'stat'
 	! bad weather, nothing to walk, sent a couple of new cafe 
 	if sunWeather = 0 or temper < 5:
 		!mey_vika['qw_day'] = day
@@ -294,8 +298,13 @@ if $args[0] = 'park_meet':
 	end
 
 	! send the fool on a workout
-	if week mod 2 = 1 or hour < 16 or hour >= 20 or mey_vika['qw_day'] = day:
-		func('mey_vika_strings', 'park_meet_another_time'+iif(mey_vika['mey_vika_qw'] < 3,0,1))
+	!rewrite the checking
+	if mey_vika['qw_day'] = day or hour >= 20 or (week > 5 and hour < 8) or (week <= 5 and week mod 2 = 0 and hour < 16):
+		!time range: 6,0 from 8, 2,4 from 16, and disable after 20
+		func('mey_vika_strings', 'park_meet_another_time0')
+	elseif week mod 2 = 1 and hour < 18:
+		!Ivan is training on 1,3,5 so start at 18
+		func('mey_vika_strings', 'park_meet_another_time1')
 	else
 		*clr
 		mey_vika['qw_day'] = day
@@ -369,10 +378,12 @@ if $args[0] = 'park_meet':
 					end
 				end
 				! if the relationship is not great - freeze quest
-				if grupNPC[15] < 80: mey_vika['mey_vika_qw'] -= 1
+				!if grupNPC[15] < 80: mey_vika['mey_vika_qw'] -= 1
+				if grupNPC[15] < 80: exit
 				! ---- 
-				if grupNPC[15] >= 80 and mey_vika['mey_vika_qw'] >= 18 and mey_vika['mey_vika_qw'] < 20:
-					if sunWeather = 1 and temper >= 20 and month >= 5 and month <= 9:
+				if mey_vika['mey_vika_qw'] >= 18 and mey_vika['mey_vika_qw'] < 19:
+					if sunWeather = 1 and temper >= 5 and month >= 5 and month <= 10:
+						!also in [glake]
 						cla
 						func('mey_vika_strings', 'case_beach0')
 
@@ -450,7 +461,7 @@ if $args[0] = 'cafe_repeat_qw':
 
 	'<br>' + func('mey_vika_strings', 'cafe_qw'+iif(mey_vika['mey_vika_qw'] > 15,5,6))
 
-	if mey_vika['mey_vika_qw'] >= 18 and mey_vika['mey_vika_qw'] < 20: mey_vika['mey_vika_qw'] += 1
+	if mey_vika['mey_vika_qw'] >= 18 and mey_vika['mey_vika_qw'] < 19: mey_vika['mey_vika_qw'] += 1
 	act 'Say goodbye and leave': gt 'cafe_parco', 'inner'
 end
 
@@ -484,7 +495,7 @@ if $args[0] = 'park_qw':
 				minut += 5
 				horny += 20
 				manna += 5
-				if mey_vika['mey_vika_qw'] < 30: mey_vika['mey_vika_qw'] += 1
+				if mey_vika['mey_vika_qw'] < 19: mey_vika['mey_vika_qw'] += 1
 				gs 'stat'
 				gt 'pavResidential'
 			end
@@ -506,10 +517,7 @@ if $args[0] = 'beach_event0':
 		func('mey_vika_strings', 'case_beach2')
 
 		if hour < 20:
-			! change clothes to swimsuit
-			gs 'zz_clothing', 'redress', 2
-			flag_tanga = tanga
-			tanga = 0
+			! change clothes to swimsuit / skip for ease
 			act 'Swim':
 				*clr & cla
 				minut += 10
@@ -616,8 +624,8 @@ if $args[0] = 'beach_ender':
 end
 
 if $args[0] = 'beach_event1':
-	if temper >= 20 and sunWeather = 1 and month >= 5 and month <= 9 and hour < 20 and mey_vika['mey_vika_qw'] >= 18 and mey_vika['mey_vika_qw'] < 20 and mey_vika['qw_day'] ! day:
-		if (hour >= 10 and week >= 6) or (hour >= 16 and week < 6):
+	!if temper >= 20 and sunWeather = 1 and month >= 5 and month <= 9 and hour < 20 and mey_vika['mey_vika_qw'] >= 18 and mey_vika['mey_vika_qw'] < 20 and mey_vika['qw_day'] ! day:
+		!if (hour >= 10 and week >= 6) or (hour >= 16 and week < 6):
 			*clr & cla
 			mey_vika['qw_day'] = day
 			'<center><img src="images/qwest/alter/meynolds/vika_beach1.jpg"></center>'
@@ -642,13 +650,13 @@ if $args[0] = 'beach_event1':
 					end
 				end
 			end
-		end
-	end
+		!end
+	!end
 end
-
+!move check condition before gs
 ! case with a gift
 if $args[0] = 'case_gift':
-	if mey_vika['mey_vika_qw'] = 30 and mey_vika['qw_day'] ! day and hour = 23:
+	!if mey_vika['mey_vika_qw'] = 30 and mey_vika['qw_day'] ! day and hour = 23:
 		zz_stage = args[1]
 		if zz_stage < 2:
 			*clr & cla
@@ -680,7 +688,7 @@ if $args[0] = 'case_gift':
 				act 'Quickly go to your room': mey_vika['mey_vika_qw'] = 31 & gs 'mey_vika_events', 'case_gift_ender'
 			end
 		end
-	end
+	!end
 end
 
 if $args[0] = 'case_gift_ender':
@@ -690,7 +698,7 @@ if $args[0] = 'case_gift_ender':
 end
 
 if $args[0] = 'learning0':
-	if mey_vika['mey_vika_qw'] >= 32 and mey_vika['mey_vika_qw'] < 35 and mey_vika['qw_day'] ! day and hour >= 23:
+	!if mey_vika['mey_vika_qw'] >= 32 and mey_vika['mey_vika_qw'] < 35 and mey_vika['qw_day'] ! day and hour >= 23:
 		*clr & cla
 		minut += 5
 		mey_vika['qw_day'] = day
@@ -751,11 +759,11 @@ if $args[0] = 'learning0':
 				end
 			end
 		end
-	end
+	!end
 end
 
 if $args[0] = 'gym0':
-	if week mod 2 ! 0 and mey_vika['mey_vika_qw'] >= 32 and mey_vika['gym_day'] ! day and hour = 16 and minut >= 30:
+	!if week mod 2 ! 0 and mey_vika['mey_vika_qw'] >= 32 and mey_vika['gym_day'] ! day and hour = 16 and minut >= 30:
 		zz_stage = args[1]
 		if zz_stage < 1:
 			*clr & cla
@@ -789,14 +797,14 @@ if $args[0] = 'gym0':
 					mey_vika['gym_day'] = day
 					killvar 'zz_stage'
 					if mesec = 0 and vagina > 0 and mey_vika['bath_qw'] = 1 and mey_vika['bath_qw_day'] ! day:
-						!act 'To go with Vika in the shower':
-						!	gt 'mey_vika_events', 'bath_common',1
-						!end
+						act 'To go with Vika in the shower':
+							gt 'mey_vika_events', 'bath_common',1
+						end
 					end
 					act 'Go in the shower itself':
 						minut += 15
 						dynamic $showerdin
-						'<center><img src="images/qwest/alter/meynolds/after_bath.jpg"></center>'
+						'<center><img src="images/qwest/alter/meynolds/after_bath0.jpg"></center>'
 						func('mey_vika_strings', 'after_bath')
 
 						act 'Out': gs 'mey_home', 0
@@ -807,11 +815,11 @@ if $args[0] = 'gym0':
 				end
 			end
 		end
-	end
+	!end
 end
 
 if $args[0] = 'gym1':
-	if week mod 2 ! 0 and mey_vika['mey_vika_qw'] >= 32 and mey_vika['gym_day'] ! day and hour = 17 and minut >= 30:
+	!if week mod 2 ! 0 and mey_vika['mey_vika_qw'] >= 32 and mey_vika['gym_day'] ! day and hour = 17 and minut >= 30:
 		zz_stage = args[1]
 		if zz_stage < 1:
 			*clr & cla
@@ -837,7 +845,7 @@ if $args[0] = 'gym1':
 				end
 			end
 		end
-	end
+	!end
 end
 
 if $args[0] = 'bath_qw0':
@@ -851,14 +859,12 @@ if $args[0] = 'bath_qw0':
 			mey_vika['bath_qw_day'] = day
 			gt 'mey_vika_events', 'bath_common',1
 		end
-	else
-		act 'Unsubscribe':
-			*clr & cla
-			'<center><img src="images/qwest/alter/meynolds/vaccleaner.jpg"></center>'
-			func('mey_vika_strings', 'bath_qw12')
-
-			act '...': gt 'mey_home', 0
-		end
+	end
+	act 'Unsubscribe':
+		*clr & cla
+		'<center><img src="images/qwest/alter/meynolds/vaccleaner.jpg"></center>'
+		func('mey_vika_strings', 'bath_qw12')
+		act '...': gt 'mey_home', 0
 	end
 end
 
