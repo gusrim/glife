@@ -20,8 +20,8 @@ if $ARGS[0] = 'start' or $ARGS[0] = '':
 
 	!125s
 	!events trigger before everything
-	if meadow = 3 and MiraLoc = 0 and miraperversion = 2 and temper >= 15 and sunWeather = 1:gt 'Meadow','mira_mitka'
-	if meadow = 3 and Mira_no = 0 and MiraLoc = 0 and miraperversion = 33 and temper >= 15 and sunWeather = 1:gt 'Meadow','mira_gang'
+	if (meadow = 3 or meadow = 6) and MiraLoc = 0 and miraperversion = 2 and temper >= 15 and sunWeather = 1:gt 'Meadow','mira_mitka'
+	if (meadow = 3 or meadow = 6) and Mira_no = 0 and MiraLoc = 0 and miraperversion = 33 and temper >= 15 and sunWeather = 1:gt 'Meadow','mira_gang'
 	if mitkasextimes > 13 and mirasex = 0 and miraperversion < 11:gt 'Meadow','mira_lesb_talk1'
 	if mitkasextimes > 13 and mirasex = 1 and miraperversion < 11 and rand(1,5) = 1 and miraday ! day:gt 'Meadow','mira_lesb_talk3'
 	if mitkasextimes > 13 and mirasex = 1 and miraperversion > 11:gt 'Meadow','mira_lesb_talk2'
@@ -29,10 +29,10 @@ if $ARGS[0] = 'start' or $ARGS[0] = '':
 	!125e
 
 	if MiraLoc = 2:
-		' <a href="exec: gt ''Meadow'', ''Mira''">Mira</a> is in the meadow and is spinning with a delightful smile and laugh.'
+		' <a href="exec: gt ''Meadow'', ''Mira''">Mira</a> is in the meadow and is spinning with a delightful smile and laughing.'
 	elseif Mira_no = 0:
 		temp = 20
-		if meadow = 3 or meadow = 6 and sunWeather = 1:temp = RAND(0,20)
+		if (meadow = 3 or meadow = 6) and sunWeather = 1:temp = RAND(0,20)
 		if mirasextimes < 15 and temper >= 15 and temp = 0:
 			'In the clearing you notice <a href="exec: gt ''Meadow'', ''0''">Mira</a>.'
 		elseif miraperversion >= 2 and temper >= 20 and temp = 1:
@@ -64,7 +64,7 @@ if $ARGS[0] = 'start' or $ARGS[0] = '':
 			'You feel like doing some exercises, if you were wearing the right clothes.'
 		else
 			if bookYog > 0 and bookYogday ! daystart:
-				'You could spend 15 minutes practicing yoga stances and <a href="exec: gt ''events'', ''yoga''">meditating</a>.'
+				'You spend 15 minutes practicing yoga stances and <a href="exec: gt ''events'', ''yoga''">meditating</a>.'
 			end
 
 			if pressday ! daystart:
@@ -83,7 +83,7 @@ end
 	!meadow = 1 'You have found the meadow'
 	!meadow = 2 'Your first visit with Mira'	
 	!meadow = 3 'You allowed Mira to come here without you'	
-	!meadow = 4 'You have denied Mira from coming here without you. Kills alot of events.'	
+	!meadow = 4 'You have denied Mira from coming here without you. Kills wish and father events.'	
 	!meadow = 5 'You are interested in Mira''s father'	
 	!meadow = 6 'You have seduced Mira''s father, now its her turn'
 	
@@ -93,25 +93,26 @@ if $ARGS[0] = 'Mira':
 	gs 'stat'
 	if meadow = 2:
 	dynamic $miraclothes
-		'"Wow!  This place is awesome.  My family and I have only been in the village a few months and I have never heard anyone ever speaking about this place." Miroslava tells you.  "Now I know where I will go, when I want to be alone, you don''t mind, do you?"'
-		act 'To allow her to come here the most':
+		'"Wow!  This place is awesome.  My family and I have only been in the village a few months, but I have never heard anyone ever speaking about this place." Mira tells you.  "Now I know where I can come to, when I want to be alone.  You don''t mind, do you?"'
+		act 'You allow her to come here on her own':
 			cls
 			meadow = 3
 			minut += 2
 			gs 'stat'
 			dynamic $miraclothes
 			'"I think you are a responsible person, Mira, you can come to the meadow whenever it pleases you.  BUT, I want this place to remain a secret so you can never tell anyone about this place."'
-			'Miroslava, readily agrees and is as happy as a lark.  Mira energetically nodding her head and says, "I''ll take this secret to the grave, I swear.  If I don''t, then I''ll grant you three wishes, that I promise I will perform no matter what..."'
+			'Mira, readily agrees and is as happy as a lark.  Mira energetically nodding her head and says, "I''ll take this secret to the grave, I swear.  If I don''t, then I''ll grant you three wishes, that I promise I will perform no matter what..."'
 			act 'Finish': gt 'meadow', 'start'
 		end
-		act 'Do not allow':
+		act 'Sorry, I want to keep this meadow private':
 			cls
 			meadow = 4
 			minut += 2
 			gs 'stat'
 			dynamic $miraclothes
-			'You tell her that this is your haven, you would prefer if she wants to come to the meadow that she can only do so with you.  Miroslava looks crestfallen, tears start to well up in her eyes, though she tries not to let you know.  She tell you, sure she will abide by your wishes.'
-			'Mira then asks you if you could help chear up her father?  He has been depressed ever sinse her mother''s death nearly two years before'
+			'You tell her that this is your haven, you would prefer if she wants to come to the meadow that she can only do so with you.  Mira looks crestfallen, tears start to well up in her eyes, though she tries not to let you know.  She tell you, sure she will abide by your wishes.'
+			'You and Mira speak for awhile.  Her mood is a little down, but as you chat a smile slowly creeps onto her face.'
+			'Mira then asks you if you could help cheer up her father?  He has been depressed ever sinse her mother''s death nearly two years before'
 			act 'Maybe':
 				cls
 				meadow = 5
@@ -125,7 +126,8 @@ if $ARGS[0] = 'Mira':
 					'<center><img src="images/qwest/gadukino/mira3.jpg"></center>'
 				end
 				'You agree, intrigued.  You ask Mira what see has in mind?  After a few seconds, she tells you she saw her father masturbateing that morning.  She doesn''t think her father has been with a woman since her mother passed away.  Mira is sorry for her father''s lose, hers too for that matter, but she has an overwhelming desire to help him.  She can''t just do nothing.'
-				'You know Mira loves her father very much, you don''t know what you can do to help.  You don''t want or need this drama in your life.  First, you find out about migic being real.  School is rapid approaching.  You tell her that there is nothing you can do to help with her father''s depression.  Mira''s pouts and stands with her arms crossed. Her whole demeaner is one of injured innocence.  A few minutes later, to your surprise, you feel an unexpectedly nice itch and a wicked heat rises up in your crotch of thoughts of his sucking Mira''s father.'
+				'You know Mira loves her father very much, you don''t know what you can do to help.  You don''t want or need this drama in your life.  First, you find out about migic being real.  School is rapid approaching.  You tell her that there is nothing you can do to help with her father''s depression.  Mira''s pouts and stands with her arms crossed. Her whole demeaner is one of injured innocence.'  
+				'A few minutes later, to your surprise, you feel an unexpectedly nice itch and a wicked heat rises up in your crotch of thoughts of his sucking Mira''s father.'
 				act 'Maybe a little followup want hurt': gt 'meadow', 'start'
 			end
 			act 'Not interested': gt 'meadow', 'start'
@@ -188,7 +190,7 @@ if $ARGS[0] = '0':
 			horny += 5
 			gs 'stat'
 			'<center><img src="images/qwest/gadukino/mirameadowmastr1.jpg"></center>'
-			'Miroslava, pulls harshly on her panties so that they bite deeply between her labia.  Mira looks around again, but you are concealed in the dense thicket thus she fails to spot you watching...'
+			'Mira, pulls harshly on her panties so that they bite deeply between her labia.  Mira looks around again, but you are concealed in the dense thicket thus she fails to spot you watching...'
 			act 'Watch':
 				cls
 				minut += 2
@@ -325,7 +327,7 @@ if $ARGS[0] = '1':
 		horny += 25
 		gs 'stat'
 		'<center><img src="images/qwest/gadukino/mirameadowsex1.jpg"></center>'
-		'After a couple of minutes Miroslava lies before Mitka on the bedspread and dangles invitingly in front of him legs. The, not forcing myself to wait, immediately takes its way between her legs and starts roughly and strongly to bitch-slap her with your dick, why she starts loudly and oohing and podveshivat.'
+		'After a couple of minutes Mira lies before Mitka on the bedspread and dangles invitingly in front of him legs. The, not forcing myself to wait, immediately takes its way between her legs and starts roughly and strongly to bitch-slap her with your dick, why she starts loudly and oohing and podveshivat.'
 		act 'Watch':
 			cls
 			minut += 5
@@ -333,7 +335,7 @@ if $ARGS[0] = '1':
 			if miraperversion = 2:miraperversion = 3
 			gs 'stat'
 			'<center><img src="images/qwest/gadukino/mirameadowsex2.jpg"></center>'
-			'Fifteen minutes Mitka finally cums Miroslava on his stomach and a little more rested, they begin to gather...'
+			'Fifteen minutes Mitka finally cums Mira on his stomach and a little more rested, they begin to gather...'
 			act 'Leave':minut += 30 & gt 'gadukino'
 		end
 	end
@@ -377,7 +379,7 @@ if $ARGS[0] = '3':
 			horny += RAND(15,30)
 			gs 'stat'
 			'<center><img src="images/qwest/gadukino/mirameadowbj1.jpg"></center>'
-			'But, apparently, you''re a little late, because after a couple minutes calamba puts a hand Miroslava on the back of the head and with one sharp jerk skewer on yourself. At first she gags and coughs of oneoriginal, but then still cope with the waves of nausea and hanging out a little of the language, obediently swallows his cum...'
+			'But, apparently, you''re a little late, because after a couple minutes calamba puts a hand Mira on the back of the head and with one sharp jerk skewer on yourself. At first she gags and coughs of oneoriginal, but then still cope with the waves of nausea and hanging out a little of the language, obediently swallows his cum...'
 			act 'Leave':minut += 30 & gt 'gadukino'
 		end
 	else
@@ -385,7 +387,7 @@ if $ARGS[0] = '3':
 		horny += 30
 		gs 'stat'
 		'<center><img src="images/qwest/gadukino/mirameadowbj2.jpg"></center>'
-		'She''s in some flip-flops is cancer, sticking out in your face your ass, and moaning loudly, when kolamba slaps her crotch with my cock, pushing in her cunt his cock. Miroslava scratching his hands on the ground and arched like a cat, with that-then in between Kagami speaking Calamba. But the, it seems. isn''t paying absolutely no attention, continuing to batter in her pussy, and soon shall bring the girl to orgasm, a minute later and he cums...'
+		'She''s in some flip-flops is cancer, sticking out in your face your ass, and moaning loudly, when kolamba slaps her crotch with my cock, pushing in her cunt his cock. Mira scratching his hands on the ground and arched like a cat, with that-then in between Kagami speaking Calamba. But the, it seems. isn''t paying absolutely no attention, continuing to batter in her pussy, and soon shall bring the girl to orgasm, a minute later and he cums...'
 		act 'Leave':minut += 30 & gt 'gadukino'
 	end
 end
@@ -400,14 +402,14 @@ if $ARGS[0] = '4':
 		horny += 50
 		gs 'stat'
 		'<center><img src="images/qwest/gadukino/mirameadowbj5.jpg"></center>'
-		'Vasya enthusiastically drives the cock in her mouth tied to a tree Miroslava. She gags and coughs, but at the same time, she moves her head towards the member. After a couple of minutes Vasya tilts back his head and with a blissful roar cums in her mouth...'
+		'Vasya enthusiastically drives the cock in her mouth tied to a tree Mira. She gags and coughs, but at the same time, she moves her head towards the member. After a couple of minutes Vasya tilts back his head and with a blissful roar cums in her mouth...'
 		act 'Leave':minut += 30 & gt 'gadukino'
 	elseif temper >= 15 and temper < 20:
 		minut += 5
 		horny += 40
 		gs 'stat'
 		'<center><img src="images/qwest/gadukino/mirameadowbj3.jpg"></center>'
-		'They are both completely naked and Mira, far sticking out his ass, feeling fucked kafousia the Vasya. After a couple of minute you see, as Miroslava onto the head on his cock and fades, swallowing sperm...'
+		'They are both completely naked and Mira, far sticking out his ass, feeling fucked kafousia the Vasya. After a couple of minute you see, as Mira onto the head on his cock and fades, swallowing sperm...'
 		act 'Leave':minut += 30 & gt 'gadukino'
 	elseif temper >= 20 and  temper < 25:
 		minut += 5
@@ -421,7 +423,7 @@ if $ARGS[0] = '4':
 		horny += 40
 		gs 'stat'
 		'<center><img src="images/qwest/gadukino/mirameadowbj6.jpg"></center>'
-		'Fully naked Miroslava, bent, facing Vasya and strenuously substitutes his ass, in which he drives his cock. Judging by her lustful moans, she quite like it, what have her in the ass, but after a couple of minutes Vasya takes from it his penis and pulls on her buttocks...'
+		'Fully naked Mira, bent, facing Vasya and strenuously substitutes his ass, in which he drives his cock. Judging by her lustful moans, she quite like it, what have her in the ass, but after a couple of minutes Vasya takes from it his penis and pulls on her buttocks...'
 		act 'Leave':minut += 30 & gt 'gadukino'
 	end
 end
@@ -429,7 +431,7 @@ end
 ! WD: No exit and does nothing
 !{
 if $ARGS[0] = '5':
-	if meadow = 3 or meadow = 6 and MiraLoc = 0 and miraperversion >= 11 and temper >= 30 and sunWeather = 1 and temp = 5:
+	if (meadow = 3 or meadow = 6) and MiraLoc = 0 and miraperversion >= 11 and temper >= 30 and sunWeather = 1 and temp = 5:
 		cls
 		minut += 5
 		horny += 20
@@ -464,7 +466,7 @@ if $ARGS[0] = '7':
 		'Mira sits on his haunches in front of one of the boys and just take in my mouth his cum. Licking and hiding in his pants his cock, it is the same with another prodelyvat...'
 	elseif temper >= 20 and temper < 30:
 		'<center><img src="images/qwest/gadukino/mirameadowbj10.jpg"></center>'
-		'Boys, the two of us fucking Mira in the mouth and pussy, about what-then with a laugh talking to each other. Miroslava also echoed them, their moans and placename... Fifteen minutes later they finish and begin to gather...'
+		'Boys, the two of us fucking Mira in the mouth and pussy, about what-then with a laugh talking to each other. Mira also echoed them, their moans and placename... Fifteen minutes later they finish and begin to gather...'
 	else
 		'<center><img src="images/qwest/gadukino/mirameadowbj9.jpg"></center>'
 		'All three of them almost naked and one of them, Mira just sucks, and the second, all appearances, already finished, but because just touching her Breasts and there it goes hand between her lustful rasstavlennyh feet...'
@@ -479,7 +481,7 @@ if $ARGS[0] = '8':
 	miraperversion += 1
 	gs 'stat'
 	'<center><img src="images/qwest/gadukino/mirameadowbj12.jpg"></center>'
-	'Miras for their bodies almost invisible, only a piece of naked ass yeah swaying feet in sneakers. You half an hour watching, as the men take turns fucking weak and tired Miroslava, but then you get bored and you decide to leave...'
+	'Miras for their bodies almost invisible, only a piece of naked ass yeah swaying feet in sneakers. You half an hour watching, as the men take turns fucking weak and tired Mira, but then you get bored and you decide to leave...'
 	act 'Leave':minut += 30 & gt 'gadukino'
 end
 
@@ -771,11 +773,11 @@ if $ARGS[0] = 'mirameadow':
 	minut += 2
 	gs 'stat'
 	!gs'time'
-	if meadow = 3 and MiraLoc = 0 and mirasextimes < 15 and temper >= 15 and temper < 25 and sunWeather = 1 and temp = 0:
+	if (meadow = 3 or meadow = 6) and MiraLoc = 0 and mirasextimes < 15 and temper >= 15 and temper < 25 and sunWeather = 1 and temp = 0:
 		cls
 		minut += 2
 		'<center><img src="images/qwest/gadukino/MiraMeadowMastr.jpg"></center>'
-		'You was about to approach her, but then surprised to notice, as she unzips his pants... You, in obedience to the eternal feminine curiosity, I decide to watch it...'
+		'You were about to approach her, but you are surprised to see her start to unzips her pants... You are excited by what you are seeing and decide to watch...'
 		act 'Watch':
 			cls
 			minut += 2
@@ -995,7 +997,7 @@ if $ARGS[0] = 'mirameadow':
 			mirasextimes += 1
 			gs 'stat'
 			'<center><img src="images/qwest/gadukino/MiraMeadowBJ5.jpg"></center>'
-			'Vasya enthusiastically drives the cock in her mouth tied to a tree Miroslava. She gags and coughs, but at the same time, she moves towards the head member. After a couple of minutes Vasya tilts back his head and roar with blissful cums in her mouth...'
+			'Vasya enthusiastically drives the cock in her mouth, Mira is tied to a tree. She gags and coughs, but at the same time, she moves towards the head member. After a couple of minutes Vasya tilts back his head and roar with blissful cums in her mouth...'
 			act 'Go':minut += 30 & gt'Gaddvor'
 		else
 			minut += 5
@@ -1003,7 +1005,7 @@ if $ARGS[0] = 'mirameadow':
 			mirasextimes += 1
 			gs 'stat'
 			'<center><img src="images/qwest/gadukino/MiraMeadowBJ6.jpg"></center>'
-			'Miroslav fully naked, bent over, standing in front of Vasya and intensively exposes his ass, which he drives his cock. Judging by her lustful moans, she quite likes having her from behind, but after a couple of minutes Vasya pulls out of her his cock and lowers her buttocks...'			
+			'Mira fully naked, bends over, standing in front of Vasya and intensively exposes her ass to him, Vasya drives his cock deep into your ass.  Judging by her lustful moans, she likes having her ass violated and after a couple of minutes Vasya pulls out of her ass and cums on her backside.'			
 			act 'Go':minut += 30 & gt'Gaddvor'
 		end
 	end
