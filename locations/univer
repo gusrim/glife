@@ -13,16 +13,16 @@ if $ARGS[0] = 'start':
 	'<center><b><font color="maroon">The University of</font></b></center>'
 	'<center><img src="images/etogame/univer.jpg"></center>'
 
-	if student = 0 and abiturient = 0:'Preparatory courses cost 15,000'
+	if student = 0 and abiturient = 0:'Preparatory courses fee 15,000'
 
 	'Examinations for admission to the University are held in August.'
-	'All lectures begin with a 8:00, late for a lecture is not allowed.'
+	'All lectures begin with a 8:00, being late for a lecture is not allowed.'
 	'First semester: September, October, November.'
 	'Second semester: February, March, April.'
 
-	if student > 0:'You learn how to <<semestr>> semester <<kurs>> course'
+	if student > 0:'You have completed <<kurs>> pieces of coursework for semestr no. <<semestr>>.'
 
-	if abiturient = 1:'You entrant.'
+	if abiturient = 1:'You enrolled.'
 
 	act 'Leave':
 		cla
@@ -30,7 +30,7 @@ if $ARGS[0] = 'start':
 		gt 'down'
 	end
 
-	if student = 0 and abiturient = 0 and money >= 15000 and month < 9 and diplom = 0 and (age >= 17 or fakepassport = 1):
+	if student = 0 and abiturient = 0 and money >= 15000 and month < 9 and diplom = 0 and age >= 17:
 		''
 
 		act 'Pay for training course (15,000 <b>₽</b>)':
@@ -38,7 +38,7 @@ if $ARGS[0] = 'start':
 			minut += 5
 			money -= 15000
 			abiturient = 1
-			'You paid 15,000 for preparatory courses. Classes start in 21chas, on weekdays'
+			'You paid 15,000 for preparatory courses. Classes start on 21:00, on weekdays'
 
 			act 'Move away':gt 'univer', 'start'
 		end
@@ -50,14 +50,14 @@ if $ARGS[0] = 'start':
 			abiturient += 1
 			intel += 1 + (mentats_dose - rand(0,mentats_dose))
 			'<center><img src="images/etogame/classroom.jpg"></center>'
-			'You were engaged in preparatory courses for an hour.'
+			'You attend the preparatory class for a hour, you stayed focused on learning what is needed so you can attend school.'
 
-			act 'Get out of class':gt 'univer', 'start'
+			act 'Leave class':gt 'univer', 'start'
 		end
 	end
 
-	if month = 8 and student = 0 and diplom = 0 and (age >= 17 or fakepassport = 1):
-		'You can try to take an entrance exam.'
+	if month = 8 and student = 0 and diplom = 0 and age >= 17:
+		'You can try to take the entrance exam.'
 
 		act 'Take the entrance exam (1:00)':
 			cla
@@ -70,18 +70,18 @@ if $ARGS[0] = 'start':
 				kurs = 1
 				semestr = 1
 				abiturient = 0
-				'You have successfully passed the entrance exams and can start training in September.'
+				'You have successfully passed the entrance exams and can start preparatory classes in September.'
 			else
 				'You failed the entrance exam.'
 			end
 
-			act 'Get out of class':gt 'univer', 'start'
+			act 'Leave class':gt 'univer', 'start'
 		end
 	end
 
 	if week < 6 and student > 0 and month > 8 and month < 12:
 		!! 1st semester
-		act 'Go to the deanery':
+		act 'Go to the Dean.':
 			cla
 
 			if semestr = 2 and examen = 0:examen = 2
@@ -90,7 +90,7 @@ if $ARGS[0] = 'start':
 		end
 	elseif week < 6 and student > 0 and month > 1 and month < 5:
 		!! 2nd semester
-		act 'Go to the deanery':
+		act 'Go to the Dean':
 			cla
 
 			if semestr = 1 and examen = 0:examen = 2
@@ -99,10 +99,10 @@ if $ARGS[0] = 'start':
 		end
 	elseif week < 6 and student > 0 and month = 12 and examen = 0 and semestr = 1:
 		!! 1st semester exams
-		act 'Go for exams':gt 'univer', 'examen'
+		act 'Go to exams':gt 'univer', 'examen'
 	elseif week < 6 and student > 0 and month = 5 and examen = 0 and semestr = 2:
 		!! 2nd semester exams
-		act 'Go for exams':gt 'univer', 'examen'
+		act 'Go to exams':gt 'univer', 'examen'
 	end
 end
 
@@ -130,7 +130,7 @@ if $ARGS[0] = 'dekanat':
 		stipuha = 0
 		lektor = 0
 
-		'YOU expelled from university.'
+		'You get expelled from the university.'
 	end
 
 	if kurs = 2:
@@ -140,21 +140,21 @@ if $ARGS[0] = 'dekanat':
 		semestr = 0
 		abiturient = 0
 		stipuha = 0
-		'YOU awarded a diploma.'
+		'You earned your degree.'
 	end
 
 	gs 'stat'
 	'<center><b><font color="maroon">Dean</font></b></center>'
 	'<center><img src="images/etogame/dekanat.jpg"></center>'
-	'You learn how to <<semestr>> semester <<kurs>> course'
-	'Prior to the session must pass <<kurs>> coursework. More welcomed and encouraged during the session.'
+	'You have completed <<kurs>> pieces of coursework for semestr no. <<semestr>>.'
+	'Prior to the end of the semester you must pass <<kurs>> of coursework. If you manage to pass more that is even better.'
 
 	if kursovikD > 0:'You passed <<kursovikD>> coursework.'
 
-	act 'Escape from the dean''s office':gt 'univer', 'start'
+	act 'Leave Dean''s office':gt 'univer', 'start'
 
 	if hour < 8 and student > 0:
-		act 'At the lecture':
+		act 'Attend the lecture':
 			cls
 			minut += 360
 			hour = 14
@@ -163,86 +163,128 @@ if $ARGS[0] = 'dekanat':
 			intel += 1 + (mentats_dose - rand(0,mentats_dose))
 			gs 'stat'
 			'<center><img src="images/etogame/classroom1.jpg"></center>'
-			'You were sitting in lectures and recorded for teacher notes.'
+			'You attend the lecture, taking notes as the professor lectures the class about the course.'
 			zanrand = rand(0, 9)
 
 			if zanrand = 0:
 				minut += 60
-				'During class lecturer starts you ask, but you did not really say you can not, and he says something to you stayed after school.'
-				'Classes are over, but you have to stay.'
-
+				'During the lecture the professor asks you a question and you do not have the answer for it, he asks that you see him after class.'
+				'When class is over you stay behind.'
+!!expanded this scene a lot, check code.
 				act 'Remain in the classroom':
 					cls
 					gs 'stat'
-					zanpicrand = rand(1, 3)
-					$ImageNeededPlacholder
-					! WD: IMAGE NEEDED ~ '<center><img src="images/img/oldtown/zan<<zanpicrand>>.jpg"></center>'
-					'After the class lecturer explains to you for an hour thing.'
-
+					'<center><img src="images/locations/city/university/krupin.jpg"></center>'
+					'After the class the professor takes the time to explain things to you, in a effort to help you better understand, so you don''t fall behind in class.'
 					act 'Leave':gt 'univer', 'dekanat'
-
 					act 'Seduce':
 						cla
 						*clr
+						$boy = 'professor Krupin'
+						dick = 15
+						$dick_girth = 'well proportioned'
+						'<center><img src="images/locations/city/university/gradepay.jpg"></center>'
+						'You sit on his desk and make sure he has a good view of your legs and short skirt. You grab his scarf and slide it back and forth across his neck as you open your legs, giving him a glimpse up your skirt. "This is all so "hard" to understand, maybe maybe if I help you with something hard, you can help me with my grades." You don''t have a lot of time to be subtle, you need to be passing this course before you leave.'
+						'For a moment he seems unsure, he looks around the class. "Well what do you have mind?"'
+						'You bite your lower lip seductively and you know you have him. You pull him by his scarf till he is standing, while you climb on his desk and get on all fours. You look up at him from where your head is right in front of his crotch. "Let me show you, professor Krupin."'
+						act 'Blow job':
+							cls
+						    '<center><img src="images/locations/city/university/gradepay1.jpg"></center>'
+							'You undo his belt and pants, letting them drop down to his knees. You start stroking his dick and it very quickly grows hard in your hand. You lick up and down along the shaft until your take his dick into your mouth. You start bobbing your head up and down on his shaft while you stroke it with your hand as well.'
+							gs 'arousal', 'bj', 15
+							'He reaches over you and pulls up your skirt, pulling aside your panties. He rubs your pussy till he gets it wet and then he slips is fingers inside of you and starts finger fucking your pussy while you suck his dick, causing you to moan in pleasure.'
+							gs 'arousal', 'vaginal_finger', 10
+							minut += 10
+							gs 'stat'
+							act 'A for sure'
+								cls
+							    '<center><img src="images/locations/city/university/gradepay2.jpg"></center>'
+								'He starts to pull off your clothes, you quickly help him get you naked. Either your mouth or hand is constantly stroking his dick, often both. Once you are naked and back in place he goes back to fingering your pussy.'
+								'You know he is wanting to fuck you, but you want to save that in case you start doing even worse in class and need to raise your grades again. So you redoubled your efforts on sucking him off and start to deep throat him, while fondling his balls.'
+								gs 'arousal', 'bj', 10
+								'He starts to groan, getting close to cumming but trying to hold back. Suddenly he says. "I''m about to cum, I want to see it on your face." At those words you pull you mouth off his dick and keep stroking him with your hand. Soon he is spurting loads of sperm all over your face and some of it splattering on your perk little breasts, once the last spurt has splattered on your body, you sit up to give him a perfect view of your naked body, covered in his cum. You grin at him. "So about my grades."'
+								gs 'arousal', 'hj', 5
+								gs 'cum_call', 'face', $boy, 1, '', '', 20
+								gs 'cum_call', 'breasts', $boy, 1, '', '', 20
+								gs 'arousal', 'end'
+								gs 'stat'
+								'He collapses back in his chair and nods his head. "Yes yes, I will make sure you are passing my class, you little minx." With a final smile and wave you gather you stuff and get dressed, on your way out of class.'
 
-						if zanpicrand = 1:picrand = 44
-						if zanpicrand = 2:picrand = 45
-						if zanpicrand = 3:picrand = 46
-
-						$ImageNeededPlacholder
-						! WD: IMAGE NEEDED ~ '<center><img src="images/img/oldtown/zan1<<zanpicrand>>.jpg"></center>'
-						'You grab his penis, he reflexively pulls away, but then relaxes and allows you to continue.'
-
-						act 'Blow job':gt 'sex', 'minet'
+								act 'Leave':gt 'univer', 'dekanat'
+							end
+						end
 					end
 				end
+!!end of first scene expansion
 			elseif zanrand = 1:
 				minut += 60
-				'During class lecturer starts you ask, but you did not really say you can not, and he says something to you stayed after school.'
-				'Classes are over, but you have to stay.'
+				'During the lecture the professor asks you a question and you do not have the answer for it, he asks that you see him after class.'
+				'When class is over you stay behind.'
 
 				act 'Remain in the classroom':
 					cls
 					gs 'stat'
-					zanpicrand = rand(4, 6)
-					$ImageNeededPlacholder
-					! WD: IMAGE NEEDED ~ '<center><img src="images/img/oldtown/zan<<zanpicrand>>.jpg"></center>'
-					'After exercising for an hour lecturer explains to you another girl the importance of its subject.'
-
+					'<center><img src="images/locations/city/university/krupin.jpg"></center>'
+					'After the class the professor takes the time to explain things to you and another girl from class, in a effort to help you both better understand, so you don''t fall behind in class.'
 					act 'Leave':gt 'univer', 'dekanat'
-
+!!expanding scene two. check code.
 					act 'Seduce':
 						cla
 						*clr
-
-						if zanpicrand = 4:picrand = 20
-						if zanpicrand = 5:picrand = 21
-						if zanpicrand = 6:picrand = 22
-
-						$ImageNeededPlacholder
-						! WD: IMAGE NEEDED ~ '<center><img src="images/img/oldtown/zan1<<zanpicrand>>.jpg"></center>'
-						'You go down on your knees and grab his penis, the other girl looks at you with round eyes, but then also starts to stick to the teacher to design, he resists a little at first, but then completely given into your hand.'
-
-						act 'Blow job':gt 'podrsex', 'suck'
+						$boy = 'professor Krupin'
+						dick = 15
+						$dick_girth = 'well proportioned'
+						'<center><img src="images/locations/city/university/gradepay.jpg"></center>'
+						'You sit on his desk and make sure he has a good view of your legs and short skirt. You grab his scarf and slide it back and forth across his neck as you open your legs, giving him a glimpse up your skirt. "This is all so "hard" to understand, maybe maybe if I help you with something hard, you can help me with my grades." You don''t have a lot of time to be subtle, you need to be passing this course before you leave.'
+						'For a moment he seems unsure, he looks around the class and the other girl. "Well what do you have mind?"'
+						'You bite your lower lip seductively and you know you have him. You pull him by his scarf out of his chair until he is standing and then you kneels down in front of him. "Let me show you, professor Krupin."'
+						'The other girl''s eyes get huge as she realize what you are about to do, she looks at the professor and then the exit and seems unsure what to do.'
+						act 'Blow job':
+							cls
+						    '<center><img src="images/locations/city/university/2forone.jpg"></center>'
+							'You undo his belt and pants, letting them drop down to his knees. You start stroking his dick and it very quickly grows hard in your hand. You lick up and down along the shaft until your take his dick into your mouth. You start bobbing your head up and down on his shaft while you stroke it with your hand as well.'
+							gs 'arousal', 'bj', 15
+							gs 'stat'
+							'The other girl seeing he is going along with it, apparently figures this beats doing homework and kneels down beside you.'
+							act 'Sharing'
+								cls
+							    '<center><img src="images/locations/city/university/2forone1.jpg"></center>'
+								'You notice her kneeling beside you, after you suck his dick for a bit, you pass it over to her and she eagerly locks her lips around it and starts sucking his dick. Perhaps she is trying to convince him to give her a better grade than you, well you can''t have that and you start sucking on his balls while she is sucking his dick.'
+								gs 'arousal', 'foreplay_give', 5
+								gs 'stat'
+								act 'A for sure'
+									cls
+									'<center><img src="images/locations/city/university/2forone2.jpg"></center>'
+									'The two of you trade his dick back and forth, taking turns sucking it, each trying to out do the other. Under this relentless tag teaming he doesn''t last to long.'
+									gs 'arousal', 'bj', 10
+									gs 'stat'
+									'He starts to groan, getting close to cumming but trying to hold back. Suddenly he says. "I''m about to cum, I want to cum in your mouth and then the two of you share it." He says when the other girl happens to have him in her mouth, she dutifully sucks his dick until he cums in her mouth. Once she pulls his dick out of her mouth, she offers it to you, you take his dick and suck it clean. Then you turn to her and french kiss her, the two of you mingling his cum on each others tongues and in each other mouths. Once he collapses back into his chair, you stop kissing her and you both swallow down, the sperm you each ended up with. Then you turn to him and grin. "So about my grades."'
+									gs 'arousal', 'kiss', 5
+									gs 'cum_call', 'mouth', $boy, 1, '', '', 20
+									gs 'stat'
+									'He watches the two of you and waves his hand absently at the question. "Yes yes, I will make sure you are passing my class, both of you, you little minxs." With a final smile and wave, the two of you straighten your clothes up, on your way out of class.'
+									act 'Leave':gt 'univer', 'dekanat'
+								end
+							end
+						end
 					end
 				end
 			end
-
-			act 'Exit from the audience':gt 'univer', 'dekanat'
 		end
 	end
+!!end of secent scene expansion.
 
 	if kursovik >= 100:
-		act 'Pass the course work':
+		act 'Hand in your course work':
 			cla
 			*clr
 			intel += 1 + (mentats_dose - rand(0,mentats_dose))
 			kursovik = 0
 			kursovikD += 1
 			'<center><img src="images/etogame/classroom1.jpg"></center>'
-			'You passed the course work.'
+			'You hand in a piece of completed course work.'
 
-			act 'Exit from the audience':gt 'univer', 'dekanat'
+			act 'Leave the lecture hall':gt 'univer', 'dekanat'
 		end
 	end
 end
@@ -262,47 +304,34 @@ if $ARGS[0] = 'examen':
 		stipuha = 1
 		lektor = 0
 		!!1200
-		'You are well attended classes and you have no outstanding coursework, exam so you put a gun.'
-		jump 'exitexamem'
-	end
+		'You completed all your coursework, passed with honors, and had good attendance.'
 
-	if ((intel >= 80) or (lektor > 40 and lektor <= 55)) and kursovikD >= kurs:
+	elseif ((intel >= 80) or (lektor > 40 and lektor <= 55)) and kursovikD >= kurs:
 		examen = 1
 		kursovikD = 0
 		stipuha = 0
 		lektor = 0
-		'You answered all the questions in the ticket and you have no outstanding coursework, so you score? Exam.'
+		'You completed all your course work and passed your exam.'
 
-		act 'Exit from the audience':gt 'univer', 'dekanat'
-
-		exit
-	end
-
-	if (intel >= 100) and kursovikD >= kurs + 10:
+	elseif (intel >= 100) and kursovikD >= kurs + 10:
 		examen = 1
 		kursovikD = 0
 		stipuha = 1
 		lektor = 0
-		'You showed great zeal and independence in learning, so you put a gun exam.'
-		jump 'exitexamem'
-		!!exit
-	end
+		'Despite missing a lot of classes you still managed to complete all the course work and somehow still manged to pass with honors.'
 
-	if (intel < 70 and lektor <= 40) or kursovikD < kurs:
+	elseif (intel < 70 and lektor <= 40) or kursovikD < kurs:
 		examen = 2
 		stipuha = 0
-		'You do not pass the exam.'
-	end
+		'You failed to pass the exam.'
 
-	if examen = 0:
+	elseif examen = 0:
 		examen = 2
 		stipuha = 0
-		'You do not pass the exam.'
+		'You failed to pass the exam.'
 	end
 
-	:exitexamem
-
-	act 'Exit from the audience':gt 'univer', 'dekanat'
+	act 'Exit exam room':gt 'univer', 'dekanat'
 end
 
 --- univer ---------------------------------
