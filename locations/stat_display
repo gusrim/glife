@@ -263,17 +263,34 @@ if opPRE = 0: $stat_msg += '<BR><<$mop>> and your hair is <<$hapri>>.' & $stat_m
 
 if daystart - lastmens > 21 and thinkpreg = 0 and knowpreg = 0 and cycle ! 6 and pillcon <= 30000 and succubusflag ! 1:
 	if daystart - lastmens < 28 and mesec = 0: 
-		$stat_msg += '<BR><font color = #AB052A><b>Your period is late by <<daystart - daylastperiod - 20>> days.</b></font><BR>'
+		$stat_msg += '<BR><font color = #AB052A><b>Your period is late by <<daystart - daylastperiod - 20>> days.</b></font>'
 	elseif daystart - lastmens < 35 and mesec = 0:
-		$stat_msg += '<BR><font color = #AB052A><b>Your period is late by more than a week!</b></font><BR>'
+		$stat_msg += '<BR><font color = #AB052A><b>Your period is late by more than a week!</b></font>'
 	elseif daystart - lastmens < 45 and mesec = 0:
-		$stat_msg += '<BR><font color = #AB052A><b>You apparently missed your period this month. Maybe you should see a doctor?</b></font><BR>'
+		$stat_msg += '<BR><font color = #AB052A><b>You apparently missed your period this month. Maybe you should see a doctor?</b></font>'
 	elseif daystart - lastmens < 69 and mesec = 0:
-		$stat_msg += '<BR><font color = #AB052A><b>You didn''t have a period for two months. You really should see a doctor about it.</b></font><BR>'
+		$stat_msg += '<BR><font color = #AB052A><b>You didn''t have a period for two months. You really should see a doctor about it.</b></font>'
 	elseif mesec = 0:
-		$stat_msg += '<BR><font color = #AB052A><b>You should consider the possibility of a pregnancy, since apparently you no longer have periods.</b></font><BR>'
+		$stat_msg += '<BR><font color = #AB052A><b>You should consider the possibility of a pregnancy, since apparently you no longer have periods.</b></font>'
 	end
 end
+if implant_day > 0:
+	if ((daystart - implant_day) * 24 + hour - implant_hour) < 5:
+		$stat_msg += '<BR><font color=#AB052A>You feel a slight twinge in your abdomen.</font>'
+	end
+elseif mesec > 0:
+	$stat_msg += '<BR><font color="red">You are currently having your period. '
+	if isprok = 0 and isprokp = 0:
+		$stat_msg += '<b>You need to use your feminine hygiene products.</b>'
+	elseif isprokp = 1 and tanga = 0:
+		isprokp = 0
+		$stat_msg += '<b>You need to wear panties to use a sanitary pad.</b>'
+	end
+	$stat_msg += '</font>'
+else
+!	$stat_msg += '<br>'
+end
+$stat_msg += '<BR><a href="exec:dynamic $d_cycreport_choice"><<$cycreport_txt>></a><br>'
 
 if StoryLine > 0 and SchoolAtestat = 0 and $holyday ! '': $stat_msg += '<BR><<$holyday>>' & $stat_msg += '<BR>'
 if birthday = day and birthmonth = month: $stat_msg += '<BR><b>Today is your birthday.</b>' & $stat_msg += '<BR>'
@@ -369,109 +386,73 @@ if $mud ! '':$stat_msg += '<BR><font color="green"><b><<$mud>></b></font>' & $st
 if smoker >= 20:
 	if smokerNeed > 0:
 		if siga > 0:
-			$stat_msg += '<BR><a href="exec:dynamic $smoker"><font color="red"><b>You want to smoke. You have <<siga>> cigarettes left.</b></font></a>'
-			$stat_msg += '<BR>'
+			$stat_msg += '<BR><a href="exec:dynamic $smoker"><font color="red"><b>You want to smoke. You have <<siga>> cigarettes left.</b></font></a><BR>'
 		else
-			$stat_msg += '<BR><a href="exec:dynamic $smoker"><font color="red"><b>You want to smoke, but you have no cigarettes left.</b></font></a>'
-			$stat_msg += '<BR>'
+			$stat_msg += '<BR><a href="exec:dynamic $smoker"><font color="red"><b>You want to smoke, but you have no cigarettes left.</b></font></a><BR>'
 		end
 	else
 		if siga > 0:
-			$stat_msg += '<BR><a href="exec:dynamic $smoker"><font color="blue"><b>You have <<siga>> cigarettes left.</b></font></a>'
-			$stat_msg += '<BR>'
+			$stat_msg += '<BR><a href="exec:dynamic $smoker"><font color="blue"><b>You have <<siga>> cigarettes left.</b></font></a><BR>'
 		else
-			$stat_msg += '<BR><font color="blue"><b>You feel like you should get some cigarettes.</b></font>'
-			$stat_msg += '<BR>'
+			$stat_msg += '<BR><font color="blue"><b>You feel like you should get some cigarettes.</b></font><BR>'
 		end
 	end
 elseif siga > 0:
-	$stat_msg += '<BR><a href="exec:dynamic $smoker"><font color = blue><b>You have <<siga>> cigarettes.</b></font></a>'
-	$stat_msg += '<BR>'
+	$stat_msg += '<BR><a href="exec:dynamic $smoker"><font color = blue><b>You have <<siga>> cigarettes.</b></font></a><BR>'
 end
 
-if smokeHour = hour and smokeday = day and smokeminut >= minut:$stat_msg += '<BR><font color="green">You are smoking a cigarette.</font>'
+if smokeHour = hour and smokeday = day and smokeminut >= minut:$stat_msg += '<BR><font color="green">You are smoking a cigarette.</font><BR>'
 
 if sweat < 0 : sweat = 0
 if sweat > 69 : sweat = 69
 jump 'statDswt<<sweat/10>>'
 :statDswt0
-	if arrsize('sparrvol') = 0 : $stat_msg += '<BR><b><font color="green">You are sparkling clean.</font></b>'
+	if arrsize('sparrvol') = 0 : $stat_msg += '<BR><b><font color="green">You are sparkling clean.</font></b><BR>'
 	jump 'statDswtEnd'
 :statDswt1
 	jump 'statDswtEnd'
 :statDswt2
-	$stat_msg += '<BR><font color="brown">You''re sweating.</font>'
+	$stat_msg += '<BR><font color="brown">You''re sweating.</font><BR>'
 	jump 'statDswtEnd'
 :statDswt3
-	$stat_msg += '<BR><font color="red">You are a little smelly.</font>'
+	$stat_msg += '<BR><font color="red">You are a little smelly.</font><BR>'
 	jump 'statDswtEnd'
 :statDswt4
-	$stat_msg += '<BR><font color="red">You stink.</font>'
+	$stat_msg += '<BR><font color="red">You stink.</font><BR>'
 	jump 'statDswtEnd'
 :statDswt5
-	$stat_msg += '<BR><b><font color="red">You really stink.</font></b>'
+	$stat_msg += '<BR><b><font color="red">You really stink.</font></b><BR>'
 	jump 'statDswtEnd'
 :statDswt6
-	$stat_msg += '<BR><b><font color="red">You are dripping wet from sweat and smell like a gym sock.</font></b>'
+	$stat_msg += '<BR><b><font color="red">You are dripping wet from sweat and smell like a gym sock.</font></b><BR>'
 	jump 'statDswtEnd'
 
 :statDswtEnd
 
 if dirtyclothes = 1:
 	if sweat > 40:
-		$stat_msg +='<br><font color = red>You from head to toe <a href="exec:view''images/qwest/gadukino/Swamp/dirtyclothes1.jpg''">smeared</a> in the mud.</font>'
+		$stat_msg +='<br><font color = red>You from head to toe <a href="exec:view''images/qwest/gadukino/Swamp/dirtyclothes1.jpg''">smeared</a> in the mud.</font><BR>'
 	else
-		$stat_msg +='<br><font color = red>Your <a href="exec:view''images/qwest/gadukino/Swamp/dirtyclothes2.jpg''">cloth</a> is dirty.</font>'	
+		$stat_msg +='<br><font color = red>Your <a href="exec:view''images/qwest/gadukino/Swamp/dirtyclothes2.jpg''">cloth</a> is dirty.</font><BR>'	
 	end
-end
-
-!! MJ: Add a line before the next message.
-if sweat > 0: $stat_msg += '<BR>'
-
-if opPRE = 0 :
-    $stat_msg += '<BR><a href="exec:dynamic $d_cycreport_choice"><<$cycreport_txt>></a>'
-end
-
-$stat_msg += '<BR>'
-
-if prezikmsg = 2:$stat_msg += '<BR><b><font color="red">You have run out of condoms.</font></b>' & $stat_msg += '<BR>'
-
-if opPRE = 0 :
-	if implant_day > 0:
-		implant_since = (((daystart+1) - implant_day) * 24) - (24 - implant_hour)
-		if implant_since < 5:
-			$stat_msg += '<BR><font color="pink">You feel a slight twinge in your abdomen.</font>'
-		end
-    elseif mesec > 0:
-        $stat_msg += '<BR><font color="red">You are currently having your period. '
-        if isprok = 0 and isprokp = 0:
-            $stat_msg += '<b>You need to use your feminine hygiene products.</b>'
-        elseif isprokp = 1 and tanga = 0:
-            isprokp = 0
-            $stat_msg += '<b>You need to wear panties to use a sanitary pad.</b>'
-        end
-        $stat_msg += '</font>'
-    end
 end
 
 if lactate = 1:
 	if lactatemv >= lactatemm-1:
-		$stat_msg += '<BR><font color = black>Your breasts are so full they hurt and a little milk is constantly dribbling out.</font>'
+		$stat_msg += '<BR><font color = black>Your breasts are so full they hurt and a little milk is constantly dribbling out.</font><BR>'
 	elseif lactatemv > lactatemm*9/10:
-		$stat_msg += '<BR><font color = black>Your breasts are firm and full, and starting to hurt from all the milk they contain.</font>'
+		$stat_msg += '<BR><font color = black>Your breasts are firm and full, and starting to hurt from all the milk they contain.</font><BR>'
 	elseif lactatemv > lactatemm*3/4:
-		$stat_msg += '<BR><font color = black>Your breasts feel firm and heavy, full of milk.</font>'
+		$stat_msg += '<BR><font color = black>Your breasts feel firm and heavy, full of milk.</font><BR>'
 	elseif lactatemv > lactatemm/2:
-		$stat_msg += '<BR><font color = black>Your breasts are heavy, a cargo of milk inside.</font>'
+		$stat_msg += '<BR><font color = black>Your breasts are heavy, a cargo of milk inside.</font><BR>'
 	elseif lactatemv > lactatemm/4:
-		$stat_msg += '<BR><font color = black>Your breasts feel a little heavy.</font>'
+		$stat_msg += '<BR><font color = black>Your breasts feel a little heavy.</font><BR>'
 	elseif lactatemv > 0:
-		$stat_msg += '<BR><font color = black>Your breasts tingle a little from the feeling of milk production.</font>'
+		$stat_msg += '<BR><font color = black>Your breasts tingle a little from the feeling of milk production.</font><BR>'
 	else
-		$stat_msg += '<BR><font color = black>Your breasts feel soft and empty.</font>'
+		$stat_msg += '<BR><font color = black>Your breasts feel soft and empty.</font><BR>'
 	end
-!! MJ: Add a line before the next message.
-	$stat_msg += '<BR>'
 end
 
 if Enable_Hymenrestore = 1: vagina = 0
@@ -904,7 +885,7 @@ if narkday ! daystart and narkoman = 1:$stat_msg += '<BR><b><font color="red">Yo
 if fingal > 0:$stat_msg += '<BR><b><font color="red">You have a black eye.</font></b>'
 
 ! WD: Bimbo look
-$stat_msg += '<BR><<$bimbostatus>>'
+if bimbolevel > 0:$stat_msg += '<BR><<$bimbostatus>>'
 
 if tanga = 1 and $clothingworntype = 'nude':
 	$stat_msg += '<BR><b><font color = red>You are stripped down to your panties and your boobs sway invitingly as you walk</font></b>'
@@ -927,6 +908,7 @@ elseif tanga = 0:
 		$stat_msg += '<BR><b><font color = #FF1493>You are completely naked. It''s exciting and you feel tingly inside.</font></b>'
 	end
 end
+$stat_msg += '<BR>'
 
 if mosol >= 50:
 	$stat_msg += '<BR><b><font color="red">Your pussy hurts and each step causes more pain, it''s crimson and visibly scuffed from walking without underwear.</font></b>'
@@ -936,6 +918,7 @@ end
 
 if analplugIN = 1:$stat_msg += '<BR><b><font color="red">You have a butt plug inserted in your ass.</font></b>'
 if vibratorin = 1:$stat_msg += '<BR><b><font color="red">You have a vibrator inserted in your vagina.</font></b>'
+$stat_msg += '<BR>'
 if young_shop_work = 1:
 	if hour = 15 and minut <= 5 and week < 6 and inWorkYoungShop = 0:
 		'You are late for work at Keys Pussy.'
@@ -1130,7 +1113,6 @@ else
 	'<<$stat_android>>'
 	$stat_msg = 'Android mode, <a href="exec:gs ''$menu_obnovit''">Refresh</a><<$stat_msg>>'
 end
-
 
 --- stat_display ---------------------------------
 
