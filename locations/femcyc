@@ -6,15 +6,15 @@ if $ARGS[0] = '':
 	!{144 hours was selected due to that being approximately the maximum amount of time sperm is viable in the womb (120 would be more accurate, but there is leeway). PLEASE DO NOT CHANGE IT.}
 	!{The potency drop may seem small in game-time, but is meant to be a reasonable approximation to real life. Avoid unprotected sex within 5 days of ovulation if you want to mitigate your risk.}
 	!{the 'rcntorgzm' variable is set to determine whether Sveta has orgasmed within the last hour. If she has, a small potency boost for the guys she has slept with in that hour.}
-	
+
 	if rcntorgzm = 1:
 		if rcntorgzmtmp = 1: rcntorgzm = 0 & rcntorgzmtmp = 0
 		if rcntorgzmtmp = 0: rcntorgzmtmp = 1
-	
+
 	end
 
 	cumarr_idx = 0
-	
+
 	:cumarrloop
 	if cumarr_idx < arrsize('$cumarrnam'):
 		if cumarrcpt[cumarr_idx] > 0 and cumarrage[cumarr_idx] < 144:
@@ -32,8 +32,8 @@ if $ARGS[0] = '':
 			gs 'cum_cleanup', 'cleanwomb', cumarr_idx
 		end
 
-		jump 'cumarrloop'	
-	
+		jump 'cumarrloop'
+
 	end
 
 	!!Succubus absorption of sperm in womb
@@ -174,7 +174,7 @@ if $ARGS[0] = '':
 			end
 			if sparrloc[cumarrtemp] = 0 and cumsumvag > 60: sparrslc[cumarrtemp] = 1
 			if sparrloc[cumarrtemp] = 3 and cumsumass > 60: sparrslc[cumarrtemp] = 1
-			if sparrloc[cumarrtemp] = 17: 
+			if sparrloc[cumarrtemp] = 17:
 				cumcondslip += 1
 				if sparridt[cumarrtemp] >= 0:
 					cumcondslip_aware = 1
@@ -296,7 +296,7 @@ end
 
 !!{Fertilization.}
 
-if $ARGS[0] = 'cyc2':	
+if $ARGS[0] = 'cyc2':
 	can_sz = arrsize('$cumarrnam')
 	if Ovulate > 0 and can_sz > 0 and UnfertEgg > 0:
 		KILLVAR 'cumfathwght'
@@ -456,18 +456,18 @@ if $ARGS[0] = 'cyc3':
 	ferteggage += 1
 	implant_idx = 0
 	implant_sz = arrsize('Babyptype')
-	
+
 	:implant_loop
 	if implant_idx < implant_sz:
-	
+
 		if Babyptype[implant_idx] = 0:
 			imp_rand = rand(0,120000)
-			
+
 			if ferteggage < 120 and broodcurse <= 0:
 				imp_rand += 170
 				imp_rand -= age * 10
 				if steriletu = 1: imp_rand -= 200
-				
+
 				if imp_rand <= 0:
 					Babyptype[implant_idx] = 2
 					FertEgg -= 1
@@ -476,14 +476,14 @@ if $ARGS[0] = 'cyc3':
 					if preg = 0: preg = 1
 					implant_day = daystart
 					implant_hour = hour
-				
+
 				end
-			
+
 			else
 				imp_rand += sterilewb
 				imp_rand -= tempwbbonus
 				if broodcurse > 0 and ferteggage >= 120: imp_rand = 0
-				
+
 				if imp_rand <= (1200 - (age * 7)):
 					Babyptype[implant_idx] = 1
 					FertEgg -= 1
@@ -492,19 +492,19 @@ if $ARGS[0] = 'cyc3':
 					if preg = 0: preg = 1
 					implant_day = daystart
 					implant_hour = hour
-				
+
 				end
 				tempwbbonus = 0
-			
+
 			end
-		
+
 		end
-		
+
 		implant_idx += 1
 		jump 'implant_loop'
-	
+
 	end
-	
+
 !!{Then, it progresses the Luteal phase. It checks to see if you are pregnant. If you are, it ends the cycle and sets preg if your Luteal hormone is at the max as well as cleans out any unimplanted eggs. Otherwise, it just progresses pregnancy chemical and Luteal Hormone. If you arent pregnant, it checks your Luteal hormone. If its at the maximum, it adds 3-5 days of bleeding, clears out your unimplanted eggs, and clears out your Luteal hormone, or ends your cycle if you are past your menopausal age. Otherwise it will just progress the Luteal hormone.}
 	if LutH > 300:
 		rej_idx = 0
@@ -538,7 +538,7 @@ if $ARGS[0] = 'cyc3':
 		else
 			KILLVAR '$wombpotfath'
 			temprand = rand(0,10)
-			if pillcon < 30000 or temprand = 0: 
+			if pillcon < 30000 or temprand = 0:
 				cycle = 0
 				if cyccustom = 1: daylastperiod = daystart
 				temprand = rand(0,10)
@@ -605,6 +605,7 @@ if $ARGS[0] = 'preg':
 		KILLVAR '$wombpotfath'
 		KILLVAR '$wombthfath'
 		preg = 2
+		pregminut = totminut + 1440
 		if babyembryo > 1:
 			'Your babies are coming...'
 		else
