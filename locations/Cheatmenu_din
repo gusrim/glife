@@ -775,52 +775,113 @@ $cheatmenu['documents'] = {
 }
 
 $cheatmenu['input_time'] = {
-	inputtmp = input("Enter time with 4-digit (input 0102 for 1:02)")
-	if inputtmp/100 >= 0 and inputtmp/100 <= 23:hour = inputtmp/100
-	inputtmp = inputtmp mod 100
-	if inputtmp >= 0 and inputtmp <= 59:minut = inputtmp
+	$inputtmp = input("Enter time with 4-digit (input 0102 for 1:02)")
+	if $inputtmp ! '':
+		inputtmp = '<<$inputtmp>>'
+		if inputtmp/100 >= 0 and inputtmp/100 <= 23:temp_hour = inputtmp/100
+		inputtmp = inputtmp mod 100
+		if inputtmp >= 0 and inputtmp <= 59:temp_minut = inputtmp
+	end
 	killvar 'inputtmp'
 	dynamic $cheatmenu['time']
 }
 
 $cheatmenu['time'] = {
 	gs 'daystart'
-	gs 'outdoors', 'weather'
-	gs'stat'
+	gs 'stat'
+
+	temp_daystart = (year - 2015) * 365
+	temp_daystart += ((year - 2015) + 3) / 4
+	i=1
+	:temp_daystart
+	if temp_month > i:
+		temp_daystart += monthsend[i]
+		i += 1
+		jump 'temp_daystart'
+	end
+	temp_daystart += temp_day
+	temp_daystart -= daystart_start
+	temp_daystart += 1
+
+	if currtimecheck = 1:
+		killvar 'currtimecheck'
+		if currday ! daystart:
+			if currday < daystart: 
+				week = (week + daystart - currday) mod 7
+			else
+				temp = week - ((currday - daystart) mod 7)
+				if temp <= 0: week = 7 - temp else week = temp
+			end
+			currday = daystart
+		end
+		if currhour < (daystart-1) * 24 + hour:femcycloop = (daystart-1) * 24 + hour - currhour
+		:femcycloop
+		if femcycloop > 0:gs 'femcyc' & femcycloop -= 1 & jump 'femcycloop'
+	end
 	clr
+	gs 'outdoors', 'weather'
 	pl'<center><a href="exec:dynamic $cheatmenu"><b>Cheat menu</b></a></center>'
 	pl''
-	pl'Right now <<$week[week]>> <<day>> number, <<$month>>, <<year>> year.'
-	pl'<a href="exec:dynamic $cheatmenu[''week'']">Select Day of the Week</a>'
-	pl'<a href="exec:day += 1 & dynamic $cheatmenu[''time'']">+1 Day</a>'
-	pl'<a href="exec:day -= 1 & dynamic $cheatmenu[''time'']">-1 Day</a>'
-	pl'<a href="exec:dynamic $cheatmenu[''month'']">Select Month</a>'
-	pl'<a href="exec:year += 1 & dynamic $cheatmenu[''time'']">+1 Year</a>'
-	pl'<a href="exec:year -= 1 & dynamic $cheatmenu[''time'']">-1 Year</a>'
+    if temp_minut > 9:
+		if temp_hour > 9: $temptime = '<b><<temp_hour>>:<<temp_minut>></b>' else $temptime = '<b>0<<temp_hour>>:<<temp_minut>></b>'
+	else
+		if temp_hour > 9: $temptime = '<b><<temp_hour>>:0<<temp_minut>></b>' else $temptime = '<b>0<<temp_hour>>:0<<temp_minut>></b>'
+	end
+    if minut > 9:
+		if hour > 9: $tempcurtime = '<b><<hour>>:<<minut>></b>' else $tempcurtime = '<b>0<<hour>>:<<minut>></b>'
+	else
+		if hour > 9: $tempcurtime = '<b><<hour>>:0<<minut>></b>' else $tempcurtime = '<b>0<<hour>>:0<<minut>></b>'
+	end
+	
+	if temp_daystart > daystart:
+		temp = (temp_daystart - daystart) mod 7
+		if (temp + week) mod 7 = 0:temp_week = 7 else temp_week = (temp + week) mod 7
+	elseif temp_daystart < daystart:
+		temp = (daystart - temp_daystart) mod 7
+		if (week - temp) mod 7 = 0:
+			temp_week = 7
+		elseif (week - temp) mod 7 < 0:
+			temp_week = ((week - temp) mod 7) + 7
+		else
+			temp_week = week - temp
+		end
+	else
+		temp_week = week
+	end
+	killvar 'temp'
+	
+	pl'Current time: <b><<$week[week]>></b>, <b><<day>></b>. day of <b><<$month>></b>, <b><<year>></b>, <<$tempcurtime>>'
+	pl'Target time: <b><<$week[temp_week]>></b>, <b><<temp_day>></b>. day of <b><<$temp_month>></b>, <b><<temp_year>></b>, <<$temptime>>'
+	pl'Daychange: <<temp_daystart - daystart>>'
+	pl''
+	pl'Year:  <a href="exec:temp_year += 1 & dynamic $cheatmenu[''time'']">+1 Year</a>  <a href="exec:temp_year -= 1 & dynamic $cheatmenu[''time'']">-1 Year</a>'
+	pl'Select <a href="exec:dynamic $cheatmenu[''month'']">Month</a>'
+	$daychange = '  <a href="exec:temp_day += 7 & dynamic $cheatmenu[''time'']">+7 Day</a>'
+	$daychange += '  <a href="exec:temp_day += 1 & dynamic $cheatmenu[''time'']">+1 Day</a>'
+	$daychange += '  <a href="exec:temp_day -= 1 & dynamic $cheatmenu[''time'']">-1 Day</a>'
+	$daychange += '  <a href="exec:temp_day -= 7 & dynamic $cheatmenu[''time'']">-7 Day</a>'
+	pl 'Day:' +$daychange
+	killvar 'daychange'
+	$SS = 'Hour: '
+	if temp_hour > 0:$SS += '<a href="exec:temp_hour -= 1 & dynamic $cheatmenu[''time'']">-1</a>  ' else $SS += '    '
+	if temp_hour ! 0:$SS += '<a href="exec:temp_hour = 0 & dynamic $cheatmenu[''time'']">0</a>  ' else $SS += '    '
+	if temp_hour < 23:$SS += '<a href="exec:temp_hour += 1 & dynamic $cheatmenu[''time'']">+1</a>'
+	pl $SS
+	$SS = 'Minute: '
+	if temp_minut > 14:$SS += '<a href="exec:temp_minut -= 15 & dynamic $cheatmenu[''time'']">-15</a> ' else $SS += '    '
+	if temp_minut > 0:$SS += '<a href="exec:temp_minut -= 1 & dynamic $cheatmenu[''time'']">-1</a> ' else $SS += '    '
+	if temp_minut ! 0:$SS += '<a href="exec:temp_minut = 0 & dynamic $cheatmenu[''time'']">0</a> ' else $SS += '   '
+	if temp_minut < 59:$SS += '<a href="exec:temp_minut += 1 & dynamic $cheatmenu[''time'']">+1</a> '
+	if temp_minut < 46:$SS += '<a href="exec:temp_minut += 15 & dynamic $cheatmenu[''time'']">+15</a>'
+	pl $SS
+	killvar 'SS'
+	pl''
 	pl' <a href="exec:dynamic $cheatmenu[''input_time'']">Direct input time</a>'	
-	if hour < 10:
-    if minut > 9:pl'Right now <b>0<<hour>> : <<minut>></b>'
-    if minut < 10:pl'Right now <b>0<<hour>> : 0<<minut>></b>'
-	end
-	if hour > 9:
-    if minut > 9:pl'Right now <b><<hour>> : <<minut>></b>'
-    if minut < 10:pl'Right now <b><<hour>> : 0<<minut>></b>'
-	end
-	$SS=''
-	pl'Watch:'
-	if hour>0:$SS='<a href="exec:hour -= 1 & dynamic $cheatmenu[''time'']">-1</a> ' else $SS='    '
-	if hour!0:$SS=$SS+'<a href="exec:hour = 0 & dynamic $cheatmenu[''time'']">0</a> ' else $SS=$SS+'   '
-	if hour<23:$SS=$SS+'<a href="exec:hour += 1 & dynamic $cheatmenu[''time'']">+1</a>'
-	pl $SS
-	$SS=''
-	pl'Minutes:'
-	if minut>14:$SS+='<a href="exec:minut -= 15 & dynamic $cheatmenu[''time'']">-15</a> ' else $SS='    '
-	if minut>0:$SS+='<a href="exec:minut -= 1 & dynamic $cheatmenu[''time'']">-1</a> ' else $SS='    '
-	if minut!0:$SS+='<a href="exec:minut = 0 & dynamic $cheatmenu[''time'']">0</a> ' else $SS=$SS+'   '
-	if minut<59:$SS+='<a href="exec:minut += 1 & dynamic $cheatmenu[''time'']">+1</a> '
-	if minut<59:$SS+='<a href="exec:minut += 15 & dynamic $cheatmenu[''time'']">+15</a>'
-	pl $SS
+	pl''
 	pl 'Weather: <a href="exec:sunWeather=iif(sunWeather=0,1,0) & $pogoda=iif(sunWeather=0,''Rain...'',''Clear...'') & dynamic $cheatmenu[''time'']">'+iif(sunWeather=0,'Rain','Sunny')+'</a>'
+	pl''
+	pl'<a href="exec:day = temp_day & $month = $temp_month & month = temp_month & year = temp_year & hour = temp_hour & minut = temp_minut & currtimecheck = 1 & dynamic $cheatmenu[''time'']">Accept target date & time</a>'
+	pl'<a href="exec:temp_day = day & $temp_month = $month & temp_month = month & temp_year = year & temp_hour = hour & temp_minut = minut & dynamic $cheatmenu[''time'']">Reset target date & time</a>'
 }
 
 $cheatmenu['week'] = {
@@ -828,7 +889,9 @@ $cheatmenu['week'] = {
 	clr
 	pl'<center><a href="exec:dynamic $cheatmenu"><b>Cheat menu</b></a> - <a href="exec:dynamic $cheatmenu[''time'']"><b>Time</b></a></center>'
 	pl''
-	pl'Right now <<$week[week]>> <<day>> number, <<$month>>, <<year>> year.'
+	pl'Current time: <b><<day>></b>. day of <b><<$month>></b>, <b><<year>></b>, <<$tempcurtime>>'
+	pl'Target time: <b><<temp_day>></b>. day of <b><<$temp_month>></b>, <b><<temp_year>></b>, <<$temptime>>'
+	pl''
 	pl'<a href="exec:week = 1 & dynamic $cheatmenu[''time'']">Monday</a>'
 	pl'<a href="exec:week = 2 & dynamic $cheatmenu[''time'']">Tuesday</a>'
 	pl'<a href="exec:week = 3 & dynamic $cheatmenu[''time'']">Wednesday</a>'
@@ -843,19 +906,21 @@ $cheatmenu['month'] = {
 	clr
 	pl'<center><a href="exec:dynamic $cheatmenu"><b>Cheat menu</b></a> - <a href="exec:dynamic $cheatmenu[''time'']"><b>Time</b></a></center>'
 	pl''
-	pl'Right now <<$week[week]>> <<day>> number, <<$month>>, <<year>> year.'
-	pl'<a href="exec:month = 1 & $month = ''January'' & dynamic $cheatmenu[''time'']">January</a>'
-	pl'<a href="exec:month = 2 & $month = ''February'' & dynamic $cheatmenu[''time'']">February</a>'
-	pl'<a href="exec:month = 3 & $month = ''March'' & dynamic $cheatmenu[''time'']">March</a>'
-	pl'<a href="exec:month = 4 & $month = ''April'' & dynamic $cheatmenu[''time'']">April</a>'
-	pl'<a href="exec:month = 5 & $month = ''May'' & dynamic $cheatmenu[''time'']">May</a>'
-	pl'<a href="exec:month = 6 & $month = ''June'' & dynamic $cheatmenu[''time'']">June</a>'
-	pl'<a href="exec:month = 7 & $month = ''July'' & dynamic $cheatmenu[''time'']">July</a>'
-	pl'<a href="exec:month = 8 & $month = ''August'' & dynamic $cheatmenu[''time'']">August</a>'
-	pl'<a href="exec:month = 9 & $month = ''September'' & dynamic $cheatmenu[''time'']">September</a>'
-	pl'<a href="exec:month = 10 & $month = ''October'' & dynamic $cheatmenu[''time'']">October</a>'
-	pl'<a href="exec:month = 11 & $month = ''November'' & dynamic $cheatmenu[''time'']">November</a>'
-	pl'<a href="exec:month = 12 & $month = ''December'' & dynamic $cheatmenu[''time'']">December</a>'
+	pl'Current time: <b><<day>></b>. day of <b><<$month>></b>, <b><<year>></b>, <<$tempcurtime>>'
+	pl'Target time: <b><<temp_day>></b>. day of <b><<$temp_month>></b>, <b><<temp_year>></b>, <<$temptime>>'
+	pl''
+	pl'<a href="exec:temp_month = 1 & $temp_month = ''January'' & dynamic $cheatmenu[''time'']">January</a>'
+	pl'<a href="exec:temp_month = 2 & $temp_month = ''February'' & dynamic $cheatmenu[''time'']">February</a>'
+	pl'<a href="exec:temp_month = 3 & $temp_month = ''March'' & dynamic $cheatmenu[''time'']">March</a>'
+	pl'<a href="exec:temp_month = 4 & $temp_month = ''April'' & dynamic $cheatmenu[''time'']">April</a>'
+	pl'<a href="exec:temp_month = 5 & $temp_month = ''May'' & dynamic $cheatmenu[''time'']">May</a>'
+	pl'<a href="exec:temp_month = 6 & $temp_month = ''June'' & dynamic $cheatmenu[''time'']">June</a>'
+	pl'<a href="exec:temp_month = 7 & $temp_month = ''July'' & dynamic $cheatmenu[''time'']">July</a>'
+	pl'<a href="exec:temp_month = 8 & $temp_month = ''August'' & dynamic $cheatmenu[''time'']">August</a>'
+	pl'<a href="exec:temp_month = 9 & $temp_month = ''September'' & dynamic $cheatmenu[''time'']">September</a>'
+	pl'<a href="exec:temp_month = 10 & $temp_month = ''October'' & dynamic $cheatmenu[''time'']">October</a>'
+	pl'<a href="exec:temp_month = 11 & $temp_month = ''November'' & dynamic $cheatmenu[''time'']">November</a>'
+	pl'<a href="exec:temp_month = 12 & $temp_month = ''December'' & dynamic $cheatmenu[''time'']">December</a>'
 }
 
 $cheatmenu['magic'] = {
@@ -1079,6 +1144,11 @@ $cheatmenu['display'] = {
 	else
 		pl' <a href="exec:Enable_tablemap = 1 & dynamic $cheatmenu[''display'']">List friends in table: OFF</a>'
 	end
+	if Enable_towntable = 1:
+		pl' <a href="exec:Enable_towntable = 0 & dynamic $cheatmenu[''display'']">Display Pavlovsk description in table: ON</a>'
+	else
+		pl' <a href="exec:Enable_towntable = 1 & dynamic $cheatmenu[''display'']">Display Pavlovsk description in table: OFF</a>'
+	end	
 	nl
 	if Enable_statfsize<0:Enable_statfsize=0
 	if Enable_Android = 1:
@@ -1169,6 +1239,9 @@ $cheatmenu['quicktime'] = {
 
 $cheatmenu = {
 	gs'stat'
+	currhour = (daystart-1) * 24 + hour
+	currday = daystart
+	temp_week = week & temp_day = day & $temp_month = $month & temp_month = month & temp_year = year & temp_hour = hour & temp_minut = minut
 	clr
 	pl'<center><a href="exec:gs''stat''"><b>Exit cheat menu</b></a></center>'
 	nl
