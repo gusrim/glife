@@ -1,0 +1,808 @@
+# train
+
+!!destination 3
+if $ARGS[0] = 'old_platform':
+	cls
+	gs 'stat'
+	'An old railway platform, it looks like it was abandoned the sign no longer legible, but there''s a hand painted sign from the communal cottages not too far away.'
+
+	if money >= 75:
+		act 'Buy a ticket to St. Petersburg city center (75 <b>₽</b>)':
+			money -= 75
+			train_dir = 1
+			train_dest = 1
+			gt 'train', 'communalN'
+		end
+	end
+	if money >= 50:
+		act 'Buy a ticket to St. Petersburg city industrial area (50 <b>₽</b>)':
+			money -= 50
+			train_dir = 1
+			train_dest = 2
+			gt 'train', 'communalN'
+		end
+	end
+	if money >= 50:
+		act 'Buy a ticket to the village of Gadyukino (50 <b>₽</b>)':
+			money -= 50
+			train_dir = 1
+			train_dest = 4
+			gt 'train', 'communalS'
+		end
+	end
+	if money >= 75:
+		act 'Buy a ticket to the old platform by the old town (75 <b>₽</b>)':
+			money -= 75
+			train_dir = 1
+			train_dest = 5
+			gt 'train', 'communalS'
+		end
+	end
+	if money >= 100:
+		act 'Buy a ticket to Pavlovsk (100 <b>₽</b>)':
+			money -= 100
+			train_dir = 1
+			train_dest = 5
+			gt 'train', 'communalS'
+		end
+	end
+end
+
+!!destination 4
+if $ARGS[0] = 'village':
+	cls
+	gs 'stat'
+	'A fairly non-descript railway platform. The small village of Gadyukino is not far from here.'
+
+	act 'Return to the road':minut += 15 & nroad = 10 & gt 'road'
+
+	if money >= 100:
+		act 'Buy a ticket to St. Petersburg city center (100 <b>₽</b>)':
+			money -= 100
+			train_dir = 1
+			train_dest = 1
+			gt 'train', 'villageN'
+		end
+	end
+	if money >= 75:
+		act 'Buy a ticket to St. Petersburg city industrial area (75 <b>₽</b>)':
+			money -= 75
+			train_dir = 1
+			train_dest = 2
+			gt 'train', 'villageN'
+		end
+	end
+	if money >= 50:
+		act 'Buy a ticket to the old platform by the communal village (50 <b>₽</b>)':
+			money -= 50
+			train_dir = 1
+			train_dest = 3
+			gt 'train', 'villageN'
+		end
+	end
+	if money >= 50:
+		act 'Buy a ticket to the old town (50 <b>₽</b>)':
+			money -= 50
+			train_dir = 1
+			train_dest = 5
+			gt 'train', 'villageS'
+		end
+	end
+	if money >= 75:
+		act 'Buy a ticket to Pavlovsk (75 <b>₽</b>)':
+			money -= 75
+			train_dir = 1
+			train_dest = 5
+			gt 'train', 'villageS'
+		end
+	end
+end
+
+!!destination 5
+if $ARGS[0] = 'oldtown':
+	cls
+	gs 'stat'
+	'A fairly modern railway platform. The old town of Pushkin is just a five minute walk away from here, on the other side of the road.'
+	if money >= 125:
+		act 'Buy a ticket to St. Petersburg city center (125 <b>₽</b>)':
+			money -= 125
+			train_dir = 1
+			train_dest = 1
+			gt 'train', 'oldtownN'
+		end
+	end
+	if money >= 100:
+		act 'Buy a ticket to St. Petersburg city industrial area (100 <b>₽</b>)':
+			money -= 100
+			train_dir = 1
+			train_dest = 2
+			gt 'train', 'oldtownN'
+		end
+	end
+	if money >= 75:
+		act 'Buy a ticket to the old platform by the communal village (75 <b>₽</b>)':
+			money -= 75
+			train_dir = 1
+			train_dest = 3
+			gt 'train', 'oldtownN'
+		end
+	end
+	if money >= 50:
+		act 'Buy a ticket to the village of Gadyukino (50 <b>₽</b>)':
+			money -= 50
+			train_dir = 1
+			train_dest = 4
+			gt 'train', 'oldtownN'
+		end
+	end
+	if money >= 50:
+		act 'Buy a ticket to Pavlovsk (50 <b>₽</b>)':
+			cls
+			money -= 50
+			minut += 5
+			gs 'stat'
+			'<center><img src="images/etogame/electri.jpg"></center>'
+			'You pay for the ticket and board the next train going to Pavlovsk.'
+			'After 5 minutes, you see the town of Pavlovsk approaching. Pavlovsk Castle is an impressive sight, even from a long distance. The train stops at its final destination, a platform in Pavlovsk station.'
+
+			act 'Get off the train':minut += 20 & nroad = 20 & gt 'vokzalperG'
+		end
+	end
+end
+
+!!For travel north from old town to village
+if $ARGS[0] = 'oldtownN':
+	cls
+	minut += 15
+	gs 'stat'
+	'<center><img src="images/etogame/electri.jpg"></center>'
+	'After 15 more minutes, the train stops at another station. The village of Gadyukino is not far from here.'
+	act 'Get off the train':train_dir = 0 & minut += 5 & nroad = 10 & gt 'road'
+	if train_dest < 4:
+		act 'Travel towards the city center':
+			minut += 15
+			gt 'train', 'villageN'
+		end
+	end
+end
+
+!!For travel north from village the communal cottages
+if $ARGS[0] = 'villageN':
+	cls
+	minut += 15
+	gs 'stat'
+	'<center><img src="images/etogame/electri.jpg"></center>'
+	'After 15 more minutes, the train stops at an old platform. The communal cottages are in this area along with some fields and not much else.'
+	act 'Get off the train':train_dir = 0 & minut += 5 & nroad = 5 & gt 'road'
+	if train_dest < 3:
+		act 'Travel towards the city center':
+			minut += 15
+			gt 'train', 'communalN'
+		end
+	end
+end
+
+!!For travel north from communal cottages to city industrial
+if $ARGS[0] = 'communalN':
+	cls
+	minut += 15
+	gs 'stat'
+	'<center><img src="images/etogame/electri.jpg"></center>'
+	'After 15 more minutes, the train stops at another station. This is the industrial area of the city.'
+	act 'Get off the train':train_dir = 0 & minut += 5 & gt 'vokzalholle'
+	if train_dest < 2:
+		act 'Travel towards the city center':
+			minut += 15
+			gt 'train', 'industrialN'
+		end
+	end
+end
+
+!!For travel north from city industrial to city center
+if $ARGS[0] = 'industrialN':
+	cls
+	minut += 5
+	gs 'stat'
+	'<center><img src="images/etogame/electri.jpg"></center>'
+	'After 5 more minutes, the train stops at the large city center station. The large office blocks and shopping centers fill your view.'
+	act 'Get off the train':train_dir = 0 & gt 'cityTrain', 'inside'
+end
+
+!!For travel south from city industrial to communal cottages
+if $ARGS[0] = 'industrialS':
+	cls
+	minut += 15
+	gs 'stat'
+	'<center><img src="images/etogame/electri.jpg"></center>'
+	'After 15 more minutes, the train stops at an old platform. The communal cottages are in this area along with some fields and not much else.'
+	act 'Get off the train':train_dir = 0 & minut += 5 & nroad = 5 & gt 'road'
+	if train_dest > 3:
+		act 'Travel towards Pavlovsk':
+			minut += 15
+			gt 'train', 'communalS'
+		end
+	end
+end
+
+!!For travel south from communal cottages to village
+if $ARGS[0] = 'communalS':
+	cls
+	minut += 15
+	gs 'stat'
+	'<center><img src="images/etogame/electri.jpg"></center>'
+	'After 15 more minutes, the train stops at another station. The village of Gadyukino is not far from here.'
+	act 'Get off the train':train_dir = 0 & minut += 5 & nroad = 10 & gt 'road'
+	if train_dest > 4:
+		act 'Travel towards Pavlovsk':
+			minut += 15
+			gt 'train', 'oldtownS'
+		end
+	end
+end
+
+!!For travel south from village to oldtown
+if $ARGS[0] = 'oldtownS':
+	cls
+	minut += 15
+	gs 'stat'
+	'<center><img src="images/etogame/electri.jpg"></center>'
+	'After 15 more minutes, the train stops at another station. The old town of Pushkin famous for its extensive park and old historic buildings, the locals are known to be eccentric but that adds to the charm.'
+	act 'Get off the train':train_dir = 0 & minut += 5 & nroad = 15 & gt 'road'
+	if train_dest > 5:
+		act 'Travel towards Pavlovsk':
+			minut += 15
+			gt 'train', 'pavlovskS'
+		end
+	end
+end
+
+!!Traveling south from old town to Pav, end of the line
+if $ARGS[0] = 'pavlovskS':
+	cls
+	gs 'stat'
+	'<center><img src="images/etogame/electri.jpg"></center>'
+	'After 5 minutes, you see the town of Pavlovsk approaching. Pavlovsk Castle is an impressive sight, even from a long distance. The train stops at its final destination, a platform in Pavlovsk station.'
+	act 'Get off the train':train_dir = 0 & minut += 5 & nroad = 20 & gt 'vokzalperG'
+end
+
+
+!!new train and train station events.
+!!chances are for leaving Pavlovsk to the city. Private compartment 10%, oldman 10%, fit 15%, young 20%, weed 20%, gopnik 25%. 
+!!chances are for leaving the city for Pavlovsk. Private compartment 15%, oldman 10%, fit 20%, young 25%, gopnik 30%. 
+
+!!event Weed
+if $ARGS[0] = 'weed':
+    '<center><h4>Pavlovsk Station</h4></center>'
+    '<center><img src="images/locations/shared/train/pavplat.jpg" ></center>'
+    'When you bought your ticket, they told you that you had just missed the train. A little miffed at this, you take a seat on one of the benches on the platform to wait for the next train to the city to one to arrive.'   
+    act 'A man approaches you with an offer':
+        '<center><h4>Pavlovsk Station</h4></center>'
+        '<center><img src="images/locations/shared/train/weed.jpg" ></center>'
+        'Only a few minutes have passed when you hear someone walk up right behind you and stop. You know they must be mere inches away, so you turn to look. Standing there is a young man, smiling at you, holding up a self-rolled cigarette... that looks suspiciously like a joint. The guy doesn''t seem too concerned about somebody catching him with that in public, though, and focuses entirely on you:'
+        '"Hey beautiful, I couldn''t help but notice you sitting here all by yourself. Guess you missed the train, too, huh?" He looks around, as if he only just noticed that he was walking around a public place with a joint in his hand, then leans down and whispers conspiratorially: "How about we blaze one while we wait?"'     
+        act 'Refuse':
+            '<center><h4>Pavlovsk Station</h4></center>'
+            '<center><img src="images/locations/shared/train/pavplat.jpg" ></center>'
+            'You have no idea what could be in it and have no intention of being caught out in the open with marijuana either, so you shake your head. "No, thanks."'
+            'He shrugs and steps away. "Alright, just trying to be friendly. It''s your loss."'
+            'He wanders around for a bit. Eventually another young woman comes down to the platform. You watch him go over, and you are sure he''s making her the same offer, but unlike you, she nods and they smoke the joint together.'
+            'You can see them talk a little and even from where you''re sitting you can tell that the woman is giving him wanton looks. Before long, the two of them sneak off across the tracks and disappear; just as the train arrives, they come rushing back, clothes out of place and hair disheveled.'
+            'It isn''t hard to guess what they were doing to kill time.'
+            act 'Board the train to the city':
+                cls
+                minut += 45
+                gs 'stat'
+                '<center><img src="images/locations/shared/train/ride.jpg"></center>'
+                'Once the train comes to a stop, you board it. The ride to the city is uneventful; you don''t see either of the two smokers either.'
+                'After 45 minutes, the train reaches its final stop in the northern district of the City.'
+                act 'Leave the train':minut += 5 & nroad = 0 & gt 'Vokzal'
+                end
+            end
+		end
+		act 'Smoke with him':
+!!arousal maxes after smoking the laced weed.
+			horny = 100
+            '<center><h4>Pavlovsk Station</h4></center>'
+            '<center><img src="images/locations/shared/train/weedsmoke.jpg" ></center>'
+            'You smile and nod, taking the joint from him - you only live once and it''s as good a pastime as any. He lights it as you take a long slow drag off it and hold it in, feeling it in your lungs... until you start coughing, causing him to chuckle. You feel the relaxing effect almost at once, your head feeling both lighter and heavier, your mind slowing down... but you notice a slightly odd taste to the smoke that you can''t place - maybe that''s just what this variety tastes like. You pace it back and forth with him, chatting idly as you smoke, and as you do, you are starting to feel aroused: Your nipples harden, your pussy is getting soaking wet and you feel so wound up that you have to actively keep your hands in check to prevent yourself from masturbating out in the open.'
+            'One thing you know for sure, even in your current state: Marijuana isn''t supposed to have this effect. You look at your smoking buddy. "What else was in this joint?"'
+            '"XTC", he responds with hesitation, a lazy smile on his face. "It feels great, right?" He grabs you by the hand and pulls you up along with him. "Come on, let''s go have some fun before the train arrives. I know you''re just as horny as I am."'
+            'If you were simply horny, you might not have accompanied him, but the XTC had fully taken effect by now, your mind was in a rush and you felt like you could trust the guy who just drugged you, so you went with him, looking forward to some ''fun''.'       
+			act 'Feeling randy':
+                '<center><h4>Pavlovsk Station</h4></center>'
+                '<center><img src="images/locations/shared/train/weedhorny.jpg" ></center>'
+                'He leads you across the tracks to the less-used side of the platform and takes you behind one of the roofed waiting areas. Once there, he starts kissing you and pulling your top aside enough to bare your breasts, squeezing and caressing them as you make out, and you groan into his mouth in response.'
+                'You are turned on beyond reason and badly want to f*** him, or anybody else, as long as you just get have a cock inside you. The XTC tells you that he is a great guy, that you can feel safe with him, that nothing you do here will backfire.'
+                'Your hands undo his pants, you pull out his dick and start stroking him with one hand while your other hand is rubbing your pussy through your clothes.'         
+			    gs 'arousal', 'foreplay', 5
+                gs 'stat'
+				act 'Suck him':
+					gs 'boyStat', 72
+                    '<center><h4>Pavlovsk Station</h4></center>'
+                    '<center><img src="images/locations/shared/train/weedbj.jpg" ></center>'
+                    'He gently pushes down on your shoulders and that is all the encouragement you need. You squat down in front of him at once, take his <<dick>>cm <<$dick_girth>> dick into your mouth and start sucking him. Your tongue is giving every bit of his cock it can reach its attention and you bob your head back and forth, your <<$liptalk>> wrapped tightly around his shaft.'
+                    'Then you take him as deep into your mouth as you can, keeping him there until you start to gag and have to come up for air, but after two, three heavy breaths to recover, you take him inside again, now rapidly moving your head, sucking and deepthroating him for all your worth.'
+                    gs 'arousal', 'bj', 5, 'deepthroat'
+                    gs 'stat'
+					act 'fuck him':
+					    gs 'boyStat', 72
+                        '<center><h4>Pavlovsk Station</h4></center>'
+                        '<center><img src="images/locations/shared/train/weedvag.jpg" ></center>'
+                        'He is having the time of his life, but all your blowjob does is making you hornier, and you can''t take it any longer: You start taking your clothes off while you keep blowing him, removing every item below your waist. Once your pussy and ass are bare, you pull him down and get him to lay down on his back.'
+                        'He has barely even touched the ground when you have already straddled him, facing his legs, and lowering yourself down until you feel his <<dick>>cm <<$dick_girth>> cock stretch out your wet cunt. You moan out loud as you impale yourself on his shaft, going all the way down on the first stroke. You lift yourself up again and, again, take his entire length, faster this time. Then again, and again, riding him harder and faster with every stroke, his dick feeling as big as that of a prized stallion.'
+                        gs 'arousal', 'vaginal', 5, 'dom'
+                        gs 'stat'
+						act 'Take his cum':
+                            spafinloc = 12
+                            gs 'cum_manage'
+                            spafinloc = 11
+                            gs 'cum_manage'
+                            '<center><h4>Pavlovsk Station</h4></center>'
+                            '<center><img src="images/locations/shared/train/weedcum.jpg" ></center>'
+                            'You give him the fuck of a lifetime, feeling your orgasm approaching fast, so close, so very close... but he lifts you off and quickly stands up. "I''m about to cum!"'
+                            'You have half a mind to say the same but you are too turned on to speak. You squat down in front of him again, and start jerking him off as you open your mouth and stick out your tongue. It only takes a few strokes before he shoots most of his load into your mouth, with a few stray squirts landing on your chin.'
+							gs 'arousal', 'hj', 5, 'deepthroat'
+							'With your mouth still open, you show him his sperm on your tongue before you swallow it down, then start sucking his dick again. He was getting soft, but you feel him getting hard again in your mouth and you are already looking forward to another go so you can have your own orgasm.'
+                            'That''s when you hear the train coming. "The train''s here; we have to stop", he states, with a hint of regret, as he pulls his dick out of your mouth. Without another look at you, he quickly pulls up his pants and rushes over to the train as it comes to a stop. You hurriedly get dressed as well and then rush after him to get on the train. You make it just in time - the doors close almost as soon as you are in.'
+                            gs 'arousal', 'end'
+							gs 'stat'
+                            act 'Board the train to the city':
+                                cls
+                                minut += 45
+                                gs 'stat'
+                                '<center><img src="images/locations/shared/train/ride.jpg"></center>'
+                                'Once on the train, you look around but you don''t see the young man. Perhaps he got on a different car? You go looking for him, passing through a few different sections, hoping to continue what you started and deal with your overwhelming horniness, but after checking the entire train without seeing a hint of him, you give up and find a seat.'
+                                'After 45 minutes, the train reaches its final stop in the northern district of the City.'
+                                act 'Leave the train':minut += 5 & nroad = 0 & gt 'Vokzal'
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+end
+
+
+!!events starting on the train. Only one act will show up depending which one triggered but they all start the same.
+if $ARGS[0] = 'private':
+    '<center><img src="images/locations/shared/train/ride.jpg" ></center>'
+	'You board the train and walk past several of the private compartments on your way to the general seating on the car you are on.'
+	act 'Private Compartment':
+	    '<center><img src="images/locations/shared/train/ride.jpg" ></center>'
+		'As you are walking past one of the private compartments with a open door, you hear a mans voice. "Hello there young lady, would you care to join me?"'
+		'You stop and look inside the private compartment and see a man in his thirties or early forties in a expansive suit sitting their. He motions you into the private compartment. "It''s alright, come in and close the door"'
+		'When you pause he pulls out 500P and puts it on the seat next to him. "Come in and close the door, we can have a very enjoyable trip together and you can have this when we get there." He indicates the money next to him.'
+		act 'Refuse':
+	        '<center><img src="images/locations/shared/train/ride2.jpg" ></center>'
+			'Shaking your head "Fuck you, I''m no whore." With that you walk away and take a seat in the general seating area. You don''t see the man for the rest of the trip, though you do spend some time talking to some of your fellow passengers and you share the story with a couple of them. They seemed shocked a man would make such a offer to a nice young lady, all and all it is a nice trip.'
+!!which of these acts show up depending on where Sveta was going when the act triggered obviously.
+			act 'Arrive at Pavlovsk':
+				cls
+				minut+=45
+				gs'stat'
+				'<center><img src="images/locations/shared/train/ride.jpg" ></center>'
+				'After 45 minutes the train reaches its final stop, Pavlovsk.'				
+				act 'Leave the train':minut+=5&nroad=20&gt'vokzalperG'
+			end
+			act 'Arrive at the city':
+				cls
+				minut += 45
+				gs 'stat'
+			    '<center><img src="images/locations/shared/train/ride.jpg"></center>'
+				'After 45 minutes the train reaches its final stop, in the northern district of the City.'
+				act 'Leave the train':minut += 5 & nroad = 0 & gt 'Vokzal'
+			end
+		end
+		act 'Accept':
+	        gs 'boyStat', 72
+			'<center><img src="images/locations/shared/train/ridebj.jpg" ></center>'
+			'Well you could use the money, you step inside and close the door behind you. You pull the privacy blinds down, as you turn back, you see he already has his cock out. Kneeling down in front of him, you take his <<dick>>cm <<$dick_girth>> cock into your mouth. You bob your head up and down sucking his dick, while your hands take turns playing with his balls.'
+			act 'Continue':
+	            gs 'boyStat', 72
+				'<center><img src="images/locations/shared/train/ridevag.jpg" ></center>'
+				'He lets you suck his dick until the first stop, at that point he gets up and lifts you up as well. Once you are both up, he turns you around and bends you over. He pulls you clothes aside just enough for him to shove his <<dick>>cm <<$dick_girth>> cock in your twat. He strokes his dick the full length inside of your pussy, he is not especially rough, but then he isn''t exactly gentle either. He fucks you for some time until he starts to breath harder, at that point he stops and lays you down on the seat.'
+				act 'Continue':
+	                gs 'boyStat', 72
+				    '<center><img src="images/locations/shared/train/rideanal.jpg" ></center>'
+					'Once he has you laying on your back on the seat cushions he moves up and slips his <<dick>>cm <<$dick_girth>> cock in your ass. He is slow, giving your plenty of time to adjust to his dick. As you relax more he goes a little deeper and a little faster, it doesn''t take him long though. You feel the first spurt of sperm deposited in you ass, as he continues to cum, he pulls out of you.'
+					act 'Continue':
+	                    '<center><img src="images/locations/shared/train/ridecum.jpg" ></center>'
+						'As he pulls out several spurts are shot all over your ass and you can feel more of it leaking out of your gapping anus. With a final grunt and spurt, he then sits down opposite you. He puts his dick away and hands you the money, he pulls out a paper and starts to read it. No longer paying attention as you get yourself cleaned up.'
+						'Once cleaned up and dressed again, you sit there quietly as he seems content to just ride in silence. After a bit you pull out your phone and amuse your self with it until the train finally pulls into the station. "Well this is my stop." You tell him.'
+						'"Well I hope you have a safe trip and thank you for making this ride just a bit less dull." He says with a wink and goes back to his paper. You exit the compartment and make you way off the train.'
+!!which of these acts show up depending on where Sveta was going when the act triggered obviously.
+						act 'Arrive at Pavlovsk':
+					        cls
+					        minut+=45
+					        gs'stat'
+					        '<center><img src="images/locations/shared/train/ride.jpg" ></center>'
+					        'After 45 minutes the train reaches its final stop, Pavlovsk.'				
+					        act 'Leave the train':minut+=5&nroad=20&gt'vokzalperG'
+				        end
+						act 'Arrive at the city':
+						    cls
+						    minut += 45
+						    gs 'stat'
+						    '<center><img src="images/locations/shared/train/ride.jpg"></center>'
+						    'After 45 minutes the train reaches its final stop, in the northern district of the City.'
+						    act 'Leave the train':minut += 5 & nroad = 0 & gt 'Vokzal'
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+if $ARGS[0] = 'fit':
+	act 'Fit man':
+	    '<center><img src="images/locations/shared/train/ride1.jpg" ></center>'
+		'Sitting in a empty seat by the window you look out as others board the train. Shortly a man in his thirties are perhaps early forties sits down next to you, he is in great shape. Once the train starts moving he engages you in a conversation, he asks a few questions and talks about a variety of subjects. He is pretty charming and you can tell he is flirting with you.'
+		'As you talk you realize you are both getting off at the same stop and he asks if you would like to go for a walk with him along the tracks after you disembark the train. You have no doubt what he would really like to do with you and it is more than just walk, still he is in great shape and decent looking for his age.'
+		act 'Refuse':
+	        '<center><img src="images/locations/shared/train/ride2.jpg" ></center>'
+			'You politely refuse his offer, claiming that you have to get home soon or your mother would be worried. He doesn''t seem to disappointed and claims perhaps you will meet again on the train sometime and then you will have more time. Regardless he is still pleasant for the rest of the ride.'
+!!which of these acts show up depending on where Sveta was going when the act triggered obviously.
+			act 'Arrive at Pavlovsk':
+				cls
+				minut+=45
+				gs'stat'
+				'<center><img src="images/locations/shared/train/ride.jpg" ></center>'
+				'After 45 minutes the train reaches its final stop, Pavlovsk.'			
+				act 'Leave the train':minut+=5&nroad=20&gt'vokzalperG'
+			end
+			act 'Arrive at the city':
+				cls
+				minut += 45
+				gs 'stat'
+			    '<center><img src="images/locations/shared/train/ride.jpg"></center>'
+				'After 45 minutes the train reaches its final stop, in the northern district of the City.'
+				act 'Leave the train':minut += 5 & nroad = 0 & gt 'Vokzal'
+			end
+		end
+		act 'Accept':
+	        '<center><img src="images/locations/shared/train/fit.jpg" ></center>'
+			'You consider his offer and figure what the hell, it likely will be fun. You let him know you would love to go for a walk. You both disembark the train and wait for it to pull out of the station. Then he takes you by the hand and leads you down the tracks, talking to you about how pretty you are and flirting that much harder with you.'
+			'You end up walking further than you expected, well out of site of the station when he finally stops, he starts kissing you at once, while his hands begin to remove your clothes. He quickly has you half naked, right here out on the tracks, you feel thrilled at the idea someone could very easily happen by and see you like this.'
+			'While you are kissing he starts rubbing your clit with his fingers, he knows just how to touch you as it feels like jolts of electricity is running through you body, in a very pleasurable way. Once he has you good and wet and gentle pushes down on your shoulders'
+			act 'Continue':
+	            gs 'boyStat', 72
+				'<center><img src="images/locations/shared/train/fitbj.jpg" ></center>'
+				'Dropping to your knees you waste no time in taking his <<dick>>cm <<$dick_girth>> cock into your mouth, he places one hand on the back of your head. Wrapping your lips tightly around the shaft of his dick you bob your head sucking him off, occasionally he uses his hand to force you to gag a bit on his dick. Not to often and less than most you are use to, who seem to enjoy making you gag.'
+				'You stay on your knees sucking him for a long time, even with the padding of your clothes to kneels on, it is a bit rough on your knees.'
+				act 'Continue':
+	                gs 'boyStat', 72
+					'<center><img src="images/locations/shared/train/fitvag.jpg" ></center>'
+					'He pulls you up, back on your feet. Turning you around, you expect him to bend you over, but instead he lifts one of your legs off the ground and you feel him rubbing the head of his dick against the lips of your pussy. Once he has the head nice and wet he slides his <<dick>>cm <<$dick_girth>> cock into you, filling your pussy with his dick.'
+					'Holding one of your legs up with one hand the other wraps around your waist to help you keep your balance, you wrap a around around his shoulders as well. He strokes most of the length of his cock inside of your, he is not to gentle but he is far from rough about it. You moan out loud not caring if anyone hears you, if anyone is even closes enough to hear you. He completely fills you, both physical and emotionally with waves of pleasure.'
+					act 'Continue':
+	                    '<center><img src="images/locations/shared/train/fitcum.jpg" ></center>'
+						'He starts moaning a bit, then he pulls out of you, letting go of your leg and body. You squat down in front of him, rubbing your clit and open your mouth. Before he even gets his dick back in your mouth he spurts his cum across your lips, more of his sperm ends up shooting into your now fully opened mouth.'
+						'He squeezes out the last few drops of sperm into your mouth and then sticks his dick in your mouth. You swallow the sperm and then suck his dick clean of any more. Once he starts to get soft in your mouth he pulls back and starts to get dressed.'
+						'After he gets dressed, he waits for you to get dressed and clean up, then he walks you back to the station, the whole walk back he continues to flirt with you, just like he did at the very start.'
+!!which of these acts show up depending on where Sveta was going when the act triggered obviously.
+						act 'To Pavlovsk station':
+					        cls
+					        minut+=45
+					        gs'stat'
+					        '<center><img src="images/locations/shared/train/pavplat.jpg" ></center>'
+					        'You return to the Pavlovsk station.'			
+					        act 'Leave':minut+=5&nroad=20&gt'vokzalperG'
+				        end
+						act 'To city station':
+						    cls
+						    minut += 45
+						    gs 'stat'
+						    '<center><img src="images/locations/shared/train/cityplat.jpg"></center>'
+						    'You go to the northern district of the City.'
+						    act 'Leave':minut += 5 & nroad = 0 & gt 'Vokzal'
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+if $ARGS[0] = 'old':
+	act 'Old man':
+	    '<center><img src="images/locations/shared/train/ride2.jpg" ></center>'
+		'While sitting in your seat a old man sits down next to you. He offers you some nuts from a bag he is carrying. He then starts talking to you about how he has not been back to the area since his wife died a few years ago. You ask him about his wife and learn they had until recently a happy wonderful life, then how she got cancer and died a very slow and painful death while he could do nothing. He gets very emotional telling you the story, thanks you for listening to him once he finishes it, and how you remind him a great deal of his wife when she was young.'
+		'He startst to say more as the train pulls into the station and then shakes his head as if saying no to himself. You coax him into saying what he started too say. Finally he says he shouldn''t ask but wonders if you would be so kind to go with him to a place him and his wife liked to go. He would love the company if you are not to busy.'
+		act 'Refuse':
+	        '<center><img src="images/locations/shared/train/ride2.jpg" ></center>'
+			'You feel sorry for him but you really don''t have time for this, especially since you think this won''t be just a quick walk. You inform him you just don''t have time, he nods sadly in understanding and once at the station you both go your own way.'
+!!which of these acts show up depending on where Sveta was going when the act triggered obviously.
+			act 'Arrive at Pavlovsk':
+				cls
+				minut+=45
+				gs'stat'
+				'<center><img src="images/locations/shared/train/ride.jpg" ></center>'
+				'After 45 minutes the train reaches its final stop, Pavlovsk.'				
+				act 'Leave the train':minut+=5&nroad=20&gt'vokzalperG'
+			end
+			act 'Arrive at the city':
+				cls
+				minut += 45
+				gs 'stat'
+			    '<center><img src="images/locations/shared/train/ride.jpg"></center>'
+				'After 45 minutes the train reaches its final stop, in the northern district of the City.'
+				act 'Leave the train':minut += 5 & nroad = 0 & gt 'Vokzal'
+			end
+		end
+		act 'Accept':
+	        '<center><img src="images/locations/shared/train/old.jpg" ></center>'
+			'Your heart goes out to the guy, you feel sorry for him and his lose. You can make time and you agree to go with him and keep him company. He livens up and seems happier than you have seen him since he sat down next to you. Once off the train he leads you down the tracks a bit to a small bridge over a gully, he leads you down along the end going along side the bridge. He points out a small old building, saying him and his wife use to come down here all the time, especially when they was younger.'
+			'The place honestly kinda looks like crap but maybe it looked a lot different when he was young, so you hold your tongue and walk with him. He wraps his arm around your waste and points out several things talking about times him and his wife came down here for varies reasons. He leads up a set of stairs to a concert platform, he sighs when at the top you see a barred door. He says the last time him and his wife came here they snuck inside, thats when you notice the raging hard-on in his pants.'
+			'He glances down when he sees you looking and he quickly apologizes and admits him and his wife use to sneak down here and have sex. He says you look so much like her and it has been years since he had sex, maybe your could help a old man out?'
+			act 'No':
+			    'You tell him  your not going to have sex with him and it is kinda creepy to have sex where him and his wife use to anyways. You quickly pull free from him and make your way back to the platform, leaving the old guy behind'
+				act 'To Pavlovsk station':
+					cls
+					minut+=45
+					gs'stat'
+					'<center><img src="images/locations/shared/train/pavplat.jpg" ></center>'
+					'You return to the Pavlovsk station.'					
+					act 'Leave':minut+=5&nroad=20&gt'vokzalperG'
+				end
+				act 'To city station':
+				    cls
+				    minut += 45
+					gs 'stat'
+					'<center><img src="images/locations/shared/train/cityplat.jpg"></center>'
+					'You go to the northern district of the City.'
+					act 'Leave':minut += 5 & nroad = 0 & gt 'Vokzal'
+				end
+			end
+			act 'Agree':
+	            gs 'boyStat', 72
+				'<center><img src="images/locations/shared/train/oldvag.jpg" ></center>'
+				'Poor guy, why not help the guy out, it''s not like it is a big deal and he looks like he could really use it. You nod your head and start to squat down, but he stops you. "My wife didn''t believe in oral sex, please take off your bottoms" He says in a pleading and hopeful tone. You agree and strip from the waist down and he does the same.'
+				'He turns you around and has you put one foot on the gate blocking the door and spread your legs, as you face the door. He comes up behind you and doesn''t even check to see how wet you are. He just shoves his <<dick>>cm <<$dick_girth>> dick into your vagina and starts to roughly fuck you, while holding onto your hips. He fucks you for a surprisingly long time, before he pulls you down on the ground. Laying you on your side in a spoon position and he lays down behind you. He slips his dick back in you and start pounding your pussy as hard as he can again.'
+			    act 'Continue':
+	                gs 'boyStat', 72
+					'<center><img src="images/locations/shared/train/oldanal.jpg" ></center>'
+					'For some time he does that and then pulls out stopping a moment, you only have a second to realize he is rubbing the tip of his dick against you anus when he shoves his <<dick>>cm <<$dick_girth>> cock up your ass, he grabs your hips and forces his dick as far into your ass as he can, before he starts hammering your ass, as he says. "My wife loved anal, I hope you don''t mind."'
+					'He pounds your little asshole for some time as hard as he can, his wife must have really liked rough sex if this was the norm for them. He lifts your leg up and props your foot on the wall to keep your legs spread.'
+					act 'Continue':
+	                    '<center><img src="images/locations/shared/train/oldcum.jpg" ></center>'
+						'He suddenly pulls out and you feel his hot sperm splattering against your asshole, vagina and inner thighs. He doesn''t cum as much as you expected for not having sex for years, but maybe he jerks off a lot. He gets up, using your to help himself get up, which holds you against the ground until he is fully up. You stat to clean up the cum as he gets dressed, he starts whistling and walking off.'
+						'You get dressed and by the time you look up, he is already almost out of the gully back to the tracks. he seems a lot more spry suddenly and you have a sneaking suspicion you have been had, in more ways than one. Once dressed you head back to the platform.'
+!!which of these acts show up depending on where Sveta was going when the act triggered obviously.
+						act 'To Pavlovsk station':
+					        cls
+					        minut+=45
+					        gs'stat'
+					        '<center><img src="images/locations/shared/train/pavplat.jpg" ></center>'
+					        'You return to the Pavlovsk station.'					
+					        act 'Leave the train':minut+=5&nroad=20&gt'vokzalperG'
+				        end
+						act 'To city station':
+						    cls
+						    minut += 45
+						    gs 'stat'
+						    '<center><img src="images/locations/shared/train/cityplat.jpg"></center>'
+						    'You go to the northern district of the City.'
+						    act 'Leave the train':minut += 5 & nroad = 0 & gt 'Vokzal'
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+if $ARGS[0] = 'young':
+	act 'Young man':
+	    '<center><img src="images/locations/shared/train/ride1.jpg" ></center>'
+		'As you sit watching the scenery go by, someone sits down heavily next to you. You turn to see a good looking young guy in his early to mid twenties, staring at you with a smile. "I have walked from one end of this train to the other and you are by far the most beautiful girl on this train." You blush slightly at such a compliment.'
+		'"Thank you, you''re not so bad looking yourself." You say as you look him over. He is well groomed, with a nice suit jacket over a button up shirt, but the pants are patched, you suppose it is done for style, but it mostly clashes with the nice jacket.'
+		'"So where are you headed?" He asks.'
+		'"I get off at the next stop." He grins at your words and you realize how that could be taken and blush slightly.'
+		'"Well I could help you with that if you like, far better than doing it alone."'
+		act 'Refuse':
+	        '<center><img src="images/locations/shared/train/ride1.jpg" ></center>'
+			'Shaking your head no. "That''s not how I meant it." You say as the train comes to a stop.'
+			'"Well no reason we can''t have fun anyways" he makes one last ditch effort but you shake you head no and disembark the train.'
+!!which of these acts show up depending on where Sveta was going when the act triggered obviously.
+			act 'Arrive at Pavlovsk':
+				cls
+				minut+=45
+				gs'stat'
+				'<center><img src="images/locations/shared/train/ride.jpg" ></center>'
+				'After 45 minutes the train reaches its final stop, Pavlovsk.'				
+				act 'Leave the train':minut+=5&nroad=20&gt'vokzalperG'
+			end
+			act 'Arrive at the city':
+				cls
+				minut += 45
+				gs 'stat'
+			    '<center><img src="images/locations/shared/train/ride.jpg"></center>'
+				'After 45 minutes the train reaches its final stop, in the northern district of the City.'
+				act 'Leave the train':minut += 5 & nroad = 0 & gt 'Vokzal'
+			end
+		end
+		act 'Accept':
+	        '<center><img src="images/locations/shared/train/young.jpg" ></center>'
+			'You look him over and bite your lower lip, you don''t even know him but someone that makes it a bigger turn on. You know exactly what he wants and you find you want it too. You nod to him, he grins at you as you do. "Great, I''ll have you off in no time or you money back." He says with a laugh.'
+			'When the train comes to a complete stop he leads you off the car, you wait with him as the people leave the platform and the new passengers get on, then as the train leaves the station he talks you on a walk along the track.'
+			act 'Continue':
+	            gs 'boyStat', 72
+				'<center><img src="images/locations/shared/train/youngvag.jpg" ></center>'
+				'As you walk together he reaches inside of your panties and starts rubbing your clit and then he starts to finger bang you. As soon as he has you good and soaking wet, he pulls down his pants and sits on the tracks, pulling you down with him. Getting your clothes aside just enough, you squat down on his <<dick>>cm <<$dick_girth>> cock, you feel it filling your twat as you lower yourself down on the shaft, impaling yourself.'
+				'You start riding him, completely controlling the action, you take him to the perfect depth and speed. Moaning louder and louder you feel yourself building up to a peek of pleasure, but before you can, he pulls you off and stands back up. Pulling you up with him. "Not yet, not yet, that was just a warm up." You are torn from screaming at him from blocking your orgasm and melting in participation for what is surely to come.'
+				act 'Continue':
+	                gs 'boyStat', 72
+					'<center><img src="images/locations/shared/train/youngbj.jpg" ></center>'
+					'He walks you down a bit further between two transformers for the train, once off the track and between them he pulls down his pants. You squat down in front of him and take his <<dick>>cm <<$dick_girth>> cock into your mouth, wrapping your lips tightly around his shaft. You start bobbing your head, sucking his dick, while one hand plays with his balls.'
+					'You can taste your own pussy juices on his dick, as you suck on him. In a bit he pulls his dick out of your mouth and then lays down on his back as he looks at you. "Lower yourself down on me again, but this time take my dick in your ass."'
+					act 'Do as he says':
+	                    gs 'boyStat', 72
+						'<center><img src="images/locations/shared/train/younganal.jpg" ></center>'
+						'You lower yourself over him, you feel the head of his dick against your asshole and the pressure building up until the head pops into your asshole. This causes you to gasp a little in a mixture of pain and pleasure, slowly you lower yourself further taking even more of his <<dick>>cm <<$dick_girth>> cock into your ass.'
+						'Once you have lowered yourself as far down as is most comfortable amount of his dick in your ass, you start to rise and lower yourself. Riding his dick with your ass, his hands come up to grab your waist and help support you, allow you to focus on getting into a rhythm, after a bit you even use one hand to rub your clit.'
+						'You feel more and more turned on, moaning loudly and riding him harder and faster. Before you even realize your doing it, you have taken him balls deep in your ass. Your body starts to shudder as your moans come to a crescendo as you orgasm, falling back against him as the shudders pass through your body.'
+						act 'Continue':
+	                        '<center><img src="images/locations/shared/train/youngcum.jpg" ></center>'
+							'Once you orgasm he lifts you off him and then stands up beside you. You squat down next him and open your mouth, he shoots his load of hot sticky sperm in your mouth and some on your lips. After several such spurts he starts to pull up his pants, while you swallow down his seamen. He waits for you to get dressed and clean up, then he walks you back to the platform.'
+							'"I am glad we meet today <<$nickname>> this has been one of the best days of my life, I hope to see you again some day." he tells you once he has you safely back on the platform.'
+							'"I had fun too, I hope we run into each other again, who knows maybe on the train again." With that you both go your seperate ways.'
+!!which of these acts show up depending on where Sveta was going when the act triggered obviously.
+							act 'To Pavlovsk station':
+					            cls
+					            minut+=45
+					            gs'stat'
+					            '<center><img src="images/locations/shared/train/pavplat.jpg" ></center>'
+					            'You return to the Pavlovsk station.'			
+					            act 'Leave the train':minut+=5&nroad=20&gt'vokzalperG'
+							end
+							act 'To city station':
+						        cls
+						        minut += 45
+						        gs 'stat'
+						        '<center><img src="images/locations/shared/train/cityplat.jpg"></center>'
+						        'You go to the northern district of the City.'
+						        act 'Leave the train':minut += 5 & nroad = 0 & gt 'Vokzal'
+					        end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+if $ARGS[0] = 'Gopnik':
+	act 'Gopnik':
+	    '<center><img src="images/locations/shared/train/ride3.jpg" ></center>'
+		'As you are sitting waiting for the train to finish loading, a gopnik boy sits down next to you. He gives you the once over and leans in close putting his arm around you. He starts to kiss you almost at once while a hand starts to roam across your breasts.'
+		act 'Stop him':
+	        '<center><img src="images/locations/shared/train/ride2.jpg" ></center>'
+			'You push him away, which doesn''t deter him in the slightest. You push him off again and then get up and move to another seat next to a woman. Leaving him no where to sit, he looks at you a moment and then shrugs and looks out the window. The rest of the ride is fairly uneventful.'
+!!which of these acts show up depending on where Sveta was going when the act triggered obviously.
+			act 'Arrive at Pavlovsk':
+				cls
+				minut+=45
+				gs'stat'
+				'<center><img src="images/locations/shared/train/ride3.jpg" ></center>'
+				'After 45 minutes the train reaches its final stop, Pavlovsk.'				
+				act 'Leave the train':minut+=5&nroad=20&gt'vokzalperG'
+			end
+			act 'Arrive at the city':
+				cls
+				minut += 45
+				gs 'stat'
+			    '<center><img src="images/locations/shared/train/ride.jpg"></center>'
+				'After 45 minutes the train reaches its final stop, in the northern district of the City.'
+				act 'Leave the train':minut += 5 & nroad = 0 & gt 'Vokzal'
+			end
+		end
+		act 'Go with it':
+	        '<center><img src="images/locations/shared/train/gopnik.jpg" ></center>'
+			'He is pretty cute, so you return his kiss and don''t even mind him pawing at your body. During the ride you hear more than a few people comment on the two of you making out like this on the train or even make suggestions often pointedly that this is not a proper place to show this level of affection. All that manages to do is drive your rebellious feelings and make you even more brazen.'
+			'Once the train stops are your destination you get off the train with him, you barely make it off onto the platform when he pulls you into another kiss, he is actually a pretty good kisser despite his pawing hands. Breaking the kiss he says "Lets go for a walk, somewhere a little more private."'
+			act 'Decline':
+			    '<center><img src="images/locations/shared/train/gopnik.jpg" ></center>'
+				'You shake your head no. "Sorry, but I don''t have time. It was fun, the trip was a lot more fun than I expected. Maybe I will see you again sometime and we can pick up where we left off." You give him a long slow kiss then bounce away and head out off the platform. You hear him murmur his disappointment at not getting more, but you don''t mind.'
+				act 'Leave Pavlovsk Platform':
+				    cls
+				    minut+=45
+				    gs'stat'
+				    '<center><img src="images/locations/shared/train/pavplat.jpg" ></center>'
+				    'You leave the platform and head into the train station.'				
+				    act 'Leave':minut+=5&nroad=20&gt'vokzalperG'
+			    end
+			    act 'Leave City Platform':
+				    cls
+				    minut += 45
+				    gs 'stat'
+			        '<center><img src="images/locations/shared/train/cityplat.jpg"></center>'
+				    'You leave the platform and head into the train station.'
+				    act 'Leave':minut += 5 & nroad = 0 & gt 'Vokzal'
+			    end
+			end
+			act 'Agree':
+				'<center><img src="images/locations/shared/train/gopnikwalk.jpg" ></center>'
+				'He talks you to one of the high walk ways that go over the tracks, he holds your hand and points out things. You already know about the things he is talking about, but you let him tell you about them anyways. He is surprisingly charming and sweet after the pawing he gave you on the train. He even throws a lot of compliments your way, like saying how the sun pales in comparison to your beauty and the like. You consider telling him, he really doesn''t have to try this hard but you are enjoying the flirting and let him go on.'
+				'Once those leaving the train have all left and those boarding have made it on the train and the train has left the station. He gives a final look around to see if anyone else is around, when he doesn''t see anyone he stops and turns towards you. He unbutton his pants and pulls them almost down to his knees, his dick springs free, already hard.'
+				act 'Um no':
+				    'Seeing the dick spring free you are already shaking your head no and you laugh abit. "You must think I''m a slut or something, I thought you was a nice guy but guess I was wrong." With that you turn and walk off, he tries to pull up his pants, calling you "You fucking tease get back here."'
+					'With that you use his distraction of pulling his pants back up to run back down the stairs to the platform.'
+				    act 'Leave Pavlovsk Platform':
+				        cls
+				        minut+=45
+				        gs'stat'
+				        '<center><img src="images/locations/shared/train/pavplat.jpg" ></center>'
+				        'You leave the platform and head into the train station.'				
+				        act 'Leave':minut+=5&nroad=20&gt'vokzalperG'
+			        end
+			        act 'Leave City Platform':
+				        cls
+				        minut += 45
+				        gs 'stat'
+			            '<center><img src="images/locations/shared/train/cityplat.jpg"></center>'
+				        'You leave the platform and head into the train station.'
+				        act 'Leave':minut += 5 & nroad = 0 & gt 'Vokzal'
+			        end
+			    end
+				act 'Blow him':
+	                gs 'boyStat', 72
+					'<center><img src="images/locations/shared/train/gopnikbj.jpg" ></center>'
+					'You squat down in front of him and take his <<dick>>cm <<$dick_girth>> cock into your mouth, your hand stroking his shaft while you roll your tongue around the head of his dick in your mouth. You stroke his dick with your hand in rhythm with bobbing your head back and forth on his dick. You other hand fondles and plays with his balls as you do. You know this is kinda slutty, you barely know him and here you area sucking his dick above the train platform.'
+					'But the idea of getting caught is making this a lot more arousing that it should be, plus he is kinda cute and who care''s if it is slutty. You''re having fun and it''s you body to do with as you please.'
+					act 'Continue':
+	                    gs 'boyStat', 72
+						'<center><img src="images/locations/shared/train/gopnikvag.jpg" ></center>'
+						'Many minutes pass as you suck him, you even start rubbing your own clit, feeling a lot more turned on sucking his dick than you expected to be. Maybe sensing it or maybe he always planned on more than just a blow job, he pulls you up and pulls aside your clothes enough to bare you naked ass and expose your glistening wet pussy.'
+						'He turns you around and bends you over up against the side of the walkway railings, he slips his <<dick>>cm <<$dick_girth>> cock into your soppying wet pussy. It slides in easily, feeling how wet and turned on you are he starts fucking you hard. He is pounding his hips against your ass cheeks, as he reaches up and grabs your shoulder with one hand to keep you from moving away as he furiously fucks your pussy, bringing you into a state of ecstatic bliss.'
+						act 'Continue':
+	                        '<center><img src="images/locations/shared/train/gopnikanal.jpg" ></center>'
+							'Another train rolls into the station, with that he stops fucking you and pulls up his pants with out button them back in place. He grabs you hand and pulls you along, you manage to half cover up, but you know your ass is still partially showing. He rushes down one of the side stairs into a older part of the station, over to the road next to the station where there is a small overpass over a lower part of the ground.'
+							'Once out of the way, just down from the station he pushes you up against the old wall and pulls your clothes aside again. He shoves his dick back in your pussy and starts fucking you again, as he does he leans forward and seductively whispers in your ear. "I''m going to fuck that tight little ass of yours." With out waiting for a response from you, he slips his dick out and slides his <<dick>>cm <<$dick_girth>> cock up your ass. You gasp slightly in pain but mostly moan in pleasure. You are so turned on at the moment you don''t really care where he sticks his dick as long as he keeps fucking you.'
+							act 'Continue':
+	                            '<center><img src="images/locations/shared/train/gopnikcum.jpg" ></center>'
+!! <<boy>> is random boyfriend name. 
+							    'He fucks your ass, but not as rough as he was fucking your pussy, still he is just rough enough to make it hurt a little with the growing pleasure building inside of you. It doesn''t take to long before he is panting into your ear as he fucks your tight little ass hole with his dick, suddenly he pulls out and you feel his hot sperm shoot all over your ass cheeks. Several spurts later and he wipes the tips of his dick off on your ass cheeks, before pulling his pants up.'
+								'As you clean up, "By the way I''m <<boy>>" says with a smile'
+								'You can''t help but laugh at that, you just let him fuck you every which way and you realized you didn''t even know his name. "<<$nickname>>, pleasure to meet you, a real pleasure." You add with another laugh.'
+								'He starts to walk away, "It was nice meeting you as well <<$nickname>>, maybe I can call you sometime."'
+								act 'Give him your number':
+								    '"I would like that." You tell him as you give him your number and he waves as he walks off.'
+!!25% chance he really does call and become a boyfriend.
+                                act 'Don''t give him your number.':
+								    'You shake your head. "Look <<boy>, I have fun but I am not looking for more than that right now. Maybe we will see each other on the train again or something sometime."'
+									'He shrugs like it doesn''t really matter to him. "Sure see you around." With that he walks off leaving you finish getting your clothes all in order.'							
+!!which of these acts show up depending on where Sveta was going when the act triggered obviously.
+						            act 'To Pavlovsk station':
+					                    cls
+					                    minut+=45
+					                    gs'stat'
+					                    '<center><img src="images/locations/shared/train/pavplat.jpg" ></center>'
+					                    'You return to the Pavlovsk station.'			
+					                    act 'Leave':minut+=5&nroad=20&gt'vokzalperG'
+				                    end
+							        act 'To city station':
+						                cls
+						                minut += 45
+						                gs 'stat'
+						                '<center><img src="images/locations/shared/train/cityplat.jpg"></center>'
+						                'You go to the northern district of the City.'
+						                act 'Leave':minut += 5 & nroad = 0 & gt 'Vokzal'
+					                    end
+						            end
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+
+
+
+--- train ---------------------------------
+
