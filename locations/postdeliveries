@@ -4,7 +4,7 @@
 !!postamountrand = (0-2), whether there is a little, medium or lots of mail to deliver. Affects how much time you have to do other things
 !!poststreets = (0-1), whether the "dangerous streets" are used to save time. Enables encounters with bandits
 !!eventrand = (1-x), selects which event plays
-!!posteventdone1-5 = (0-1) stops non-repeatable events from repeating
+!!posteventQW1-5 = (0-x) sets quest stage for events with after delivery stages
 !!posteventcounter = (0-1) used to set first and second round of events
 !!petrand = (0-2), whether a cat, dog or catgirl happens to walk by during your break
 !!postbandQW = (0-6), quest stages for the "bandits" story line
@@ -87,15 +87,15 @@ end
 if $ARGS[0] = 'event':
 	eventrand = rand (1,120)
 !!change to determine which event is chosen. Easily moddable in case events ought to happen more or less often.
-	if eventrand <= 3 and posteventdone1 = 0:
+	if eventrand <= 3 and posteventQW1 = 0:
 		gt 'postdeliveries', '1'
-	elseif eventrand <= 6 and posteventdone2 = 0:
+	elseif eventrand <= 6 and posteventQW2 = 0:
 		gt 'postdeliveries', '2'
-	elseif eventrand <= 9 and posteventdone3 = 0:
+	elseif eventrand <= 9 and posteventQW3 = 0:
 		gt 'postdeliveries', '3'
-	elseif eventrand <= 12 and posteventdone4 = 0:
+	elseif eventrand <= 12 and posteventQW4 = 0:
 		gt 'postdeliveries', '4'
-	elseif eventrand <= 15 and posteventdone5 = 0:
+	elseif eventrand <= 15 and posteventQW5 = 0:
 		gt 'postdeliveries', '5'
 	elseif eventrand <= 20:
 		gt 'postdeliveries', '6'
@@ -164,7 +164,7 @@ if $ARGS[0] = '1':
 	end
 	act 'Ask him what''s in the parcel':
 		cla
-		posteventdone1 = 1
+		posteventQW1 = 1
 		'"I don''t know... maybe. Depends. What did you buy your wife?" you ask him.'
 		'Glad to hear you didn''t shoot down the idea right away, he shrugs: "It''s lingerie. A fancy gown, of sorts. I don''t know, I think she''d like it."'
 		'When he sees your hesitant look, he adds: "You can change in the bathroom, I wouldn''t see anything inappropriate! The gown will cover you up! Please, I''m a married man! I only want to make my wife happy!"'
@@ -179,7 +179,7 @@ if $ARGS[0] = '1':
 		end
 		act 'Say you would, but you have a job to do':
 			cla
-			postafter = 1
+			posteventQW1 = 2
 			'"That... sounds interesting, but I really don''t have time," you apologize to the man. "I still have some mail to deliver."'
 			'He ponders for a moment, and suggests: "How about you come back after you finish your round? My wife won''t be home for a few more hours. Please?"'
 			'"I''ll think about it. I really have to go now! Maybe see you later!" you say, and continue your round.'
@@ -191,7 +191,7 @@ end
 if $ARGS[0] = '2':
 	cla
 	*clr
-	posteventdone2 = 1
+	posteventQW2 = 1
 	'<center><img src="images/shared/postoffice/events/postevent2-1.jpg"></center>'
 	'As you walk up some stairs to deliver a letter, you nearly bump into a drunk girl. "Hey, cutie!" she slurs, and winks at you. "What brings you here?"'
 	'"I uhh... I have a letter for Mr. Yanovich?" you tell her.'
@@ -219,7 +219,7 @@ if $ARGS[0] = '2':
 		end
 		act 'Ask if they can wait until you finish your round':
 			cla
-			postafter = 2
+			posteventQW2 = 2
 			'You point at your bag apologetically and say: "I want to but I can''t right now, I still have some deliveries to do! Maybe I can come back when I''m done with my round, though?"'
 			'The girl looks at Arsen and smiles: "What do you think, babe? I can just give you a quick BJ now, and we''ll play more when she''s back? Please? I really like her!"'
 			'Arsen looks you up and down again. He hates the idea of having to wait, but definitely wants you to join. He sits back down in his beanbag chair and shrugs: "I guess," while he grabs the water pipe again. "Start sucking then."'
@@ -246,7 +246,7 @@ if $ARGS[0] = '3':
 	''
 	act 'Ask him what he wants':
 		cla
-		posteventdone3 = 1
+		posteventQW3 = 1
 		'"Uhh... why?" you ask him. "What do you want?"'
 		'He casts a quick look down to the street to make sure no one''s listening in, and says: "You say you love clothes? I love cute little girls like you. You get whatever''s in this box if you suck my dick. I can guarantee you: you''ll want what''s in this box. And I want that mouth on my cock. Win-win. So... interested?"'
 		''
@@ -260,6 +260,7 @@ if $ARGS[0] = '3':
 			''
 			act 'Say you''ll be back when you''re done':
 				cla
+				posteventQW3 = 2
 				'"Deal. I''ll come back once I''m done," you tell him. "I should be done around 15:00."'
 				'"Heh... I can''t wait. I have a feeling we''re going to be good friends," he grins, as he signs for his parcel. "See you then."'
 				act 'Continue your round':gt 'postdeliveries', 'resume'
@@ -307,8 +308,7 @@ if $ARGS[0] = '4':
 		act 'Agree to jerk him off, to be safe': gt 'postevents', '4'
 		act 'Stick to your guns and leave':
 			cla
-			postafter = 4
-			posteventdone4 = 1
+			posteventQW4 = 1
 			'Not saying another word, you turn around and leave his apartment. Hopefully you''re right about the postmaster believing you...'
 			act 'Continue your round':gt 'postdeliveries', 'resume'
 		end
@@ -323,8 +323,7 @@ if $ARGS[0] = '4':
 		act 'Do as he says and jerk him off': gt 'postevents', '4'
 		act 'Refuse and run away':
 			cla
-			postafter = 4
-			posteventdone4 = 1
+			posteventQW4 = 1
 			'When he slowly comes closer to you, you decide to quickly leave his apartment and run away while you still can. Who knows what else he''d make you do!?'
 			'Once you''re a few houses away and look back, you realize there''s no way he can follow you the way he was dressed. You take a deep breath, and look at your clipboard to see where you have to go next. One signature will be missing from your list today, but surely the postmaster will understand?'
 			act 'Continue your round':gt 'postdeliveries', 'resume'
@@ -332,8 +331,7 @@ if $ARGS[0] = '4':
 	end
 	act 'Run away from him':
 		cla
-		postafter = 4
-		posteventdone4 = 1
+		posteventQW4 = 1
 		'You don''t like where this is going at all! Deciding you''re better off leaving his apartment while you still can, you bolt for the door and run away. You don''t trust him one bit... who knows what kind of other things he''d make you do!?'
 		'Once you''re a few houses away and look behind you, you realize there''s no way he can follow you. Not with the way he was dressed.'
 		'You take a deep breath, and look at your clipboard to see where you have to go next while you try to put the last guy out of your head. One signature will be missing from your list today, but surely the postmaster will understand when you explain what happened?'
@@ -364,7 +362,7 @@ if $ARGS[0] = '5':
 		act 'Not while you''re working!':
 			cla
 			postafter = 5
-			posteventdone5 = 1
+			posteventQW5 = 1
 			'If the postmaster had even the slightest suspicion of you drinking on the job, he''d fire you for sure!'
 			'"I really shouldn''t. Thanks for the offer, though!" you tell the guy, declining the beer.'
 			'The guys chat with you for a few minutes more, and you tell them about things they can do in Pavlovsk during their stay. They don''t seem particularly interested in any of your suggestions, though.'
@@ -1286,7 +1284,7 @@ if $ARGS[0] = 'finishround':
 	end
 	''
 !! possible responses to what happened during your round
-	if postafter = 4: '"One missing signatu- oh never mind, it''s him!" the postmaster remarks dryly when he notices the missing signature of the pervert who tried to to blackmail you. "No need to explain. I hope you didn''t listen to him? He tries that with every girl we hire. I''ve reported him to captain Katalkin several times, but nothing ever happens..."'
+	if posteventQW4 = 1:posteventQW4 = 2 & '"One missing signatu- oh never mind, it''s him!" the postmaster remarks dryly when he notices the missing signature of the pervert who tried to to blackmail you. "No need to explain. I hope you didn''t listen to him? He tries that with every girl we hire. I''ve reported him to captain Katalkin several times, but nothing ever happens..."'
 	if postjobQW ! 999:
 		money += 750
 		'You receive your pay for the day, 750 rubles.'
@@ -1294,10 +1292,10 @@ if $ARGS[0] = 'finishround':
 	if postjobQW = 999: '"I better let Aleksiy know he needs to come in again on Saturdays, from now on. I knew I shouldn''t have trusted you!" he sighs, shaking his head in disappointment as he walks off. Guess you''re not getting paid for the day...'
 !! actions after your round is finished, default plus options if a long scene was triggered during your round
 	act 'Leave the postmaster''s office':gt 'postoffice', 'start'
-	if postafter = 1: act 'Return to the married man''s house': gt 'postevents', '1'
-	if postafter = 2: act 'Go back to Jenya and Arsen''s apartment': gt 'postevents', '2'
-	if postafter = 3: act 'Return to the businessman''s house': gt 'postevents', '3'
-!!	if postafter = 5: act 'Return to the hostel to rejoin the tourists': gt 'postevents', '5'
+	if posteventQW1 = 2: act 'Return to the married man''s house': gt 'postevents', '1'
+	if posteventQW2 = 2: act 'Go back to Jenya and Arsen''s apartment': gt 'postevents', '2'
+	if posteventQW3 = 2: act 'Return to the businessman''s house': gt 'postevents', '3'
+!!	if posteventQW5 = 2: act 'Return to the hostel to rejoin the tourists': gt 'postevents', '5'
 end
 
 --- postdeliveries ---------------------------------
