@@ -36,7 +36,6 @@ if $ARGS[0] = 'start':
 		cla
 		*clr
 		posteventcounter = 0
-		postworkday = daystart
 		if posteventQW1 = 2: posteventQW = 3
 		if posteventQW2 = 2: posteventQW = 3
 		if posteventQW3 = 2: posteventQW = 3
@@ -91,7 +90,12 @@ if $ARGS[0] = 'start':
 end
 
 if $ARGS[0] = 'event':
-	eventrand = rand(1,120)
+	if postworkday = daystart:
+		eventrand = rand(20,120)
+	else
+		eventrand = rand(1,120)
+		postworkday = daystart
+	end
 !!change to determine which event is chosen. Easily moddable in case events ought to happen more or less often.
 	if eventrand <= 3 and posteventQW1 = 0:
 		gt 'postdeliveries', '1'
@@ -384,7 +388,7 @@ if $ARGS[0] = '5':
 		cla
 		'"Sorry guys, I have mail to deliver! No time to chat!" you say, and keep walking.'
 		'For a second you were afraid they were going to be more insistent, but luckily they leave you alone.'
-		act 'Finish your round':
+		act 'Continue your round':gt 'postdeliveries', 'resume'
 	end
 end
 
