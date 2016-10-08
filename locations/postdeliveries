@@ -13,6 +13,7 @@
 !!postbj = how many times you''ve given the guys a blowjob
 !!postlate = (0-15), how often you come back to the post office after 15:15. You get fired if this counter hits 15)
 !!postburn = (0-1), whether hoodlums tampered with your mail. Gets you fired if yes)
+!!postworkday = day check so postmaster knows you worked already
 
 if $ARGS[0] = 'start':
 	cla
@@ -35,6 +36,7 @@ if $ARGS[0] = 'start':
 		cla
 		*clr
 		posteventcounter = 0
+		postworkday = daystart
 		if posteventQW1 = 2: posteventQW = 3
 		if posteventQW2 = 2: posteventQW = 3
 		if posteventQW3 = 2: posteventQW = 3
@@ -78,10 +80,8 @@ if $ARGS[0] = 'start':
 			if postamountrand = 0:
 				'Your bag is emptying rapidly, and you don''t think you''ll need much more than a half hour to finish your round if you can keep this up!'
 			elseif postamountrand = 1:
-				'<center><img src="images/shared/postoffice/postgirl.jpg"></center>'
 				'At this pace you''ll be able to finish your round with about a half hour left to spare. Assuming nothing happens...'
 			else
-				'<center><img src="images/shared/postoffice/postgirl.jpg"></center>'
 				'After another half hour you take another look in your bag. Damn, there''s still so much left to deliver! You should be able to just about get it done on time, but you''re going to have to keep the pace up...'
 			end
 			
@@ -102,7 +102,8 @@ if $ARGS[0] = 'event':
 	elseif eventrand <= 12 and posteventQW4 = 0:
 		gt 'postdeliveries', '4'
 	elseif eventrand <= 15 and posteventQW5 = 0:
-		gt 'postdeliveries', '5'
+!!		gt 'postdeliveries', '5' - pending follow up event/s
+		gt 'postdeliveries', 'event'
 	elseif eventrand <= 20:
 		gt 'postdeliveries', '6'
 	elseif eventrand <= 25:
@@ -578,6 +579,7 @@ if $ARGS[0] = '13':
 	else
 		'Just before he closes the door completely, you''d swear you saw a nude girl walking through Sergey''s apartment! You didn''t get a good enough look to see who it is, though.'
 	end
+	act 'Continue your round':gt 'postdeliveries', 'resume'
 end
 
 if $ARGS[0] = '14':
