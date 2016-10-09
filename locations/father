@@ -139,6 +139,13 @@ end
 !!----------------------------------------end reaction block---------------------------------------------
 
 if week < 6:
+	if hour = 8:
+		'"Alright <<$nickname>>. It''s getting late, I need to go to work. See you later."'
+		cla
+		act '<B>Continue</B>':gt $loc, $metka
+		exit
+	end
+		
 	if father_go = 0 and hour >= 21:
 		'"Alright <<$nickname>>. It''s getting late, I need to get to bed. See you tomorrow."'
 		cla
@@ -190,181 +197,181 @@ act 'Chat':
 	end
 end
 
-act 'Ask for money':
-	cls
-	minut += 5
-	gs 'stat'
-	'<center><b><font color="maroon">Your stepfather, Vladimir Mikhailovich Scriabin</font></b></center>'
-	'<center><img src="images/qwest/alter/father.jpg"></center>'
-	'Your stepfather is sitting on the couch, watching some boring TV show. You sit down next to him.'
-	dynamic $fatherRep
-	act 'Move away':gt $loc, $metka
+if hour > 10 and week < 6:
+	act 'Ask for money':
+		cls
+		minut += 5
+		gs 'stat'
+		'<center><b><font color="maroon">Your stepfather, Vladimir Mikhailovich Scriabin</font></b></center>'
+		'<center><img src="images/qwest/alter/father.jpg"></center>'
+		'Your stepfather is sitting on the couch, watching some boring TV show. You sit down next to him.'
+		dynamic $fatherRep
+		act 'Move away':gt $loc, $metka
 
-	if fatherPayDay = daystart:
-		'Trying your cutest face on your stepfather, you ask him for some money. He just shook his head wearily: "No, <<$nickname>>. I''ve already given you some money today, don''t be greedy."'
-	else
-		if father<=40 and TouchedByFather=0 or vnesh<=60 and TouchedByFather=0:
-			'You ask your stepfather for some money, but he shakes his head in response: "I already gave my salary to your mother, go ask her."'
+		if fatherPayDay = daystart:
+			'Trying your cutest face on your stepfather, you ask him for some money. He just shook his head wearily: "No, <<$nickname>>. I''ve already given you some money today, don''t be greedy."'
 		else
-			'You ask your stepfather for some money, but he shakes his head in response: "I already gave my salary to your mother, go ask her."'
-			if father>=40 and father<60 and fatherPayDay ! daystart:FatherMolest = RAND (1,4)
-			if father>=60 and father<80 and fatherPayDay ! daystart:FatherMolest = RAND (1,2)
-			if father>=80 and fatherPayDay ! daystart:FatherMolest = 1
-			if FatherMolest=1:
-				'While you''re talking with him, you notice your stepfather is in a good mood today. Perhaps you can persuade him...'
-				act '"Oh please?"':
-					cla
-					minut+=5
-					gs 'stat'
-					horny+=RAND(1,5)
-					'"Oh come on, please Daddy?" you beg him, batting your eyelids and trying to look as cute as possible.'
-					if vnesh >= 200:
-						fatherLust = 1
-					elseif vnesh >= 120:
-						fatherLust = Rand (1,2)
-					elseif vnesh >= 60:
-						fatherLust = Rand (1,4)
-					else
-						fatherLust = 2
-					end
-
-					if fatherLust >= 2:
-						'"Sorry <<$nickname>>, like I said, I have no money. Go ask your mother."'
-					else
-						money+=rand(200,300)
-						fatherPayDay = daystart
-						gs 'stat'
-						'"Oh, alright then. Just don''t tell your mother!" he says in a tired voice, keeping his eyes on the doorway as he gives you the money. You act genuinely happy as you take the money from him, giving him a kiss on the cheek as you go.'
-					end
-
-					act 'Move away':gt $loc, $metka
-				end
-
-				if hadsexwithfather=1:
-					act 'Blackmail him':
+			if father<=40 and TouchedByFather=0 or vnesh<=60 and TouchedByFather=0:
+				'You ask your stepfather for some money, but he shakes his head in response: "I already gave my salary to your mother, go ask her."'
+			else
+				'You ask your stepfather for some money, but he shakes his head in response: "I already gave my salary to your mother, go ask her."'
+				if father>=40 and father<60 and fatherPayDay ! daystart:FatherMolest = RAND (1,4)
+				if father>=60 and father<80 and fatherPayDay ! daystart:FatherMolest = RAND (1,2)
+				if father>=80 and fatherPayDay ! daystart:FatherMolest = 1
+				if FatherMolest=1:
+					'While you''re talking with him, you notice your stepfather is in a good mood today. Perhaps you can persuade him...'
+					act '"Oh please?"':
 						cla
 						minut+=5
-						money+=rand(300,500)
-						fatherPayDay = daystart
 						gs 'stat'
-						'"Aren''t you forgetting something?" you say in a serious voice, referring to your recent intimate moments with him.'
-						'Your stepfather is clearly embarrassed by this, and surprised at you for bringing it up. He clears his throat loudly, and the following silence makes you feel slightly uncomfortable. Nevertheless, he reaches for his wallet.'
-						'"Here you go, you leech! You know you shouldn''t be taking advantage of me like that! Here, take your money and get out of here. Just keep your mouth shut!" You nod and pocket the money, feeling slightly worse for blackmailing him for it.'
-						act 'Move away':gt $locM, $metkaM
+						horny+=RAND(1,5)
+						'"Oh come on, please Daddy?" you beg him, batting your eyelids and trying to look as cute as possible.'
+						if vnesh >= 200:
+							fatherLust = 1
+						elseif vnesh >= 120:
+							fatherLust = Rand (1,2)
+						elseif vnesh >= 60:
+							fatherLust = Rand (1,4)
+						else
+							fatherLust = 2
+						end
+
+						if fatherLust >= 2:
+							'"Sorry <<$nickname>>, like I said, I have no money. Go ask your mother."'
+						else
+							money+=rand(200,300)
+							fatherPayDay = daystart
+							gs 'stat'
+							'"Oh, alright then. Just don''t tell your mother!" he says in a tired voice, keeping his eyes on the doorway as he gives you the money. You act genuinely happy as you take the money from him, giving him a kiss on the cheek as you go.'
+						end
+
+						act 'Move away':gt $loc, $metka
 					end
+
+					if hadsexwithfather=1:
+						act 'Blackmail him':
+							cla
+							minut+=5
+							money+=rand(300,500)
+							fatherPayDay = daystart
+							gs 'stat'
+							'"Aren''t you forgetting something?" you say in a serious voice, referring to your recent intimate moments with him.'
+							'Your stepfather is clearly embarrassed by this, and surprised at you for bringing it up. He clears his throat loudly, and the following silence makes you feel slightly uncomfortable. Nevertheless, he reaches for his wallet.'
+							'"Here you go, you leech! You know you shouldn''t be taking advantage of me like that! Here, take your money and get out of here. Just keep your mouth shut!" You nod and pocket the money, feeling slightly worse for blackmailing him for it.'
+							act 'Move away':gt $locM, $metkaM
+						end
+					end
+				end
+
+				if FatherMolest>1:
+					'"<<$nickname>>, I already said no."'
+				end
+			end
+		end
+	end
+
+	act 'Ask about him and your mother':
+		cls
+		minut += 5
+		gs 'stat'
+		'<center><b><font color="maroon">Your stepfather, Vladimir Mikhailovich Scriabin</font></b></center>'
+		'<center><img src="images/qwest/alter/father.jpg"></center>'
+		'You ask your stepfather how he met your mother. Your stepfather scratches his slightly balding head and replies: "I used to work as a taxi driver back then, drove your mother to places from time to time and we got along very well. Natasha is a strong and independant woman, raising you and Anya all by herself after she left your father. I didn''t know him very well, I''ve only met him a couple of times. All I know is that his name is Mikhail Kuznetsov, and that he moved to a different city soon after he and your mother divorced."'
+
+		act 'Move away':gt $loc, $metka
+	end
+
+	act 'Ask about his work':
+		cls
+		minut += 5
+		gs 'stat'
+		'<center><b><font color="maroon">Your stepfather, Vladimir Mikhailovich Scriabin</font></b></center>'
+		'<center><img src="images/qwest/alter/father.jpg"></center>'
+		'You ask your stepfather about his work. Your stepfather reaches for his aching joints, with a grimace on his face. "I used to be a taxi driver. It was hard work though, often working many hours a day, and it could be dangerous too. With some money we saved up I bought a Gazelle pickup truck, and now I drive that selling goods and making deliveries. As you know I have two garages; one for our Volga, and the other one for the Gazelle."'
+
+		act 'Move away':gt $loc, $metka
+	end
+
+	if motherKnowSpravka = 1 and hadsexwithfather=0:
+		cla
+		father = 0
+		motherKnowSpravka = 2
+		'Your stepfather angrily walked up to you: "Damnit <<$name>>, your mother told me you''re sexually active already! You''re still so young! I know I can''t stop you, but at least have some decency and don''t bring them to our house." His facial expression then softens, and he adds in a milder voice: "And please... be careful, okay?" You can tell your stepfather is very disappointed in you.'
+
+		act 'Move away':gt $loc, $metka
+		exit
+	end
+
+	if alko > 0 and alkoday ! daystart:
+		alkoday = daystart
+		father -= 1
+		'Your stepfather notices the sharp smell of booze on you and looks disappointed. "<<$name>>, you smell like alcohol, what are you getting yourself into? You''re too young to drink that!"'
+	end
+
+	if TorgVokzalTimes>0 and YouCanGar=0:
+		act 'Ask him permission to store things in his garage':
+			cls
+			minut+=5
+			gs'stat'
+			'<center><B><font color=maroon>Your stepfather, Vladimir Mikhailovich Scriabin</font></B></center>'
+			'<center><img src="images/qwest/alter/father.jpg" ></center>'
+			'You ask your stepfather if it is okay for you to store some things in his garage.'
+			if father+dom>=80 or TouchedByFather=1:
+				YouCanGar=1
+				'Your stepfather reluctantly agrees to let you store some things in his garage. You can hide some of your trinkets there now.'
+			else
+				'Your stepfather shook his head and said "Sorry <<$nickname>>. The garage already has more stuff in it than I would like, there''s simply no room."'
+			end
+		act 'Move away':gt $locM, $metkaM
+		
+		end
+	end
+
+	act 'Ask him what he thinks of your outfit':
+		cls
+		minut+=rand(10,15)
+		gs 'stat'
+		'<center><B><font color=maroon>Your stepfather, Vladimir Mikhailovich Scriabin</font></B></center>'
+		'<center><img src="images/qwest/alter/father.jpg"></center>'
+		'Your stepfather is sitting on the couch, watching TV. You sat next to him on the sofa.'
+
+		dynamic $fatherRep
+		act 'Move away':gt $locM, $metkaM
+
+		''
+		if father<=40 or vnesh<=60:
+			'You ask your stepfather what he thinks of your outfit. It looks like he''s not in the mood to indulge you, and impatiently waves you away with his hand: "Don''t bother me <<$nickname>>, I''m busy.'
+		else
+			'You move slightly closer towards your stepfather, flirtatiously smile at him and ask him what he thinks of your outfit.'
+			dynamic $din_father_hapri
+
+			if father>=40 and father<60:FatherMolest = RAND (1,8)
+			if father>=60 and father<80:FatherMolest = RAND (1,4)
+			if father>=80:FatherMolest = RAND (1,2)
+
+			if FatherMolest=1:
+				horny+=RAND(1,5)
+				gs 'stat'
+				'He seems happy to oblige, and asks you to twirl your body so he can look at your outfit from all angles. The approving nod and hungry look in his eyes that follow, show that he would like to do more than just watch.'
+				if horny>=50 or TouchedByFather=1:
+					dynamic $din_vertetzopa
+					if fatherLust=1:'"Even though he did not expect this from you, you can tell by the spark in his eyes and his heavier breathing that he is, at least, pleasantly surprised by your request.'
+				end
+
+				if horny>=90 or TouchedByFather=1:
+					dynamic $din_popravit
+					dynamic $din_potr
 				end
 			end
 
 			if FatherMolest>1:
-				'"<<$nickname>>, I already said no."'
+				'You twirl on the spot, showing off your outfit from all sides.'
+				cla
+				act 'Move away':gt $locM, $metkaM
 			end
 		end
 	end
-end
 
-act 'Ask about him and your mother':
-	cls
-	minut += 5
-	gs 'stat'
-	'<center><b><font color="maroon">Your stepfather, Vladimir Mikhailovich Scriabin</font></b></center>'
-	'<center><img src="images/qwest/alter/father.jpg"></center>'
-	'You ask your stepfather how he met your mother. Your stepfather scratches his slightly balding head and replies: "I used to work as a taxi driver back then, drove your mother to places from time to time and we got along very well. Natasha is a strong and independant woman, raising you and Anya all by herself after she left your father. I didn''t know him very well, I''ve only met him a couple of times. All I know is that his name is Mikhail Kuznetsov, and that he moved to a different city soon after he and your mother divorced."'
-
-	act 'Move away':gt $loc, $metka
-end
-
-act 'Ask about his work':
-	cls
-	minut += 5
-	gs 'stat'
-	'<center><b><font color="maroon">Your stepfather, Vladimir Mikhailovich Scriabin</font></b></center>'
-	'<center><img src="images/qwest/alter/father.jpg"></center>'
-	'You ask your stepfather about his work. Your stepfather reaches for his aching joints, with a grimace on his face. "I used to be a taxi driver. It was hard work though, often working many hours a day, and it could be dangerous too. With some money we saved up I bought a Gazelle pickup truck, and now I drive that selling goods and making deliveries. As you know I have two garages; one for our Volga, and the other one for the Gazelle."'
-
-	act 'Move away':gt $loc, $metka
-end
-
-if motherKnowSpravka = 1 and hadsexwithfather=0:
-	cla
-	father = 0
-	motherKnowSpravka = 2
-	'Your stepfather angrily walked up to you: "Damnit <<$name>>, your mother told me you''re sexually active already! You''re still so young! I know I can''t stop you, but at least have some decency and don''t bring them to our house." His facial expression then softens, and he adds in a milder voice: "And please... be careful, okay?" You can tell your stepfather is very disappointed in you.'
-
-	act 'Move away':gt $loc, $metka
-	exit
-end
-
-if alko > 0 and alkoday ! daystart:
-	alkoday = daystart
-	father -= 1
-	'Your stepfather notices the sharp smell of booze on you and looks disappointed. "<<$name>>, you smell like alcohol, what are you getting yourself into? You''re too young to drink that!"'
-end
-
-if TorgVokzalTimes>0 and YouCanGar=0:
-	act 'Ask him permission to store things in his garage':
-		cls
-		minut+=5
-		gs'stat'
-		'<center><B><font color=maroon>Your stepfather, Vladimir Mikhailovich Scriabin</font></B></center>'
-		'<center><img src="images/qwest/alter/father.jpg" ></center>'
-		'You ask your stepfather if it is okay for you to store some things in his garage.'
-		if father+dom>=80 or TouchedByFather=1:
-			YouCanGar=1
-			'Your stepfather reluctantly agrees to let you store some things in his garage. You can hide some of your trinkets there now.'
-		else
-			'Your stepfather shook his head and said "Sorry <<$nickname>>. The garage already has more stuff in it than I would like, there''s simply no room."'
-		end
-	act 'Move away':gt $locM, $metkaM
-	
-	end
-end
-
-act 'Ask him what he thinks of your outfit':
-	cls
-	minut+=rand(10,15)
-	gs 'stat'
-	'<center><B><font color=maroon>Your stepfather, Vladimir Mikhailovich Scriabin</font></B></center>'
-	'<center><img src="images/qwest/alter/father.jpg"></center>'
-	'Your stepfather is sitting on the couch, watching TV. You sat next to him on the sofa.'
-
-	dynamic $fatherRep
-	act 'Move away':gt $locM, $metkaM
-
-	''
-	if father<=40 or vnesh<=60:
-		'You ask your stepfather what he thinks of your outfit. It looks like he''s not in the mood to indulge you, and impatiently waves you away with his hand: "Don''t bother me <<$nickname>>, I''m busy.'
-	else
-		'You move slightly closer towards your stepfather, flirtatiously smile at him and ask him what he thinks of your outfit.'
-		dynamic $din_father_hapri
-
-		if father>=40 and father<60:FatherMolest = RAND (1,8)
-		if father>=60 and father<80:FatherMolest = RAND (1,4)
-		if father>=80:FatherMolest = RAND (1,2)
-
-		if FatherMolest=1:
-			horny+=RAND(1,5)
-			gs 'stat'
-			'He seems happy to oblige, and asks you to twirl your body so he can look at your outfit from all angles. The approving nod and hungry look in his eyes that follow, show that he would like to do more than just watch.'
-			if horny>=50 or TouchedByFather=1:
-				dynamic $din_vertetzopa
-				if fatherLust=1:'"Even though he did not expect this from you, you can tell by the spark in his eyes and his heavier breathing that he is, at least, pleasantly surprised by your request.'
-			end
-
-			if horny>=90 or TouchedByFather=1:
-				dynamic $din_popravit
-				dynamic $din_potr
-			end
-		end
-
-		if FatherMolest>1:
-			'You twirl on the spot, showing off your outfit from all sides.'
-			cla
-			act 'Move away':gt $locM, $metkaM
-		end
-	end
-end
-
-if hour > 10 and week < 6:
 	act 'Watch TV together':
 		cls
 		minut+=60
