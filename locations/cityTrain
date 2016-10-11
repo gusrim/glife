@@ -38,12 +38,16 @@ end
 
 if $ARGS[0] = 'tickets':
 	cls
+!! This is a lie, but a useful one don''t change the $loc and $metka
+	$loc = 'cityTrain'
+	$metka = 'industrial'
 	gs 'stat'
 	'<center><h4>Ticket office</h4></center>'
 	'<center><img src="images/qwest/alter/kassa.jpg"></center>'
 
 	if money >= 50:
 		act 'Buy a ticket to the city industrial area (50 <b>₽</b>)':
+			train_event = 0
 			money -= 50
 			train_dir = 2
 			train_dest = 2
@@ -53,6 +57,7 @@ if $ARGS[0] = 'tickets':
 
 	if money >= 75:
 		act 'Buy a ticket to the old platform by the communal village (75 <b>₽</b>)':
+			train_event = 0
 			money -= 75
 			train_dir = 2
 			train_dest = 3
@@ -62,6 +67,7 @@ if $ARGS[0] = 'tickets':
 
 	if money >= 100:
 		act 'Buy a ticket to the village of Gadyukino (100 <b>₽</b>)':
+			train_event = 0
 			money -= 100
 			train_dir = 2
 			train_dest = 4
@@ -71,18 +77,22 @@ if $ARGS[0] = 'tickets':
 
 	if money >= 125:
 		act 'Buy a ticket to the old town (125 <b>₽</b>)':
+			train_event = 0
 			money -= 125
 			train_dir = 2
 			train_dest = 5
+			if rand(1, 100) < 15: gt 'train', 'private'
 			gt 'cityTrain', 'industrial'
 		end
 	end
 
 	if money >= 150:
 		act 'Buy a ticket to Pavlovsk (150 <b>₽</b>)':
+			train_event = 0
 			money -= 150
 			train_dir = 2
 			train_dest = 6
+			if rand(1, 100) < 15: gt 'train', 'private'
 			gt 'cityTrain', 'industrial'
 		end
 	end
@@ -100,7 +110,6 @@ if $ARGS[0] = 'industrial':
 	act 'Get off the train at this station':minut += 5 & gt 'vokzal'
 	if train_dest > 2:
 		act 'Continue your journey':
-			minut += 15
 			gt 'train', 'industrialS'
 		end
 	end

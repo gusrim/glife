@@ -1,8 +1,8 @@
 # vokzalGin
 
 if $ARGS[0] = '':
-	$metka = $ARGS[0]
-	$loc = $CURLOC
+	$metka = ''
+	$loc = 'vokzalGin'
 	$location_type = 'public_indoors'
 	CLOSE ALL
 	if sound = 0:PLAY 'sound/vokzal2.mp3',30
@@ -142,6 +142,9 @@ end
 
 if $ARGS[0] = 'kassi':
 	cls
+!! This is a lie, but a useful one don''t change the $loc and $metka
+	$loc = 'vokzalGin'
+	$metka = 'oldtown'
 	gs 'stat'
 	'<center><h4>Ticket office</h4></center>'
 	'<center><img src="images/qwest/alter/kassa.jpg"></center>'
@@ -149,6 +152,7 @@ if $ARGS[0] = 'kassi':
 
 	if money >= 50:
 		act 'Buy a ticket to the old town (50 <b>₽</b>)':
+			train_event = 0
 			money -= 50
 			train_dest = 5
 			gt 'vokzalGin', 'oldtown'
@@ -157,6 +161,7 @@ if $ARGS[0] = 'kassi':
 
 	if money >= 75:
 		act 'Buy a ticket to the village of Gadyukino (75 <b>₽</b>)':
+			train_event = 0
 			money -= 75
 			train_dir = 1
 			train_dest = 4
@@ -166,6 +171,7 @@ if $ARGS[0] = 'kassi':
 
 	if money >= 100:
 		act 'Buy a ticket to the the communal village (100 <b>₽</b>)':
+			train_event = 0
 			money -= 100
 			train_dir = 1
 			train_dest = 3
@@ -175,18 +181,22 @@ if $ARGS[0] = 'kassi':
 
 	if money >= 125:
 		act 'Buy a ticket to city industrial area (125 <b>₽</b>)':
+			train_event = 0
 			money -= 125
 			train_dir = 1
 			train_dest = 2
+			if rand(1, 100) < 15: gt 'train', 'private'
 			gt 'vokzalGin', 'oldtown'
 		end
 	end
 
 	if money >= 150:
 		act 'Buy a ticket to city center (150 <b>₽</b>)':
+			train_event = 0
 			money -= 150
 			train_dir = 1
 			train_dest = 1
+			if rand(1, 100) < 15: gt 'train', 'private'
 			gt 'vokzalGin', 'oldtown'
 		end
 	end
@@ -198,7 +208,7 @@ end
 !!For travel north from Pav to old town
 if $ARGS[0] = 'oldtown':
 	close all
-	if rand(1,100) < 10: gt 'train', 'weed'
+	if rand(1,100) < 10 and train_event = 0: gt 'train', 'weed'
 	cls
 	minut += 5
 	gs 'stat'
@@ -206,9 +216,9 @@ if $ARGS[0] = 'oldtown':
 	'You pay for the ticket and board the next train going to St. Petersburg.'
 	'After 5 minutes, you see the familiar old buildings and the train stops at the station near the old town.'
 	act 'Get off the train at this station':gt 'train', 'oldtown'
+	if train_dest < 3 and rand(0, 100) < 15: gt 'train', 'private'
 	if train_dest < 5:
 		act 'Continue your journey':
-			minut += 15
 			gt 'train', 'oldtownN'
 		end
 	end

@@ -11,10 +11,23 @@ if $ARGS[0] = '':
 	'<center><img src="images/pic/vokzalholle.jpg" ></center>'
 	'Go to the <a href="exec:GT ''vokzalper''">platforms</a>'
 	act 'Leave the station building':gt 'vokzal' & minut+=5
+	act 'Got to the ticket office': gt 'vokzalholle', 'ticket'
 	act 'Go to the restrooms':gt 'vokzaltoilet' & minut+=5
+end
+
+if $ARGS[0] = 'ticket':
+	cls
+!! This is a lie, but a useful one don''t change the $loc and $metka
+	$loc = 'vokzalholle'
+	$metka = 'cottages'
+	gs 'stat'
+	'<center><h4>Ticket office</h4></center>'
+	'<center><img src="images/qwest/alter/kassa.jpg"></center>'
 
 	if money >= 50:
 		act 'Buy a ticket to the city center (50 <b>₽</b>)':
+			$loc = 'cityTrain'
+			$metka = 'inside'
 			cls
 			money -= 50
 			minut += 5
@@ -29,6 +42,7 @@ if $ARGS[0] = '':
 
 	if money >= 50:
 		act 'Buy a ticket to the old platform by the communal cottages (50 <b>₽</b>)':
+			train_event = 0
 			money -= 100
 			train_dir = 2
 			train_dest = 3
@@ -38,6 +52,7 @@ if $ARGS[0] = '':
 
 	if money >= 75:
 		act 'Buy a ticket to the village of Gadyukino (75 <b>₽</b>)':
+			train_event = 0
 			money -= 75
 			train_dir = 2
 			train_dest = 4
@@ -47,6 +62,7 @@ if $ARGS[0] = '':
 
 	if money >= 100:
 		act 'Buy a ticket to the old town (100 <b>₽</b>)':
+			train_event = 0
 			money -= 100
 			train_dir = 2
 			train_dest = 5
@@ -56,9 +72,11 @@ if $ARGS[0] = '':
 
 	if money >= 125:
 		act 'Buy a ticket to Pavlovsk (125 <b>₽</b>)':
+			train_event = 0
 			money -= 125
 			train_dir = 2
 			train_dest = 6
+			if rand(1, 100) < 15: gt 'train', 'private'
 			gt 'vokzalholle', 'cottages'
 		end
 	end
@@ -66,14 +84,13 @@ end
 
 if $ARGS[0] = 'cottages':
 	cls
-	minut+=15
+	minut += 10
 	gs'stat'
 	'<center><img src="images/etogame/electri.jpg" ></center>'
-	'After 15 minutes the train stops at a small station. It''s abandoned, and there is not much activity outside.'
+	'After 10 minutes the train stops at a small station. It''s abandoned, and there is not much activity outside.'
 	act 'Get off the train at this station': gt 'train', 'old_platform'
 	if train_dest > 3:
 		act 'Continue your journey':
-			minut += 15
 			gt 'train', 'communalS'
 		end
 	end
