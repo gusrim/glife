@@ -1,0 +1,148 @@
+# npcgenext
+
+
+! {Dick size and thickness generator. Outputs $npctempgn[4] for girth and npctempgn[5] for length. It takes a higher add number for a call that is supposed to be bigger than average.}
+if $args[0] = 'dick':
+	i = 4
+	tempfindadd = 2
+	if args[1] > 0: tempfindadd += args[1]
+	:dickaddloop
+	! {4 random 1-6 plus 2. A repeat 1 results in 1 being subtracted, a repeat 6 results in 1 being added. This gives a figure between 2 and 30.}
+	tempfinddick = rand(1,6)
+	tempfindadd += tempfinddick
+	if tempfinddick = 1 and rand(1,6) = 1: tempfindadd -= 1
+	if tempfinddick = 6 and rand(1,6) = 6: tempfindadd += 1
+	i -= 1
+	if i > 0:
+		jump 'dickaddloop'
+	end
+	! {It then outputs the data. Dick minimum is 6, so if it is less than that, it spits out 6.}
+	if tempfindadd < 6:
+		npctempgn[5] = 6
+	else
+		npctempgn[5] = tempfindadd
+	end
+	! {It sets the girth based on the dick size}
+	if tempfindadd < 9:
+		tempfindgirth = 1
+	elseif tempfindadd < 12:
+		tempfindgirth = 2
+	elseif tempfindadd < 15:
+		tempfindgirth = 3
+	elseif tempfindadd < 18:
+		tempfindgirth = 4
+	elseif tempfindadd < 21:
+		tempfindgirth = 5
+	elseif tempfindadd < 24:
+		tempfindgirth = 6:
+	else
+		tempfindgirth = 7
+	end
+	! {Then it gives random variance with girth. 1 or 2 drops a size. 3 or 4 stays the same. 5 or 6 goes up a size. A 1 or a 6 gives a chance to go up or down a size again, for a max of 2 changes from the base girth from size.}
+	tempfinddick = rand(1,6)
+	if tempfinddick < 3:
+		tempfindgirth -= 1
+		if tempfinddick = 1:
+			tempfinddick = rand(1,3)
+			if tempfinddick = 1:
+				tempfindgirth -= 1
+			elseif tempfinddick = 3:
+				tempfindgirth += 1
+			end
+		end
+	elseif tempfinddick < 4:
+		tempfindgirth += 1
+		if tempfinddick = 6:
+			tempfinddick = rand(1,3)
+			if tempfinddick = 1:
+				tempfindgirth -= 1
+			elseif tempfinddick = 3:
+				tempfindgirth += 1
+			end
+		end
+	end
+	! {Then it returns the official girth.}
+	if tempfindgirth < 2:
+		$npctempgn[4] = 'skinny'
+	elseif tempfindgirth = 2:
+		$npctempgn[4] = 'slim'
+	elseif tempfindgirth = 3:
+		$npctempgn[4] = 'well proportioned'
+	elseif tempfindgirth = 4:
+		$npctempgn[4] = 'thicker than average'
+	elseif tempfindgirth = 5:
+		$npctempgn[4] = 'thick'
+	elseif tempfindgirth = 6:
+		$npctempgn[4] = 'massive'
+	else
+		$npctempgn[4] = 'monstrous'
+	end
+end
+
+! {Personality Generator. Outputs $npctempgn[6]}
+if $args[0] = 'pers':
+	if rand(0,1) = 1:
+		$npctempgn[6] = 'E'
+	else
+		$npctempgn[6] = 'I'
+	end
+	if rand(0,1) = 1:
+		$npctempgn[6] += 'S'
+	else
+		$npctempgn[6] += 'N'
+	end
+	if rand(0,1) = 1:
+		$npctempgn[6] += 'T'
+	else
+		$npctempgn[6] += 'F'
+	end
+	if rand(0,1) = 1:
+		$npctempgn[6] += 'J'
+	else
+		$npctempgn[6] += 'P'
+	end
+end
+
+! {Venerial Disease Generator. requires a index.}
+if $args[0] = 'rstd':
+	if $ARGS[1] = '': $ARGS[1] = 0
+	$tempvan1 = $ARGS[1]
+	if rand(0,100) = 100:
+		tempvenerial = rand(1,7)
+		tempfindN = mid($tempvan1, 2) & $tempfindL = mid($tempvan1,1,1)
+		if $tempfindL = 'A':
+			if tempvenerial = 1: Astat_herpes[tempfindN] = 1
+			if tempvenerial = 2: Astat_syph[tempfindN] = 1
+			if tempvenerial = 3: Astat_gon[tempfindN] = 1
+			if tempvenerial = 4: Astat_chlam[tempfindN] = 1
+			if tempvenerial = 5: Astat_Hiv[tempfindN] = 1
+			if tempvenerial = 6: Astat_genwart[tempfindN] = 1
+			if tempvenerial = 7: Astat_Thrush[tempfindN] = 1
+		elseif $tempfindL = 'B':
+			if tempvenerial = 1: Bstat_herpes[tempfindN] = 1
+			if tempvenerial = 2: Bstat_syph[tempfindN] = 1
+			if tempvenerial = 3: Bstat_gon[tempfindN] = 1
+			if tempvenerial = 4: Bstat_chlam[tempfindN] = 1
+			if tempvenerial = 5: Bstat_Hiv[tempfindN] = 1
+			if tempvenerial = 6: Bstat_genwart[tempfindN] = 1
+			if tempvenerial = 7: Bstat_Thrush[tempfindN] = 1
+		elseif $tempfindL = 'C':
+			if tempvenerial = 1: Cstat_herpes[tempfindN] = 1
+			if tempvenerial = 2: Cstat_syph[tempfindN] = 1
+			if tempvenerial = 3: Cstat_gon[tempfindN] = 1
+			if tempvenerial = 4: Cstat_chlam[tempfindN] = 1
+			if tempvenerial = 5: Cstat_Hiv[tempfindN] = 1
+			if tempvenerial = 6: Cstat_genwart[tempfindN] = 1
+			if tempvenerial = 7: Cstat_Thrush[tempfindN] = 1
+		end
+	end
+	killvar 'tempvenerial'
+	killvar '$tempfindL'
+	killvar 'tempfindN'
+	killvar '$tempvan1'
+end
+
+
+
+--- npcgenext ---------------------------------
+
