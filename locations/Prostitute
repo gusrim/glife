@@ -34,7 +34,8 @@ if $ARGS[0] = 'start':
 			act 'Fight her':
 				cla
 				minut += 15
-				$boy = 'Stoned prostitute'
+				gs 'npcgeneratec', 1, 'stoned prostitute', rand(18,28)
+				gs 'boyStat', $npclastgenerated
 				!!stats
 				strenV = 20
 				speedV = 30
@@ -115,8 +116,8 @@ if $ARGS[0] = 'start':
 									'You realize he''s not going to let you off the hook easily, and that he probably has enough connections to get you into serious trouble. It''s probably easiest to treat him as just another customer, maybe he''ll let you go if you do a good job...'
 
 									act 'Reach for his groin':
-										$boy = 'Bandit'
-										dick = rand(18, 21)
+											gs 'npcgeneratec', 0, 'Bandit', rand(18,45)
+											gs 'boyStat', $npclastgenerated
 										gt 'blowPR', 'start'
 									end
 								end
@@ -125,7 +126,8 @@ if $ARGS[0] = 'start':
 							act 'Refuse to pay and fight him':
 								cla
 								minut += 15
-								$boy = 'Bandit'
+								gs 'npcgeneratec', 0, 'Bandit', rand(18,45)
+								gs 'boyStat', $npclastgenerated
 								!!stats
 								strenV = 200
 								speedV = 30
@@ -179,7 +181,8 @@ if $ARGS[0] = 'start':
 							act 'Refuse to pay and fight her':
 								cla
 								minut += 15
-								$boy = 'Prostitute'
+								gs 'npcgeneratec', 1, 'prostitute', rand(18,28)
+								gs 'boyStat', $npclastgenerated
 								!!stats
 								strenV = 50
 								speedV = 50
@@ -294,7 +297,7 @@ if $ARGS[0] = 'work1':
 	if leghair > 0:vnpr -= 5
 	if lobok > 0:vnpr -= 5
 	if lobok <= 0:vnpr += 1
-	if tan > 0:vnpr += 1
+	if Astat_tan[pc] > 0:vnpr += 1
 	if curly > 0:vnpr += 1
 	if sweat > 24:
 		vnpr -= 10
@@ -349,7 +352,8 @@ if $ARGS[0] = 'work2':
 		clr
 		*clr
 		gs 'boy'
-		$boy = '"John"'
+		gs 'npcgeneratec', 0, '"John"', rand(18,45)
+		gs 'boyStat', $npclastgenerated
 		slutty += 1
 		minut += 1
 		guy += 1
@@ -369,7 +373,7 @@ if $ARGS[0] = 'work2':
 				clr
 				*clr
 				minut += 5
-				dynamic $prezik
+				prezik -= 1
 				gs 'stat'
 				picrand = rand(1, 7)
 				if picrand = 1:
@@ -389,10 +393,11 @@ if $ARGS[0] = 'work2':
 					'The client is so turned on, he doesn''t want any foreplay. Now that he has a condom on, he wants to fuck you.'
 
 					act 'Continue':
-						cls
+						cla
+						clr
+						*clr
 						prosti = 0
 						arousal_minut = 15
-						if dick > vagina: vagina += 1
 						protect = 1
 						if preziktype = 2:
 							sexcontra = 7
@@ -444,7 +449,7 @@ if $ARGS[0] = 'work2':
 						end
 
 						if anus >= dick:
-							horny += anus
+							Astat_horny[pc] += anus
 							'Your anus has no difficulty adjusting to the size of his member, and it actually feels fairly pleasant when he shoves his length in. Your anus clasps around the base of his cock from time to time, and the man begins to thrust his hips against yours enthusiastically when he notices you can take it.'
 						end
 
@@ -595,7 +600,7 @@ if $ARGS[0] = 'work2':
 								'The guy holds still for a moment so your ass can get used to how far it''s being stretched out. After a little while you don''t think it''s going to get any better, and you tell the man he can start to fucking you now with a forced, fake smile on your face.'
 								'He''s still careful at first, but soon forgets about your suffering and accelerates more and more. The man groans loudly while he hammers his cock inside your ass, ignoring your crying and mewling underneath him.'
 							else
-								horny += anus
+								Astat_horny[pc] += anus
 								'Your anus has no difficulty adjusting to the size of his member, and it actually feels fairly pleasant when he shoves his length in. Your anus clasps around the base of his cock from time to time, and the man begins to thrust his hips against yours enthusiastically when he notices you can take it.'
 							end
 
@@ -636,7 +641,7 @@ if $ARGS[0] = 'work2':
 										act 'Collect the money and get up':gt 'prostitute', 'start'
 									end
 
-									if intel >= 50:
+									if Astat_int[pc] >= 50:
 										act 'Apologize and make amends':
 											cla
 											*clr

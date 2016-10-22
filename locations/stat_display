@@ -142,15 +142,15 @@ if Enable_showattr = 0:
 end
 if Enable_showattr = 1:
 	$stat_msg += '<BR> <a href="exec:Enable_showattr = 0 & gs ''$menu_obnovit''">Attributes:</a>'
-	gs 'indik', '1',stren , stren
+	gs 'indik', '1',Astat_str[pc] , Astat_str[pc]
 	$stat_msg += '<BR><<$ind>> Power'
 	gs'indik','1',speed,speed
 	$stat_msg += '<BR><<$ind>> Speed'
-	gs'indik','1',agil,agil
+	gs'indik','1',Astat_agil[pc],Astat_agil[pc]
 	$stat_msg += '<BR><<$ind>> Agility'
-	gs'indik','1',vital,vital
+	gs'indik','1',Astat_vit[pc],Astat_vit[pc]
 	$stat_msg += '<BR><<$ind>> Endurance'
-	gs'indik','1',intel,intel
+	gs'indik','1',Astat_int[pc],Astat_int[pc]
 	$stat_msg += '<BR><<$ind>> Intelligence'
 	gs'indik','1',will,will
 	$stat_msg += '<BR><<$ind>> Spirit'
@@ -162,12 +162,12 @@ if Enable_showattr = 1:
 			gs'indik','1',SUB,SUB
 		$stat_msg += '<BR><<$ind>> Subordination'
 	end
-	if DOM > 0:
-			gs'indik','1',DOM,DOM
+	if Astat_dom[pc] > 0:
+			gs'indik','1',Astat_dom[pc],Astat_dom[pc]
 		$stat_msg += '<BR><<$ind>> Dominance'
 	end	
 	if SchoolAtestat = 0 and StoryLine > 0:	
-			gs'indik','1',Suspeh,Suspeh
+			gs'indik','1',Astat_grades[pc],Astat_grades[pc]
 		$stat_msg += '<BR><<$ind>> School Grades'	
 	end
 	if exhibi > 0:
@@ -189,7 +189,7 @@ if Enable_showskill = 1:
 	if Kik > 0:gs'show_table','<<Kik>> Kicks','2'
 	if KikDef > 0:gs'show_table','<<KikDef>> Defense','2'
 	if beg > 0:gs'show_table','<<beg>> Running','2'
-	if volleyboll > 0:gs'show_table','<<volleyboll>> Volleyball','2'
+	if Astat_vball[pc] > 0:gs'show_table','<<Astat_vball[pc]>> Volleyball','2'
 	if oficiant > 0:gs'show_table','<<oficiant>> Waitressing','2'
 	if vokal > 0:gs'show_table','<<vokal>> Vocal','2'
 	if dance > 0:gs'show_table','<<dance>> Dancing','2'
@@ -227,10 +227,10 @@ if Enable_showrelation = 1:
 	if hantersSergeiQw > 0:gs'show_table','Hunter Sergei: <<hantersSergeiQw>>','2'
 	if hantersIgorQw > 0:gs'show_table','Hunter Igor: <<hantersIgorQw>>','2'
 	if StoryLine > 0:	
-		if mother > 0:gs'show_table','<<mother>> Mother','2'
-		if father > 0:gs'show_table','<<father>> Father','2'
-		if sister > 0:gs'show_table','<<sister>> Sister','2'
-		if brother > 0:gs'show_table','<<brother>> Brother','2'
+		if Astat_rel[29] > 0:gs'show_table','<<Astat_rel[29]>> mother','2'
+		if Astat_rel[28] > 0:gs'show_table','<<Astat_rel[28]>> father','2'
+		if Astat_rel[33] > 0:gs'show_table','<<Astat_rel[28]>> Sister','2'
+		if Astat_rel[34] > 0:gs'show_table','<<Astat_rel[34]>> Brother','2'
 	end
 	if st_count > 0 :$stat_msg += '<BR> <a href="exec:Enable_showrelation = 0 & gs ''$menu_obnovit''">Relations:</a> <BR><TABLE BORDER=1> <<$show_table>></TR></TABLE>'
 end
@@ -334,10 +334,10 @@ end
 if opPRE = 0 :
     if tanga = 1 and clit_size >= 25:$stat_msg += '<BR><font color = #FF1493>Your panties keep rubbing against your clit and making you horny.</font>'
 
-    if horny >= 50:
-	    if horny < 90 and tanga = 1:
+    if Astat_horny[pc] >= 50:
+	    if Astat_horny[pc] < 90 and tanga = 1:
 		    $stat_msg += '<BR><font color = #DB7093>You are a little nervous, feeling nice between your legs <a href="exec:view''images/picb/briefs1.jpg''">itchy</a> from arousal.</font>'
-	    elseif horny < 90 and tanga = 0:
+	    elseif Astat_horny[pc] < 90 and tanga = 0:
 		    $stat_msg += '<BR><font color = #DB7093>You are a little nervous, feeling nice between your legs <a href="exec:view''images/picb/briefs1a.jpg''">itchy</a> from arousal.</font>'
 	    elseif tanga = 1:
 		    $stat_msg += '<BR><font color = #FF1493>You can''t stop thinking about sex, between your legs you are <a href="exec:view''images/picb/briefs2.jpg''">soaked</a> from your juices.</font>'
@@ -503,8 +503,15 @@ $cumdescribe = {
 	idxmax = arrsize('sparrloc')
 	:idxloop
 		if sparrloc[idx] = i:
-			if sparridt[idx] >= 0 and sparrvol[idx] > 0 and ((arrcomp('temparray',$sparrnam[idx]) = -1) or strcomp($sparrnam[idx],'.*\p{Lu}.*') = 0):
-				$temparray[] = $sparrnam[idx]
+			if sparridt[idx] >= 0 and ((arrcomp('temparray',$sparrnam[idx]) = -1) or strcomp($sparrnam[idx],'.*\p{Lu}.*') = 0):
+				tempfindN = mid($sparrnam[idx], 2) & $tempfindL = mid($sparrnam[idx],1,1)
+				if $tempfindL = 'A':
+					$temparray[] = $Astat_usedname[tempfindN]
+				elseif $tempfindL = 'B':
+					$temparray[] = $Bstat_usedname[tempfindN]
+				elseif $tempfindL = 'C':
+					$temparray[] = $Cstat_usedname[tempfindN]
+				end	
 				if sparridt[idx] = 0:somedude = 1
 				if sparrage[idx] < cumres['new_thresh'] and tempage > 0:
 					tempage = 0
@@ -990,8 +997,8 @@ else
 	$streetev_home = 'the train station'
 end
 
-if hour < meethour and svidanieA = 1:$stat_msg += '<BR><<$boyA>> will be waiting for you near <<$streetev_home>> at <<meethour>>:00.'
-if hour = meethour and svidanieA = 1:$stat_msg += '<BR><b><font color="red"><<$boyA>> is waiting for you by <<$streetev_home>>.</font></b>'
+if hour < meethour and svidanieA = 1:$stat_msg += '<BR><<$boydescA>> will be waiting for you near <<$streetev_home>> at <<meethour>>:00.'
+if hour = meethour and svidanieA = 1:$stat_msg += '<BR><b><font color="red"><<$boydescA>> is waiting for you by <<$streetev_home>>.</font></b>'
 
 if meetday < daystart and svidanieA = 1:bfA -= 10 & svidanieA = 0
 if StrongNarkota > 20:$stat_msg += '<BR><b><font color="red">You are stoned.</font></b>'
@@ -1003,7 +1010,7 @@ if alko > 0:
 end
 if day = 31 and month = 12 and (year - year_start) < 2 and hour >= 5 and hour <= 14 and StoryLine = 1:$stat_msg += '<BR>At 14:00 your New Year''s party will start.'
 
-if StoryLine = 1 and sisboyday + 1 = daystart and hour < 19 and (sisboyQW = 3 or sisboyQW = 5 or sisboyQW = 7 or (sisboyQW = 9 and sisboytrioQW ! 1)):$stat_msg += '<BR>' & $stat_msg += '<BR>You promised your sister not to go into your room at 18:00.'
+if StoryLine = 1 and sisboyday + 1 = daystart and hour < 19 and (Astat_Qstlvl[33] = 3 or Astat_Qstlvl[33] = 5 or Astat_Qstlvl[33] = 7 or (Astat_Qstlvl[33] = 9 and sisboytrioQW ! 1)):$stat_msg += '<BR>' & $stat_msg += '<BR>You promised your sister not to go into your room at 18:00.'
 if StoryLine = 1 and sisboyday + 1 = daystart and hour < 19 and sisboytrioQW = 1:$stat_msg += '<BR>' & $stat_msg += '<BR>You promised your sister to meet her in your room at 18:00.'
 
 if week = 6 and hour > 9 and detention_set = 1:$stat_msg += '<BR><b>You have a detention this morning and must be at school between 8 and 9.</b>'
