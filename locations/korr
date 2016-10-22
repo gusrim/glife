@@ -125,9 +125,9 @@ if IvanPodstavaQW = 3 and hour >= 9 and hour <= 20:
 		money = 0
 		karta = 0
 		stolmoney = 0
-		age += 5
 		vidage += 7
 		year += 5
+		age = year - ((Astat_dob[pc] - (Astat_dob[pc] mod 10000)) / 10000)
 		money = 2000
 		'For you police patrol arrived and took you to court. At trial, you were given five years of general regime, is obliged to pay debt <<DolgRS>>.'
 
@@ -145,7 +145,7 @@ if IvanPodstavaQW = 3 and hour >= 9 and hour <= 20:
 			straight = 0
 			mop = 1
 			skinvan = 0
-			tan = 0
+			Astat_tan[pc] = 0
 			leghair = 6
 			lobok = 3
 			bfa = 0
@@ -183,7 +183,7 @@ if IvanPodstavaDay ! daystart and IvanPodstavaQW = 1 and hour >= 8 and hour <= 2
 	act 'Come to the door':
 		cls
 		gs 'stat'
-		'You came to the door and looked through the peephole. On the site you saw a few men. In the darkness you have seen them on their caps. One of the men said to you through the door. <<$name>> <<$surname>> open, police.'
+		'You came to the door and looked through the peephole. On the site you saw a few men. In the darkness you have seen them on their caps. One of the men said to you through the door. <<$Astat_usedname[pc]>> <<$Astat_lastname[pc]>> open, police.'
 
 		act 'Answer the door':
 			cls
@@ -225,22 +225,21 @@ end
 if gopstop > 30:gt 'police', '1'
 
 if sick > 0 and doktorday ! daystart:
-	!'
-	act 'Call a doctor':
-		cla
-		*clr
-		minut += 15
-		doktorday = daystart
-		sick -= 5
+	
+	!!act 'Call a doctor':
+	!!	cla
+	!!	*clr
+	!!	minut += 15
+	!!	doktorday = daystart
+	!!	sick -= 5
 
-		if sick < 1:sick = 1
-		if sickstage = 1:sicktimer += 5
+	!!	if sick < 1:sick = 1
+	!!	if sickstage = 1:sicktimer += 5
 
-		'Has come to you from the clinic and the doctor examined you. After examination, the doctor made a shot and you will become easier.'
+	!!	'Has come to you from the clinic and the doctor examined you. After examination, the doctor made a shot and you will become easier.'
 
-		act 'Move away':gt 'korr'
-	end
-	'!
+	!!	act 'Move away':gt 'korr'
+	!!end
 
 	act 'Call a doctor':doktorday = daystart & dynamic $polidin
 end
@@ -261,7 +260,7 @@ $ninel0 = {
 		ninelmet = 1
 		'<center><img src="images/inbed/nadom0.jpg"></center>'
 		'The doctor sat on the edge of your bed and sprsil:'
-		'(Doctor) - On that complain of <<$name>>? Can I call you that?'
+		'(Doctor) - On that complain of <<$Astat_usedname[pc]>>? Can I call you that?'
 		'(You) - Of course ... Ahem, ahem, ahem ... Oh, Doctor, perhaps I have the flu - cough just kills and very sore throat. And the temperature is high.'
 		'(Doctor) - Runny nose is? Headaches? Aching bones?'
 		'(You) - Yes. A Aptchee and!'
@@ -271,7 +270,7 @@ $ninel0 = {
 			cla
 			*clr
 			minut += 5
-			horny += 10
+			Astat_horny[pc] += 10
 			clr
 			gs 'stat'
 			'<center><img src="images/inbed/nadom1.jpg"></center>'
@@ -291,7 +290,7 @@ $ninel0 = {
 					'<center><img src="images/inbed/ninel04.jpg"></center>'
 					'(Dr.) No, not so. Temperature should be measured rectally.'
 					'(You) - Uh-uh ...'
-					'(Doctor) - Do not be afraid, <<$name>>, is not painful.'
+					'(Doctor) - Do not be afraid, <<$Astat_usedname[pc]>>, is not painful.'
 					'(You) - Well if you''re sure ...'
 					'(Doctor) - I''m sure. Come on - lie down on his stomach and spread your hands buttocks.'
 
@@ -299,13 +298,13 @@ $ninel0 = {
 						cla
 						*clr
 						minut += 10
-						horny += 10
+						Astat_horny[pc] += 10
 						clr
 						gs 'stat'
 						'<center><img src="images/inbed/nadom2.jpg"></center>'
 						'You obediently roll over and substitute ass. Dr. lubricates your anus lubricated and deftly introduces a thermometer. You flinch, but not from pain and pleasure. Doctor leaves just stick a thermometer in your ass and slowly moves it back and forth and it''s very nice. You feel the growing excitement.'
 
-						if horny >= 50:
+						if Astat_horny[pc] >= 50:
 							act 'Moan with pleasure':
 								cla
 								*clr
@@ -317,7 +316,7 @@ $ninel0 = {
 									cla
 									*clr
 									minut += 15
-									horny += 10
+									Astat_horny[pc] += 10
 									clr
 									gs 'stat'
 									'<center><img src="images/inbed/nadom5.jpg"></center>'
@@ -328,7 +327,7 @@ $ninel0 = {
 										cla
 										*clr
 										clr
-										horny += 15
+										Astat_horny[pc] += 15
 										!!time += 15
 
 										gs 'stat'
@@ -387,7 +386,7 @@ $ninel0 = {
 						act 'Doctor, what with me?':
 							cla
 							'(You scared) - Doctor, what with me?'
-							'(Doctor) - I''m afraid that you have angina, <<$name>>. I would advise you to inpatient treatment'
+							'(Doctor) - I''m afraid that you have angina, <<$Astat_usedname[pc]>>. I would advise you to inpatient treatment'
 							'(You) - What''s that - in the hospital, or what?'
 							'(Doctor) - Yes'
 
@@ -401,7 +400,7 @@ $ninel0 = {
 								act 'Lie on your stomach and bare ass':
 									cla
 									minut += 15
-									horny = 100
+									Astat_horny[pc] = 100
 									clr
 									gs 'stat'
 									'<center><img src="images/inbed/nadom9.jpg"></center>'
@@ -516,7 +515,7 @@ $polidin = {
 
 			act 'Introduce':
 				cla
-				'(You) - Mi ... Kha-kha! Sorry ... <<$name>> <<$surname>>. Park Street apartment house 4 69 ... Aa-and-pchhi!'
+				'(You) - Mi ... Kha-kha! Sorry ... <<$Astat_usedname[pc]>> <<$Astat_lastname[pc]>>. Park Street apartment house 4 69 ... Aa-and-pchhi!'
 				'(Nurse) - It''s okay. Wait a minute.'
 
 				act 'Wait':
@@ -525,7 +524,7 @@ $polidin = {
 					clr
 					gs 'stat'
 					'You wait five minutes, occasionally coughing into the phone and finally hear:'
-					'(Nurse) - So - <<$name>> <<$surname>>. here is your card ... What are you worried?'
+					'(Nurse) - So - <<$Astat_usedname[pc]>> <<$Astat_lastname[pc]>>. here is your card ... What are you worried?'
 					'(You) - Kha-kha-kha ... I''m sorry ... I have a fever and sore throat very. And cough and runny nose.'
 					'(Nurse) - high temperature?'
 					'(You) - Yes, very - 39.2 ... Aa-pchhi!'
