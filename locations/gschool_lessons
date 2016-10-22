@@ -25,10 +25,10 @@ if $ARGS[0] = 'class':
 		minut += 60 * 2
 		school_lunch = 0
 		urand = rand(0, 12)
-		if lernHome = 0: Suspeh += 2
-		if lernHome > 0: Suspeh -= 1
-		if Suspeh > 100: Suspeh = 100
-		if Suspeh < 0: Suspeh = 0
+		if lernHome = 0: Astat_grades[pc] += 2
+		if lernHome > 0: Astat_grades[pc] -= 1
+		if Astat_grades[pc] > 100: Astat_grades[pc] = 100
+		if Astat_grades[pc] < 0: Astat_grades[pc] = 0
 		lernSkill += 1
 		lernHome += 1
 		if schoolSorev = 1: schoolSorev = 0
@@ -60,7 +60,7 @@ if $ARGS[0] = 'class':
 		gt 'gschool_lunch', 'lunch' & !skip class ev if 1.not Anatoly E. or 2. rand < set chance by illume
 
 	elseif rand(1,100) < 3:
-		if Suspeh >= 80:
+		if Astat_grades[pc] >= 80:
 			'You''re far too tired to pay attention in class today. You don''t even know what the lesson is about, as you keep dozing off.'
 			'You''re snapped back to consciousness when you hear <<$teacher>> call your name. Everyone looks at you expectantly, and you realize that you were just asked a question about the topic.'
 			'Taking your best guess at what the teacher might be asking, the entire class is shocked as you somehow manage to produce the correct answer, since it must''ve been obvious to everyone that you were sleeping. <<$teacher>> tells you, "Very good, but try and keep your head up during class, if you don''t mind."'
@@ -78,7 +78,7 @@ if $ARGS[0] = 'class':
 		if rand(1,100) < 3:
 			if skinvan < 20:
 				'Entering the classroom, you overhear your name in a boys conversation.'
-				'"<<$nickname>>? She wouldn''t be bad, if not for the acne."'
+				'"<<$Astat_nickname[pc]>>? She wouldn''t be bad, if not for the acne."'
 				'"I know. All day yesterday, I just couldn''t stop staring at that whitehead. I just wanted somebody to pop it so that I wouldn''t have to look at it anymore."'
 				'"The boys go silent when they notice you walking past, hoping you didn''t catch the details of the conversation.'
 			elseif hotcat > 8:
@@ -89,8 +89,8 @@ if $ARGS[0] = 'class':
 
 				gs 'gschool_events', 'rand_girl_arg3'
 
-				'Waiting for class to start, <<$rand_girl>> reapplies some of her makeup. <<$rand_girl2>> compliments her on her look, but <<$rand_girl>> complains: "I wish I didn''t have to use so much foundation, though."'
-				'"Wouldn''t it be nice to have <<$nickname>>''s skin?" <<$rand_girl2>> suggests. "I bet she barely needs to use anything on it."'
+				'Waiting for class to start, <<girl1>> reapplies some of her makeup. <<girl2>> compliments her on her look, but <<girl1>> complains: "I wish I didn''t have to use so much foundation, though."'
+				'"Wouldn''t it be nice to have <<$Astat_nickname[pc]>>''s skin?" <<girl2>> suggests. "I bet she barely needs to use anything on it."'
 			end
 		elseif rand(1,100) < 3:
 			if hotcat < 7:
@@ -105,7 +105,7 @@ if $ARGS[0] = 'class':
 
 		act'Listen attentively to <<$teacher[1]>>':
 			cla
-			Suspeh += 1
+			Astat_grades[pc] += 1
 			
 			if $teacher = 'Anatoly E.': grupNPC[26] += 1
 			
@@ -143,7 +143,7 @@ if $ARGS[0] = 'class':
 					gt 'gschool_events', 'disrupt'
 				
 				else
-					Suspeh += 1
+					Astat_grades[pc] += 1
 					''
 					'<<$teacher>> nods approvingly, always happy to see his students engaged in his class. He happily spends some extra time explaining the topic again, and answers any extra questions you might have. You feel smarter, thoroughly understanding today''s lessons now.'
 				
@@ -201,7 +201,7 @@ if $ARGS[0] = 'class':
 
 		act'Daydream':
 			cla
-			Suspeh -= 1
+			Astat_grades[pc] -= 1
 			if RAND(1,2) = 1:
 				''
 				'Today''s lessons don''t particularly interest you, and you find yourself drifting off constantly. After a while you notice <<$teacher>> has stopped teaching and is looking at you intently, asking you to pay attention. Apparently this is already the third time he asked; you missed the first two completely while you was lost in your own thoughts. The whole class is looking at you now.'
@@ -226,12 +226,12 @@ if $ARGS[0] = 'class':
 
 							act 'Leave the classroom':school_event_hour = daystart & gt 'gschool_lunch', 'lunch'
 						
-						elseif dom > 70:
+						elseif Astat_dom[pc] > 70:
 							''
-							'<<$teacher>> tries to convince you on the importance of todays lesson, "<<$name>>, please pay attention, this is very important. Today''s topic is going to be on the exam for sure."'
+							'<<$teacher>> tries to convince you on the importance of todays lesson, "<<$Astat_usedname[pc]>>, please pay attention, this is very important. Today''s topic is going to be on the exam for sure."'
 							'"Of course, sir. Please continue your super fascinating lesson. Just keep it a bit up-beat please, if you talk any slower, I might fall asleep!" you answer boldly.'
 							'The whole class bursts into loud laughter, and <<$teacher>> has a rough time getting everyone to quiet down.'
-							'"<<$surname>>, get out of class! I should call your parents, and let the principal know you''re being impossible! Out, now!"'
+							'"<<$Astat_lastname[pc]>>, get out of class! I should call your parents, and let the principal know you''re being impossible! Out, now!"'
 							
 							act 'Don''t leave the classroom':
 								''
@@ -280,7 +280,7 @@ if $ARGS[0] = 'class':
 		
 		act'Play with your phone':
 			cla
-			Suspeh -= 1
+			Astat_grades[pc] -= 1
 			
 			if RAND(1,3) = 1:
 				$school_class_txtrand = 'This lesson is so boring, you have to do something to keep yourself entertained. You take out your phone and begin to play a mobile game, hoping the lesson will be over soon.'
@@ -356,7 +356,7 @@ if $ARGS[0] = 'afternoon2':
 				if temper >= 18 and sunWeather = 1:
 					'<center><img src="images/qwest/alter/fizra/fizra2.jpg"></center>'
 					'Since the weather is nice outside, Mr. Pavlovich decides to stage the run outside, on a nearby forest track he set out before the lesson.'
-					if horny =>90 and npcSex[3] = 1:
+					if Astat_horny[pc] => 90 and npcSex[3] = 1:
 						'As you run through the forest, you feel a hand on your ass. It''s Ivan; he''s much faster than you, and sprints past you to show you how fast he can be when he wants. He then pauses and lets you catch up, and you run together for a while.'
 						act 'Show him your tits':
 							cla & *clr
@@ -378,7 +378,7 @@ if $ARGS[0] = 'afternoon2':
 				act 'Finish run':gt 'gschool_lessons', 'postphys'
 			end
 		elseif fizrarand = 1:
-			agil += rand(1, 3)
+			Astat_agil[pc] += rand(1, 3)
 			fat -= 5
 			manna -= 5
 			sweat += 30
@@ -386,7 +386,7 @@ if $ARGS[0] = 'afternoon2':
 			gs 'gschool_events', 'fiz_rand'
 			act 'End of lesson':gt 'gschool_lessons', 'postphys'
 		elseif fizrarand = 2:
-			stren += rand(1, 3) + (steroid_dose - rand(0,steroid_dose)) & gs 'obj_din', 'steroids'
+			Astat_str[pc] += rand(1, 3) + (steroid_dose - rand(0,steroid_dose)) & gs 'obj_din', 'steroids'
 			manna -= 5
 			fat -= 2
 			sweat += 30
@@ -406,7 +406,7 @@ if $ARGS[0] = 'afternoon2':
 				act 'End of lesson':gt 'gschool_lessons', 'postphys'
 			end
 		elseif fizrarand = 3:
-			vital += rand(1, 3) + (steroid_dose - rand(0,steroid_dose)) & gs 'obj_din', 'steroids'
+			Astat_vit[pc] += rand(1, 3) + (steroid_dose - rand(0,steroid_dose)) & gs 'obj_din', 'steroids'
 			manna -= 5
 			fat -= 2
 			sweat += 30
@@ -414,9 +414,9 @@ if $ARGS[0] = 'afternoon2':
 			if rand(0,1) = 0:
 				'The boys get it a little harder, as they''re asked to do full pull-ups, but everyone needs to do the sit-ups. The instructor is actually counting and recording how many each person does, so it''s a bit more stressful than usual.'
 				if vnesh >= 60:'Some of the boys stop what they''re doing when it''s your turn, coming over to shout some words of support.'
-				if stren <= 40:
+				if Astat_str[pc] <= 40:
 					'Unfortunately, sit-ups aren''t your strong point, and you''re unable to do as many as most of the girls.'
-				elseif stren <= 60:
+				elseif Astat_str[pc] <= 60:
 					'In the end, you wind up doing a perfectly respectable amount, better than most of the girls, but less than the jocks.'
 				else
 					'You''ve done enough sit-ups in the past that this isn''t too much of a challenge. Eventually you stop just because the instructor seems to be getting tired of counting.'
@@ -459,22 +459,22 @@ if $ARGS[0] = 'afternoon2':
 			end
 		elseif fizrarand = 4:
 			cls
-			stren += rand(1, 3) + (steroid_dose - rand(0,steroid_dose)) & gs 'obj_din', 'steroids'
+			Astat_str[pc] += rand(1, 3) + (steroid_dose - rand(0,steroid_dose)) & gs 'obj_din', 'steroids'
 			manna -= 5
 			fat -= 2
 			sweat += 30
-			horny += 10
+			Astat_horny[pc] += 10
 			gs 'stat'
 			'<center><img src="images/qwest/alter/rope.jpg"></center>'
 			'After the roll call, he announces that you will all be taking turns climbing the ropes today.'
 
-			if horny >= 100:
-				horny = 0
+			if Astat_horny[pc] >= 100:
+				Astat_horny[pc] = 0
 				orgasm += 1
 				rope_orgasm += 1
-				'You climb the rope as instructed, and can''t help but feel the rough robe rubbing against your pussy through your clothes. You do your best to climb up, but the rubbing of the rope against your pussy gets more and more intense as you try to climb higher. After a few seconds the stimulation from the rope against your clit brings you to orgasm, and you have to do everything in your power to not fall down as you quiver against the rope, stifling your moans. Your teacher looks up to you and says, "Why are you shaking, <<$surname>>? Are you tired or something? Go ahead, come down then."'
-			elseif horny >= 50 and horny < 100:
-				horny += 20
+				'You climb the rope as instructed, and can''t help but feel the rough robe rubbing against your pussy through your clothes. You do your best to climb up, but the rubbing of the rope against your pussy gets more and more intense as you try to climb higher. After a few seconds the stimulation from the rope against your clit brings you to orgasm, and you have to do everything in your power to not fall down as you quiver against the rope, stifling your moans. Your teacher looks up to you and says, "Why are you shaking, <<$Astat_lastname[pc]>>? Are you tired or something? Go ahead, come down then."'
+			elseif Astat_horny[pc] >= 50 and Astat_horny[pc] < 100:
+				Astat_horny[pc] += 20
 				'You climb the rope as instructed, and can''t help but feel the rough robe rubbing against your pussy through your clothes. You do your best to climb up, but the rubbing of the rope against your pussy gets more and more intense as you try to climb higher. You manage to reach the top, but the rubbing of the rope has got you all worked up. With a bright blush on your face you slide back down, making sure the rope doesn''t rub against your most sensitive spots.'
 			end
 			gs 'gschool_events', 'fiz_rand'
@@ -499,7 +499,7 @@ if $ARGS[0] = 'postphys':
 	end
 
 	if fizrukSex > 0 and kristinaSex > 0:
-		'When the class is dismissed, Christina approaches you, "<<$nickname>>, sweetie, Mr. Pavlovich wants you to join me again in his office. He wants us to ''entertain him'', if you know what I mean. Want to join me?"'
+		'When the class is dismissed, Christina approaches you, "<<$Astat_nickname[pc]>>, sweetie, Mr. Pavlovich wants you to join me again in his office. He wants us to ''entertain him'', if you know what I mean. Want to join me?"'
 
 		act 'Entertain Mr. Pavlovich with Christina':
 			cls
@@ -535,15 +535,15 @@ if $ARGS[0] = 'postphys':
 		act 'Listen in on Christina and Mr. Pavlovich':
 			cls
 			gs 'stat'
-			'You quietly move up to Mr. Pavlovich''s office, to listen to what they''re talking about. You hear Christina saying, "Please sir, you can''t let <<$name>> go to the regional competition!"'
-			'He replies, "<<$name>> beat you fair and square, Christina. There''s not a whole lot I can do about it."'
+			'You quietly move up to Mr. Pavlovich''s office, to listen to what they''re talking about. You hear Christina saying, "Please sir, you can''t let <<$Astat_usedname[pc]>> go to the regional competition!"'
+			'He replies, "<<$Astat_usedname[pc]>> beat you fair and square, Christina. There''s not a whole lot I can do about it."'
 			'Christina''s voice again, "But you promised! Please? I''ll make it worth your while if you choose me over her, sir..."'
 			'After a few seconds of silence, you hear him smirk, "Is that so, Christina? You know what to do then, this is not your first time here." Seconds later you hear a gasp from your teacher, and then soft moaning from him.'
 
 			act 'Try to see what''s happening':
 				cls
 				zverevaQW = 2
-				horny += 10
+				Astat_horny[pc] += 10
 				gs 'stat'
 				'<center><img src="images/qwest/alter/ev/zver.jpg"></center>'
 				'You lean over and try to look through the keyhole. You''re flabbergasted by what you see: Christina is on her knees in front of Mr. Pavlovich, and is sucking him off like her life depended on it.'
@@ -554,12 +554,12 @@ if $ARGS[0] = 'postphys':
 					gs 'stat'
 					!!'<center><img src="images/qwest/alter/ev/zver.jpg"></center>'
 					if GorSlut = 0:
-						'You open the door and enter Mr. Pavlovich''s room. Christine is startled, jumping up from her kneeling position and desperately wiping her mouth while your teacher quickly stuffs his erection back into his shorts. "<<$surname>>, has no one taught you you should knock!? Me and Christina were just discussing some important matters!" he exclaims, pretending to be insulted by your sudden intrusion.'
+						'You open the door and enter Mr. Pavlovich''s room. Christine is startled, jumping up from her kneeling position and desperately wiping her mouth while your teacher quickly stuffs his erection back into his shorts. "<<$Astat_lastname[pc]>>, has no one taught you you should knock!? Me and Christina were just discussing some important matters!" he exclaims, pretending to be insulted by your sudden intrusion.'
 						'You can''t believe he''s even trying! You tell him just that, "Christina was using her mouth, but it certainly wasn''t for talking! You''re letting her suck you off so she can go to the regional competition instead of me!"'
 						'He drops the charade, but has a confident grin on his face, "Who would believe you? It''s your word against mine, and the word of our school''s star athlete Christina Zvereva. The principal would consider it slander! Your parents would be outraged! Face it you don''t have shit on me, get out of my office. Christina, get back on your knees, we''re not done." The last part was directed at Christina.'
 						'Christina obliges, rubbing his cock through his shorts as she looks you in the eye. Having regained her confidence in knowing that she''ll be your school''s admission for the contest, she parrots, "Face it bitch, you can''t prove a thing. Now get the fuck out, Mr. Pavlovich and I have more to discuss."'
 					elseif GorSlut > 0:
-						'You open the door and burst into Mr. Pavlovich''s room. Christina pulls off her teacher''s dick in a panic reaction, but regains her confidence when she sees it''s you, "Look what the cat dragged in, it''s <<$name>> the <<$gnikname>>. I recognize that look, you want to suck him off too, don''t you? That''s okay, we can share."'
+						'You open the door and burst into Mr. Pavlovich''s room. Christina pulls off her teacher''s dick in a panic reaction, but regains her confidence when she sees it''s you, "Look what the cat dragged in, it''s <<$Astat_usedname[pc]>> the <<$gnikname>>. I recognize that look, you want to suck him off too, don''t you? That''s okay, we can share."'
 
 						act 'Give him a blowjob with Christina':
 							cls
@@ -582,7 +582,7 @@ if $ARGS[0] = 'postphys':
 
 				act 'Keep looking':
 					cls
-					horny += 10
+					Astat_horny[pc] += 10
 					gs 'stat'
 					'<center><img src="images/qwest/alter/ev/zver.jpg"></center>'
 					'Mr. Pavlovich groans, and after a few minutes he can''t hold back any more shoots his load in Christina''s mouth. She diligently swallows his sperm without even taking her mouth off his cock, giving it a thorough tongue bath before tucking it back into his shorts. You hear her ask, "Did I do a good job, sir? Did I earn my spot in the regional championships?"'
@@ -633,7 +633,7 @@ if $ARGS[0] = 'principal':
 		act 'Choose detention': detention_set = 1 & gt 'gschool_lessons', 'class'
 		act 'Choose spanking': gt 'gschool_lessons', 'spanked'
 	else
-		'You take a seat at Principal <<$npcSurName[50]>>''s desk and wait for her to address you. "You know why you are here <<$surname>>?", before you have a chance to reply she continues on. "It was a rhetorical question, we both know why you are here. You are here because you got in trouble." She pauses to look over at the folder in front of her. "It shows you have mostly stayed out of trouble until now. I hope this is only a minor lapse in judgement and not a new trend from you. We won''t get into what you did, just understand this is a warning. Straighten yourself out or their will be consequences. Now return to class."'
+		'You take a seat at Principal <<$npcSurName[50]>>''s desk and wait for her to address you. "You know why you are here <<$Astat_lastname[pc]>>?", before you have a chance to reply she continues on. "It was a rhetorical question, we both know why you are here. You are here because you got in trouble." She pauses to look over at the folder in front of her. "It shows you have mostly stayed out of trouble until now. I hope this is only a minor lapse in judgement and not a new trend from you. We won''t get into what you did, just understand this is a warning. Straighten yourself out or their will be consequences. Now return to class."'
 		act 'Go to class':gt 'gschool_lessons', 'class'
 	end
 end

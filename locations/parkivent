@@ -22,7 +22,7 @@ if $ARGS[0] = '1':
 
 		act 'Tell him to shut up':
 			cla
-			dom += 1
+			Astat_dom[pc] += 1
 			'"Shut your trap, jackass." You''re surprised when you see him quickly running away.'
 
 			act 'Leave':gt 'park', 'start'
@@ -40,11 +40,11 @@ if $ARGS[0] = '1':
 		act 'Continue': gt 'succubus', 'RapistFight'
 	else
 		'From the shade of a tree guy came out, he came up to you and through gritted teeth, "Babe", you dragged into the bushes.'
-
+		gs 'npcgeneratec', 0, 'Rapist', rand(18,40)
+		gs 'boyStat', $npclastgenerated
 		act 'Fight him':
 			cls
 			cla
-			$boy = 'Rapist'
 			!!stats
 			strenV = 100
 			speedV = 50
@@ -152,9 +152,7 @@ if $ARGS[0] = '2':
 				cla
 				*clr
 				money += 500
-				$boy = 'guy in the park'
-				dick = rand (8, 20)
-				silavag = rand (0,2)
+				gs 'boyStat', 121
 				pose = 1
 				parkday = daystart
 
@@ -184,9 +182,7 @@ if $ARGS[0] = '2':
 				cla
 				*clr
 				money += 2000
-				$boy = 'guy in the park'
-				dick = rand (8, 20)
-				silavag = rand (0,2)
+				gs 'boyStat', 121
 				pose = 1
 				parkday = daystart
 
@@ -221,21 +217,21 @@ if $ARGS[0] = '3':
 	act 'Peek':
 		cla
 		*clr
-		horny += 10
+		Astat_horny[pc] += 10
 		gs 'stat'
 		'<center><img src="images/img/spaln/shfoto.jpg"></center>'
 		'You take a peek through the bushes and see three guys fucking one woman. It seems like she''s really enjoying it.'
 
 		act 'Leave':gt 'park', 'start'
 
-		if horny >= 50:
+		if Astat_horny[pc] >= 50:
 			act 'Pry':
 				cla
-				horny += 10
+				Astat_horny[pc] += 10
 				gs 'stat'
 				'You hide behind a tree to get a better look at the group action.'
 
-				if horny >= 75:
+				if Astat_horny[pc] >= 75:
 					'This sight really excites you and you can feel your pussy moisten.'
 				else
 					'While this is quite the sight to enjoy, you think it''s better not to get caught, so you silently move away.'
@@ -390,7 +386,7 @@ if $ARGS[0] = '4':
 								stat['bj'] += 8
 								swallow += 6
 								facial += 2
-								horny = 0
+								Astat_horny[pc] = 0
 								cumface += 2
 								'"Okay, boys," you say around the cock in your mouth.'
 								'You drunkenly wonder why they insist on talking so loud. But when you open your eyes, you see two of the girls from the group with a camera.'
@@ -435,7 +431,7 @@ if $ARGS[0] = '5':
 			act 'Agree':
 				cla
 				'"Alright, but what''s in for me?" you ask him. "I''d pay you 2.000 <b>₽</b>.", he answers. "By the way, I haven''t asked you for your name yet."'
-				'"I''m <<$name>>.", you tell him. He nods and smiles and tells you it''s a cute name. Then he gives you his card and judging by the address, it''s somewhere in the city center.'
+				'"I''m <<$Astat_usedname[pc]>>.", you tell him. He nods and smiles and tells you it''s a cute name. Then he gives you his card and judging by the address, it''s somewhere in the city center.'
 
 				act 'Ask him, when to come by':
 					cla
@@ -473,7 +469,8 @@ if $ARGS[0] = '6':
 			act 'Wake up':
 				cla
 				*clr
-				$boy = 'rapist'
+				gs 'npcgeneratec', 0, 'Rapist', rand(18,40)
+				gs 'boyStat', $npclastgenerated
 				'<center><img src="images/picizpar/1.jpg"></center>'
 				'"Ouch...", you say groggily as you wake up. "I thought you would never wake up.", a deep voice says. He grabs your hair and pulls you up, then takes his huge knife and holds it to your face. "Look pretty, if you don''t resist, this might be a pleasurable experience for you.", he tells you, "Now take off your clothes, you won''t need them for now."'
 
@@ -708,10 +705,10 @@ if $ARGS[0] = '7':
 		act 'Yes':
 			cla
 			pusher = 1
-			health = vital * 10 + stren * 5
-			willpower = intel * 5 + will * 5
-			manna = (intel * magik) + magik * 100 + vital * 10 + rikudo
-			horny = 100
+			health = Astat_vit[pc] * 10 + Astat_str[pc] * 5
+			willpower = Astat_int[pc] * 5 + will * 5
+			manna = (Astat_int[pc] * magik) + magik * 100 + Astat_vit[pc] * 10 + rikudo
+			Astat_horny[pc] = 100
 			nark += 10
 			narkday = daystart
 			'You stayed with interest, never tried dope, but because at one time there will be nothing? The guy came up to you and backfilled with a little white powder, you sucked his nose and the world blossomed unexpected colors.'
@@ -737,13 +734,13 @@ if $ARGS[0] = '8':
 		*clr
 		gs 'boy'
 		'To you came <<$boybody>> <<$boybod>> <<$boyface>>. One <<$boyClo>>'
-		'The guy introduced as <<$boy>> and asked your number.'
+		'The guy introduced as <<$boydesc>> and asked your number.'
 
 		act 'Tell him to phone':
 			cla
 			gs 'boyfrend', 'start'
 			stopboy = 0
-			'<<$boyA>> recorded your phone and left.'
+			'<<$boydescA>> recorded your phone and left.'
 
 			act 'Complete walk':gt 'park', 'start'
 		end
@@ -761,25 +758,25 @@ if $ARGS[0] = '9':
 
 	if bfa >= 1:
 		cls
-		'You walk through the park and you notice how the meeting goes your man <<$boyA>>'
+		'You walk through the park and you notice how the meeting goes your man <<$boydescA>>'
 
 		act 'Leave':bfa -= 1 & gt 'park', 'start'
 
-		if boyonceA = 0 or SUB = 0 and DOM = 0:
+		if boyonceA = 0 or SUB = 0 and Astat_dom[pc] = 0:
 			act 'Nice to talk':
 				cla
 				bfa += 2
 				minut += 15
-				'<<$boyA>> bradovalsya your chance meeting and hugged you. You nice talk and kiss goodbye to split each according to his deeds.'
+				'<<$boydescA>> bradovalsya your chance meeting and hugged you. You nice talk and kiss goodbye to split each according to his deeds.'
 
 				act 'Complete walk':gt 'park', 'start'
 			end
 		elseif boyonceA = 1 and SUB > 0:
-			'<<$boyA>> glad you and taking you by the hand led to a deeper into the park.'
+			'<<$boydescA>> glad you and taking you by the hand led to a deeper into the park.'
 
 			act 'Go with the guy.':gt 'event', 'park'
-		elseif boyonceA = 1 and DOM > 0:
-			'<<$boyA>> glad you and taking you by the hand led to a deeper into the park.'
+		elseif boyonceA = 1 and Astat_dom[pc] > 0:
+			'<<$boydescA>> glad you and taking you by the hand led to a deeper into the park.'
 
 			act 'Offer to sit on the bench. (You decide to have sex with a guy.)':gt 'event', 'park'
 
@@ -787,7 +784,7 @@ if $ARGS[0] = '9':
 				cla
 				bfa += 5
 				minut += 15
-				'<<$boyA>> bradovalsya your chance meeting and hugged you. You nice talk and kiss goodbye to split each according to his deeds.'
+				'<<$boydescA>> bradovalsya your chance meeting and hugged you. You nice talk and kiss goodbye to split each according to his deeds.'
 
 				act 'Complete walk':gt 'park', 'start'
 			end
