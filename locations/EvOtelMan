@@ -5,20 +5,21 @@ if $ARGS[0] = '':
 	minut += 15
 	gs 'tboyopr'
 	gs 'stat'
-
-	'<<$bname>> hails a taxi when you''re outside, and has a short chat with the taxi driver.'
-	'Then he beckons you: "<<$name>>, come on. Let''s go!"'
-	'You get into the back seat of the taxi with him, and spend the fifteen minute taxi drive mostly in silence. You notice <<$bname>> giving the taxi driver an impressive tip when you arrive at the hotel... is he trying to impress you?'
-	act 'Go to <<$bname>>''s room':
+	gs 'boyStat', $bname
+	
+	'<<$boydesc>> hails a taxi when you''re outside, and has a short chat with the taxi driver.'
+	'Then he beckons you: "<<$Astat_usedname[pc]>>, come on. Let''s go!"'
+	'You get into the back seat of the taxi with him, and spend the fifteen minute taxi drive mostly in silence. You notice <<$boydesc>> giving the taxi driver an impressive tip when you arrive at the hotel... is he trying to impress you?'
+	act 'Go to <<$boydesc>>''s room':
 		if DPtipe = 1:
 			cls
 			BeInOtel += 1
 			minut += 5
 			gs 'stat'
 			'<center><img src="images/qwest/alter/ev/otel.jpg"></center>'
-			'<<$bname>> actually has a fairly nice room. He must''ve counted on bringing someone back to the room with him, because a bottle of whisky and a fruit platter are already waiting at the table.'
+			'<<$boydesc>> actually has a fairly nice room. He must''ve counted on bringing someone back to the room with him, because a bottle of whisky and a fruit platter are already waiting at the table.'
 			'He invites you to sit down in a comfortable chair and pours two glasses of whiskey, offering you one.'
-			'"Let''s drink to meeting new acquaintances! I''m very fortunate to have met a beautiful and wonderful girl such as yourself, <<$name>>", he toasts cheerfully.'
+			'"Let''s drink to meeting new acquaintances! I''m very fortunate to have met a beautiful and wonderful girl such as yourself, <<$Astat_usedname[pc]>>", he toasts cheerfully.'
 
 			act 'Have a drink with him':gt 'EvOtelMan', 'sex'
 		else
@@ -32,7 +33,7 @@ if $ARGS[0] = 'sex':
 	minut += 5
 
 	if DPtipe = 1:
-		horny += 20
+		Astat_horny[pc] += 20
 		alko += 2
 		cumspclnt = 2
 		gs 'cum_cleanup'
@@ -40,15 +41,15 @@ if $ARGS[0] = 'sex':
 		gs 'stat'
 		'<center><img src="images/qwest/alter/ev/kiss.jpg"></center>'
 		'You can tell he didn''t cheap out on the whisky at all, this is good stuff!'
-		'The two of you enjoy the drink. Then <<$bname>> stands up and walks up to you, placing his hands on your shoulders while his lips find yours. He gives you a deep kiss while he begins to take off your clothes confidently.'
+		'The two of you enjoy the drink. Then <<$boydesc>> stands up and walks up to you, placing his hands on your shoulders while his lips find yours. He gives you a deep kiss while he begins to take off your clothes confidently.'
 	else
 		gs 'stat'
 		'<center><img src="images/qwest/alter/ev/kiss.jpg"></center>'
-		'Immediately as you enter his hotel room, <<$bname>> puts his hands on your hips and pulls you close for a deep kiss. He slides his hands up and down your body, trying to find a way to get underneath your clothes.'
+		'Immediately as you enter his hotel room, <<$boydesc>> puts his hands on your hips and pulls you close for a deep kiss. He slides his hands up and down your body, trying to find a way to get underneath your clothes.'
 	end
 
 	!! MJ: Same condition.
-	if ((horny < 75 or dom > 0) and vagina = 0 and stat['vaginal'] = 0):
+	if ((Astat_horny[pc] < 75 or Astat_dom[pc] > 0) and vagina = 0 and stat['vaginal'] = 0):
 		act 'Tell him you''re still a virgin':
 			cls
 			minut += 5
@@ -57,23 +58,23 @@ if $ARGS[0] = 'sex':
 
 			if tiprandeom < 2:
 				'"No, wait!" you interrupt him. "Look... I like men, and I like you, but I''m not losing my virginity to someone I just met!"'
-				'<<$bname>> smiles reassuringly and says: "Oh wow, a virgin huh? That''s okay... we can still have fun without you losing your virginity! Maybe you could use your mouth?"'
-				'<<$bname>> unbuttons his pants, springing his cock free.'
+				'<<$boydesc>> smiles reassuringly and says: "Oh wow, a virgin huh? That''s okay... we can still have fun without you losing your virginity! Maybe you could use your mouth?"'
+				'<<$boydesc>> unbuttons his pants, springing his cock free.'
 
-				if dom > 0:
+				if Astat_dom[pc] > 0:
 					act 'Tell him it''s not going to happen':
 						cls
-						dom += 1
+						Astat_dom[pc] += 1
 						gs 'stat'
 						'You laugh at his hubris, but set him straight: "Hah! I don''t think so..."'
-						'<<$bname>> scratches his head, pondering for a moment. Then he suggests: "I can pay you? I''ll give you 500 <b>₽</b> for a blowjob?"'
+						'<<$boydesc>> scratches his head, pondering for a moment. Then he suggests: "I can pay you? I''ll give you 500 <b>₽</b> for a blowjob?"'
 						'He''s already counting the money out while he says it.'
 
 						act 'Suck him off for money':
 							cls
 							money += 500
 							gs 'stat'
-							'You wordlessly extend your hand, and <<$bname>> readily gives you the money.'
+							'You wordlessly extend your hand, and <<$boydesc>> readily gives you the money.'
 							gt 'EvOtelMan', 'Blow'
 						end
 
@@ -85,16 +86,16 @@ if $ARGS[0] = 'sex':
 				act 'Squat before him': gt 'EvOtelMan', 'Blow'
 			else
 				'<center><img src="images/qwest/alter/ev/otel.jpg"></center>'
-				'<<$bname>>''s eyes grow a bit wider, the moment you say the word ''virgin''.'
+				'<<$boydesc>>''s eyes grow a bit wider, the moment you say the word ''virgin''.'
 				'"Wow, you''re a virgin? Really?" he asks in an intrigued voice. "Can I see your pussy? Please? I haven''t seen a virgin pussy in forever... I''ll give you 500 <b>₽</b>! I just want to look at it, no touching!"'
 
-				if dom > 0:
+				if Astat_dom[pc] > 0:
 					act 'Tell him it''s not going to happen':
 						cls
-						dom += 1
+						Astat_dom[pc] += 1
 						gs 'stat'
 						'You laugh at his hubris, but set him straight: "Hah! I don''t think so..."'
-						'<<$bname>> scratches his head, pondering for a moment. Then he suggests: "How about a blowjob then? I''ll give you 500 <b>₽</b>?"'
+						'<<$boydesc>> scratches his head, pondering for a moment. Then he suggests: "How about a blowjob then? I''ll give you 500 <b>₽</b>?"'
 						'He''s already counting the money out while he says it.'
 
 						act 'Suck him off for money':
@@ -102,7 +103,7 @@ if $ARGS[0] = 'sex':
 							money += 500
 							gs 'stat'
 							'<center><img src="images/qwest/alter/ev/otel.jpg"></center>'
-							'You wordlessly extend your hand, and <<$bname>> readily gives you the money.'
+							'You wordlessly extend your hand, and <<$boydesc>> readily gives you the money.'
 							act 'Squat before him': gt 'EvOtelMan', 'Blow'
 						end
 
@@ -127,33 +128,33 @@ if $ARGS[0] = 'sex':
 						cls
 						minut += 30
 						!!stat['vaginal'] += 1
-						$boy = $bname
+						gs 'boyStat', $bname
 						bmSEX[Tboynum] += 1
 						money += 5000
 						gs 'stat'
 						'<center><img src="images/qwest/alter/ev/sex.jpg"></center>'
 						'"Well... alright", you say softly as you extend your hand. He gives you a hearty handshake and happily says: "Deal!"'
-						'He puts a large pile of bank notes in your hand, and you quickly count it. It''s all there, as promised. When you put the money away, <<$bname>> eagerly throws you onto the bed and has you spread your legs for him.'
+						'He puts a large pile of bank notes in your hand, and you quickly count it. It''s all there, as promised. When you put the money away, <<$boydesc>> eagerly throws you onto the bed and has you spread your legs for him.'
 						dynamic $sexstart
 						dynamic $sexstart2
 						dynamic $sexcum
 						act 'Brush up a little':gt 'EvOtelMan', 'End'
 					end
 
-					if dom > 0:
+					if Astat_dom[pc] > 0:
 						act 'Say you''re saving yourself for marriage':
 							cls
-							dom += 1
+							Astat_dom[pc] += 1
 							gs 'stat'
 							'You laugh at his hubris, but set him straight: "Sorry, but... no. I''m saving myself for marriage, and no amount of money is going to change that!"'
-							'<<$bname>> scratches his head, pondering for a moment. He looks rather disappointed. Then he sighs: "Fair enough, I can respect that. I still want you though... how about a blowjob then? I''ll give you 500 <b>₽</b>?"'
+							'<<$boydesc>> scratches his head, pondering for a moment. He looks rather disappointed. Then he sighs: "Fair enough, I can respect that. I still want you though... how about a blowjob then? I''ll give you 500 <b>₽</b>?"'
 							'He''s already counting the money out while he says it.'
 
 							act 'Suck him off for money':
 								cls
 								money += 500
 								gs 'stat'
-								'You wordlessly extend your hand, and <<$bname>> readily gives you the money.'
+								'You wordlessly extend your hand, and <<$boydesc>> readily gives you the money.'
 								act 'Squat before him': gt 'EvOtelMan', 'Blow'
 							end
 
@@ -167,17 +168,17 @@ if $ARGS[0] = 'sex':
 		end
 	end
 
-	if dom >= 5 and StoryLine > 0:
+	if Astat_dom[pc] >= 5 and StoryLine > 0:
 		act 'Suggest you want money':
 			cls
-			dom += 1
+			Astat_dom[pc] += 1
 			minut += 5
 			gs 'stat'
 			'<center><img src="images/qwest/alter/ev/otel.jpg"></center>'
-			'You look at the clock and fake a yawn: "Oh wow, is it that late already? It''s been fun spending time with you, <<$bname>>, but I really should get going!"'
-			'<<$bname>> frowns and protests: "Already? But we were having such a nice time!"'
+			'You look at the clock and fake a yawn: "Oh wow, is it that late already? It''s been fun spending time with you, <<$boydesc>>, but I really should get going!"'
+			'<<$boydesc>> frowns and protests: "Already? But we were having such a nice time!"'
 			'"I know, babe!" you smile at him, letting the words linger in the air for moment. "I have to get up early tomorrow to find a new job, though! Money is very tight, you know?"'
-			'<<$bname>> gives you a knowing smile. Apparently he travels around a lot, and paying for sex is nothing new to him.'
+			'<<$boydesc>> gives you a knowing smile. Apparently he travels around a lot, and paying for sex is nothing new to him.'
 			'He decides to play along and says: "Oh, I see. Well, you''re such a sweet girl... I want to help you. Would 3,000 <b>₽</b> help? Surely you wouldn''t have to wake up early tomorrow, with that money in your pocket?"'
 			'From the greedy look in his eyes and the large bulge in his pants, it''s very obvious that he expects to fuck you if you say yes.'
 
@@ -186,12 +187,12 @@ if $ARGS[0] = 'sex':
 				minut += 30
 				!!stat['vaginal'] += 1
 				guy += 1
-				$boy = $bname
+				gs 'boyStat', $bname
 				bmSEX[Tboynum] += 1
 				money += 3000
 				gs 'stat'
 				'<center><img src="images/qwest/alter/ev/sex.jpg"></center>'
-				'"You''re a lifesaver, <<$bname>>! Thank you so much!" you smile at him, and quickly put away the money he counted out for you. You barely get to finish the sentence as <<$bname>> throws you down onto the bed and immediately jumps on top of you.'
+				'"You''re a lifesaver, <<$boydesc>>! Thank you so much!" you smile at him, and quickly put away the money he counted out for you. You barely get to finish the sentence as <<$boydesc>> throws you down onto the bed and immediately jumps on top of you.'
 				'"Finally! I''ve been dying to fuck you this whole evening... spread ''em, girl!" he grunts in your ear.'
 				dynamic $sexstart
 				dynamic $sexstart2
@@ -199,21 +200,21 @@ if $ARGS[0] = 'sex':
 				act 'Brush up a little':gt 'EvOtelMan', 'End'
 			end
 
-			if dom > 0:
+			if Astat_dom[pc] > 0:
 				act 'Offer a blowjob for money instead':
 					cls
-					dom += 1
+					Astat_dom[pc] += 1
 					gs 'stat'
 					'<center><img src="images/qwest/alter/ev/otel.jpg"></center>'
 					'You laugh and say: "That''s very kind of you, but that''s too much! I don''t think I could thank you enough..."'
 					'Before he is able to say anything, you get to the point: "And I really do need to leave soon. But... how about I give you a blowjob for 500 <b>₽</b>?"'
-					'<<$bname>> looks a little disappointed at first, he really hoped he''d get to fuck you tonight. However, he is into you way too much to reject your offer.'
+					'<<$boydesc>> looks a little disappointed at first, he really hoped he''d get to fuck you tonight. However, he is into you way too much to reject your offer.'
 
 					act 'Blow him for money':
 						cls
 						money += 500
 						gs 'stat'
-						'You wordlessly extend your hand, and <<$bname>> readily gives you the money.'
+						'You wordlessly extend your hand, and <<$boydesc>> readily gives you the money.'
 						act'Squat before him': gt 'EvOtelMan', 'Blow'
 					end
 
@@ -223,7 +224,7 @@ if $ARGS[0] = 'sex':
 		end
 	end
 
-	if dom > 0: act'Give him a blowjob': gt 'EvOtelMan', 'Blow'
+	if Astat_dom[pc] > 0: act'Give him a blowjob': gt 'EvOtelMan', 'Blow'
 
 	act 'Have sex with him':
 		cls
@@ -233,11 +234,11 @@ if $ARGS[0] = 'sex':
 		if boynumBlock = 0:guy += 1
 		if boynumBlock > 0 and bmTOTSEX[Tboynum] = 0:guy += 1
 
-		$boy = $bname
+		gs 'boyStat', $bname
 		bmSEX[Tboynum] += 1
 		gs 'stat'
 		'<center><img src="images/qwest/alter/ev/sex.jpg"></center>'
-		'<<$bname>> throws you down onto the bed and immediately jumps on top of you.'
+		'<<$boydesc>> throws you down onto the bed and immediately jumps on top of you.'
 		'"Finally! I''ve been dying to fuck you this whole evening... spread ''em, girl!" he grunts in your ear.'
 		dynamic $sexstart
 		dynamic $sexstart2
@@ -256,8 +257,8 @@ if $ARGS[0] = 'Blow':
 	bmBJ[Tboynum] += 1
 	gs 'stat'
 	'<center><img src="images/qwest/alter/ev/bj.jpg"></center>'
-	'You squat in front of <<$bname>> and take his throbbing cock in your hand. With a devious smile you slowly pull his foreskin back, and carefully place some kisses and licks on the tip of his penis.'
-	'It doesn''t take long at all for him to start begging: "<<$name>>, please... I''m going to cum in no time if you keep that up!"'
+	'You squat in front of <<$boydesc>> and take his throbbing cock in your hand. With a devious smile you slowly pull his foreskin back, and carefully place some kisses and licks on the tip of his penis.'
+	'It doesn''t take long at all for him to start begging: "<<$Astat_usedname[pc]>>, please... I''m going to cum in no time if you keep that up!"'
 
 	act 'Suck his dick':
 		cls
@@ -278,7 +279,7 @@ if $ARGS[0] = 'Blow':
 			'<center><img src="images/qwest/alter/ev/bj3.jpg"></center>'
 			'You look him in the eye while you continue to suck him off, feeling spray after spray land on your tongue. Wow, he must have been saving up for you!'
 			'He cums so much that you don''t have enough time to swallow it all, and some of it flows out of your mouth onto the head of his penis.'
-			'<<$bname>> groans happily and finally takes his cock out of your mouth, once you lap up the remains of his sperm. The pungent taste of sperm in your mouth is very strong, and you have no doubt that your breath smells like it too.'
+			'<<$boydesc>> groans happily and finally takes his cock out of your mouth, once you lap up the remains of his sperm. The pungent taste of sperm in your mouth is very strong, and you have no doubt that your breath smells like it too.'
 			act 'Brush up a little':gt 'EvOtelMan', 'End'
 		end
 
@@ -290,7 +291,7 @@ if $ARGS[0] = 'Blow':
 			minut += 10
 			gs 'stat'
 			'<center><img src="images/qwest/alter/ev/bj4.jpg"></center>'
-			'You let his member slip out of your mouth, and smile happily at him when you feel another jet of sperm immediately land on your forehead. You close your eyes so no sperm can get in them but otherwise let him cover your face with his load, which <<$bname>> does with great enthusiasm.'
+			'You let his member slip out of your mouth, and smile happily at him when you feel another jet of sperm immediately land on your forehead. You close your eyes so no sperm can get in them but otherwise let him cover your face with his load, which <<$boydesc>> does with great enthusiasm.'
 			act 'Brush up a little':gt 'EvOtelMan', 'End'
 		end
 	end
@@ -298,9 +299,9 @@ if $ARGS[0] = 'Blow':
 	act 'Suggest he fucks your ass':
 		cls
 		minut += 30
+		gs 'boyStat', $bname
 		spafinloc = 3
 		gs 'cum_manage'
-		$boy = $bname
 		bmANAL[Tboynum] += 1
 		gs 'stat'
 		'<center><img src="images/qwest/alter/ev/anal.jpg"></center>'
@@ -313,11 +314,11 @@ if $ARGS[0] = 'Blow':
 		cls
 		minut += 30
 		!!stat['vaginal'] += 1
-		$boy = $bname
+		gs 'boyStat', $bname
 		bmSEX[Tboynum] += 1
 		gs 'stat'
 		'<center><img src="images/qwest/alter/ev/sex.jpg"></center>'
-		'When you lie down on his bed on your back, <<$bname>> pounces on top of you in no time and eagerly makes you spread your legs.'
+		'When you lie down on his bed on your back, <<$boydesc>> pounces on top of you in no time and eagerly makes you spread your legs.'
 		'"Finally! I''ve been dying to fuck you this whole evening... spread ''em, girl!" he grunts in your ear.'
 		dynamic $sexstart
 		dynamic $sexstart2
@@ -331,8 +332,8 @@ if $ARGS[0] = 'End':
 	minut += 15
 	gs 'stat'
 	'<center><img src="images/qwest/alter/ev/otel1.gif"></center>'
-	'After the two of you relax for a while longer, you smile at <<$bname>> and say: "That was fun! But I should really get going..."'
-	'<<$bname>> stretches lazily on the bed, not bothering to get up. "You were great, <<$name>>! I hope I''ll run into you again, next time I''m in Pavlovsk!"'
+	'After the two of you relax for a while longer, you smile at <<$boydesc>> and say: "That was fun! But I should really get going..."'
+	'<<$boydesc>> stretches lazily on the bed, not bothering to get up. "You were great, <<$Astat_usedname[pc]>>! I hope I''ll run into you again, next time I''m in Pavlovsk!"'
 
 	if sparrloc[temp] = 11 and sparrvol > 0:cumspclnt = 12 & gs 'cum_cleanup' & 'When you look around the room, you find a packet of sanitary napkins. You take one and quickly wipe the sperm off your face, in an attempt to make yourself presentable enough to go outside.'
 	if cumsumass > 60:'You try to wipe the sperm from your buttocks with the sanitary napkins you found, but there''s more still leaking from your anus. A few seconds after you clean yourself, some more already dribbles down again. After a few wipes you give up and shrug, figuring you''ll deal with it later.'
