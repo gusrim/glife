@@ -85,14 +85,15 @@
 
 if $ARGS[0] = '':
 
+!!{ Debug information, comment out in release versions. }
+!!	'<br><b><font color="red">Cum_Manage</font> called with: spafinloc=<<spafinloc>> cumarrkno=<<cumarrkno>> cummarrcon=<<cumarrcon>> cumarrdel=<<cumarrdel>></b>'
+
 !!{ We count every time somebody cum on or inside the MC. It is used for spatter and cum matching in femcyc}
 
 	stat['cum_count'] += 1
 
 !!{	Here we define our important variables.}
-	tempfindN = mid($boy, 2)
-	$tempfindL = mid($boy,1,1)
-
+	tempfindN = mid($boy, 2) and $tempfindL = mid($boy,1,1)
 	if $tempfindL = 'A':
 		dick = Astat_dick[tempfindN]
 		sexspecpot = Astat_spermpot[tempfindN]
@@ -139,7 +140,7 @@ if $ARGS[0] = '':
 		end
 	end
 
-	cumarrtemp2 = arrsize('sparrvol')
+	sparrtemp = arrsize('sparrvol')
 !!{	Check to see if this is flagged as a preejaculate emmission. All vaginal penetrations that flag this as cumprecheck contain preejaculate. Guidelines for calling it: If your boy is likely to have masterbated, had sex, or otherwise encouraged semen to leak out of their urethra in the last 48 hours, they probably have some fertile preejaculate. If in doubt, let it leak. The chances of pregnancy from it are low, and the MC should have been wearing protection.}
 			
 	if cumprecheck ! 1:
@@ -161,15 +162,13 @@ if $ARGS[0] = '':
 			cumarrdel[cumarrtemp] = 0
 			cumarrcnt[cumarrtemp] = stat['cum_count']
 			cumarrppt[cumarrtemp] = sexspecpot
-			else
-				
-			end
 
 !!{	Now it sets up the splatter and actual internal cum. 
 !!	First it sets the array to the spatter end of file.	Then it checks for riding bareback. 
 !!	If theres a condom, it gives a chance for the condom to fail in general, slip off and remain in the vagina, or break.}
 			
 			if sexcontra > 2:
+				if noprotect = 1: noprotect = 0 & sexcontra = 4
 				
 				if sexcontra = 3:
 					temprand = rand(0,1000)
@@ -211,83 +210,44 @@ if $ARGS[0] = '':
 						cumcondslip = 1
 						cumcondsanb = cumarrtemp
 						sexcontra = 5
-						sparrage[cumarrtemp2] = 0
-						sparrloc[cumarrtemp2] = 17
-						$sparrnam[cumarrtemp2] = $boy
-						sparrcnt[cumarrtemp2] = stat['cum_count']
-						sparrppt[cumarrtemp2] = sexspecpot
+						sparrage[sparrtemp] = 0
+						sparrloc[sparrtemp] = 17
+						$sparrnam[sparrtemp] = $boy
+						sparrcnt[sparrtemp] = stat['cum_count']
+						sparrppt[sparrtemp] = sexspecpot
 
 						
-						sparrvol[cumarrtemp2] += sexvolume
+						sparrvol[sparrtemp] += sexvolume
 						cumsumbod += sexvolume
 						cumsumvag += sexvolume
 						
-						if sexvolume <= 0: sparrvol[cumarrtemp2] += 40 & cumsumbod += 40 & cumsumvag += 40
 						
-						sparridt[cumarrtemp2] = cumarrkno[cumarrtemp]
-						sparrslc[cumarrtemp2] = 0
+						sparridt[sparrtemp] = cumarrkno[cumarrtemp]
+						sparrslc[sparrtemp] = 0
 
 						cumcondslip += 1
 						if cumcondslip_deep <= 0:cumcondslip_deep = rand(1, dick)
-						if sparridt[cumarrtemp2] >= 0:cumcondslip_aware = 1
+						if sparridt[sparrtemp] >= 0:cumcondslip_aware = 1
 						
-						if fertegg > 0:
-							if thinkpreg = 0 and knowpreg = 0 and sparrppt[cumarrtemp2] > 0:
-								if cumarrkno[cumarrtemp] = 1:
-									if arrcomp('$cumfthname',$boy) = -1:
-										$cumfthname[] = $boy
-										cumtime[] = 1
-									else
-										if Enable_Android = 0:
-											i = arrpos(0, '$cumfthname', boy)
-										else
-											i = arrpos('$cumfthname', boy)
-										end
-										cumtime[i] += 1
-									end
-								elseif cumarrkno[cumarrtemp] = 0:
-									cumtime[0] += 1
-								end
-							end
-						end
+						dynamic $ferteggfather
 
 					elseif temprand <= break_thresh:
 						cumarrcpt[cumarrtemp] += cumarrppt[cumarrtemp]/2
 						cumarrcon[cumarrtemp] = 4
 						sexcontra = 4
-						sparrage[cumarrtemp2] = 0
-						sparrloc[cumarrtemp2] = 0
-						$sparrnam[cumarrtemp2] = $boy
-						sparrcnt[cumarrtemp2] = stat['cum_count']
-						sparrppt[cumarrtemp2] = sexspecpot
-						sparrvol[cumarrtemp2] += sexvolume
+						sparrage[sparrtemp] = 0
+						sparrloc[sparrtemp] = 0
+						$sparrnam[sparrtemp] = $boy
+						sparrcnt[sparrtemp] = stat['cum_count']
+						sparrppt[sparrtemp] = sexspecpot
+						sparrvol[sparrtemp] += sexvolume
 						cumsumbod += sexvolume
 						cumsumvag += sexvolume
 						
-						if sexvolume <= 0: sparrvol[cumarrtemp2] += 40 & cumsumbod += 40 & cumsumvag += 40
+						sparridt[sparrtemp] = cumarrkno[cumarrtemp]
+						sparrslc[sparrtemp] = 0
 						
-						sparridt[cumarrtemp2] = cumarrkno[cumarrtemp]
-						sparrslc[cumarrtemp2] = 0
-						
-						if fertegg > 0:
-							if thinkpreg = 0 and knowpreg = 0 and sparrppt[cumarrtemp2] > 0:
-								if cumarrkno[cumarrtemp] = 1:
-									if arrcomp('$cumfthname',$boy) = -1:
-										$cumfthname[] = $boy
-										cumtime[] = 1
-									else
-										if Enable_Android = 0:
-											i = arrpos(0, '$cumfthname', boy)
-										else
-											i = arrpos('$cumfthname', boy)
-										end
-										cumtime[i] += 1
-									end
-								elseif cumarrkno[cumarrtemp] = 0:
-									cumtime[0] += 1
-								end
-							end
-						end
+						dynamic $ferteggfather
 					
 					else
 						cumarrcpt[cumarrtemp] += 5
@@ -301,82 +261,42 @@ if $ARGS[0] = '':
 				elseif sexcontra = 4:
 					cumarrcpt[cumarrtemp] += cumarrppt[cumarrtemp]/2
 					cumarrcon[cumarrtemp] = 4
-					sparrage[cumarrtemp2] = 0
-					sparrloc[cumarrtemp2] = 0
-					$sparrnam[cumarrtemp2] = $boy
-					sparrcnt[cumarrtemp2] = stat['cum_count']
-					sparrppt[cumarrtemp2] = sexspecpot					
-					sparrvol[cumarrtemp2] += sexvolume
+					sparrage[sparrtemp] = 0
+					sparrloc[sparrtemp] = 0
+					$sparrnam[sparrtemp] = $boy
+					sparrcnt[sparrtemp] = stat['cum_count']
+					sparrppt[sparrtemp] = sexspecpot
+					sparrvol[sparrtemp] += sexvolume
 					cumsumbod += sexvolume
 					cumsumvag += sexvolume
-					
-					if sexvolume <= 0: sparrvol[cumarrtemp2] += 40 & cumsumbod += 40 & cumsumvag += 40
-					
-					sparridt[cumarrtemp2] = cumarrkno[cumarrtemp]
-					sparrslc[cumarrtemp2] = 0
-					
-					if fertegg > 0:
-						if thinkpreg = 0 and knowpreg = 0 and sparrppt[cumarrtemp2] > 0:
-							if cumarrkno[cumarrtemp] = 1:
-								if arrcomp('$cumfthname',$boy) = -1:
-									$cumfthname[] = $boy
-									cumtime[] = 1
-								else
-									if Enable_Android = 0:
-										i = arrpos(0, '$cumfthname', boy)
-									else
-										i = arrpos('$cumfthname', boy)
-									end
-									cumtime[i] += 1
-								end
-							elseif cumarrkno[cumarrtemp] = 0:
-								cumtime[0] += 1
-							end
-						end
-					end
+
+					sparridt[sparrtemp] = cumarrkno[cumarrtemp]
+					sparrslc[sparrtemp] = 0
+
+					dynamic $ferteggfather
 				
 				elseif sexcontra = 5:
 					cumarrcpt[cumarrtemp] += cumarrppt[cumarrtemp]/200
 					cumarrcon[cumarrtemp] = 5
 					cumcondslip = 1
 					cumcondsanb = cumarrtemp
-					sparrage[cumarrtemp2] = 0
-					sparrloc[cumarrtemp2] = 17
-					$sparrnam[cumarrtemp2] = $boy
-					sparrcnt[cumarrtemp2] = stat['cum_count']
-					sparrppt[cumarrtemp2] = sexspecpot					
-					sparrvol[cumarrtemp2] += sexvolume
+					sparrage[sparrtemp] = 0
+					sparrloc[sparrtemp] = 17
+					$sparrnam[sparrtemp] = $boy
+					sparrcnt[sparrtemp] = stat['cum_count']
+					sparrppt[sparrtemp] = sexspecpot
+					sparrvol[sparrtemp] += sexvolume
 					cumsumbod += sexvolume
 					cumsumvag += sexvolume
 					
-					if sexvolume <= 0: sparrvol[cumarrtemp2] += 40 & cumsumbod += 40 & cumsumvag += 40
-					
-					sparridt[cumarrtemp2] = cumarrkno[cumarrtemp]
-					sparrslc[cumarrtemp2] = 0
+					sparridt[sparrtemp] = cumarrkno[cumarrtemp]
+					sparrslc[sparrtemp] = 0
 
 					cumcondslip += 1
 					if cumcondslip_deep <= 0:cumcondslip_deep = rand(1, dick)
-					if sparridt[cumarrtemp2] >= 0:cumcondslip_aware = 1
+					if sparridt[sparrtemp] >= 0:cumcondslip_aware = 1
 					
-					if fertegg > 0:
-						if thinkpreg = 0 and knowpreg = 0 and sparrppt[cumarrtemp2] > 0:
-							if cumarrkno[cumarrtemp] = 1:
-								if arrcomp('$cumfthname',$boy) = -1:
-									$cumfthname[] = $boy
-									cumtime[] = 1
-								else
-									if Enable_Android = 0:
-										i = arrpos(0, '$cumfthname', boy)
-									else
-										i = arrpos('$cumfthname', boy)
-									end
-									cumtime[i] += 1
-								end
-							elseif cumarrkno[cumarrtemp] = 0:
-								cumtime[0] += 1
-							end
-						end
-					end
+					dynamic $ferteggfather
 
 
 !!{	Next, check for sabotaged condoms. First sabotaged by you, then sabotaged by the guy.
@@ -390,68 +310,29 @@ if $ARGS[0] = '':
 					cumarrcpt[cumarrtemp] += cumarrppt[cumarrtemp]/3
 					cumarrcon[cumarrtemp] = 7
 					
-					if fertegg > 0:
-						if thinkpreg = 0 and knowpreg = 0 and sparrppt[cumarrtemp2] > 0:
-							if cumarrkno[cumarrtemp] = 1:
-								if arrcomp('$cumfthname',$boy) = -1:
-									$cumfthname[] = $boy
-									cumtime[] = 1
-								else
-									if Enable_Android = 0:
-										i = arrpos(0, '$cumfthname', boy)
-									else
-										i = arrpos('$cumfthname', boy)
-									end
-									cumtime[i] += 1
-								end
-							elseif cumarrkno[cumarrtemp] = 0:
-								cumtime[0] += 1
-							end
-						end
-					end
-				
+					dynamic $ferteggfather
+					
 				end					
 !!{	If you have no protection, you get a nice, full load of semen.}
 
 			else
-				sparrage[cumarrtemp2] = 0
-				sparrloc[cumarrtemp2] = 0
-				$sparrnam[cumarrtemp2] = $boy
-				sparrcnt[cumarrtemp2] = stat['cum_count']
-				sparrppt[cumarrtemp2] = sexspecpot
+				sparrage[sparrtemp] = 0
+				sparrloc[sparrtemp] = 0
+				$sparrnam[sparrtemp] = $boy
+				sparrcnt[sparrtemp] = stat['cum_count']
+				sparrppt[sparrtemp] = sexspecpot
 				
-				sparrvol[cumarrtemp2] += sexvolume
+				sparrvol[sparrtemp] += sexvolume
 				cumsumbod += sexvolume
 				cumsumvag += sexvolume
 				
-				if sexvolume <= 0: sparrvol[cumarrtemp2] += 40 & cumsumbod += 40 & cumsumvag += 40
-				
-				sparridt[cumarrtemp2] = cumarrkno[cumarrtemp]
-				sparrslc[cumarrtemp2] = 0
+				sparridt[sparrtemp] = cumarrkno[cumarrtemp]
+				sparrslc[sparrtemp] = 0
 				cumarrcpt[cumarrtemp] += cumarrppt[cumarrtemp]/5*4
 				cumarrcon[cumarrtemp] = sexcontra
 				
-				if fertegg > 0:
-					if thinkpreg = 0 and knowpreg = 0 and sparrppt[cumarrtemp2] > 0:
-						if cumarrkno[cumarrtemp] = 1:
-							if arrcomp('$cumfthname',$boy) = -1:
-								$cumfthname[] = $boy
-								cumtime[] = 1
-							else
-								if Enable_Android = 0:
-									i = arrpos(0, '$cumfthname', boy)
-								else
-									i = arrpos('$cumfthname', boy)
-								end
-								cumtime[i] += 1
-							end
-						elseif cumarrkno[cumarrtemp] = 0:
-							cumtime[0] += 1
-						end
-					end
-				end
+				dynamic $ferteggfather
 
-			
 			end
 
 !!{	If you arent getting it in the vagina, and the boy isnt pumping it into a condom, a spatter is made and applied. 
@@ -460,8 +341,8 @@ if $ARGS[0] = '':
 			
 		elseif spafinloc > 0 and sexcontra < 3:
 				
-			sparrage[cumarrtemp2] = 0
-			sparrcnt[cumarrtemp2] = stat['cum_count']
+			sparrage[sparrtemp] = 0
+			sparrcnt[sparrtemp] = stat['cum_count']
 			
 			if tanga = 0:
 				
@@ -507,27 +388,22 @@ if $ARGS[0] = '':
 			
 			end
 			
-			sparrloc[cumarrtemp2] = spafinloc
+			sparrloc[sparrtemp] = spafinloc
 			
 			if spafinloc = 12 and swallow >= 10 and rand(0,3) = 0: energy += 2
 			
-			$sparrnam[cumarrtemp2] = $boy
-			sparrppt[cumarrtemp2] = sexspecpot			
-			sparrvol[cumarrtemp2] += sexvolume
+			$sparrnam[sparrtemp] = $boy
+			sparrppt[sparrtemp] = sexspecpot
+			sparrvol[sparrtemp] += sexvolume
 			cumsumbod += sexvolume
-			
-			if sexvolume <= 0: sparrvol[cumarrtemp2] += 40 & cumsumbod += 40 & cumsumvag += 40
 			
 			if spafinloc = 3:
 				cumsumass += sexvolume
-				
-				if sexvolume <= 0: cumsumass += 40
-			
 			end
-			
-			sparridt[cumarrtemp2] = cumarrkno[cumarrtemp]
-			sparrslc[cumarrtemp2] = 0
-		
+
+			sparridt[sparrtemp] = cumarrkno[cumarrtemp]
+			sparrslc[sparrtemp] = 0
+
 		end
 		if cumarrppt[cumarrtemp] < cumarrcpt[cumarrtemp]:cumarrcpt[cumarrtemp] = cumarrppt[cumarrtemp]
 		sexpartkno = 0
