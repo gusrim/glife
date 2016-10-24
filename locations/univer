@@ -30,7 +30,7 @@ if $ARGS[0] = 'start':
 		gt 'down'
 	end
 
-	if student = 0 and abiturient = 0 and money >= 15000 and month < 9 and diplom = 0 and age >= 17:
+	if student = 0 and abiturient = 0 and money >= 15000 and month < 9 and diplom = 0 and (age >= 17 or fakepassport = 1):
 		''
 
 		act 'Pay for training course (15,000 <b>₽</b>)':
@@ -48,7 +48,7 @@ if $ARGS[0] = 'start':
 			*clr
 			minut += 60
 			abiturient += 1
-			intel += 1 + (mentats_dose - rand(0,mentats_dose))
+			Astat_intel[pc] += 1 + (mentats_dose - rand(0,mentats_dose))
 			'<center><img src="images/etogame/classroom.jpg"></center>'
 			'You attend the preparatory class for a hour, you stayed focused on learning what is needed so you can attend school.'
 
@@ -56,8 +56,8 @@ if $ARGS[0] = 'start':
 		end
 	end
 
-	if month = 8 and student = 0 and diplom = 0 and age >= 17:
-		'You can try to take the entrance exam.'
+	if month = 8 and student = 0 and diplom = 0 and (age >= 17 or fakepassport = 1):
+		'You can try to take an entrance exam.'
 
 		act 'Take the entrance exam (1:00)':
 			cla
@@ -65,7 +65,7 @@ if $ARGS[0] = 'start':
 			minut += 60
 			'<center><img src="images/etogame/classroom.jpg"></center>'
 
-			if intel + abiturient >= 100:
+			if Astat_intel[pc] + abiturient >= 100:
 				student = 1
 				kurs = 1
 				semestr = 1
@@ -160,7 +160,7 @@ if $ARGS[0] = 'dekanat':
 			hour = 14
 			minut = 0
 			lektor += 1
-			intel += 1 + (mentats_dose - rand(0,mentats_dose))
+			Astat_intel[pc] += 1 + (mentats_dose - rand(0,mentats_dose))
 			gs 'stat'
 			'<center><img src="images/etogame/classroom1.jpg"></center>'
 			'You attend the lecture, taking notes as the professor lectures the class about the course.'
@@ -280,7 +280,7 @@ if $ARGS[0] = 'dekanat':
 		act 'Hand in your course work':
 			cla
 			*clr
-			intel += 1 + (mentats_dose - rand(0,mentats_dose))
+			Astat_intel[pc] += 1 + (mentats_dose - rand(0,mentats_dose))
 			kursovik = 0
 			kursovikD += 1
 			'<center><img src="images/etogame/classroom1.jpg"></center>'
@@ -308,21 +308,21 @@ if $ARGS[0] = 'examen':
 		!!1200
 		'You completed all your coursework, passed with honors, and had good attendance.'
 
-	elseif ((intel >= 80) or (lektor > 40 and lektor <= 55)) and kursovikD >= kurs:
+	elseif ((Astat_intel[pc] >= 80) or (lektor > 40 and lektor <= 55)) and kursovikD >= kurs:
 		examen = 1
 		kursovikD = 0
 		stipuha = 0
 		lektor = 0
 		'You completed all your course work and passed your exam.'
 
-	elseif (intel >= 100) and kursovikD >= kurs + 10:
+	elseif (Astat_intel[pc] >= 100) and kursovikD >= kurs + 10:
 		examen = 1
 		kursovikD = 0
 		stipuha = 1
 		lektor = 0
 		'Despite missing a lot of classes you still managed to complete all the course work and somehow still manged to pass with honors.'
 
-	elseif (intel < 70 and lektor <= 40) or kursovikD < kurs:
+	elseif (Astat_intel[pc] < 70 and lektor <= 40) or kursovikD < kurs:
 		examen = 2
 		stipuha = 0
 		'You failed to pass the exam.'

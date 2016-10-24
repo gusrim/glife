@@ -75,9 +75,10 @@ if $ARGS[0] = 'mens':
 
 	if rand(1, 10) >= 6:
 		'Its unusually empty, you could take a closer look, if you wanted to.'
-		dick = 20
-		$dick_girth = 'massive'
-		$boy = 'guy from the man''s bathroom'
+		gs 'npcgeneratec', 0, 'guy from the man''s bathroom', rand(19,45)
+		$Cstat_thdick[npclastgeneratedn] = 'massive'
+		Cstat_dick[npclastgeneratedn] = 20
+		gs 'boyStat', $npclastgenerated
 
 		act 'Take a closer look':
 			cla
@@ -87,7 +88,7 @@ if $ARGS[0] = 'mens':
 			'You enter the room and take a better look around, to your surprise, there is a naked man standing with his face to the wall. His body is pressed up close against the wall.'
 
 			act 'Smile at him':
-				horny += 20
+				Astat_horny[pc] += 20
 				minut +=2
 				cla
 				*clr
@@ -96,7 +97,7 @@ if $ARGS[0] = 'mens':
 				'You look over his naked body, biting your lower lip in appreciation. You''re not at all sure what he is doing though, is this a thing boys regularly do?'
 
 				act 'Look at him':
-					horny += 20
+					Astat_horny[pc] += 20
 					minut +=5
 					cla
 					*clr
@@ -105,7 +106,7 @@ if $ARGS[0] = 'mens':
 					'He turns his head and notices you, at first he seems a bit embarrassed and unsure what to do, but then he notices your look and  he smiles.  He turns around, giving you a full view of his naked body. As he walks over towards you, your eyes are drawn to his swinging dick. When he gets close to you, he leans in and kisses you'
 
 					act 'Kiss him':	
-						horny += 20
+						Astat_horny[pc] += 20
 						minut +=5
 						cla
 						*clr
@@ -114,7 +115,7 @@ if $ARGS[0] = 'mens':
 						'You return his kiss with a fierce passion you didn''t know you was feeling or maybe you are just turned on by naked guys. His hands gently roams all over  your body, finally ending up on your <<$titsize>> breasts where he play''s with them. His lips, hands, flutter of his tongue, all drive you crazy as you feel yourself getting more and more turned on.'
 
 						act 'Undressed':
-							horny += 20
+							Astat_horny[pc] += 20
 							minut +=5
 							cla
 							*clr
@@ -123,7 +124,7 @@ if $ARGS[0] = 'mens':
 							'He starts pulling your clothes off, once you are mostly naked, he turns you around against the wall. He presses your face and breasts to the wall, while pulling your hips back away from the wall. Despite his aggressive behavior you rather enjoy being man handled.'
 
 							act 'Submit':
-								horny += 20
+								Astat_horny[pc] += 20
 								minut +=5
 								guy += 1
 								cls
@@ -133,7 +134,7 @@ if $ARGS[0] = 'mens':
 
 								act 'Carried':
 									orgasm += 1
-									horny = 0
+									Astat_horny[pc] = 0
 									manna += 15
 									willpower += 15
 									minut +=5
@@ -146,7 +147,7 @@ if $ARGS[0] = 'mens':
 										minut +=5
 										stat['bj'] += 1
 										throat += 1
-										horny += 10
+										Astat_horny[pc] += 10
 										minut +=5
 										cls
 										gs 'stat'
@@ -226,7 +227,7 @@ if $ARGS[0] = 'emptystall':
 	
 	act 'Caress Yourself':
 		minut += 5
-		horny += 10
+		Astat_horny[pc] += 10
 		manna += 10
 		cla
 		*clr
@@ -234,94 +235,104 @@ if $ARGS[0] = 'emptystall':
 		'<center><img src="images/qwest/publicrest/caress1.gif"></center>'
 		'Feeling a bit turned on, you close the door to the stall and reach inside of your panties and start rubbing your clit, before long you are breathing heavy and moaning.'
 
-		act 'continue':
-			minut += 5
-			horny += 10
-			manna += 10
-			if horny >= 100:
-				orgasm += 1
-				horny = 0
-				manna += 15
-				willpower += 15
-				stat['mast'] += 1
-				gs 'stat'
+		gs 'gdktoilet', 'wank'
+	end
+	act 'Look in the hole': gt 'gdktoilet', 'hole'
+	end
+end
+
+if $ARGS[0] = 'wank':
+	minut += 5
+	Astat_horny[pc] += 10
+	manna += 10
+	if Astat_horny[pc] >= 100:
+		cls
+		orgasm += 1
+		Astat_horny[pc] = 0
+		manna += 15
+		willpower += 15
+		stat['mast'] += 1
+		gs 'stat'
+		'<center><img src="images/qwest/publicrest/orgasm.gif"></center>'
+		'As your pussy gets wet you pulls you panties down and slip your fingers inside or yourself. You start finger fucking yourself, with in a few minutes a powerful orgasm rocks your body. Leaving you gasping and trembling as you recover.'
+	end
+	act 'Look through the hole again':gt 'gdktoilet', 'hole'
+	act 'Leave Stall':gt 'gdktoilet', 'womens'
+end
+
+if $ARGS[0] = 'hole':
+	cls
+	gs 'npcgeneratec', 0, 'unknown guy', rand(18,40)
+	gs 'boyStat', $npclastgenerated
+	minut +=5
+	gs 'stat'
+	if rand(1, 10) >= 7 - (ghnow * 2):
+		'<center><img src="images/qwest/publicrest/ghseemen.jpg"></center>'
+		'You look through the hole and see several mens with their backs to you, using the urinals.'
+		if guy = 0:
+			act 'Sign the wall':
 				cla
 				*clr
-				'<center><img src="images/qwest/publicrest/orgasm.gif"></center>'
-				'As your pussy gets wet you pulls you panties down and slip your fingers inside of yourself. You start finger fucking yourself, with in a few minutes a powerful orgasm rocks your body. Leaving you gasping and trembling as you recover.'
+				'<center><img src="images/qwest/publicrest/ghstartled.gif"></center>'
+				'While looking through the hole you decided to write something on the wall just above it. While you was focused on writing, you didn''t notice the dick poking through the hole until the tip of it nearly went into your mouth. Startled you jerk away from the offending penis.'
+				act 'Suck it': gt 'gdktoilet', 'blowjob'
+				act 'Touch the shaft':gt 'gdktoilet', 'virgin'
+				act 'Quickly leave the stall':
+					cla
+					*clr
+					'<center><img src="images/qwest/publicrest/eww.gif"></center>'
+					'You shudder in disgust at the thought that some strangers dick was just practically in your mouth, you get up and quickly leave.'
+					act'Leave':gt 'gdktoilet', 'womens'
+				end
 			end
-			xgt 'gdktoilet', 'emptystall'
-		end
-	end
+		elseif guy > 0:
 
-	act 'Look through the hole':
+			act 'Stick your finger in the hole':
+				cla
+				*clr
+				ghnow += 1
+				money += 100
+				minut += 10
+				gs 'stat'
+				if gloryhole = 0:
+					'<center><img src="images/qwest/publicrest/ready.jpg"></center>'
+					'You put your finger in the hole hoping to entice a man to come over. Then you put your face close to the hole and open your mouth.'
+					'The man slips 100 <b>?</b> into the hole, and then put''s his erect cock through the hole.'
+					act 'Blow Him': gt 'gdktoilet', 'blowjob'
+				end
+				if gloryhole > 0:
+					'<center><img src="images/qwest/publicrest/ready.jpg"></center>'
+					'You poke your finger in the hole showing that you are ready to serve a man. Then you put your face close to the hole and open your mouth.'
+					'The stranger slips 100 <b>?</b> into the hole, and then his erect cock pokes out of the hole.'
+					act 'Blow Him': gt 'gdktoilet', 'blowjob'
+				end
+				act 'Stop':
+					cla
+					*clr
+					'See the dick poke through you reconsider what you are about to do, do you really want to suck some strange man''s dick, through a hole in the bathroom for money?'
+					act 'Take his money and Leave':gt 'gdktoilet', 'rape'
+					act 'Give back the money and Leave':
+						money -= 100
+						gt 'gdktoilet', 'womens'
+					end
+					act 'Blow Him': gt 'gdktoilet', 'blowjob'
+				end
+			end
+			act 'Leave':
+				cla
+				*clr
+				'You reconsider what you are about to do and quickly leave the stall.'
+				act 'Continue':gt 'gdktoilet', 'womens'
+			end
+		end
+	else
 		cla
 		*clr
-		minut +=5
-		if rand(1, 10) >= 7 - (ghnow * 2):
-			gs 'boyStat', 72
-			'<center><img src="images/qwest/publicrest/ghseemen.jpg"></center>'
-			'Looking through the hole you see several men with their backs to you, using the urinals of the mens room next door.'
-			if guy = 0:
-				act 'Sign the wall':
-					cla
-					*clr
-					'<center><img src="images/qwest/publicrest/ghstartled.gif"></center>'
-					'While looking through the hole you decided to write something on the wall just above it. While you was focused on writing, you didn''t notice the dick poking through the hole until the tip of it nearly went into your mouth. Startled you jerk away from the offending penis.'
-					act 'Suck it': gt 'gdktoilet', 'blowjob'
-					act 'Touch the shaft':gt 'gdktoilet', 'virgin'
-					act 'Quickly leave the stall':
-						cla
-						*clr
-						killvar 'firststall'
-						'<center><img src="images/qwest/publicrest/eww.gif"></center>'
-						'You shudder in disgust at the thought that some strangers dick was just practically in your mouth, you get up and quickly leave.'
-						act'Leave':gt 'gdktoilet', 'womens'
-					end
-				end
-			elseif guy > 0:
-				act 'Stick your finger in the hole':
-					cla
-					*clr
-					ghnow += 1
-					money += 100
-					minut += 10
-					gs 'stat'
-					if gloryhole = 0:
-						'<center><img src="images/qwest/publicrest/ready.jpg"></center>'
-						'You put your finger in the hole hoping to entice a man to come over. Then you put your face close to the hole and open your mouth.'
-						'The man slips 100 <b>?</b> into the hole, and then put''s his erect cock through the hole.'
-						act 'Blow Him': gt 'gdktoilet', 'blowjob'
-					end
-					if gloryhole > 0:
-						'<center><img src="images/qwest/publicrest/ready.jpg"></center>'
-						'You poke your finger in the hole showing that you are ready to serve a man. Then you put your face close to the hole and open your mouth.'
-						'The stranger slips 100 <b>?</b> into the hole, and then his erect cock pokes out of the hole.'
-						act 'Blow Him': gt 'gdktoilet', 'blowjob'
-					end
-					act 'Stop':
-						cla
-						*clr
-						'See the dick poke through you reconsider what you are about to do, do you really want to suck some strange man''s dick, through a hole in the bathroom for money?'
-						act 'Take his money and Leave':killvar 'firststall' & gt 'gdktoilet', 'rape'
-						act 'Give back the money and Leave':
-							money -= 100
-							killvar 'firststall'
-							gt 'gdktoilet', 'womens'
-						end
-						act 'Blow Him': gt 'gdktoilet', 'blowjob'
-					end
-				end
-				act 'Back off':gt 'gdktoilet', 'emptystall'
-			end
-		else
-			'<center><img src="images/qwest/publicrest/ghseenomen.jpg"></center>'
-			'Looking through the hole you see a row of urinals on the other side. The hole must be to the mens room next door. You don''t see any men currently in there.'
-			act 'Stop looking': gt 'gdktoilet', 'emptystall'
-		end
+		'<center><img src="images/qwest/publicrest/ghseenomen.jpg"></center>'
+		'Looking through the hole, you can see a row of urinals on the other side. The hole must be to the mens room next door. You don''t see any men currently in there.'
+
+		act 'Leave': killvar 'firststall' & gt 'gdktoilet', 'womens'
 	end
-	
-	act 'Leave the stall':killvar 'firststall' & gt 'gdktoilet', 'womens'	
 end
 
 if $ARGS[0] = 'virgin':
@@ -363,7 +374,7 @@ if $ARGS[0] = 'virgin':
 				'<center><img src="images/qwest/publicrest/ghmastcum.gif"></center>'	
 				'Without any warning, hot white liquid spurts out the tip of his penis. You look at your hand''s, watching the sperm run down the back of your hand and down onto your arm.  The man panting says, "That was," He takes another breath "That was great."'	
                 'You decide to lick a bit of the sperm off your hand, curious what it tastes like. It''s slimy and tastes tart.'
-				act'Leave Stall': gt 'gdktoilet', 'emptystall'
+				act 'Continue': gt 'gdktoilet', 'emptystall'
 			end	
 		end
 		act 'Stop':
@@ -380,7 +391,7 @@ end
 if $ARGS[0] = 'blowjob':        
 	cla
 	*clr
-	horny += VAF
+	Astat_horny[pc] += VAF
 	guy += 1
 	stat['bj'] += 1
 	gloryhole += 1
@@ -460,7 +471,7 @@ if $ARGS[0] = 'anal':
 			'The pain fades slowly and soon all you feel pleasure. You fuck his dick with your ass, taking him deeper and deeper, as you get faster and faster, you start to rub your clit as you feel yourself getting close to climax. You can tell by the throbbing of his dick and ragged breathing he is about to cum.'
 		else
 			anus += 1
-			horny += RAND(20,40)
+			Astat_horny[pc] += RAND(20,40)
 			'The pain fades quickly and soon all you feel pleasure. You fuck his dick with your ass, taking him deeper and deeper, as you get faster and faster, you start to rub your clit as you feel yourself getting close to climax. You can tell by the throbbing of his dick and ragged breathing he is about to cum.'
 		end
 
@@ -537,7 +548,7 @@ end
 
 if $ARGS[0] = 'pussy2':
 	cls
-	horny += 10
+	Astat_horny[pc] += 10
 	minut += 10
 	gs 'stat'
 	if protect = 1:
@@ -591,11 +602,11 @@ if $ARGS[0] = 'pussy2':
 		end
 	else
 		if sexcontra = 4:
-			'You pull off of <<$boy>> and look at his dick. and think "Oh shit! The condom burst."'
+			'You pull off of <<$boydesc>> and look at his dick. and think "Oh shit! The condom burst."'
 		elseif sexcontra = 5:
-			'You pull off of <<$boy>> and look at his dick. and think "Oh shit! The condom is missing!"'
+			'You pull off of <<$boydesc>> and look at his dick. and think "Oh shit! The condom is missing!"'
 		else
-			'<<$boy>> groaned and you realized that he had came in the condom.'
+			'<<$boydesc>> groaned and you realized that he had came in the condom.'
 		end
 		sexcontra = 0
 		protect = 0
@@ -609,7 +620,8 @@ if $ARGS[0] = 'rape':
 	*clr
 	dick = rand(9, 20)
 	if rand(1, 20) > 12:
-		$boy = 'rapist'
+		gs 'npcgeneratec', 0, 'rapist', rand(19,45)
+		gs 'boyStat', $npclastgenerated
 		'<center><img src="images/qwest/publicrest/mensrape3.gif"></center>'
 		'Just as you are leaving the womens restroom a naked man storm''s out of the Mens restroom and grab''s you by the hair and drag''s you inside the mens room. He rip''s off your top and force''s you down on your knees, shoving his dick in your mouth, forcing you to suck his dick.'
 
@@ -639,7 +651,7 @@ if $ARGS[0] = 'rape':
 					elseif anus < 20:
 						anus += 2 & agape = 3
 					else
-						anus += 2 & agape = 2 & horny += RAND(20,40)
+						anus += 2 & agape = 2 & Astat_horny[pc] += RAND(20,40)
 					end
 					'<center><img src="images/qwest/publicrest/cumspit.gif"></center>'
 					'Finally he pulls the dick out of your ass and forces you back to your knees, he shoves his dick back in your mouth and you can taste your own ass on his dick. He says to you. "You fucking bite me again bitch and I will call everyone I know and we will train fuck your ass for days." Afraid he is serious you suck his dick until he finally shoots his load in your mouth. With that he lets go of you and walks off in disgust.'

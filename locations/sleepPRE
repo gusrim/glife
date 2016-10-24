@@ -1,16 +1,21 @@
 # sleepPRE
 
 if $ARGS[0] = 'stat':
-	age = 18
 	vidage = 16
-	year = 2015
-	year_start = 2015
+	year = 2018
+	year_start = 2018
 	month = 5
 	$month = 'May'
-	week = 3
+	day = 1
+	week = 2
 	hour = 13
 	gs 'daystart', 'start'
-	birthyear = year-age
+	birthyear = 2000
+	Astat_dob[pc] = 20000000
+	Astat_dob[pc] += (birthmonth * 100)
+	Astat_dob[pc] += birthday
+	age = year - ((Astat_dob[pc] - (Astat_dob[pc] mod 10000)) / 10000)
+	if ((month * 100) + day) < Astat_dob[pc] mod 10000: age -= 1
 	!!Body
 	rost = 170
 	fat = 60
@@ -20,20 +25,20 @@ if $ARGS[0] = 'stat':
 	water = 60
 	son = 70
 	!!Stats
-	stren = 10
+	Astat_stren[pc] = 10
 	strenbuf = 10
 	speed = 10
-	agil = 10
+	Astat_agil[pc] = 10
 	agilbuf = 10
-	vital = 10
+	Astat_vital[pc] = 10
 	vitalbuf = 10
-	intel = 10
+	Astat_intel[pc] = 10
 	will = 10
 	react = 10
 	magik = 0
-	health = vital * 10 + stren * 5
-	willpower = intel * 5 + will * 5
-	manna = (intel * magik) + magik * 100 + vital * 10 + rikudo
+	health = Astat_vital[pc] * 10 + Astat_stren[pc] * 5
+	willpower = Astat_intel[pc] * 5 + will * 5
+	manna = (Astat_intel[pc] * magik) + magik * 100 + Astat_vital[pc] * 10 + rikudo
 	nastjaQW = 0
 	money = 16500
 	vidageday = 300
@@ -44,8 +49,8 @@ if $ARGS[0] = 'stat':
 	housr = 1
 	tanga = 1
 	!!!!!!!!!!!!!! Maruda Hair Mod
-	hairlength = 17
-	hcol = 1
+	Astat_hairlng[pc] = 17
+	Astat_haircol[pc] = 1
 	nathcol = 1
 	oldsavehcol = 1
 	!!!!!!!!!!!!!! Maruda Hair Mod
@@ -87,10 +92,10 @@ if $ARGS[0] = 'start':
 	fcolor = rgb(0, 0, 0)
 	bcolor = rgb(255, 255, 255)
 	lcolor = rgb(106, 90, 205)
-	$name = 'Svetlana'
-	$surname = 'Lebedev'
+	$Astat_firstname[pc] = 'Svetlana'
+	$Astat_lastname[pc] = 'Lebedev'
 	!!!0.2.6 addition
-	$nickname = 'Sveta'
+	$Astat_nickname[pc] = 'Sveta'
 	!!!
 	minut += 120
 	gs 'sleepPRE', 'stat'
@@ -109,18 +114,18 @@ if $ARGS[0] = 'start':
 		'"This is the first time I changed the gender of a person, therefore I just HAD to see your reaction. Totally worth it. But you turned out beautiful. For a first try that is of course. I miscalculated something, for example due to sharp hormonal change you have bad acme on your face and I failed to change your eyes and lips. On the bright side, your body will change much faster than the one of a natural born woman. That means it will be easier to gain and lose weight and change facial features. All in all you turned quite well. By the way, your new ''equipment'' down there is fully functional, so if you don''t want to be a mommy, you should think about using contraceptives."'
 		'You angrily look at Tatiana, "So you think I''m a complete woman? On the outside I''ll look like one, but guess what, I''m still the 34-years-old me."'
 		'"Well, yes. I won''t argue about that." Tatiana agrees. "It''s your life and you decide what you do with it, but for the time being, you cannot go back to your old life, so deal with it. On a side note, I already took care of an alibi. Today Michael crashed his car into the pit and died, it''s on the news." With these words, Tatiana picked up the remote and turned on the TV.'
-		$name = input("What is your first name? (Leave blank for default)")
+		$Astat_firstname[pc] = input("What is your first name? (Leave blank for default)")
 
-		if $name = '':$name = 'Svetlana'
+		if $Astat_firstname[pc] = '':$Astat_firstname[pc] = 'Svetlana'
 
-		$surname = input("What is your last name? (Leave blank for default)")
+		$Astat_lastname[pc] = input("What is your last name? (Leave blank for default)")
 
-		if $surname = '':$surname = 'Lebedev'
+		if $Astat_lastname[pc] = '':$Astat_lastname[pc] = 'Lebedev'
 
 		!!!0.2.6 addition
-		$nickname = input("What is your nickname? (Note: If you chose a custom name, you have to enter something here!)")
+		$Astat_nickname[pc] = input("What is your nickname? (Note: If you chose a custom name, you have to enter something here!)")
 
-		if $nickname = '':$nickname = 'Sveta'
+		if $Astat_nickname[pc] = '':$Astat_nickname[pc] = 'Sveta'
 		!!!
 
 		act 'Watch TV':
@@ -132,7 +137,7 @@ if $ARGS[0] = 'start':
 			'<center><img src="images/picpre/car2.jpg"></center>'
 			'On TV there is a news report about about a businessman, who drove his car into a hole at a construction site. The man died later in hospital without regaining consciousness.'
 			'You look at Tatiana, with a bewildered look. She has an enimatic smile, "Well, I''m still a magician and that''s something that I can do. Reinhold has definitely lost the trail. The body that ''died'' behind the wheel of the BMW was a perfect copy of your old self, from your absorbed amulet energy down to the placement of every single hair."' 
-			'"Anyways, here are your new legal documents, including a new passport. Starting today, you are <<$name>> <<$surname>>, 18 years old, female and live in the city. Nobody knows you, but you at least have an apartment to call home. Your first month''s rent is a gift to you from Gustav. Here are the keys to it. Now get up, you''ve got to go to your new home and start a new life."'
+			'"Anyways, here are your new legal documents, including a new passport. Starting today, you are <<$Astat_usedname[pc]>> <<$Astat_lastname[pc]>>, 18 years old, female and live in the city. Nobody knows you, but you at least have an apartment to call home. This is a gift to you from Gustav. Here are the keys to it. Now get up, you''ve got to go to your new home and start a new life."'
 			'Gustav, the redhead with a tattoo on his face enters the room. He looks at you and says, "I''ll take you."'
 
 			act 'Go with Gustav':
