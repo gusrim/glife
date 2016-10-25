@@ -2,112 +2,121 @@
 
 !!For setting the $boy, dick and $dick_girth with a single call for a npc
 !!Use with a gosub and match the ARGS[0] with the correct char
-!!A generated NPC would be gs 'boyStat', $npclastgenerated
+!!A generated NPC would be gs 'boyStat', $npclastcalled
 !!Other NPCs may be called either by number if they are a static NPC, or by letter and number otherwise.
 !!eg. "gs 'boyStat', 56" would call for Roma. Likewise, "gs 'boyStat', 'A56'" also calls for Roma.
 !! A second argument calls for multiple partners. They are output as stats1, stats2, stats3, and stats4, for a total of 5 stats.
 
 
-if $ARGS[0] = '' and ARGS[0] > 0:
-	npcboytemp = ARGS[0]
-	$bstemp[1] = 'A' + npcboytemp
-	$bstemp[2] = $Astat_usedname[npcboytemp]
-	bstemp[3] = Astat_dick[npcboytemp]
-	$bstemp[4] = $Astat_thdick[npcboytemp]
-	bstemp[5] = Astat_sexskill[npcboytemp]
+if ($ARGS[0] = '' and ARGS[0] > 0) or mid($ARGS[0],1,1) < 10:
+	if ARGS[0] > 0:
+		npclastcalledn = ARGS[0]
+	else
+		npclastcalledn = $ARGS[0]
+	end
+	$npclastcalled = 'A' + npclastcalledn
+	$bstemp[1] = $Astat_usedname[npclastcalledn]
+	bstemp[2] = Astat_dick[npclastcalledn]
+	$bstemp[3] = $Astat_thdick[npclastcalledn]
+	bstemp[4] = Astat_sexskill[npclastcalledn]
 else
 	$npcboytemp = $ARGS[0]
+		!! {This error is for where something outside the range of possibility is specified. The calling code is broken. The exact thing specified will be announced.}
+		if mid($npcboytemp,2,1) > 10: MSG 'There has been an error in the $boy passing code. Please contact a developer with what you were doing prior to receiving this message so the error may be fixed. Error type: Improper value for boyStat. Calling <<$ARGS[0]>>'
+	$npcboytemp = 'D0'
 end
 
 if mid($npcboytemp,1,1) = 'A':
-	$bstemp[1] = $npcboytemp
-	npcboytemp = mid($npcboytemp, 2)
-	$bstemp[2] = $Astat_usedname[npcboytemp]
-	bstemp[3] = Astat_dick[npcboytemp]
-	$bstemp[4] = $Astat_thdick[npcboytemp]
-	bstemp[5] = Astat_sexskill[npcboytemp]
-elseif mid($npcboytemp,1,1) = 'B':	
-	$bstemp[1] = $npcboytemp
-	npcboytemp = mid($npcboytemp, 2)
-	$bstemp[2] = $Bstat_usedname[npcboytemp]
-	bstemp[3] = Bstat_dick[npcboytemp]
-	$bstemp[4] = $Bstat_thdick[npcboytemp]
-	bstemp[5] = Bstat_sexskill[npcboytemp]
+	$npclastcalled = $npcboytemp
+	npclastcalledn = mid($npcboytemp, 2)
+	$bstemp[1] = $Astat_usedname[npclastcalledn]
+	bstemp[2] = Astat_dick[npclastcalledn]
+	$bstemp[3] = $Astat_thdick[npclastcalledn]
+	bstemp[4] = Astat_sexskill[npclastcalledn]
+elseif mid($npcboytemp,1,1) = 'B':   
+	$npclastcalled = $npcboytemp
+	npclastcalledn = mid($npcboytemp, 2)
+	$bstemp[1] = $Bstat_usedname[npclastcalledn]
+	bstemp[2] = Bstat_dick[npclastcalledn]
+	$bstemp[3] = $Bstat_thdick[npclastcalledn]
+	bstemp[4] = Bstat_sexskill[npclastcalledn]
 elseif mid($npcboytemp,1,1) = 'C':
-	$bstemp[1] = $npcboytemp
-	npcboytemp = mid($npcboytemp, 2)
-	$bstemp[2] = $Cstat_usedname[npcboytemp]
-	bstemp[3] = Cstat_dick[npcboytemp]
-	$bstemp[4] = $Cstat_thdick[npcboytemp]
-	bstemp[5] = Cstat_sexskill[npcboytemp]
+	$npclastcalled = $npcboytemp
+	npclastcalledn = mid($npcboytemp, 2)
+	$bstemp[1] = $Cstat_usedname[npclastcalledn]
+	bstemp[2] = Cstat_dick[npclastcalledn]
+	$bstemp[3] = $Cstat_thdick[npclastcalledn]
+	bstemp[4] = Cstat_sexskill[npclastcalledn]
 elseif mid($npcboytemp,1,1) = 'D':
 	if mid($npcboytemp, 2) = 1:
-		$bstemp[2] = 'small sized'
-		bstemp[3] = 10
-		$bstemp[4] = 'slim'
+		$bstemp[1] = 'small sized'
+		bstemp[2] = 10
+		$bstemp[3] = 'slim'
 	elseif mid($npcboytemp, 2) = 2:
-		$bstemp[2] = 'medium sized'
-		bstemp[3] = 15
-		$bstemp[4] = 'well proportioned'
+		$bstemp[1] = 'medium sized'
+		bstemp[2] = 15
+		$bstemp[3] = 'well proportioned'
 	elseif mid($npcboytemp, 2) = 3:
-		$bstemp[2] = 'large sized'
-		bstemp[3] = 20
-		$bstemp[4] = 'thicker than average'
+		$bstemp[1] = 'large sized'
+		bstemp[2] = 20
+		$bstemp[3] = 'thicker than average'
 	elseif mid($npcboytemp, 2) = 4:
-		$bstemp[2] = 'huge sized'
-		bstemp[3] = 25
-		$bstemp[4] = 'thick'
+		$bstemp[1] = 'huge sized'
+		bstemp[2] = 25
+		$bstemp[3] = 'thick'
 	elseif mid($npcboytemp, 2) = 5:
-		$bstemp[2] = 'giant sized'
-		bstemp[3] = 30
-		$bstemp[4] = 'massive'
+		$bstemp[1] = 'giant sized'
+		bstemp[2] = 30
+		$bstemp[3] = 'massive'
 	elseif mid($npcboytemp, 2) = 6:
-		$bstemp[2] = 'humongous sized'
-		bstemp[3] = 35
-		$bstemp[4] = 'monstrous'
+		$bstemp[1] = 'humongous sized'
+		bstemp[2] = 35
+		$bstemp[3] = 'monstrous'
 	else
-		$bstemp[2] = 'horse sized'
-		bstemp[3] = 40
-		$bstemp[4] = 'monstrous'
+		$bstemp[1] = 'horse sized'
+		bstemp[2] = 40
+		$bstemp[3] = 'monstrous'
 	end
-else
-	!! {This error is for where something outside the range of possibility is specified. The calling code is broken. The exact thing specified will be announced.}
-	'There has been an error in the $boy passing code. Please contact a developer with what you were doing prior to recieving this message so the error may be fixed. Error type: Inproper value for boyStat. Calling <<$npcboytemp>>'
 end
 
-if ARGS[1] = 1:
-	$boy1 = $bstemp[1]
-	$boydesc1 = $bstemp[2]
-	dick1 = bstemp[3]
-	$dick_girth1 = $bstemp[4]
-	silavag1 = bstemp[5]
-elseif ARGS[1] = 2:
-	$boy2 = $bstemp[1]
-	$boydesc2 = $bstemp[2]
-	dick2 = bstemp[3]
-	$dick_girth2 = $bstemp[4]
-	silavag2 = bstemp[5]
-elseif ARGS[1] = 3:
-	$boy3 = $bstemp[1]
-	$boydesc3 = $bstemp[2]
-	dick3 = bstemp[3]
-	$dick_girth3 = $bstemp[4]
-	silavag3 = bstemp[5]
-elseif ARGS[1] = 4:
-	$boy4 = $bstemp[1]
-	$boydesc4 = $bstemp[2]
-	dick4 = bstemp[3]
-	$dick_girth4 = $bstemp[4]
-	silavag4 = bstemp[5]
+if $ARGS[1] = 'a':
+	$boy1 = $npclastcalled
+	$boydesc1 = $bstemp[1]
+	dick1 = bstemp[2]
+	$dick_girth1 = $bstemp[3]
+	silavag1 = bstemp[4]
+elseif $ARGS[1] = 'b':
+	$boy2 = $npclastcalled
+	$boydesc2 = $bstemp[1]
+	dick2 = bstemp[2]
+	$dick_girth2 = $bstemp[3]
+	silavag2 = bstemp[4]
+elseif $ARGS[1] = 'c':
+	$boy3 = $npclastcalled
+	$boydesc3 = $bstemp[1]
+	dick3 = bstemp[2]
+	$dick_girth3 = $bstemp[3]
+	silavag3 = bstemp[4]
+elseif $ARGS[1] = 'd':
+	$boy4 = $npclastcalled
+	$boydesc4 = $bstemp[1]
+	dick4 = bstemp[2]
+	$dick_girth4 = $bstemp[3]
+	silavag4 = bstemp[4]
 else
-	$boy = $bstemp[1]
-	$boydesc = $bstemp[2]
-	dick = bstemp[3]
-	$dick_girth = $bstemp[4]
-	silavag = bstemp[5]
-end	
+	i = ARGS[1]
+	if mid($ARGS[1],1,1) < 10: i = $ARGS[1]
+	$boy[i] = $npclastcalled
+	$boydesc[i] = $bstemp[1]
+	dick[i] = bstemp[2]
+	$dick_girth[i] = $bstemp[3]
+	silavag[i] = bstemp[4]
+end   
 
 killvar 'bstemp'
+killvar '$bstemp'
+killvar 'i'
+
 
 --- boyStat ---------------------------------
 
