@@ -62,6 +62,67 @@ if VersionCheck < 504:
 	killvar '$surname'
 	killvar '$boy'
 	$boy = 'D0'
+
+	!!The following part update the cum related arrays from an old savegame to the new MGX format.
+	cycletemp = 0
+	:cumarrupd
+	if cycletemp < arrsize('$cumarrnam'):
+		tempnpcid = arrpos('$Astat_usedname', $cumarrnam[cycletemp])
+		if tempnpcid > 0:
+			MSG '<br><b><font color="teal">DEBUG: Legacy name in save updated from <<$cumarrnam[cycletemp]>> to A<<tempnpcid>></font></b>'
+			$cumarrnam[cycletemp] = 'A<<tempnpcid>>'
+		elseif cumarrkno[cycletemp] > 0:
+			MSG '<br><b><font color="red">WARNING: Unable to upgrade correctly cum entry <<cycletemp>> with name <<$cumarrnam[cycletemp]>></font></b>'
+			gs 'npcgeneratec', 0, $cumarrnam[cycletemp], rand(18,60)
+			$cumarrnam[cycletemp] = $npclastgenerated
+		else
+			gs 'npcgeneratec', 0, $cumarrnam[cycletemp], rand(18,60)
+			$cumarrnam[cycletemp] = $npclastgenerated
+		end
+		cycletemp += 1
+		jump 'cumarrupd'
+	end
+	cycletemp = 0
+	:sparrupd
+	if cycletemp < arrsize('$sparrnam'):
+		tempnpcid = arrpos('$Astat_usedname', $sparrnam[cycletemp])
+		if tempnpcid > 0:
+			MSG '<br><b><font color="teal">DEBUG: Legacy name in save updated from <<$sparrnam[cycletemp]>> to A<<tempnpcid>></font></b>'
+			$sparrnam[cycletemp] = 'A<<tempnpcid>>'
+		elseif sparrkno[cycletemp] > 0:
+			MSG '<br><b><font color="red">WARNING: Unable to upgrade correctly spatter entry <<cycletemp>> with name <<$sparrnam[cycletemp]>></font></b>'
+			gs 'npcgeneratec', 0, $sparrnam[cycletemp], rand(18,60)
+			$sparrnam[cycletemp] = $npclastgenerated
+		else
+			gs 'npcgeneratec', 0, $sparrnam[cycletemp], rand(18,60)
+			$sparrnam[cycletemp] = $npclastgenerated
+		end
+		cycletemp +=1
+		jump 'sparrupd'
+	end
+	cycletemp = 0
+	:cumcbcupd
+	if cycletemp < arrsize('$ChildFath'):
+		tempnpcid = arrpos('$Astat_usedname', $ChildFath[cycletemp])
+		if tempnpcid > 0:
+			MSG '<br><b><font color="teal">DEBUG: Legacy name in save updated from <<$sparrnam[cycletemp]>> to A<<tempnpcid>></font></b>'
+			$ChildFath[cycletemp] = 'A<<tempnpcid>>'
+		else
+			MSG '<br><b><font color="red">WARNING: Unable to upgrade correctly father entry <<cycletemp>> with name <<$ChildFath[cycletemp]>></font></b>'
+			gs 'npcgeneratec', 0, $ChildFath[cycletemp], rand(18,60)
+			$ChildFath[cycletemp] = $npclastgenerated
+		end
+		tempnpcid = arrpos('$Astat_usedname', $ChildThFath[cycletemp])
+		if tempnpcid > 0:
+			MSG '<br><b><font color="teal">DEBUG: Legacy name in save updated from <<$sparrnam[cycletemp]>> to A<<tempnpcid>></font></b>'
+			$ChildThFath[cycletemp] = 'A<<tempnpcid>>'
+		else
+			MSG '<br><b><font color="red">WARNING: Unable to upgrade correctly tought father entry <<cycletemp>> with name <<$ChildFath[cycletemp]>></font></b>'
+			$ChildThFath[cycletemp] = 'unknown'
+		end
+		cycletemp +=1
+		jump 'cumcbcupd'
+	end
 end
 
 
