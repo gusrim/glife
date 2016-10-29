@@ -67,7 +67,29 @@ $party_pre_conditions ={
 	if rex <= 80:
 		'<center><img src="images/qwest/alter/sisterqw/rekshome/party_sister_1.jpg"></center>'
 		$sisPartyInvite = '"Hi <<$Astat_nickname[pc]>>, we''re going to a party at Rex''s today. Want to come with us?"'
-		if mesec <= 0 and mood < 50 and alko < 3 and spdirtyv = 0 and spdirtyc = 0: 
+
+		if mesec > 0:
+			*pl $sisPartyInvite
+			'"Sorry Anya, I''m not in the mood today, you go without me."'
+			'"What, are you on the rag today? You should have told me! Alright, go home and get some rest."'
+			act 'Move away':SiSgdk = 0 & gt $loc, $metka
+
+		elseif mood < 50:
+			*pl $sisPartyInvite
+			'"Sorry Anya, I''m not in the mood today, you go without me."'
+			'"You do look a little pale sis, go home and get some rest."'
+			act 'Move away':SiSgdk = 0 & gt $loc, $metka
+
+		elseif alko >= 3:
+			'"<<$Astat_nickname[pc]>>, how the hell did you get so drunk already? I was going to invite you to a party, but you look like you have already been to one. Go home and sleep it off."'
+			act 'Move away':SiSgdk = 0 & gt $loc, $metka
+
+		elseif spdirtyv > 0 or spdirtyc > 0:
+			'"My God, you''ll get yourself a reputation! Go home and wash that off, quickly."'
+			'You feel a little ashamed that your sister has seen you looking like this in public.'
+			act 'Move away':SiSgdk = 0 & gt $loc, $metka
+
+		else
 			*pl $sisPartyInvite
 
 			act 'Yes':gt 'sbReksHome','party'
@@ -86,49 +108,13 @@ $party_pre_conditions ={
 		
 			end
 
-		elseif mesec > 0:
-			*pl $sisPartyInvite
-			'"Sorry Anya, I''m not in the mood today, you go without me."'
-			'"What, are you on the rag today? You should have told me! Alright, go home and get some rest."'
-			act 'Move away':SiSgdk = 0 & gt $loc, $metka
-
-		elseif mood < 50:
-			*pl $sisPartyInvite
-			'"Sorry Anya, I''m not in the mood today, you go without me."'
-			'"You do look a little pale sis, go home and get some rest."'
-			act 'Move away':SiSgdk = 0 & gt $loc, $metka
-			 
-		elseif alko >= 3:
-			'"<<$Astat_nickname[pc]>>, how the hell did you get so drunk already? I was going to invite you to a party, but you look like you have already been to one. Go home and sleep it off."'
-			act 'Move away':SiSgdk = 0 & gt $loc, $metka
-			 
-		elseif spdirtyv > 0 or spdirtyc > 0:
-			'"My God, you''ll get yourself a reputation! Go home and wash that off, quickly."'
-			'You feel a little ashamed that your sister has seen you looking like this in public.'
-			act 'Move away':SiSgdk = 0 & gt $loc, $metka
 		end
 	end
 	
 	if rex > 80:
 		'<center><img src="images/qwest/alter/sisterqw/rekshome/reks.jpg"></center>'
 		*nl
-		if GorSlut < 2 and mesec <= 0 and manna >= ((Astat_intel[pc]*magik) + magik*100 + Astat_vital[pc]*10 + rikudo)*50/100 and alko < 3 and spdirtyv = 0 and spdirtyc = 0:
-			'"Baby, let''s go to my place, once again I am hosting a great get together."'
-				
-			act 'Accept':gt 'sbReksHome','party'
-				
-			act 'Decline':
-				cla
-				minut += 5
-				sisboyparty = -1
-				gs'stat'
-				'"Sorry Rex, I have a lot of homework. I''d love to but I don''t want to fail my exams."'
-				'"Well, go on then, but next time you definitely come, okay?"'
-		
-				act 'Move away':SiSgdk = 0 & gt $loc, $metka
-			end
-
-		elseif GorSlut >= 2:
+		if GorSlut >= 2:
 			'"Shit, <<$Astat_usedname[pc]>> everywhere people say you are a fucking whore. What is this garbage, <<$Astat_usedname[pc]>>? I thought we were an item, and things were getting serious, and you''re fucking around?"'
 			'"I do not know what came over me, I was not myself, please forgive me, if you can."'
 			'"Listen, everything''s OK, but let''s just be friends and forget all that we had. Okay?"'
@@ -155,6 +141,22 @@ $party_pre_conditions ={
 			'"Okay..."'
 
 			act 'Move away':SiSgdk = 0 & gt $loc, $metka
+		else
+			'"Baby, let''s go to my place, once again I am hosting a great get together."'
+				
+			act 'Accept':gt 'sbReksHome','party'
+				
+			act 'Decline':
+				cla
+				minut += 5
+				sisboyparty = -1
+				gs'stat'
+				'"Sorry Rex, I have a lot of homework. I''d love to but I don''t want to fail my exams."'
+				'"Well, go on then, but next time you definitely come, okay?"'
+		
+				act 'Move away':SiSgdk = 0 & gt $loc, $metka
+			end
+
 		end
 	end
 }
