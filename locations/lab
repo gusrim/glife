@@ -118,7 +118,7 @@ if $ARGS[0] = 'jugo':
 	if jugoday ! daystart:
 		act 'Develop strength (1:00)':
 			cla
-			Astat_stren[pc] += rand(3, 6) + (steroid_dose - rand(0,steroid_dose)) & gs 'obj_din', 'steroids'
+			pcs_stren += rand(3, 6) + (steroid_dose - rand(0,steroid_dose)) & gs 'obj_din', 'steroids'
 			minut += 60
 			jugoday = daystart
 			'You do exercises under the guidance of Gustav.'
@@ -138,7 +138,7 @@ if $ARGS[0] = 'jugo':
 
 		act 'Develop agility (1:00)':
 			cla
-			Astat_agil[pc] += rand(3, 6)
+			pcs_agil += rand(3, 6)
 			minut += 60
 			jugoday = daystart
 			'You do exercises under the guidance of Gustav.'
@@ -158,7 +158,7 @@ if $ARGS[0] = 'jugo':
 
 		act 'Develop endurance (1:00)':
 			cla
-			Astat_vital[pc] += rand(3, 6) + (steroid_dose - rand(0,steroid_dose)) & gs 'obj_din', 'steroids'
+			pcs_vital += rand(3, 6) + (steroid_dose - rand(0,steroid_dose)) & gs 'obj_din', 'steroids'
 			minut += 60
 			jugoday = daystart
 			'You do exercises under the guidance of Gustav.'
@@ -183,7 +183,7 @@ if $ARGS[0] = 'Tatiana':
 
 	if succubusflag = 1:
 		if karinsucsex > 0 and sucinfoday ! 0 and sucinfoday <= daystart:
-			'"Hey <<$Astat_nickname[pc]>>!'
+			'"Hey <<$pcs_nickname>>!'
 			'"I''ve gotten some more information about Succubae!"'
 			if sucpcinfo = 4 and succublvl >= 2:
 				'"I heard from one of my mage contacts, in Sydney, Australia of all places, and he passed on some more details."'
@@ -277,7 +277,7 @@ if $ARGS[0] = 'Tatiana':
 		if Tatianaday ! daystart:
 			act 'Develop intelligence (1:00)':
 				cla
-				Astat_intel[pc] += rand(3, 6)
+				pcs_intel += rand(3, 6)
 				minut += 60
 				Tatianaday = daystart
 				'You study with Tatiana developing your intellect.'
@@ -432,7 +432,7 @@ if $ARGS[0] = 'Tatiana':
 				'You settle into a meditative state and link with Tatiana.'
 				if succhungry > -2:
 					gs 'stat'
-					'After a few minutes, you feel Tatiana break the link and say, "<<$Astat_usedname[pc]>>, you need to build up <i>two</i> days of reserve before we do this training."'
+					'After a few minutes, you feel Tatiana break the link and say, "<<$pcs_nickname>>, you need to build up <i>two</i> days of reserve before we do this training."'
 					'She then stands up and goes back to her studying.'
 					act 'Finish': gt 'lab', 'Tatiana'
 					exit
@@ -517,7 +517,7 @@ if $ARGS[0] = 'Tatiana':
 					sucskill = 4
 					sucexcess -= 100
 					act 'Continue':
-						Astat_horny[pc] = 0
+						pcs_horny = 0
 						'As you''re finishing, you notice Tatiana has her eyes closed and is visibly trying to get ahold of herself.'
 						if Tatianasucsexday < daystart or rand(1,100) > 95:
 							'Then her eyes snap open and you feel arousal suddenly flooding the link!'
@@ -624,7 +624,7 @@ if $ARGS[0] = 'Tatianasucsexask':
 		If karinsucsex = 0:
 			'She gives you a wide eyed look before saying,'
 			if succublvl + TatianaSex < rand(0,6):
-				'"I''m sorry, <<$Astat_usedname[pc]>>, I just don''t have the time now."'
+				'"I''m sorry, <<$pcs_nickname>>, I just don''t have the time now."'
 				act 'Move on to something else': gt 'lab', 'Tatiana'
 			else
 				'"I would love to!", with a wide smile.'
@@ -634,10 +634,10 @@ if $ARGS[0] = 'Tatianasucsexask':
 		else
 			If karinsucsexday <= daystart:
 				if 1 + (succublvl * 2) + karinsucsex < rand(1,20):
-					'"I''m sorry, <<$Astat_nickname[pc]>>, I just don''t have the time now."'
+					'"I''m sorry, <<$pcs_nickname>>, I just don''t have the time now."'
 					act 'Move on to something else': gt 'lab', 'Tatiana'
 				else
-					'She gives you a "come hither" smile and says, "I would love to, <<$Astat_nickname[pc]>>!"'
+					'She gives you a "come hither" smile and says, "I would love to, <<$pcs_nickname>>!"'
 					'You both head toward the couch, stripping as you go.'
 					'Once there, you both sit down facing each other and she looks at you in anticipation.'
 					act 'Proceed': gt 'succubus', 'karinsex'
@@ -649,7 +649,7 @@ if $ARGS[0] = 'Tatianasucsexask':
 					$scsextmp = 'day'
 				end
 				'She looks at you with a sad smile and says,'
-				'"I''m sorry, <<$Astat_nickname[pc]>>, I need at least <<Tatianasucsexday - daystart>> more <<$scsextmp>>."'
+				'"I''m sorry, <<$pcs_nickname>>, I need at least <<Tatianasucsexday - daystart>> more <<$scsextmp>>."'
 				killvar '$scsextmp'
 				act 'Move on to something else': gt 'lab', 'Tatiana'
 			end
@@ -676,9 +676,9 @@ if $ARGS[0] = 'suctrainsex':
 	minut += 5
 	'She suddenly lunges at you and starts kissing you! You''re so surprised it takes you a bit to respond and, before you can do anything, she is nibbling your ear and whispering, "Let it go..."'
 !!	Hopefully this can be replaced by an 'arousal' call
-	Astat_horny[pc] += 10
-	if Astat_horny[pc] >= 100:
-		Astat_horny[pc] = 0
+	pcs_horny += 10
+	if pcs_horny >= 100:
+		pcs_horny = 0
 		orgasm += 1
 		'You''re so shocked at this; you suddenly feel a powerful orgasm rush through you, causing you to cry out even as it rushes down the link to Tatiana, giving her a powerful orgasm as well!'
 		'Then, you feel your control slip...'

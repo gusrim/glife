@@ -26,12 +26,12 @@
 
 if $ARGS[0] = '':
 !!Fall of muscularity over time
-	if Astat_stren[pc] >= 26 and Astat_vital[pc] >= 26 and sftrstflag = 0:
+	if pcs_stren >= 26 and pcs_vital >= 26 and sftrstflag = 0:
 		if downmusl >= 5:
 			downmusl = 0
-			Astat_stren[pc] -= 1
-			Astat_vital[pc] -= 1
-			Astat_agil[pc] -= 1
+			pcs_stren -= 1
+			pcs_vital -= 1
+			pcs_agil -= 1
 			fat += 5
 		else
 			downmusl += rand (0,1)
@@ -39,12 +39,12 @@ if $ARGS[0] = '':
 	end
 
 !!This controls the gradual change in stat to -buf
-	if strenbuf > Astat_stren[pc]: strenbuf -= 1
-	if strenbuf < Astat_stren[pc]: strenbuf += 1
-	if vitalbuf > Astat_vital[pc]: vitalbuf -= 1
-	if vitalbuf < Astat_vital[pc]: vitalbuf += 1
-	if agilbuf > Astat_agil[pc]: agilbuf -= 1
-	if agilbuf < Astat_agil[pc]: agilbuf += 1
+	if strenbuf > pcs_stren: strenbuf -= 1
+	if strenbuf < pcs_stren: strenbuf += 1
+	if vitalbuf > pcs_vital: vitalbuf -= 1
+	if vitalbuf < pcs_vital: vitalbuf += 1
+	if agilbuf > pcs_agil: agilbuf -= 1
+	if agilbuf < pcs_agil: agilbuf += 1
 
 !!All the ratios were rounded to 2 digits and there are divide 100s at the final calc points
 !!Waist to hip ratio
@@ -200,9 +200,9 @@ end
 		if fat >= 1:
 			salo = 1
 			if fat > 1: fat -= 1
-		elseif fat <= 0 and Astat_stren[pc] + Astat_vital[pc] > 0:
-			Astat_stren[pc] -= 1
-			Astat_vital[pc] -= 1
+		elseif fat <= 0 and pcs_stren + pcs_vital > 0:
+			pcs_stren -= 1
+			pcs_vital -= 1
 			salo = 1
 		else
 			if Enable_nogameover = 0:
@@ -304,7 +304,7 @@ if $ARGS[0] = 'hardreset':
 !!Also could be built in as a means to in-game undo "dounspell", other than the cheat.
 	if dounspell = 1 and dounsplkil > 0:
 		fat = 12 & salo = 12
-		agilbuf = Astat_agil[pc] & strenbuf = Astat_stren[pc] & vitalbuf = Astat_vital[pc]
+		agilbuf = pcs_agil & strenbuf = pcs_stren & vitalbuf = pcs_vital
 		salobustdo = 1 & sftrstflag = 1 & normbuffpick = -1
 		gs 'body_shape'
 		salo = (bedra * 2) - ((rost * hratio) / 50) + 80
@@ -347,7 +347,7 @@ if $ARGS[0] = 'initial':
 	else
 		nbsize = genbsize
 	end
-	agilbuf = Astat_agil[pc] & strenbuf = Astat_stren[pc] & vitalbuf = Astat_vital[pc]
+	agilbuf = pcs_agil & strenbuf = pcs_stren & vitalbuf = pcs_vital
 	normbuffpick = -1 & gmstrtflag = 1
 	salo = 0
 	gs 'body_shape', 'softreset'
@@ -399,7 +399,7 @@ if $args[0] = 'basebeautycalc':
 	end
 
 !!	Preforming the calculation
-	vneshtemp = vidagebonus * ((skinvan * 2 / 5) + (3 * (2 + bodykoef)) + (Astat_agil[pc] / 10) + (Astat_vital[pc] / 10) + resnicbonus + glarazbonus + lipbonus - (5 * zub)) / 100
+	vneshtemp = vidagebonus * ((skinvan * 2 / 5) + (3 * (2 + bodykoef)) + (pcs_agil / 10) + (pcs_vital / 10) + resnicbonus + glarazbonus + lipbonus - (5 * zub)) / 100
 !!	skinvan = skin condition, corrected to a 0 to 40 range; bodykoef set in main body_shape; zub is missing teeth or cosmetically improved teeth (-1)
 
 !!	This is the first limiter
