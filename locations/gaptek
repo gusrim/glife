@@ -19,7 +19,7 @@ if $ARGS[0] = 'start' or gaptek_loc = 1 or $message ! '':
 		Olu_pay = 0
 
 		'You go back to the pharmacy, and wait for a slow moment so you can talk to your aunt undisturbed.'
-		'Your aunt smiles happily as she gives you a small envelope. "Thank you so much <<$name>>, this is the only way I can get some sleep. I really appreciate it. Here, please accept this money, you''ve earned it."'
+		'Your aunt smiles happily as she gives you a small envelope. "Thank you so much <<$pcs_firstname>>, this is the only way I can get some sleep. I really appreciate it. Here, please accept this money, you''ve earned it."'
 
 		act 'Thank her and leave the pharmacy':gt'pavCommercial'
 		exit
@@ -38,7 +38,7 @@ if $ARGS[0] = 'start' or gaptek_loc = 1 or $message ! '':
 		if StoryLine = 0:
 			'The woman behind the counter in a white coat greets you, "Hello, what you need?"'
 		else
-			'Aunt Luda is sitting behind the counter, as usual. She gives you a friendly nod when she sees you: "Hi <<$name>>! How are you?"'
+			'Aunt Luda is sitting behind the counter, as usual. She gives you a friendly nod when she sees you: "Hi <<$pcs_firstname>>! How are you?"'
 		end
 	end
 	'</center>'
@@ -62,7 +62,7 @@ if $ARGS[0] = 'start' or gaptek_loc = 1 or $message ! '':
 	!strip polt-related item, other use new system
 	if KandidNapr = 1:'Cure for yeast infection - 1,500 <b>₽</b>'
 
-		if Astat_Qstlvl[29] >= 2:
+		if npc_QW['A29'] >= 2:
 			act 'Ask about the ''garden''':
 				cls
 				gaptekfirst = 1
@@ -71,7 +71,7 @@ if $ARGS[0] = 'start' or gaptek_loc = 1 or $message ! '':
 				!'<center><img src="images/etogame/aptek.jpg"></center>'
 				'<center><img src="images/qwest/apteka/apteka_worker_1.jpg"></center>'
 
-				if Astat_Qstlvl[29] = 2 and gaogorod < 40:
+				if npc_QW['A29'] = 2 and gaogorod < 40:
 					if gaptekfirst = 0:
 						gaptekfirst = 1
 						minut += 5
@@ -99,9 +99,9 @@ if $ARGS[0] = 'start' or gaptek_loc = 1 or $message ! '':
 							'You linger around the pharmacy, waiting for your aunt to become available. However, as time passes the pharmacy only becomes more and more crowded, and your aunt has a long line of customers to deal with. You decide you''ve wasted enough time, and to try again later.'
 						end
 					end
-				elseif Astat_Qstlvl[29] = 2 and gaogorod >= 20:
+				elseif npc_QW['A29'] = 2 and gaogorod >= 20:
 					gt 'motherQW','motherQW_3'
-				elseif Astat_Qstlvl[29] >= 3 and galubri = 0:
+				elseif npc_QW['A29'] >= 3 and galubri = 0:
 					if gaprezikday ! daystart or gatabletkiday ! daystart:
 						minut += RAND(5,15)
 						gs'stat'
@@ -117,7 +117,7 @@ if $ARGS[0] = 'start' or gaptek_loc = 1 or $message ! '':
 
 						'You wait for your turn and move up to the counter, discretely nodding at the counter with the contraceptives. She apologizes: "I''m sorry <<$pcs_nickname>>, those are all sold out." With some malice in her voice, she whispers: "Your stud will have to wait until tomorrow, unless you plan on entertaining him in some other way." Giving you a lewd grin, she ushers you away from the counter so she can help the next customer.'
 					end
-				elseif Astat_Qstlvl[29] >= 3 and galubri = 1:
+				elseif npc_QW['A29'] >= 3 and galubri = 1:
 					if gaprezikday ! daystart or gatabletkiday ! daystart or galubriday ! daystart:
 						minut += RAND(5,15)
 						if RAND(0,5) = 0 and oluuosegunday ! daystart and tetyafirst < 3:
@@ -151,7 +151,7 @@ if $ARGS[0] = 'start' or gaptek_loc = 1 or $message ! '':
 						act 'Move away from the counter':gt 'gaptek', 'start'
 					exit
 						
-					elseif portion > 1 and Astat_Qstlvl[29] < 3:
+					elseif portion > 1 and npc_QW['A29'] < 3:
 						portion = 1
 						'You quietly think to yourself, while you put most of the packages back on the shelf: "Just the one should be enough. It''s probably better if I don''t buy too many at once, otherwise aunt Luda might become suspicious."'
 					end
@@ -171,7 +171,7 @@ if $ARGS[0] = 'start' or gaptek_loc = 1 or $message ! '':
 				end
 			end
 
-			if klisma = 0 and Astat_Qstlvl[29] >= 2 and gaptekfirst = 1:
+			if klisma = 0 and npc_QW['A29'] >= 2 and gaptekfirst = 1:
 				act 'Buy the enema kit (500 <b>₽</b>)':
 					cla
 					*clr
@@ -362,7 +362,7 @@ if $ARGS[0] = 'garden':
 	'Condoms - 100 ₽'
 	'Pregnancy test - 200 ₽'
 	'Lubricant - 300 ₽'
-	if money >= 100 and Astat_Qstlvl[29] >= 2 and gaptekfirst = 1 and gaprezikday ! daystart:
+	if money >= 100 and npc_QW['A29'] >= 2 and gaptekfirst = 1 and gaprezikday ! daystart:
 		act 'Buy condoms (100 <b>₽</b>) <<iif(prezik > 0, ''[left:<b>'' + prezik + ''</b>]'', '''')>>':
 			cla
 			*clr
@@ -376,8 +376,8 @@ if $ARGS[0] = 'garden':
 
 			end
 
-			if portion > 2 and Astat_Qstlvl[29] < 3:portion = 2 & 'You tell yourself: "Two packages should be enough". You shouldn''t buy too many at once, otherwise your aunt might get suspicious.'
-			if portion > 5 and Astat_Qstlvl[29] >= 3:portion = 5 & 'Your aunt laughs and shakes her head. "I''m sorry <<$pcs_nickname>>, I can only give you five. With the amounts you''re buying, the condom factory can barely keep up delivering new stock."'
+			if portion > 2 and npc_QW['A29'] < 3:portion = 2 & 'You tell yourself: "Two packages should be enough". You shouldn''t buy too many at once, otherwise your aunt might get suspicious.'
+			if portion > 5 and npc_QW['A29'] >= 3:portion = 5 & 'Your aunt laughs and shakes her head. "I''m sorry <<$pcs_nickname>>, I can only give you five. With the amounts you''re buying, the condom factory can barely keep up delivering new stock."'
 
 			if portion * 100 <= money:
 				prezik += portion * 5
@@ -387,7 +387,7 @@ if $ARGS[0] = 'garden':
 				'<center><img src="images/etogame/kassa.jpg"></center>'
 				'You pay for the condoms and quickly put them in your pocket, before anyone sees you buy them.'
 
-				if Astat_Qstlvl[29] < 3:gaogorod += portion
+				if npc_QW['A29'] < 3:gaogorod += portion
 			else
 				'You can''t afford the condoms.'
 			end
@@ -396,7 +396,7 @@ if $ARGS[0] = 'garden':
 		end
 	end
 
-	if money >= 200 and Astat_Qstlvl[29] >= 2 and gaptekfirst = 1:
+	if money >= 200 and npc_QW['A29'] >= 2 and gaptekfirst = 1:
 		act 'Buy  pregnancy tests (200 <b>₽</b>) <<iif(pregtest > 0, ''[left:<b>'' + pregtest + ''</b>]'', '''')>>':
 			cla
 			*clr
@@ -417,7 +417,7 @@ if $ARGS[0] = 'garden':
 				'<center><img src="images/etogame/kassa.jpg"></center>'
 				'You pay for the pregnancy tests and quickly put them in your pocket, before anyone sees you buy them.'
 
-				if Astat_Qstlvl[29] < 3:gaogorod += portion
+				if npc_QW['A29'] < 3:gaogorod += portion
 			else
 				'You can''t afford to buy the pregnancy tests, and have to put them back on the counter.'
 			end
@@ -427,7 +427,7 @@ if $ARGS[0] = 'garden':
 	end
 
 	!! you can only buy lube here if your aunt arranged for it and you haven''t bought any today yet
-	if money >= 300 and galubri = 1 and Astat_Qstlvl[29] >= 2 and gaptekfirst = 1 and galubriday ! daystart:
+	if money >= 300 and galubri = 1 and npc_QW['A29'] >= 2 and gaptekfirst = 1 and galubriday ! daystart:
 		act 'Buy <b>lubricant</b> (300 <b>₽</b>) <<iif(lubri > 0, ''[left:<b>'' + lubri + ''</b>]'', '''')>>':
 			cla
 			*clr
@@ -451,7 +451,7 @@ if $ARGS[0] = 'garden':
 				'<center><img src="images/etogame/kassa.jpg"></center>'
 				'You pay for the lubricant and quickly put the tubes in your pocket, before anyone sees you buy them.'
 
-				if Astat_Qstlvl[29] < 3:gaogorod += portion
+				if npc_QW['A29'] < 3:gaogorod += portion
 			else
 				'You can''t afford to buy the lubricant.'
 			end
