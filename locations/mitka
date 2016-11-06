@@ -21,16 +21,74 @@ else
 		'You greet him, "I''m doing fine, thanks."'
 		'Mitka smiles, "That''s great to hear, <<$pcs_nickname>>.", then he offers, "<<$mitkaInvitation>>"'
 
-		if mitkasextimes < 13:
+		
+		If mitkasextimes = 0 and vagina = 0:
+			*nl
+			'Mitka scratches his balls and adds with a grin: "Hey <<$pcs_nickname>>, do you want to have some fun?"'
+			
+			act 'I don''t know.  My mother is obsessed with me staying a virgin.':
+				'You turn away and slowly walk away from Mitka.  You know you want him, but you promised your mother...'
+				wait 1500
+				gt 'gadukino'
+			end
+			act 'Hmm. No sex, Mitka.  I will give you a blowjob only.':
+				cls
+				gs 'boyStat', 63
+				minut += 10
+				pcs_horny += 10
+				mitkasextimes += 1
+				stat['bj'] += 1
+				gs'stat'
+
+				'<center><img src="images/qwest/gadukino/mitkabjhome.jpg"></center>'
+				*nl
+				'Mitka takes you to his house and onto the veranda.  You kneel down on your knees and smiling up at him take his cock out of his pants and start to suck...'
+				gs'oral','start'
+
+				act 'Swallow':
+					cls
+					minut += 10
+					pcs_horny += 10
+					sub += RAND(0,1)
+					temp = rand(0,5)
+
+					if temp = 5:
+						spafinloc = 12
+						swallow += 1
+						'<center><img src="images/qwest/gadukino/mitkabjhomecum3.jpg"></center>'
+						*nl
+						'You bob your head up and down on his cock, trying to cram as much of his cock deep into your mouth. Sometimes you gag as it enters your throat. Eventually, you feel Mitka''s cock pulse and a few seconds later your mouth is filled with his salty sperm.'
+					elseif temp >= 3:
+						spafinloc = 11
+						'<center><img src="images/qwest/gadukino/mitkabjhomecum2.jpg"></center>'
+						*nl
+						'Mitka takes his cock in his hand and begins to furiously jacking off right in your face. Within a minute Mitka is panting hard and suddenly you feel hot spunk slapping into your face and mouth. It feels wonderful.'
+
+					else
+						spafinloc = 12
+						swallow += 1
+						'<center><img src="images/qwest/gadukino/mitkabjhomecum1.jpg"></center>'
+						*nl
+						'Mitya places his large hands on the back of your head and roughly force you to take his cock deep into your throat. Slowly he builds up a rhythm and finally finishes in your mouth.'
+					end
+
+					gs 'cum_manage'
+					gs 'stat'
+					act 'Leave':gt 'gadukino'
+				end
+			end	
+		end
+				
+		if mitkasextimes > 0 and mitkasextimes < 13:
 			temp = RAND(0,5)
 			*nl
-			'Mitka scratches his balls and adds with a grin: "Hey baby, do you want to have some fun? My cock is hard, we could both have a fucking good time."'
-
+			'Mitka scratches his balls and adds with a grin: "Hey <<$pcs_nickname>>, do you want to have some fun?"'
+			
 			if temp = 0 or (temp < 3 and vagina > 0):
 				act 'Sure, sounds like fun':
 					cls
 					minut += 15
-					if mitkasex = 0:mitkasex = 1 & guy += 1
+					if mitkasextimes = 0:mitkasextimes += 1 & guy += 1
 					gs 'boyStat', 63
 					pose = 0
 					gs'stat'
@@ -43,7 +101,7 @@ else
 					*nl
 					'Mitka takes you to his house and onto the veranda. He has you sit on the couch and begins pawing at your cloths pulling them off you.'
 
-					'Breathing heavily, Mitka steps to your side and says, "Let''s fuck!"'
+					'Breathing heavily, Mitka steps to your side and says, "Nice fuck!"'
 
 					dynamic $sexstart
 					dynamic $sexstart2
@@ -57,6 +115,7 @@ else
 					gs 'boyStat', 63
 					minut += 10
 					pcs_horny += 10
+					mitkasextimes += 1
 					stat['bj'] += 1
 					gs'stat'
 
@@ -98,12 +157,13 @@ else
 					end
 				end
 			else
-				act 'Slurred mumble':
+				act 'I guess':
 					cls
 					minut += 15
 					gs 'boyStat', 63
 					pose = 0
 					spafinloc = 3
+					mitkasextimes += 1
 					gs 'cum_manage'
 					anus += 1
 					if anus < 10:sub += 1

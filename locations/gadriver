@@ -24,19 +24,22 @@ if $ARGS[0] = 'start':
 			'<center><img src="images/qwest/gadukino/river/gadriver_winter_night.jpg"></center>'
 		end
 	end
-
+	
 	'A large river flows lazily a hundred meters in the northern outskirts of Gadukino.'
 	
-	temp = RAND(0,20)
-		if temp <= 3 and hour >= 6 and hour < 21 and month >= 5 and month <= 9 and sunWeather = 1:
-		fishers = daystart
-			'You notice the local <a href="exec:gt ''Gadriver'', ''fishers''">fishermen</a> fishing on the riverbank.'
-		elseif fishers = daystart and hour < 21 and sunWeather = 1:
-			'You see the local <a href="exec:gt ''Gadriver'', ''fishers''">fishermen</a> fishing with their rods on the riverbank.'
-		end
-	if temp = 1 and hour < 5 and month >= 5 and month <= 9 and miraperversion >= 20:'Right next to the path leading to the river, you see <a href="exec: gt ''Gadriver'', ''mirapunish'' ">Mira</a> naked, bound with ropes between two trees...'
+	if hour >= 6 and hour < 21 and sunWeather = 1: 'You see the local <a href="exec:gt ''Gadriver'', ''fishers''">fishermen</a> fishing with their rods on the riverbank.'
+	
 
+	
+	!if rand(0,20) < 4 and hour >= 6 and hour < 21 and month >= 5 and month <= 9 and sunWeather = 1:
+	!	fishers = daystart
+	!	'You notice the local <a href="exec:gt ''Gadriver'', ''fishers''">fishermen</a> fishing on the riverbank.'
+	!elseif fishers = daystart and hour < 21 and sunWeather = 1:
+	
+	temp = rand(0,20)
 
+	if temp = 1 and hour < 5 and month >= 5 and month <= 9 and miraperversion >= 20: 'Right next to the path leading to the river, you see <a href="exec: gt ''Gadriver'', ''mirapunish'' ">Mira</a> naked, bound with ropes between two trees...'
+	
 	if temp = 4 and MiraLoc ! 1 and mitkasextimes >= 13 and hour >= 5 and sub > 0:
 		if mitkaguysriver ! daystart:
 			mitkaguysriver = daystart
@@ -149,11 +152,12 @@ if $ARGS[0] = 'Gadbitch':
 	cls
 	gs 'stat'
 
-
 	'<center><H4>Village Beach</H4></center>'
+	
 	!125s
 	!start before everything
-    if mira_go_blok = 0 and MiraLoc = 1 and rand(1,10) = 5 or MiraLoc = 1 and hour >= 20:
+	
+    if (mira_go_blok = 0 and MiraLoc = 1 and rand(1,10) = 5) or (MiraLoc = 1 and hour >= 20):
 	    cla
 	    *clr
         MiraLoc ! 1
@@ -167,7 +171,7 @@ if $ARGS[0] = 'Gadbitch':
 			'<center><img src="images/qwest/gadukino/river/mira_go_home.jpg"></center>'
 		end
 	    '"<<$pcs_nickname>>, I have to go home, "  Mira said to you and began to gather her stuff.'
-	    
+		MiraLoc = 0
         act 'Further': gt'Gadriver', 'Gadbitch'
 	end
 
@@ -591,7 +595,7 @@ if $ARGS[0] = 'Mira':
 				'Placeholder Text'
             elseif miraperversion >= 20 and sunWeather = 1:
 				'Placeholder Text'
-            elseif miraperversion >= 30 and miraprostitute = 1 and sunWeather = 1:
+            elseif miraperversion >= 30 and miraprost > 0 and sunWeather = 1:
 				'You and Mira talk about her being the village prostitute and how she can improve her performance.'
 			end
 		end
@@ -898,14 +902,9 @@ if $ARGS[0] = 'fishers':
 					act 'Fishing':gt 'Gadriver', 'fishing'
 				end
 			end
-			act 'Leave':minut += 5 & gt 'Gadriver', 'Gadbitch'
 		end
-		
-		act 'Leave':minut += 5 & gt 'Gadriver', 'Gadbitch'
-	else
-		act 'Leave':minut += 5 & gt 'Gadriver', 'Gadbitch'
 	end
-	
+	act 'Leave':minut += 5 & gt 'Gadriver', 'Gadbitch'
 end
 
 if $ARGS[0] = 'fishing':
@@ -944,13 +943,13 @@ if $ARGS[0] = 'fishing':
 					*clr
 					minut += 1
 					temp = RAND(0,120)
-					if temp < 50:react += 1
+					if temp < 50:pcs_react += 1
 					gs 'stat'
 					
-					if react > temp:
+					if pcs_react > temp:
 						manna += mannamax/RAND(10,20)
 						minut += 1
-						react += 1
+						pcs_react += 1
 						fish += 1
 						gs 'stat'
 						'<center><img src="images/qwest/gadukino/river/fishyes.jpg"></center>'
