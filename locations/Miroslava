@@ -61,18 +61,19 @@ if $ARGS[0] = '':
 	else
 		'You and Mira are best friends.'
 	end
-	gs 'Miroslava', 'Ask for Mira'
+	!gs 'Miroslava','Ask for Mira'
 end
 
 	!if graze_cow = 0: have not found where this is ever set to 1, removing until ocnflicts resolved and found out why this is here
 if $ARGS[0] = 'Ask for Mira':
 	act 'Leave':
 		if mira_guest = 1:
-			gt'Gaddvor'
+			gt 'Gaddvor'
 		else 
 			gt $loc, $metka
 		end
 	end
+	
 	act 'Call Mira':	
 		cls
 		minute += 2
@@ -86,7 +87,7 @@ if $ARGS[0] = 'Ask for Mira':
 			act 'Talk':
 				gt 'Meadow','lesb_talk_mira1'
 			end
-		elseif miraperversion >= 15 and mitkasextimes >= 13 and mirasex = 1 and miralick = 0 and  MiraLoc = 2 and pcs_horny >= 60:
+		elseif miraperversion >= 15 and mitkasextimes >= 13 and mirasex = 1 and miralick = 0 and MiraLoc = 2 and pcs_horny >= 60:
 			act 'Talk':
 				gt 'Meadow','lesb_talk_mira2'
 			end    
@@ -94,7 +95,29 @@ if $ARGS[0] = 'Ask for Mira':
 			!if mirasex = 1 and mitkasextimes < 13 and miralick > 0 and MiraLoc = 2 and pcs_horny >= 40:act 'Ordered to lick':gt 'Meadow','lesb_talk_mira3'  - Not certain this belongs here, looks like it belongs in Meadow
 			!if mirasex = 2 and MiraLoc = 2 and pcs_horny >= 40 and miraQW >= 15:act 'Stick':gt 'Meadow','lesb_mira'   - not certain this belongs here, looks like it belongs in Meadow               
 			act 'Chat':dynamic $miratalk
-			if month >= 4 and month <= 10 and sunWeather = 1:
+			if mira_temp >= 10 and sunWeather = 1 and temper >= 20 and hour < 20 and MiraLoc ! 0 and Mira_no = 0:
+				act 'Go to river':gt 'gadriver','start'
+					cls
+					minut += 2
+					MiraLoc = 1
+					mira_no_home += rand(1,4)
+					gs 'stat'
+					'<center><img src="images/qwest/gadukino/MiraFather.jpg"></center>'
+					'Mira`s father tells you that she`s not home, she is over at the river.'
+				end	
+			elseif mira_temp >= 10 and sunWeather = 0 and hour < 20 and MiraLoc ! 0 and Mira_no = 0:
+				act 'Leave':gt $loc, $metka
+					cls
+					minut += 2
+					mira_no_home += rand(1,4)
+					gs 'stat'         
+					'<center><img src="images/qwest/gadukino/MiraFather.jpg"></center>'
+					'Mira`s father tells you that she`s isn''t home.'
+				end
+				act 'Leave':gt $loc, $metka
+			end	
+
+			if month >= 4 and month <= 10 and sunWeather = 1:	    
 				act 'Offer to walk together':
 					cls
 					!if Mira_no = 0:  Another variable that I have no idea what its for.  I have only found a single place where this goes above 0, but is reduced by -1 each day.  What is this?
@@ -145,7 +168,7 @@ if $ARGS[0] = 'Ask for Mira':
 					end
 				end
 			end
-
+		
 			if meadow = 1 and MiraLoc ! 3:
 				act 'Show her your secret place':
 					cls
@@ -210,7 +233,8 @@ if $ARGS[0] = 'Ask for Mira':
 						act 'Leave':gt $loc, $metka						    
 					end						    
 				end
-			end		
+			end
+			
 			if miraQW >= 15 and hour >= 20 and miraperversion = 0 and sunWeather = 1 and MiraLoc ! 3:
 				act 'Ask if she has met the local boys?':
 					cls
@@ -234,7 +258,8 @@ if $ARGS[0] = 'Ask for Mira':
 					
 					act 'Further':mira_guest = 0 & minut += 15 & temp = 0 & miralko = 0 & gt 'mitkabuh'
 				end
-			end	
+			end
+			
 			if miraQW >= 19 and hour >= 21 and miraperversion > 0 and sunWeather = 1 and MiraLoc ! 3:
 				act 'Suggest catching up with the local guys and having a drink or three':
 					if Mira_no = 0:
@@ -271,7 +296,8 @@ if $ARGS[0] = 'Ask for Mira':
 						act 'Leave':gt $loc, $metka						    
 					end			    
 				end
-			end		
+			end
+			
 			if miraQW >= 20 and week = 6 and hour > 18 and hour < 22:
 				act 'Suggest taking a steam bath in your grandparents sauna':
 					if Mira_no = 0:
@@ -367,28 +393,29 @@ if $ARGS[0] = 'Ask for Mira':
 					gs 'stat'
 
 					dynamic $miraclothes	
-					'"Mira,and you were in the woods behind the village?" - I decided to ask you.'
-					'"No, <<$pcs_nickname>>, are you one I`m afraid to go there"- said Mira, shaking his head.'
-					'"And why?" - continued to be interested in you Mira.'
-					'"Oh, they say it is easy to get lost, in case you don`t know, " she said. - "They also say there are wolves there."'
-					'"Who says?", - you asked incredulously. - "Real wolves?"'
-					'"Locals say this" - said Mira. - "They have all sorts of scary stories to tell."'
-					'"Oh, neboys is filled" - with a laugh said you. - "Ride on the ears of such as we to in the forest did not go. They then mushrooms and berries will get more."'
-					'"No, no, <<$pcs_nickname>>," - in a serious tone she answered. - "Told me that last summer the wolves a girl from a neighboring village got mauled to death. She`s in the mushrooms went, but time did not count and stayed up late. In the morning to find her gone, only Rattray sarafan found in the blood, Yes the basket."'
-					'"This is terrible" - you shivered. - "And more interesting do not tell?."'
-					'"What?" - Mira giggled, turning to whisper zagovorcheski. - "Overheard recently a conversation between two aunts in the village. They said that if in the woods to go naked, the health increases and mood improves. The air is so fresh impact."'
+					'"Mira, can you tell me about the forest near the village?" You ask you.'
+					'"No, <<$Astat_nickname[pc]>>, I`m afraid to go there" said Mira, shaking her head.'
+					'"Why?" You said, wanting to continue the conversation.'
+					'"Oh, they say it is easy to get lost in those woods, in case you didn`t know, " she said. - "They say that there are wolf packs roaming those woods too."'
+					'"Who says?", you asked incredulously.  "Real wolves?"'
+					'"Locals say this" said Mira.  "They have all sorts of scary ghost stories to tell."'
+					'"Oh, they are pulling your leg." with a laugh said you.  "I bet they don''t want us to go into the forest because that they don''t want to share in the picking of the mushrooms and berries.  They will get more, plain and simple."'
+					'"No, no, <<$Astat_nickname[pc]>>," Mira said in a serious tone.  "They told me that last summer the wolves attacked a girl from a neighboring village.  She was mauled to death.  She had gone into the forest looking for mushrooms too, but she never come out of the forest. In the morning they found the remains of her corpse and lots of blood.  They found many wolf tracks in the blood."'
+					'"That is terrible" you shivered.  "If you have simular tells, keep them to yourself.  I don''t like horror stories."'
+					'"What?" Mira giggled, turning to whisper in your ear. "I also overheard a few days ago a conversation between two of the village elders.  They said that if you walk naked in the woods, your health and mood improves.  Something to do with the air being so fresh.  Or something like that."'
 					'Mira thought for a moment, and then continued.'
-					'"I don`t know about health, but there is definitely more to itch begins," Mira expressive glanced between his legs.'
-					'"Wait," you interrupted her. - "You said that I`m afraid to walk in the woods one."'
-					'"Oh, it all once was," she said blushing. - "To check the truth if the aunt said."'		    
-					'"Okay, okay, no excuses," - you chuckled, looking at a confused Mira. -"And let`s go out together?."'
-					'"I don`t know <<$pcs_nickname>>," - she said. - "If it will be warm and the weather is nice, you can like something and go."'	
-					'"But deep into the forest will not go," - then quickly she added.'
-					'"Okay, okay, on the edge of the walk," - you have agreed.'
+					'"I don`t know about health part, but there is definitely more to my mood and a little itch begins," Mira expressively glances between her legs.'
+					'"Wait," you interrupted her.  "I thought you said that you''re afraid to walk in the woods alone."'
+					'"Oh, I didn go once," she said blushing.  "Just to check on the truth if what the elders said."'		    
+					'"Okay, okay, no more excuses," - you chuckled, looking at a confused Mira.  "And let`s just go together?."'
+					'"I don`t know <<$Astat_nickname[pc]>>," Mira said.  "If it''s warm and the weather is nice, you can count on me to go with you."'	
+					'"But, just the forest edge.  I refuse to go deep into the forest,"  Mira quickly added.'
+					'"Okay, okay, we''ll only the walk allong the edge of the forest," - you have agreed.'
 						
 					act 'Further':gt $loc, $metka
 				end    
 			end
+			
 			if sunWeather = 1 and temper >= 20 and month >= 5 and month <= 9 and MiraLoc ! 3 and miratalkforest > 0 and miraQW >= 5:			
 				act 'Offer to go to the forest':
 					cls
@@ -523,6 +550,7 @@ if $ARGS[0] = 'Ask for Mira':
 									end    
 								end
 							end
+							
 							act 'Forgive':
 								cls
 								minut += 5
@@ -539,6 +567,7 @@ if $ARGS[0] = 'Ask for Mira':
 							end    							
 						end
 					end
+					
 					if piratsuka > 0:
 						!'This one replaced with naked walk in 1.2.5 add back with piratsuka check, according to texts by illume'
 						act 'Go to your barn (Order her suck Pirate)':
@@ -584,7 +613,8 @@ if $ARGS[0] = 'Ask for Mira':
 								end
 							end
 						end
-					end				
+					end	
+					
 					act 'Go to your barn (make her your dog)':
 						cls
 						minut += 10
@@ -632,6 +662,7 @@ if $ARGS[0] = 'Ask for Mira':
 									act 'Finish':mira_guest = 0 & gt 'Gadsarai'
 								end
 							end
+							
 							act 'Forgive':
 								cls
 								minut += 5
@@ -650,6 +681,7 @@ if $ARGS[0] = 'Ask for Mira':
 					end			
 				end    
 			end
+			
 			if miraQW >= 15 and MiraLoc ! 3 and (mitkasextimes < 13 or miraperversion >= 10 or mirasex > 1):
 				if mira_guest = 0:
 					act 'To invite as a guest':
@@ -738,7 +770,7 @@ if $ARGS[0] = 'Ask for Mira':
 	end     	 
 end
 
-! This is part of the meadow.  Remoarking it out.	
+! This is part of the meadow.  Remarking it out.	
 !if meadow = 2:
 !	cls
 !	minut += 2
