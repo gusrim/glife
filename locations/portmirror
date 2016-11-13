@@ -44,7 +44,7 @@ if pcs_hairbsh = 0 and AutoHapri = 1:
 	*pl $brushHair
 end
 
-! WD: Cheat Unused ~ 'AutoMakeup'
+!! WD: Cheat Unused ~ 'AutoMakeup'
 if mop = 1 and kosmetica > 0 and AutoMakeup = 1:
 	mop = AutoMakeupType
 	if kosmetica < 3 and mop = 4:mop = 3
@@ -87,6 +87,97 @@ if lipbalm > 0 and lipbalmstat <= 0 and AutoLipBalm = 1:
 	lipbalmstat += 8
 	*pl $applyLipbalm
 end
+if pcs_hairbsh = 0 or mop = (1 and kosmetica > 0) or (lipbalm > 0 and lipbalmstat <= 0):
+	act 'Do the works':
+		cla
+		if pcs_hairbsh = 0:
+			act 'Brush your hair':
+				cla
+				minut += 3
+				pcs_hairbsh = 1
+				*pl $brushHair
+			end
+		end
+		if mop = 1 and kosmetica > 0:
+			*clr
+			'<center><img src="images/etogame/mop.jpg"></center>'
+			*nl
+			*pl 'You consider for a moment which look you want to go for.'
+			*nl
+			if makeupSetting = 1:
+				cla
+				'Without thinking, you instantly apply a sutle amount of makeup to your face.'
+				minut += 3
+				kosmetica -= 1
+				mop = 2
+				recmop = mop
+				*pl $makeupLight
+			elseif makeupSetting = 2:
+				cla
+				'Without thinking, you instantly apply a moderate amount of makeup to your face.'
+				minut += 5
+				kosmetica -= 2
+				mop = 3
+				recmop = mop
+				*pl $makeupNatural
+			elseif makeupSetting = 3:
+				cla
+				'Without thinking, you instantly apply a heavy amount of makeup to your face.'
+				minut += 10
+				kosmetica -= 3
+				vidageday -= 1
+				mop = 4
+				recmop = mop
+				*pl $makeupHeavy
+			else
+				act 'Light make-up':
+					cla
+					minut += 3
+					kosmetica -= 1
+					mop = 2
+					recmop = mop
+					*pl $makeupLight
+				end
+
+				if kosmetica >= 2:
+					act 'Natural makeup':
+						cla
+						minut += 5
+						kosmetica -= 2
+						mop = 3
+						recmop = mop
+						*pl $makeupNatural
+					end
+				end
+
+				if kosmetica >= 3:
+					act 'Heavy makeup':
+						cla
+						minut += 10
+						kosmetica -= 3
+						vidageday -= 1
+						mop = 4
+						recmop = mop
+						*pl $makeupHeavy
+					end
+				end
+			end
+		end
+		if lipbalm > 0 and lipbalmstat <= 0:
+			minut += 10
+			lipbalm -= 1
+			lipkoef += rand(0, 1)
+			if lipkoef > 50:
+				lipkoef = 0
+				lip += 1
+			end
+			lipbalmstat += 8
+			*pl $applyLipbalm
+		end
+		
+		act 'View results':gt 'portmirror'
+	end
+end
 
 if pcs_hairbsh = 0:
 	act 'Brush your hair':
@@ -98,46 +189,78 @@ if pcs_hairbsh = 0:
 	end
 end
 
+!! Added the makeup setting.
+
 if mop = 1 and kosmetica > 0:
 	act 'Apply makeup':
 		cla
 		*clr
 		'<center><img src="images/etogame/mop.jpg"></center>'
 		*nl
-		*pl 'You consider for a moment which look you want to gor for.'
+		*pl 'You consider for a moment which look you want to go for.'
 		*nl
-		act 'Light make-up':
+		if makeupSetting = 1:
 			cla
+			'Without thinking, you instantly apply a sutle amount of makeup to your face.'
 			minut += 3
 			kosmetica -= 1
 			mop = 2
 			recmop = mop
 			*pl $makeupLight
 			act 'View results':gt 'portmirror'
-		end
-
-		if kosmetica >= 2:
-			act 'Natural makeup':
+		elseif makeupSetting = 2:
+			cla
+			'Without thinking, you instantly apply a moderate amount of makeup to your face.'
+			minut += 5
+			kosmetica -= 2
+			mop = 3
+			recmop = mop
+			*pl $makeupNatural
+			act 'View results':gt 'portmirror'
+		elseif makeupSetting = 3:
+			cla
+			'Without thinking, you instantly apply a heavy amount of makeup to your face.'
+			minut += 10
+			kosmetica -= 3
+			vidageday -= 1
+			mop = 4
+			recmop = mop
+			*pl $makeupHeavy
+			act 'View results':gt 'portmirror'
+		else
+			act 'Light make-up':
 				cla
-				minut += 5
-				kosmetica -= 2
-				mop = 3
+				minut += 3
+				kosmetica -= 1
+				mop = 2
 				recmop = mop
-				*pl $makeupNatural
+				*pl $makeupLight
 				act 'View results':gt 'portmirror'
 			end
-		end
 
-		if kosmetica >= 3:
-			act 'Heavy makeup':
-				cla
-				minut += 10
-				kosmetica -= 3
-				vidageday -= 1
-				mop = 4
-				recmop = mop
-				*pl $makeupHeavy
-				act 'View results':gt 'portmirror'
+			if kosmetica >= 2:
+				act 'Natural makeup':
+					cla
+					minut += 5
+					kosmetica -= 2
+					mop = 3
+					recmop = mop
+					*pl $makeupNatural
+					act 'View results':gt 'portmirror'
+				end
+			end
+
+			if kosmetica >= 3:
+				act 'Heavy makeup':
+					cla
+					minut += 10
+					kosmetica -= 3
+					vidageday -= 1
+					mop = 4
+					recmop = mop
+					*pl $makeupHeavy
+					act 'View results':gt 'portmirror'
+				end
 			end
 		end
 	end
@@ -158,6 +281,20 @@ if lipbalm > 0 and lipbalmstat <= 0:
 		*pl $applyLipbalm
 		act 'View results':gt 'portmirror'
 	end
+end
+
+!!New makeup setting
+!!This imforms the person what makeup they have pre selected
+!! 0 - none, 1 - light, 2 - moderate, 3 - heavy
+
+if makeupSetting = 0:
+	act 'You choose the makeup you want. Click to make the decision to put on light makeup automatically.':makeupSetting = 1 & gt 'portmirror'
+elseif makeupSetting = 1:
+	act 'You use light amount of makeup. Click to make the decision to put on moderate amount of makeup automatically.':makeupSetting = 2 & gt 'portmirror'
+elseif makeupSetting = 2:
+	act 'You use moderate amount of makeup. Click to make the decision to put on heavy amount of makeup automatically.':makeupSetting = 3 & gt 'portmirror'
+elseif makeupSetting = 3:
+	act 'You use heavy amount of makeup. Click to make the decision on what makeup to put on individually.':makeupSetting = 0 & gt 'portmirror'
 end
 
 act 'Move away from the mirror':gt '<<$gt1>>', '<<$gt2>>'

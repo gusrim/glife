@@ -1,4 +1,5 @@
 # boy
+
 !!'<<$boydesc>> <<$boybody>> <<$boybod>> <<$boyface>>. <<$boydesc>> <<$boyClo>>'
 
 !Select Photos
@@ -306,6 +307,258 @@ titBoy = Cstat_bust[npclastgeneratedn]
 vneshBoy = Cstat_app[npclastgeneratedn]
 
 
+
+
+!! trying to make the preference section 
+!! Variables here are clotTypePref, clotQualPref, clotTopPref, bottShorPref, clotThinPref, bimbPref, pierPref, tattPref, lipsPref, bodyPref, makePref.
+
+
+!!This is for clothing type preference
+!! If you notice how rare it is to get a preference that is intentional
+!!0 - none, 1 - cheap, 2 - average, 3 - formal, 4 - naughty.
+randchan = rand(0, 4)
+
+if randchan = 4:
+	if finance = 0:
+		randchan = rand(0,1)
+		if randchan = 0:
+			clotTypePref = 1
+		elseif randchan = 1:
+			clotTypePref = 2
+		end
+		randchan = rand(0, 1)
+		if randchan = 1 and izvrat = 1:
+			clotTypePref = 4
+		end
+	elseif finance = 1:
+		randchan = rand(0,2)
+		if randchan = 0:
+			clotTypePref = 1
+		elseif randchan = 1:
+			clotTypePref = 2
+		elseif randchan = 2:
+			clotTypePref = 3
+		end
+		randchan = rand(0, 2)
+		if randchan = 2 and izvrat = 1:
+			clotTypePref = 4
+		end
+	elseif finance = 2:
+		randchan = rand(0,2)
+		if randchan = 0:
+			clotTypePref = 2
+		elseif randchan = 1:
+			clotTypePref = 3
+		end
+		randchan = rand(0, 1)
+		if randchan = 1 and izvrat = 1:
+			clotTypePref = 4
+		end
+	end
+else
+	clotTypePref = 0
+end
+
+
+!!This is for the quality of clothing
+!! 0 - no preference, 1 - 1 to 4 units cheap to average (Locked if formal chosen), 2 - 5 to 7 units expensive to ballroom quality (Locked if naughty is chosen)
+randchan = rand(0, 5)
+if randchan = 5:
+	if finance = 0:
+		clotQualPref = 1
+	elseif finance = 1:
+		randchan = rand(0, 1)
+		if randchan = 0:
+			clotQualPref = 1
+		elseif randchan = 1:
+			clotQualPref = 2
+		end
+		randchan = rand(0, 1)
+		if randchan = 0 and clotTypePref ! 3:
+			clotQualPref = 1
+		elseif randchan = 1 and clotTypePref ! 1:
+			clotQualPref = 2
+		end
+	elseif finance = 2:
+		randchan = rand(0, 2)
+		if randchan = 2 and clotTypePref ! 1:
+			clotQualPref = 2
+		end
+	end
+else
+	clotQualPref = 0
+end
+
+!!This is for the clothing top cut for the clothing
+
+
+!!Need to add modifiers based on breast size, where larger breasts end up forcing the player to show more cleavage than those with smaller breasts.
+!! 0 - no preference, 1 - 1 to 2 or neckline to moderate, 2 - 3 to 4 or heavy to severe, 3 - 5 to 7 or buldging to outpouring 
+!! The breast size must be adjusted either when the action is being calculeted or we can base it on their ideal breast size :titBoy + 0/3 depending on the players breast size
+
+
+!!0 - no preference, 1 - 1 neckline , 2 - 2 or moderate, 3 - 3 to 4 or heavy to severe
+!! It doesn''t matter if your poor or rich, everyone loves tits.
+
+randchan = rand(0, 1)
+if randchan = 1 and izvrat = 1:
+	slutConstant = 1
+else
+	slutConstant = 0
+end
+
+
+randchan = rand(0, 2)
+if randchan = 2:
+	randchan = rand(0, 2)
+	if randchan = 0 and clotTypePref ! 4:
+		clotTopPref = 1 + slutConstant
+	elseif randchan = 1 and clotTypePref ! 4:
+		clotTopPref = 2 + slutConstant
+	elseif randchan = 2 and clotTypePref ! 3:
+		clotTopPref = 3
+	end
+else
+	clotTopPref = 0
+end
+
+
+!! This is for pants and skirt shortness and will be grouped together as such.
+!! 0 - no preference, 1 - 1 to 2 units or ankle to calf length, 2 - 3 to 4 units or knee to miniskirt, 3 - 5 units to 6 or slut to hoe.
+
+randchan = rand(0, 2)
+if randchan = 2:
+	randchan = rand(0, 2)
+	if randchan = 0 and clotTypePref ! 4:
+		bottShorPref = 1 
+	elseif randchan = 1:
+		bottShorPref = 2 
+	elseif randchan = 2:
+		bottShorPref = 3
+	end
+	randchan = rand(0, 1)
+	if slutConstant = 1 and randchan = 1 and clotTypePref = 4:
+		bottShorPref = 3
+	end
+else
+	bottShorPref = 0
+end
+
+!! This is for clothes thinness.
+!! 0 - no preference, 1 - 0 to 2 (Conservative), 2 - 3 to 4 (Moderate), 3 - 4 to 6 (really thin)
+!! I see the moderate to really thin overlapping. Its intentional.
+
+randchan = rand(0, 2)
+if randchan = 2:
+	randchan = rand(0, 2)
+	if randchan = 0:
+		clotThinPref = 1 + slutConstant
+	elseif randchan = 1:
+		clotThinPref = 2 + slutConstant
+	elseif randchan = 2 and clotTypePref ! 3:
+		clotThinPref = 3
+	end
+else
+clotThinPref = 0
+end
+
+
+!!This is to find out if they want you to wear bimbo clothing
+!! 0 - no preference, 1 - Prefers bimbo clothing.
+randchan = rand(0, 2)
+if randchan = 2 and clotTypePref ! 3:
+	bimbPref = 1
+else
+	bimbPref = 0
+end
+
+!!This is to find out if they want you to wear piercings.
+!! 0 - no preference, 1 - 0 to 2 piercings, 2 - 3 to 5 piercings, 3 - 6 or more piercings.
+
+randchan = rand(0, 3)
+if randchan = 3:
+	randchan = rand(0, 2)
+	if randchan = 0:
+		pierPref = 1 + slutConstant
+	elseif randchan = 1:
+		pierPref = 2 + slutConstant
+	elseif randchan = 2:
+		pierPref = 3
+	end
+else
+	pierPref = 0
+end
+
+!!This is to find out if they want you to have tattoos.
+!! 0 - no preference, 1 - 0 to 2 tattoos, 2 - 3 to 5 tattoos, 3 - 6 or more tattoos.
+
+randchan = rand(0, 3)
+if randchan = 3:
+	randchan = rand(0, 2)
+	if randchan = 0:
+		tattPref = 1
+	elseif randchan = 1:
+		tattPref = 2
+	elseif randchan = 2:
+		tattPref = 3
+	end
+else
+	tattPref = 0
+end
+
+!!This is to find out how big they want your lips.
+!! 0 - no preference, 1 - 2 to 3 units (average) , 2 - 4 units (THIC lips)
+
+randchan = rand(0, 2)
+if randchan = 2:
+	randchan = rand(0, 2)
+	if randchan = 0:
+		lipsPref = 1 + slutConstant
+	elseif randchan = 1:
+		lipsPref = 2 + slutConstant
+	elseif randchan = 2:
+		lipsPref = 3
+	end
+else
+	lipsPref = 0
+end
+
+!!This is to find out how big they want YOU.
+!! 0 - no preference, 1 - 1 to 3 units (Skinny) , 2 - 3 to 6 units (Average), 3 - 6 + units (THIC)
+!! Notice how this one overlaps. I believe that it should because changing ones weight is very hard.
+
+
+randchan = rand(0, 3)
+if randchan = 3:
+	randchan = rand(0, 2)
+	if randchan = 0:
+		bodyPref = 1 
+	elseif randchan = 1:
+		bodyPref = 2 
+	elseif randchan = 2:
+		bodyPref = 3
+	end
+else
+	bodyPref = 0
+end
+
+!!This is to find out how much makeup they want you to wear.
+!! 0 - no preference, 1 - 1 (light makeup) , 2 - 2 (moderate makeup), 3 - 3(heavy makeup)
+!! Plan to make a way for you to set what you makeup you want to wear at your bedside and giving into his wishes would automatically change the automated setting.
+
+randchan = rand(0, 1)
+if randchan = 1:
+	randchan = rand(0, 2)
+	if randchan = 0:
+		makePref = 1 + slutConstant 
+	elseif randchan = 1:
+		makePref = 2 + slutConstant
+	elseif randchan = 2 and clotTypePref ! 3:
+		makePref = 3 
+	end
+else
+	makePref = 0
+end
 
 --- boy ---------------------------------
 
