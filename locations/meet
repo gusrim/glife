@@ -1,4 +1,5 @@
 # meet
+
 if $ARGS[0] = 'start':
 	minut += 15
 	dayA += 1
@@ -30,6 +31,62 @@ if $ARGS[0] = 'start':
 	izvrat = izvratA
 	husb_birth_year = year - boyage
 	husbAge = boyage
+	
+	!!new preferences
+	
+	!!This is for clothing type preference
+	!!0 - none, 1 - cheap, 2 - average, 3 - formal, 4 - naughty.
+	clotTypePref = clotTypePrefA
+	
+	!!This is for the quality of clothing
+	!! 0 - no preference, 1 - 1 to 4 units cheap to average (Locked if formal chosen), 2 - 5 to 7 units expensive to ballroom quality (Locked if naughty is chosen)
+	clotQualPref = clotQualPrefA
+	
+	!!Need to add modifiers based on breast size, where larger breasts end up forcing the player to show more cleavage than those with smaller breasts.
+	!! 0 - no preference, 1 - 1 to 2 or neckline to moderate, 2 - 3 to 4 or heavy to severe, 3 - 5 to 7 or buldging to outpouring 
+	!! The breast size must be adjusted either when the action is being calculeted or we can base it on their ideal breast size :titBoy + 0/3 depending on the players breast size
+	
+	!! How much they want to see your chest USE THIS FOR NOW
+	!! 0 - no preference, 1 - 1 neckline , 2 - 2 or moderate, 3 - 3 to 4 or heavy to severe
+	!! It doesn''t matter if your poor or rich, everyone loves tits.
+	clotTopPref = clotTopPrefA
+	
+	!! This is for pants and skirt shortness and will be grouped together as such.
+	!! 0 - no preference, 1 - 1 to 2 units or ankle to calf length, 2 - 3 to 4 units or knee to miniskirt, 3 - 5 units to 6 or slut to hoe.
+	bottShorPref = bottShorPrefA
+	
+	!! This is for clothes thinness.
+	!! 0 - no preference, 1 - 0 to 2 (Conservative), 2 - 3 to 4 (Moderate), 3 - 4 to 6 (really thin)
+	!! I see the moderate to really thin overlapping. Its intentional.
+	clotThinPref = clotThinPrefA
+	
+	!!This is to find out if they want you to wear bimbo clothing
+	!! 0 - no preference, 1 - Prefers bimbo clothing.
+	bimbPref = bimbPrefA
+	
+	!!This is to find out if they want you to wear piercings.
+	!! 0 - no preference, 1 - 0 to 2 piercings, 2 - 3 to 5 piercings, 3 - 6 or more piercings.	
+	pierPref = pierPrefA
+	
+	!!This is to find out if they want you to have tattoos.
+	!! 0 - no preference, 1 - 0 to 2 tattoos, 2 - 3 to 5 tattoos, 3 - 6 or more tattoos.
+	tattPref = tattPrefA
+	
+	!!This is to find out how big they want your lips.
+	!! 0 - no preference, 1 - 2 to 3 units (average) , 2 - 4 units (THIC lips)
+	lipsPref = lipsPrefA
+	
+	!!This is to find out how big they want YOU.
+	!! 0 - no preference, 1 - 1 to 3 units (Skinny) , 2 - 3 to 6 units (Average), 3 - 6 + units (THIC)
+	!! Notice how this one overlaps. I believe that it should because changing ones weight is very hard.
+	bodyPref = bodyPrefA
+	
+	!!This is to find out how much makeup they want you to wear.
+	!! 0 - no preference, 1 - 1 (light makeup) , 2 - 2 (moderate makeup), 3 - 3(heavy makeup)
+	makePref = makePrefA
+	
+	
+	
 
 	if love = 3:
 		'<<$boydescA>> has hired a wedding limousine and it''s outside waiting for you. This is it, you are getting married today.'
@@ -106,13 +163,13 @@ if $ARGS[0] = 'start':
 		exit
 	end
 
-	if skinvan < 20:
+	if pcs_skin < 20:
 		bfa -= 2 & $meetskin = 'looking at his feet'
-	elseif skinvan < 40:
+	elseif pcs_skin < 40:
 		bfa -= 1 & $meetskin = 'giving you a quick glance'
-	elseif skinvan < 60:
+	elseif pcs_skin < 60:
 		$meetskin = 'looking at you'
-	elseif skinvan < 80:
+	elseif pcs_skin < 80:
 		bfa += 1 & $meetskin = 'smiling at you'
 	else
 		bfa += 2 & $meetskin = 'smiling at you'
@@ -130,9 +187,9 @@ if $ARGS[0] = 'start':
 	end
 
 	if mop = 0:bfA -= 1 & $meetmop = 'Um, your makeup is running.'
-	if hapri = 1 and curly > 0:bfA += 2 & $meethair = 'Your hair looks very beautiful.'
-	if hapri = 1 and curly = 0:bfA += 1 & $meethair = 'You have pretty hair today.'
-	if hapri = 0:bfA -= 1 & $meethair = 'You look like you were in a hurry.'
+	if pcs_hairbsh = 1 and curly > 0:bfA += 2 & $meethair = 'Your hair looks very beautiful.'
+	if pcs_hairbsh = 1 and curly = 0:bfA += 1 & $meethair = 'You have pretty hair today.'
+	if pcs_hairbsh = 0:bfA -= 1 & $meethair = 'You look like you were in a hurry.'
 	if harakBoyA = 0:$meet = '"Hello darling, I am glad to see you, <<$meetmop>> <<$meethair>>"'
 	if harakBoyA = 1:$meet = '"Hello <<$pcs_nickname>>, I am glad to see you, <<$meetmop>> <<$meethair>>"'
 	if harakBoyA = 2:$meet = '"Hi <<$pcs_nickname>>! Glad to see you, <<$meetmop>> <<$meethair>>"'
@@ -179,11 +236,11 @@ if $ARGS[0] = 'start':
 		end
 	end
 
-	if lip = 0:$meetlip = 'thin lips'
-	if lip = 1:$meetlip = 'soft lips'
-	if lip = 2:$meetlip = 'plump lips'
-	if lip = 3:$meetlip = 'large, plump lips'
-	if lip = 4:$meetlip = 'thick and huge lips'
+	if pcs_lip = 0:$meetlip = 'thin lips'
+	if pcs_lip = 1:$meetlip = 'soft lips'
+	if pcs_lip = 2:$meetlip = 'plump lips'
+	if pcs_lip = 3:$meetlip = 'large, plump lips'
+	if pcs_lip = 4:$meetlip = 'thick and huge lips'
 
 	'At the entrance <<$meetskin>> stands <<$boydescA>>. He comes over to you and says. <<$meet>> <<$meetcol>>'
 
@@ -286,7 +343,7 @@ if $ARGS[0] = 'start':
 		act 'Kiss on the lips':
 			cla
 
-			if cumlip = 0:
+			if spdirtyb = 0:
 				'<center><img src="images/etogame/kiss1.jpg"></center>'
 
 				if harakBoyA = 0:'You move in for a kiss and <<$boydescA>> a little embarrassed kisses you back.'

@@ -1,13 +1,14 @@
 # cikl
+
+day += 1
+week += 1
+hour -= 24
+
 !!moving the porn schedule ahead a day, flaffing for missed shootings, if it even matters
 if (film > 0 or pornstack = 1) and pfilmNO = 0 and pfilmSTOP = 0:
 	if pfilmday[0] > 0:gs 'pornschedule', 'pornmiss'
 	gs 'pornschedule', 'schedule'
 end
-
-day += 1
-week += 1
-hour -= 24
 
 age = year - ((pcs_dob - (pcs_dob mod 10000)) / 10000)
 if ((month * 100) + day) <= pcs_dob mod 10000: age -= 1
@@ -55,7 +56,9 @@ if i <= 147:jump 'loopprice'
 
 if coatH[defaultcoat] <= 0: defaultcoat = 0
 
-!!SECTION: Bimbo (daily status update checks)
+!!------------------------------------------------------------------------------------------------------------
+!!	Bimbo
+!!------------------------------------------------------------------------------------------------------------
 !!A Succubus cannot be a Bimbo
 if succubusflag = 1 and bimbo > 0: bimbo -= succublvl * 2
 
@@ -138,7 +141,7 @@ if succubusflag = 1:
 		if pcs_sprt < 250: pcs_sprt += 1 & sucexcess -= 12
 		if pcs_intel < 250: pcs_intel += 1 & sucexcess -= 12
 		if succhungry > (0 - 2 - succublvl): succhungry -= 1 & sucexcess -= 10
-		if skinvan < 100: skinvan += 1 & sucexcess -= 2
+		if pcs_skin < 100: pcs_skin += 1 & sucexcess -= 2
 !!		This is to drive the Succubus vidage into the max appearance range
 		if vidageday < 720 and vidage >= 28: vidageday += 2 & sucexcess -= 2
 		if vidageday > 0 and vidage <= 20: vidageday -= 2 & sucexcess -= 2
@@ -188,7 +191,7 @@ if bimbo < 0: bimbo = 0
 snapshotX = (stat['vaginal'] + stat['bj'] + stat['anal'])
 snapshotY = bimbo
 
-!!***************
+!!------------------------------------------------------------------------------------------------------------
 
 if defcurly = 0 and curly > 0:curly -= 1
 if defcurly = 1:
@@ -205,6 +208,23 @@ sweat += 2
 if pcs_tan > 0:pcs_tan -= 1
 
 if prezikmsg = 2: prezikmsg = 3
+
+!!------------------------------------------------------------------------------------------------------------
+!!   Birth control
+!!------------------------------------------------------------------------------------------------------------
+!!   Birth Control Management variables
+!!
+!!   tabletkimm      : The modifier for the current mood of the MC.
+!!   tabletkiap      : Autopill factor affecting the liklihood you took your pill as you should have
+!!   tabletkipt      : Pill Dicipline Take increase
+!!   tabletkipi      : Pill Dicipline Dont take increase
+!!   tabletkicpd      : Current MC Pill Dicipline
+!!   tabletkichday   : Current day that the Birth Control is being evaluated for
+!!   tabletkicheck   : If the birth control is automatically handled
+!!   tabletki      : How many Birth Control Pills there are
+!!   tabletkishot   : The flag for being on the Birth Control shot.
+!!   pillcon         : The number for the current birth control chemical level.
+
 
 if tabletkishot <= 0: pillcon -= 1000
 if pillcon < 0:	pillcon = 0
@@ -269,9 +289,9 @@ if tabletkicheck = 1 and tabletkichday < daystart:
 		tabletkimm = tabletkimm / 2
 	end
 	tabletkiap = tabletkimm
-	tabletkiap += (pcs_intel*4)+(will*2)+(age*3)
-	tabletkiap -= ((kid*30)+(abort*2)-(tabletkipd*((60-age)/10)))
-	temprand = rand(0,(200+(tabletkimm-((100-will)*3))))
+	tabletkiap += (pcs_intel * 4) + (pcs_sprt * 2) + (age * 3)
+	tabletkiap -= ((kid * 30) + (abort * 2) - (tabletkipd * ((60 - age) / 10)))
+	temprand = rand(0,(200 + (tabletkimm - ((100 - pcs_sprt) * 3))))
 	if temprand = 0:
 		tabletkioddp = 1
 	end
@@ -300,7 +320,7 @@ if tabletkicheck = 1 and tabletkichday < daystart:
 			temprand = rand(0,1)
 			if temprand = 0:
 				tabletki -= 1
-				skinvan += 1
+				pcs_skin += 1
 				tabletkipt = -2
 				tabletkipi = 1
 			else
@@ -328,33 +348,39 @@ if tabletkicheck = 1 and tabletkichday < daystart:
 		else
 			'You take your birth control pill for the day.'
 			tabletki -= 1
-			skinvan += 1
+			pcs_skin += 1
 			if tabletkioddp = 0:
 				pillcon += ((pillcon+15000)/40)+1000
 				if pillcon > 40000: pillcon = 40000
 			else
 				if vitaminday ! daystart:
 					vitaminday = daystart
-					skinvan += 1
+					pcs_skin += 1
 				end
 			end
+			if rand(0,7) = 0 and tabletkiday >= (daystart - 1): tabletkipd += 1
 			tabletkiday = daystart
 			tabletkipt = 0
 			tabletkipi = 0
 		end
 	end		
+elseif tabletkicheck = 0
+	if tabletkiday >= (daystart - 1) and tabletkipt = 0 and rand(0,7) = 0: tabletkipt = 1
+	if pillcon > 0 and tabletkipi = 0 and rand(0,3) and (tabletkiday + 15) > daystart = 0: tabletkipi = -1
 end
+
+!!------------------------------------------------------------------------------------------------------------
 
 if lashair ! 1:
 	pcs_leghair += 1
-	lobok += 1
+	pcs_pubes += 1
 end
 
 if age < 18 and rand (0,2) = 0 and pcs_leghair > 0: pcs_leghair -= 1
 
 if suhbelo > 0:suhbelo2 = suhbelo & suhbelo = 0
 
-if fbreath = 1:fbreath = 0
+if pcs_breath = 1:pcs_breath = 0
 
 if cheatNoEat = 1 and dounspell = 1:fat += 15
 
@@ -404,9 +430,7 @@ if vagina > 10 and vshrink > 0:
 end
 
 lipkoef -= 1
-!!!!!!!!!!!!
-!!!jobs!!!
-!!!!!!!!!!!!
+
 if Enable_autotampon = 0 and isprok = 1:isprok = 0 & 'You threw away your used tampon.'
 if Enable_autotampon = 0 and isprokp = 1:isprokp = 0 & 'You threw away your used sanitary pad.'
 
@@ -435,6 +459,10 @@ elseif preg = 0:
 	KILLVAR 'pregTalkMom'
 	KILLVAR 'pregTalk'
 end
+
+!!------------------------------------------------------------------------------------------------------------
+!!	Arousal
+!!------------------------------------------------------------------------------------------------------------
 
 if StoryLine = 0 or altQS = 1:
 	if pcs_horny < 100:pcs_horny += vagina
@@ -495,13 +523,17 @@ end
 
 if pcs_horny < 0:pcs_horny = 0
 
+!!------------------------------------------------------------------------------------------------------------
+
 !counter for Dimka avoidance
 if dimaFilm = 1 and dimaRudeBlock = 0:
 	nodimkaK += 1
 	DimkaWarnedToday = 0
 end
 
-!!! Maruda Hair Mod
+!!------------------------------------------------------------------------------------------------------------
+!!	Maruda hair mod
+!!------------------------------------------------------------------------------------------------------------
 !!! Max. Hair length 600mm, or 60cm, which should be somewhere in the lower back area.
 !!! Hair grows 1mm each day, it takes 20 months (1 month = 30 days) to regrow the hair from 0.
 if pcs_hairlng < 601:pcs_hairlng += 1
@@ -518,7 +550,8 @@ if hscrunch > 0:
 
 	if hscrunchrand <= 8:hscrunch -= 1
 end
-!!! Maruda Hair Mod
+
+!!------------------------------------------------------------------------------------------------------------
 
 gs 'starenie'
 
@@ -531,6 +564,10 @@ elseif nark > 0:
 end
 
 if pregtime > 10:fat += 1
+
+!!------------------------------------------------------------------------------------------------------------
+!!	Pain
+!!------------------------------------------------------------------------------------------------------------
 
 if pain['head'] > 0:pain['head'] -= rand(1,3)
 if pain['hair'] > 0:pain['hair'] -= rand(1,3)
@@ -594,6 +631,7 @@ if shorthair = 1:
 	shorthairday += 1
 	if shorthairday >= 45:shorthairday = 0 & shorthair = 0
 end
+!!------------------------------------------------------------------------------------------------------------
 
 if KatjaOTN > 0:
 	if KatjaHorny > 0 and KatjaLust < 40:KatjaHorny -= rand(1, 3)
@@ -604,9 +642,9 @@ end
 
 if trenerepa > 20:trenerepa -= 1
 
-!!!!!!!!!!!!!!!
-!!!generation!!!
-!!!!!!!!!!!!!!!
+!!------------------------------------------------------------------------------------------------------------
+!!	Generation
+!!------------------------------------------------------------------------------------------------------------
 if NPCnum < 290:
 	NPCnow = NPCnum
 	NPCnum += rand(1, 3)
@@ -617,7 +655,8 @@ elseif NPCnum < 300:
 	gs 'npc'
 end
 
-!!!!!!!!!!!!!!!
+!!------------------------------------------------------------------------------------------------------------
+
 if kanikuli = 0:pcs_grades -= 1
 dmishaevent = 0
 
@@ -680,6 +719,10 @@ end
 petersexday = 0
 klismaday1 = 0
 
+!!------------------------------------------------------------------------------------------------------------
+!!	Banking
+!!------------------------------------------------------------------------------------------------------------
+
 !!MJ: Add some (daily) interest to the bank account.
 !!Not very realistic but wont make anyone too rich.
 
@@ -706,7 +749,10 @@ if bankAccount = 1:
 	end
 end
 
-!!payments
+!!------------------------------------------------------------------------------------------------------------
+!!	Payments
+!!------------------------------------------------------------------------------------------------------------
+
 if day = 25:
 	! -- meynold payment ---!
 	if mey_vika_qw >= 35 and mey_tamara_help_count >= 10 and mey_tamara_qw_end = 0:
@@ -816,6 +862,7 @@ if sdaday = day and sdamonth = month and housr = 0:
 	!msg 'Your tenants have moved out and your apartment is now vacant.'
 end
 
+!!------------------------------------------------------------------------------------------------------------
 
 
 if day > monthsEnd[month]:
@@ -928,7 +975,7 @@ if bcream_used >= 1:
 end
 if steroid_dose >= 1:
     if lashair < 1:
-        lobok += steroid_dose
+        pcs_pubes += steroid_dose
         pcs_leghair += steroid_dose
     end
     steroid_dose = 0
