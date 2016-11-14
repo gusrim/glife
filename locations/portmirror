@@ -8,9 +8,9 @@ gs 'stat'
 if daystart < 10 and StoryLine = 0:'In the mirror, you see a strange woman''s face looking back at you that exactly copies all your actions. You can hardly accept the idea that this is now you.'
 if daystart >= 10 and daystart < 30 and StoryLine = 0:'In the mirror you see a woman''s face to which you have become accustomed to. But sometimes, you get the feel that this is not your face.'
 *pl '<<$hair>>'
-*pl '<<$mop>>. <<$lip>>'
+*pl '<<$pcs_makeup>>. <<$lip>>'
 *pl '<<$skin>>'
-*pl '<<$vnesh>>'
+*pl '<<$pcs_apprnc>>'
 
 if curly > 0 and defcurly = 0: '<br>Your curly hair will last for another <<curly>> days.'
 if straight > 0 and defcurly = 1: '<br>Your straightened hair will last for another <<straight>> days.'
@@ -45,27 +45,27 @@ if pcs_hairbsh = 0 and AutoHapri = 1:
 end
 
 !! WD: Cheat Unused ~ 'AutoMakeup'
-if mop = 1 and kosmetica > 0 and AutoMakeup = 1:
-	mop = AutoMakeupType
-	if kosmetica < 3 and mop = 4:mop = 3
-	if kosmetica < 2 and mop = 3:mop = 2
-	if kosmetica < 1 and mop ! 1:
-		mop = 1
+if pcs_makeup = 1 and kosmetica > 0 and AutoMakeup = 1:
+	pcs_makeup = AutoMakeupType
+	if kosmetica < 3 and pcs_makeup = 4:pcs_makeup = 3
+	if kosmetica < 2 and pcs_makeup = 3:pcs_makeup = 2
+	if kosmetica < 1 and pcs_makeup ! 1:
+		pcs_makeup = 1
 		'You have no make-up left.'
 	else
-		if mop = 2:
+		if pcs_makeup = 2:
 			*pl $makeupLight
 			minut -= 3
 			kosmetica -= 1
 		end
 
-		if mop = 3:
+		if pcs_makeup = 3:
 			*pl $makeupNatural
 			minut -= 5
 			kosmetica -= 2
 		end
 
-		if mop = 4:
+		if pcs_makeup = 4:
 			*pl $makeupHeavy
 			minut -= 10
 			vidageday -= 1
@@ -75,7 +75,7 @@ if mop = 1 and kosmetica > 0 and AutoMakeup = 1:
 end
 
 ! WD: Cheat Unused ~ 'AutoLipBalm'
-if lipbalm > 0 and lipbalmstat <= 0 and AutoLipBalm = 1:
+if lipbalm > 0 and pcs_lipbalm <= 0 and AutoLipBalm = 1:
 	minut -= 10
 	lipbalm -= 1
 	lipkoef += rand(0, 1)
@@ -84,10 +84,10 @@ if lipbalm > 0 and lipbalmstat <= 0 and AutoLipBalm = 1:
 		pcs_lip += 1
 	end
 
-	lipbalmstat += 8
+	pcs_lipbalm += 8
 	*pl $applyLipbalm
 end
-if pcs_hairbsh = 0 or mop = (1 and kosmetica > 0) or (lipbalm > 0 and lipbalmstat <= 0):
+if pcs_hairbsh = 0 or pcs_makeup = (1 and kosmetica > 0) or (lipbalm > 0 and pcs_lipbalm <= 0):
 	act 'Do the works':
 		cla
 		if pcs_hairbsh = 0:
@@ -98,7 +98,7 @@ if pcs_hairbsh = 0 or mop = (1 and kosmetica > 0) or (lipbalm > 0 and lipbalmsta
 				*pl $brushHair
 			end
 		end
-		if mop = 1 and kosmetica > 0:
+		if pcs_makeup = 1 and kosmetica > 0:
 			*clr
 			'<center><img src="images/etogame/mop.jpg"></center>'
 			*nl
@@ -109,16 +109,16 @@ if pcs_hairbsh = 0 or mop = (1 and kosmetica > 0) or (lipbalm > 0 and lipbalmsta
 				'Without thinking, you instantly apply a sutle amount of makeup to your face.'
 				minut += 3
 				kosmetica -= 1
-				mop = 2
-				recmop = mop
+				pcs_makeup = 2
+				recmop = pcs_makeup
 				*pl $makeupLight
 			elseif makeupSetting = 2:
 				cla
 				'Without thinking, you instantly apply a moderate amount of makeup to your face.'
 				minut += 5
 				kosmetica -= 2
-				mop = 3
-				recmop = mop
+				pcs_makeup = 3
+				recmop = pcs_makeup
 				*pl $makeupNatural
 			elseif makeupSetting = 3:
 				cla
@@ -126,16 +126,16 @@ if pcs_hairbsh = 0 or mop = (1 and kosmetica > 0) or (lipbalm > 0 and lipbalmsta
 				minut += 10
 				kosmetica -= 3
 				vidageday -= 1
-				mop = 4
-				recmop = mop
+				pcs_makeup = 4
+				recmop = pcs_makeup
 				*pl $makeupHeavy
 			else
 				act 'Light make-up':
 					cla
 					minut += 3
 					kosmetica -= 1
-					mop = 2
-					recmop = mop
+					pcs_makeup = 2
+					recmop = pcs_makeup
 					*pl $makeupLight
 				end
 
@@ -144,8 +144,8 @@ if pcs_hairbsh = 0 or mop = (1 and kosmetica > 0) or (lipbalm > 0 and lipbalmsta
 						cla
 						minut += 5
 						kosmetica -= 2
-						mop = 3
-						recmop = mop
+						pcs_makeup = 3
+						recmop = pcs_makeup
 						*pl $makeupNatural
 					end
 				end
@@ -156,14 +156,14 @@ if pcs_hairbsh = 0 or mop = (1 and kosmetica > 0) or (lipbalm > 0 and lipbalmsta
 						minut += 10
 						kosmetica -= 3
 						vidageday -= 1
-						mop = 4
-						recmop = mop
+						pcs_makeup = 4
+						recmop = pcs_makeup
 						*pl $makeupHeavy
 					end
 				end
 			end
 		end
-		if lipbalm > 0 and lipbalmstat <= 0:
+		if lipbalm > 0 and pcs_lipbalm <= 0:
 			minut += 10
 			lipbalm -= 1
 			lipkoef += rand(0, 1)
@@ -171,7 +171,7 @@ if pcs_hairbsh = 0 or mop = (1 and kosmetica > 0) or (lipbalm > 0 and lipbalmsta
 				lipkoef = 0
 				lip += 1
 			end
-			lipbalmstat += 8
+			pcs_lipbalm += 8
 			*pl $applyLipbalm
 		end
 		
@@ -191,7 +191,7 @@ end
 
 !! Added the makeup setting.
 
-if mop = 1 and kosmetica > 0:
+if pcs_makeup = 1 and kosmetica > 0:
 	act 'Apply makeup':
 		cla
 		*clr
@@ -204,8 +204,8 @@ if mop = 1 and kosmetica > 0:
 			'Without thinking, you instantly apply a sutle amount of makeup to your face.'
 			minut += 3
 			kosmetica -= 1
-			mop = 2
-			recmop = mop
+			pcs_makeup = 2
+			recmop = pcs_makeup
 			*pl $makeupLight
 			act 'View results':gt 'portmirror'
 		elseif makeupSetting = 2:
@@ -213,8 +213,8 @@ if mop = 1 and kosmetica > 0:
 			'Without thinking, you instantly apply a moderate amount of makeup to your face.'
 			minut += 5
 			kosmetica -= 2
-			mop = 3
-			recmop = mop
+			pcs_makeup = 3
+			recmop = pcs_makeup
 			*pl $makeupNatural
 			act 'View results':gt 'portmirror'
 		elseif makeupSetting = 3:
@@ -223,8 +223,8 @@ if mop = 1 and kosmetica > 0:
 			minut += 10
 			kosmetica -= 3
 			vidageday -= 1
-			mop = 4
-			recmop = mop
+			pcs_makeup = 4
+			recmop = pcs_makeup
 			*pl $makeupHeavy
 			act 'View results':gt 'portmirror'
 		else
@@ -232,8 +232,8 @@ if mop = 1 and kosmetica > 0:
 				cla
 				minut += 3
 				kosmetica -= 1
-				mop = 2
-				recmop = mop
+				pcs_makeup = 2
+				recmop = pcs_makeup
 				*pl $makeupLight
 				act 'View results':gt 'portmirror'
 			end
@@ -243,8 +243,8 @@ if mop = 1 and kosmetica > 0:
 					cla
 					minut += 5
 					kosmetica -= 2
-					mop = 3
-					recmop = mop
+					pcs_makeup = 3
+					recmop = pcs_makeup
 					*pl $makeupNatural
 					act 'View results':gt 'portmirror'
 				end
@@ -256,8 +256,8 @@ if mop = 1 and kosmetica > 0:
 					minut += 10
 					kosmetica -= 3
 					vidageday -= 1
-					mop = 4
-					recmop = mop
+					pcs_makeup = 4
+					recmop = pcs_makeup
 					*pl $makeupHeavy
 					act 'View results':gt 'portmirror'
 				end
@@ -266,7 +266,7 @@ if mop = 1 and kosmetica > 0:
 	end
 end
 
-if lipbalm > 0 and lipbalmstat <= 0:
+if lipbalm > 0 and pcs_lipbalm <= 0:
 	act 'Apply lip balm':
 		cla
 		minut += 10
@@ -277,7 +277,7 @@ if lipbalm > 0 and lipbalmstat <= 0:
 			pcs_lip += 1
 		end
 
-		lipbalmstat += 8
+		pcs_lipbalm += 8
 		*pl $applyLipbalm
 		act 'View results':gt 'portmirror'
 	end
