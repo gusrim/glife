@@ -34,7 +34,7 @@ if $ARGS[0] = '':
 		if StoryLine = 1 and SchoolAtestat = 0:'The club and you see a few <a href="exec:gt ''SgrupDisco''">of the people you know</a>.'
 		if soniaslut < 5:soniaslut += 1
 
-		if grupTipe[25] ! -1 and StoryLine = 1 and BeInSchool > 0 and soniaslut >= 5 and hour < 23:
+		if grupTipe[25] = 3 and StoryLine = 1 and BeInSchool > 0 and soniaslut >= 5 and hour < 23:
 			'You notice Sonia from your class. She is talking to Victor about something.'
 
 			act 'View Sonya':gt 'soniaDisco'
@@ -153,9 +153,9 @@ if $ARGS[0] = '':
 				if pcs_hairbsh = 1:verodance += 1
 				if PCloSkirt > 2 or PCloPants > 4:verodance += 1
 				if $clothingworntype = 'expensive':verodance += 2
-				if pcs_makeup = 2:verodance += 1
-				if pcs_makeup = 3:verodance += 2
-				if pcs_makeup = 4:verodance += 3
+				if mop = 2:verodance += 1
+				if mop = 3:verodance += 2
+				if mop = 4:verodance += 3
 
 				verodance += alko
 				verodance += 5
@@ -361,10 +361,12 @@ if $ARGS[0] = 'dance_vrp':
 		if alko > 0: *clr &'<center><img src="images/etogame/club_dance10.jpg"></center>'
 
 		if DPgrup = 1:
+			$Bstat_usedname[npclastcalledn] = $Bstat_nickname[npclastcalledn]
+			$boydesc = $Bstat_nickname[npclastcalledn]
 			if DPtipe = 1:
-				'The guy told you during the dance "My name is <<$bname>>. What''s your name?" You answered "<<$pcs_nickname>>." Once the song ends, the guy asks you to sit with him and chat.'
+				'The guy told you during the dance "My name is <<$boydesc>>. What''s your name?" You answered "<<$pcs_nickname>>." Once the song ends, the guy asks you to sit with him and chat.'
 			elseif DPtipe = 2:
-				'The guy told you during the dance "My name is <<$bname>>. What''s your name?" You answered "<<$pcs_nickname>>." During the whole dance the drunk guy humped your body and now his face flushed with excitement. He asks you to leave the club and go get some fresh air, socialize, outside.'
+				'The guy told you during the dance "My name is <<$boydesc>>. What''s your name?" You answered "<<$pcs_nickname>>." During the whole dance the drunk guy humped your body and now his face flushed with excitement. He asks you to leave the club and go get some fresh air, socialize, outside.'
 			end
 
 			act 'Go with a guy':gt 'EvBoyBuh'
@@ -386,7 +388,9 @@ if $ARGS[0] = 'dance_vrp':
 					cls
 					gs 'stat'
 					'<center><img src="images/etogame/dk_night.jpg"></center>'
-					'You went outside with the man. As you walked he put his arm around your waist. "My name is <<$bname>>. What''s your name?" You answered "<<$pcs_nickname>>." The man continued, "<<$pcs_nickname>>, I''m in town on a business trip. I am staying at a nearby hotel, I live in the city itself. There is virtually nothing to do in this town you know. Come back to my hotel with me and we can drink whiskey, while we sit and have a nice chat."'
+					$Bstat_usedname[npclastcalledn] = $Bstat_nickname[npclastcalledn]
+					$boydesc = $Bstat_nickname[npclastcalledn]
+					'You went outside with the man. As you walked he put his arm around your waist. "My name is <<$boydesc>>. What''s your name?" You answered "<<$pcs_nickname>>." The man continued, "<<$pcs_nickname>>, I''m in town on a business trip. I am staying at a nearby hotel, I live in the city itself. There is virtually nothing to do in this town you know. Come back to my hotel with me and we can drink whiskey, while we sit and have a nice chat."'
 
 					act 'Go to the hotel':gt 'EvOtelMan'
 
@@ -398,7 +402,9 @@ if $ARGS[0] = 'dance_vrp':
 					end
 				end
 			elseif DPtipe = 2:
-				'For the entire dance the drunk man molested you, when the dance ended. He whispered in your ear. "My name is <<$bname>>. What''s your name?" You answered "<<$pcs_nickname>>." The man continued, "<<$pcs_nickname>>, I''m not a local, I''m staying in a nearby hotel, let''s take a taxi and go to my room."'
+				$Bstat_usedname[npclastcalledn] = $Bstat_nickname[npclastcalledn]
+				$boydesc = $Bstat_nickname[npclastcalledn]
+				'For the entire dance the drunk man molested you, when the dance ended. He whispered in your ear. "My name is <<$boydesc>>. What''s your name?" You answered "<<$pcs_nickname>>." The man continued, "<<$pcs_nickname>>, I''m not a local, I''m staying in a nearby hotel, let''s take a taxi and go to my room."'
 
 				act 'Go to the hotel':gt 'EvOtelMan'
 			end
@@ -424,7 +430,8 @@ if $ARGS[0] = 'dance_partner':
 	!!the creation of a partner to dance
 	sozboyrand = rand(1, 300)
 	if sozboyrand > boynum:
-		gs 'BnameGen'
+		gs 'npcgeneratec', 0, 'Stranger', rand((age - 1),(age + 1))
+		gs 'npcpreservec', $npclastgenerated
 		DaPaTipeRand = rand(0, 100)
 
 		if DaPaTipeRand < 70:
@@ -476,6 +483,7 @@ if $ARGS[0] = 'dance_partner':
 				$din_disc_dance2 = 'Dancing next to you is a drunk man in a nice suit and expensive shoes.'
 			end
 		end
+		gs 'boystat', $npclastsaved
 		gs 'boymass'
 	elseif sozboyrand <= boynum:
 		gt 'gdkin', 'familiar'
