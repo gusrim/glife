@@ -1,0 +1,281 @@
+# preCS
+
+!!Background Options
+cls
+fcolor = rgb(0, 0, 0)
+bcolor = rgb(255, 255, 255)
+lcolor = rgb(106, 90, 205)
+
+!!******************** TG Start Background Options ******************************
+if $ARGS[0] = 'TGStart':
+!!	Nothing here for now
+
+	
+	if tgs_skipinto = 1:
+		gt 'preCUST', 'TGStart'
+	else
+		gt 'preTG', 'roomPRE'
+	end
+end
+
+!!******************** SG Start Background Options ******************************
+if $ARGS[0] = 'SGStart':
+
+	StoryLine = 1
+
+	month = 8
+!!	Last friday in August 2016
+	$month = 'August'
+	day = 26
+	week = 5
+	daystart_start = 236
+	hour = 9
+	kanikuli = 5
+	$holyday = '<b>Summer holidays</b>'
+
+	if player_avatar = 0:
+		birthmonth = 4
+		birthday = 1
+		pcs_eyecol = 1
+		pcs_eyesize = 2
+		pcs_haircol = 1
+		pcs_lip = 2
+	end
+
+!!	Body
+	pcs_hgt = 170
+	fat = 60
+	salo = 60
+	dick = 0
+	pcs_energy = 60
+	water = 60
+	pcs_sleep = 70
+!!	Stats
+	speed = 10
+	pcs_stren = 10
+	strenbuf = 10
+	pcs_agil = 10
+	agilbuf = 10
+	pcs_vital = 10
+	vitalbuf = 10
+	pcs_intel = 10
+	pcs_sprt = 10
+	pcs_react = 10
+!!	pcs_chrsm = 10
+!!	pcs_prcptn = 10
+	pcs_magik = 0
+
+!!	pcs_makupskl = 25
+	pcs_pubes = 3
+	pcs_leghair -= 5
+	pcs_makeup = 1
+
+	money = 50
+	housrA = 0
+	npc_rel['A28'] = 50
+	npc_rel['A29'] = 50
+	npc_rel['A33'] = 50
+	npc_rel['A34'] = 50
+	pcs_grades = 75
+	prezikProver = 3
+	brothersawpirsF = 0
+
+!!	********************
+	$pcs_firstname = input("What is your first name? (Leave blank for default)")
+
+	if $pcs_firstname = '':$pcs_firstname = 'Svetlana'
+
+	$pcs_lastname = input("What is your last name? (Leave blank for default)")
+
+	if $pcs_lastname = '':$pcs_lastname = 'Lebedev'
+
+	$pcs_nickname = input("What is your nick name? (Note: If you chose a custom name, you have to enter something here!)")
+
+	if $pcs_nickname = '':$pcs_nickname = 'Sveta'
+
+	'Your name is <<$pcs_firstname>> <<$pcs_lastname>>, Friends and family sometimes call you <<$pcs_nickname>>.'
+
+	act 'Re-enter name/s': gt 'preCS', 'SGStart'
+	act 'Continue':
+		cls
+		'Please select how long you have left in school.'
+		act 'Begin at the last year of school, age 16 or 17':
+			birthyear = 1999
+			yearlefttemp = 1
+			gt 'preCS', 'SGStart2'
+		end
+		act 'Begin at the second-last year of school, age 15 or 16':
+			birthyear = 2000
+			yearlefttemp = 2
+			gt 'preCS', 'SGStart2'
+		end
+	end
+end
+if $ARGS[0] = 'SGStart2':
+	if birthday < 10 and birthmonth < 10:
+		$startdob = 'Your birthday: <B>0<<birthmonth>>/0<<birthday>>/<<birthyear>></B> (MM/DD/YYYY)'
+	elseif birthday < 10 and birthmonth >= 10:
+		$startdob = 'Your birthday: <B><<birthmonth>>/0<<birthday>>/<<birthyear>></B> (MM/DD/YYYY)'
+	elseif birthday >= 10 and birthmonth < 10:
+		$startdob = 'Your birthday: <B>0<<birthmonth>>/<<birthday>>/<<birthyear>></B> (MM/DD/YYYY)'
+	elseif birthday >= 10 and birthmonth >= 10:
+		$startdob = 'Your birthday: <B><<birthmonth>>/<<birthday>>/<<birthyear>></B> (MM/DD/YYYY)'
+	end
+
+	if player_avatar = 0:
+		'<a href="exec:gt ''begin'', ''birthday''"><<$startdob>></a>.'
+	else
+		'<<$startdob>>'
+	end
+	'You can begin your game at the end of the summer holiday, very close to starting the new school year. Alternatively, you can start at the beginning of the holiday.'
+	killvar '$startdob'
+	act 'Start at the end of August <B>(recommended for new players)</B>':
+!!		This is the default start
+		gt 'preCS', 'SGStart3'
+	end
+
+	act 'Start at the beginning of June':
+		month = 6
+		$month = 'June'
+		day = 1
+		week = 3
+		daystart_start = 152
+		kanicont = 92
+		gt 'preCS', 'SGStart3'
+	end
+end
+if $ARGS[0] = 'SGStart3':
+!!	This will be where the advanced social group options go.
+	'Select your personality/social group:'
+	act 'I am a complete bookworm!':
+		cls
+		pcs_stren = 1
+		pcs_vital = 5
+		pcs_agil = 1
+		fat = 10
+		salo = 180
+		pcs_intel = 50
+		pcs_tan = 0
+		blizoruk = 300
+		if glass < 1 : glass = 1
+		pcs_grades = 55
+!!		Maruda Hair Mod
+		if player_avatar ! 1: pcs_hairlng = 90
+		if player_avatar ! 1: pcs_haircol = 0
+		hpingrip = 10
+		hpingripw = 1
+!!		**********
+		pcs_nerd = 100
+		fantasybook = 5
+		grupTipe=0
+		alterstrtimg = 3
+		$startgrptemp = 'While you were growing up, you spent virtually all your free time at home, reading books. While you have gained a lot of knowledge from reading books, your sedentary lifestyle has left you quite frumpy. The long nights of trying to read in poor light have taken a toll on your eyesight as well, so you now need glasses to be able to read.'
+
+		gt 'preCUST', 'SGStart'
+	end
+
+	act 'I am the queen of the nerds!':
+		cls
+		pcs_stren = 5
+		pcs_vital = 5
+		pcs_agil = 5
+		fat = 10
+		salo = 10
+		pcs_intel = 40
+		pcs_tan = 30
+		npc_rel['A29'] = 100
+		npc_rel['A28'] = 100
+		money += 3000
+		blizoruk = 300
+		pcs_dom = 50
+		if glass < 1 : glass = 1
+		pcs_grades = 110
+!!		Maruda Hair Mod
+		if player_avatar ! 1: pcs_hairlng = 50
+		if player_avatar ! 1: pcs_haircol = 1
+		hpingrip = 10
+		hpingripw = 1
+!!		**********
+		pcs_nerd = 100
+		fantasybook = 5
+		grupTipe=1
+		alterstrtimg = 4
+		$startgrptemp = 'While you were growing up, you spent virtually all your free time at home, reading books and playing fantasy games with the other nerds. While you have gained a huge amount of knowledge from this, your lack of interest in exercising as a child has left your body a little frail. The long nights of trying to read in poor light have taken a toll on your eyesight as well, so you now need glasses to be able to read. However, by the usual nerd standards you are confident and dynamic, this has lead you to be the leader of your group of friends and more acceptable to the other kids.'
+
+		gt 'preCUST', 'SGStart'
+	end
+
+	act 'I am a good student':
+		cls
+		fat = 150
+		salo = 150
+		pcs_intel = 50
+		pcs_grades = 110
+!!		Maruda Hair Mod
+		if player_avatar ! 1: pcs_hairlng = 162
+		if player_avatar ! 1: pcs_haircol = 0
+		hpingrip = 10
+		hpingripw = 1
+!!		**********
+		npc_rel['A29'] = 100
+		money += 2000
+		pcs_tan = 30
+		grupTipe=1
+		alterstrtimg = 4
+		$startgrptemp = 'You were always a bit of a teacher''s pet, trying to absorb every bit of knowledge and doing everything you could to excel in school. While this attitude has gained you a lot of respect, it did not earn you a lot of friends, and you never had time for sports. You have excellent grades though, and your mother is very proud of you.'
+
+		gt 'preCUST', 'SGStart'
+	end
+
+	act 'I am an avid volleyball player!':
+		cls
+		pcs_stren = 25
+		pcs_vital = 25
+		speed = 25
+		pcs_agil = 25
+		fat = 20
+		salo = 20
+		sanpad = 0
+		tampon = 20
+		pcs_vball = 70
+		pcs_run = 40
+		gsAboVolley = 120
+		pcs_dom = 10
+!!		Maruda Hair Mod
+		if player_avatar ! 1: pcs_hairlng = 97
+		if player_avatar ! 1: pcs_haircol = 3
+		hscrunch = 10
+		hscrunchw = 0
+!!		**********
+		pcs_tan = 30
+		grupTipe=2
+		alterstrtimg = 5
+		$startgrptemp = 'Ever since you first tried volleyball, you have been in love with the sport. You spent a lot of your free time trying to get better at it, and it paid off: you''re actually quite good now! However, your obsession with volleyball has had some repercussions on your school performance; you''re a sub-par student, and you haven''t made many friends.'
+
+		gt 'preCUST', 'SGStart'
+	end
+
+	act 'I have a lot of friends!':
+		cls
+		pcs_stren = 10
+		pcs_vital = 10
+		pcs_agil = 20
+		fat = 30
+		salo = 30
+		pcs_dom = 50
+!!		Maruda Hair Mod
+		if player_avatar ! 1: pcs_hairlng = 19
+		if player_avatar ! 1: pcs_haircol = 2
+!!		**********
+		pcs_tan = 30
+		grupTipe=4
+		alterstrtimg = 2
+		$startgrptemp = 'You spent most of your childhood outdoors, playing with other girls and boys. As a result, you''re quite healthy and are pretty strong verbally, knowing how to get yourself out of trouble. However, you were never very interested in school or sports, and are only a sub-par student.'
+
+		gt 'preCUST', 'SGStart'
+	end
+
+end
+
+--- preCS ---------------------------------
+
