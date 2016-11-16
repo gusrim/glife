@@ -1,109 +1,58 @@
-# altPRE
+# preALT
 
-! Master Node (after select start options)
-! convergence and divergence of the start options
-! recommend to move here many primary variable definitions
-!  (sorry for my google english :) )
+cls
+fcolor = rgb(0, 0, 0)
+bcolor = rgb(255, 255, 255)
+lcolor = rgb(106, 90, 205)
 
-fairycurse = -1
-gs 'npcstatic'
-age = year - ((pcs_dob - (pcs_dob mod 10000)) / 10000)
-if ((month * 100) + day) < pcs_dob mod 10000: age -= 1
-
-daylastperiod = daystart
-temprand = rand(0,3)
-if temprand = 0:
-	cycle = 0
-	mesec = rand(1,120)
-	EggRH = 0
-	FocH = 0
-	unfertegg = 0
-	ferteggage = 0
-	Ovulate = 0
-	LutH = 0
-	daylastperiod -= (96-mesec)/24
-elseif temprand = 1:
-	cycle = 1
-	EggRH = rand(1,149)
-	FocH = EggRH
-	mesec = 0
-	unfertegg = 0
-	ferteggage = 0
-	Ovulate = 0
-	LutH = 0
-	daylastperiod -= 4+(FocH/24)
-	lastmens = daylastperiod
-elseif temprand = 2:
-	cycle = 2
-	unfertegg = 1
-	ferteggage = rand(0,44)
-	Ovulate = (rand(24,44) - ferteggage)
-	if Ovulate <= 0: Ovulate = 1
-	mesec = 0
-	EggRH = 0
-	FocH = 0
-	LutH = 0
-	daylastperiod -= 10+(ferteggage/24)
-	lastmens = daylastperiod
-elseif temprand = 3:
-	cycle = 3
-	LutH = rand(0,300)
-	ferteggage = 36 + LutH
-	mesec = 0
-	EggRH = 0
-	FocH = 0
-	unfertegg = 0
-	Ovulate = 0
-	daylastperiod -= 10+(ferteggage/24)
-	lastmens = daylastperiod
+!!School Girl Specific Story elements
+if $ARGS[0] = 'One':
+	'<center><img src="images/pic/alterstart1.jpg"></center>'
+	'You are <<$pcs_firstname>> "<<$pcs_nickname>>" <<$pcs_lastname>>'
+	'You were born in <<birthyear>>. You have a sister, Anya, who is 2 years older than you.'
+	'Your mother is Natasha <<$pcs_lastname>>. You don''t know much about your biological father... your mother never wants to talk about him, or why he left you and Anya with her.'
+	'Your mother found another man not too long after her and your biological father and her divorced, Vladimir Mikhailovich Scriabin. Together they had your little brother Kolka. Even though he''s not your real father, Vladimir always treated you and Anya as if they were his own children.'
+	act 'Continue': gt 'preALT', 'Two'
 end
-temp[1] = daystart-daylastperiod
-$cycreport_txt = 'It has been <<temp[1]>> days since you last had a period.'
-if menoage <= 0:
-	menoage = rand(40,50)
-	temprand = rand(0,10)
-	if temprand = 0:
-		menoage += rand(0,5)
-	elseif temprand < 4:
-		menoage += rand(3,10)
-	elseif temprand < 9:
-		menoage += rand(5,12)
+if $ARGS[0] = 'Two':
+	'<center><img src="images/pic/alterstart<<alterstrtimg>>.jpg"></center>'
+	'You had a pleasant, undisturbed childhood when you were young. Although you don''t remember much from kindergarten, you do remember going to elementary school when you were 7 years old.'
+	''
+	$startgrptemp
+	killvar 'alterstrtimg'
+	killvar '$startgrptemp'
+	act 'Continue': gt 'preALT', 'Three'
+end
+if $ARGS[0] = 'Three':
+	'<center><img src="images/pic/alterstart7.jpg"></center>'
+	if yearlefttemp = 1:
+		'Your 13th year began like it did for most other girls in your class: you occasionally got sick, you started to grow breasts, armpit and pubic hair. Your skin became very greasy and you have a pretty bad case of acne. You did your best in school, and managed to get very decent results. Only one more year of school left before you graduate!'
+		'But first: it''s time for a well-deserved holiday!'
 	else
-		menoage += rand(7,13)
+		'As with all girls, you reached the milestone of puberty two years ago. Like it does for most girls, it started for you when you were 13 years old. You had your first period, which sucked... but that was the start of your changes.'
+		*nl
+		'Your chest then felt strange and you discovered your breasts were growing! This excited you: how big will they be when you grow up? Hair also began to form on your armpits and groin, and at the same time you felt... things, intimate things. Over time you learned to appreciate these feelings, and how to manage your developing body. Your troublesome skin complexion remains an issue though.'
+		*nl
+		'When you finished 9th grade, you decided to continue with your secondary education. Two more years of school to go, but first: it''s time for the summer holiday!'
+	end
+	killvar 'yearlefttemp'
+	if MagikDostup = 1:
+		showstat 1
+		showobjs 1
+		if oldobjmenu = 0:
+			gs 'obj_din', 'new'
+		else
+			gs 'obj_din', 'old'
+		end
+		act 'Begin': gt 'bedrPar'
+	else
+		act 'Continue': gt 'preALT', 'Cursed Schoolgirl Start'
 	end
 end
-
-gs 'stat'
-
-pcs_horny = 0
-
-if $ARGS[0] = 'Original start':
-	cla
-	music_on = 0
-	opPRE = 1
-	showstat 1
-	showobjs 1
-	addobj 'Player'
-	gt 'roomPRE'
-end
-
-if $ARGS[0] = 'Original start, Skip intro':
-	music_on = 0
-	opPRE = 1
-	gs 'begin1'
-	gt 'street'
-end
-
-if $ARGS[0] = 'Alternate Start':
-	opPRE = 0
-	gt 'bedrPar'
-end
-
 if $ARGS[0] = 'Cursed Schoolgirl Start':
-	opPRE = 0
 	'<center><img src="images/pic/gadukino.jpg"></center>'
 	'You are on summer holiday with your parents and have been stuck here weeks. Good thing this evening you are finally going home, there is nothing to do here but watch animals graze.'
-    
+   
     act 'Take a walk':
         *clr
         cla
@@ -144,7 +93,7 @@ if $ARGS[0] = 'Cursed Schoolgirl Start':
                                     cla
                                     '<center><img src="images/etogame/road.jpg"></center>'
                                     'Workers shift was over so that made sneaking out much easier. And you found a road! You hope you can make it back before your mother starts freaking out. As you start walking back you feel a sudden rush of heat and find yourself falling...'
-                                    act 'continue':gt 'altPre','Cursed Schoolgirl Start 2'
+                                    act 'Continue': gt 'preALT','Cursed Schoolgirl Start 2'
                                 end
                             end
                         end
@@ -153,7 +102,16 @@ if $ARGS[0] = 'Cursed Schoolgirl Start':
             end
         end
     end
-	act 'Skip intro':gt 'pavResidential'
+	act 'Skip intro':
+		showstat 1
+		showobjs 1
+		if oldobjmenu = 0:
+			gs 'obj_din', 'new'
+		else
+			gs 'obj_din', 'old'
+		end
+		gt 'pavResidential'
+	end
 end
 
 if $ARGS[0] = 'Cursed Schoolgirl Start 2':
@@ -180,9 +138,7 @@ if $ARGS[0] = 'Cursed Schoolgirl Start 2':
 		act 'So, the whole world is just an illusion?':
 			cla
 			*clr
-			minut += 5
 			clr
-			gs 'statPRE'
 			'<center><img src="images/picpre/karinpre.jpg"></center>'
 			'"So magic exists and is used by all these people and creatures, but the rest of us just don''t see it, or convince ourselves it didn''t happen?" You ask.'
 			'The girl nods. "Yes. You''re a quick study. Machines, apartments, television and the Internet, all this really does exist and is in the form in which people see it. But if I say, hurl a fireball, then people might see that I threw a grenade or shot from a flamethrower. The human mind can''t process magic, so it blocks it as a way to protect the person from going crazy."'
@@ -191,9 +147,7 @@ if $ARGS[0] = 'Cursed Schoolgirl Start 2':
 			act 'And who are you?':
 				cla
 				*clr
-				minut += 5
 				clr
-				gs 'statPRE'
 				'<center><img src="images/picpre/karinpre.jpg"></center>'
 				'"And who are you?" you ask.'
 				'The girl smiled. "Me? I''m Tatiana, a young mage with an keen interest in magical phenomenon. I specialize in the treatment of mutations, and magic relating to the body. I have little combat skill, so I rely on the services of Gustav to provide some muscle. He''s a Mutant, his mutation is due to magical exposure and it gives him unmatched physical strength and he is a great tracker."'
@@ -202,9 +156,7 @@ if $ARGS[0] = 'Cursed Schoolgirl Start 2':
 				act 'What do you want form me?':
 					cla
 					*clr
-					minut += 5
 					clr
-					gs 'statPRE'
 					'<center><img src="images/picpre/karinpre.jpg"></center>'
 					'"What do you want form me?" you ask.'
 					'"Hmm, well... the amulet obviously," Tatiana replies. "When I looked for you, I was hoping to get that object of power to study but the power transferred to you first. The amulet will now be pretty much useless."'
@@ -232,7 +184,16 @@ if $ARGS[0] = 'Cursed Schoolgirl Start 2':
 								*clr
 								'<center><img src="images/etogame/gorodok.jpg"></center>'
 								'You give Gustav directions to your house and half an hour later he drops you off in front of your home.'
-								act 'continue':gt 'pavResidential'
+								act 'Continue':
+									showstat 1
+									showobjs 1
+									if oldobjmenu = 0:
+										gs 'obj_din', 'new'
+									else
+										gs 'obj_din', 'old'
+									end
+									gt 'pavResidential'
+								end
 							end
 						end
 					end
@@ -241,5 +202,6 @@ if $ARGS[0] = 'Cursed Schoolgirl Start 2':
 		end
 	end
 end
---- altPRE ---------------------------------
+
+--- preALT ---------------------------------
 
