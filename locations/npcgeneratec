@@ -8,10 +8,28 @@ $npctempgn[0] = $ARGS[1]
 npctempgage = $ARGS[2]
 
 
-! {First we set the newly generated index number or overwrite the first blank number}
-npclastgeneratedn = arrsize('$Cstat_PersType')
-if npclastgeneratedn > 0: npclastgeneratedn = arrpos('$Cstat_PersType', '')
-if npclastgeneratedn < 0 or $Cstat_PersType[npclastgeneratedn] ! '': npclastgeneratedn = arrsize('$Cstat_PersType')
+!! {First we set the newly generated index number or overwrite the first blank number}
+!! {Checks to see if array 0 in the cleanup list is available for overwrite and makes the overwrite as that if so.}
+if mid($cemptyarray[0],1,1) = 'C':
+	$npclastgenerated = $cemptyarray[0]
+	killvar '$cemptyarray', 0
+else
+	:npcgencsanityloop
+	i = 0
+	$npclastgenerated = 'C' + '<<carraynumber>>'
+	$npctemparrc = 'C' + '<<(carraynumber)-(1)>>'
+	if $npc_persType[$npctemparrc] = '' and carraynumber > 0:
+		carraynumber -= 1
+		i = 1
+	elseif $npc_persType[$npclastgenerated] = '':
+		i = 0
+	else
+		carraynumber += 1
+		i = 1
+	end
+	if i = 1: jump 'npcgencsanityloop'
+end
+carraynumber += 1
 
 ! {Now we need a random birthday based on the rough age given.}
 npctempc1[1] = year - npctempgage
@@ -25,9 +43,9 @@ elseif ((npctempc1[1] mod 4 = 0) and (npctempc1[1] mod 100 ! 0)) or (npctempc1[1
 else
 	npctempc1[3] = rand(1,28)
 end
-Cstat_dob[npclastgeneratedn] = npctempc1[1] * 10000
-Cstat_dob[npclastgeneratedn] += (npctempc1[2] * 100)
-Cstat_dob[npclastgeneratedn] += npctempc1[3]
+npc_dob[$npclastgenerated] = npctempc1[1] * 10000
+npc_dob[$npclastgenerated] += (npctempc1[2] * 100)
+npc_dob[$npclastgenerated] += npctempc1[3]
 
 ! {Now, we set the variable for the stat randomization as well as calculate chance of virginity.}
 if npctempgage < 18:
@@ -39,14 +57,14 @@ else
 end
 ! {We flag virginity based on the results of the check. Overwrite it after generation if you want to be sure of status.}
 if npctempc2[1] >= 20:
-	$Cstat_firstpart[npclastgeneratedn] = 'U'
-	$Cstat_lastpart[npclastgeneratedn] = 'U'
-	$Cstat_kidpater[npclastgeneratedn] = 'N'
+	$npc_firstpart[$npclastgenerated] = 'U'
+	$npc_lastpart[$npclastgenerated] = 'U'
+	$npc_kidpater[$npclastgenerated] = 'N'
 else
-	$Cstat_firstpart[npclastgeneratedn] = 'V'
-	$Cstat_lastpart[npclastgeneratedn] = 'V'
-	$Cstat_kidpater[npclastgeneratedn] = 'N'
-	Cstat_sexskill[npclastgeneratedn] = 0
+	$npc_firstpart[$npclastgenerated] = 'V'
+	$npc_lastpart[$npclastgenerated] = 'V'
+	$npc_kidpater[$npclastgenerated] = 'N'
+	npc_sexskill[$npclastgenerated] = 0
 end
 
 
@@ -55,168 +73,179 @@ if npctempgsex = 0:
 	! {Male}
 	gs 'npcrnamefile', 'rusMale'
 	gs 'npcgenext', 'dick'
-	Cstat_gender[npclastgeneratedn] = 1
-	Cstat_cyc[npclastgeneratedn] = -1
-	Cstat_fert[npclastgeneratedn] = -1
-	Cstat_spermpot[npclastgeneratedn] = 10000
-	$Cstat_thdick[npclastgeneratedn] = npctempgn[4]
-	Cstat_dick[npclastgeneratedn] = npctempgn[5]
-	$Cstat_notes[npclastgeneratedn] = 'A male.'
-	Cstat_bust[npclastgeneratedn] = 0
-	Cstat_nips[npclastgeneratedn] = 1
+	npc_gender[$npclastgenerated] = 1
+	npc_cyc[$npclastgenerated] = -1
+	npc_fert[$npclastgenerated] = -1
+	npc_spermpot[$npclastgenerated] = 10000
+	$npc_thdick[$npclastgenerated] = npctempgn[4]
+	npc_dick[$npclastgenerated] = npctempgn[5]
+	$npc_notes[$npclastgenerated] = 'A male.'
+	npc_bust[$npclastgenerated] = 0
+	npc_nips[$npclastgenerated] = 1
 	if npctempc2[1] >= 20:
-		Cstat_hymen[npclastgeneratedn] = -1
+		npc_hymen[$npclastgenerated] = -1
 	end
 elseif npctempgsex = 1:
 	! {Female}
 	gs 'npcrnamefile', 'rusFemale'
-	Cstat_gender[npclastgeneratedn] = 1
-	Cstat_cyc[npclastgeneratedn] = rand(0,29)
-	Cstat_fert[npclastgeneratedn] = 1
-	Cstat_spermpot[npclastgeneratedn] = -1
-	$Cstat_thdick[npclastgeneratedn] = 'clitoris'
-	Cstat_dick[npclastgeneratedn] = rand(0,1)
-	$Cstat_notes[npclastgeneratedn] = 'A female.'
-	Cstat_bust[npclastgeneratedn]= rand(1,12)
-	Cstat_nips[npclastgeneratedn] = rand(2,6)
+	npc_gender[$npclastgenerated] = 1
+	npc_cyc[$npclastgenerated] = rand(0,29)
+	npc_fert[$npclastgenerated] = 1
+	npc_spermpot[$npclastgenerated] = -1
+	$npc_thdick[$npclastgenerated] = 'clitoris'
+	npc_dick[$npclastgenerated] = rand(0,1)
+	$npc_notes[$npclastgenerated] = 'A female.'
+	npc_bust[$npclastgenerated]= rand(1,12)
+	npc_nips[$npclastgenerated] = rand(2,6)
 	if npctempc2[1] >= 20:
-		Cstat_hymen[npclastgeneratedn] = rand(4,6)
+		npc_hymen[$npclastgenerated] = rand(4,6)
 	else
-		Cstat_hymen[npclastgeneratedn] = 0
+		npc_hymen[$npclastgenerated] = 0
 	end
 elseif npctempgsex = 2:
 	! {HermFemale}
 	gs 'npcrnamefile', 'rusFemale'
 	gs 'npcgenext', 'dick'
-	Cstat_gender[npclastgeneratedn] = 1
-	Cstat_cyc[npclastgeneratedn] = rand(0,29)
-	Cstat_fert[npclastgeneratedn] = 1
-	Cstat_spermpot[npclastgeneratedn] = -1
-	$Cstat_thdick[npclastgeneratedn] = 'clitoris'
-	Cstat_dick[npclastgeneratedn] = npctempgn[5]
-	$Cstat_notes[npclastgeneratedn] = 'A female Hermaphrodite.'
-	Cstat_bust[npclastgeneratedn]= rand(1,10)
-	Cstat_nips[npclastgeneratedn] = rand(1,5)
+	npc_gender[$npclastgenerated] = 1
+	npc_cyc[$npclastgenerated] = rand(0,29)
+	npc_fert[$npclastgenerated] = 1
+	npc_spermpot[$npclastgenerated] = -1
+	$npc_thdick[$npclastgenerated] = 'clitoris'
+	npc_dick[$npclastgenerated] = npctempgn[5]
+	$npc_notes[$npclastgenerated] = 'A female Hermaphrodite.'
+	npc_bust[$npclastgenerated]= rand(1,10)
+	npc_nips[$npclastgenerated] = rand(1,5)
 	if npctempc2[1] >= 20:
-		Cstat_hymen[npclastgeneratedn] = rand(0,6)
-		if Cstat_hymen[npclastgeneratedn] < 4 and Cstat_hymen[npclastgeneratedn] > 0: Cstat_hymen[npclastgeneratedn] = 4
+		npc_hymen[$npclastgenerated] = rand(0,6)
+		if npc_hymen[$npclastgenerated] < 4 and npc_hymen[$npclastgenerated] > 0: npc_hymen[$npclastgenerated] = 4
 	else
-		Cstat_hymen[npclastgeneratedn] = 0
+		npc_hymen[$npclastgenerated] = 0
 	end
 else
 	! {HermMale}
 	gs 'npcrnamefile', 'rusMale'
 	gs 'npcgenext', 'dick'
-	Cstat_gender[npclastgeneratedn] = 0
-	Cstat_cyc[npclastgeneratedn] = -1
-	Cstat_fert[npclastgeneratedn] = -1
-	Cstat_spermpot[npclastgeneratedn] = 10000
-	$Cstat_thdick[npclastgeneratedn] = npctempgn[4]
-	Cstat_dick[npclastgeneratedn] = npctempgn[5]
-	$Cstat_notes[npclastgeneratedn] = 'A male Hermaphrodite.'
-	Cstat_bust[npclastgeneratedn]= rand(0,1)
-	Cstat_nips[npclastgeneratedn] = rand(1,3)
+	npc_gender[$npclastgenerated] = 0
+	npc_cyc[$npclastgenerated] = -1
+	npc_fert[$npclastgenerated] = -1
+	npc_spermpot[$npclastgenerated] = 10000
+	$npc_thdick[$npclastgenerated] = npctempgn[4]
+	npc_dick[$npclastgenerated] = npctempgn[5]
+	$npc_notes[$npclastgenerated] = 'A male Hermaphrodite.'
+	npc_bust[$npclastgenerated]= rand(0,1)
+	npc_nips[$npclastgenerated] = rand(1,3)
 	if npctempc2[1] >= 20:
-		Cstat_hymen[npclastgeneratedn] = rand(0,6)
-		if Cstat_hymen[npclastgeneratedn] < 4 and Cstat_hymen[npclastgeneratedn] > 0: Cstat_hymen[npclastgeneratedn] = 4
+		npc_hymen[$npclastgenerated] = rand(0,6)
+		if npc_hymen[$npclastgenerated] < 4 and npc_hymen[$npclastgenerated] > 0: npc_hymen[$npclastgenerated] = 4
 	else
-		Cstat_hymen[npclastgeneratedn] = 0
+		npc_hymen[$npclastgenerated] = 0
 	end
 end
 
 ! {Then we set the names, and the stat high ends as determined earlier.}
 gs 'npcrnamefile', 'rusSur'
-$Cstat_firstname[npclastgeneratedn] = $npctempgn[1]
-$Cstat_nickname[npclastgeneratedn] = $npctempgn[2]
-$Cstat_lastname[npclastgeneratedn] = $npctempgn[3]
-$Cstat_usedname[npclastgeneratedn] = $npctempgn[0]
-Cstat_vit[npclastgeneratedn] = rand(1,npctempc2)
-Cstat_str[npclastgeneratedn] = rand(1,npctempc2)
-Cstat_int[npclastgeneratedn] = rand(1,npctempc2)
-Cstat_agil[npclastgeneratedn] = rand(1,npctempc2)
-Cstat_spirit[npclastgeneratedn] = rand(1,npctempc2)
+$npc_firstname[$npclastgenerated] = $npctempgn[1]
+$npc_nickname[$npclastgenerated] = $npctempgn[2]
+$npc_lastname[$npclastgenerated] = $npctempgn[3]
+$npc_usedname[$npclastgenerated] = $npctempgn[0]
+npc_vit[$npclastgenerated] = rand(1,npctempc2)
+npc_str[$npclastgenerated] = rand(1,npctempc2)
+npc_int[$npclastgenerated] = rand(1,npctempc2)
+npc_agil[$npclastgenerated] = rand(1,npctempc2)
+npc_spirit[$npclastgenerated] = rand(1,npctempc2)
 
 ! {Then we call out other stats}
-Cstat_mag[npclastgeneratedn] = 0
-Cstat_drunk[npclastgeneratedn] = 0
-Cstat_undies[npclastgeneratedn] = 0
-Cstat_vag[npclastgeneratedn] = 0
-Cstat_ass[npclastgeneratedn] = 0
+npc_mag[$npclastgenerated] = 0
+npc_drunk[$npclastgenerated] = 0
+npc_undies[$npclastgenerated] = 0
+npc_vag[$npclastgenerated] = 0
+npc_ass[$npclastgenerated] = 0
+
 ! {NPCs start with random horniness}
-Cstat_horny[npclastgeneratedn] = rand(0,60)
-Cstat_Pavrep[npclastgeneratedn] = 0
-Cstat_Godrep[npclastgeneratedn] = 0
+npc_horny[$npclastgenerated] = rand(0,60)
+npc_Pavrep[$npclastgenerated] = 0
+npc_Godrep[$npclastgenerated] = 0
+
 ! {Random attractiveness}
-Cstat_app[npclastgeneratedn] = rand(30,60)
-Cstat_lipstick[npclastgeneratedn] = 0
-Cstat_makeup[npclastgeneratedn] = 0
-Cstat_sweat[npclastgeneratedn] = 0
-Cstat_dye[npclastgeneratedn] = 0
-Cstat_hair[npclastgeneratedn] = 0
+npc_app[$npclastgenerated] = rand(30,60)
+npc_lipstick[$npclastgenerated] = 0
+npc_makeup[$npclastgenerated] = 0
+npc_sweat[$npclastgenerated] = 0
+npc_dye[$npclastgenerated] = 0
+npc_hair[$npclastgenerated] = 0
+
 ! {Random skin quality and body hair}
-Cstat_skin[npclastgeneratedn] = rand(30,70)
-Cstat_bodyhair[npclastgeneratedn] = rand(0,4)
-Cstat_breath[npclastgeneratedn] = 0
-Cstat_hipcurv[npclastgeneratedn]  = 0
-Cstat_hgt[npclastgeneratedn] = 0
-Cstat_fat[npclastgeneratedn] = 0
+npc_skin[$npclastgenerated] = rand(30,70)
+npc_bodyhair[$npclastgenerated] = rand(0,4)
+npc_breath[$npclastgenerated] = 0
+npc_hipcurv[$npclastgenerated]  = 0
+npc_hgt[$npclastgenerated] = 0
+npc_fat[$npclastgenerated] = 0
+
 ! {Random pubic hair}
-Cstat_pubes[npclastgeneratedn] = rand(0,1)
-Cstat_hairlng[npclastgeneratedn] = 0
-Cstat_haircol[npclastgeneratedn] = 0
-Cstat_haircurl[npclastgeneratedn] = 0
-Cstat_tan[npclastgeneratedn] = 0
-Cstat_lip[npclastgeneratedn] = 0
-Cstat_lashes[npclastgeneratedn] = 0
-Cstat_eyesize[npclastgeneratedn] = 0
-Cstat_eyecol[npclastgeneratedn] = 0
-Cstat_dom[npclastgeneratedn] = 0
-Cstat_sub[npclastgeneratedn] = 0
+npc_pubes[$npclastgenerated] = rand(0,1)
+npc_hairlng[$npclastgenerated] = 0
+npc_haircol[$npclastgenerated] = 0
+npc_haircurl[$npclastgenerated] = 0
+npc_tan[$npclastgenerated] = 0
+npc_lip[$npclastgenerated] = 0
+npc_lashes[$npclastgenerated] = 0
+npc_eyesize[$npclastgenerated] = 0
+npc_eyecol[$npclastgenerated] = 0
+npc_dom[$npclastgenerated] = 0
+npc_sub[$npclastgenerated] = 0
+
 ! {Random glasses, grades, and other skills, based on age established above.}
-Cstat_glasses[npclastgeneratedn] = rand(0,1)
-Cstat_grades[npclastgeneratedn] = rand(40,100)
-Cstat_run[npclastgeneratedn] = rand(0,(npctempc2 + 10))
-Cstat_vball[npclastgeneratedn] = rand(0,(npctempc2 + 10))
-Cstat_nerd[npclastgeneratedn] = rand(0,(npctempc2 + 10))
-Cstat_shoot[npclastgeneratedn] = rand(0,(npctempc2 + 10))
-Cstat_sew[npclastgeneratedn] = rand(0,(npctempc2 + 10))
-Cstat_serve[npclastgeneratedn] = rand(0,(npctempc2 + 10))
-Cstat_chess[npclastgeneratedn] = rand(0,(npctempc2 + 10))
-Cstat_dnc[npclastgeneratedn] = rand(0,(npctempc2 + 10))
-Cstat_erodnc[npclastgeneratedn] = rand(0,(npctempc2 + 10))
-Cstat_jab[npclastgeneratedn] = rand(0,(npctempc2 + 10))
-Cstat_punch[npclastgeneratedn] = rand(0,(npctempc2 + 10))
-Cstat_kick[npclastgeneratedn] = rand(0,(npctempc2 + 10))
-Cstat_def[npclastgeneratedn] = rand(0,(npctempc2 + 10))
-Cstat_sing[npclastgeneratedn] = rand(0,(npctempc2 + 10))
-Cstat_teach[npclastgeneratedn] = rand(0,(npctempc2 + 10))
+npc_glasses[$npclastgenerated] = rand(0,1)
+npc_grades[$npclastgenerated] = rand(40,100)
+npc_run[$npclastgenerated] = rand(0,(npctempc2 + 10))
+npc_vball[$npclastgenerated] = rand(0,(npctempc2 + 10))
+npc_nerd[$npclastgenerated] = rand(0,(npctempc2 + 10))
+npc_shoot[$npclastgenerated] = rand(0,(npctempc2 + 10))
+npc_sew[$npclastgenerated] = rand(0,(npctempc2 + 10))
+npc_serve[$npclastgenerated] = rand(0,(npctempc2 + 10))
+npc_chess[$npclastgenerated] = rand(0,(npctempc2 + 10))
+npc_dnc[$npclastgenerated] = rand(0,(npctempc2 + 10))
+npc_erodnc[$npclastgenerated] = rand(0,(npctempc2 + 10))
+npc_jab[$npclastgenerated] = rand(0,(npctempc2 + 10))
+npc_punch[$npclastgenerated] = rand(0,(npctempc2 + 10))
+npc_kick[$npclastgenerated] = rand(0,(npctempc2 + 10))
+npc_def[$npclastgenerated] = rand(0,(npctempc2 + 10))
+npc_sing[$npclastgenerated] = rand(0,(npctempc2 + 10))
+npc_teach[$npclastgenerated] = rand(0,(npctempc2 + 10))
+
 ! {Starting at 0 quest state and love for the character, and slightly disliked.}
-Cstat_Qstlvl[npclastgeneratedn]= 0
-Cstat_rel[npclastgeneratedn] = 40
-Cstat_love[npclastgeneratedn] = 0
+npc_Qstlvl[$npclastgenerated]= 0
+npc_rel[$npclastgenerated] = 40
+npc_love[$npclastgenerated] = 0
+
 ! {Start unemployed and unspecified location}
-Cstat_job[npclastgeneratedn] = 0
-Cstat_cloc[npclastgeneratedn] = 0
+npc_job[$npclastgenerated] = 0
+npc_cloc[$npclastgenerated] = 0
+
 ! {Unspecified dad and mom, and picture. We could have a stock group of pictures and have it pick based on certain attribute types, but...}
-$Cstat_dad[npclastgeneratedn] = 'U'
-$Cstat_mom[npclastgeneratedn] = 'U'
-$Cstat_pic[npclastgeneratedn] = 'xPICx'
+$npc_dad[$npclastgenerated] = 'U'
+$npc_mom[$npclastgenerated] = 'U'
+$npc_pic[$npclastgenerated] = 'xPICx'
+
 ! {STDs are not randomly given here. For characters with a STD, you need to gs npcgenext rstd. It will be expecting an npclastgeneratedn variable.}
-Cstat_herpes[npclastgeneratedn] = 0
-Cstat_syph[npclastgeneratedn] = 0
-Cstat_gon[npclastgeneratedn] = 0
-Cstat_chlam[npclastgeneratedn] = 0
-Cstat_Hiv[npclastgeneratedn] = 0
-Cstat_genwart[npclastgeneratedn] = 0
-Cstat_Thrush[npclastgeneratedn] = 0
-Cstat_Malen[npclastgeneratedn] = 0
+npc_herpes[$npclastgenerated] = 0
+npc_syph[$npclastgenerated] = 0
+npc_gon[$npclastgenerated] = 0
+npc_chlam[$npclastgenerated] = 0
+npc_Hiv[$npclastgenerated] = 0
+npc_genwart[$npclastgenerated] = 0
+npc_Thrush[$npclastgenerated] = 0
+npc_Malen[$npclastgenerated] = 0
+
 ! {Chemestry and clothing preference are unspecified}
-Cstat_Chem[npclastgeneratedn] = 0
-Cstat_Clothpref[npclastgeneratedn] = 0
+npc_Chem[$npclastgenerated] = 0
+npc_Clothpref[$npclastgenerated] = 0
+
 ! {Personality is called up}
 gs 'npcgenext', 'pers'
-$Cstat_PersType[npclastgeneratedn] = $npctempgn[6]
-$npclastgenerated = 'C' + npclastgeneratedn
+$npc_PersType[$npclastgenerated] = $npctempgn[6]
+npclastgeneratedn = mid($npclastgenerated, 2)
 
 ! {Variables are cleaned up.}
 killvar '$npctempgn'
@@ -225,6 +254,7 @@ killvar 'npctempc2'
 killvar 'npctempgsex'
 killvar '$npctempgn'
 killvar 'npctempgage'
+killvar '$npctemparrc'
 
 --- npcgeneratec ---------------------------------
 
