@@ -57,7 +57,7 @@ $clothing_list_line = {
 		if StoryLine = 1 and SchoolAtestat = 0 and SchoolBlock = 0 and $ARGS[1] = 'school' and ARGS[2] = 6:
 			$RESULT += ' <a href="exec:gs ''clothing'', ''wear'', ''<<$ARGS[1]>>'', <<ARGS[2]>> & gt ''clothing'', ''view_clothing_list'', ''wardrobe''">Wear</a></TD>'
 		elseif ($ARGS[1] ! 'coat' and $ARGS[1] ! 'swimwear') and dyneval('RESULT = <<$ARGS[1]>>H[<<ARGS[2]>>]') > 0:
-			if $ARGS[1] ! 'exercise' and CloStyle ! 5 and (dyneval('RESULT = <<$ARGS[1]>>B[<<ARGS[2]>>]') < (bedra - 8) or dyneval('RESULT = <<$ARGS[1]>>B[<<ARGS[2]>>]') > (bedra + 8)):
+			if $ARGS[1] ! 'exercise' and CloStyle ! 5 and (dyneval('RESULT = <<$ARGS[1]>>B[<<ARGS[2]>>]') < (pcs_hips - 8) or dyneval('RESULT = <<$ARGS[1]>>B[<<ARGS[2]>>]') > (pcs_hips + 8)):
 				$RESULT += '</TD>'
 			else
 				$RESULT += ' <a href="exec:gs ''clothing'', ''wear'', ''<<$ARGS[1]>>'', <<ARGS[2]>> & gt ''clothing'', ''view_clothing_list'', ''wardrobe''">Wear</a></TD>'
@@ -293,7 +293,7 @@ if $ARGS[0] = 'view_clothing_item':
 					else
 						dynamic $ARGS[2] + 'H[<<ARGS[3]>>] = 60 + <<h>>'
 					end
-					dynamic $ARGS[2] + 'B[<<ARGS[3]>>] = bedra'
+					dynamic $ARGS[2] + 'B[<<ARGS[3]>>] = pcs_hips'
 					dynamic $ARGS[2] + 'S[<<ARGS[3]>>] = 0'
 					gt $loc, $metka
 				end
@@ -338,8 +338,8 @@ if $ARGS[0] = 'view_clothing_item':
 			if $ARGS[2] ! 'exercise' and $ARGS[2] ! 'coat' and CloStyle ! 5:
 				!! if the hipsize is too far from your hipsize
 				dynamic 'RESULT = <<$ARGS[2]>>B[<<ARGS[3]>>]'
-				if RESULT < bedra - 8 or RESULT > bedra + 8:
-					if RESULT < bedra:
+				if RESULT < pcs_hips - 8 or RESULT > pcs_hips + 8:
+					if RESULT < pcs_hips:
 						'This item is too small for you to wear.'
 					else
 						'This item is too large for you to wear.'
@@ -352,7 +352,7 @@ if $ARGS[0] = 'view_clothing_item':
 							cla
 							tkan -= 1
 							minut += 30
-							dynamic $ARGS[2] + 'B[<<ARGS[3]>>] = bedra'
+							dynamic $ARGS[2] + 'B[<<ARGS[3]>>] = pcs_hips'
 							'You spend 30 minutes resizing the outfit.'
 							act 'Return':gt 'clothing', 'view_clothing_list', $ARGS[1]
 						end
@@ -419,11 +419,11 @@ if $ARGS[0] = 'view_clothing_item':
 		act 'Leave item alone':gt 'clothing', 'view_clothing_list', $ARGS[1]
 
 		if $ARGS[2] ! 'exercise' and $ARGS[2] ! 'coat' and CloStyle ! 5:
-			if dyneval('RESULT = <<$ARGS[2]>>B[<<ARGS[3]>>]') ! bedra and money >= 500:
+			if dyneval('RESULT = <<$ARGS[2]>>B[<<ARGS[3]>>]') ! pcs_hips and money >= 500:
 				'You can have this resized for 500 <b>₽</b>.'
 				act 'Resize':
 					money -= 500
-					dynamic '<<$ARGS[2]>>B[<<ARGS[3]>>] = bedra'
+					dynamic '<<$ARGS[2]>>B[<<ARGS[3]>>] = pcs_hips'
 					gt 'clothing', 'view_clothing_list', $ARGS[1]
 				end
 			end
