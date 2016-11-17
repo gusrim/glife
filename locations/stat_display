@@ -53,19 +53,19 @@ end
 
 if pain['total'] > 80:
 	if (health * 5) >= healthmax: health = health * 20 / 100
-	if (manna * 5) >= mannamax: manna = manna * 20 / 100
+	if (pcs_mood * 5) >= 100: pcs_mood = pcs_mood * 20 / 100
 elseif pain['total'] > 60:
 	if (health * 5 / 2) >= healthmax: health = health * 40 / 100
-	if (manna * 5 / 2) >= mannamax: manna = manna * 40 / 100
+	if (pcs_mood * 5 / 2) >= 100: pcs_mood = pcs_mood * 40 / 100
 elseif pain['total'] > 40:
 	if (health * 5 / 3) >= healthmax: health = health * 60 / 100
-	if (manna * 5 / 3) >= mannamax: manna = manna * 60 / 100
+	if (pcs_mood * 5 / 3) >= 100: pcs_mood = pcs_mood * 60 / 100
 elseif pain['total'] > 20:
 	if (health * 5 / 4) >= healthmax: health = health * 80 / 100
-	if (manna * 5 / 4) >= mannamax: manna = manna * 80 / 100
+	if (pcs_mood * 5 / 4) >= 100: pcs_mood = pcs_mood * 80 / 100
 elseif pain['total'] > 0:
 	if (health * 10 / 9) >= healthmax: health = health * 90 / 100
-	if (manna * 10 / 9) >= mannamax: manna = manna * 90 / 100
+	if (pcs_mood * 10 / 9) >= 100: pcs_mood = pcs_mood * 90 / 100
 end
 
 !!!!!!!!!!!!!!!!!!!!!
@@ -118,14 +118,17 @@ else
 	gs 'indik', '1', health * 100 / healthmax, health
 	$stat_msg += '<BR><<$ind>> Health'
 
+	if mannamax <=0:
+		gs 'indik', '1', 0, pcs_manna
+	else
+		gs 'indik', '1', pcs_manna * 100 / mannamax, pcs_manna
+	end
+	$stat_msg += '<BR><<$ind>> pcs_manna'
+
 	gs 'indik', '1', willpower * 100 / willpowermax, willpower
 	$stat_msg += '<BR><<$ind>> Willpower'
 
-	if mannamax <=0:
-		gs 'indik', '1', 0, manna
-	else
-		gs 'indik', '1', manna * 100 / mannamax, manna
-	end
+	gs 'indik', '1', pcs_mood, pcs_mood
 	$stat_msg += '<BR><<$ind>> Mood'
 
 	gs 'indik', '1', energy, energy
@@ -296,7 +299,7 @@ if StoryLine > 0 and SchoolAtestat = 0 and $holyday ! '': $stat_msg += '<BR><<$h
 if birthday = day and birthmonth = month: $stat_msg += '<BR><b>Today is your birthday.</b>' & $stat_msg += '<BR>'
 
 !!if shame > 0:$stat_msg += '<BR><<$shame>>' & $stat_msg += '<BR>'
-$stat_msg += '<BR><b><<$manna>></b>'
+$stat_msg += '<BR><b><<$pcs_mood>></b>'
 $stat_msg += '<BR>'
 
 if mentats_dose >= 1:$stat_msg += '<BR><font color = green>You feel sharp and focused.</font>'
@@ -359,7 +362,7 @@ $smoker = {
 	cumspclnt = 2
 	gs 'cum_cleanup'
 	pcs_breath = 0
-	manna += 100
+	pcs_mood += 100
 	wipo += 100
 	if energy < 80:energy += 4
 	gs '$menu_obnovit'
@@ -381,7 +384,7 @@ elseif CondomToggle = 0 and Sprezik > 0:
 	Sprezik = 0
 end
 
-if $mud ! '':$stat_msg += '<BR><font color="green"><b><<$mud>></b></font>' & $stat_msg += '<BR>'
+if $pcs_mood ! '':$stat_msg += '<BR><font color="green"><b><<$pcs_mood>></b></font>' & $stat_msg += '<BR>'
 
 if smoker >= 20:
 	if smokerNeed > 0:
@@ -456,7 +459,7 @@ if lactate = 1:
 end
 
 if Enable_Hymenrestore = 1: vagina = 0
-if Enable_tightrestore = 1: anus = 0 & if vagina > 0:vagina = 1
+if Enable_tightrestore = 1: pcs_ass = 0 & if vagina > 0:vagina = 1
 if Enable_clearwrite > 0: body_write = 0 & face_write = 0
 !{
 if Enable_clearcum > 0:

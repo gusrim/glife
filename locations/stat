@@ -25,9 +25,9 @@ if pcs_sewng > 1000:pcs_sewng = 1000
 
 if cheatHealth = 1:dynamic $cheatmenu['std_cure']
 
-if analplay >= 2 and anus <= 10:anus += 1 & analplay = 0
-if analplay >= 4 and anus <= 15:anus += 1 & analplay = 0
-if analplay >= 8 and anus <= 20:anus += 1 & analplay = 0
+if analplay >= 2 and pcs_ass <= 10:pcs_ass += 1 & analplay = 0
+if analplay >= 4 and pcs_ass <= 15:pcs_ass += 1 & analplay = 0
+if analplay >= 8 and pcs_ass <= 20:pcs_ass += 1 & analplay = 0
 
 musle[1] = musle
 flex[1] = pcs_agil
@@ -169,7 +169,7 @@ if pcs_run > 2000:pcs_run = 2000
 if pcs_servng > 100:pcs_servng = 100
 if vagina > 36:vagina = 36
 if throat > 36:throat = 36
-if anus > 36:anus = 36
+if pcs_ass > 36:pcs_ass = 36
 if pcs_jab > 120:pcs_jab = 120
 if pcs_punch > 120:pcs_punch = 120
 if pcs_kick > 120:pcs_kick = 120
@@ -357,7 +357,8 @@ if Enable_lockhorny > 0 and pcs_horny < Enable_lockhorny - 1:pcs_horny = Enable_
 if pcs_horny < 0:pcs_horny = 0
 if health > healthmax:health = healthmax
 if willpower > willpowermax:willpower = willpowermax
-if manna > mannamax:manna = mannamax
+if pcs_manna > mannamax:pcs_manna = mannamax
+if pcs_mood > 100:pcs_mood = 100
 
 if hypnoAddict = 1 and pcs_horny < 30:
 	pcs_horny = 30
@@ -517,18 +518,18 @@ if minut >= 60:
 	end
 	!!!!!!!!!!!!!
 
-	if shame > 0:shame -= 1 & manna -= 5
+	if shame > 0:shame -= 1 & pcs_mood -= 5
 	if smoker >= 20:smokerNeed += 1
-	if smokerNeed > 10 and InSleep = 0:manna -= manna * 10/100
+	if smokerNeed > 10 and InSleep = 0 and pcs_mood > 20:pcs_mood -= pcs_mood / 10
 	if smokerNeed > 300:smokerNeed = 0 & smoker = 0
 	if StrongNarkota > 0:StrongNarkota -= 1
-	if SLomka > 0:SLomka += 1 & manna -= 500
+	if SLomka > 0 and pcs_mood > 10:SLomka += 1 & pcs_mood -= pcs_mood / 10
 	if SLomka > 100 and StrongNarkota <= 0:SLomka = 0 & SNarkTimes = 0
 
 	if narkoman = 1 and narkday ! daystart:
 		health -= 5
 		willpower -= 5
-		manna -= 10
+		pcs_mood -= 10
 	end
 
 	if tanga = 0 and PCloPants > 0 and $clothingworntype ! 'nude':mosolpred += 1
@@ -540,7 +541,7 @@ if minut >= 60:
 	end
 
 	if mosol >= 50:
-		manna -= 5
+		pcs_mood -= 5
 	end
 
 	if energy > 100:
@@ -651,36 +652,35 @@ end
 !!mannamax
 !!totminut
 
-if Mud >= totminut:
-	manna = mannamax
-	$mud = 'You feel buoyed.'
+if pcs_mood >= totminut:
+	pcs_mood = 100
+	$pcs_mood = 'You feel buoyed.'
 else
-	$mud = ''
+	$pcs_mood = ''
 end
 
 if pcs_nerd > 0:
 	if lastreadday = daystart:
 		!!<font color="green">You are completely healthy shine and a healthy glow.</font>
-		manna = mannamax
+		pcs_mood = 100
 		SbrosNerdism = 0
 		$mudnerd = '<font color="green">You are lost in a fantasy after reading a book.</font>'
 	end
 
 	if lastreadday + 1 = daystart:
-		!!manna = mannamax
 		SbrosNerdism = 0
 		$mudnerd = '<font color="black">You are a little bored and want to plunge into a book.</font>'
 	end
 	if lastreadday + 2 = daystart:
 		SbrosNerdism = 0
 
-		if manna > mannamax / 2:manna -= 10
+		if pcs_mood > 50:pcs_mood -= 10
 
 		$mudnerd = '<font color="red">You really want to read something.</font>'
 	end
 
 	if lastreadday + 3 <= daystart:
-		if manna > mannamax / 10:manna -= 10
+		if pcs_mood 10:pcs_mood -= 10
 
 		SbrosNerdism = 1
 		$mudnerd = '<font color="red"><b>You have an incredibly strong desire to read!!!</b></font>'
@@ -700,10 +700,10 @@ if bimbolevel > 0:
 	elseif bimbowithdrawal < 4:
 		$bimbostatus = '<font color="black">You feel, like, totally lame today.</font>'
 	elseif bimbowithdrawal < 6:
-		if manna > mannamax / 2:manna -= 10
+		if pcs_mood > 50:pcs_mood -= 10
 		$bimbostatus = '<font color="red">You really feel, like, awful today.</font>'
 	elseif bimbowithdrawal >= 6:
-		if manna > mannamax / 10:manna -= 10
+		if pcs_mood > 10:pcs_mood -= 10
 		$bimbostatus= '<font color="red"><b>You feel that, like, horrible today!</b></font>'
 	end
 
@@ -766,12 +766,12 @@ else
 
 !!SECTION: Bimbo (15 minute interval update checks)
 		if bimbolevel = 2:
-			if manna < mannamax:manna += ((manna / 100) * (rand(0,1)))
+			if pcs_mood < 100:pcs_mood += ((pcs_mood / 100) * (rand(0,1)))
 			if pcs_horny < 25:pcs_horny = 25
 			if pcs_horny < 100:pcs_horny += 1
 		end
 		if bimbolevel = 3:
-			if (manna < mannamax):manna += ((manna / 100) * (rand(0,2)))
+			if (pcs_mood < 100):pcs_mood += ((pcs_mood / 100) * (rand(0,2)))
 			if pcs_horny < 50:pcs_horny = 50
 			if pcs_horny < 100:pcs_horny += 2
 		end
@@ -836,7 +836,7 @@ else
 				$stat_msg += '<BR>You <<$sucabs1>><<$sucabs2>><<$sucabs3>>, gaining nourishment.'
 				sucabslez = 0 & sucabscum = 0
 				$sucabs1 = '' & $sucabs2 = '' & $sucabs3 = ''
-				if (manna < mannamax): manna += ((manna / 100) * 5)
+				if (pcs_mood < 100): pcs_mood += ((pcs_mood / 100) * 5)
 				if energy > 100: entemp = (energy - 100)
 				if sucexcess < 0 and sexnutrition > 20 and energy > 30:
 					if sexnutrition - 20 >= (0 - sucexcess) * 2:
@@ -892,7 +892,7 @@ end
 
 if son < 0:
 	son = 0
-	manna -= 5
+	pcs_mood -= 5
 end
 
 if energy < 0:
@@ -924,8 +924,8 @@ if water < 0:
 	willpower -= 1
 end
 
-if manna <= 0:
-	manna = 1
+if pcs_mood <= 0:
+	pcs_mood = 1
 	health -= 5
 	willpower -= 5
 	!!fat += 1
@@ -944,14 +944,14 @@ end
 
 if willpower <= 0 :
 	!this will set willpower to 0 correctly; then check mana =1 for insane-gameover(willpower=0&mana=1).
-	if manna <= 1:
+	if pcs_mood <= 1:
 		if Enable_nogameover = 0 :
 			over = 2
 			gt'gameover'
 			exit & !nogameover by illume
 		else
 			$stat_msg += '<BR><font color=red><B>You are insane, but Cheat Mode keeps you Alive.</B></font>'
-			!manna already checked for >=1 in line 1113 if manna <= 0, no need to set another one
+			!pcs_mood already checked for >=1 in line 1113 if pcs_mood <= 0, no need to set another one
 		end
 	end
 	willpower = 0
@@ -967,13 +967,13 @@ end
 
 !cars-increase/depressed mood after orgasm/rape
 if rape > 0 and rape ! rape_count and orgasm = orgasm_count:
-	manna = 10
+	pcs_mood = 10
 	rape_count = rape
 elseif orgasm > 0 and orgasm ! orgasm_count:
-	manna = mannamax
+	pcs_mood = 100
 	orgasm_count = orgasm
 elseif  rape > 0 and rape ! rape_count and orgasm > 0 and orgasm ! orgasm_count:
-	manna = mannamax
+	pcs_mood = 100
 	orgasm_count = orgasm
 	rape_count = rape
 end
@@ -1004,16 +1004,16 @@ else
 	$willpower = '<font color="red">You are on the verge of madness.</font>'
 end
 
-if manna >= mannamax:
-	$manna = '<font color="green">You are in a good mood.</font>'
-elseif manna >= mannamax * 75 / 100:
-	$manna = '<font color="blue">You have a normal mood.</font>'
-elseif manna >= mannamax * 50 / 100:
-	$manna = '<font color="brown">You are in a bad mood.</font>'
-elseif manna >= mannamax * 25 / 100:
-	$manna = '<font color="red">You are in a terrible mood.</font>'
+if pcs_mood >= 100:
+	$pcs_mood = '<font color="green">You are in a good mood.</font>'
+elseif pcs_mood >= 75:
+	$pcs_mood = '<font color="blue">You have a normal mood.</font>'
+elseif pcs_mood >= 50:
+	$pcs_mood = '<font color="brown">You are in a bad mood.</font>'
+elseif pcs_mood >= 25:
+	$pcs_mood = '<font color="red">You are in a terrible mood.</font>'
 else
-	$manna = '<font color="red">Your mood is stuck in the gutter.</font>'
+	$pcs_mood = '<font color="red">Your mood is stuck in the gutter.</font>'
 end
 
 if energy >= 80:
@@ -1065,12 +1065,12 @@ end
 !!if shame = 1:$shame = '<font color="green">You''re a little confused.</font>'
 !!if shame <= 0:$shame = '<font color="green">You''re a little confused.</font>'
 maxmood = 100-moodmodifier
-if mood > maxmood:
-	mood = maxmood
-	manna = mannamax
-	$mood = 'You feel buoyed.'
-elseif mood < 0:
-	mood = 0
+if pcs_mood > 100:
+	pcs_mood = 100
+	pcs_mood = 100
+	$pcs_mood = 'You feel buoyed.'
+elseif pcs_mood < 0:
+	pcs_mood = 0
 	!{Asylum: basically this means clinically insane, like court-ordered committed, saliva dripping, blubbering...
 		Ordinarily irreversible at this stage meaning Game Over, but cheat can help}
 end
