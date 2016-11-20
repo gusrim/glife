@@ -33,11 +33,11 @@ if $ARGS[0] = 'start':
 	act 'Leave Clinic':gt 'street'
 	act 'See cosmetic surgeon':gt 'poli','cosmetic1'
 
-	if health < (pcs_vital * 10 + pcs_stren * 5):
+	if pcs_health < (pcs_vital * 10 + pcs_stren * 5):
 		act 'Treat health':
 			cla
 			minut += 60
-			health = pcs_vital * 10 + pcs_stren * 5 + 1000
+			pcs_health = pcs_vital * 10 + pcs_stren * 5 + 1000
 			if pillcon > 0:pillcon -= rand(0,2000)
 			if hosprand = 0:gt 'poli', '0'
 			if hosprand = 1:gt 'poli', '1'
@@ -49,12 +49,12 @@ if $ARGS[0] = 'start':
 		end
 	end
 
-	if willpower < pcs_intel * 5 + pcs_sprt * 5:
+	if pcs_willpwr < pcs_intel * 5 + pcs_sprt * 5:
 		act 'See a therapist':
 			cla
 			minut += 60
-			willpower = pcs_intel * 5 + pcs_sprt * 5 + 1000
-			manna = (pcs_intel * pcs_magik) + pcs_magik * 100 + pcs_vital * 10 + rikudo
+			pcs_willpwr = pcs_intel * 5 + pcs_sprt * 5 + 1000
+			pcs_mood = 100
 
 			if hosprand = 0:gt 'poli', '0'
 			if hosprand = 1:gt 'poli', '1'
@@ -237,15 +237,15 @@ if $ARGS[0] = 'start':
 
 	if katjob > 0:act 'Visit the chief doctor':gt 'poli', 'glavdoc'
 
-	if zub > -1:
+	if pcs_teeth > -1:
 		act 'Go to the dentist':
 			cls
-			zubpay = zub * 30000
+			zubpay = pcs_teeth * 30000
 			gs 'stat'
-			if zub = 0:
+			if pcs_teeth = 0:
 				zubpay = 30000
 				'The dentist examines you and says, it will cost you <<zubpay>> <b>₽</b> to straighten and polish your teeth.'
-			elseif zub = 1:
+			elseif pcs_teeth = 1:
 				'The dentist examines you and says, it will cost you <<zubpay>> <b>₽</b> to replace your tooth'
 			else
 				'The dentist examines you and says, it will cost you <<zubpay>> <b>₽</b> to fill the gaps'
@@ -258,11 +258,11 @@ if $ARGS[0] = 'start':
 					minut += 60
 					gs 'body_shape', 'basebeautycalc', 1
 					gs 'stat'
-					if zub > 0:
-						zub = 0
+					if pcs_teeth > 0:
+						pcs_teeth = 0
 						'You pay the dentist to fix your teeth, within an hour he has restored your winning smile.'
 					else
-						zub = -1
+						pcs_teeth = -1
 						'You pay the dentist to straighten and polish your teeth, an hour later your smile is much brighter and more attractive.'
 					end
 
@@ -274,7 +274,7 @@ if $ARGS[0] = 'start':
 		end
 	end
 
-	if anus > 5:
+	if pcs_ass > 5:
 		act 'Go to the proctologist':
 			cls
 			minut += 15
@@ -282,28 +282,28 @@ if $ARGS[0] = 'start':
 			if analplugIN ! 0:analplugIN = 0
 
 			gs 'stat'
-			'<center><img src="images/body/<<anpic>>.jpg"></center>'
+			'<center><img src="images/pc/body/anus/<<anpic>>.jpg"></center>'
 			'You go to the office to the proctologist. He immediately asks you to remove all clothes from your lower body and bend over.'
 
-			if anus <= 15:
+			if pcs_ass <= 15:
 				'The doctor examines your anus and says, "Well, slightly distended, but no abnormalities."'
-			elseif anus > 15 and anus <= 25:
+			elseif pcs_ass > 15 and pcs_ass <= 25:
 				'The doctor examines your anus and says, "You have a stretched anus and sphincter. I would recomend massage therapy, 1,000 <b>₽</b> per session. This will help restore the anus to it''s normal size."'
-			elseif anus > 25 and anus <= 35:
+			elseif pcs_ass > 25 and pcs_ass <= 35:
 				'The doctor examines your anus and says, "You have a greatly distended anus, most likely your sphincter is not able to close fully. I would recomend massage therapy, 1,000 <b>₽</b> per session. This will help restore the anus to it''s normal size."'
-			elseif anus > 35:
+			elseif pcs_ass > 35:
 				'The doctor examines your anus and says, "Oh my God! I have never in all my years seen a case such as this! You''ll have to be careful not to cough, or your guts will fall out. I would recomend massage therapy, 1,000 <b>₽</b> per session. This will help restore the anus to it''s normal size."'
 			end
 
-			if money >= 1000 and anus > 15 and proktologday ! daystart:
+			if money >= 1000 and pcs_ass > 15 and proktologday ! daystart:
 				act 'Massage therapy':
 					cls
 					money -= 1000
 					minut += 60
 					proktologday = daystart
-					anus -= 5
+					pcs_ass -= 5
 					gs 'stat'
-					'<center><img src="images/body/<<anpic>>.jpg"></center>'
+					'<center><img src="images/pc/body/anus/<<anpic>>.jpg"></center>'
 					'You pay for the therapy and the doctor spends an hour massaging your ass muscles. It really isn''t as much fun as it looked in the brochure.'
 
 					act 'Get away from the clinic':gt 'street'
@@ -840,11 +840,11 @@ if $ARGS[0] = 'ninel':
 													if ninelsex = 1:girl += 1
 
 													SUB += 1
-													vagina += 1
+													pcs_vag += 1
 													sick = 0
-													health = pcs_vital * 10 + pcs_stren * 5 + 1000
-													willpower = pcs_intel * 5 + pcs_sprt * 5 + 1000
-													manna = (pcs_intel * pcs_magik) + pcs_magik * 100 + pcs_vital * 10 + rikudo
+													pcs_health = pcs_vital * 10 + pcs_stren * 5 + 1000
+													pcs_willpwr = pcs_intel * 5 + pcs_sprt * 5 + 1000
+													pcs_mood = 100
 													gs 'stat'
 													'<center><img src="images/add-on/exam19a.jpg"></center>'
 													'Ninel removes the strapon and you press your face to her soaking wet pussy. It doesn''t take long for you efforts to bring Ninel to orgzazm. She screams and digs her nails into her own knees as your face is covered by her squirting orgasm.'
@@ -967,11 +967,11 @@ if $ARGS[0] = 'ninel2':
 									orgasm += 1
 									lesbian += 1
 									SUB += 1
-									vagina += 1
+									pcs_vag += 1
 									sick = 0
-									health = pcs_vital * 10 + pcs_stren * 5 + 1000
-									willpower = pcs_intel * 5 + pcs_sprt * 5 + 1000
-									manna = (pcs_intel * pcs_magik) + pcs_magik * 100 + pcs_vital * 10 + rikudo
+									pcs_health = pcs_vital * 10 + pcs_stren * 5 + 1000
+									pcs_willpwr = pcs_intel * 5 + pcs_sprt * 5 + 1000
+									pcs_mood = 100
 									gs 'stat'
 									'<center><img src="images/add-on/exam08.jpg"></center>'
 									'Moaning with excitement you get on your knees and lift your ass to Ninel, to make it easier for her, but she is in no hurry.'
@@ -1062,9 +1062,9 @@ if $ARGS[0] = 'ninel3':
 						orgasm += 1
 						lesbian += 1
 						SUB += 1
-						manna += 15
-						willpower += 15
-						vagina += 1
+						pcs_mood += 15
+						pcs_willpwr += 15
+						pcs_vag += 1
 
 						gs 'stat'
 						'<center><img src="images/add-on/polsex04.jpg"></center>'

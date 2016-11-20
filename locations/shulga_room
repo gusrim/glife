@@ -98,9 +98,9 @@ if $ARGS[0] = 'start':
 		'<center>A small sofa just big enough for you to curl up and take nap on</center>'
 		act 'Look around the room': gt 'shulga_room', 'start'
 		act 'Take an hour long nap':
-			if son < 90:
-				son += 10
-				health += 5
+			if pcs_sleep < 90:
+				pcs_sleep += 10
+				pcs_health += 5
 				minut += 60
 				gs'stat'
 				'You sleep about an hour.'
@@ -437,7 +437,7 @@ if $ARGS[0] = 'gang_sex_room_ev1_2':
 		cls
 		minut += 10
 		stat['bj'] +=3
-		throat += 1
+		pcs_throat += 1
 		pcs_horny += 5
 		gs'stat'
 		'<center><img src="images/zsoft/pod_ezd/shulgahome/bigroom/sex/1_6.jpg"></center>'
@@ -547,7 +547,7 @@ if $ARGS[0] = 'gang_sex_room_ev1_2':
 									'You revel in the feeling of being used so completely. This night of drunken debauchery somehow makes you feel whole.'
 									if pcs_horny >=70:
 										orgasm += 1
-										manna += 35
+										pcs_mood += 35
 										fat-=1
 										pcs_horny = 0
 									'You ride that feeling to orgasm, and you collapse in a heap. The guys give you a couple minutes to recover as you lay panting against Vitek''s chest. Quickly enough they urge you back into action with the prodding of their hips.'
@@ -582,8 +582,8 @@ if $ARGS[0] = 'gang_sex_room_ev1_2':
 											gs 'cum_manage'
 											swallow += 1
 											facial += 1
-											energy -= 8
-											son -= 8
+											pcs_energy -= 8
+											pcs_sleep -= 8
 											gs'stat'
 											'<center><img src="images/zsoft/pod_ezd/shulgahome/bigroom/sex/1_15.jpg"></center>'
 											'Eventually the boys lay you down on the sofa. They stand over you and jerk themselves in earnest toward the finish. You eagerly smile up at them awaiting yet another reward.' 
@@ -723,7 +723,7 @@ if $ARGS[0] = 'drunken_sex':
 			if temp = 0:spafinloc = 12
 			if temp = 1:spafinloc = 14
 			if temp = 2:spafinloc = 11
-			son -= 5
+			pcs_sleep -= 5
 			if npcSex[9] = 0:npcSex[9] = 1 & guy += 1
 			if npcSex[10] = 0:npcSex[10] = 1 & guy += 1
 			if npcSex[11] = 0:npcSex[11] = 1 & guy += 1
@@ -749,7 +749,7 @@ if $ARGS[0] = 'drunken_sex_no':
 	cls
 	minut += 5 
 	pcs_dom +=1
-	health -= 10
+	pcs_health -= 10
 	gs'stat'
 	'<center><img src="images/zsoft/pod_ezd/shulgahome/bigroom/drunk_ev/sleep'+rand(1,17)+'.jpg"></center>'
 	'"You are all fixing to get a swift kick in the balls if you guys don''t cut it out, or I can wake this whole building up with a scream", you drunkenly slur.'
@@ -762,14 +762,14 @@ end
 if $ARGS[0] = 'drunken_sleep':
 	cls
 	minut += 180 
-	if son < 75:
-		son += 25
+	if pcs_sleep < 75:
+		pcs_sleep += 25
 	else
-		son = 100
+		pcs_sleep = 100
 	end
-	health -= 10
-	manna -= 25
-	willpower -=10
+	pcs_health -= 10
+	pcs_mood -= 25
+	pcs_willpwr -=10
 	gs'stat'
 	'<center><img src="images/zsoft/pod_ezd/shulgahome/bigroom/drunk_ev/pohmel'+rand(1,4)+'.jpg"></center>'
 	'You passed out for about three hours.'
@@ -817,8 +817,8 @@ if $ARGS[0] = 'view_pornotv':
 	act 'Flip to the porn channel':
 		cls
 		minut += 30
-		manna += 4
-		willpower = willpower + RAND(5,10)
+		pcs_mood += 4
+		pcs_willpwr = pcs_willpwr + RAND(5,10)
 		pcs_horny += 15
 		gs'stat'
 		'<center><img src="images/zsoft/pod_ezd/shulgahome/tv/tvporn'+rand(1,5)+'.gif" width="748" height="540"></center> You switched to the porn channel.'
@@ -832,7 +832,7 @@ if $ARGS[0] = 'view_pornotv_evgr':
 	act 'Watch some porn':
 		cls
 		minut += 10
-		manna += 4
+		pcs_mood += 4
 		pcs_horny += 15
 		gs'stat'
 		'<center><img src="images/zsoft/pod_ezd/shulgahome/tv/tvporn'+rand(1,5)+'.gif" width="748" height="540"></center> You switched to porn channel.'
@@ -966,7 +966,7 @@ if $ARGS[0] = 'view_pornotv_vasya':
 	act 'Watch porn channel':
 		cls
 		minut += 10
-		manna += 4
+		pcs_mood += 4
 		pcs_horny += 15
 		gs'stat'
 		'<center><img src="images/zsoft/pod_ezd/shulgahome/tv/tvporn'+rand(1,5)+'.gif" width="748" height="540"></center> You switched to porn channel.'
@@ -1077,8 +1077,8 @@ if $ARGS[0] = 'shultv':
 	rndtvs=rand(1,100)
 	cls
 	if rndtvs>10: minut += 30
-	if rndtvs>10: manna += 10
-	if rndtvs>10: willpower = willpower + RAND(1,5)
+	if rndtvs>10: pcs_mood += 10
+	if rndtvs>10: pcs_willpwr = pcs_willpwr + RAND(1,5)
 	if rndtvs<=10: minut += 5
 	gs'stat'
 	
@@ -1393,7 +1393,7 @@ if $ARGS[0] = 'shulga_lern':
 			'You have a sneaking suspicion that he isn''t talking about the Biology assignment.'
 			'You stammer: "I...don''t know...would you please..."'
 				act 'Stop it': gt 'shulga_room', 'shulga_lern_sex_no'
-			if vagina >=1:
+			if pcs_vag >=1:
 				act 'Teach me': gt 'shulga_room', 'shulga_lern_sex_yes'
 			end
 		end	
@@ -1561,7 +1561,7 @@ if $ARGS[0] = 'shulga_bazar_day':
 		act 'Do homework': gt 'shulga_room', 'shulga_lern'
 	end	
 
-	if vasya_shulgin>=70 and alko >= 1 and vagina >=1 or vasya_shulgin>=70 and pcs_horny >= 30 and vagina >=1:
+	if vasya_shulgin>=70 and pcs_vag >=1 and (alko >= 1 or pcs_horny >= 30):
 		act 'Suggest sex': 
 			if shgopsex_vasya_count = 0:
 				cla
@@ -1584,10 +1584,10 @@ end
 if $ARGS[0] = 'sleep_vasya_bed':
 	cla
 	vasya_shulgin += 1
-	if son > 75:
-		son += 25
+	if pcs_sleep > 75:
+		pcs_sleep += 25
 	else
-		son = 100
+		pcs_sleep = 100
 	end
 	minut += 180
 	gs'stat'

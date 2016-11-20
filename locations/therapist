@@ -5,6 +5,7 @@ CLOSE ALL
 if sound = 0:PLAY 'sound/Clock.mp3',80
 $location_type = 'public_indoors'
 if $ARGS[0] = '':
+	therapistday = daystart
 	'<center><img src="images/_nuki/therapist/room.jpg"></center>'
 	'You step into the office of <a href="exec:dynamic $pavlov">Dr. Pavlov</a>, who invites you in with a warm smile.'
 	'The room looks like a study room, appearing warm and inviting. There is desk with a chair at one end of the room, but it appears to be seldom used. On the desk there is an older <a href="exec: VIEW ''images/_nuki/therapist/PavlovFamily.jpg''">photograph of Dr. Pavlov''s family</a>, in which he appears to be about two decades younger.'
@@ -14,8 +15,8 @@ if $ARGS[0] = '':
 		cls
 		'<center><img src="images/_nuki/therapist/therapy1.jpg"></center>'
 		minut += 60
-		willpower = pcs_intel * 5 + pcs_sprt * 5 + 1000
-		manna = (pcs_intel * pcs_magik) + pcs_magik * 100 + pcs_vital * 10 + rikudo
+		pcs_willpwr = pcs_intel * 5 + pcs_sprt * 5 + 1000
+		pcs_mood = 100
 		gs 'stat'
 		'You talk about your problems for a while, and in a few places Dr. Pavlov asks you some pointed questions. Although he makes you look at your own actions and desires closely, making you aware of your own issues, it somehow makes you feel better about yourself.'
 		'"Please, visit me again if you have any further problems, I will be glad to help!" Says Dr. Pavlov, as he escort you out of his door.'
@@ -32,7 +33,7 @@ if $ARGS[0] = '':
 			cls
 			'<center><img src="images/_nuki/therapist/therapy1.jpg"></center>'
 			minut += 60
-			if rand(0,9) = 0: willpower += rand(0,1)
+			pcs_willpwr += rand(0,1)
 			gs 'stat'
 			'You talk about your self-confidence problem, and Dr. Pavlov makes some suggestions, and asks some pointed questions. Although he makes you look at your own actions and desires closely, making you aware of your own issues, it somehow makes you feel better about yourself.'
 			'"Please, visit me again if you have any further problems, I will be glad to help!" Says Dr. Pavlov, as he escort you out of his door.'
@@ -52,7 +53,7 @@ if $ARGS[0] = '':
 			cls
 			'<center><img src="images/_nuki/therapist/therapy1.jpg"></center>'
 			minut += 60
-			pcs_dom += 2
+			pcs_dom += rand(0,1)
 			gs 'stat'
 			'You talk about your submissiveness, and Dr. Pavlov makes some suggestions, and asks some pointed questions. Although he makes you look at your own actions and desires closely, making you aware of your own issues, it somehow makes you feel better about yourself.'
 			'"Please, visit me again if you have any further problems, I will be glad to help!" Says Dr. Pavlov, as he escort you out of his door.'
@@ -71,7 +72,7 @@ if $ARGS[0] = '':
 			cls
 			'<center><img src="images/_nuki/therapist/therapy1.jpg"></center>'
 			minut += 60
-			sub += 2
+			sub += rand(0,1)
 			gs 'stat'
 			'You talk about your strong dominance issues, and Dr. Pavlov makes some suggestions, and asks some pointed questions. Although he makes you look at your own actions and desires closely, making you aware of your own issues, it somehow makes you feel better about yourself.'
 			'"Please, visit me again if you have any further problems, I will be glad to help!" Says Dr. Pavlov, as he escort you out of his door.'
@@ -103,7 +104,6 @@ if $ARGS[0] = 'hypno':
 	gs 'boyStat', 68
 	if firsthypno = 0:
 		firsthypno = 1
-		hidden_guy += 1
 		$firsthypno = 'While you are Under, I will call you <i>Cunt</i>, and you will respond to it. You will also call me Master.<br>You reply, "yes, <i>Master</i>."'
 		$firsthypno2 = '"Miss <<$pcs_lastname>>, everything that happens while you are in the black room you will not remember. Understand it?"<br>"Yes, Dr. Pavlov."'
 	else
@@ -125,20 +125,23 @@ if $ARGS[0] = 'hypno':
 		PLAY 'sound/Rainstorm.mp3',30 & PLAY 'sound/Clock.mp3',60
 		minut += 15
 		'<center><img width=700 src="images/_nuki/therapist/hypnotism<<rand(1,4)>>.jpg"></center>'
-		hypnoStrength += 14
+		var1 = 10 - (pcs_dom/10)
+		if var1 < 2: var1 = 2
+		if var1 > 9: var1 = 9
+		hypnostrength += rand(var1,10)
 		if hypnoTime < 15:
 			if hypnoStrength >= 20:hypnoStrength = hypnoStrength-20 & hypnoTime += 1
 		elseif hypnoStrength > 20:
 			hypnoStrength = 20
 		end
 		if $therapy = 'confidence':
-			willpower += 5
+			willpower += rand(1,2)
 			$session = 'You will feel more confident. You are smart, beautiful, and if other people has other opinions, that is their problem. You know what you want, and do not fear to act upon your desires."<br>...<br>...<br>...'
 		elseif $therapy = 'dominance':
-			pcs_dom += 4
+			pcs_dom += rand(1,2)
 			$session = 'You like to do what you want to do. It pleases you if people do what you tell them to do, or act according to your wishes, and you like to couse them pleasure this way. You have to be in control constantly, but that means others around you can relax."<br>...<br>...<br>...'
 		elseif $therapy = 'submission':
-			sub += 4
+			sub += rand(1,2)
 			$session = 'You want to be told what to do and what to think, what to feel and whom to please. Obeying others pleases you because it pleases them, and for a while you do not have to take responsibility for your actions."<br>...<br>...<br>...'
 		end
 		'<font color=brown>'
@@ -149,43 +152,70 @@ if $ARGS[0] = 'hypno':
 			'"Yes, <i>Master</i>."'
 			'"Perfect! Now take off your clothes."</font>'
 		gs 'stat'
-		act 'Taking off clothes':
-			minut += 5
-			cla
-			*clr
-			if sound = 0:PLAY 'sound/Rainstorm.mp3',20 & PLAY 'sound/Clock.mp3',40
-			cumprecheck = 0
-			dick = 13
-			$dick_girth = 'massive'
-			if hypnoTime < 4:
-				$hypnoact = 'I want you to suck me!'
-				act 'Continue':gt 'therapist', 'hypnoSuck'
-			else
-	!			if hypnoTime < 10:
-					if rand(0,2) > 0:
-						$hypnoact = 'I want to fuck your pussy!'
-						act 'Continue':gt 'therapist', 'hypnoFuck'
-					else
-						$hypnoact = 'I want to fuck your ass!'
-						act 'Continue':gt 'therapist', 'hypnoAnal'
-					end
-	!			elseif rand(0,3) = 0:
-	!				$hypnoact = 'I thought of something special for you.'
-	!				act 'Continue':gt 'therapist', 'hypnoPerv'
-	!			else
-	!				if rand(0,2) > 0:
-	!					$hypnoact = 'I want to fuck your pussy!'
-	!					act 'Continue':gt 'therapist', 'hypnoFuck'
-	!				else
-	!					$hypnoact = 'I want to fuck your ass!'
-	!					act 'Continue':gt 'therapist', 'hypnoAnal'
-	!				end
-	!			end
+		if hypnotime < 1:
+			act 'Refuse':
+				minut += 5
+				cla
+				if sound = 0:PLAY 'sound/Rainstorm.mp3',20 & PLAY 'sound/Clock.mp3',40
+				'<font color=brown>'
+				if hypnostrength <=5:
+					'Your body tenses and you shake your head as you reject Dr. Pavlov''s suggestion to remove your clothing. Seeing that you might awaken, he quickly tells you to forget the idea of undressing. As the suggestion fades from your memory, you once again relax.'
+					'"Hmmm," Dr. Pavlov muses, "Your will is quite strong, it may take some time to break you - but you will break."'
+					act 'Wake up':gt 'therapist', 'hypnoEnd'
+				elseif hypnostrength <=10:
+					'Your body tenses and you frown as you resist Dr. Pavlov''s suggestion to strip. The doctor frowns but orders you to forget the idea of undressing, for now. You relax as you comply with his order to forget.'
+					'"Soon you will be unable to resist me, my dear." he murmurs as he lightly traces the shape of your breast through your clothes, "Then we will have some fun."'
+					act 'Wake up':gt 'therapist', 'hypnoEnd'
+				elseif hypnostrength <=15:
+					'Your brow wrinkles and you frown as you fight the doctor''s suggestion and he quickly tells you to forget that he asked. As the command fades from your memory, you relax once more.'
+					'"It would appear that you are not yet ready to play, but it won''t be long now, <i>Cunt</i>." Dr. Pavlov mutters in mild frustration.' 
+					act 'Wake up':gt 'therapist', 'hypnoEnd'
+				else
+					'You frown slightly as your hands start to move towards your waist to unfasten your clothes then return to your side before once again beginning to move. Your frown deepens and Dr. Pavlov tells you to forget the command before the conflict awakens you. You relax once more as the doctor sighs in frustration.'
+					'"We are very close to a breakthrough, my little <i> Cunt </i>." he whispers in your ear as he caresses your breasts making your nipples stiffen, "You won''t resist me much longer and then you''ll be mine to enjoy."'
+					act 'Wake up':gt 'therapist', 'hypnoEnd'
+				end
 			end
-			'<center><img width=500 src="images/_nuki/therapist/stripping<<rand(1,3)>>.gif"></center>'
-			'<font color=brown>'
-			'You get up from the couch and start to take off all of your clothing. While you do this, Dr. Pavlov opens up his pants and takes out his dick, slowly masturbating as he watches you. After a while he stops and motions you closer to him.'
-			'"Come here, <i>Cunt</i>, <<$hypnoact>>"</font>'
+		else				
+			act 'Taking off clothes':
+				hidden_guy += 1
+				minut += 5
+				cla
+				*clr
+				if sound = 0:PLAY 'sound/Rainstorm.mp3',20 & PLAY 'sound/Clock.mp3',40
+				cumprecheck = 0
+				dick = 13
+				$dick_girth = 'massive'
+				if hypnoTime < 4:
+					$hypnoact = 'I want you to suck me!'
+					act 'Continue':gt 'therapist', 'hypnoSuck'
+				else
+		!			if hypnoTime < 10:
+						if rand(0,2) > 0:
+							$hypnoact = 'I want to fuck your pussy!'
+							act 'Continue':gt 'therapist', 'hypnoFuck'
+						else
+							$hypnoact = 'I want to fuck your ass!'
+							act 'Continue':gt 'therapist', 'hypnoAnal'
+						end
+		!			elseif rand(0,3) = 0:
+		!				$hypnoact = 'I thought of something special for you.'
+		!				act 'Continue':gt 'therapist', 'hypnoPerv'
+		!			else
+		!				if rand(0,2) > 0:
+		!					$hypnoact = 'I want to fuck your pussy!'
+		!					act 'Continue':gt 'therapist', 'hypnoFuck'
+		!				else
+		!					$hypnoact = 'I want to fuck your ass!'
+		!					act 'Continue':gt 'therapist', 'hypnoAnal'
+		!				end
+		!			end
+				end
+				'<center><img width=500 src="images/_nuki/therapist/stripping<<rand(1,3)>>.gif"></center>'
+				'<font color=brown>'
+				'You get up from the couch and start to take off all of your clothing. While you do this, Dr. Pavlov opens up his pants and takes out his dick, slowly masturbating as he watches you. After a while he stops and motions you closer to him.'
+				'"Come here, <i>Cunt</i>, <<$hypnoact>>"</font>'
+			end
 		end
 	end
 end
@@ -261,7 +291,7 @@ if $ARGS[0] = 'hypnoFuck':
 	'<font color=brown>'
 	$hypnofuck
 	'As soon as he is inside your pussy, he starts to fuck you.'
-	if vagina = 0:pain['vaginal'] +=5 & vagina += 1 & 'You feel a sharp pain as your <i>Master</i> pushes through your maidenhead, taking it away. He doesn''t seem to care about it, he just pushes himself deeper in your unexplored depths, enjoying himself immensly.'
+	if pcs_vag = 0:pain['vaginal'] +=5 & pcs_vag += 1 & 'You feel a sharp pain as your <i>Master</i> pushes through your maidenhead, taking it away. He doesn''t seem to care about it, he just pushes himself deeper in your unexplored depths, enjoying himself immensly.'
 	$hypnofuck2
 	'"Oh yes, my little <i>Cunt</i>, I am so close! I will blow a huge wad of sperm in your beautiful pussy! And you won''t even know about it!"<br>He finally groans, jabbing his hips deep, jetting all of his sperm as deep in your pussy as he possibly can.<br>"Cum, little <i>Cunt</i>, suck all of my seed deep in your body!"'
 	if randpos <= 1:
@@ -369,7 +399,7 @@ if $ARGS[0] = 'hypnoEnd':
 		'When you wake up, you see your therapist looking at you.'
 		'"How do you feel, Miss <<$pcs_lastname>>?"'
 		'You have a nagging feeling that you have forgotten somehing you should remember, but it is quickly forgotten, when you realize that you feel better about your problem. The therapy helped you a lot.'
-		'You certainly do not notice that your mouth tastes like sperm.'
+		if hypnotime ! 0: 'You certainly do not notice that your mouth tastes like sperm.'
 	elseif hypnoTime < 7:
 		'When you wake up, you see your therapist smiling.'
 		'"Very good, Miss <<$pcs_lastname>>. How do you feel?"'
