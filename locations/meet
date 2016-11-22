@@ -21,9 +21,11 @@ if $ARGS[0] = 'start':
 	!!check in appearance, a parameter vnesh
 	vneshBoy = vneshBoyA
 	$boyClo = $boyCloA
+	
+	
 	!!0 - 0 to 2, 1 - 3 to 5, 2, 5 to 6
 
-	
+	!! These variables will be compared to the player value 'salocatnow'.
 	figurBoy = figurBoyA
 	
 		
@@ -88,14 +90,35 @@ if $ARGS[0] = 'start':
 	!! It doesn''t matter if your poor or rich, everyone loves tits.
 	clotTopPref = clotTopPrefA
 	
+	!!This part helps calculate the constant to add to the 
+	
+	
+	!!This is to set the max/min of the clotTop variables. This is so you dont need to go through the code changing individual numbers.
+	if clotTopPref = 1:
+		clotTopMin = 1
+		clotTopMax = 4
+	elseif clotTopPref = 2:
+		clotTopMin = 3
+		clotTopMax = 5
+	elseif clotTopPref = 3:
+		clotTopMin = 5
+		clotTopMax = 7
+	else
+		clotTopMin = 0
+		clotTopMax = 999
+	end
+	
+	
+	
+	
 	!!THIS IS THE EQUATION FOR THE TIT ADDITION
-	if tits < 1:
+	if tits < 2:
 		titConstant = 0
-	elseif tits < 2:
+	elseif tits >= 2 and tits < 4:
 		titConstant = 1
-	elseif tits < 3:
+	elseif tits >= 4 and tits < 6:
 		titConstant = 2
-	elseif tits > 2:
+	elseif tits >= 6:
 		titConstant = 3
 	else
 		titConstant = 0
@@ -103,14 +126,49 @@ if $ARGS[0] = 'start':
 	
 	
 	
+	
 	!! This is for pants and skirt shortness and will be grouped together as such.
-	!! 0 - no preference, 1 - 1 to 2 units or ankle to calf length, 2 - 3 to 4 units or knee to miniskirt, 3 - 5 units to 6 or slut to hoe.
+	!! 0 - no preference, 1 - 1 to 2 units or ankle to calf length, 2 - 3 to 5 units or knee to miniskirt, 3 - 5 units to 6 or slut to hoe.
 	bottShorPref = bottShorPrefA
+	
+	
+	!!This is to set the max/min of the bottShor variables. This is so you dont need to go through the code changing individual numbers.
+	if bottShorPref = 1:
+		bottShorMin = 0
+		bottShorMax = 2
+	elseif bottShorPref = 2:
+		bottShorMin = 3
+		bottShorMax = 5
+	elseif bottShorPref = 3:
+		bottShorMin = 5
+		bottShorMax = 6
+	else
+		bottShorMin = 0
+		bottShorMax = 999
+	end
+	
 	
 	!! This is for clothes thinness.
 	!! 0 - no preference, 1 - 0 to 2 (Conservative), 2 - 3 to 4 (Moderate), 3 - 4 to 6 (really thin)
 	!! I see the moderate to really thin overlapping. Its intentional.
+	
+	!!This is to set the max/min of the clotThinness variables. This is so you dont need to go through the code changing individual numbers.
 	clotThinPref = clotThinPrefA
+	if clotThinPref = 1:
+		clotThinMin = 0
+		clotThinMax = 2
+	elseif clotThinPref = 2:
+		clotThinMin = 3
+		clotThinMax = 4
+	elseif clotThinPref = 3:
+		clotThinMin = 4
+		clotThinMax = 6
+	else
+		pierPrefMin = 0
+		clotThinMax = 999
+	end
+	
+	
 	
 	!!This is to find out if they want you to wear bimbo clothing
 	!! 0 - no preference, 1 - Prefers bimbo clothing.
@@ -289,20 +347,7 @@ if $ARGS[0] = 'start':
 	
 	!!I WILL START HERE!
 	
-	!!Putting his preferences into words
-	!! 0 - black, 1 - brown, 2 - redhead, 3 - blonde, 4 - no preference,
-	if hairPref = 0:
-		$hairPref = 'black'
-	elseif hairPref = 1:
-		$hairPref = 'brown'
-	elseif hairPref = 2: 
-		$hairPref = 'redhead'
-	elseif hairPref = 3:
-		$hairPref = 'blond'
-	else
-		$hairPref = ''
-	end
-	
+
 	!!0 - none, 1 - cheap, 2 - average, 3 - formal, 4 - naughty.
 	if clotTypePref = 0:
 		$clotTypePref = ''
@@ -470,15 +515,15 @@ if $ARGS[0] = 'start':
 
 	!! manna , mannamax * 50 / 100:
 	
-	if hapri = 1 and curly > 0:
+	if pcs_hairbsh = 1 and curly > 0:
 		bfA += 2 &
 		$meetHair = 'Your hair looks very beautiful.'
 	end
-	if hapri = 1 and curly = 0:
+	if pcs_hairbsh = 1 and curly = 0:
 		bfA += 1 
 		$meetHair = 'You have pretty hair today.'
 	end
-	if hapri = 0:
+	if pcs_hairbsh = 0:
 		bfA -= 1 
 		$meetHair = 'You look like you were in a hurry.'
 	end
@@ -1133,7 +1178,7 @@ if $ARGS[0] = 'actions':
 							end
 						end
 					end
-				elseif pierWearCount < pierPrefMin or pierWearCount > pierPrefMax and pierPref ! 0 pierDay >= dayA:
+				elseif pierWearCount < pierPrefMin or pierWearCount > pierPrefMax and pierPref ! 0 and pierDay <= dayA:
 					'<<$boydescA>> talks about how you just don''t have the right amount of piercings.'
 					if pierWearCount < pierPrefMin:
 						'He tells you that you should have more piercings.'
@@ -1203,7 +1248,7 @@ if $ARGS[0] = 'actions':
 							end
 						end
 					end
-				elseif tattCount < tattPrefMin or tattCount > tattPrefMax and tattPref ! 0 tattDay >= dayA:
+				elseif tattCount < tattPrefMin or tattCount > tattPrefMax and tattPref ! 0 and tattDay <= dayA:
 					'<<$boydescA>> talks about how you just don''t have the right amount of tattoos.'
 					if tattCount < tattPrefMin:
 						'He tells you that you should have more tattoos.'
@@ -1505,7 +1550,7 @@ if $ARGS[0] = 'actions':
 							end
 						end
 					end
-				elseif pierWearCount < pierPrefMin or pierWearCount > pierPrefMax and pierPref ! 0 and pierDay >= dayA:
+				elseif pierWearCount < pierPrefMin or pierWearCount > pierPrefMax and pierPref ! 0 and pierDay <= dayA:
 					'<<$boydescA>> talks about how you just don''t have the right amount of piercings.'
 					if pierWearCount < pierPrefMin:
 						'He tells you that you should have more piercings.'
@@ -1575,7 +1620,7 @@ if $ARGS[0] = 'actions':
 							end
 						end
 					end
-				elseif tattCount < tattPrefMin or tattCount > tattPrefMax and tattPref ! 0 and tattDay >= dayA:
+				elseif tattCount < tattPrefMin or tattCount > tattPrefMax and tattPref ! 0 and tattDay <= dayA:
 					'<<$boydescA>> talks about how you just don''t have the right amount of tattoos.'
 					if tattCount < tattPrefMin:
 						'He tells you that you should have more tattoos.'
@@ -1646,7 +1691,7 @@ if $ARGS[0] = 'actions':
 						end
 					end
 					
-				elseif pcs_lip < lipsPrefMin or pcs_lip > lipsPrefMax and lipsDay >= dayA: 
+				elseif pcs_lip < lipsPrefMin or pcs_lip > lipsPrefMax and lipsDay <= dayA: 
 					'<<$boydescA>> tells you your lips are just not the right size.'
 					if pcs_lip < lipsPrefMin:
 						'He tells you that you should get lip injections.'
@@ -1717,7 +1762,7 @@ if $ARGS[0] = 'actions':
 						end
 					end
 				
-				elseif tits < titMin or tits > titMax and titsDay >= dayA:
+				elseif tits < titMin or tits > titMax and titsDay <= dayA:
 					'<<$boydescA>> tells you your breasts are just not right.'
 					if tits < titMin:
 						'He tells you that you should get breast implants.'
@@ -1884,6 +1929,8 @@ if $ARGS[0] = 'actions':
 				randchan = rand(1, 3)
 			end
 			
+			randchan = 0
+			
 			if randchan = 0:
 				cls 
 				!!Some things you can change.
@@ -2041,7 +2088,7 @@ if $ARGS[0] = 'actions':
 							end
 						end
 					end
-				elseif pierWearCount < pierPrefMin or pierWearCount > pierPrefMax and pierPref ! 0 and pierDay >= dayA:
+				elseif pierWearCount < pierPrefMin or pierWearCount > pierPrefMax and pierPref ! 0 and pierDay <= dayA:
 					'<<$boydescA>> talks about how you just don''t have the right amount of piercings.'
 					if pierWearCount < pierPrefMin:
 						'He tells you that you should have more piercings.'
@@ -2111,7 +2158,7 @@ if $ARGS[0] = 'actions':
 							end
 						end
 					end
-				elseif tattCount < tattPrefMin or tattCount > tattPrefMax and tattPref ! 0 and tattDay >= dayA:
+				elseif tattCount < tattPrefMin or tattCount > tattPrefMax and tattPref ! 0 and tattDay <= dayA:
 					'<<$boydescA>> talks about how you just don''t have the right amount of tattoos.'
 					if tattCount < tattPrefMin:
 						'He tells you that you should have more tattoos.'
@@ -2182,7 +2229,7 @@ if $ARGS[0] = 'actions':
 						end
 					end
 					
-				elseif pcs_lip < lipsPrefMin or pcs_lip > lipsPrefMax and lipsDay >= dayA: 
+				elseif pcs_lip < lipsPrefMin or pcs_lip > lipsPrefMax and lipsDay <= dayA: 
 					'<<$boydescA>> tells you your lips are just not the right size.'
 					if pcs_lip < lipsPrefMin:
 						'He tells you that you should get lip injections.'
@@ -2253,7 +2300,7 @@ if $ARGS[0] = 'actions':
 						end
 					end
 				
-				elseif tits < titMin or tits > titMax and titsDay >= dayA:
+				elseif tits < titMin or tits > titMax and titsDay <= dayA:
 					'<<$boydescA>> tells you your breasts are just not right.'
 					if tits < titMin:
 						'He tells you that you should get breast implants.'
@@ -2323,7 +2370,7 @@ if $ARGS[0] = 'actions':
 							end
 						end
 					end
-				elseif salocatnow > figurePrefMax and figureDay >= dayA:
+				elseif salocatnow > figurePrefMax and figureDay <= dayA:
 					'<<$boydescA>> tells you your body is just too thick.'
 					'He offers to pay for you to get lyposuction.'
 					if sub < 20 and bfa < 60 and compliance < 6:
@@ -2438,7 +2485,8 @@ if $ARGS[0] = 'actions':
 	end
 	act 'I want to do something today.':
 		cla
-	
+		
+		
 		randchan = rand(0, 1)
 		if randchan = 0:
 			pcs_dom += 1
@@ -2456,7 +2504,7 @@ if $ARGS[0] = 'actions':
 		act '"Lets go to the cafe."':
 			act 'Go with him':gt 'kafeM', 'start'
 		end
-
+		
 		act 'Never mind...':
 			gt 'meet', 'actions'
 			exit

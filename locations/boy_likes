@@ -17,8 +17,9 @@ $boyClo = $boyCloA
 figurBoy = figurBoyA
 !!0 - chest less or equal 3, 1 breast 3-4, 2 breasts bigger 4
 titBoy = titBoyA
-!!favorite hair color 0 - brunette, 1 - haired, 2 - Redhead, 3 - blonde
+!!favorite hair color 0 - black, 1 - brown, 2 - Redhead, 3 - blonde
 haerBoy = haerBoyA
+
 !!character 0 - soft, 1 -norm 2 - aggressor
 harakBoy = harakBoyA
 !!perversity
@@ -50,17 +51,7 @@ clotQualPref = clotQualPrefA
 clotTopPref = clotTopPrefA
 
 !!THIS IS THE EQUATION FOR THE TIT ADDITION
-if tits < 1:
-	titConstant = 0
-elseif tits < 2:
-	titConstant = 1
-elseif tits < 3:
-	titConstant = 2
-elseif tits > 2:
-	titConstant = 3
-else
-	titConstant = 0
-end
+
 
 
 
@@ -108,22 +99,8 @@ IQPref = IQPrefA
 !! 0 - black, 1 - brown, 2 - redhead, 3 - blonde, 4 - no preference,
 
 
-!!How many days until the boyfriend starts to comment.
-
-
 !!Putting his preferences into words
-!! 0 - black, 1 - brown, 2 - redhead, 3 - blonde, 4 - no preference,
-if hairPref = 0:
-	$hairPref = 'black'
-elseif hairPref = 1:
-	$hairPref = 'brown'
-elseif hairPref = 2: 
-	$hairPref = 'redhead'
-elseif hairPref = 3:
-	$hairPref = 'blond'
-else
-	$hairPref = ''
-end
+
 
 !!0 - none, 1 - cheap, 2 - average, 3 - formal, 4 - naughty.
 if clotTypePref = 0:
@@ -292,15 +269,15 @@ end
 
 !! manna , mannamax * 50 / 100:
 
-if hapri = 1 and curly > 0:
+if pcs_hairbsh = 1 and curly > 0:
 	bfA += 2 &
 	$meetHair = 'Your hair looks very beautiful.'
 end
-if hapri = 1 and curly = 0:
+if pcs_hairbsh = 1 and curly = 0:
 	bfA += 1 
 	$meetHair = 'You have pretty hair today.'
 end
-if hapri = 0:
+if pcs_hairbsh = 0:
 	bfA -= 1 
 	$meetHair = 'You look like you were in a hurry.'
 end
@@ -369,13 +346,13 @@ if $ARGS[0] = 'clotQualPref':
 		if PCloQuality > 4: 
 			if harakBoyA = 0:
 				bfA -= 2
-				$meetQualPref = '<<$boydescA>> says that he thinks your clothing quality is way to high and he likes girls that where clothing that is <<$clotQualPref>>."'
+				$meetQualPref = '<<$boydescA>> says that he thinks your clothing quality is way too high and he likes girls that where clothing that is <<$clotQualPref>>."'
 			elseif harakBoyA = 0:
 				bfA -= 1
-				$meetQualPref = '<<$boydescA>> says that he thinks your clothing quality is way to high and he likes girls that where clothing that is <<$clotQualPref>>."'
+				$meetQualPref = '<<$boydescA>> says that he thinks your clothing quality is way too high and he likes girls that where clothing that is <<$clotQualPref>>."'
 			elseif harakBoyA = 0:
 				bfA -= 2 
-				$meetQualPref = '<<$boydescA>> says that he thinks your clothing quality is way to high and he likes girls that where clothing that is <<$clotQualPref>>."'
+				$meetQualPref = '<<$boydescA>> says that he thinks your clothing quality is way too high and he likes girls that where clothing that is <<$clotQualPref>>."'
 			end	
 		elseif PCloQuality < 4:
 			if harakBoyA = 0:
@@ -421,7 +398,7 @@ if $ARGS[0] = 'clotQualPref':
 end
 if $ARGS[0] = 'clotTopPref':
 	if clotTopPref = 1:
-		if PCloTopCut + titConstant >= 3:
+		if PCloTopCut > clotTopMax:
 			if harakBoyA = 0:
 				bfA -= 1
 				$meetTopPref = '<<$boydescA>> says shyly that he likes girls who wear clothes with <<$clotTopPref>> cleavage, and you kind of have to much for his taste."'
@@ -432,7 +409,7 @@ if $ARGS[0] = 'clotTopPref':
 				bfA -= 2 
 				$meetTopPref = '<<$boydescA>> looks at your cleavage and says he likes girls that wear clothes with <<$clotTopPref>> cleavage, and anything else is trash."'
 			end	
-		elseif PCloTopCut + titConstant < 4:
+		elseif PCloTopCut <= clotTopMax:
 			if harakBoyA = 0:
 				bfA += 1
 				$meetTopPref = '<<$boydescA>> says with a blush he likes that you are wearing clothes with only <<$clotTopPref>> cleavage."'
@@ -445,7 +422,7 @@ if $ARGS[0] = 'clotTopPref':
 			end					
 		end
 	elseif clotTopPref = 2:
-		if PCloTopCut + titConstant < 4:
+		if PCloTopCut < clotTopMin:
 			if harakBoyA = 0:
 				bfA -= 1
 				$meetTopPref = '<<$boydescA>> looks at your cleavage and says shyly that he likes girls who wear clothes with <<$clotTopPref>> cleavage, and you have to little for his taste."'
@@ -456,7 +433,7 @@ if $ARGS[0] = 'clotTopPref':
 				bfA -= 2 
 				$meetTopPref = '<<$boydescA>> looks at your cleavage and says he likes girls that wear clothes with <<$clotTopPref>> cleavage, and anything else is trash."'
 			end	
-		elseif PCloTopCut + titConstant > 5:
+		elseif PCloTopCut > clotTopMax:
 			if harakBoyA = 0:
 				bfA -= 1
 				$meetTopPref = '<<$boydescA>> looks at your cleavage and says slightly embarressed that he likes girls who wear clothes with <<$clotTopPref>> cleavage, and you have to much for his taste."'
@@ -467,7 +444,7 @@ if $ARGS[0] = 'clotTopPref':
 				bfA -= 2 
 				$meetTopPref = '<<$boydescA>> looks at your cleavage and says he likes girls that wear clothes with <<$clotTopPref>> cleavage, and anything else is trash."'
 			end	
-		elseif PCloTopCut + titConstant < 6 and PCloTopCut + titConstant >= 3:
+		elseif PCloTopCut <= clotTopMax and PCloTopCut >= clotTopMin:
 				if harakBoyA = 0:
 				bfA += 1
 				$meetTopPref = '<<$boydescA>> says with a blush he likes that you are wearing clothes with only <<$clotTopPref>> cleavage."'
@@ -480,7 +457,7 @@ if $ARGS[0] = 'clotTopPref':
 			end	
 		end
 	elseif clotTopPref = 3:
-		if PCloTopCut + titConstant < 5:
+		if PCloTopCut < clotTopMin:
 			if harakBoyA = 0:
 				bfA -= 1
 				$meetTopPref = '<<$boydescA>> looks at your cleavage and says shyly that he likes girls who wear clothes with <<$clotTopPref>> cleavage, and you have to little for his taste."'
@@ -491,7 +468,7 @@ if $ARGS[0] = 'clotTopPref':
 				bfA -= 2 
 				$meetTopPref = '<<$boydescA>> looks at your cleavage and says he likes girls that wear clothes with <<$clotTopPref>> cleavage, and anything else is trash."'
 			end	
-		elseif PCloTopCut + titConstant < 4:
+		elseif PCloTopCut >= clotTopMin:
 			if harakBoyA = 0:
 				bfA += 1
 				$meetTopPref = '<<$boydescA>> says with a blush he likes that you are wearing clothes with only <<$clotTopPref>> cleavage."'
@@ -510,7 +487,7 @@ if $ARGS[0] = 'clotTopPref':
 end
 if $ARGS[0] = 'bottShorPref':
 	if bottShorPref = 1:
-		if PCloSkirt > 2 or PCloPants > 2:
+		if PCloSkirt > bottShorMax or PCloPants > bottShorMax:
 			if harakBoyA = 0:
 				bfA -= 1
 				$meetBottPref = '<<$boydescA>> says shyly that he likes girls who wear clothes with <<$bottShorPref>> bottoms, and you kind of show too much for his taste."'
@@ -521,7 +498,7 @@ if $ARGS[0] = 'bottShorPref':
 				bfA -= 2 
 				$meetBottPref = '<<$boydescA>> looks at your legs and says he likes girls that wear clothes with <<$bottShorPref>> bottoms, and yours makes you look like a slut."'
 			end	
-		elseif PCloSkirt < 3 or PCloPants < 3:
+		elseif PCloSkirt <= bottShorMax or PCloPants <= bottShorMax:
 			if harakBoyA = 0:
 				bfA += 1
 				$meetBottPref = '<<$boydescA>> looks at your bottom''s length and says that he likes that you are wearing clothes with only <<$bottShorPref>> bottoms."'
@@ -535,10 +512,10 @@ if $ARGS[0] = 'bottShorPref':
 		end
 	
 	elseif bottShorPref = 2:
-		if PCloSkirt < 4 or PCloPants < 4:
+		if PCloSkirt < bottShorMin or PCloPants < bottShorMin:
 			if harakBoyA = 0:
 				bfA -= 1
-				$meetBottPref = '<<$boydescA>> looks at your clothing''s bottoms length and says shyly that he likes girls who wear clothes with <<$bottShorPref>> bottoms, and you kind of have to long of clothing for his taste."'
+				$meetBottPref = '<<$boydescA>> looks at your clothing''s bottoms length and says shyly that he likes girls who wear clothes with <<$bottShorPref>> bottoms, and you kind of have too long of clothing for his taste."'
 			elseif harakBoyA = 1:
 				bfA -= 1
 				$meetBottPref = '<<$boydescA>> says he likes girls that wear clothes with <<$bottShorPref>> bottoms, and yours makes you look prudish."'
@@ -546,7 +523,7 @@ if $ARGS[0] = 'bottShorPref':
 				bfA -= 2 
 				$meetBottPref = '<<$boydescA>> looks at your legs and says he likes girls that wear clothes with <<$bottShorPref>> bottoms, and yours makes you look like a prude."'
 			end	
-		elseif PCloSkirt > 5 or PCloPants > 5:
+		elseif PCloSkirt > bottShorMax or PCloPants > bottShorMax:
 			if harakBoyA = 0:
 				bfA -= 1
 				$meetBottPref = '<<$boydescA>> says shyly that he likes girls who wear clothes with <<$bottShorPref>> bottoms, and you kind of show too much for his taste."'
@@ -557,7 +534,7 @@ if $ARGS[0] = 'bottShorPref':
 				bfA -= 2 
 				$meetBottPref = '<<$boydescA>> looks at your legs and says he likes girls that wear clothes with <<$bottShorPref>> bottoms, and yours makes you look like a slut."'
 			end	
-		elseif (PCloSkirt < 6 or PCloPants < 6) and (PCloSkirt >= 4 or PCloPants >= 4):
+		elseif (PCloSkirt <= bottShorMax or PCloPants <= bottShorMax) and (PCloSkirt >= bottShorMin or PCloPants >= bottShorMin):
 			if harakBoyA = 0:
 				bfA += 1
 				$meetBottPref = '<<$boydescA>> looks at your bottom''s length, blushing, and says that he likes that you are wearing clothes with <<$bottShorPref>> bottoms."'
@@ -570,10 +547,10 @@ if $ARGS[0] = 'bottShorPref':
 			end					
 		end
 	elseif bottShorPref = 3:
-		if PCloSkirt < 5 or PCloPants < 5:
+		if PCloSkirt < bottShorMin or PCloPants < bottShorMin:
 			if harakBoyA = 0:
 				bfA -= 1
-				$meetBottPref = '<<$boydescA>> looks at your clothing''s bottoms length and says shyly that he likes girls who wear clothes with <<$bottShorPref>> bottoms, and you kind of show to little for his taste."'
+				$meetBottPref = '<<$boydescA>> looks at your clothing''s bottoms length and says shyly that he likes girls who wear clothes with <<$bottShorPref>> bottoms, and you kind of show too little for his taste."'
 			elseif harakBoyA = 1:
 				bfA -= 1
 				$meetBottPref = '<<$boydescA>> says he likes girls that wear clothes with <<$bottShorPref>> bottoms, and yours makes you look prudish."'
@@ -581,7 +558,7 @@ if $ARGS[0] = 'bottShorPref':
 				bfA -= 2 
 				$meetBottPref = '<<$boydescA>> looks at your legs and says he likes girls that wear clothes with <<$bottShorPref>> bottoms, and yours makes you look like a prude."'
 			end	
-		elseif PCloSkirt > 4 or PCloPants > 4:
+		elseif PCloSkirt >= bottShorMin or PCloPants >= bottShorMin:
 			if harakBoyA = 0:
 				bfA += 1
 				$meetBottPref = '<<$boydescA>> looks at your clothing''s bottoms length and says with a blush he likes that you are wearing clothes with <<$bottShorPref>> bottoms, and that he thinks the length looks great on you."'
@@ -594,91 +571,91 @@ if $ARGS[0] = 'bottShorPref':
 			end	
 		end
 	end
-	if clotBottPref ! 0:
+	if bottShorPref ! 0:
 		'<<$meetBottPref>>'
 	end
 
 end
 if $ARGS[0] = 'clotThinPref':
 	if clotThinPref = 1:
-		if PCloThinness > 2: 
+		if PCloThinness > clotThinMax: 
 			if harakBoyA = 0:
 				bfA -= 2
 				$meetClotThin = '<<$boydescA>> looks at the thinness of your outfit and says that your outfit is too thin, and looking down he mumbles that it makes you look like a slut."'
-			elseif harakBoyA = 0:
+			elseif harakBoyA = 1:
 				bfA -= 1
 				$meetClotThin = '<<$boydescA>> looks at the thinness of your outfit and says that your outfit is too thin, and that it makes you look like a slut."'
-			elseif harakBoyA = 0:
+			elseif harakBoyA = 2:
 				bfA -= 2 
 				$meetClotThin = '<<$boydescA>> looks at the thinness of your outfit and says that your outfit is too thin, and only whores where clothes that thin."'
 			end	
-		elseif PCloThinness < 3:
+		elseif PCloThinness <= clotThinMax:
 			if harakBoyA = 0:
 				bfA += 1
 				$meetClotThin = '<<$boydescA>> tells you that he thinks your outfit''s thinness is just right, not too thick and not to thin."'
-			elseif harakBoyA = 0:
+			elseif harakBoyA = 1:
 				bfA += 1
 				$meetClotThin = '<<$boydescA>> tells you that he thinks your outfit''s thinness is just right, not too thick and not to thin."'
-			elseif harakBoyA = 0:
+			elseif harakBoyA = 2:
 				bfA += 2 
 				$meetClotThin = '<<$boydescA>> tells you that he thinks your outfit''s thinness is just right, not too thick and not to thin."'
 			end	
 		end
 	elseif clotThinPref = 2: 
-		if PCloThinness > 4: 
+		if PCloThinness > clotThinMax: 
 			if harakBoyA = 0:
 				bfA -= 2
 				$meetClotThin = '<<$boydescA>> looks at the thinness of your outfit and says that your outfit is too thin, and looking down he mumbles that it makes you look like a slut."'
-			elseif harakBoyA = 0:
+			elseif harakBoyA = 1:
 				bfA -= 1
 				$meetClotThin = '<<$boydescA>> looks at the thinness of your outfit and says that your outfit is too thin, and that it makes you look like a slut."'
-			elseif harakBoyA = 0:
+			elseif harakBoyA = 2:
 				bfA -= 2 
 				$meetClotThin = '<<$boydescA>> looks at the thinness of your outfit and says that your outfit is too thin, and only whores where clothes that thin."'
 			end	
-		elseif PCloThinness < 3:
+		elseif PCloThinness < clotThinMin:
 			if harakBoyA = 0:
 				bfA -= 2
 				$meetClotThin = '<<$boydescA>> looks at the thinness of your outfit and says that your outfit is too thick, and looking down he mumbles that it makes you look like a prude."'
-			elseif harakBoyA = 0:
+			elseif harakBoyA = 1:
 				bfA -= 1
 				$meetClotThin = '<<$boydescA>> looks at the thinness of your outfit and says that your outfit is too thick, and that it makes you look like a prude."'
-			elseif harakBoyA = 0:
+			elseif harakBoyA = 2:
 				bfA -= 2 
 				$meetClotThin = '<<$boydescA>> looks at the thinness of your outfit and says that your outfit is too thick, and only prude where clothes that thick."'
 			end	
-		elseif PCloThinness > 2 and PCloThinness < 5:
+		elseif PCloThinness >= clotThinMin and PCloThinness <= clotThinMax:
 			if harakBoyA = 0:
 				bfA += 1
 				$meetClotThin = '<<$boydescA>> tells you that he thinks your outfit''s thinness is just right, not too thick and not to thin."'
-			elseif harakBoyA = 0:
+			elseif harakBoyA = 1:
 				bfA += 1
 				$meetClotThin = '<<$boydescA>> tells you that he thinks your outfit''s thinness is just right, not too thick and not to thin."'
-			elseif harakBoyA = 0:
+			elseif harakBoyA = 2:
 				bfA += 2 
 				$meetClotThin = '<<$boydescA>> tells you that he thinks your outfit''s thinness is just right, not too thick and not to thin."'
 			end	
 		end
 	elseif clotThinPref = 3:
-		if PCloThinness < 5:
+		if PCloThinness < clotThinMin:
 			if harakBoyA = 0:
 				bfA -= 2
 				$meetClotThin = '<<$boydescA>> looks at the thinness of your outfit and says that your outfit is too thick, and looking down he mumbles that it makes you look like a prude."'
-			elseif harakBoyA = 0:
+			elseif harakBoyA = 1:
 				bfA -= 1
 				$meetClotThin = '<<$boydescA>> looks at the thinness of your outfit and says that your outfit is too thick, and that it makes you look like a prude."'
-			elseif harakBoyA = 0:
+			elseif harakBoyA = 2:
 				bfA -= 2 
 				$meetClotThin = '<<$boydescA>> looks at the thinness of your outfit and says that your outfit is too thick, and only prude where clothes that thick."'
 			end	
-		elseif PCloThinness > 4:
+		elseif PCloThinness >= clotThinMin:
 			if harakBoyA = 0:
 				bfA += 1
 				$meetClotThin = '<<$boydescA>> tells you that he thinks your outfit''s thinness is perfect, and he says shyly he likes to look at your body''s curves."'
-			elseif harakBoyA = 0:
+			elseif harakBoyA = 1:
 				bfA += 1
 				$meetClotThin = '<<$boydescA>> tells you that he thinks your outfit''s thinness is perfect, and he loves to see every curve of your body."'
-			elseif harakBoyA = 0:
+			elseif harakBoyA = 2:
 				bfA += 2 
 				$meetClotThin = '<<$boydescA>> tells you that he thinks your outfit''s thinness is perfect, and his eyes take in the curves of your body."'
 			end	
@@ -694,10 +671,10 @@ if $ARGS[0] = 'bimbPref':
 			if harakBoyA = 0:
 				bfA += 1
 				$meetBimbPref = '<<$boydescA>> tells you blushing that he likes that you look like a bimbo."'
-			elseif harakBoyA = 0:
+			elseif harakBoyA = 1:
 				bfA += 1
 				$meetBimbPref = '<<$boydescA>> tells you that your bimbo clothes look amazing on you."'
-			elseif harakBoyA = 0:
+			elseif harakBoyA = 2:
 				bfA += 2 
 				$meetBimbPref = '<<$boydescA>> tells you that he thinks all girls should dress up as much as a bimbo as you are."'
 			end	
@@ -789,7 +766,7 @@ end
 if $ARGS[0] = 'makePref':
 	if pcs_makeup ! 0 and makePref ! 0:
 		if harakBoyA = 0:
-			if hapri = 0:
+			if pcs_hairbsh = 0:
 				bfA -= 1
 				$meetMake = '<<$boydescA>> says timidly "I guess you had to leave in a hurry huh?"'
 			elseif pcs_makeup ! makePref + 1 and makePref ! 0:
@@ -800,7 +777,7 @@ if $ARGS[0] = 'makePref':
 				$meetMake = '<<$boydescA>> looks at your face and says, "I love the way you did your makeup."'
 			end
 		elseif harakBoyA = 1:
-			if hapri = 0:
+			if pcs_hairbsh = 0:
 				bfA -= 1
 				$meetMake = '<<$boydescA>> says questionly, "I guess you had to leave in a hurry?"'
 			elseif pcs_makeup ! makePref + 1 and makePref ! 0:
@@ -813,7 +790,7 @@ if $ARGS[0] = 'makePref':
 				$meetMake = '<<$boydescA>> says sweetly, "It seems any way you do your makeup is beautiful."'
 			end
 		elseif harakBoyA = 2:
-			if hapri = 0:
+			if pcs_hairbsh = 0:
 				bfA -= 1
 				$meetMake = '<<$boydescA>> says rudely, "Couldn''t take the time to brush your hair?"'
 			elseif pcs_makeup ! makePref + 1 and makePref ! 0:
@@ -2220,6 +2197,18 @@ if $ARGS[0] = 'changeTits':
 		end
 	end
 end
+
+!!This is a interesting one as it will take in a couple of things, not just clothes preferences. I need to find clothing pictures for most of the types of clothes. Think of these as quest clothes.
+if $ARGS[0] = 'changeClothes':
+	act 'Enter Clothing Shop':
+	cla
+	if 
+	
+	
+	end
+end
+
+!! This should not increase the weight at all, and should only have been called if they weigh over the figurePrefMax
 if $ARGS[0] = 'changeFigure':
 	act 'Enter clinic':
 		cla
@@ -2250,10 +2239,9 @@ if $ARGS[0] = 'changeFigure':
 						
 						if figurBoyA ! 3:
 							:loopfatRemover
-								fat -= 10
-								salo -= 10
-								if fat < 11: fat = 11
-								if salo < 11: salo = 11
+								fat = 20 * figurePrefMin + 1
+								if fat < 10: fat = 20
+
 								gs 'body_shape', 'softreset'
 								!!'<<salocatnow>> is the value for salocatnow, the value for fat is <<fat>>, and the value for salo is <<salo>>.'
 								
@@ -2270,7 +2258,7 @@ if $ARGS[0] = 'changeFigure':
 							cls
 							'As you go back towards him, he looks you up and down.'
 							'"There we go!", he says with a smile.'
-							gs 'obj_din'', ''body'
+							gs 'obj_din', 'body'
 							if figurBoyA = 0:
 								'You can tell that <<$boydescA>> likes a girl that has very little fat on her whorish tits, and you can kind of see why as you slowly look at yourself in the mirror.'
 							elseif figurBoy = 1:
@@ -2305,7 +2293,72 @@ if $ARGS[0] = 'changeFigure':
 				end
 			end
 		end
+		
+	
+	
+	
 	end
+
+end
+if $ARGS[0] = 'testLikes':
+	figurBoyA = 0
+	titBoyA = 0
+
+	!!new preferences
+	clotTypePrefA = 0
+	clotQualPrefA = 0
+	clotTopPrefA = 0
+	bottShorPrefA = 0
+	clotThinPrefA = 0
+	bimbPrefA = 0
+	pierPrefA = 0
+	tattPrefA = 0
+	lipsPrefA = 0
+	makePrefA = 0
+	IQPrefA = 0
+	harakBoyA = 0
+	financeA = 2
+	'figurBoyA is <<figurBoyA>>, titBoyA is <<titBoyA>>, clotTypePrefA is <<clotTypePrefA>>, clotQualPrefA is <<clotQualPrefA>>, clotTopPrefA is <<clotTopPrefA>>'
+	'bottShorPrefA is <<bottShorPrefA>>, clotThinPrefA is <<clotThinPrefA>>, bimbPrefA is <<bimbPrefA>>, pierPrefA is <<pierPrefA>>, tattPrefA is <<tattPrefA>>'
+	'lipsPrefA is <<lipsPrefA>>, makePrefA is <<makePrefA>>, IQPrefA is <<IQPrefA>>, compliance is <<compliance>>.'
+end
+
+!!When I test things I like to have a small preference. Don''t mind this, nothing to see here.
+
+if $ARGS[0] = 'bimTest':
+	figurBoyA = 0
+	titBoyA = 2
+	haerBoyA = 3
+	
+	clotTypePrefA = 4
+	clotQualPrefA = 2
+	clotTopPrefA = 3
+	bottShorPrefA = 3
+	clotThinPrefA = 3
+	bimbPrefA = 1
+	pierPrefA = 2
+	tattPrefA = 1
+	lipsPrefA = 2
+	makePrefA = 3
+	IQPrefA = 0
+	harakBoyA = 2
+	financeA = 2
+	
+	boybodyrand = 1
+	boybodyrandA = boybodyrand
+	if boybodyrandA = 1: $boybody = 'tall'
+	$boybodyA = $boybody 
+	
+	boybodrand = 2
+	boybodrandA = boybodrand
+	if boybodrand = 2: $boybod = 'athletic'
+	$boybodA = $boybod
+	izvrat = 1
+	izvratA = izvrat
+	
+	'figurBoyA is <<figurBoyA>>, titBoyA is <<titBoyA>>, clotTypePrefA is <<clotTypePrefA>>, clotQualPrefA is <<clotQualPrefA>>, clotTopPrefA is <<clotTopPrefA>>'
+	'bottShorPrefA is <<bottShorPrefA>>, clotThinPrefA is <<clotThinPrefA>>, bimbPrefA is <<bimbPrefA>>, pierPrefA is <<pierPrefA>>, tattPrefA is <<tattPrefA>>'
+	'lipsPrefA is <<lipsPrefA>>, makePrefA is <<makePrefA>>, IQPrefA is <<IQPrefA>>, compliance is <<compliance>>.'
 end
 
 --- boy_likes ---------------------------------
