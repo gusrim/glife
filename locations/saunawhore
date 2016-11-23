@@ -1,90 +1,594 @@
 # saunawhore
+
 saunaWorkKlient = 1
 guy += 1
 slutty += 1
-stat['bj'] += 1
-dynamic $venerasiak
-gs 'boy'
-gs 'npcgeneratec', 0, 'Client', rand(18,45)
-gs 'boyStat', $npclastgenerated
-whorerand = rand(1, 22)
-minut += 15
 SaunaWhore += 1
-workDolg2 = 0
-gs 'stat'
-'<center><img src="images/sauna/bj<<whorerand>>.jpg"></center>'
-'You take your client in to the sauna, where you both undress.'
-'You fall to your knees in front of the client and take his flaccid cock in your mouth. You work your magic and his member quickly rises to <<dick>> centimeters fully erect.'
-'You carefully clasping his dick and sucking with your <<$liptalk>> you feel every movement of his hard cock in your mouth and throat.'
+dynamic $venerasiak
 
-if dick <= 12:
-    'His member is not very large and you constantly poke you nose into his curly pubes sucking his dick to the base and his hairy balls hit you on the chin.'
-elseif dick > 12 and dick <= 15:
-    'With each movement the member pokes into your throat and you choke a little diligently working the full length.'
-elseif dick > 15:
-    'This dick is too big for your mouth and you suck it as far as your mouth will allow, taking it down your the neck then removing it to free your airway and licking the head admiringly.'
+
+if moodTypeRand <= 0:
+	$moodType = 'bad'
+elseif moodTypeRand >= 1 and moodTypeRand <= 3:
+	$moodType = 'neutral'
+elseif moodTypeRand >= 4:
+	$moodType = 'good'
 end
-!!dynamic $saunadinsexbefore
-if dick > 15:saunarand = rand(0, 100)
 
-if dick > 15 and saunarand > 90:
-	'Client wants you to give him a deep blowjob.'
+if $ARGS[0] = 'clientGate':
+	
+	moodTypeRand = rand(-3, 3)
 
-	act 'Deepthroat':
-		cls
-		minut += 45
-		pcs_sweat += 10
-		pcs_makeup = 0
-		pcs_throat += 1
-		gs 'stat'
-		whorerand = rand(1, 34)
-		'<center><img src="images/sauna/deep<<whorerand>>.jpg"></center>'
-		'You deeply absorb the dick into your mouth, it rests in your throat, you try to stretch your throat and swallow the cock. It becames hard to breathe and you start crying, drooling and snot dribbles from your nose, you pull the member out of your throat and take a rest.'
-		'Then you begin again and wrap your mouth around the <<dick>> centimeter member pushing against your throat help it to adapt and you can find the space in which to swallow the member. Your is throat burning with fire and your eyes are flowing with tears, snot runs from your nose down the face, the client finally groans and finishes in the condom.'
+	! customer body type
+	! -1=skinny, 3-4=regular, 5-6=muscular, 7+=fat
+	bodyTypeRand = 3
 
-		act 'Take the money from the client and go':money += 1500 & saunaWorkNow = 1 & gt 'saunawork'
+	! customer height type
+	! -1=small, 3-4=regular, 5+=tall
+	heightTypeRand = 3
+
+	! customer age
+	customerAge = rand(15, 90)
+
+	gs 'npcgeneratec', 0, 'client', customerAge
+	gs 'boyStat', $npclastgenerated
+
+	! customer race, racial modifiers, dick modifiers
+	raceRand = rand(1, 3)
+	if RaceRand = 1:
+		$raceType = 'white'
+		dickChance = 30
+		bodyTypeRand += rand(-2, 8)
+		heightTypeRand += rand(-1, 6)
+	elseif RaceRand = 2:
+		$raceType = 'black'
+		dickChance = 40
+		bodyTypeRand += rand(0, 6)
+		heightTypeRand += rand(0, 6)
+	elseif RaceRand = 3:
+		$raceType = 'asian'
+		dickChance = 20
+		bodyTypeRand += rand(-6, 2)
+		heightTypeRand += rand(-4, 1)
 	end
 
-else
-	'The client has had enough of your mouth and wants sex.'
+	dickRand = rand(1, 100)
+	if dickRand <= dickChance:
+		dick = rand(15, 28)
+	elseif dickRand <= (dickChance * 2):
+		dick = rand(10, 20)
+	else
+		dick = rand(5, 12)
+	end
 
-	act 'Further':
-		cls
+	! customer dick size
+	if dick >= 24:
+		$dick_girth = 'monstrous'
+		cumVol = rand(4, 5)
+	elseif dick >= 24:
+		$dick_girth = 'huge'
+		cumVol += 1
+		cumVol = rand(3, 5)
+	elseif dick >= 20:
+		$dick_girth = 'very big'
+		cumVol = rand(2, 5)
+	elseif dick >= 16:
+		$dick_girth = 'big'
+		cumVol = rand(2, 4)
+	elseif dick >= 12:
+		$dick_girth = 'regular'
+		cumVol -= 1
+		cumVol = rand(1, 4)
+	else
+		$dick_girth = 'tiny'
+		cumVol -= 2
+		cumVol = rand(1, 3)
+	end
 
-		if rand(0, 100) <= 80 and mesec = 0:
-			cls
-			arousal_minut = 45
-			pose = 0
-			pcs_sweat += 10
-			gs 'stat'
-			whorerand = rand(1, 23)
-			'<center><img src="images/sauna/sex<<whorerand>>.jpg"></center>'
-			'The customer places you in a pose.'
+	! customer cum volume
+	if cumVol <= 1:
+		$cumType = 'neglectable'
+		cumVolMl = 10
+	elseif cumVol = 2:
+		$cumType = 'little'
+		cumVolMl = 20
+	elseif cumVol = 3:
+		$cumType = 'normal'
+		cumVolMl = 40
+	elseif cumVol = 4:
+		$cumType = 'significant'
+		cumVolMl = 60
+	elseif cumVol >= 5:
+		$cumType = 'horse like'
+		cumVolMl = 100
+	end
 
-			if prezik <= 0:prezik += 1 & workDolg2 = 50 & 'You take a condom out of the big box, knowing this will cost you 50 <b>₽</b>.'
+	if bodyTypeRand <= 1:
+		$bodyType = 'thin'
+	elseif bodyTypeRand >= 2 and bodyTypeRand <= 4:
+		$bodyType = 'athletic'
+	elseif bodyTypeRand >= 5 and bodyTypeRand <= 6:
+		$bodyType = 'chunky'
+	elseif bodyTypeRand >= 7:
+		$bodyType = 'fat'
+	end
 
-			gs 'orgazm', 'start'
+	if heightTypeRand <= 1:
+		$heightType = 'short'
+	elseif heightTypeRand >= 2 and heightTypeRand <= 4:
+		$heightType = 'average'
+	elseif heightTypeRand >= 5:
+		$heightType = 'tall'
+	end
 
-			act 'Take the money from the client and go':money += 1000 & money -= workDolg2 & saunaWorkNow = 1 & gt 'saunawork'
-		else
-			cls
-			minut += 45
-			pcs_sweat += 10
-			gs 'stat'
-			whorerand = rand(1, 23)
-			'<center><img src="images/sauna/anal<<whorerand>>.jpg"></center>'
-			'The client wants you in the ass, you smear lube on your ass and turning, offer it to the client.'
+	if customerAge <= 18:
+		$ageType = 'very young'
+	elseif customerAge > 18 and customerAge <= 30:
+		$ageType = 'young'
+	elseif customerAge > 30 and customerAge <= 45:
+		$ageType = 'middle aged'
+	elseif customerAge > 45 and customerAge <= 60:
+		$ageType = 'elderly'
+	elseif customerAge > 60 and customerAge <= 80:
+		$ageType = 'old'
+	elseif customerAge > 80:
+		$ageType = 'very old'
+	end
 
-			if prezik <= 0:prezik += 1 & workDolg2 = 50
+	durr = 5
+	minut += durr
 
-			lubonus = 5
-			dynamic $analsex
-			'Finally client groans and finishes in a condom.'
-			dynamic $prezik
+	'<center><img src="images/sauna/room.jpg"></center>'
+	'You take your client in to the sauna, closing the door behind him.'
+	'Client sits down in the chair and looks at you with obvious appetite.'
+	'He is <<$ageType>> <<$raceType>>, his figure is <<$heightType>> and <<$bodyType>>. In his pants you can see a bulge indicating he has a <<$dick_girth>> dick.'
+	'Looking at his face, you can guess he has a <<$moodType>> mood.'
+	if $moodType = 'bad':
+		'You better be careful..'
+	end 
+	'You decide to..:'
+	gs 'stat'
+	act 'Simply strip':gt 'saunawhore', 'simplystrip'
+	act 'Do a provocative striptease':gt 'saunawhore', 'striptease'
+end
 
-			act 'Take the money from the client and go':money += 2000 & money -= workDolg2 & saunaWorkNow = 1 & gt 'saunawork'
+if $ARGS[0] = 'striptease':
+	minut += 5
+	'<center><img src="images/sauna/striptease'+rand(1, 5)+'.gif"></center>'
+	'Performing as appealing as you can you dance and strip your clothes, hoping to please the customer.'
+	moodTypeRand += 1
+	gs 'stat'
+	act 'Continue':gt 'saunawhore', 'strippedGate'
+end
+
+if $ARGS[0] = 'simplystrip':
+	minut += 2
+	'<center><img src="images/sauna/simplystrip'+rand(1, 2)+'.gif"></center>'
+	'You just remove your clothes like on any other occassion. Client does not look very pleased by this..'
+	moodTypeRand -= 1
+	gs 'stat'
+	act 'Continue':gt 'saunawhore', 'strippedGate'
+end
+
+if $ARGS[0] = 'strippedGate':
+	minut += 2
+	'<center><img src="images/sauna/nakedstand.jpg"></center>'
+	'You stand naked in front of the client.'
+
+	act 'Dance naked':gt 'saunawhore', 'nakeddance'
+	act 'Kneel and open mouth':gt 'saunawhore', 'blowjob'
+	act 'Present him your holes':gt 'saunawhore', 'holeshow'
+end
+
+if $ARGS[0] = 'nakeddance':
+	minut += 5
+	'<center><img src="images/sauna/nakeddance'+rand(1, 4)+'.gif"></center>'
+	'You decide to tease him further, so you start dancing, shaking your ass and breasts as tingly as possible.'
+	moodTypeRand += 1
+	gs 'stat'
+	act 'Continue':gt 'saunawhore', 'blowjob'
+end
+
+if $ARGS[0] = 'holeshow':
+	minut += 5
+	'<center><img src="images/sauna/holeshow'+rand(1, 5)+'.gif"></center>'
+	'You decide to tease him further, so you reach closer to him and open your mouth, sticking your tongue as far as possible.'
+	'Then you turn around, bend with your legs still straight, putting your open asscheeks close to his head.'
+	'First you stretch your pussy lips, showing him a bit of your vagina insides, then you switch to stretching your ass.'
+	moodTypeRand += 1
+	gs 'stat'
+	act 'Continue':gt 'saunawhore', 'blowjob'
+end
+
+if $ARGS[0] = 'blowjob':
+	minut += 5
+	'Kneeling in front of him you give him sign that you want his cock in your mouth.'
+	'Cient understands very well what you signal to him.'
+
+	if $moodType = 'neutral':
+		'<center><img src="images/sauna/blowjob'+rand(1, 5)+'.gif"></center>'
+		'He takes out his half flaccid cock and puts it on tip of your already prepared tongue.'
+		'You start kissing the tip, licking it all around and putting it a bit inside your mouth and sucking it.'
+		gs 'arousal', 'bj', durr, 'prostitution'
+		act 'Continue':gt 'saunawhore', 'blowjobGate'
+	elseif $moodType = 'good':
+		'<center><img src="images/sauna/blowjob'+rand(1, 5)+'.gif"></center>'
+		'He comes close to you, fondles your hair and face and takes you gently by your arm, raising you up.'
+		'He directs you to the bed, undresses and both of you lie down.'
+		act 'Continue':gt 'saunawhore', 'fuckGate'
+	elseif $moodType = 'bad':
+		'<center><img src="images/sauna/slapface'+rand(1, 1)+'.gif"></center>'
+		'He comes close to you and suddenly slaps your face hard.'
+		'You are surprised by this action and tears pop up on your eyes.'
+		'He seems very angry and even aroused by your misfortune.'
+		'As you kneel in front of him in tears, he grabs you roughly by your arms, painfully twisting them behind your back he strikes you down on the bed.'
+		Manna -= 50
+		gs 'pain', 2, 'armL', 'twist'
+		gs 'pain', 2, 'armR', 'twist'
+		act 'Continue':gt 'saunawhore', 'fuckRoughGate'
+	end
+	gs 'stat'
+end
+
+if $ARGS[0] = 'blowjobGate':
+	'You are caressing his cock with your lips for a while.'
+	gs 'arousal', 'bj', 5, 'prostitution'
+	'It is fully erect now and you can see his <<dick>> cm <<$dick_girth>> member in all its beauty.'
+	if dick > throat:
+		'You can already tell that his member is above your sucking skill.'
+	else
+		act 'Deepthroat':gt 'saunawhore', 'blowjobDeepthroat'
+	end
+	'Client seems to be so far content with your performance, but you think it may be time to switch to efficient approach:'
+	gs 'stat'
+	act 'Continue caressing':gt 'saunawhore', 'blowjobCaress'
+end
+
+if $ARGS[0] = 'blowjobCaress':
+	'You continue caressing his cock with your lips for a while.'
+	gs 'arousal', 'bj', 5, 'prostitution'
+	''
+	moodChange = rand (-2, 0)
+	moodTypeRand += moodChange
+
+	if $moodType = 'good':
+		'<center><img src="images/sauna/blowjob'+rand(1, 5)+'.gif"></center>'
+		'He seems to enjoy your gentle caress of his cock and signals you that he''s ready to move to the next stage.'	
+		act 'Continue':gt 'saunawhore', 'fuckGate'
+	elseif $moodType = 'neutral':
+		'<center><img src="images/sauna/blowjob'+rand(1, 5)+'.gif"></center>'
+		'He seem to have enough of this mild teasing and takes your hand and directs you towards the bed.'
+		act 'Continue':gt 'saunawhore', 'fuckGate'
+	elseif $moodType = 'bad':
+		'<center><img src="images/sauna/slapface'+rand(1, 1)+'.gif"></center>'
+		'Suddenly he grunts and pulls his cock out of your reach.'
+		question = rand (1, 3)
+		if question = 1:
+			'He slaps your face hard and shouts: "What do you think this is whore, a child''s sweet?"'
+		elseif question = 2:
+			'He slaps your face hard and shouts: "My cock is not tasty enough for you to suck on properly, bitch?"'
+		elseif question = 3:
+			'He slaps your face hard and shouts: "Matkamoja, what kind of a lazy whore are you?"'
+		end
+		act 'Continue':gt 'saunawhore', 'fuckRoughGate'
+	end
+	gs 'stat'
+end
+
+if $ARGS[0] = 'blowjobDeepthroat':
+	moodChange += rand (0, 2)
+	moodTypeRand += moodChange
+	'<center><img src="images/sauna/deepthroat'+rand(1, 5)+'.gif"></center>'
+	'Cient is enjoying the deep blowjob you are giving him - his <<dick>> cm <<$dick_girth>> member is buried all the way inside your throat.'
+	'You try to hold as long as possible, while teasing his balls with your tongue, all that while having your nose buried in his rich scratchy bush.'
+	if $moodType = 'bad':
+		'Occasionaly while having his cock inside your throat, he holds your head so you cannot take it out.'
+		'You almost suffocate trying to get away from it - and he seems to enjoy this alot..'
+	end
+	gs 'arousal', 'bj', 10, 'prostitution', 'deepthroat'
+	'Finally he seems to have enough of oral sex and signals you that he wants some more.'
+	gs 'stat'
+	act 'Continue':gt 'saunawhore', 'fuckGate'
+end
+
+if $ARGS[0] = 'fuckGate':
+	minut += 2
+	noCondChance = rand(1, 100)
+	if noCondChance < 40:
+		'"So baby, how much for not using a condom?"'
+		'"I don''t know sir, it''s too dangerous, I shouldn''t.."'
+		'"Come on, I''ll pay you double!"'
+		act 'Agree to not use condom':gt 'saunawhore', 'fuckGateCondomNo'
+		act 'Insist on using the condom':gt 'saunawhore', 'fuckGateCondomYes'
+	else
+		gs 'saunawhore', 'fuckGateCondomYes'
+	end
+	gs 'stat'
+end
+
+if $ARGS[0] = 'fuckGateCondomYes':
+	useCondom = 1
+	moodTypeRand -= 2
+	gs 'saunawhore', 'fuckGateGo'
+end
+
+if $ARGS[0] = 'fuckGateCondomNo':
+	useCondom = 2
+	moodTypeRand += 1
+	gs 'saunawhore', 'fuckGateGo'
+end
+
+if $ARGS[0] = 'fuckGateGo':
+	durr = 2
+	minut += durr
+	'<center><img src="images/sauna/lieonbedboth.jpg"></center>'
+	'You and the client lie on a bed.'
+	'"How do you want me?" you ask him.'
+	if $moodType = 'bad':
+		'"How do I want you whore? I want you screaming!"'
+		forced = 1
+		act 'Continue':gt 'saunawhore', 'fuckRoughGate'
+	else
+		forced = 0
+		holeType = rand(1, 2)
+		if holeType = 1:
+			'"I want to try your pussy."'
+			act 'Continue':gt 'saunawhore', 'fuckVaginal'
+		elseif holeType = 2:
+			'"I want to fuck your ass."'
+			act 'Continue':gt 'saunawhore', 'fuckAnal'
 		end
 	end
+	gs 'stat'
+end
+
+if $ARGS[0] = 'fuckVaginal':
+	'<center><img src="images/sauna/fuckVaginal'+rand(1, 5)+'.gif"></center>'
+	'You let yourself be fucked at his liking, helping him to reach an orgasm as good as you can.'
+	if dick > vagina:
+		'His <<dick>> cm <<$dick_girth>> cock is too big for your pussy and causes you intense pain, as it occasionaly hits your vaginal walls and even your sensitive cervix.'
+		DMG = (dick - vagina)
+		gs 'pain', DMG, 'vaginal', 'stretch'
+		gs 'pain', DMG, 'cervix', 'pinch'
+		pcs_mood -= (DMG * 5)
+		gs 'arousal', 'vaginal', 30, 'prostitution', 'rough'
+	else
+		gs 'arousal', 'vaginal', 30, 'prostitution'
+	end
+	''
+	'Finally he is about to come.'
+	gs 'stat'
+	act 'Let him cum wherever he wants':gt 'saunawhore', 'cumClientGate'
+end
+
+if $ARGS[0] = 'fuckAnal':
+	'<center><img src="images/sauna/fuckAnal'+rand(1, 5)+'.gif"></center>'
+	'You let yourself be fucked at his liking, helping him to reach an orgasm as good as you can.'
+	if dick > anus:
+		'His <<dick>> cm <<$dick_girth>> cock is too big for your ass and causes you intense pain, as it occasionaly hits your intestinal walls.'
+		DMG = (dick - anus)
+		gs 'pain', DMG, 'asshole', 'stretch'
+		gs 'pain', DMG, 'tummy', 'pinch'
+		pcs_mood -= (DMG * 5)
+		gs 'arousal', 'anal', 30, 'prostitution', 'rough'
+	else
+		gs 'arousal', 'anal', 30, 'prostitution'
+	end
+	''
+	'Finally he is about to come.'
+	gs 'stat'
+	act 'Let him cum wherever he wants':gt 'saunawhore', 'cumClientGate'
+end
+
+
+if $ARGS[0] = 'fuckRoughGate':
+	durr = 5
+	minut += durr
+	'<center><img src="images/sauna/bedoverpowered.jpg"></center>'
+	'You are overpowered by the client, entirely at his will.'
+	'Painfully he twists your hands behind your back.'
+	pcs_mood -= 50
+	useCondom = 2
+	forced = 1
+	gs 'pain', 2, 'armL', 'twist'
+	gs 'pain', 2, 'armR', 'twist'
+	holeType = rand(1, 2)
+	if holeType = 1:
+		'He decides to fuck your pussy..'
+		act 'Continue':gt 'saunawhore', 'fuckRoughVaginal'
+	elseif holeType = 2:
+		'He decides to fuck your ass..'
+		act 'Continue':gt 'saunawhore', 'fuckRoughAnal'
+	end
+	gs 'stat'
+end
+
+if $ARGS[0] = 'fuckRoughVaginal':
+	'<center><img src="images/sauna/fuckRoughVaginal'+rand(1, 5)+'.gif"></center>'
+	'Client forces upon you, fucking your tender pussy furiously.'
+	'You cannot help but scream in pain, which even arouses him more and makes him push even harder and deeper.'
+	if dick > vagina:
+		'His <<dick>> cm <<$dick_girth>> is too big for your pussy and causes you intense pain, as it often hits your vaginal walls and even your sensitive cervix.'
+		DMG = (dick - vagina)
+		gs 'pain', DMG, 'vaginal', 'stretch'
+		gs 'pain', DMG, 'cervix', 'pinch'
+		pcs_mood -= (DMG * 5)
+	end
+	gs 'arousal', 'vaginal', 30, 'prostitution', 'rough', 'bound'
+	''
+	'Finally he is about to come.'
+	gs 'stat'
+	act 'Let him cum wherever he wants':gt 'saunawhore', 'cumClientGate'
+end
+
+if $ARGS[0] = 'fuckRoughAnal':
+	'<center><img src="images/sauna/fuckRoughAnal'+rand(1, 5)+'.gif"></center>'
+	'Client forces upon you, fucking your anus furiously.'
+	'You cannot help but scream in pain, which even arouses him more and makes him push even harder and deeper.'
+	if dick > anus:
+		'His <<dick>> cm <<$dick_girth>> is too big for your ass and causes you intense pain, as it often hits your intestinal walls.'
+		DMG = (dick - anus)
+		gs 'pain', DMG, 'asshole', 'stretch'
+		gs 'pain', DMG, 'tummy', 'pinch'
+		pcs_mood -= (DMG * 5)
+	end
+	gs 'arousal', 'anal', 30, 'prostitution', 'rough', 'bound'
+	''
+	'Finally he is about to come.'
+	gs 'stat'
+	act 'Let him cum wherever he wants':gt 'saunawhore', 'cumClientGate'
+end
+
+if $ARGS[0] = 'cumClientGate':
+	cumRand = rand(1, 6)
+	if cumRand = 1:
+		'He decides to cum in your pussy.'
+		act 'Let him':gt 'saunawhore', 'cumVaginal'
+	elseif cumRand = 2:
+		'He decides to cum in your ass.'
+		act 'Let him':gt 'saunawhore', 'cumAnal'	
+	elseif cumRand = 3:
+		'He decides to cum on your face.'
+		act 'Let him':gt 'saunawhore', 'cumFace'	
+	elseif cumRand = 4:
+		'He decides to cum in your mouth.'
+		act 'Let him':gt 'saunawhore', 'cumMouth'	
+	elseif cumRand = 5:
+		'He decides to cum on your belly.'
+		act 'Let him':gt 'saunawhore', 'cumBelly'	
+	elseif cumRand = 6:
+		'He decides to cum on your tits.'
+		act 'Let him':gt 'saunawhore', 'cumTits'	
+	end	
+end
+
+if $ARGS[0] = 'cumVaginal':
+	minut += 5
+	if useCondom = 1:
+		'<center><img src="images/sauna/cumCondomVaginal.jpg"></center>'
+		'Client pumps his <<$cumType>> amount of cum inside the condom and then takes it out of your pussy.'
+		'He strips the condom down his dick, the sack still full of his <<$cumType>> amount of sperm.'
+		moodTypeRand += rand (-2, 2)
+		if $moodType = 'bad':
+			'<center><img src="images/sauna/cumCondomPourFace.gif"></center>'
+			'Suddenly he grabs your head and pours the contents all over your face.'
+			gs 'cum_call', '', $boy, 0, 3
+			gs 'cum_call', 'face', $boy, 0
+		elseif $moodType = 'neutral':
+			'He throws it away on the floor, not caring about spilling the fluids around.'
+			gs 'cum_call', '', $boy, 0, 3
+		elseif $moodType = 'good':
+			'He throws it in the waste bin and gently caresses your hair afterwards.'
+			gs 'cum_call', '', $boy, 0, 3
+		end
+	else
+		'<center><img src="images/sauna/cumVaginal'+rand(1, 5)+'.gif"></center>'
+		'Client pumps his <<$cumType>> amount of cum deep inside your vagina.'
+		gs 'cum_call', '', $boy, 0
+	end
+	gs 'stat'
+	act 'Let him':gt 'saunawhore', 'clientLeave'
+end
+
+if $ARGS[0] = 'cumAnal':
+	if useCondom = 1:
+		'<center><img src="images/sauna/cumCondomAnal.jpg"></center>'
+		'Client pumps his <<$cumType>> amount of cum inside the condom and then takes it out of your anus.'
+		'He strips the condom down his dick, the sack still full of his <<$cumType>> amount of sperm.'
+		moodTypeRand += rand (-2, 2)
+		if $moodType = 'bad':
+			'<center><img src="images/sauna/cumCondomPourFace.jpg"></center>'
+			'Suddenly he grabs your head and pours the contents all over your face.'
+			gs 'cum_call', 'anus', $boy, 0, 3
+			gs 'cum_call', 'face', $boy, 0
+		elseif $moodType = 'neutral':
+			'He throws it away on the floor, not caring about spilling the fluids around.'
+			gs 'cum_call', 'anus', $boy, 0, 3
+		elseif $moodType = 'good':
+			'He throws it in the waste bin and gently caresses your hair afterwards.'
+			gs 'cum_call', 'anus', $boy, 0, 3
+		end
+	else
+		'<center><img src="images/sauna/cumAnal'+rand(1, 5)+'.gif"></center>'
+		'Client pumps his <<$cumType>> amount of cum deep inside your intestines.'
+		gs 'cum_call', 'anus', $boy, 0
+	end
+	gs 'stat'
+	act 'Let him':gt 'saunawhore', 'clientLeave'
+end
+
+if $ARGS[0] = 'cumFace':
+	'<center><img src="images/sauna/cumFace'+rand(1, 5)+'.gif"></center>'
+	if useCondom = 1:
+		'Client strips the condom down his dick and blows his <<$cumType>> amount of cum all over your face.'
+	else
+		'Client grabs his cock and masturbating it he cums all over your face.'
+	end
+	gs 'cum_call', 'face'
+	gs 'stat'
+	act 'Let him':gt 'saunawhore', 'clientLeave'
+end
+
+if $ARGS[0] = 'cumMouth':
+	'<center><img src="images/sauna/cumMouth'+rand(1, 5)+'.gif"></center>'
+	if useCondom = 1:
+		'Client strips the condom down his dick and shoots his <<$cumType>> amount of cum inside your mouth.'
+	else
+		'Client grabs his cock and masturbating it he cums into your mouth..'
+	end
+	gs 'cum_call', 'mouth'
+	gs 'stat'
+	act 'Let him':gt 'saunawhore', 'clientLeave'
+end
+
+if $ARGS[0] = 'cumBelly':
+	'<center><img src="images/sauna/cumBelly'+rand(1, 5)+'.gif"></center>'
+	if useCondom = 1:	
+		'Client strips the condom down his dick and shoots his <<$cumType>> amount of cum all over your belly.'
+	else
+		'Client grabs his cock and masturbating it he cums all over your belly.'
+	end
+	gs 'cum_call', 'stomach'
+	gs 'stat'
+	act 'Let him':gt 'saunawhore', 'clientLeave'
+end
+
+if $ARGS[0] = 'cumTits':
+	'<center><img src="images/sauna/cumTits'+rand(1, 5)+'.gif"></center>'
+	'You kneel down infront of him, raising your breasts higher for him to shoot his cum on them.'
+	if useCondom = 1:
+		'Client strips the condom down his dick and shoots his <<$cumType>> amount of cum all over your tender tits.'
+	else
+		'Client grabs his cock and masturbating it he cums all over your tender tits.'
+	end
+	gs 'cum_call', 'breasts'
+	gs 'stat'
+	act 'Let him':gt 'saunawhore', 'clientLeave'
+end
+
+if $ARGS[0] = 'clientLeave':
+	basePay = 2000
+	if prezik = 0:
+		condomPrice = 50
+	elseif prezik > 0:
+		prezik -= 1
+		condomPrice = 0
+	end
+	if forced = 0:
+		payment = (basePay * useCondom) - (condomPrice * useCondom)
+	else
+		payment = ((basePay / 2) * useCondom) - (condomPrice * useCondom)
+	end
+	'<center><img src="images/sauna/givemoney.jpg"></center>'
+	'Client dresses up, takes his wallet and gives you payment of <<payment>>.'
+
+	if workDolg > 0:
+		workDolg -= payment
+	else
+		money += payment
+	end
+
+	act 'Take the money and see him out':gt 'saunawork'
 end
 
 --- saunawhore ---------------------------------
