@@ -1,0 +1,347 @@
+# preCUST
+
+cls
+fcolor = rgb(0, 0, 0)
+bcolor = rgb(255, 255, 255)
+lcolor = rgb(106, 90, 205)
+
+!!Body Customization and Initializations
+if $ARGS[0] = 'BeforeCust':
+!!	This is a placeholder at the moment
+end
+
+!!******************** TG Start Body Customization Options ******************************
+if $ARGS[0] = 'TGStart':
+!!	This is to bypass the next part if the avatar system was used
+!!	It will be changed to bypass the head options, once more body options are added
+	if player_avatar = 1: gt 'preCUST', 'Done', 'TGS'
+
+!!	Just hair and eye color here for now; the dialog will be update as more options are added
+	'As you drift in unconsciousness, an impression of a woman forms in your mind. Many aspects of her appearance are indistinct, but there are some things you can make out.'
+	'She is fairly tall.'
+	''
+	if pcs_eyecol = 0: 'She has <a href="exec:pcs_eyecol = 1 & gt ''preCUST'', ''TGStart''">brown</a> eyes.'
+	if pcs_eyecol = 1: 'She has <a href="exec:pcs_eyecol = 2 & gt ''preCUST'', ''TGStart''">gray</a> eyes.'
+	if pcs_eyecol = 2: 'She has <a href="exec:pcs_eyecol = 3 & gt ''preCUST'', ''TGStart''">green</a> eyes.'
+	if pcs_eyecol = 3: 'She has <a href="exec:pcs_eyecol = 0 & gt ''preCUST'', ''TGStart''">blue</a> eyes.'
+	''
+	if pcs_haircol = 0: 'Her hair is <a href="exec:pcs_haircol = 1 & gt ''preCUST'', ''TGStart''">black</a>.'
+	if pcs_haircol = 1: 'Her hair is <a href="exec:pcs_haircol = 2 & gt ''preCUST'', ''TGStart''">brown</a>.'
+	if pcs_haircol = 2: 'Her hair is <a href="exec:pcs_haircol = 3 & gt ''preCUST'', ''TGStart''">red</a>.'
+	if pcs_haircol = 3: 'Her hair is <a href="exec:pcs_haircol = 0 & gt ''preCUST'', ''TGStart''">blonde</a>.'
+	if defcurly = 0:'And it''s naturally <a href="exec:defcurly = 1 & pcs_haircurl = 2147483647 & gt ''preCUST'', ''TGStart''">straight</a>.'
+	if defcurly = 1:'And it''s naturally <a href="exec:defcurly = 0 & pcs_haircurl = 0 & gt ''preCUST'', ''TGStart''">curly</a>.'
+	''
+	'Everything else about her is fuzzy...'
+	''
+
+	act 'Done': gt 'preCUST', 'Done', 'TGS'
+end
+
+!!******************** SG Start Body Customization Options ******************************
+if $ARGS[0] = 'SGStart':
+!!	This is to bypass the next part if the avatar system was used
+!!	It will be changed to bypass the head options, once more body options are added
+	if player_avatar = 1: gt 'preCUST', 'Done', 'SGS'
+
+	'<center>Current face image (based on hairstyle)</center>'
+	'<center><img src="<<FUNC(''$face_image'')>>"></center>'
+	if pcs_eyecol = 0: 'You have <a href="exec:pcs_eyecol = 1 & gt ''preCUST'', ''SGStart''">brown</a> eyes.'
+	if pcs_eyecol = 1: 'You have <a href="exec:pcs_eyecol = 2 & gt ''preCUST'', ''SGStart''">gray</a> eyes.'
+	if pcs_eyecol = 2: 'You have <a href="exec:pcs_eyecol = 3 & gt ''preCUST'', ''SGStart''">green</a> eyes.'
+	if pcs_eyecol = 3: 'You have <a href="exec:pcs_eyecol = 0 & gt ''preCUST'', ''SGStart''">blue</a> eyes.'
+	''
+	if pcs_haircol = 0: 'Your hair is <a href="exec:pcs_haircol = 1 & gt ''preCUST'', ''SGStart''">black</a>.'
+	if pcs_haircol = 1: 'Your hair is <a href="exec:pcs_haircol = 2 & gt ''preCUST'', ''SGStart''">brown</a>.'
+	if pcs_haircol = 2: 'Your hair is <a href="exec:pcs_haircol = 3 & gt ''preCUST'', ''SGStart''">red</a>.'
+	if pcs_haircol = 3: 'Your hair is <a href="exec:pcs_haircol = 0 & gt ''preCUST'', ''SGStart''">blonde</a>.'
+	if defcurly = 0:'And it''s naturally <a href="exec:defcurly = 1 & pcs_haircurl = 2147483647 & gt ''preCUST'', ''SGStart''">straight</a>.'
+	if defcurly = 1:'And it''s naturally <a href="exec:defcurly = 0 & pcs_haircurl = 0 & gt ''preCUST'', ''SGStart''">curly</a>.'
+	''
+	'Personalize attributes related to your <a href="exec:gs ''begin'', ''eyes''">eyes</a></center>.'
+
+	act 'Done': gt 'preCUST', 'Done', 'SGS'
+end
+
+!!******************** Final variable setting and initializations ***********************
+if $ARGS[0] = 'Done':
+!!	Top area for things that need to be done before setting the variables for either start
+	year = 2016
+	year_start = 2016
+	nastjaQW = 0
+	tanga = 1
+
+	BDSMfilm = 0
+	pornstudio = 0
+	pfilmSTOP = 0
+
+	thinkpreg = 0
+	denypreg = 0
+	pertemp = 1
+
+!!	Initializing elasticity
+	vshrink = 1
+	vshrinkdays = 6
+	ashrink = 1
+	ashrinkdays = 3
+
+	fairycurse = -1
+
+	gs 'fight', 'Wrestlergen'
+
+	monthsend[1] = 31
+	if ((year mod 4 = 0) and (year mod 100 ! 0)) or (year mod 400 = 0): 
+		Leapyear = 1 & monthsend[2] = 29
+	else
+		Leapyear = 0 & monthsend[2] = 28
+	end
+	monthsend[3] = 31
+	monthsend[4] = 30
+	monthsend[5] = 31
+	monthsend[6] = 30
+	monthsend[7] = 31
+	monthsend[8] = 31
+	monthsend[9] = 30
+	monthsend[10] = 31
+	monthsend[11] = 30
+	monthsend[12] = 31
+
+	$monthName[1] = 'January'
+	$monthName[2] = 'February'
+	$monthName[3] = 'March'
+	$monthName[4] = 'April'
+	$monthName[5] = 'May'
+	$monthName[6] = 'June'
+	$monthName[7] = 'July'
+	$monthName[8] = 'August'
+	$monthName[9] = 'September'
+	$monthName[10] = 'October' 
+	$monthName[11] = 'November'
+	$monthName[12] = 'December'
+	$month = $monthName[month]
+
+!!	TG Start Specific Variable Setting
+	if $ARGS[1] = 'TGS':
+		age = 18
+		month = 5
+		$month = 'May'
+		week = 3
+		hour = 13
+		if player_avatar = 0:
+			birthyear = year - age
+			birthmonth = 4
+			birthday = 1
+		end
+
+!!		Body
+		pcs_hgt = 170
+		fat = 60
+		salo = 60
+		dick = 0
+!!		Stats
+		speed = 10
+		pcs_stren = 10
+		strenbuf = 10
+		pcs_agil = 10
+		agilbuf = 10
+		pcs_vital = 10
+		vitalbuf = 10
+		pcs_intel = 10
+		pcs_sprt = 10
+		pcs_react = 10
+!!		pcs_chrsm = 10
+!!		pcs_prcptn = 10
+		pcs_magik = 0
+		money = 16500
+		housrA = 1
+		pcs_pubes = 3
+		pcs_leghair = 3
+		pcs_makeup = 1
+		housr = 1
+
+!!		Maruda Hair Mod
+		pcs_hairlng = 17
+!!		***********
+		cltarelka = 1
+		fairy = 10
+		eda = 5
+		clrbelo = 2
+		poroshok = 5
+		shampoo = 5
+		tampon = 2
+		pcs_energy = 100
+		water = 100
+		pcs_sleep = 100
+
+!!		Starting Option Adjustments
+!!		The TG Background options would be aplied here
+
+!!		***********
+
+		daystart_start = 145
+	end
+
+!!	SG Start Specific Variable Setting
+	if $ARGS[1] = 'SGS':
+		school[6] = 1
+		umbrella = 1
+		sisboyday = -2
+		housr = 0
+		cltarelka = 0
+		fairy = 0
+		eda = 0
+		clrbelo = 10
+		poroshok = 0
+		shampoo = 0
+		sanpad = 20
+
+		hcolmotherremember = pcs_haircol
+		hcolfatherremember = pcs_haircol
+		hcolfronce = 1
+
+		$holyday += ', <b><<kanicont>> days left.</b>'
+		
+		gs 'gschool_lessons', 'npc_data'
+
+!!		Social Group Relationship update
+		i = 1
+		:mark_grup
+		if grupTipe = grupTipe[i]:
+			npc_rel['A<<i>>'] += rand(25,30)
+		else
+			npc_rel['A<<i>>'] -= rand(10,20)
+		end
+		i += 1
+		if i <= 25: jump 'mark_grup'
+!!		**********
+		
+	end
+!!*************************
+!!	Final Initializations
+
+	VersionCheck = 5030
+
+	pcs_dob += birthyear * 10000
+	pcs_dob += (birthmonth * 100)
+	pcs_dob += birthday
+
+	age = year - ((pcs_dob - (pcs_dob mod 10000)) / 10000)
+	if ((month * 100) + day) < pcs_dob mod 10000: age -= 1
+		
+	if age < 17:
+		vidage = age
+	else
+		vidage = age - 1
+	end
+
+	vidageday = 300
+
+	pcs_health = pcs_vital * 10 + pcs_stren * 5
+	pcs_willpwr = pcs_intel * 5 + pcs_sprt * 5
+	pcs_manna = (pcs_intel * pcs_magik) + pcs_magik * 100 + pcs_vital * 10 + rikudo
+	pcs_mood = 100
+
+	pcs_nhcol = pcs_haircol
+	oldsavepcs_haircol = 1
+
+	gs 'body_shape', 'initial'
+
+!!	Starting clothing set
+	cheap[69] = 1
+	cheapH[69] = pcs_hips
+	cheap[15] = 1
+	cheapH[15] = 100
+	cheapB[15] = pcs_hips
+	exercise[4] = 1
+	exerciseH[4] = 100
+	cheap[10] = 1
+	cheapH[10] = 100
+	cheapB[10] = pcs_hips
+	coat[5] = 1
+	coatH[5] = 200
+	defaultcoat = 5
+
+	gs 'clothing', 'wear', 'cheap', 15
+!!	**********
+	
+	gs 'din_pav'
+	gs 'dinSex2'
+	gs 'dina'
+	gs 'din_van'
+	gs 'din_bad'
+	gs 'dinSex'
+	gs 'dinBoroda'
+	gs 'BanSexType'
+
+	gs 'daystart'
+	gs 'outdoors', 'weather'
+
+	gs 'npcstatic1'
+	gs 'npcstatic2'
+	gs 'npcstatic3'
+	gs 'npcstatic4'
+
+	daylastperiod = daystart
+	temprand = rand(0,3)
+	if temprand = 0:
+		cycle = 0
+		mesec = rand(1,120)
+		EggRH = 0
+		FocH = 0
+		unfertegg = 0
+		ferteggage = 0
+		Ovulate = 0
+		LutH = 0
+		daylastperiod -= (96-mesec)/24
+	elseif temprand = 1:
+		cycle = 1
+		EggRH = rand(1,149)
+		FocH = EggRH
+		mesec = 0
+		unfertegg = 0
+		ferteggage = 0
+		Ovulate = 0
+		LutH = 0
+		daylastperiod -= 4+(FocH/24)
+		lastmens = daylastperiod
+	elseif temprand = 2:
+		cycle = 2
+		unfertegg = 1
+		ferteggage = rand(0,44)
+		Ovulate = (rand(24,44) - ferteggage)
+		if Ovulate <= 0: Ovulate = 1
+		mesec = 0
+		EggRH = 0
+		FocH = 0
+		LutH = 0
+		daylastperiod -= 10+(ferteggage/24)
+		lastmens = daylastperiod
+	elseif temprand = 3:
+		cycle = 3
+		LutH = rand(0,300)
+		ferteggage = 36 + LutH
+		mesec = 0
+		EggRH = 0
+		FocH = 0
+		unfertegg = 0
+		Ovulate = 0
+		daylastperiod -= 10+(ferteggage/24)
+		lastmens = daylastperiod
+	end
+
+	pcs_horny = 0
+	killvar 'opPRE'
+	killvar 'tgs_skipinto'
+
+	gs 'stat'
+	showstat 0
+	showobjs 0
+	if $ARGS[1] = 'TGS':
+		gt 'preTG', 'sleepPRE'
+	else
+		gt 'preALT', 'One'
+	end
+end
+
+--- preCUST ---------------------------------
+
