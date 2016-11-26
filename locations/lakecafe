@@ -16,15 +16,16 @@ if $ARGS[0] = 'main':
 	*nl
 
 	if hour >= 14 or hour < 4:
-		if barmenshameet = 0:
+		if npc_Qstlvl['A89'] = 0:
 			if barrnd = 1:'Behind the bar you see a smiling <a href="exec:gt ''lakecafe'', ''barmensha''">barmaid</a>, who is currently polishing some glasses.'
 			if barrnd = 2:'Inside the diner you see a smiling <a href="exec:gt ''lakecafe'', ''barmensha''">barmaid</a>, who is currently picking up some dirty dishes and cleaning a table.'
 			if barrnd = 3:'Behind the bar you see a smiling  <a href="exec:gt ''lakecafe'', ''barmensha''">barmaid</a>, who is currently making some mixed drinks skilfully.'
-		elseif barmenshameet = 1:
+		elseif npc_Qstlvl['A89'] = 1:
 			if barrnd = 1:'Behind the bar you see <a href="exec:gt ''lakecafe'', ''barmensha''">Eugene</a>, with that perpetual smile on her face. She''s currently polishing some glasses, it must be a slow period.'
 			if barrnd = 2:'Inside the diner you see <a href="exec:gt ''lakecafe'', ''barmensha''">Eugene</a>, with that perpetual smile on her face. She''s collecting dirty dishes from tables.'
 			if barrnd = 3:'Behind the bar you see <a href="exec:gt ''lakecafe'', ''barmensha''">Eugene</a>, with that perpetual smile on her face. She''s skilfully mixing some drinks for customers, making a show out of it.'
-		end
+		end	
+
 
 		if week = 1 and hour = 22:
 			LCWorkRand = rand(1,6)
@@ -75,81 +76,101 @@ if $ARGS[0] = 'barmensha':
     $location_type = 'event'
 	cls
 	gs 'stat'
-	'<center><B><font color=maroon>Barmaid Eugene</font></B></center>'
-	'<center><img src="images/lakecafe/lakebarmensha.jpg"></center>'
-	if JenyaLC < 20:
-		'You have a bad relationship with Eugene.'
-	elseif JenyaLC < 40:
-		'You have cold relations with Eugene.'
-	elseif JenyaLC < 60:
-		'You have a normal relationship with Eugene.'
-	elseif JenyaLC < 80:
-		'You have a good relationship with Eugene.'
+	if npc_Qstlvl['A89'] > 0:
+		'<center><B><font color=maroon>Barmaid Eugene</font></B></center>'
+		'<center><img src="images/lakecafe/lakebarmensha.jpg"></center>'
+		if npc_rel['A89'] < 20:
+			'You have a bad relationship with Eugene.'
+		elseif npc_rel['A89'] < 40:
+			'You have cold relations with Eugene.'
+		elseif npc_rel['A89'] < 60:
+			'You have a normal relationship with Eugene.'
+		elseif npc_rel['A89'] < 80:
+			'You have a good relationship with Eugene.'
+		else
+			'You have an excellent relationship with Eugene.'
+		end
 	else
-		'You have an excellent relationship with Eugene.'
+		'<center><B><font color=maroon>Barmaid</font></B></center>'
+		'<center><img src="images/lakecafe/lakebarmensha.jpg"></center>'
 	end
-	''
+	
 
-	if barmenshameet = 0:
+	if npc_Qstlvl['A89'] = 0:
 		'The barmaid gives you a warm smile, and looks you straight in the eyes as she says: "Hi there! Can I get you anything?"'
-	elseif barmenshameet = 1:
+	elseif npc_Qstlvl['A89'] = 1:
 		'Eugene smiles as she sees you approach the bar, and says cheerfully: "Hi, <<$pcs_nickname>>! What''s up?"'
 	end
 
 	if hour >= 14 or hour < 4:
-		if barmenshameet = 0:
+		if npc_Qstlvl['A89'] = 0:
 			act 'Chat with the barmaid (0:30)':
 				cla
 				*clr
-				barmenshameet = 1
-				JenyaLC = 10
+				npc_Qstlvl['A89'] = 1
+				npc_rel['A89'] = 10
 				minut += 30
 				gs 'stat'
 				'<center><img src="images/lakecafe/lakebarmensha.jpg"></center>'
 				'You spend a half hour chatting with the barmaid. She''s very open, and you learn a lot about her.'
-				'Her name is Eugene, and she works here together with her girlfriend, Angela. Angela is the cook, and Eugene is the barmaid in the diner. The two of them work here all days of the week, and wouldn''t have it any other way!'
+				'Her name is Eugene, and she works here together with her sister, Angela. Angela is the cook, and Eugene is the barmaid in the diner. The two of them work here all days of the week, and wouldn''t have it any other way!'
 
 				act 'Continue':gt 'lakecafe', 'barmensha'
 			end
 		end
 
-		if barmenshameet = 1:
+		if npc_Qstlvl['A89'] => 1:
 			act 'Chat with Eugene (0:30)':
 				cla
 				*clr
 
-				if JenyaLC < 60:JenyaLC += 3
+				if npc_rel['A89'] < 60:npc_rel['A89'] += 3
 
 				minut += 30
 				gs 'stat'
 				'<center><img src="images/lakecafe/lakebarmensha.jpg"></center>'
-				'You spend a half hour chatting with Eugene, getting to know her a little bit better. You chat about all sorts of things; your lives, work, and current events.'
-
+				if npc_rel['A89'] < 0
+					'Eugene glares at you. "I have nothing to say to you."'
+					npc_rel['A89'] = -5
+				elseif npc_rel['A89'] < 30 and LCEugenefirst = 0:
+					'You spend a half hour chatting with Eugene, getting to know her a little bit better. You chat about all sorts of things; your lives, work, and current events.'
+				elseif lakepater[0] > 0
+					'You spend a half hour discussing the family with Eugene.'
+				else
+					'You spend a half hour chatting with Eugene. You chat about all sorts of things; your lives, work, and current events.'
+				end
 				act 'Continue':gt 'lakecafe', 'barmensha'
 			end
 		end
-
-		if JenyaLC >= 60 and pcs_horny > 50:
+			
+		
+		if npc_rel['A89'] >= 60 and pcs_horny > 50:
 			act 'Flirt with Eugene':
 				cla
 				*clr
+				npc_love['A89'] > 0:
+					if npc_love['A89'] < 5:
+						npc_love['A89'] = 0
+					else
+						npc_love['A89'] -= 5
+					end
 				minut += 10
 				gs 'stat'
 				'<center><img src="images/lakecafe/lakebarmensha.jpg"></center>'
 				'While you chat with Eugene you flirt with her to your heart''s delight, tossing in as many double innuendos as you can.'
 				'After a few minutes, she smiles wolfishly at you and says: "You want me, don''t you?"'
 				'When you nod, she continues: "How about you follow me to a back room, and we have some fun?"'
-				'Wow, that was easy! And that with her girlfriend working here.'
+				'Wow, that was easy!'
 				'You nod again and follow Eugene, feeling your heart pound in your chest while you stare at her ass.'
 
 				act 'Follow her into a back room':
-					if JenyaLCfirst = 0:gt 'LCporn', 'firsttime'
-					if JenyaLCfirst = 1:gt 'LCporn', 'sex'
+					if LCEugenefirst = 0:gt 'LCporn', 'firsttime'
+					if LCEugenefirst = 1:gt 'LCporn', 'sex'
 				end
 			end
 		end
 
-		if JenyaLC >= 35:
+		if npc_rel['A89'] >= 35:
 			act 'Ask about work':
 				cla
 				*clr
@@ -177,39 +198,135 @@ if $ARGS[0] = 'barmensha':
 			end
 		end
 
-		if JenyaLC >= 80:
+		if npc_rel['A89'] >= 80 and LCworkwork < 2:
 			act 'Ask about the special work':
 				cla
 				*clr
 				'<center><img src="images/lakecafe/lakebarmensha.jpg"></center>'
-
 				if LCworkwork = 0:
 					'During a slow moment, you ask Eugene: "Say, I''ve overheard some of the customers talking fondly about a ''special'' service this diner has. What''s that all about?"'
-					'Eugene ponders for a moment, but then decides she can trust you and says: "We... we do offer special services, once a week. It''s every Monday, at 22:00. I''m not sure it''s something you would be interested in."'
-					'When you seem confused, she confesses: "It''s... it''s borderline prostitution, really. Some of the girls working here earn some extra money on the side, by offering their services to our customers after work. It happened sporadically at first, but then it became so popular that we organize a weekly event now. Customers can hook up with our waitresses, and our waitresses can earn some extra cash if they want. Everybody wins... right?"'
-
-					act 'Ask for more information':
-						cla
-						'Eugene notices that spark in your eye, and laughs: "I see you might be interested after all!"'
-						'You play it cool for now: "Maybe. But just in case I were, how does it work?"'
-						'She gives you a kind smile: "I trust you, so... okay. I''ll let you do it if you want. Like I said, all our regulars know that we ''arrange meetings'' every Monday between 22:00 and 23:00. If you''re here at that time and want to earn some money, introduce yourself to the person or group you want to service and say: ''I''ll be your waitress tonight.'' They''ll know what it means. From what the girls told me, they get paid between 500 and 2,000 <b>₽</b>."'
-						'Before you leave, she adds: "Keep in mind that the diner is just a meeting area; whatever happens when you leave with someone is between you and them! Don''t embarrass us though, we''d hate to lose regular customers, no matter how perverted they might be!" She added the last bit with a laugh and a wink.'
-						
-						act 'Say you''ll think about it':
+					if npc_love['A89'] > 80:
+						'Eugene blushes and says: "That''s something some of the girls do here. It would hurt me to see you doing that, love"'
+					elseif npc_love['A89'] > 60:
+						'Eugene blushes and says: "That''s something some of the girls do here. I don''t think you should do it, <<$pcs_nickname>>"'
+						act 'Press for more information':
 							cla
-							LCworkwork = 1
-							LCwork = 1
-							minut += 4
-							gt 'lakecafe', 'barmensha'
+							'You press for more information.'
+							'Eugene seems to be hurt by your insistance to find out more. She begs you not to ask any more.'
+							act 'Refuse to relent.':
+								cla
+								npc_love['A89'] -= 5
+								npc_rel['A89'] -= 20
+								'You refuse to relent.'
+								'Eugene sighs: "All our regulars know that we ''arrange meetings'' every Monday between 22:00 and 23:00. If you''re here at that time and want to earn some money, introduce yourself to the person or group you want to service and say: ''I''ll be your waitress tonight.'' They''ll know what it means. Please don''t do it, <<$pcs_nickname>>."'
+								'You see tears forming in her eyes.'
+								act 'Say you won''t do it':
+									cla
+									'Eugene seems relieved as she looks back at you.'
+									'"Thank you, <<$pcs_nickname>>. I don''t know what I would do if you were doing that..."'
+									act 'continue':
+										cla
+										LCworkwork = 2
+										LCwork = 0
+										minut += 4
+										gt 'lakecafe', 'barmensha'
+									end
+								end
+								act 'Walk away':
+									cla
+									npc_love['A89'] -= 30
+									npc_rel['A89'] -= 40
+									LCworkwork = 1
+									LCwork = 1
+									minut += 4
+									gt 'lakecafe', 'main'
+								end
+							end
+						end
+					elseif npc_love['A89'] > 30:
+						'Eugene blushes and says: "That''s something some of the girls do here. It''s not something I would like to see you doing, <<$pcs_nickname>>"'
+						act 'Press for more information':
+							cla
+							'You press Eugene for more information.'
+							'Eugene seems to be hurt by your insistance to find out more, but she reluctantly relents.'
+							'"All our regulars know that we ''arrange meetings'' every Monday between 22:00 and 23:00. If you''re here at that time and want to earn some money, introduce yourself to the person or group you want to service and say: ''I''ll be your waitress tonight.'' They''ll know what it means. From what the girls told me, they get paid between 500 and 2,000 <b>₽</b>."'
+							'Before you leave, she adds: "Please don''t do it. I''m starting to care for you and..."'
+							'She looks away from you.'
+							act 'Say you won''t do it':
+								cla
+								'You promise Eugene you won''t do it.'
+								'Eugene seems relieved as she looks back at you.'
+								'"Thank you, <<$pcs_nickname>>. I don''t think I could look at you the same way if you did that."'
+								act 'continue':
+									cla
+									LCworkwork = 2
+									LCwork = 0
+									minut += 4
+									gt 'lakecafe', 'barmensha'
+								end
+							end
+							act 'Walk away':
+								cla
+								npc_love['A89'] -= 5
+								npc_rel['A89'] -= 20
+								LCworkwork = 1
+								LCwork = 1
+								minut += 4
+								gt 'lakecafe', 'main'
+							end
+						end
+					elseif npc_love['A89'] > 10:	
+						if LCknowslut = 0
+							'Eugene ponders for a moment, but then decides she can trust you and says: "We... we do offer special services, once a week. It''s every Monday, at 22:00. I''m not sure it''s something you would be interested in."'
+							'When you seem confused, she confesses: "It''s... it''s borderline prostitution, really. Some of the girls working here earn some extra money on the side, by offering their services to our customers after work. It happened sporadically at first, but then it became so popular that we organize a weekly event now. Customers can hook up with our waitresses, and our waitresses can earn some extra cash if they want. Everybody wins... right?"'
+
+							act 'Ask for more information':
+								cla
+								'Eugene notices that spark in your eye, and laughs: "I see you might be interested after all!"'
+								'You play it cool for now: "Maybe. But just in case I were, how does it work?"'
+								'She gives you a kind smile: "I trust you, so... okay. I''ll let you do it if you want. Like I said, all our regulars know that we ''arrange meetings'' every Monday between 22:00 and 23:00. If you''re here at that time and want to earn some money, introduce yourself to the person or group you want to service and say: ''I''ll be your waitress tonight.'' They''ll know what it means. From what the girls told me, they get paid between 500 and 2,000 <b>₽</b>."'
+								'Before you leave, she adds: "Keep in mind that the diner is just a meeting area; whatever happens when you leave with someone is between you and them! Don''t embarrass us though, we''d hate to lose regular customers, no matter how perverted they might be!" She added the last bit with a laugh and a wink.'
+								
+								act 'Say you''ll think about it':
+									cla
+									LCworkwork = 1
+									LCwork = 1
+									minut += 4
+									gt 'lakecafe', 'barmensha'
+								end
+							end
+						end
+						else
+							'Eugene smiles at you. "This is something right up your alley"'
+							'All our regulars know that we ''arrange meetings'' every Monday between 22:00 and 23:00. If you''re here at that time and want to earn some money, introduce yourself to the person or group you want to service and say: ''I''ll be your waitress tonight.'' They''ll know what it means. From what the girls told me, they get paid between 500 and 2,000 <b>₽</b>."'
+							'Before you leave, she adds: "Keep in mind that the diner is just a meeting area; whatever happens when you leave with someone is between you and them! Don''t embarrass us though, we''d hate to lose regular customers, no matter how perverted they might be!" She added the last bit with a laugh and a wink.'
+							
+							act 'Thank her for the information':
+								cla
+								LCworkwork = 1
+								LCwork = 1
+								minut += 4
+								gt 'lakecafe', 'barmensha'
+							end
 						end
 					end
 				elseif LCworkwork = 1:
+					if LCknowslut = 1 and npc_love['A89'] > 30:
+						'Eugene glares at you.'
+						'"Did you come to brag about how much of a slut you are, <<$pcs_firstname>>? If you want to prostitute yourself out, come monday night between 2200 and 2300 and show the men here what kind of a person you are. Just don''t lose us any customers."'
+						'She turns around and walks away from you.'
+						npc_love['A89'] = -5
+						act 'continue':
+							minut += 3
+							gt 'lakecafe', 'barmensha'
+						end
+					else
 					'"So you''re still interested in that, huh?" Eugene smirks, when you mention the special work.'
 					'She reminds you: "Like I said, our regulars know that we ''arrange meetings'' every Monday between 22:00 and 23:00. If you''re here at that time and want to earn some money using your body, introduce yourself to the person or group you want to service and say: ''I''ll be your waitress tonight.'' They''ll know what it means. From what the girls told me, they get paid between 500 and 2,000 <b>₽</b>."'
-
-					act 'Thank her for the reminder':
-						minut += 3
-						gt 'lakecafe', 'barmensha'
+						act 'Thank her for the reminder':
+							minut += 3
+							gt 'lakecafe', 'barmensha'
+						end
 					end
 				end
 			end
@@ -217,6 +334,37 @@ if $ARGS[0] = 'barmensha':
 	end
 
 	act 'Leave Eugene so she can work':gt 'lakecafe', 'main'
+
+	if npc_horny['A89'] > 50:
+		'Eugene smiles at you, with a glimmer in her eye.'
+		if LCEugenefirst > 0:
+			'You can see her clothing slightly bulging, making you think her penis is erect.'
+			if LCknowslut > 0:
+			cla
+			'She grabs your hand and starts to lead you to the back room.'
+				act 'resist':
+					'"No!" You say to her.'
+					if npc_love['A89'] < -5:
+						'"You''ll service me, or you''ll get out." She hisses back in your ear.'
+					else
+						'She seems disappointed as she lets go of your hand.'
+						'"We both know what kind of girl you are, <<$pcs_nickname>>. Don''t pretend you aren''t."'
+					end	
+				end
+				
+				act 'go with her.':gt 'LCporn', 'sex'
+			else
+				'"I seem to have a growing problem, <<$pcs_nickname>>. Could you help me out?"'
+				'When you nod, she continues: "How about you follow me to a back room, and we have some fun?"'
+				act 'Follow her into a back room':
+					gt 'LCporn', 'sex'
+					'Eugene guides you out to the back room, pinching your butt along the way.'
+					npc_horny['A89'] = 49
+					gt 'LCporn', 'sex'
+				end
+			end
+		end
+	end
 end
 
 if $ARGS[0] = 'bandits':
