@@ -366,16 +366,17 @@ if $ARGS[0]='':
 	if rand (0,2) ! 0:gs 'din_bad' & dynamic $mobile_check
 end
 
-
 if $ARGS[0]='grandma':
 	cls
 	minut += 2
-	if grandmatalkday ! daystart:grandmatalk = 0
+	if grandmatalkday ! daystart: grandmatalk = 0
 	gs 'stat'
 	
 	'<center><img src="images/qwest/gadukino/grandma.jpg"></center>'
 	'Your grandma is extremely old, and almost never leaves the house. Most of the time she just sits on her bed watching TV, or is slowly cleaning.'
-	if grandmahelpday ! daystart:act 'Offer to help out':grandmahelpday = daystart & gt'grandmahelp'
+	if grandmahelpday ! daystart:
+		act 'Offer to help out': grandmahelpday = daystart & gt'grandmahelp'
+	end
 	!125s
 	if grandmatalkgad = 0:
 		act 'Ask about the village (0:10)':
@@ -418,6 +419,7 @@ if $ARGS[0]='grandma':
 			act 'Continue':gt 'Gadhouse'
 		end
 	end
+
 	if grandmastory ! daystart:
 		act 'Ask her to tell you a story (0:20)':
 			cla
@@ -425,12 +427,13 @@ if $ARGS[0]='grandma':
 			grandmastory = daystart
 			minut += 20
 			pcs_mood += RAND(10,15)
-			temp = RAND(0,3)
 			gs 'stat'
 			
 			'<center><img src="images/qwest/gadukino/babushka.jpg"></center>'
 			'When you ask your grandmother to tell you a story, she mumbles something. Nevertheless, after a brief second or two, she decides on a story to share with you today, she begins to talk slowly.'
-			
+
+			temp = RAND(0,7)
+
 			if temp = 0:
 				'"There was this one time my parents allowed me to stay at my friend''s home for the night. During the night, a lot of snow fell... and we heard a soft knock on the door!" she says in an ominous voice.'
 				'"We listened more closely, but could only hear the wind whistling through the trees... so we decided to go back to sleep. Then we heard the knocking again!"'
@@ -471,7 +474,7 @@ if $ARGS[0]='grandma':
 				'You look at her perplexed, questioning what she''s talking about. "We do have matches in the kitchen or if you want I can run over to the store to buy some."'
 				'"You don''t get it, <<$pcs_nickname>>. The matches today are not as good as those made long time ago. I miss those matches we had during the Great Patriotic War, before they had to move the factory to the far east... Those matches were magical, not like this crap we have now... Ugh..."'
 			
-			!Keep the word brigade if you want to change the text. It's what the people working on the kolkhoz were called.  
+			!Keep the word brigade if you want to change the text. It''s what the people working on the kolkhoz were called.  
 			elseif temp = 7:
 				'"One day my mother, rest her soul, sent us four siblings out to the forest for berry gathering", your grandma begins. "We took our berry collectors and headed out. We reached the entrance of the forest pretty quickly and decided that it would be best to split up to complete the task faster. Since we were familiar with the area we all dispersed to our cherished spots and began gathering berries."'
 				'"My favorite spot was a plot surrounded by dense bushes and in the middle of the plot there was a huge stump. It’’s was really a great spot and as I approached I noticed very large number of ripe strawberries. I was rejoicing over the thought that I would gather more than my brothers, slowly gathering the berries and putting them in my berry collector. All of a sudden I hear some rustling behind the bushes. I turn towards the sound, but I''m met with silence. I didn''t notice anyone but I still couldn''t get rid of the eerie feeling."'
@@ -481,9 +484,8 @@ if $ARGS[0]='grandma':
 				'"Ever since that day the fear I experienced never disappeared, as I''ve felt it through my whole life. I’ll carry on this fear for the remaining days of my life…"'
 			end
 			!125e
-			act 'You thank your grandmother for the story.':gt 'Gadhouse'
+			act 'You thank your grandmother for the story':gt 'Gadhouse'
 		end
-	
 	end
 
 	act 'Leave her alone':gt 'Gadhouse'
