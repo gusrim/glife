@@ -28,6 +28,7 @@ if $ARGS[0] = 'SGStart':
 	$month = 'August'
 	day = 26
 	week = 5
+	daystart_start = 236
 	hour = 9
 	kanikuli = 5
 	$holyday = '<b>Summer holidays</b>'
@@ -35,22 +36,19 @@ if $ARGS[0] = 'SGStart':
 	if player_avatar = 0:
 		birthmonth = 4
 		birthday = 1
-		pcs_eyecol = 1
-		pcs_eyesize = 2
 		pcs_haircol = 1
-		pcs_lip = 2
 	end
 
 !!	Body
 	pcs_hgt = 170
-	fat = 60
-	salo = 60
+	fat = 80
+	salo = 80
 	dick = 0
 	pcs_energy = 60
 	water = 60
 	pcs_sleep = 70
 !!	Stats
-	speed = 10
+	pcs_react = 10
 	pcs_stren = 10
 	strenbuf = 10
 	pcs_agil = 10
@@ -60,11 +58,11 @@ if $ARGS[0] = 'SGStart':
 	pcs_intel = 10
 	pcs_sprt = 10
 	pcs_react = 10
-!!	pcs_chrsm = 10
-!!	pcs_prcptn = 10
+	pcs_chrsm = 10
+	pcs_prcptn = 10
 	pcs_magik = 0
 
-!!	pcs_makupskl = 25
+	pcs_makupskl = 20
 	pcs_pubes = 3
 	pcs_leghair -= 5
 	pcs_makeup = 1
@@ -91,12 +89,13 @@ if $ARGS[0] = 'SGStart':
 	$pcs_nickname = input("What is your nick name? (Note: If you chose a custom name, you have to enter something here!)")
 
 	if $pcs_nickname = '':$pcs_nickname = 'Sveta'
-
+    '<center><img src="images/pre/SYS/altstart.jpg"></center>'
 	'Your name is <<$pcs_firstname>> <<$pcs_lastname>>, Friends and family sometimes call you <<$pcs_nickname>>.'
 
 	act 'Re-enter name/s': gt 'preSYS', 'SGStart'
 	act 'Continue':
 		cls
+		'<center><img src="images/pre/SYS/altstart1.jpg"></center>'
 		'Please select how long you have left in school.'
 		act 'Begin at the last year of school, age 16 or 17':
 			birthyear = 1999
@@ -111,6 +110,8 @@ if $ARGS[0] = 'SGStart':
 	end
 end
 if $ARGS[0] = 'SGStart2':
+!!make sure this image shows up above the text that shows your birthday.
+    '<center><img src="images/pre/SYS/altstart2.jpg"></center>'
 	if birthday < 10 and birthmonth < 10:
 		$startdob = 'Your birthday: <B>0<<birthmonth>>/0<<birthday>>/<<birthyear>></B> (MM/DD/YYYY)'
 	elseif birthday < 10 and birthmonth >= 10:
@@ -126,11 +127,11 @@ if $ARGS[0] = 'SGStart2':
 	else
 		'<<$startdob>>'
 	end
+	'<center><img src="images/pre/SYS/altstart26.jpg"></center>'
 	'You can begin your game at the end of the summer holiday, very close to starting the new school year. Alternatively, you can start at the beginning of the holiday.'
 	killvar '$startdob'
 	act 'Start at the end of August <B>(recommended for new players)</B>':
 !!		This is the default start
-		gs 'daystart'
 		gt 'preSYS', 'SGStart3'
 	end
 
@@ -139,142 +140,385 @@ if $ARGS[0] = 'SGStart2':
 		$month = 'June'
 		day = 1
 		week = 3
-		gs 'daystart'
+		daystart_start = 152
 		kanicont = 92
 		gt 'preSYS', 'SGStart3'
 	end
 end
 if $ARGS[0] = 'SGStart3':
-!!	This will be where the advanced social group options go.
-	'Select your personality/social group:'
-	act 'I am a complete bookworm!':
-		cls
-		pcs_stren = 1
-		pcs_vital = 5
-		pcs_agil = 1
-		fat = 10
-		salo = 180
-		pcs_intel = 50
+!!From here on down it is all new and changed. I would like it once you choose your start date, that it goes to a page with the image below and text with the 5 social groups to choose from. Then when you click on a main social group it takes you to a page with a image and text, with a list of sub social groups. When you click on a subsocial group, it takes you to a page with a image and text explaining what that subgroup is like. Then you click customize and then it goes to the page that lets you change hair, eye color etc and eventually the traits when we add them.
+	'<center><img src="images/pre/SYS/altstart27.jpg"></center>'
+	'Select your personality/social group. Your social group will have a major defining impact on your life in school. While you can with work change groups, it takes time and effort. So choose wisely.'
+	*nl
+	'Your five choices of social group are.'
+	'Nerds, Geeks, and good Students. - They tend to do well in school and are well liked by the teachers, your parents will be more proud of you as well. Though they tend to not have many friends other than the other Geeks and Nerds. They sometimes get picked on, they are usually subpar athletically and they don''t place a value on looks.'
+	*nl
+	'Jocks and natural athletes. - They are gifted in their chosen sport and very athletically inclined. Which means they tend to be fit and in good shape, making them often better looking than many students. They get along with other jocks and are respected by the cool kids of the school and feared by the nerds, geeks and losers. They don''t value academic achievements and can come into conflict with the gopniks and other troublemakers.'
+	*nl
+	'The Popular, Cool, and Beautiful. - They are typically social gifted and often blessed with naturally good looks. They are envied by many and most kids want to be their friends. They have the ability more than any other to ruin someones rep and get them outcast which makes them respected and feared by many students. Being cool is all they value, so they tend to be subpar athletically and academically.'
+	*nl
+	'Gopniks, Rebels, Punks, or Troublemakers. - They don''t play by the rules and often happily will piss on the rules if given half a chance. They are in decent shape from the fighting, more focused on strength than speed and are quite sociable. They are not the most well liked students, Teachers and parents take a dim view of them, as does the local police. Most of the students, either fear them, since they have no problem kicking someones ass, or secretly envy their carefree attitude.'
+	*nl
+	'Losers, Teachers pets, Sluts, or the Ugly. - They are the outcasts, the kids no one likes to spend time with, other than to pick on them. Perhaps they are socially awkward and never made friends, broke one of the unwritten rules, are a tattle tell, a slut, ugly and/or an outed gay boy. Either way they all have one thing in common, a easy target to make fun of.'
+	
+	act 'Nerd, Geek, Student.':
+!!average appearance and below average physically fit.
+        cls
 		pcs_tan = 0
-		blizoruk = 300
+		pcs_ttgmng = 20
 		if glass < 1 : glass = 1
-		pcs_grades = 55
-!!		Maruda Hair Mod
-		if player_avatar ! 1: pcs_hairlng = 90
 		if player_avatar ! 1: pcs_haircol = 0
-		hpingrip = 10
-		hpingripw = 1
-!!		**********
-		pcs_nerd = 100
 		fantasybook = 5
-		grupTipe=0
-		alterstrtimg = 3
-		$startgrptemp = 'While you were growing up, you spent virtually all your free time at home, reading books. While you have gained a lot of knowledge from reading books, your sedentary lifestyle has left you quite frumpy. The long nights of trying to read in poor light have taken a toll on your eyesight as well, so you now need glasses to be able to read.'
-
-		gt 'preCUST', 'SGStart'
-	end
-
-	act 'I am the queen of the nerds!':
-		cls
-		pcs_stren = 5
-		pcs_vital = 5
-		pcs_agil = 5
-		fat = 10
-		salo = 10
-		pcs_intel = 40
-		pcs_tan = 30
-		npc_rel['A29'] = 100
-		npc_rel['A28'] = 100
-		money += 3000
-		blizoruk = 300
-		pcs_dom = 50
-		if glass < 1 : glass = 1
-		pcs_grades = 110
-!!		Maruda Hair Mod
-		if player_avatar ! 1: pcs_hairlng = 50
-		if player_avatar ! 1: pcs_haircol = 1
-		hpingrip = 10
-		hpingripw = 1
-!!		**********
-		pcs_nerd = 100
-		fantasybook = 5
-		grupTipe=1
-		alterstrtimg = 4
-		$startgrptemp = 'While you were growing up, you spent virtually all your free time at home, reading books and playing fantasy games with the other nerds. While you have gained a huge amount of knowledge from this, your lack of interest in exercising as a child has left your body a little frail. The long nights of trying to read in poor light have taken a toll on your eyesight as well, so you now need glasses to be able to read. However, by the usual nerd standards you are confident and dynamic, this has lead you to be the leader of your group of friends and more acceptable to the other kids.'
-
-		gt 'preCUST', 'SGStart'
-	end
-
-	act 'I am a good student':
-		cls
-		fat = 150
-		salo = 150
-		pcs_intel = 50
-		pcs_grades = 110
-!!		Maruda Hair Mod
-		if player_avatar ! 1: pcs_hairlng = 162
-		if player_avatar ! 1: pcs_haircol = 0
-		hpingrip = 10
-		hpingripw = 1
-!!		**********
-		npc_rel['A29'] = 100
+		grupTipe=3
 		money += 2000
-		pcs_tan = 30
-		grupTipe=1
-		alterstrtimg = 4
-		$startgrptemp = 'You were always a bit of a teacher''s pet, trying to absorb every bit of knowledge and doing everything you could to excel in school. While this attitude has gained you a lot of respect, it did not earn you a lot of friends, and you never had time for sports. You have excellent grades though, and your mother is very proud of you.'
+		pcs_eyesize = 0
+		pcs_lip = 0
+		pcs_lashes = 0
+		pcs_skin = 0
+		fat = 100
+		salo = 100
+		'<center><img src="images/pic/altstart3.jpg"></center>'
+        'While you were growing up, you spent virtually all your free time at home, pursuing varies cerebral pursuits. Whether they was comics, books, fantasy, scifi, school, chess, or computers, your sedentary lifestyle has left you quite frumpy. While you love many nerdy things your true passion is...'
 
-		gt 'preCUST', 'SGStart'
+        act 'I am the queen of the nerds!':
+!!above average looks and average physically fit
+            cls
+		    pcs_intel = 20
+			pcs_sprt = 20
+		    pcs_grades = 70
+			pcs_icesktng = 10
+			pcs_humint = 10
+            pcs_persuas = 10
+            pcs_makupskl = 10
+		    if player_avatar ! 1: pcs_hairlng = 165
+		    if player_avatar ! 1: pcs_haircol = 1
+			pcs_eyesize = 1
+			pcs_lip = 1
+			pcs_skin = 10
+			fat = 60
+			salo = 60
+			'<center><img src="images/pic/altstart8.jpg"></center>'
+			alterstrtimg = 8
+            $startgrptemp = 'While you were growing up, you spent virtually all your free time at home, reading books and playing fantasy games with the other nerds. While you have gained a huge amount of knowledge from this, your lack of interest in exercising as a child has left your body a little frail. The long nights of trying to read in poor light have taken a toll on your eyesight as well, so you now need glasses to be able to read. However, by the usual nerd standards you are confident and dynamic, this has lead you to be the leader of your group of friends and more acceptable to the other kids.'
+			$startgrptemp
+			act 'Continue': gt 'preCUST', 'SGStart'
+		end
+
+        act 'I am a good student':
+            cls
+		    pcs_intel = 30
+		    pcs_grades = 90
+		    if player_avatar ! 1: pcs_hairlng = 120
+			'<center><img src="images/pic/altstart9.jpg"></center>'
+			alterstrtimg = 9
+			$startgrptemp = 'You were always trying to absorb every bit of knowledge and doing everything you could to excel in school. While this attitude has gained you a lot of respect, it did not earn you a lot of friends, and you never had time for sports. You have excellent grades though, and your mother is very proud of you.'
+			$startgrptemp
+			act 'Continue': gt 'preCUST', 'SGStart'
+		end
+
+        act 'I am a computer geek': 
+            cls
+		    pcs_intel = 40
+		    pcs_grades = 80
+			pcs_compskl = 40
+            pcs_comphckng = 20
+			pcs_ttgmng = 30
+		    if player_avatar ! 1: pcs_hairlng = 50
+			'<center><img src="images/pic/altstart10.jpg"></center>'
+			alterstrtimg = 10
+			$startgrptemp = 'You were always into computers, whether playing video games, taking them apart, programing, or even hacking. You love everything about computers, but it has left you little time to make many friends and you rarely spend any time outdoors.'
+			$startgrptemp
+			act 'Continue': gt 'preCUST', 'SGStart'
+		end
+
+        act 'I am a avid Chess player':
+            cls
+		    pcs_intel = 40
+		    pcs_grades = 80
+			pcs_chess = 40
+		    if player_avatar ! 1: pcs_hairlng = 90
+			'<center><img src="images/pic/altstart11.jpg"></center>'
+			alterstrtimg = 11
+			$startgrptemp = 'You were always into chess, you have studied all the great chess masters and you can name them all. You find nothing more interesting than matching your wits with someone else in chess. This has left you little time to make many friends and you rarely spend any time outdoors.'
+			$startgrptemp
+			act 'Continue': gt 'preCUST', 'SGStart'
+		end
 	end
 
-	act 'I am an avid volleyball player!':
-		cls
+    act 'Athlete, Jock.':
+!!Very good shape, above average skin
+        cls
+		pcs_sprt = 30
 		pcs_stren = 25
 		pcs_vital = 25
-		speed = 25
+		pcs_react = 25
 		pcs_agil = 25
-		fat = 20
-		salo = 20
-		sanpad = 0
+		pcs_grades = 50
+		fat = 40
+		salo = 40
 		tampon = 20
-		pcs_vball = 70
-		pcs_run = 40
-		gsAboVolley = 120
+		pcs_run = 20
+		pcs_icesktng = 20
+		pcs_humint = 10
+        pcs_makupskl = 10
 		pcs_dom = 10
-!!		Maruda Hair Mod
 		if player_avatar ! 1: pcs_hairlng = 97
 		if player_avatar ! 1: pcs_haircol = 3
 		hscrunch = 10
 		hscrunchw = 0
-!!		**********
 		pcs_tan = 30
+		pcs_eyesize = 1
+		pcs_lip = 1
+		pcs_lashes = 0
+		pcs_skin = 10
 		grupTipe=2
-		alterstrtimg = 5
-		$startgrptemp = 'Ever since you first tried volleyball, you have been in love with the sport. You spent a lot of your free time trying to get better at it, and it paid off: you''re actually quite good now! However, your obsession with volleyball has had some repercussions on your school performance; you''re a sub-par student, and you haven''t made many friends.'
+		'<center><img src="images/pic/altstart4.jpg"></center>'
+        'While you were growing up, you spent virtually all your free time outdoors, you loved playing sports, running, biking, horseback riding, hiking, and most other outdoor activities but your real passion is sports. You especially love...'
+			act 'Continue': gt 'preCUST', 'SGStart'
+		end
 
-		gt 'preCUST', 'SGStart'
+        act 'I am an avid volleyball player!':
+            cls
+			fat = 60
+			salo = 60
+		    pcs_vball = 60
+			'<center><img src="images/pic/altstart12.jpg"></center>'
+			alterstrtimg = 12
+			$startgrptemp = 'Ever since you first tried volleyball, you have been in love with the sport. You spent a lot of your free time trying to get better at it, and it paid off: you''re actually quite good now! However, your obsession with volleyball has had some repercussions on your school performance; you''re a sub-par student, and you haven''t made many friends.'
+			$startgrptemp
+			act 'Continue': gt 'preCUST', 'SGStart'
+		end
+
+        act 'I am an avid dancer!':
+            cls
+			if player_avatar ! 1: pcs_hairlng = 120
+		    pcs_danc = 40
+			'<center><img src="images/pic/altstart13.jpg"></center>'
+			alterstrtimg = 13
+			$startgrptemp = 'Ever since you first danced, you have been in love with dancing. You spent a lot of your free time trying to get better at it, and it paid off: you''re actually quite good now! However, your obsession with dancing has had some repercussions on your school performance; you''re a sub-par student, and you haven''t made many friends.'
+			$startgrptemp
+			act 'Continue': gt 'preCUST', 'SGStart'
+		end
+
+        act 'I am an avid runner!':
+            cls
+		    pcs_run = 40
+			'<center><img src="images/pic/altstart14.jpg"></center>'
+			alterstrtimg = 14
+			$startgrptemp = 'Ever since you first tried track, you have been in love with the sport. You spent a lot of your free time trying to get better at it, and it paid off: you''re actually quite good now! However, your obsession with running has had some repercussions on your school performance; you''re a sub-par student, and you haven''t made many friends.'
+			$startgrptemp
+			act 'Continue': gt 'preCUST', 'SGStart'
+		end
+
+        act 'I am a Football player.':
+            cls
+			fat = 60
+			salo = 60
+		    pcs_ftbll = 40
+			'<center><img src="images/pic/altstart15.jpg"></center>'
+			alterstrtimg = 15
+			$startgrptemp = 'Ever since you first tried football, you have been in love with the sport. You spent a lot of your free time trying to get better at it, and it paid off: you''re actually quite good now! However, your obsession with running has had some repercussions on your school performance; you''re a sub-par student, and you haven''t made many friends.'
+			$startgrptemp
+			act 'Continue': gt 'preCUST', 'SGStart'
+		end
 	end
 
-	act 'I have a lot of friends!':
-		cls
-		pcs_stren = 10
-		pcs_vital = 10
+    act 'Popular, Cool, Beautiful.':
+!!average shape, above average skin and appearance.
+        cls
+		pcs_sprt = 20
+		pcs_chrsm = 20
+		pcs_vital = 15
 		pcs_agil = 20
-		fat = 30
-		salo = 30
-		pcs_dom = 50
-!!		Maruda Hair Mod
-		if player_avatar ! 1: pcs_hairlng = 19
+		pcs_grades = 60
+		pcs_icesktng = 10
+        pcs_persuas = 30
+		if player_avatar ! 1: pcs_hairlng = 160
 		if player_avatar ! 1: pcs_haircol = 2
-!!		**********
 		pcs_tan = 30
-		grupTipe=4
-		alterstrtimg = 2
-		$startgrptemp = 'You spent most of your childhood outdoors, playing with other girls and boys. As a result, you''re quite healthy and are pretty strong verbally, knowing how to get yourself out of trouble. However, you were never very interested in school or sports, and are only a sub-par student.'
+		pcs_eyesize = 2
+		pcs_lip = 2
+		pcs_lashes = 1
+		pcs_skin = 20
+		grupTipe=1
+		'<center><img src="images/pic/altstart5.jpg"></center>'
+        'You spent most of your childhood outdoors, playing with other girls and boys. As a result, you''re quite healthy and are pretty strong verbally, knowing how to get yourself out of trouble. However, you were never very interested in school or sports, and are only a sub-par student. You...'
+			act 'Continue': gt 'preCUST', 'SGStart'
+		end
 
-		gt 'preCUST', 'SGStart'
+        act 'I have a lot of friends!':
+            cls
+		    pcs_chrsm = 30
+			pcs_humint = 40
+            pcs_makupskl = 30
+			fat = 80
+			salo = 80
+			'<center><img src="images/pic/altstart16.jpg"></center>'
+			alterstrtimg = 16
+			$startgrptemp = 'You have a lot of friends, you was always very social growing up and enjoyed being with others. You have always had a knack of knowing the right things to say at the right moments, which has lead to most of the other kids wanting to be your friend.'
+			$startgrptemp
+			act 'Continue': gt 'preCUST', 'SGStart'
+		end
+
+        act 'I am beautiful.':
+            cls
+			pcs_humint = 20
+            pcs_makupskl = 40
+			pcs_skin = 30
+			fat = 60
+			salo = 60
+			'<center><img src="images/pic/altstart17.jpg"></center>'
+			alterstrtimg = 17
+			$startgrptemp = 'You might not be the smartest, you might not be the most social, or have the tough attitude, but what you do have is good looks. You blossomed early as a girl and the boys took note. As you got older your looks have only improved and now you are often considered one of the best looking girls in school.'
+			$startgrptemp
+			act 'Continue': gt 'preCUST', 'SGStart'
+		end
 	end
 
+    act 'Gopnik, Rebel, Punk, Troublemaker.':
+!!above average fitness
+        cls
+		pcs_sprt = 20
+		pcs_stren = 20
+		pcs_vital = 20
+		pcs_react = 20
+		pcs_agil = 20
+		pcs_grades = 40
+		fat = 80
+		salo = 80
+		tampon = 20
+		pcs_run = 20
+		pcs_humint = 10
+        pcs_makupskl = 10
+		pcs_jab = 10
+        pcs_punch = 10
+        pcs_kick = 10
+        pcs_def = 10
+		pcs_tan = 30
+		pcs_eyesize = 1
+		pcs_lip = 1
+		pcs_lashes = 0
+		pcs_skin = 10
+		grupTipe=4
+		'<center><img src="images/pic/altstart6.jpg"></center>'
+        'You spent most of your childhood outdoors, playing with other girls and boys. As a result, you''re quite healthy. As you got older you lost any interest you might have once had with fitting in, now you do your own thing and are ready to tell anyone where they can stick it if they have a problem with it. This has had some repercussions on your school performance; you''re a sub-par student. Now most consider you...'
+
+		act 'I am a Gopnik.':
+		    pcs_jab = 30
+            pcs_punch = 30
+            pcs_kick = 30
+            pcs_def = 30
+			'<center><img src="images/pic/altstart18.jpg"></center>'
+			alterstrtimg = 18
+			$startgrptemp = 'You are a gopnik, you proved yourself to the others are while still low in the pecking order of things, you have proven yourself already and are fully accepted by the rest. Because of your behavior, you have problems at home. Especially with your mother and step father, who see you going down the wrong path, the teachers and the police all know your one of the local gopniks.'
+			$startgrptemp
+			act 'Continue': gt 'preCUST', 'SGStart'
+		end
+			
+        act 'I am a Troublemaker!': 
+		    pcs_chrsm = 20
+			pcs_humint = 20
+			pcs_persuas = 10
+            pcs_makupskl = 20
+			'<center><img src="images/pic/altstart19.jpg"></center>'
+			alterstrtimg = 19
+			$startgrptemp = 'You are a troublemaker, nothing makes you happier than causing problems. Whether it be petty larceny, getting into fights, or vandalize. You live for the thrill of breaking the rules, you get along fairly well with the gopniks and they accept you as a kindred spirit even if you are not strictly one.'
+			$startgrptemp
+			act 'Continue': gt 'preCUST', 'SGStart'
+		end
+
+        act 'I am Vitek''s Girl Friend.':
+		    pcs_chrsm = 20
+			pcs_humint = 20
+            pcs_makupskl = 20
+			pcs_eyesize = 2
+			pcs_lip = 2
+			pcs_lashes = 1
+			pcs_skin = 20
+			fat = 60
+			salo = 60
+			'<center><img src="images/pic/altstart20.jpg"></center>'
+			alterstrtimg = 20
+			$startgrptemp = 'You are Vitek''s girlfriend, you love the thrill and danger of hanging out with the gopniks, even if you lack the true attitude yourself. You are more of a hanger on, but caught the eye of the local alpha of the gopniks and now you are his girlfriend. As such you are accepted by the rest.'
+			$startgrptemp
+			act 'Continue': gt 'preCUST', 'SGStart'
+		end
+
+        act 'I am a Punk, Rebel, or Alt.':
+		    pcs_jab = 20
+            pcs_punch = 20
+            pcs_kick = 20
+            pcs_def = 20
+			pcs_humint = 20
+            pcs_makupskl = 20
+			'<center><img src="images/pic/altstart21.jpg"></center>'
+			alterstrtimg = 21
+			$startgrptemp = 'You march to your own tune, you are not a follower but a leader, but you have no desire to lead anything. You just do what you want, when you want and fuck everything else. The local gopniks respect you and for the most part you get along with them, but you are not one of them, just a kindred spirit looking to walk your own path and raise a little hell on the way.'
+			$startgrptemp
+			act 'Continue': gt 'preCUST', 'SGStart'
+		end
+	end
+
+    act 'Outcast, Loser, Goth, Ugly.':
+!!not in good shape, below average skin. With exception of slut below.
+        cls
+		pcs_prcptn = 20
+		pcs_grades = 40
+		if player_avatar ! 1: pcs_haircol = 0
+		pcs_eyesize = 0
+		pcs_lip = 0
+		pcs_lashes = 0
+		pcs_skin = 0
+		grupTipe=5
+		'<center><img src="images/pic/altstart7.jpg"></center>'
+        'You never fit in, you are just one of those by choice or circumstance just never fit in with the other kids. As you got older things only got worse, you are seen as being a outcast, breaking one of the unacceptable rules among your peers, like sluts, losers, gay boys and the like. You have no friends, you get bullied and made fun of all the time, because...'
+
+        act 'I have no friends.':
+			fat = 100
+			salo = 100
+            '<center><img src="images/pic/altstart22.jpg"></center>'
+			alterstrtimg = 22
+			$startgrptemp = 'You was never very social and you never learned how to make friends. As you got made fun of you shyed away from the other kids which isolated you even further. Now years later, you have never made any friends.'
+			$startgrptemp
+			act 'Continue': gt 'preCUST', 'SGStart'
+		end
+
+        act 'I am a Ugly duckling.':
+!!low in all things that effect appearance.
+			fat = 120
+			salo = 120
+            '<center><img src="images/pic/altstart23.jpg"></center>'
+			alterstrtimg = 23
+			$startgrptemp = 'Some girls blossom early, some have natural good looks, you got neither. You body seemed to grow out of sync leaving you looking odd and at best unattractive for most of your life. Now in your teens your body is starting to even out in growth but you are still considered not much to look at.'
+			$startgrptemp
+			act 'Continue': gt 'preCUST', 'SGStart'
+		end
+
+        act 'I am a Good girl.':
+			fat = 80
+			salo = 80
+            '<center><img src="images/pic/altstart24.jpg"></center>'
+			alterstrtimg = 24
+			$startgrptemp = 'You are a good girl, the kind parents, teachers and adults love, but the other kids hate. You always reminded the teacher to give out homework and you would tell on everyone for doing anything. You loved the attention you got from the adults, while at times it can be lonely you are still pretty happy knowing your a good girl.'
+			$startgrptemp
+			act 'Continue': gt 'preCUST', 'SGStart'
+		end
+
+        act 'I am a slut.':
+!!above average in all things that add to appearance.
+			pcs_eyesize = 2
+			pcs_lip = 2
+			pcs_lashes = 1
+			pcs_skin = 20
+			fat = 60
+			salo = 60
+			'<center><img src="images/pic/altstart25.jpg"></center>'
+			alterstrtimg = 25
+			$startgrptemp = 'You was the first girl your age to lose her virginity. You have been curious about sex far sooner than other kids your age and you wanted to find out about it. Once you tried it, you found you loved it, you love everything about it. You use to give boys blowjobs under the bleachers during receese and after school. The only thing you like more than sucking on a cock, is getting fucked by ones while sucking on another.'
+			$startgrptemp
+			act 'Continue': gt 'preCUST', 'SGStart'
+		end
+	end
 end
 
 --- preSYS ---------------------------------
