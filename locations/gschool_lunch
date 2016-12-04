@@ -49,7 +49,7 @@ if $ARGS[0] = 'break':
 	gs'stat'
 
 !!Lunch events requiring unlock
-	if lunch_event ! daystart:gs 'gschool_lunch', 'events'
+	if lunch_event ! daystart:gt 'gschool_lunch', 'events'
 
 	if soniaPS = 2:soniaPS = 3 & 'When you walk through the hallways of your school during the break, you see Sonia Ivanko and Vitek Kotov talking about something. Sonia looks like she''s about to cry, but nods when Vitek tells her something.'
 
@@ -305,22 +305,18 @@ if $ARGS[0] = 'events':
 		end
 
 		gs 'gschool_lessons', 'afternoon'
-		exit
 	elseif GorSlut >= 3 and kotovLoveQW <= 0:
 		lunch_event = daystart
-		gs 'gschool_lunch', 'bjs'
+		gt 'gschool_lunch', 'bjs'
 
-	end
 !!question, shouldn't the Ivan asking Sveta if she is bored by moved here to the lunch area and be part of the unlock? since it only happens if Sveta has had sex with him and then talked to him during lunch and agreed about hooking up when bored.
-
-!!new lunch unlock events.
 
 !!Anushka lesbian unlock. There is two ways for this to happen, I am putting them both here.
 
 !!alternative way for this to trigger with out talking to Anushka, instead she approaches Sveta 1 and 5. 
 !!requirements, have done this scene once before, or Sveta is a gopnik. 
 !!Event Anushka is horny
-	if (Anush_lunch > 0 or grupTipe = 4) and rand(0, 5) = 0:
+	elseif (Anush_lunch > 0 or grupTipe = 4) and rand(0, 5) = 0:
 		lunch_event = daystart
 		pcs_horny += 20
 		'<center><img src="images/qwest/alter/school/lunch/want.jpg"></center>'
@@ -328,6 +324,7 @@ if $ARGS[0] = 'events':
 		act 'Not today':
 			'<center><img src="images/qwest/alter/school/lunch/nomake.jpg.jpg"></center>'
 			'You are barely able to break away, mostly because you mostly don''t want to, but you do finally manage to break away and shake your head. "I''m sorry but I can''t right now, sorry." With that you hurry off.'
+
 			gs 'gschool_lessons', 'afternoon'
 		end
 		act 'Go with it':
@@ -335,13 +332,13 @@ if $ARGS[0] = 'events':
 			pcs_horny += 20
 			'<center><img src="images/qwest/alter/school/lunch/makeout.gif.jpg"></center>'
 			'As her fingers invade your wet pussy, you spread your legs a bit wider to give her easier access, barely even aware of your fellow students in the hall and you softly moan back to her. "Yes, I want you to fuck me." With that she grabs you by the hand and leads you off somewhere private.'
+
 			act 'Go somewhere private': gt 'gschool_sex', 'Anush_private'
 		end
-	end
 
 !!This unlocks once the above scene Anushka is horny has happened once or if Sveta is a gopnik. After that has happened then there is a 50/50 if Anushka is horny event triggers that it will be that scene or this scene.
 !!Event Anushka is horny with friends
-	if (Anush_lunch > 1 or grupTipe = 4) and rand(0, 1) = 0:
+	elseif (Anush_lunch > 1 or grupTipe = 4) and rand(0, 1) = 0:
 		lunch_event = daystart
 		'<center><img src="images/qwest/alter/school/lunch/hall.jpg"></center>'
 		'As you stop by your locker after lunch, Anushka comes over to you and leans against the locker next to yours. She leans in close to you "Hey <<$nickname>> want to have some fun? The boys got some stuff and they are waiting for us in one of the unused classrooms." By the look in her eye and the way she is acting, you know exactly what she means by having fun with the boys.'
@@ -353,13 +350,10 @@ if $ARGS[0] = 'events':
 			gs 'gschool_lessons', 'afternoon'
 		end
 		act 'Go somewhere private':gt 'gschool_sex', 'Anush_private2'
-	end
-
-
 
 !!This part I moved because it was in the middle of parts I felt was connected and I wanted this one to no longer be connected to that group of scenes. Instead I wanted it to be a unlock lunch scene because it can only trigger if Sveta has enough rep with the gopnik to be considered a hanger on or higher.
 !!chance this happens is 1 in 4, if the other unlock scenes don't trigger first of course.
-	if gruptipe = 4:
+	elseif gruptipe = 4:
 		lunch_event = daystart
 		cla
 		'During the break, you are approached by some local Gopniks in your school, "<<$pcs_nickname>>, come to the bathroom with us so we can have a little fun. You look like you could use a protein snack anyways." A couple of them snicker at that, as they put their hands around your arms and begin to guide you to the restrooms.'
@@ -411,12 +405,10 @@ if $ARGS[0] = 'events':
 				gs 'gschool_lessons', 'afternoon'
 			end
 		end
-	end
-!!end of lunch unlock events
 
 
 !! Random lunch events
-	if rand(1,100) < 3:
+	elseif rand(1,100) < 3:
 		cla
 		lunch_event = daystart
 		gs 'gschool_events', 'rand_boy_arg', 1, 1, 0, 1, 0, 0
@@ -625,6 +617,9 @@ if $ARGS[0] = 'events':
 
 !!			act 'Continue your break': gt 'gschool_lunch', 'break'
 !!		end
+	else
+		lunch_event = daystart
+		gt 'gschool_lunch', 'break'
 	end
 end
 
@@ -715,13 +710,14 @@ if $ARGS[0] = 'bjs':
 !!Event 2 random boy lunch blowjob
 	elseif gorslut >= rand(1,10):
 !!chance based on rep. So rep 1 gives 1 in 10 chance it happens. while rep 6 gives 6 in 10 it happens.
+		*clr
 		'<center><img src="images/qwest/alter/school/lunch/blowme.jpg"></center>'
 		'During the break, some guy you''ve never seen before approaches you, "Hi <<$nickname>>, right? I hear you''re the best in the school at giving blowjobs! Want to umm, want to come with me and prove it?"'
 		if gorslut = 6:'He then adds, "I''ll give you 50 <b>₽</b>?"'
 
 		act 'Go to the men''s restroom with him':
 			if gorslut = 6: money += 50
-			gt 'gchsool_sex', 'lunch_bj'
+			gt 'gschool_sex', 'lunch_bj'
 		end
 
 		act 'Tell him to get lost':
@@ -761,6 +757,7 @@ if $ARGS[0] = 'bjs':
 	elseif temper > 0 and pcs_horny > 50:
 !!Event 3 roof fuck. Only if not super cold out. and Sveta is horny
 !!This is another thing that can happen during lunch break, like the gopniks and random boy asking for BJ. This can only happen when it is above freezing during the day. chance this happens is based on rep-1. So rep 2 would be 1 in 10 chance it happens. while rep 6 would be 5 in 10 it happens. If none of the above options happen first. 
+		*clr
 		'<center><img src="images/qwest/alter/school/lunch/blowme.jpg"></center>'
 		'During the break, some guy you''ve never seen before approaches you, "Hi <<$nickname>>, right? I hear you''re the best fuck in school! Want to umm, want to come with me and prove it?"'
 		if gorslut = 6:'He then adds, "I''ll give you 100 <b>₽</b>?"'
