@@ -8,12 +8,14 @@ if $ARGS[0] = 'morning':
 		'The principal is waiting for you in the hall, and with a simple curl of a finger, she summons you to follow her to her office.'
 		act 'Follow': gt 'gschool_lessons', 'principal'
 	else
+
 	    '<center><b><font color="maroon">School Hallway</font></b></center>'
 	    '<center><img src="images/qwest/alter/gschool_hall0<<Rand(0,2)>>.jpg"></center>'
 	    'Walking down the halls, you barely notice the poor state of the school anymore, having grown used to it. Approaching your locker, you see several of your classmates who you wave to. The first bell rings to attend morning class and now you debate cutting class.'
 		act 'Go to class':gt 'gschool_lessons', 'class'
 		act 'Skip one of your classes':
 			cla
+			
 			*nl
 			'<center><b><font color="maroon">School Hallway</font></b></center>'
 	        '<center><img src="images/qwest/alter/gschool_hall0<<Rand(0,2)>>.jpg"></center>'
@@ -33,6 +35,7 @@ if $ARGS[0] = 'class':
 		if lernHome = 0: pcs_grades += 2
 		if lernHome > 0: pcs_grades -= 1
 		if pcs_grades > 100: pcs_grades = 100
+
 		if pcs_grades < 0: pcs_grades = 0
 		lernSkill += 1
 		lernHome += 1
@@ -90,9 +93,9 @@ if $ARGS[0] = 'class':
 				'<<$teacher>> is talking to the class about current political events. A few students are engaging in the discussion with the teacher, while most of the others are simply waiting for class to end.'
 				'You, however, find yourself suddenly aware of having eyes on you. Looking around the classroom, you catch quite a few of the boys stealing glances at you. You''re not the only one who notices, either, as a few of the other girls have caught them in the act. One even gives you a dirty look, as if you were somehow responsible for it.'
 			else
-				gs 'gschool_events', 'rand_girl_arg'
+				gs 'gschool_events', 'rand_girl_arg', 1, 1, 1, 1, 1, 0
 
-				gs 'gschool_events', 'rand_girl_arg3'
+				gs 'gschool_events', 'rand_girl_arg1', 1, 1, 1, 1, 1, 0
 
 				'Waiting for class to start, <<girl1>> reapplies some of her makeup. <<girl2>> compliments her on her look, but <<girl1>> complains: "I wish I didn''t have to use so much foundation, though."'
 				'"Wouldn''t it be nice to have <<$pcs_nickname>>''s skin?" <<girl2>> suggests. "I bet she barely needs to use anything on it."'
@@ -112,7 +115,7 @@ if $ARGS[0] = 'class':
 			cla
 			pcs_grades += 1
 			
-			if $teacher = 'Anatoly E.': grupNPC[26] += 1
+			if $teacher = 'Anatoly E.': npc_rel[26] += 1
 			
 			if RAND(1,2) = 1:
 				$school_class_txtrand = 'You listen attentively to <<$teacher[1]>> for the duration of the class. Today''s lesson was interesting and informative, and you feel you learned from taking part in class.'
@@ -125,8 +128,8 @@ if $ARGS[0] = 'class':
 			if rand(1,100) < 3:
 				cla
 				school_event_hour = daystart
-				gs 'gschool_events', 'rand_boy_arg'
-				gs 'gschool_events', 'rand_girl_arg'
+				gs 'gschool_events', 'rand_boy_arg', 1, 1, 0, 1, 0, 0
+				gs 'gschool_events', 'rand_girl_arg', 1, 1, 1, 1, 1, 0
 
 				'<<$teacher>>''s lecture has fallen into a droning rhythm that has brought you, and most of your classmates, into something of a trance as you slowly approach the end of the class you so desperately yearn for.'
 				'That comes to an abrupt end when a loud crash from the back of the room nearly startles you out of your chair.'
@@ -140,7 +143,7 @@ if $ARGS[0] = 'class':
 			end
 			act'Ask a question about the lesson':
 				cla
-				if $teacher = 'Anatoly E.': grupNPC[26] += 1
+				if $teacher = 'Anatoly E.': npc_rel[26] += 1
 
 				if RAND(1,4) = 1:
 					''
@@ -158,16 +161,16 @@ if $ARGS[0] = 'class':
 			
 			end
 			
-			if $teacher = 'Anatoly E.' and pcs_apprnc > 60 and grupNPC[26] >= 40:
-				if grupNPC[26] >= 40 and grupNPC[26] < 60:
+			if $teacher = 'Anatoly E.' and pcs_apprnc > 60 and npc_rel[26] >= 40:
+				if npc_rel[26] >= 40 and npc_rel[26] < 60:
 					ivrand = 1
-				elseif grupNPC[26] >= 60 and grupNPC[26] < 80:
+				elseif npc_rel[26] >= 60 and npc_rel[26] < 80:
 					ivrand = RAND (1,3)
-				elseif grupNPC[26] >= 80:
+				elseif npc_rel[26] >= 80:
 					ivrand = RAND (1,4)
 				end
 				if ivrand = 1:
-					grupNPC[26] += 1
+					npc_rel[26] += 1
 					if RAND(1,3) = 1:
 						$school_class_txtrand = 'Today, there''s a test about the homework you hopefully did. Anatoly E. calls you forward a lot, having you write your answers down on the board. When he asks you for the fourth time today, you begin to suspect he keeps asking you just because of how cute you look in your school uniform, and blush a little as you pick up the chalk once more.'
 					elseif RAND(1,2) = 1:
@@ -176,7 +179,7 @@ if $ARGS[0] = 'class':
 						$school_class_txtrand = 'Today, you had to work hard at school. It certainly payed off though, and <<$teacher>> does his best to involve you in the lessons.'
 					end
 				elseif ivrand = 2:
-					grupNPC[26] += 1
+					npc_rel[26] += 1
 					$school_class_txtrand = 'You listen closely to every word <<$teacher[1]>> says, doing your best to learn. You are, however, somewhat distracted by the way he keeps glancing at you when he thinks you''re not looking. You notice he keeps checking out your legs, which stick out from under your desk.'
 					gt 'gschool_events', 'legs'
 				elseif ivrand = 3:
@@ -184,7 +187,7 @@ if $ARGS[0] = 'class':
 					gt 'gschool_events', 'help'
 				
 				elseif ivrand = 4:
-					grupNPC[26] += 1
+					npc_rel[26] += 1
 					
 					if RAND(1,2) = 1:
 						$school_class_txtrand = 'You sit at your desk, writing a summary on today''s lesson to help you study later. Suddenly, <<$teacher>> comes up from behind you and puts his hand on your shoulder. He takes his time and patiently corrects your mistakes, leaning in a bit closer than is appropriate from a teacher. You don''t mind though, <<$teacher>> is always nice to you.'
@@ -210,7 +213,7 @@ if $ARGS[0] = 'class':
 			if RAND(1,2) = 1:
 				''
 				'Today''s lessons don''t particularly interest you, and you find yourself drifting off constantly. After a while you notice <<$teacher>> has stopped teaching and is looking at you intently, asking you to pay attention. Apparently this is already the third time he asked; you missed the first two completely while you was lost in your own thoughts. The whole class is looking at you now.'
-				if $teacher = 'Anatoly E.' and pcs_apprnc > 60 and grupNPC[26] >= 40 and sub < 30:
+				if $teacher = 'Anatoly E.' and pcs_apprnc > 60 and npc_rel[26] >= 40 and sub < 30:
 					cla
 					
 					act'Don''t pay attention':
@@ -218,30 +221,31 @@ if $ARGS[0] = 'class':
 						
 						if rand(1,100) > 3:
 							school_event_hour = daystart
-							gs 'gschool_events', 'rand_boy_arg'
-							gs 'gschool_events', 'rand_girl_arg'
+							gs 'gschool_events', 'rand_boy_arg', 1, 1, 0, 1, 0, 0
+							gs 'gschool_events', 'rand_girl_arg', 1, 1, 1, 1, 1, 0
 
-							'Almost the entire period has been a lecture, and a quick glance around the room suggests that most of your classmates are on the verge of falling a sleep.'
+							'Almost the entire period has been a lecture, and a quick glance around the room suggests that most of your classmates are on the verge of falling asleep.'
 							'Not all, however. You catch some male voices sniggering from the back of the room.'
 							'Turning in your chair, at first you can''t make out what''s going on. However, you soon notice that <<$rand_boy>> is missing.'
-							'Well, not missing exactly; you can see his legs. It seemed like, perhaps, he was retrieving something he''d dropped something on the floor, but then you realize he''s actually leaning far out to the side, holding out his phone.'
+							'Well, not missing exactly; you can see his legs. It seemed like, perhaps, he was retrieving something he''d dropped on the floor, but then you realize he''s actually leaning far out to the side, holding out his phone.'
 							'It all becomes clear in an instant. In her lecture-induced haze, <<girl>> is sitting with her legs apart and <<$rand_boy>> is maneuvering his phone for a discrete upskirt photo.'
-							'He''s over-extended himself, however, and two of the other boys in the back row have noticed it. The legs of his chair have lifted off the ground slightly as he stretches out, and it seems like a miracle that he''s been able to remained balanced this long.'
-							'Unbelievably, he manages to get the shot and return to a proper sitting position. The other boys shake their heads in disbelief, but <<$rand_boy>> takes a moment to examine the photos he got before holding his phone up to them, to display his hard won reward, upskirt photos of <<girl>>.'
+							'He''s over-extended himself, however, and two of the other boys in the back row have noticed it. The legs of his chair have lifted off the ground slightly as he stretches out, and it seems like a miracle that he''s been able to remain balanced this long.'
+							'Contrary to all expectations, he manages to get the shot and return to a proper sitting position. The other boys shake their heads in disbelief, but <<$rand_boy>> takes a moment to examine the booty before holding his phone up to them and putting his hard-won reward on display: Several upskirt photos of <<girl>> that are sure to spread around school like cooties at a kindergarten.'
 
 							act 'Leave the classroom':school_event_hour = daystart & gt 'gschool_lunch', 'lunch'
 						
 						elseif pcs_dom > 70:
 							''
-							'<<$teacher>> tries to convince you on the importance of todays lesson, "<<$pcs_nickname>>, please pay attention, this is very important. Today''s topic is going to be on the exam for sure."'
-							'"Of course, sir. Please continue your super fascinating lesson. Just keep it a bit up-beat please, if you talk any slower, I might fall asleep!" you answer boldly.'
+!!This one should add 5 demerits for this or the else below 
+							'<<$teacher>> tries to convince you of the importance of todays lesson, "<<$pcs_nickname>>, please pay attention, this is very important. Today''s topic is going to be on the exam for sure."'
+							'"Of course, sir. Please continue your super-fascinating lesson. Just keep it a bit up-beat please. If you talk any slower, I might fall asleep!" you answer boldly.'
 							'The whole class bursts into loud laughter, and <<$teacher>> has a rough time getting everyone to quiet down.'
-							'"<<$pcs_lastname>>, get out of class! I should call your parents, and let the principal know you''re being impossible! Out, now!"'
+							'"Miss <<$pcs_lastname>>, get out of class! I should call your parents, and let the principal know you''re being impossible! Out, now!"'
 							
 							act 'Don''t leave the classroom':
 								''
-								'"What good would that do? Are you trying to get me to start smoking to pass the time? I''m not interrupting your classes, just leave me alone. I''m having some... girl problems. Would you like me to talk about those?" you answer brashly, not having any intentions of getting up.'
-								'Your teacher doesn''t know what to say, and after a while just decides to continue his classes. You obviously don''t learn anything today.'
+								'"What good would that do? Are you trying to get me to start smoking to pass the time? I''m not interrupting your classes, just leave me alone. I''m having some... girl problems. Would you like me to talk about those instead?" you answer brashly, not having any intentions of getting up.'
+								'Your teacher doesn''t know what to say, and after a while just decides to continue his classes. Obviously, you don''t learn anything today.'
 								
 								act'Wait for the end of the lesson':gt 'gschool_lunch', 'lunch'
 							
@@ -251,7 +255,7 @@ if $ARGS[0] = 'class':
 						
 						else
 							''
-							'The eyes of <<$teacher>> grow narrower, and even though you roll your eyes at him, you sit through the rest of the lesson in silence, at least pretending to pay attention sometimes. You don''t learn anything today.'
+							'The eyes of <<$teacher>> grow narrower, and even though you roll your eyes at him, you sit through the rest of the lesson in silence, at least pretending to pay attention sometimes. You don''t learn anything today, though.'
 							
 							act'Wait for the end of the lesson':gt 'gschool_lunch', 'lunch'
 						
@@ -288,17 +292,18 @@ if $ARGS[0] = 'class':
 			pcs_grades -= 1
 			
 			if RAND(1,3) = 1:
-				$school_class_txtrand = 'This lesson is so boring, you have to do something to keep yourself entertained. You take out your phone and begin to play a mobile game, hoping the lesson will be over soon.'
+				$school_class_txtrand = 'The lesson is so boring that you have to do something to keep yourself entertained. You take out your phone and begin to play a mobile game, hoping the lesson will be over soon.'
 			
 			elseif RAND(1,2) = 1:
-				$school_class_txtrand = '<<$teacher>> notices you''re not listening at all, and asks you to put your phone away. You decide not to make things worse, and put your phone back in your pocket. The lesson feels like it takes forever to end, and you''re glad when it''s finally over.'
+!!this should result in 5 demerit
+				$school_class_txtrand = 'Unfortunately, <<$teacher>> notices you''re not listening at all and asks you to put your phone away. You decide not to make things worse and put your phone back in your pocket. The lesson feels like it takes forever to end, and you''re glad when it''s finally over.'
 			
 			else
-				$school_class_txtrand = 'This lesson is so boring, you have to do something to keep yourself entertained. You take out your phone and begin to play a mobile game, hoping the lesson will be over soon.'
+				$school_class_txtrand = 'This lesson is so boring that you have to do something to keep yourself entertained. You take out your phone and begin to play a mobile game, hoping the lesson will be over soon.'
 			
 			end
 			
-			if $teacher = 'Anatoly E.' and pcs_apprnc > 60 and grupNPC[26] >= 40:
+			if $teacher = 'Anatoly E.' and pcs_apprnc > 60 and npc_rel[26] >= 40:
 				cla
 				
 				gt 'gschool_events', 'phone'
@@ -317,12 +322,17 @@ if $ARGS[0] = 'class':
 end
 
 if $ARGS[0] = 'afternoon':
+!!added image and text to the next two parts make sure it works please.
+	'<center><b><font color="maroon">School Hallway</font></b></center>'
+	'<center><img src="images/qwest/alter/gschool_hall0<<Rand(0,2)>>.jpg"></center>'
+	'Walking down the halls, you barely notice the poor state of the school anymore, having grown used to it. Approaching your locker, you see several of your classmates who you wave to. The first bell rings to attend afternoon class and now you debate cutting class.'
 	act 'Go to class':gt 'gschool_lessons', 'afternoon2'
-
 	act 'Skip one of your classes':
 		cla
 		''
-		'You don''t feel like attending all of your classes this afternoon, no one will miss you if you skip one of your three afternoon classes.'
+		'<center><b><font color="maroon">School Hallway</font></b></center>'
+	    '<center><img src="images/qwest/alter/gschool_hall0<<Rand(0,2)>>.jpg"></center>'
+		'You don''t feel like attending all of your classes this afternoon. Surely no one will miss you if you skip one of your three afternoon classes.'
 		act 'Go to girl''s bathroom': gt 'gschool_bathrooms', 'girls bathroom'
 		act 'Go to boy''s bathroom': gt 'gschool_bathrooms', 'boys bathroom'
 !!		act 'Go to old school building': gt
@@ -337,15 +347,24 @@ if $ARGS[0] = 'afternoon2':
 	schoolprogul -= 1
 	school_event_hour = daystart - 1
 
-	if week ! 3 and week ! 5:
+	if week ! 1 and week ! 3 and week ! 5:
 		urand = rand(0, 12)
 		lernSkill += 1
 		lernHome += 1
 		gt 'gschool_lessons', 'class'
-	elseif week = 3 or week = 5:
+	else
 		gs 'stat'
 		'<center><img src="images/qwest/alter/fizra.jpg"></center>'
 		'On Wednesdays and Fridays, you have gym class as always. After everyone gets dressed and gets ready for gym class, Viktor Pavlovich conducts a roll call to ensure everyone is there.'
+		if week = 5 and LocalRun = 0:
+			if schoolSorev = 0:schoolSorev = 1
+
+			'Mr. Pavlovich announces that the inter-school running competition will be held this Saturday at 11:00. If you want to participate, you should come to school between 10:00 and 11:00.'
+		elseif week = 5 and LocalRun = 1:
+			if schoolSorev = 0:schoolSorev = 2
+
+			'Mr. Pavlovich announces that the inter-school running competition will be held this Saturday at 11:00. If you want to participate, you should come to school between 10:00 and 11:00.'
+		end
 		fizrarand = rand(0, 4)
 
 		if fizrarand = 0:
@@ -358,9 +377,10 @@ if $ARGS[0] = 'afternoon2':
 			act 'Run':
 				*clr
 				cla
-				if temper >= 18 and sunWeather = 1:
+				if temper >= 10 and sunWeather = 1:
+!!I changed temper to 10 which is 50F which is plenty warm for running. For weather I would like to change it so as long as it isn''t raining/storming or really bad weather.
 					'<center><img src="images/qwest/alter/fizra/fizra2.jpg"></center>'
-					'Since the weather is nice outside, Mr. Pavlovich decides to stage the run outside, on a nearby forest track he set out before the lesson.'
+					'Since the weather is nice outside, Mr. Pavlovich decides to stage the run outside, on the forest track on school grounds, near the old school building.'
 					if pcs_horny => 90 and npcSex[3] = 1:
 						'As you run through the forest, you feel a hand on your ass. It''s Ivan; he''s much faster than you, and sprints past you to show you how fast he can be when he wants. He then pauses and lets you catch up, and you run together for a while.'
 						act 'Show him your tits':
@@ -368,11 +388,12 @@ if $ARGS[0] = 'afternoon2':
 							'<center><img src="images/qwest/alter/fizra/fizra3.jpg"></center>'
 							'Making sure no one else is near you, you pull up your shirt and reveal your <<$titsize>> boobs to Ivan. You almost immediately notice his erection growing in his tight shorts, and he awkwardly tries to hide his boner. As you pull your shirt back where it belongs you give him a sweet smile and say, "Try hiding that while you''re running past everyone!"'
 							'He grimaces as he sprints away from you, carefully checking to make sure no one is near him. You have a knowing smile on your face when, at the end of the class, his friends ask him why his lap time was so much slower than usual.'
+
 							act 'Finish run':gt 'gschool_lessons', 'postphys'
 						end
 						act 'Laugh it off and let him go':
 							cla
-							'"Very funny, Ivan" you tell him as you give him a wink. He salutes you theatrically as he sprints off again, finishing the run well before anyone else.'
+							'"Very funny, Ivan," you tell him as you give him a wink. He salutes you theatrically as he sprints off again, finishing the run well before anyone else.'
 							act 'Finish run':gt 'gschool_lessons', 'postphys'
 						end
 					end
@@ -380,7 +401,7 @@ if $ARGS[0] = 'afternoon2':
 					'<center><img src="images/qwest/alter/fizra/fizra1.jpg"></center>'
 				end
 				'You join the class in running laps around the gymnasium. Half-way into the fourteenth lap, you wonder if there''s any way gym class could be more boring than this.'
-				act 'Finish run':gt 'gschool_lessons', 'postphys'
+				act 'Finish the run':gt 'gschool_lessons', 'postphys'
 			end
 		elseif fizrarand = 1:
 			pcs_agil += rand(1, 3)
@@ -431,30 +452,33 @@ if $ARGS[0] = 'afternoon2':
 			else
 				'For one of the activities, the teacher breaks everyone into small groups and has you compete to see who can jump rope the longest. Many of the boys pay special attention to the girls as they jump rope.'
 				if pcs_cupsize <= 20:
+					'<center><img src="images/qwest/alter/fizra/jumpr.gif"></center>'
 					if speed <= 40:
 						'You''re barely able to do more than a few before you get tripped up on the rope. The teacher wants to make sure you get enough exercise, though, so you''re made to give it a few tries.'
 					elseif speed <= 60:
 						'Jumping rope is a surprisingly good workout. While you never win any of the competitions, you don''t embarrass yourself, either. You''re tired by the time you''re done.'
 					else
-						'The other girls in your group are surprised at just how long you can jump rope without messing up. You mange to go the longest in a couple of rounds of the competition.'
+						'The other girls in your group are surprised at just how long you can jump rope without messing up. You manage to go the longest in a couple of rounds of the competition.'
 					end
 
 					act 'End of lesson':gt 'gschool_lessons', 'postphys'
 				elseif pcs_cupsize <= 60:
+					'<center><img src="images/qwest/alter/fizra/jumprb.gif"></center>'
 					if speed <= 40:
-						'You''re barely able to do more than a few before you get tripped up on the rope. The teacher wants to make sure you get enough exercise, though, so you''re made to give it a few tries. For some reason, a number of the boys grumble each time you fail to go for more than a couple of seconds.'
-					elseif speed <= 40:
-						'Jumping rope is a surprisingly hard workout. It''s particularly rough on your chest, with your boobs bouncing hard and fighting against the rest of your body. You don''t win any of the rounds, but you find that a number of boys have come over to watch you compete, and offer their support.'
+						'You''re barely able to do more than a few before you get tripped up on the rope. The teacher wants to make sure you get enough exercise, though, so you''re made to give it a few tries. A number of the boys grumble each time you fail to go for more than a couple of seconds.'
+					elseif speed <= 60:
+						'Jumping rope is a surprisingly hard workout. You don''t win any of the rounds, but you find that a number of boys have come over to watch you compete, and offer their support. You have no doubt why the boys are watching, you can feel your boobs bouncing with every jump.'
 					else
 						'With your fitness skills, you easily manage to outlast the other girls. You could actually jump rope for quite a bit longer, but notice that the longer the class goes on, the more boys have found their way over to watch you. Some of the girls you were competing with make snide remarks about just which particular parts of you they are so keen on watching.'
 					end
 
 					act 'End of lesson':gt 'gschool_lessons', 'postphys'
 				else
+					'<center><img src="images/qwest/alter/fizra/jumph.gif"></center>'
 					if speed <= 40:
-						'You''re barely able to do more than a few before you get tripped up on the rope. It''s hard to get the coordination right, and your breasts always seem to be in the way. The teacher wants to make sure you get enough exercise. So you''re made to give it a few tries. There''s outright jeering from some of the boys whenever you screw up. One of them shouts: "C''mon, already! We want to see them bounce!"'
+						'You''re barely able to do more than a few before you get tripped up on the rope. It''s hard to get the coordination right, and your breasts always seem to be in the way. The teacher wants to make sure you get enough exercise, so you''re made to give it a few tries. There''s outright jeering from some of the boys whenever you screw up. One of them shouts: "C''mon, already! We want to see them bounce!"'
 					elseif speed <= 60:
-						'Jumping rope is a complete misery. You can''t manage it for very long, although your coordination and endurance are there, the pain from your breasts slapping around builds up fast. The girls you''re competing with are sympathetic at first, but that slowly goes away as some of the boys wander over to cheer you on. It''s completely apparent what their eyes are focused on each time a round begins.'
+						'Jumping rope is a complete misery. You can''t manage it for very long; although your coordination and endurance are there, the pain from your breasts slapping around builds up fast. The girls you''re competing with are sympathetic at first, but that slowly goes away as some of the boys wander over to cheer you on. It''s completely apparent what their eyes are focused on each time a round begins.'
 					else
 						'You''re easily in good enough shape that this should be a snap, but each time you jump, your breasts slap up and down pretty hard, and in no time they''ve gotten really sore. Fitness means enduring a little pain sometimes though, so you try to press on for as long as you can bear it. What ultimately stops you is the hooting and hollering from the boys. By the end of the period, almost all of them have come over to gawk at your boobs.'
 					end
@@ -465,21 +489,23 @@ if $ARGS[0] = 'afternoon2':
 		elseif fizrarand = 4:
 			cls
 			pcs_stren += rand(1, 3) + (steroid_dose - rand(0,steroid_dose)) & gs 'obj_din', 'steroids'
+
 			pcs_mood -= 5
 			fat -= 2
 			pcs_sweat += 30
 			pcs_horny += 10
 			gs 'stat'
-			'<center><img src="images/qwest/alter/rope.jpg"></center>'
 			'After the roll call, he announces that you will all be taking turns climbing the ropes today.'
 
 			if pcs_horny >= 100:
 				pcs_horny = 0
 				orgasm += 1
 				rope_orgasm += 1
-				'You climb the rope as instructed, and can''t help but feel the rough robe rubbing against your pussy through your clothes. You do your best to climb up, but the rubbing of the rope against your pussy gets more and more intense as you try to climb higher. After a few seconds the stimulation from the rope against your clit brings you to orgasm, and you have to do everything in your power to not fall down as you quiver against the rope, stifling your moans. Your teacher looks up to you and says, "Why are you shaking, <<$pcs_lastname>>? Are you tired or something? Go ahead, come down then."'
+				'<center><img src="images/qwest/alter/fizra/fizra8.jpg"></center>'
+				'You climb the rope as instructed, and can''t help but feel the rough robe rubbing against your pussy through your clothes. You do your best to climb up, but the rubbing of the rope against your pussy gets more and more intense as you try to climb higher. After a few seconds the stimulation from the rope against your clit brings you to orgasm, and you have to do everything in your power to not fall down as you quiver against the rope, stifling your moans. Your teacher looks up to you and says, "Why are you shaking, Miss <<$pcs_lastname>>? Are you tired or something? Go ahead, come down then."'
 			elseif pcs_horny >= 50 and pcs_horny < 100:
 				pcs_horny += 20
+				'<center><img src="images/qwest/alter/rope.jpg"></center>'
 				'You climb the rope as instructed, and can''t help but feel the rough robe rubbing against your pussy through your clothes. You do your best to climb up, but the rubbing of the rope against your pussy gets more and more intense as you try to climb higher. You manage to reach the top, but the rubbing of the rope has got you all worked up. With a bright blush on your face you slide back down, making sure the rope doesn''t rub against your most sensitive spots.'
 			end
 			gs 'gschool_events', 'fiz_rand'
@@ -491,7 +517,7 @@ end
 if $ARGS[0] = 'postphys':
 	cls
 	gs 'stat'
-	'<center><img src="images/qwest/alter/school/gym/postphys<<rand(1,2)>>.jpg"></center>'
+	'<center><img src="images/qwest/alter/school/gym/postphys<<rand(1,4)>>.jpg"></center>'
 
 	if week = 5 and LocalRun = 0:
 		if schoolSorev = 0:schoolSorev = 1
@@ -534,16 +560,18 @@ if $ARGS[0] = 'postphys':
 
 	!!if zverevaQW = 2:end
 	!!if zverevaQW = 3 and fizrukSex = 0:end
+>>>>>>> 10ef79a30115cf1bc0771aae5487c2481e3a8411
 
 	if zverevaQW = 1:
+		postphys_event = daystart
 		'After class, Mr. Pavlovich returns to his office. For some reason, Christina Zvereva is following him while all other students go to the locker rooms as usual.'
 
 		act 'Listen in on Christina and Mr. Pavlovich':
 			cls
 			gs 'stat'
-			'You quietly move up to Mr. Pavlovich''s office, to listen to what they''re talking about. You hear Christina saying, "Please sir, you can''t let <<$pcs_nickname>> go to the regional competition!"'
+			'You quietly move up to Mr. Pavlovich''s office, to listen to what they''re talking about. You hear Christina saying, "Please, sir, you can''t let <<$pcs_nickname>> go to the regional competition!"'
 			'He replies, "<<$pcs_nickname>> beat you fair and square, Christina. There''s not a whole lot I can do about it."'
-			'Christina''s voice again, "But you promised! Please? I''ll make it worth your while if you choose me over her, sir..."'
+			'Christina''s voice again: "But you promised! Please? I''ll make it worth your while if you choose me over her, sir..."'
 			'After a few seconds of silence, you hear him smirk, "Is that so, Christina? You know what to do then, this is not your first time here." Seconds later you hear a gasp from your teacher, and then soft moaning from him.'
 
 			act 'Try to see what''s happening':
@@ -554,72 +582,274 @@ if $ARGS[0] = 'postphys':
 				'<center><img src="images/qwest/alter/ev/zver.jpg"></center>'
 				'You lean over and try to look through the keyhole. You''re flabbergasted by what you see: Christina is on her knees in front of Mr. Pavlovich, and is sucking him off like her life depended on it.'
 
+
 				act 'Burst into the room':
 					cls
 					zverevaQW = 3
 					gs 'stat'
 					!!'<center><img src="images/qwest/alter/ev/zver.jpg"></center>'
 					if GorSlut = 0:
-						'You open the door and enter Mr. Pavlovich''s room. Christine is startled, jumping up from her kneeling position and desperately wiping her mouth while your teacher quickly stuffs his erection back into his shorts. "<<$pcs_lastname>>, has no one taught you you should knock!? Me and Christina were just discussing some important matters!" he exclaims, pretending to be insulted by your sudden intrusion.'
+						'You open the door and enter Mr. Pavlovich''s room. Christine is startled, jumping up from her kneeling position and desperately wiping her mouth while your teacher quickly stuffs his erection back into his shorts. "Miss <<$pcs_lastname>>, has no one taught you you should knock!? Me and Christina were just discussing some important matters!" he exclaims, pretending to be insulted by your sudden intrusion.'
+						*nl
 						'You can''t believe he''s even trying! You tell him just that, "Christina was using her mouth, but it certainly wasn''t for talking! You''re letting her suck you off so she can go to the regional competition instead of me!"'
-						'He drops the charade, but has a confident grin on his face, "Who would believe you? It''s your word against mine, and the word of our school''s star athlete Christina Zvereva. The principal would consider it slander! Your parents would be outraged! Face it you don''t have shit on me, get out of my office. Christina, get back on your knees, we''re not done." The last part was directed at Christina.'
+						*nl
+						'He drops the charade, but has a confident grin on his face, "Who would believe you? It''s your word against mine, and the word of our school''s star athlete Christina Zvereva. The principal would consider it slander! Your parents would be outraged! Face it: You don''t have shit on me, so get out of my office. Christina, get back on your knees, we''re not done." The last part was directed at Christina.'
+						*nl
 						'Christina obliges, rubbing his cock through his shorts as she looks you in the eye. Having regained her confidence in knowing that she''ll be your school''s admission for the contest, she parrots, "Face it bitch, you can''t prove a thing. Now get the fuck out, Mr. Pavlovich and I have more to discuss."'
 					elseif GorSlut > 0:
-						'You open the door and burst into Mr. Pavlovich''s room. Christina pulls off her teacher''s dick in a panic reaction, but regains her confidence when she sees it''s you, "Look what the cat dragged in, it''s <<$pcs_nickname>> the <<$gnikname>>. I recognize that look, you want to suck him off too, don''t you? That''s okay, we can share."'
+						'You open the door and burst into Mr. Pavlovich''s room. Christina pulls off her teacher''s dick in a panic reaction, but regains her confidence when she sees it''s you, "Look what the cat dragged in, it''s <<$pcs_nickname>> the <<$pcs_nickname>>. I recognize that look, you want to suck him off too, don''t you? That''s okay, we can share."'
 
 						act 'Give him a blowjob with Christina':
 							cls
-							stat['bj'] += 1
 
 							if fizrukSex = 0:fizrukSex = 1 & guy += 1
 							if kristinaSex = 0:kristinaSex = 1
 
-							grupNPC[18] = 100
+							npc_rel[18] = 100
 							gs 'stat'
 							'<center><img src="images/qwest/alter/ev/fiz.jpg"></center>'
-							'You nod and get down on your knees next to Christina, thinking maybe if you outperform her, he will still pick you for the competition. She diligently takes off his clothes and takes his penis in her hand, sucking on it for a little while before offering it to you. You follow her lead and obediently take his cock in your mouth, sucking on it and trying to take it down as far down your throat as you are comfortable with. After a while she pushes your face away and closes her lips around it, sucking him off until he shoots his load inside her mouth. Unwilling to share, she swallows it and then goes to the changing room to get dressed. You might be faster than Christina, but she definitely outperformed you here.'
+							'You nod and get down on your knees next to Christina, thinking maybe if you outperform her, he will still pick you for the competition. She diligently takes off his clothes and takes his penis in her hand, sucking on it for a little while before offering it to you. You follow her lead and obediently take his cock in your mouth, sucking on it and trying to take it as far down your throat as you are comfortable with. After a while she pushes your face away and closes her lips around it, sucking him off until he shoots his load inside her mouth. Unwilling to share, she swallows it and then goes to the changing room to get dressed. You might be faster than Christina, but she definitely outperformed you here.'
 
-							act 'Shower and leave the school':dynamic $showerdin & gt 'gschool_grounds', 'main'
-							act 'Skip your shower and leave the school':gt 'gschool_grounds', 'main'
+							act 'Go and get changed': gt 'gschool_lessons', 'postphys2'
 						end
 					end
 
-					act 'Shower and leave the school':dynamic $showerdin & gt 'gschool_grounds', 'main'
-					act 'Skip your shower and leave the school':gt 'gschool_grounds', 'main'
+					act 'Go and get changed': gt 'gschool_lessons', 'postphys2'
 				end
 
 				act 'Keep looking':
 					cls
-					pcs_horny += 10
 					gs 'stat'
 					'<center><img src="images/qwest/alter/ev/zver.jpg"></center>'
-					'Mr. Pavlovich groans, and after a few minutes he can''t hold back any more shoots his load in Christina''s mouth. She diligently swallows his sperm without even taking her mouth off his cock, giving it a thorough tongue bath before tucking it back into his shorts. You hear her ask, "Did I do a good job, sir? Did I earn my spot in the regional championships?"'
+					'Mr. Pavlovich groans, and after a few minutes he can''t hold back any more and shoots his load into Christina''s mouth. She diligently swallows his sperm without even taking her mouth off his cock, giving it a thorough tongue-bath before tucking it back into his shorts. You hear her ask, "Did I do a good job, sir? Did I earn my spot in the regional championships?"'
+					*nl
 					'He groans, petting her head as he instructs her to stay on her knees for a while longer, "Absolutely babe, as long as you keep taking care of me, I''ll make sure you''ll be running those championships. Don''t get up, stay there and keep nuzzling. I think I can go again in a minute."'
 
-					act 'Admit defeat and go get changed':
-						cls
-						gs 'stat'
+
+					act 'Admit defeat':
+						cla
 						'As you see Christina happily dig her face into his groin, you quietly close the door and leave. It looks like, despite being the better runner, you won''t be going to the regional championships.'
 
-						act 'Shower and leave the school':dynamic $showerdin & gt 'gschool_grounds', 'main'
-						act 'Skip your shower and leave the school':gt 'gschool_grounds', 'main'
+						act 'Go and get changed': gt 'gschool_lessons', 'postphys2'
 					end
 				end
 
-				act 'Admit defeat and go get changed':
-					cls
-					gs 'stat'
-					'Yea, you''re not willing to do that. As you see Christina happily dig her face into his groin, you quietly close the door and leave. It looks like, despite being the better runner, you won''t be going to the regional championships.'
+				act 'Admit defeat':
+					cla
+					'Yeah, you''re not willing to do that. As you see Christina happily dig her face into his groin, you quietly close the door and leave. It looks like, despite being the better runner, you won''t be going to the regional championships.'
 
-					act 'Shower and leave the school':dynamic $showerdin & gt 'gschool_grounds', 'main'
-					act 'Skip your shower and leave the school':gt 'gschool_grounds', 'main'
+					act 'Go and get changed': gt 'gschool_lessons', 'postphys2'
 				end
 			end
 		end
+	elseif fizrukSex > 0 and kristinaSex > 0:
+		'When the class is dismissed, Christina approaches you, "<<$pcs_nickname>>, sweetie, Mr. Pavlovich wants you to join me again in his office. He wants us to ''entertain him'', if you know what I mean. Want to join me?"'
+
+		act 'Entertain Mr. Pavlovich with Christina':
+			cls
+			stat['bj'] += 1
+
+			if fizrukSex = 0:fizrukSex = 1 & guy += 1
+			if kristinaSex = 0:kristinaSex = 1
+
+			npc_rel[18] = 100
+			gs 'stat'
+			'<center><img src="images/qwest/alter/ev/fiz.jpg"></center>'
+			'You follow Christina, and follow her lead as she squats before your teacher. She diligently takes off his clothes and takes his penis in her hand, sucking on it for a little while before offering it to you. You follow her lead and obediently take his cock in your mouth, sucking on it and trying to take it as far down your throat as you are comfortable with. After a while she pushes your face away and closes her lips around it, sucking him off until he shoots his load inside her mouth. Unwilling to share, she swallows it and then goes to the changing room to get dressed.'
+
+			act 'Go and get changed': gt 'gschool_lessons', 'postphys2'
+		end
+	else
+		gt 'gschool_lessons', 'postphys2'
+	end
+end
+
+!!second note, make sure to randomize the teachers for the classes that is not Anatoly, the other ones that can be random teachers of classes would be numbers 47, 48, 51, 52, 54, and 55. the rest of them would have a specific class like PE etc or they don''t teach classes.
+if $ARGS[0] = 'postphys2':
+	if zverRageQW = 10 and postphys_event ! daystart:postphys_event = daystart & gt 'gKristinaZv'
+	cls
+	$metka = 'postphys2'
+	$loc = 'gschool_lessons'
+	gs 'stat'
+	'<center><img src="images/qwest/alter/school/gym/postphys<<rand(1,4)>>.jpg"></center>'
+    'You enter the girls locker room and find several other girls already inside, undressing, changing, heading for or returning from the showers, or simply chatting with each other. You ignore the young women in various states of undress around you, find your locker, and start to take off your clothes.'
+	act 'Get dressed': gt 'gschool_lessons', 'dress'
+!!This should just let Sveta change to any clothes since Gym is always the last class at school.
+	act 'Have a shower': gt 'gschool_lessons', 'shower'
+	act 'Use the mirror':
+		cla
+		$gt1 = 'gschool_lessons'
+		$gt2 = 'postphys2'
+		gt 'portmirror'
+
+		act 'Move away from the mirror':
+			cla
+			gt 'gschool_lessons', 'postphys2'
+		end
+	end
+end
+
+if $ARGS[0] = 'shower':
+	cls
+	shower_shave = 0
+	gs 'stat'
+    '<center><img src="images/qwest/alter/school/gym/change.jpg"></center>'
+    'After taking off all of your clothes, you gather up your towel, washcloth and soap, then head to the showers; you are greeted by wafts of steam and several girls who are giggling and gossiping among themselves, apparently oblivious to your existence.'
+	if (pcs_leghair > 0 or pcs_pubes > 0) and stanok > 0:
+		'In a clumsy moment, you drop your soap with loud clatter. As you crouch to pick it up again, you notice that you badly need to shave your legs and bikini area.'
+		act 'Ignore it': gt 'gschool_lessons', 'shower2'
+		act 'Better shave':
+			cla
+			shower_shave = 1
+			'Blushing slightly - now that you''re aware how badly groomed you are compared to the other girls - you quickly head back to the locker and gather up your shaving cream and razor as well.'
+			act 'Return to the showers': gt 'gschool_lessons', 'shower2'
+		end
+	else
+		act 'Return to the showers': gt 'gschool_lessons', 'shower2'
+	end
+end
+!!second option adds act after shower text below, act 'Shave' that act only shows up if the act Better shave was choosen.
+
+if $ARGS[0] = 'shower2':
+	cls
+	dynamic $showerdin
+	gs 'stat'
+	'<center><img src="images/qwest/alter/school/gym/postphyssho<<rand(1,6)>>.jpg"></center>'
+	'You pick one of the empty shower heads at random and turn the water on, letting it pour over you and run down your body, caressing you in the relaxing way that is unique to hot showers - after PE, this feels simply great. After a few moments of basking in this joy of modern civilization and silently thanking providence that you life in an era where this is commonplace, you lather up your body with soap. You barely pay any attention to the other girls showering with you, their conversations mostly drowned out by the sound of the shower.'
+	if rand(0, 9) = 0:
+		*clr
+		'<center><img src="images/qwest/alter/school/gym/showerspank.gif"></center>'
+		'You pick one of the empty shower heads at random and turn the water on, letting it pour over you and run down your body, caressing you in the relaxing way that is unique to hot showers - after PE, this feels simply great. After a few moments of basking in this joy of modern civilization and silently thanking providence that you life in an era where this is commonplace, you lather up your body with soap. You barely pay any attention to the other girls showering with you, their conversations mostly drowned out by the sound of the shower.'
+		'As you wash off the soap, you turn just in time to see one girl start spanking another one; most of the girls in the shower room stop what they''re doing to watch the antics of the two of them. After several fairly hard smacks, they stop and laugh about it, the ''victim'' rubbing her butt with strange glee, before everyone returns to showering.'
+	end
+	if shower_shave = 1:
+	    act 'Shave':
+			cla
+			minut += 20
+			if pcs_leghair ! 0 :stanok -= 1 & pcs_leghair = -5
+			if pcs_pubes ! 0 :stanok -= 1 & pcs_pubes = -5
+			pcs_horny += 5
+			if stanok < 0: stanok = 0
+	        '<center><img src="images/qwest/alter/school/gym/shave<<rand(1,2)>>.jpg"></center>'
+		    'Once you have washed your hair and body, you stand next to the shower and lather up with your shaving cream before you turn your attention to the stubbles on your legs and bikini area. Once you are satisfied with the smoothness of your bottom half, you wash off any remaining cream and soap before turning off the water.'
+
+			act 'Return to locker room': gt 'gschool_lessons', 'post_shower'
+			act 'Check out the other girls': gt 'gschool_lessons', 'post_shower2'
+		end
 	end
 
-	act 'Shower and leave the school':dynamic $showerdin & gt 'gschool_grounds', 'main'
-	act 'Skip your shower and leave the school':gt 'gschool_grounds', 'main'
+	act 'Return to locker room': gt 'gschool_lessons', 'post_shower'
+	act 'Check out the other girls': gt 'gschool_lessons', 'post_shower2'
+end
+
+if $ARGS[0] = 'post_shower':
+	cla
+    'You grab your towel and diligently dry off your body. With your hair still wet, you wrap the towel around you, ready to return to the locker room and put that blow dryer to use.'
+	act 'Get Dressed': gt 'gschool_lessons', 'dress'
+end
+
+if $ARGS[0] = 'post_shower2':
+	cls
+	pcs_horny += 5
+	gs 'stat'
+	'<center><img src="images/qwest/alter/school/gym/postphyssho<<rand(1,6)>>.jpg"></center>'
+	'Before leaving, you pause a moment by the door and casually glance back at the other girls who are still showering, pretending to be unsatisfied with your shave so you can check out their naked bodies. Several of them are really good looking and you can feel yourself getting aroused as you watch them lathering up their wet, nubile, naked bodies. Biting your lip, you give a particularly pretty girl a final, longing, lingering glance before going back to the locker room to dry your hair and get dressed. You don''t think anyone noticed you watching them.'
+	gs 'arousal', 'voyeur', 2
+	gs 'arousal', 'end'
+	gs 'stat'
+	*nl
+	'You grab your towel and diligently dry off your body. With your hair still wet, you wrap the towel around you, ready to return to the locker room and put that blow dryer to use.'
+
+	act 'Get Dressed': gt 'gschool_lessons', 'dress'
+end
+
+if $ARGS[0] = 'dress':
+	cls
+	$metka = 'dress'
+	$loc = 'gschool_lessons'
+	gs 'stat'
+    '<center><img src="images/qwest/alter/school/gym/change.jpg"></center>'
+	'You take your clothes out of your locker and start putting them on. This takes longer than expected, however, since you get distracted several times while getting dressed - sometimes by other girls engaging you in a brief conversation, sometimes by something or someone catching your eye. By the time you are finished, most of the other girls have already left the locker room.'
+	'You can choose another outfit while you''re here.'
+
+!!below is a list of random incidental events that can happen in the locker room while getting dressed. Set up how we did the in class events, I would say 25% chance one of them happens and then random which one it is. Or what ever chance you feel works best. Also you might want to put them in gschool_events file as well. Not sure, I am leaving them here because I was working on the locker room and these take place in the locker room.
+
+	if postphys_event ! daystart:
+		if rand(0,10) = 0:
+			cls
+			postphys_event = daystart
+			pcs_mood += 10
+			gs 'stat'
+			gs 'gschool_events', 'rand_girl_arg', 1, 1, 0, 1, 1, 0
+			gs 'gschool_events', 'rand_girl1_arg', 1, 1, 0, 1, 1, 0
+			'<center><img src="images/qwest/alter/school/gym/lockerflash.jpg"></center>'
+			'Several other girls come in from the showers together, wearing their towels. <<girl1>> picks up her phone and holds it up to take their picture when <<girl2>> see''s this. She stops and, with a lewd smile, pulls her towel wide open, showing off her naked body as <<girl1>> takes the picture. Several girls giggle at <<girl2>>''s antics while others whistle or cat call. All in all, everyone has a good laugh at the moment.'
+			*nl
+			'You take your clothes out of your locker and start putting them on. This takes longer than expected, however, since you get distracted several times while getting dressed - sometimes by other girls engaging you in a brief conversation, sometimes by something or someone catching your eye. By the time you are finished, most of the other girls have already left the locker room.'
+			'You can choose another outfit while you''re here.'
+
+		elseif rand(0,10) = 0:
+			cls
+			postphys_event = daystart
+			pcs_mood += 10
+			gs 'stat'
+			gs 'gschool_events', 'rand_girl_arg', 1, 1, 0, 1, 1, 0
+			gs 'gschool_events', 'rand_girl1_arg', 1, 1, 0, 1, 1, 0
+			'<center><img src="images/qwest/alter/school/gym/locselfiedan.gif"></center>'
+			'<<girl1>> is at the mirror, taking a selfie of herself while trying to look all sexy. As she does, <<girl2>> walks up beside her and then starts to dance next to her, bending over and grinding her butt against <<girl1>>''s. <<girl1>> can''t help but laugh and grind back, and soon both of them are teasing each other and laughing, along with many of the other girls in the locker room that saw the whole thing.'
+			*nl
+			'You take your clothes out of your locker and start putting them on. This takes longer than expected, however, since you get distracted several times while getting dressed - sometimes by other girls engaging you in a brief conversation, sometimes by something or someone catching your eye. By the time you are finished, most of the other girls have already left the locker room.'
+			'You can choose another outfit while you''re here.'
+
+		elseif rand(0,10) = 0:
+			cls
+			postphys_event = daystart
+			gs 'stat'
+			'<center><img src="images/qwest/alter/school/gym/lockerroom.jpg"></center>'
+			'You are running extra late today. By the time you finally finish dressing, nobody seems to be left in the room or shower. You take a few steps towards the door, convinced that you are the last person here, when you hear a soft moan. At first you think you misheard but... there it is again.'
+			act 'Ignore it': gt 'gschool_lessons', 'dress'
+			act 'Take a peek':
+!!two random girls from class or unknown girls. only those we listed as bisexual or lesbian
+				'<center><img src="images/qwest/alter/school/gym/les<<rand(1,3)>>.jpg"></center>'
+				'Curious, you sneak toward the source of the soft, feminine sounds. As you get closer, you are sure you are about to come across a couple of girls making out... and, sure enough, when you peek around the next corner, you spy two girls you don''t know making out and feeling each other up. Their display of passion is so infectious that you are tempted to join them, but they seem so into each other that you would feel guilty intruding on their tender moment. That doesn''t make it any less arousing to watch, though.'
+				gs 'arousal', 'voyeur', 1
+				gs 'stat'
+
+				act 'Leave them in peace':gs 'arousal', 'end' & gt 'gschool_lessons', 'dress'
+				act 'Masturbate':
+					'<center><img src="images/qwest/alter/school/gym/mast<<rand(1,2)>>.gif"></center>'
+					'As you watch them, you feel yourself getting horny, <b>really</b> horny, and before you know it, you have slipped your hand under your clothes and have started masturbating. As you watch them more, the girls oblivious to their aroused observer, you pull some of your clothes away to make it easier to fondle yourself. You stifle your moans as best you can, but you don''t think they can possible hear them over their own, the couple too absorbed in kissing and caressing each other to notice anything around them.'
+					'Your fingers make their rounds around your clit in smaller, harder circles, your eyes glued to lovers, and you feel yourself getting closer to a climax.'
+					$orgasm_txt = 'About a second later, you feel like a small explosive went off inside you, and you have to clamp one of your hands over your mouth to keep yourself from shouting as the other continues to rub your clit. The climax hits you hard and your legs nearly give out, your whole body shaking and shuddering like an actual shockwave is passing through it. You are momentarily blinded by the pleasure but after a few seconds, you get yourself back under control.'
+					gs 'arousal', 'voyeur', 10
+					minut -= 10
+					gs 'arousal', 'masturbate', 10
+					'As you do, you hear their joined moans of pleasure grow to crescendo that fills the room and your ears. Then, all goes quiet. You peek around the corner again and watch them talk softly for a moment, exchanging final kisses before they get up to get dressed. You quickly straighten out your clothes as well and head for the exit as quietly as you can - you don''t want them to know you have been spying on them.'
+					$orgasm_txt = ''
+					gs 'arousal', 'end'
+					gs 'stat'
+
+					act 'Return': gt 'gschool_lessons', 'dress'
+				end
+			end
+		elseif rand(0,10) = 0:
+			cls
+			postphys_event = daystart
+			gs 'stat'
+!!Someone took a picture of Sveta, We will need a argument to decided on who it could be. eventually will lead to the picture going up all over and everyone at school seeing it
+			'<center><img src="images/qwest/alter/school/gym/nudepic<<rand(1,3)>>.jpg"></center>'
+			'While you are still naked, you hear a couple of girls giggling. You turn to look at them, but they are not looking at you. Confused, you follow their collective gaze but can''t see anything in that direction that would be worth a laugh. Glancing back at them, you see them looking at you and giggling again - obviously, something happened that you missed; something that they thought was funny. You wonder what it was.'
+			*nl
+			'You take your clothes out of your locker and start putting them on. This takes longer than expected, however, since you get distracted several times while getting dressed - sometimes by other girls engaging you in a brief conversation, sometimes by something or someone catching your eye. By the time you are finished, most of the other girls have already left the locker room.'
+			'You can choose another outfit while you''re here.'
+
+		end
+	end
+
+	act 'Choose an outfit':postphys_event = daystart & gt 'clothing_QV','list'
+	!!act 'Return to gym':
+!!I would like to keep the gym open until 18:00 so kids can work out in the gym or use the showers/locker rooms after school. A lot of schools do that when they have sports teams that practice after school and some do it to give the kids a place to be that is safe. Right now the return to gym will do nothing but eventually I will add stuff. 
+	act 'Leave school': gt 'school grounds'
 end
 
 if $ARGS[0] = 'principal':
@@ -627,24 +857,24 @@ if $ARGS[0] = 'principal':
 	gs 'stat'
     '<center><b><font color="maroon">Principal''s Office</font></b></center>'
     '<center><img src="images/qwest/alter/school/principal/office.jpg"></center>'
-	'The office in a word is impressive, it must have cost a full years worth of the schools budget to decorate it. At least now you know why so much of the rest of the school has cracked and faded paint, Or is in need of repair, that never seems to happen, they spend all the money on this office.'
+	'The office is, in a word, impressive: It must have cost a full year''s worth of the school''s budget to decorate it. At least now you know why so much of the rest of the school has cracked and faded paint, or is in need of repair that never seems to happen - all the money is spent on this one room.'
 	if detention_set = 2:
-		'You take a seat at Principal <<$npcSurName[50]>>''s desk and wait for her to address you with a exacerbated tone "I give pupils the choice of a detention so that I don''t have to punish them personally, but you have abused that leniency so this spanking will have to be much more severe in order to teach you not to insult my kindness." She is clearly very angry and you are already anticipating the pain your butt is about to receive.'
+		'You take a seat at Principal <<$npcSurName[50]>>''s desk and wait for her to address you with an exacerbated tone: "I usually give pupils the choice of detention so that I don''t have to punish them personally... but you have abused my leniency one time too many. I''m going to teach you not to insult my kindness." She is clearly angry and you can almost already feel the pain on your butt that you are about to receive.'
 		act 'Accept the inevitable': gt 'gschool_lessons', 'spanked'
 	elseif demerit > 20:
-		'You take a seat at Principal <<$npcSurName[50]>>''s desk and wait for her to address you with a exacerbated tone "What did you do this time? No I don''t want to know. I really don''t care. You obviously have no respect for me or your teachers." She looks over your file some more and shakes her head slightly. "You have been here enough, you know what comes next. So what will it be this time? Spanking, Saturday detention perhaps." She seems more than a bit annoyed that you seem immune to her punishment system or are just that troubled of a student.'
+		'You take a seat at Principal <<$npcSurName[50]>>''s desk and wait for her to address you with an exacerbated tone: "What did you do this time, <<$surname>>? No, I don''t want to know. I really don''t care what it is. You obviously have no respect for me or your teachers." She looks over your file some more and shakes her head slightly. "You have been here enough and you know what comes next. So, what will it be this time? Spanking, or perhaps Saturday detention?" She seems more than a bit annoyed that you appear to be immune to her punishment system... or maybe that you are that troubled of a student.'
 		act 'Choose detention':detention_set = 1 & gt 'gschool_lessons', 'class'
 		act 'Choose spanking': gt 'gschool_lessons', 'spanked'
 !!		if demerit >= 50:act 'Choose suspension': gt 'gschool_lessons', 'suspension'
 !!		act 'Call Parents': gt 'gschool_lessons', 'Call Parents' - I will add this one in later as it will be a bit of work to write and tie in events at home.
 	elseif demerit > 10:
-		'You take a seat at her desk and wait for Principal <<$npcSurName[50]>> to address you. "This is becoming a routine with you, I feel like I am seeing you every day. What has changed? You use to be such a good girl, perhaps a bit quiet, but now. This is not the way to get attention." She looks over your file some more and shakes her head slightly.'
-		'"We can''t have you keep getting in trouble like this, this is going to require a form of punishment." She looks directly at you for a moment to make sure you understand when you cause problems you will be getting punished. "I believe in giving the students a voice in their future. So I will let you decided, Saturday detention or a spanking now. Which will it be?"'
+		'You take a seat at her desk and wait for Principal <<$npcSurName[50]>> to address you. "This is becoming a routine with you; I feel like I am seeing you every day! What has changed, <<$surname>>? You used to be such a good girl, perhaps a bit quiet, but now? This is not the way to get attention." She looks over your file some more and shakes her head slightly.'
+		'"We can''t have you keep getting in trouble like this - I will have to punish you." She looks directly at you for a moment to make sure you understand that when you cause problems, you will be getting punished. "I believe in giving the students a voice in their future, so I will let you decide: Saturday detention, or a spanking, right now - which will it be?"'
 
 		act 'Choose detention': detention_set = 1 & gt 'gschool_lessons', 'class'
 		act 'Choose spanking': gt 'gschool_lessons', 'spanked'
 	else
-		'You take a seat at Principal <<$npcSurName[50]>>''s desk and wait for her to address you. "You know why you are here <<$pcs_lastname>>?", before you have a chance to reply she continues on. "It was a rhetorical question, we both know why you are here. You are here because you got in trouble." She pauses to look over at the folder in front of her. "It shows you have mostly stayed out of trouble until now. I hope this is only a minor lapse in judgement and not a new trend from you. We won''t get into what you did, just understand this is a warning. Straighten yourself out or their will be consequences. Now return to class."'
+		'You take a seat at Principal <<$npcSurName[50]>>''s desk and wait for her to address you. "Do you know why you are here, <<$surname>>?", before you have a chance to reply she continues on. "It was a rhetorical question - we both know why you are here. You are here because you got in trouble." She pauses to look over at the folder in front of her. "Your file shows you have mostly stayed out of trouble until now. I hope this is only a minor lapse in judgment and not a new trend from you. We won''t get into what you did, just understand this is a warning. Straighten yourself out or there will be consequences. Now, return to class."'
 		act 'Go to class':gt 'gschool_lessons', 'class'
 	end
 end
@@ -653,10 +883,11 @@ if $ARGS[0] = 'spanked':
 	cls
 	gs 'stat'
 	'<center><b><font color="maroon">Principal''s Office</font></b></center>'
-	'<center><img src="images/qwest/alter/school/principal/principal.jpg"></center>'
-	if detention_set ! 2:'No way are you coming back to school on a Saturday. "Uh, I would rather just get it over with, so spanking."'
-	'"Very well, come over here." She says as she gets up and pulls a chair out and sits down on it. You get up and walk over to her.'
+	'<center><img src="images/qwest/alter/npc/50.jpg"></center>'
+	if detention_set ! 2:'No way are you coming back to school on a Saturday. "Uh, I would rather just get it over with, so... Spanking."'
+	'"Very well, come over here." She says as she gets up, pulls a chair out and sits down on it. You get up and walk over to her.'
 	principal_spank += 1
+	demerit -= 10
 	if principal_spank <= 5 and detention_set ! 2:
 	!!there is different levels of spanking, first 5 times is Spanked, next 5 is Bare Spanked, next 5 times is Leather Paddle, after that all future ones is Wooden Paddle. If flirt is selected it automatic jumps to the next level, regardless of number of times.
 		act 'Take Punishment':
@@ -664,9 +895,14 @@ if $ARGS[0] = 'spanked':
 			gs 'pain', 1, 'asscheeks', 'spank'
 			gs 'stat'
 			'<center><img src="images/qwest/alter/school/principal/schoolspank.jpg"></center>'
-			'Once you walk over to her, Principal <<$npcSurName[50]>> pulls you down across her knees, with you laying across her knees she pulls up your skirt and using her hand to smack your ass. You jerk a bit in reflex, she is a strong woman and her smacks sting a bit. She is obviously trying to smack your butt with enough force to teach you a lesson.'
-			'You silently take your punishment, even if it is not all that bad and a bit of you actually likes it. Regardless you don''t want her to know this isn''t bother you all that much. So you play along, withering around and whimpering as she spanks you for a good solid minute.'
-			'Then she lifts you back to your feet and rubs your arm. "I hope this has taught you a lesson and I don''t want to see you in my office any more. Ok return to your classes." With that she goes back to her desk and you head back to class.'
+			'Once you walk over to her, Principal <<$npcSurName[50]>> pulls you down across her knees. With you laying like that, she pulls up your skirt and gives your ass a hard smack with her hand. You jerk a bit in reflex - she is a strong woman and her blows sting quite a bit. She is obviously trying to spank your butt with enough force to teach you a lesson.'
+			*nl
+			'You silently take your punishment, even if it is not all that bad and a bit of you actually likes it. Regardless, you don''t want her to know this doesn''t bother you all that much, so you play along, withering around and whimpering as she spanks you for a good solid minute.'
+			'Then she lifts you back to your feet and rubs your arm. "I hope this has taught you a lesson; I don''t want to see you in my office anymore, <<$surname>>. You can return to your classes now." With that, she goes back to her desk and you head back to class.'
+			gs 'arousal', 'foreplay', 5, 'maso', 'rough'
+			gs 'stat'
+			gs 'arousal', 'end'
+			gs 'stat'
 			act 'Go to class':gt 'gschool_lessons', 'class'
 		end
 		act 'Flirt/rebel':
@@ -675,10 +911,17 @@ if $ARGS[0] = 'spanked':
 			gs 'pain', 2, 'asscheeks', 'spank'
 			gs 'stat'
 			'<center><img src="images/qwest/alter/school/principal/schoolspank.jpg"></center>'
-			'Once you walk over to her, Principal <<$npcSurName[50]>> pulls you down across her knees, pulls up your skirt she uses her hand to smack your ass. You jerk a bit in reflex, she is a strong woman and her smacks sting a bit. She is obviously trying to smack your butt with enough force to teach you a lesson.'
-			'With each smack you start to moan, softly. "Stop that!" She says and gives you the hardest smack on your ass yet. You moan even louder and wiggle your butt a bit.'
-			'"Oh yes Mrs. <<$npcSurName[50]>>, yes please harder, harder." You say as if your on the verge of a orgasm. "Yes spank me, spank me, harder and I promise to be your special bad little girl." You say with a giggle.'
-			'To her credit she doesn''t relent and even manages to spank you harder. Once she has spanked you for a minute or so, she roughly lifted you off her knees and back on your feet. She points at the door. "Back to class now, before I give you detention as well." Not wanting detention, you don''t say anymore. Heading instead for the door, putting a bit of extra sway into your hips as you do.'
+			'Once you walk over to her, Principal <<$npcSurName[50]>> pulls you down across her knees. With you laying like that, she pulls up your skirt and gives your ass a hard smack with her hand. You jerk a bit in reflex - she is a strong woman and her blows sting quite a bit. She is obviously trying to spank your butt with enough force to teach you a lesson.'
+			*nl
+			'With each hit, you give a moan, soft at first but getting louder each time she strikes. "Stop that!", she says and gives you the hardest smack on your ass yet. You moan even louder and wiggle your butt a bit.'
+			*nl
+			'"Oh yes, Mrs. <<$npcSurName[50]>>, yes, please, harder, harder!", you beg as if you were on the verge of an orgasm. "Yes, spank me, spank me harder and I promise to be your special, little, bad girl," you say with a giggle.'
+			*nl
+			'To her credit, she doesn''t relent and even manages to spank you harder. After another a minute or two of this, however, she roughly lifts you off her knees and back on your feet. She points at the door, her voice quivering with anger: "Back to class now, before I give you detention as well." Not wanting detention, you don''t say anymore but, instead, head for the door, putting a bit of extra sway into your hips as you go.'
+			gs 'arousal', 'foreplay', 5, 'maso', 'rough'
+			gs 'stat'
+			gs 'arousal', 'end'
+			gs 'stat'
 			act 'Go to class':gt 'gschool_lessons', 'class'
 		end
 	elseif principal_spank <= 10 and detention_set ! 2:
@@ -688,9 +931,15 @@ if $ARGS[0] = 'spanked':
 			gs 'pain', 2, 'asscheeks', 'spank'
 			gs 'stat'
 			'<center><img src="images/qwest/alter/school/principal/schoolbarespank.jpg"></center>'
-			'Once you walk over to her, Principal <<$npcSurName[50]>> pulls you down across her knees, with you laying across her knees she pulls up your skirt and pulls your panties down to your knees, exposing your base ass. She smacks you hard across your bare ass, you jerk a bit in reflex, she is a strong woman and her smacks sting a bit. She is obviously trying to smack your butt with enough force to teach you a lesson.'
-			'You silently take your punishment, even if it is not all that bad and a bit of you actually likes it. Regardless you don''t want her to know this isn''t bother you all that much. So you play along, withering around and whimpering as she spanks you for a good solid minute, which leaves your butt a nice shade of red.'
-			'Then she lifts you back to your feet and rubs your arm. "I hope this has taught you a lesson and I don''t want to see you in my office any more. Ok return to your classes." With that she goes back to her desk and you pull up your panties, before heading back to class.'
+			'Once you walk over to her, Principal <<$npcSurName[50]>> pulls you down across her knees. With you laying like that, she pulls up your skirt and your panties down to your knees, exposing your bare ass before she gives it a hard smack with her hand. You jerk a bit in reflex - she is a strong woman and her blows sting quite a bit. She is obviously trying to spank your butt with enough force to teach you a lesson.'
+			*nl
+			'You silently take your punishment, even if it is not all that bad and a bit of you actually likes it. Regardless, you don''t want her to know this doesn''t bother you all that much, so you play along, withering around and whimpering as she spanks you for a good solid minute, giving your butt a nice crimson hue.'
+			*nl
+			'Then she lifts you back to your feet and rubs your arm. "I hope this has taught you a lesson; I don''t want to see you in my office anymore, <<$surname>>. You can return to your classes now." With that, she goes back to her desk and you pull your panties up before heading back to class.'
+			gs 'arousal', 'foreplay', 5, 'maso', 'rough'
+			gs 'stat'
+			gs 'arousal', 'end'
+			gs 'stat'
 			act 'Go to class':gt 'gschool_lessons', 'class'
 		end
 		act 'Flirt/rebel':
@@ -699,10 +948,17 @@ if $ARGS[0] = 'spanked':
 			gs 'pain', 3, 'asscheeks', 'spank'
 			gs 'stat'
 			'<center><img src="images/qwest/alter/school/principal/schoolbarespank.jpg"></center>'
-			'Once you walk over to her, Principal <<$npcSurName[50]>> pulls you down across her knees, with you laying across her knees she pulls up your skirt and pulls your panties down to your knees, exposing your base ass. She smacks you hard across your bare ass, you jerk a bit in reflex, she is a strong woman and her smacks sting a bit. She is obviously trying to smack your butt with enough force to teach you a lesson.'
-			'With each smack you start to moan, softly. "Stop that!" She says and gives you the hardest smack on your ass yet. You moan even louder and wiggle your butt a bit.'
-			'"Oh yes Mrs. <<$npcSurName[50]>>, yes please harder, harder." You say as if your on the verge of a orgasm. "Yes spank me, spank me, harder and I promise to be your special bad little girl." You say with a giggle.'
-			'To her credit she doesn''t relent and even manages to spank you harder. Once she has spanked you for a minute or so, which leaves your butt a nice shade of red. She roughly lifts you off her knees and back on your feet. She points at the door. "Back to class now, before I give you detention as well." Not wanting detention you slowly pulling your panties back up, giving her a extra long look at your cherry red butt cheeks. As  you head for the door you add a bit of extra sway into your hips.'
+			'Once you walk over to her, Principal <<$npcSurName[50]>> pulls you down across her knees. With you laying like that, she pulls up your skirt and your panties down to your knees, exposing your bare ass before she gives it a hard smack with her hand. You jerk a bit in reflex - she is a strong woman and her blows sting quite a bit. She is obviously trying to spank your butt with enough force to teach you a lesson.'
+			*nl
+			'With each hit, you give a moan, soft at first but getting louder each time she strikes. "Stop that!", she says and gives you the hardest smack on your ass yet. You moan even louder and wiggle your butt a bit.'
+			*nl
+			'"Oh yes, Mrs. <<$npcSurName[50]>>, yes, please, harder, harder!", you beg as if you were on the verge of an orgasm. "Yes, spank me, spank me harder and I promise to be your special, little, bad girl," you say with a giggle.'
+			*nl
+			'To her credit, she doesn''t relent and even manages to spank you harder. After another a minute or two of this, about the time your butt has taken on a nice shade of red, she roughly lifts you off her knees and back on your feet. She points at the door, her voice quivering with anger: "Back to class now, before I give you detention as well." Not wanting detention, you slowly pull your panties back up, giving her an extra-long look at your cherry-red butt cheeks before you head for the door, putting a bit of extra sway into your hips as you go.'
+			gs 'arousal', 'foreplay', 5, 'maso', 'rough'
+			gs 'stat'
+			gs 'arousal', 'end'
+			gs 'stat'
 			act 'Go to class':gt 'gschool_lessons', 'class'
 		end
 	elseif principal_spank <= 15 and detention_set ! 2:
@@ -712,9 +968,15 @@ if $ARGS[0] = 'spanked':
 			gs 'pain', 4, 'asscheeks', 'spank'
 			gs 'stat'
 			'<center><img src="images/qwest/alter/school/principal/schoolpaddle2.jpg"></center>'
-			'Once you walk over to her,  Principal <<$npcSurName[50]>> pulls you down across her knees, with you laying across her knees she pulls up your skirt and pulls your panties down to your knees, exposing your base ass. This time she pulls out a leather paddle and gives you a hard smack across your bare ass, you jerk a bit in reflex, she is a strong woman and her smacks sting. She is obviously trying to smack your butt with enough force to teach you a lesson and it is kinda working.'
-			'You silently take your punishment, it almost brings you to tears but a part of you gets turned on by it as well. Regardless you don''t want her to know that you are actually getting turned on by this. You don''t have to play along much, this really stings even if you are enjoying it too, you wither around and whimpering as she spanks you for a good solid minute.'
-			'Then she lifts you back to your feet and rubs your arm. "I hope this has taught you a lesson and I don''t want to see you in my office any more. Ok return to your classes." With that she goes back to her desk and you pull up your panties, before heading back to class.'
+			'Once you walk over to her, Principal <<$npcSurName[50]>> pulls you down across her knees. With you laying like that, she pulls up your skirt and your panties down to your knees, exposing your bare ass. This time she pulls out a leather paddle and gives you a hard smack across your bare butt. You jerk a bit in reflex - she is a strong woman and her blows sting quite a bit. She is obviously trying to spank your butt with enough force to teach you a lesson... and it''s kinda working, too.'
+			*nl
+			'You silently take your punishment. It almost brings you to tears but a part of you gets turned on by it as well... a circumstance you don''t want her to know about. You don''t have to play along much to hide it either: It <b>really</b> stings, even if you are enjoying it too, so you wither around and whimper as she spanks you for a good solid minute or three, until your butt is bright red and feels like it''s radiating heat.'
+			*nl
+			'Then she lifts you back to your feet and rubs your arm. "I hope this has taught you a lesson; I don''t want to see you in my office anymore, <<$surname>>. You can return to your classes now." With that, she goes back to her desk and you pull your panties up before heading back to class.'
+			gs 'arousal', 'foreplay', 5, 'maso', 'rough'
+			gs 'stat'
+			gs 'arousal', 'end'
+			gs 'stat'
 			act 'Go to class':gt 'gschool_lessons', 'class'
 		end
 		act 'Flirt/rebel':
@@ -723,13 +985,20 @@ if $ARGS[0] = 'spanked':
 			gs 'pain', 5, 'asscheeks', 'spank'
 			gs 'stat'
 			'<center><img src="images/qwest/alter/school/principal/schoolpaddle2.jpg"></center>'
-			'You walk over to her, swaying your hips. You pull your panties down to your knees and lay across her legs, looking back up her expectantly. You bite your lower lip, looking at her like you might a lover. She tries to ignore your look and picks up a leather paddle,  Principal <<$npcSurName[50]>> smacks you hard across your bare ass, you jerk a bit in reflex, she is a strong woman and her smacks really sting, yet you moan softly. She is obviously trying to smack your butt with enough force to teach you a lesson.'
-			'With each smack you start to moan, softly. She smacks your ass even harder, really putting her shoulder into it. You moan even louder and wiggle your butt a bit. She looks a little troubled like she is unsure this is working, but the troubled look only lasts a second and her face hardens into a stern resolve.'
-			'"Oh yes Mrs. <<$npcSurName[50]>>, yes please harder, harder." You say as if your on the verge of a orgasm. "Yes spank me, spank me, harder and I promise to be your special bad little girl. Oh god you are making me so wet." You say in a husky tone.'
-			'To her credit she doesn''t relent and even manages to spank you harder. Once she has spanked you for a minute or so, she roughly lifted you off her knees and back on your feet. She points at the door. "Back to class now, before this gets worse for you." You head for the door, putting a bit of extra sway into your hips as you go, and very slowly pulling your panties back up, giving her a extra long look at your cherry red butt cheeks.'
+			'You walk over to her, swaying your hips. You pull your panties down to your knees and lay across her legs, biting your lower lips and looking back up at her expectantly like you might at a lover. Principal <<$npcSurName[50]>> tries to ignore your look and picks up a leather paddle with which she then smacks you hard across your bare ass. You jerk a bit in reflex - she is a strong woman and her blows really sting - but a soft moan escapes you while she is obviously trying to spank your butt with enough force to teach you a lesson.'
+			*nl
+			'With each hit, you''re getting louder. She smacks your ass even harder, really putting her shoulder into it now, but all it does is cause you to respond with a louder groan and a wiggle of your butt. She looks a little troubled, like she is unsure if this is working at all, but the troubled look only lasts a second and her face hardens into an expression of stern, if not stubborn, resolve.'
+			*nl
+			'"Oh yes, Mrs. <<$npcSurName[50]>>, yes, please, harder, harder!", you beg as if you were on the verge of an orgasm. "Yes, spank me, spank me harder and I promise to be your special, little, bad girl. Oh god, you are making me so wet," you say in a husky tone.'
+			*nl
+			'To her credit, she doesn''t relent and even manages to spank you harder. After another a minute or two of this, about the time your butt has taken on a nice shade of red, she roughly lifts you off her knees and back on your feet. She points at the door, her voice quivering with anger... but also uncertainty: "Back to class now, before this gets worse for you." You head for the door, putting a bit of extra sway into your hips and very slowly pulling your panties back up as you go, giving her an extra-long look at your cherry-red butt cheeks.'
+			gs 'arousal', 'foreplay', 5, 'maso', 'rough'
+			gs 'stat'
+			gs 'arousal', 'end'
+			gs 'stat'
 			act 'Go to class':gt 'gschool_lessons', 'class'
 		end
-	else
+	elseif principal_spank <= 20 or detention_set = 2:
 !!Spanked Wooden Paddle
 		if detention_set = 2: detention_set = 0
 		act 'Take Punishment':
@@ -737,24 +1006,320 @@ if $ARGS[0] = 'spanked':
 			gs 'pain', 5, 'asscheeks', 'spank'
 			gs 'stat'
 			'<center><img src="images/qwest/alter/school/principal/schoolpaddle1.jpg"></center>'
-			'Once you walk over to her, Principal <<$npcSurName[50]>> pulls you down across her knees, with you laying across her knees she pulls up your skirt and pulls your panties down to your knees, exposing your base ass. This time she pulls out a large wooden paddle and gives you a hard smack across your bare ass, you jerk as it stings your bare butt cheeks, she is a strong woman and her smacks really sting a lot. She is obviously trying to smack your butt with enough force to teach you a lesson and it is sorta working.'
-			'You silently take your punishment, it almost brings you to tears but a part of you gets turned on by it as well. Regardless you don''t want her to know that you are actually getting turned on by this. You don''t have to play along much, this really stings even if you are enjoying it too, you wither around and whimpering as she spanks you for a good solid minute.'
-			'Then she lifts you back to your feet and rubs your arm. "I hope this has taught you a lesson and I don''t want to see you in my office any more. Ok return to your classes." With that she goes back to her desk and you pull up your panties, before heading back to class.'
+			'Once you walk over to her, Principal <<$npcSurName[50]>> pulls you down across her knees. With you laying like that, she pulls up your skirt and your panties down to your knees, exposing your bare ass. This time she pulls out a large wooden paddle and gives you a hard smack across your bare butt. You jerk a bit in reflex - she is a strong woman and her blows sting quite a bit. She is obviously trying to spank your butt with enough force to teach you a lesson... and it''s kinda working, too.'
+			*nl
+			'You silently take your punishment. It almost brings you to tears but a part of you gets turned on by it as well... a circumstance you don''t want her to know about. You don''t have to play along much to hide it either: It <b>really</b> stings, even if you are enjoying it too, so you wither around and whimper as she spanks you for a good solid minute or three, until your butt is bright red and feels like it''s radiating heat.'
+			*nl
+			'Then she lifts you back to your feet and rubs your arm. "I hope this has taught you a lesson; I don''t want to see you in my office anymore, <<$surname>>. You can return to your classes now." With that, she goes back to her desk and you pull your panties up before heading back to class.'
+			gs 'arousal', 'foreplay', 5, 'maso', 'rough'
+			gs 'stat'
+			gs 'arousal', 'end'
+			gs 'stat'
 			act 'Go to class':gt 'gschool_lessons', 'class'
 		end
 		act 'Flirt/rebel':
+			principal_spank += 1
 			cls
 			gs 'pain', 6, 'asscheeks', 'spank'
 			gs 'stat'
 			'<center><img src="images/qwest/alter/school/principal/schoolpaddle1.jpg"></center>'
-			'You walk over to her, swaying your hips. You pull your panties down to your knees and lay across her legs, looking back up her expectantly. You bite your lower lip, looking at her like you might a lover. She tries to ignore your look and picks up a leather paddle, Principal <<$npcSurName[50]>> smacks you hard across your bare ass, you jerk a bit in reflex, she is a strong woman and her smacks really sting, yet you moan softly. She is obviously trying to smack your butt with enough force to teach you a lesson.'
-			'With each smack you start to moan, softly. She smacks your ass even harder, really putting her shoulder into it. You moan even louder and wiggle your butt a bit. She looks a little troubled like she is unsure this is working, but the troubled look only lasts a second and her face hardens into a stern resolve.'
-			'"Oh yes Mrs. <<$npcSurName[50]>>, yes please harder, harder." You say as if your on the verge of a orgasm. "Yes spank me, spank me, harder and I promise to be your special bad little girl. Oh god you are making me so wet." You say in a husky tone.'
-			'To her credit she doesn''t relent and even manages to spank you harder. Once she has spanked you for a minute or so, she roughly lifted you off her knees and back on your feet, her hands rest on your hips, as she stands up to face you, one hand slips down to your bare ass and stays there just a moment. She removes her hands and then points at the door. "You are playing a dangerous game young lady, get back to class." You head for the door, putting a bit of extra sway into your hips as you go and very slowly pulling your panties back up, giving her a extra long look at your cherry red butt cheeks.'
+			'You walk over to her, swaying your hips. You pull your panties down to your knees and lay across her legs, biting your lower lips and looking back up at her expectantly like you might at a lover. Principal <<$npcSurName[50]>> tries to ignore your look and picks up a large wooden paddle with which she then smacks you hard across your bare ass. You jerk a bit in reflex - she is a strong woman and her blows really sting - but a soft moan escapes you while she is obviously trying to spank your butt with enough force to teach you a lesson.'
+			*nl
+			'With each hit, you''re getting louder. She smacks your ass even harder, really putting her shoulder into it now, but all it does is cause you to respond with a louder groan and a wiggle of your butt. She looks a little troubled, like she is unsure if this is working at all, but the troubled look only lasts a second and her face hardens into an expression of stern, if not stubborn, resolve.'
+			*nl
+			'"Oh yes, Mrs. <<$npcSurName[50]>>, yes, please, harder, harder!", you beg as if you were on the verge of an orgasm. "Yes, spank me, spank me harder and I promise to be your special, little, bad girl. Oh god, you are making me so wet," you say in a husky tone.'
+			*nl
+			'To her credit, she doesn''t relent and even manages to spank you harder. After another a minute or two of this, about the time your butt has taken on a nice shade of red, she roughly lifts you off her knees and back on your feet. Her hands rest on your hips and as she stands up to face you, one hand slips down to your bare ass and stays there for just a moment... Then she removes her hands and points at the door, her expression unreadable. "You are playing a very dangerous game, young lady. Get back to class." You head for the door, putting a bit of extra sway into your hips and very slowly pulling your panties back up as you go, giving her an extra-long look at your cherry-red butt cheeks. You don''t dare to look back but you are almost certain that Principal <<$npcSurName[50]>> had her eyes on your ass right until the door closed behind you.'
+
 			act 'Go to class':gt 'gschool_lessons', 'class'
+		end
+	else
+!!this happens if Sveta choose to flirt/rebel 5 times while getting spanked by the wooden paddle and chooses spanking again then it goes to this.
+		*nl
+		'"It is obvious spanking is not an option any longer. In fact, I doubt it was an adequate punishment for you to begin with: You just moan and act like a whore when I try and punish you." She looks at you for a long moment to see if you will dispute it, but, really, what can you say? She''s right - you do - and it is just as funny now as it was the first time you did it, despite her best efforts.' 
+		'"You leave me no choice. If you are going to act like a whore, I will treat you like a whore. Come over here."'
+		if tanga = 0 and plugin = 0:
+!!if not wearing panties.
+			'<center><img src="images/qwest/alter/school/principal/bare.jpg"></center>'
+			'Once you walk over to her, Principal <<$npcSurName[50]>> bends you over. With you standing like that, she pulls up your skirt and when she see''s your bare ass she pauses. "Where are your panties?"'
+			'<center><img src="images/qwest/alter/school/principal/bare.jpg"></center>'
+			'Once you walk over to her, Principal <<$npcSurName[50]>> bends you over. With you standing like that, she pulls up your skirt, and when she see''s your bare ass, she pauses. "Where are your panties?"'
+			act 'Feign innocence':
+				cls
+				gs 'pain', 7, 'asscheeks', 'spank'
+				gs 'stat'
+				'<center><img src="images/qwest/alter/school/principal/schoolpaddle1.jpg"></center>'
+				'"What? Oh, I must have forgotten them," you tell her in mock-surprise.'
+				'She sighs. "You seriously expect me to believe you forgot to put on your underwear?" She pauses for the briefest of moments and, before you can reply, she adds. "I don''t care what reasons you have - it is simply unacceptable not to wear underwear to school. I will note this down as additional demerits; don''t let me catch you not wearing them again, <<$surname>>. Do you understand me?" Without waiting for a response, she pulls out a large wooden paddle and gives you a hard smack across your bare butt. You jerk a bit in reflex - she is a strong woman and her blows sting quite a bit. She is obviously trying to spank your butt with enough force to teach you a lesson... and it''s kinda working, too.'
+				*nl
+				'You silently take your punishment. It almost brings you to tears... but a part of you gets turned on by it as well - a circumstance you don''t want her to know about. You don''t have to play along much to hide it either: It <b>really</b> hurts, even if you are enjoying it too, so you wither around and whimper as she spanks you for a good solid minute or three, until your butt is bright red and feels like it''s radiating heat.'
+				*nl
+				'Then she lifts you back to your feet. "I hope this has taught you a lesson; I don''t want to see you in my office anymore, <<$surname>>. You can return to your classes now." With that, she goes back to her desk and you pull your skirt down, making sure your naked privates are properly covered, before heading back to class.'
+!!this part only shows up if detention is allowed.
+				detention_set = 1
+				'Just before you walk out the door she adds. "I am also giving you detention this Saturday, do not miss it."'
+				gs 'arousal', 'foreplay', 5, 'maso', 'rough'
+				gs 'arousal', 'end'
+				gs 'stat'
+
+				act 'Go to class':gt 'gschool_lessons', 'class'
+			end
+			act '"Don''t like wearing them"':
+				'<center><img src="images/qwest/alter/school/principal/angry.jpg"></center>'
+				'"I don''t like wearing them; the freedom I feel when I don''t have them on is just so..."'
+				*nl
+				'You stop when you realize how quickly your headmaster''s face darkens. A blind man could tell she is angry with you, even without the shrill tone of her voice: "I don''t care if you don''t like wearing them, you will not walk around my school like some whore. Do you understand me?"'
+				act '"Yes"':
+					cls
+					gs 'pain', 7, 'asscheeks', 'spank'
+					gs 'stat'
+					'<center><img src="images/qwest/alter/school/principal/schoolpaddle1.jpg"></center>'
+					'"Yes, I understand, I won''t let it happen again," you respond meekly. She nods, pulls out a large wooden paddle and gives you a hard smack across your bare butt. You jerk a bit in reflex - she is a strong woman and her blows sting quite a bit. She is obviously trying to spank your butt with enough force to teach you a lesson... and it''s kinda working, too.'
+					*nl
+					'You silently take your punishment. It almost brings you to tears... but a part of you gets turned on by it as well - a circumstance you don''t want her to know about. You don''t have to play along much to hide it either: It <b>really</b> hurts, even if you are enjoying it too, so you wither around and whimper as she spanks you for a good solid minute or three, until your butt is bright red and feels like it''s radiating heat.'
+					*nl
+					'Then she lifts you back to your feet. "I hope this has taught you a lesson; I don''t want to see you in my office anymore, <<$surname>>. You can return to your classes now." With that, she goes back to her desk and you pull your skirt down, making sure your naked privates are properly covered, before heading back to class.'
+					gs 'arousal', 'foreplay', 5, 'maso', 'rough'
+					gs 'arousal', 'end'
+					gs 'stat'
+
+					act 'Go to class':gt 'gschool_lessons', 'class'
+				end
+				act '"No"':
+					'<center><img src="images/qwest/alter/school/principal/angry.jpg"></center>'
+					'"No, I don''t have to wear them if I don''t want to," you say in a haughty voice; it''s not like she can force you, right?'
+					*nl
+					'She gives you a long, hard look and her eyes narrow dangerously. "Fine, if that is what you wanna be... but this is a school, <b>your</b> school, and as your teacher, I will show you how to be a proper whore."'
+
+					act 'See how she treats a whore': gt 'gschool_lessons', 'whore'
+				end
+			end
+			act 'Flirt':
+				'<center><img src="images/qwest/alter/school/principal/flirt.jpg"></center>'
+				'You wiggle your butt around a bit. "I didn''t wear any for you. Like what you see?"'
+				*nl
+				'"Stop acting like some little whore right this moment!", she says in a stern voice, obviously not pleased by you or your antics.'
+				*nl
+				'You smile at her. "Come on and give my ass a slap, you know you want to."'
+				*nl
+				'She gives you a long, hard look and her eyes narrow dangerously. "Fine, if that is what you wanna be... but this is a school, <b>your</b> school, and as your teacher, I will show you how to be a proper whore."'
+
+				act 'See how she treats a whore': gt 'gschool_lessons', 'whore'
+			end
+		elseif tanga = 1 and plugin = 1:
+!!if wearing buttplug and wearing panties.
+			'<center><img src="images/qwest/alter/school/principal/plug.jpg"></center>'
+			'Once you walk over to her, Principal <<$npcSurName[50]>> bends you over. With you standing like that, she pulls up your skirt, pulls down your panties and stops when she see''s the buttplug. "Why do you have that stuck in your butt?"'
+			act '"Sorry"':
+				cls
+				gs 'pain', 7, 'asscheeks', 'spank'
+				gs 'stat'
+				'<center><img src="images/qwest/alter/school/principal/schoolpaddle1.jpg"></center>'
+				'"What? Oh, sorry. I like the way it feels and I forgot I was wearing it. I meant to take it out before I came to school this morning," you tell her.'
+				'She sighs. "You seriously expect me to believe you forgot you had a plug stuck in your butt?" She pauses for the briefest of moments and, before you can reply, she adds. "I don''t care what reasons you have - it is simply unacceptable to wear a buttplug to school. I will note this down as additional demerits; don''t let me catch you wearing this again, <<$surname>>. Do you understand me?" Without waiting for a response, she pulls out a large wooden paddle and gives you a hard smack across your bare butt. You jerk a bit in reflex - she is a strong woman and her blows sting quite a bit. She is obviously trying to spank your butt with enough force to teach you a lesson... and it''s kinda working, too.'
+				*nl
+				'You silently take your punishment. It almost brings you to tears... but a part of you gets turned on by it as well - a circumstance you don''t want her to know about. You don''t have to play along much to hide it either: It <b>really</b> hurts, even if you are enjoying it too, so you wither around and whimper as she spanks you for a good solid minute or three, until your butt is bright red and feels like it''s radiating heat.'
+				*nl
+				'Then she lifts you back to your feet. "I hope this has taught you a lesson; I don''t want to see you in my office anymore, <<$surname>>. You can return to your classes now." With that, she goes back to her desk; you pull your panties back up before heading back to class.'
+!!this part only shows up if detention is allowed.
+				detention_set = 1
+				'Just before you walk out the door she adds. "I am also giving you detention this Saturday, do not miss it."'
+				gs 'arousal', 'foreplay', 5, 'maso', 'rough'
+				gs 'arousal', 'end'
+				gs 'stat'
+
+				act 'Go to class':gt 'gschool_lessons', 'class'
+			end
+			act '"I like wearing it':
+				'<center><img src="images/qwest/alter/school/principal/angry.jpg"></center>'
+				'"I like the way it feels, it especially helps class pass more quickly."'
+				'Her face darkens and you can tell she is angry with you, even without the shrill tone of her voice. "I don''t care if you like wearing them, you will not walk around my school like some whore. Do you understand me?"'
+				act 'Yes':
+					cls
+					gs 'pain', 7, 'asscheeks', 'spank'
+					gs 'stat'
+					'<center><img src="images/qwest/alter/school/principal/schoolpaddle1.jpg"></center>'
+					'"Yes, I understand, I won''t let it happen again," you respond meekly. She nods, pulls out a large wooden paddle and gives you a hard smack across your bare butt. You jerk a bit in reflex - she is a strong woman and her blows sting quite a bit. She is obviously trying to spank your butt with enough force to teach you a lesson... and it''s kinda working, too.'
+					*nl
+					'You silently take your punishment. It almost brings you to tears... but a part of you gets turned on by it as well - a circumstance you don''t want her to know about. You don''t have to play along much to hide it either: It <b>really</b> hurts, even if you are enjoying it too, so you wither around and whimper as she spanks you for a good solid minute or three, until your butt is bright red and feels like it''s radiating heat.'
+					*nl
+					'Then she lifts you back to your feet. "I hope this has taught you a lesson; I don''t want to see you in my office anymore, <<$surname>>. You can return to your classes now." With that, she goes back to her desk; you pull your panties back up before heading back to class.'
+!!this part only shows up if detention is allowed.
+					detention_set = 1
+					'Just before you walk out the door she adds. "I am also giving you detention this Saturday, do not miss it."'
+					gs 'arousal', 'foreplay', 5, 'maso', 'rough'
+					gs 'arousal', 'end'
+					gs 'stat'
+
+					act 'Go to class':gt 'gschool_lessons', 'class'
+				end
+				act 'No':
+					'<center><img src="images/qwest/alter/school/principal/angry.jpg"></center>'
+					'"No, I like wearing it and I''m not gonna let you tell me what I can or can''t do," you say in a haughty voice; it''s not like she can force you, right?'
+					'She gives you a long, hard look and her eyes narrow dangerously. "Fine, if that is what you wanna be... but this is a school, <b>your</b> school, and as your teacher, I will show you how to be a proper whore."'
+
+					act 'See how she treats a whore': gt 'gschool_lessons', 'whore'
+					
+				end
+			end
+			act 'Flirt':
+				'<center><img src="images/qwest/alter/school/principal/flirt.jpg"></center>'
+				'You wiggle your butt around a bit. "I wore it for you. Like what you see?"'
+				*nl
+				'"Stop acting like some little whore right this moment!", she says in a stern voice, obviously not pleased by you or your antics.'
+				*nl
+				'You smile at her. "Come on and give my ass a slap, you know you want to."'
+				*nl
+				'She gives you a long, hard look and her eyes narrow dangerously. "Fine, if that is what you wanna be... but this is a school, <b>your</b> school, and as your teacher, I will show you how to be a proper whore."'
+
+				act 'See how she treats a whore': gt 'gschool_lessons', 'whore'
+			end
+		elseif tanga = 0 and plugin = 1:
+!!if buttplug and no panties
+			'<center><img src="images/qwest/alter/school/principal/plug.jpg"></center>'
+			'Once you walk over to her, Principal <<$npcSurName[50]>> bends you over. With you standing like that, she pulls up your skirt and when she see''s your bare ass she pauses. "Where are your panties? And why do you have that stuck in your butt?"'
+			act '"Sorry"':
+				cls
+				gs 'pain', 7, 'asscheeks', 'spank'
+				gs 'stat'
+				'<center><img src="images/qwest/alter/school/principal/schoolpaddle1.jpg"></center>'
+				'"What? Oh, sorry. I like the way it feels and I forgot I was wearing it. I meant to take it out before I came to school this morning, but I forgot... and I guess I also forgot my panties," you tell her.'
+				'She sighs. "You seriously expect me to believe you forgot to put on your underwear <b>and</b> forgot that you had a plug stuck in your butt?" She pauses for the briefest of moments and, before you can reply, she adds. "I don''t care what reasons you have - it is simply unacceptable to wear a buttplug to school... or <i>not to</i> wear underwear. I will note this down as additional demerits; don''t let me catch you doing this again, <<$surname>>. Do you understand me?" Without waiting for a response, she pulls out a large wooden paddle and gives you a hard smack across your bare butt. You jerk a bit in reflex - she is a strong woman and her blows sting quite a bit. She is obviously trying to spank your butt with enough force to teach you a lesson... and it''s kinda working, too.'
+				*nl
+				'You silently take your punishment. It almost brings you to tears... but a part of you gets turned on by it as well - a circumstance you don''t want her to know about. You don''t have to play along much to hide it either: It <b>really</b> hurts, even if you are enjoying it too, so you wither around and whimper as she spanks you for a good solid minute or three, until your butt is bright red and feels like it''s radiating heat.'
+				*nl
+				'Then she lifts you back to your feet. "I hope this has taught you a lesson; I don''t want to see you in my office anymore, <<$surname>>. You can return to your classes now." With that, she goes back to her desk and you pull your skirt down, making sure your naked privates and plug are properly covered, before heading back to class.'
+!!this part only shows up if detention is allowed.
+				detention_set = 1
+				'Just before you walk out the door she adds. "I am also giving you detention this Saturday, do not miss it."'
+				gs 'arousal', 'foreplay', 5, 'maso', 'rough'
+				gs 'arousal', 'end'
+				gs 'stat'
+
+				act 'Go to class':gt 'gschool_lessons', 'class'
+			end
+			act '"I like the way it feels"':
+				'<center><img src="images/qwest/alter/school/principal/angry.jpg"></center>'
+				'"I don''t like wearing them; the freedom I feel when I don''t have them on is incredible, and the sensations of having a plug in my ass are..."'
+				*nl
+				'You stop when you realize how quickly your headmaster''s face darkens. A blind man could tell she is angry with you, even without the shrill tone of her voice: "I don''t care if you don''t like wearing them, you will not walk around my school like some whore. Do you understand me?"'
+				act 'Yes':
+					cls
+					gs 'pain', 7, 'asscheeks', 'spank'
+					gs 'stat'
+					'<center><img src="images/qwest/alter/school/principal/schoolpaddle1.jpg"></center>'
+					'"Yes, I understand, I won''t let it happen again," you respond meekly. She nods, pulls out a large wooden paddle and gives you a hard smack across your bare butt. You jerk a bit in reflex - she is a strong woman and her blows sting quite a bit. She is obviously trying to spank your butt with enough force to teach you a lesson... and it''s kinda working, too.'
+					*nl
+					'You silently take your punishment. It almost brings you to tears... but a part of you gets turned on by it as well - a circumstance you don''t want her to know about. You don''t have to play along much to hide it either: It <b>really</b> hurts, even if you are enjoying it too, so you wither around and whimper as she spanks you for a good solid minute or three, until your butt is bright red and feels like it''s radiating heat.'
+					*nl
+					'Then she lifts you back to your feet. "I hope this has taught you a lesson; I don''t want to see you in my office anymore, <<$surname>>. You can return to your classes now." With that, she goes back to her desk and you pull your skirt down, making sure your naked privates and plug are properly covered, before heading back to class.'
+!!this part only shows up if detention is allowed.
+					detention_set = 1
+					'Just before you walk out the door she adds. "I am also giving you detention this Saturday, do not miss it."'
+					gs 'arousal', 'foreplay', 5, 'maso', 'rough'
+					gs 'arousal', 'end'
+					gs 'stat'
+
+					act 'Go to class':gt 'gschool_lessons', 'class'
+				end
+				act 'No':
+					'<center><img src="images/qwest/alter/school/principal/angry.jpg"></center>'
+					'"No, I''m not gonna let you tell me what I can or can''t wear," you say in a haughty voice; it''s not like she can force you, right?'
+					*nl
+					'She gives you a long, hard look and her eyes narrow dangerously. "Fine, if that is what you wanna be... but this is a school, <b>your</b> school, and as your teacher, I will show you how to be a proper whore."'
+
+					act 'See how she treats a whore': gt 'gschool_lessons', 'whore'
+				end
+			end
+			act 'Flirt':
+				'<center><img src="images/qwest/alter/school/principal/flirt.jpg"></center>'
+				'You wiggle your butt around a bit. "I wore it for you. Like what you see?"'
+				'"Stop acting like some little whore right this moment!", she says in a stern voice, obviously not pleased by you or your antics.'
+				'You smile at her. "Come on and give my ass a slap, you know you want to."'
+				*nl
+				'She gives you a long, hard look and her eyes narrow dangerously. "Fine, if that is what you wanna be... but this is a school, <b>your</b> school, and as your teacher, I will show you how to be a proper whore."'
+
+				act 'See how she treats a whore': gt 'gschool_lessons', 'whore'
+			end
+		else
+			act 'See how she treats a whore': gt 'gschool_lessons', 'whore'
 		end
 	end
 end
+
+if $ARGS[0] = 'whore':
+	'<center><img src="images/qwest/alter/school/principal/whore.jpg"></center>'
+	'"Strip off your clothes." When you hesitate, she adds: "Either that or I call your parents right now and tell them why you are being expelled from school." A cold chill runs down your spine at the thought - could she really expel you for this? Unwilling to test her and with little choice in the matter, you strip off your clothes. Once you are down to just your shoes and socks, she pulls you across her lap and starts giving your bare ass a hard spanking with her hand. She hits you with full force every single time and keeps it up until her own hand starts to sting and she stops. You''re starting to think you''re done then she grips you by the hair and bends you over her desk instead.'
+	act 'She takes out the paddle':
+		'<center><img src="images/qwest/alter/school/principal/whore1.jpg"></center>'
+		'Once bent over her desk, she takes out a large paddle and spanks you hard with it, leaving your ass red and throbbing. After a while, the pain is really starting to get to you, and she doesn''t seem to have any intention of stopping. Finally, after many minutes, she seems to be getting tired, her hits lack the zip the early ones had. She pulls you away from the desk and turns you to face the other way, then forces you down to your knees. "Stay like this", she commands, and walks behind you, back to her desk.'
+		act 'When she comes back...':
+			'<center><img src="images/qwest/alter/school/principal/whore4.jpg"></center>'
+			'You hear her rummaging around in her desk for a moment and then... well, you can''t really sort the sounds and you don''t dare looking at her. But sure enough, she comes back into view a couple of minutes later, wearing a rather large strap-on. Your eyes widen a bit in shock at the sight of it, and while you''re still preoccupied with working through your surprise, she closes the gap between you and starts rubbing the tip of the dildo against your lips, as if trying to force it into your mouth. "Open your mouth like the good little whore you so desperately want to be."'
+			act 'Suck it':
+				gs 'boyStat', 64
+				'<center><img src="images/qwest/alter/school/principal/whore5.jpg"></center>'
+				'You barely even have time to open your mouth at all before she shoves the <<dick>>cm <<$dick_girth>> strap-on inside and down your throat, causing you to start gagging at once. Unconcerned by this, she shoves the dildo as far down your throat as it will physically go and then she starts roughly fucking your throat with it, barely giving you any time to catch your breath. After several minutes, your throat feels like it is on fire and she finally stops, finally giving you time to gulp down the air you so desperately needed. As you do, she lifts you up and bends you over her desk once more. She briefly slips one finger into your pussy, likely checking if you are a virgin.'
+				if pcs_vag = 0:
+					'"I must admit, I am very surprised anyone acting like such a whore like yourself would still be a virgin. I suppose that means you are one of those girls that just let the boys use their other holes instead."'
+					act 'Get your ass fucked': gt 'gschool_lessons', 'whore2'
+				else
+					act 'Get fucked':
+						'<center><img src="images/qwest/alter/school/principal/whore6.jpg"></center>'
+						'Lifting one of your legs up to place your knee on the desk, you know what is about to come next, and though knowing itself only helps so much, the natural wetness of your pussy and your slobber on the dildo absolutely do. It hurts a little when she shoves the <<dick>>cm <<$dick_girth>> strap-on basically all the way into your twat, and the moan you give is one of both pain and pleasure. "You even moan like a little whore," the Principal says as she hammers the dildo''s full length into you repeatedly.'
+						act 'Get your ass fucked': gt 'gschool_lessons', 'whore2'
+					end
+				end
+			end
+		end
+	end
+end
+
+if $ARGS[0] = 'whore2':
+	'<center><img src="images/qwest/alter/school/principal/whore7.jpg"></center>'
+	'She half-lifts, half-pushes you onto her desk where she has you kneel down and sit back until you''re touching your heels. With your feet dangling off the edge of the desk, your backdoor is easily accessible, which seems to be the idea - you feel the pressure of the <<dick>>cm <<$dick_girth>> strap-on against you anus. It only lasts for a moment, though: As soon as she is sure she has it lined up, she shoves the dildo up your ass. Given how unprepared you were and that the only lubrication was whatever wetness clung to the dildo, your cry of pain was surprisingly soft, but your first reflex still is to move forward.'
+	*nl
+	'Realizing that, she grabs hold of your hips to keep you from pulling away. "I''m not done with you yet, <<$surname>>. This is what whores do every day, and they have to like it," she says as she pounds the dildo into your ass. The first few thrusts are the worst, even worse than the initial penetration... but after a while - and maybe also due to the Principal spitting on your puckered hole several times - the pain subsides to tolerable levels and it starts feeling good, <i>really</i> good. Soft moans escape your lips as she pounds your little ass. No longer trying to pull away, you are pushing back against her.' 
+	'"Now you''re acting like a good little whore," she comments, and with your only response being another moan and thrust against her, she is not wrong.'
+	act 'Take it deep':
+		'<center><img src="images/qwest/alter/school/principal/whore8.jpg"></center>'
+		'She pulls out of you and part of you is relieved... but another part of you wants her to keep going. She pushes you forward until your elbows touch the top of her desk, and once you are on your hands and knees, she climbs onto the desk behind you. It seems she isn''t actually done after all, slipping the <<dick>>cm <<$dick_girth>> dildo back into your gaping ass and sliding inside with ease.'
+		*nl
+		'Her one hand holds onto your hips for leverage, but with the other she grabs a handful of your hair and painfully pulls and twists it as she starts jackhammering your ass again.'
+!!next part only shows up if Sveta has a orgasm
+		*nl
+		'As she gives your ass a merciless pounding, you can feel that familiar tingling building up inside of your body, and soon an orgasm crashes over you. You start humping back against her as she fucks your ass while the orgasm courses through your body. Barely coherent, you hear her say something along the lines of "that''s right, my little whore, moan and orgasm like the dirty little anal slut you are", and eventually the sensation passes... but she doesn''t stop fucking you.'
+!!this part shows up after the orgasm or in place of the orgasm if she failed to have one, in other words it shows up either way.
+		*nl
+		'Many more minutes pass, and while it did feel extraordinarily good for a while, your butt is now starting to get really sore and hurt; all the lubrication seems to have come off the dildo and the friction is turning every thrust into a bigger (literal) pain in the ass than the last. You grit your teeth and bear it as best you can, but eventually it starts hurting so much that your ass feels like it is on fire and you beg: "Please, Miss Volkov, please stop, it is really starting to hurt!"'
+		*nl
+		'"I thought you wanted to act like a little whore in my school. Are you saying you changed your mind?", she asks as she pulls nearly completely out and then slams the entire shaft back in again.'
+		*nl
+		'You cry out in agony; at this point, you''d be willing to do just about anything to stop this. "Yes! Yes, I changed my mind! I''m sorry, Principal, I don''t want to be a whore. Please stop!"'
+		*nl
+		'For a moment you don''t know what she''s going to do, and are nonetheless surprised, let alone relieved, when she pulls out. "Very well", she says, "roll over."'
+		act 'Roll over':
+			'<center><img src="images/qwest/alter/school/principal/whore9.jpg"></center>'
+			'You do as she tells you and roll over, now belly-up on her desk. She steps one leg off the desk, straddling your face, and lowers her pussy right over your mouth. "Good little whores get their customers off. Maybe you have changed your mind, or maybe you just told me what I wanted to hear, but either way, this lesson isn''t over yet. Get licking or I''ll fuck that sore little ass of yours again."'
+			*nl
+			'Not wanting her to make good on that threat, you start licking her pussy and find it soaking wet already: It would seem the rumors that she used to be or still is a dominatrix really are true, if fucking you raw excited her this much. You lick and suck on her pussy lips and clit, avoiding the center for a few moments, but then slip your tongue into her twat, fucking her pussy as well as you can to get at least a hint of poetic justice. It doesn''t take long until she orgasms and coats your face in her pussy juices.'
+			act 'Clean up':
+				'<center><img src="images/qwest/alter/school/principal/whore10.jpg"></center>'
+				'She rises just a bit and then uses her hand to tilt the dildo down to your mouth. "That wasn''t too bad, <<$surname>>. All you have to do now is suck my dick clean, and then you can go. Or maybe you''d rather...?" She leaves the exact alternative unspoken, but you have no doubt as to what she is alluding to, and while you''d rather be doing anything else than sucking a large dildo your headmaster just violated your ass with, it beats getting fucked up your sore ass with it again.'
+				*nl
+				'With the choice rather easy, you obediently open your mouth and start sucking it clean, ignoring both the taste and the throbbing pain in your bowels as best you can.'
+				act 'Get out':
+					'<center><img src="images/qwest/alter/school/principal/whore11.jpg"></center>'
+					'Once the Principal deems the dildo clean enough, she removes it from your mouth, gets off the desk and pulls you off as well. She leans against the table and points at the door. "Get your shit and remove yourself from my office right now. If you hurry, you can make it back into the hall and get dressed before the next bell." Your eyes widen slightly at the thought of being forced out into a hall full of the classmates, naked as you are, but the expression on her face and her previous cruelties leave no doubt in your mind that she is serious. You quickly gather your clothes and hurry out of the office.'
+					*nl
+					'Once out in the hall, you quickly get dressed and try your best to ignore your burning asshole as you do. You barely finish getting yourself in order before the bell rings and the hall fills up with your fellow students. It takes you a moment to realize that the Principal was fucking you for a full class - no wonder your ass started hurting so much. With a new understanding for what school punishment can entail, you go to your next class, trying not to walk too bowlegged.'
+					act 'Go to class':gt 'gschool_lessons', 'class'
+				end
+			end
+		end
+	end
+end
+
 
 if $ARGS[0] = 'npc_data':
 !!$npc_firstname['i] - npc given name stored since MGX
@@ -768,480 +1333,369 @@ if $ARGS[0] = 'npc_data':
 !!npc_rel['A<<i>>'] - Starting relationship
 !!npcPol[i] - sex, 0 - male, 1 - female
 !!grupTipe[i] - social group, -1 - outcasts, 1 - nerds, 2 - jocks, 3 - cool kids, 4 - gopnik, 0 - teachers
+!!1 - cool kids
+!!2 - jocks
+!!3 - nerds
+!!4 - Gopnik
+!!5 - outcasts
+!!6 - teachers
 
 !!
 !!===========================Male Students=======================
 !!
-	$npcName[1] = 'Dimka'
-	$npcSurName[1] = 'Nosov'
-	$npcText[1] = 'Dimka (Dmitriy) Nosov is a cute guy and all the girls adore him.'
-	grupNPC[1] = 50
+!!Dimka Nosov
+	$static_num[1] = 'A1'
 	npcPol[1] = 0
-	grupTipe[1] = 3
+	grupTipe[1] = 1
 	$npcGo[1] = '<a href="exec:numnpc = 1 & gt ''Snpc''"><<$npcName[1]>> <<$npcSurName[1]>></a>'
 
-	$npcName[2] = 'Artem'
-	$npcSurName[2] = 'Chebotarev'
-	$npcText[2] = 'Artem (Artyom) Chebotarev is a typical nerd, but not a bad looking one.'
-	grupNPC[2] = 50
+!!Artem Chebotarev
+	$static_num[2] = 'A2'
 	npcPol[2] = 0
-	grupTipe[2] = 1
+	grupTipe[2] = 3
 	$npcGo[2] = '<a href="exec:numnpc = 2 & gt ''Snpc''"><<$npcName[2]>> <<$npcSurName[2]>></a>'
 
-	$npcName[3] = 'Ivan'
-	$npcSurName[3] = 'Prokhorov'
-	$npcText[3] = 'Ivan Prokhorov is an excellent athlete, who is able to succeed in any sport. He''s mostly into boxing and running right now.'
-	grupNPC[3] = 50
+!!Ivan Prokhorov
+	$static_num[3] = 'A3'
 	npcPol[3] = 0
 	grupTipe[3] = 2
 	$npcGo[3] = '<a href="exec:numnpc = 3 & gt ''Snpc''"><<$npcName[3]>> <<$npcSurName[3]>></a>'
 
-	$npcName[4] = 'Igor'
-	$npcSurName[4] = 'Kruglov'
-	$npcText[4] = 'Igor Kruglov is your classmate, and Dimka''s best friends. Whenever you see one of them, the other is usually not far away.'
-	grupNPC[4] = 50
+!!Igor Kruglov
+	$static_num[4] = 'A4'
 	npcPol[4] = 0
-	grupTipe[4] = 3
+	grupTipe[4] = 1
 	$npcGo[4] = '<a href="exec:numnpc = 4 & gt ''Snpc''"><<$npcName[4]>> <<$npcSurName[4]>></a>'
 
-	$npcName[5] = 'Fedor'
-	$npcSurName[5] = 'Kozlov'
-	$npcText[5] = 'Fedor (Fyodor) Kozlov is a decent athlete. He often trains with his good friend Ivan, but lacks the level of talent that Ivan does have.'
-	grupNPC[5] = 50
+!!Fedor Kozlov
+	$static_num[5] = 'A5'
 	npcPol[5] = 0
 	grupTipe[5] = 2
 	$npcGo[5] = '<a href="exec:numnpc = 5 & gt ''Snpc''"><<$npcName[5]>> <<$npcSurName[5]>></a>'
 
-	$npcName[6] = 'Petka'
-	$npcSurName[6] = 'Klyuyev'
-	$npcText[6] = 'Petka (Peter) Klyuyev is a nerd who usually doesn''t look far beyond his textbook. He''s good friends with Artem.'
-	grupNPC[6] = 50
+!!Petka Klyuyev
+	$static_num[6] = 'A6'
 	npcPol[6] = 0
-	grupTipe[6] = 1
+	grupTipe[6] = 3
 	$npcGo[6] = '<a href="exec:numnpc = 6 & gt ''Snpc''"><<$npcName[6]>> <<$npcSurName[6]>></a>'
 
-	$npcName[7] = 'Lesco'
-	$npcSurName[7] = 'Tsarev'
-	$npcText[7] = 'Everyone at school always bullies Lesco about anything and everything.'
-	grupNPC[7] = 50
+!!Lesco Tsarev
+	$static_num[7] = 'A7'
 	npcPol[7] = 0
-	grupTipe[7] = -1
+	grupTipe[7] = 5
 	$npcGo[7] = '<a href="exec:numnpc = 7 & gt ''Snpc''"><<$npcName[7]>> <<$npcSurName[7]>></a>'
 
-	$npcName[8] = 'Svyatoslav'
-	$npcSurName[8] = 'Voinov'
-	$npcText[8] = 'Svyatoslav Voinov is a athletic guy, with a very competitive spirit. He is always engaged in sports, one way or another.'
-	grupNPC[8] = 50
+!!Svyatoslav Voinov
+	$static_num[8] = 'A8'
 	npcPol[8] = 0
 	grupTipe[8] = 2
 	$npcGo[8] = '<a href="exec:numnpc = 8 & gt ''Snpc''"><<$npcName[8]>> <<$npcSurName[8]>></a>'
 
-	$npcName[9] = 'Vitek'
-	$npcSurName[9] = 'Kotov'
-	$npcText[9] = 'Vitek (Viktor) Kotov is an aggressive and strong guy, who considers himself a gangsta. But his personality is pretty much see-through. Lena is his twin-sister.'
-	grupNPC[9] = 50
+!!Vitek Kotov
+	$static_num[9] = 'A9'
 	npcPol[9] = 0
 	grupTipe[9] = 4
 	$npcGo[9] = '<a href="exec:numnpc = 9 & gt ''Snpc''"><<$npcName[9]>> <<$npcSurName[9]>></a>'
 
-	$npcName[10] = 'Dan'
-	$npcSurName[10] = 'Ryzhov'
-	$npcText[10] = 'Dan (Denis) Ryzhov is a tall and skinny guy, who usually communicates to others with disdain and contempt. He''s a very stubborn guy who will never let an argument go. He''s best friends with Vitek and Vasily, and can be considered the smartest one of the three.'
-	grupNPC[10] = 50
+!!Dan Ryzhov
+	$static_num[10] = 'A10'
 	npcPol[10] = 0
 	grupTipe[10] = 4
 	$npcGo[10] = '<a href="exec:numnpc = 10 & gt ''Snpc''"><<$npcName[10]>> <<$npcSurName[10]>></a>'
 
-	$npcName[11] = 'Vasily'
-	$npcSurName[11] = 'Shulgin'
-	$npcText[11] = 'Vasily is always with Dan and Vitek, who are his best friends. His nickname is Shulga. He''s physically the weakest one of the three, but is a bit of a prankster and always makes the others laugh. He was raised by just his father, after his mother left when he was still an infant.'
-	grupNPC[11] = 50
+!!Vasily Shulgin
+	$static_num[11] = 'A11'
 	npcPol[11] = 0
 	grupTipe[11] = 4
 	$npcGo[11] = '<a href="exec:numnpc = 11 & gt ''Snpc''"><<$npcName[11]>> <<$npcSurName[11]>></a>'
 
-	$npcName[146] = 'Marcus'
-	$npcSurName[146] = 'Larson'
-	$npcText[146] = 'African American boy, that is part of a exchange program. He does well in school and is fairly athletic. He seems to really enjoy Russia and has a eye for Russian girls, always going on about how they are so much more beautiful, than the girls back home. He is a decent looking guy, combined with his exotic looks, accent and different views has made him pretty poplar. He is friendly and out going, he stays with Andrey''s family, whom he has become close friends with.'
-	grupNPC[146] = 50
-	npcPol[146] = 0
-	grupTipe[146] = 3
-	$npcGo[146] = '<a href="exec:numnpc = 146 & gt ''Snpc''"><<$npcName[146]>> <<$npcSurName[146]>></a>'
+!!Marcus Larson
+	$static_num[27] = 'A146'
+	npcPol[27] = 0
+	grupTipe[27] = 1
+	$npcGo[27] = '<a href="exec:numnpc = 146 & gt ''Snpc''"><<$npcName[146]>> <<$npcSurName[146]>></a>'
 
-	$npcName[147] = 'Andrey'
-	$npcSurName[147] = 'Aleksandrov'
-	$npcText[147] = 'His family took part in the exchange student program. Rumor is they was less than happy when the student they sent was a African American boy, but Andrey doesn''t seem to mind. He and Marcus quickly became friends, he tends to use Marcus popularity to boost his own. His aunt is the school nurse.'
-	grupNPC[147] = 50
-	npcPol[147] = 0
-	grupTipe[147] = 3
-	$npcGo[147] = '<a href="exec:numnpc = 147 & gt ''Snpc''"><<$npcName[147]>> <<$npcSurName[147]>></a>'
+!!Andrey Aleksandrov
+	$static_num[28] = 'A147'
+	npcPol[28] = 0
+	grupTipe[28] = 1
+	$npcGo[28] = '<a href="exec:numnpc = 147 & gt ''Snpc''"><<$npcName[147]>> <<$npcSurName[147]>></a>'
 
-	$npcName[148] = 'Mefodiy'
-	$npcSurName[148] = 'Utkin'
-	$npcText[148] = 'Reasonably intelligent, but middle-of-the-road grades. Fairly average looking, but posses a good sense of humor and timing. He isn''t to popular, just popular enough to be a hanger on among the cool kids, who like his humor.'
-	grupNPC[148] = 50
-	npcPol[148] = 0
-	grupTipe[148] = 3
-	$npcGo[148] = '<a href="exec:numnpc = 148 & gt ''Snpc''"><<$npcName[148]>> <<$npcSurName[148]>></a>'
+!!Mefodiy Utkin
+	$static_num[29] = 'A148'
+	npcPol[29] = 0
+	grupTipe[29] = 1
+	$npcGo[29] = '<a href="exec:numnpc = 148 & gt ''Snpc''"><<$npcName[148]>> <<$npcSurName[148]>></a>'
 
-	$npcName[149] = 'Lazar'
-	$npcSurName[149] = 'Utkin'
-	$npcText[149] = 'Lazar is the school football star. He is a central midfielder and team captain. He excels in other sports as well, but his passion is for football, least when he is not dating girls.'
-	grupNPC[149] = 50
-	npcPol[149] = 0
-	grupTipe[149] = 2
-	$npcGo[149] = '<a href="exec:numnpc = 149 & gt ''Snpc''"><<$npcName[149]>> <<$npcSurName[149]>></a>'
+!!Lazar Utkin
+	$static_num[32] = 'A149'
+	npcPol[32] = 0
+	grupTipe[32] = 2
+	$npcGo[32] = '<a href="exec:numnpc = 149 & gt ''Snpc''"><<$npcName[149]>> <<$npcSurName[149]>></a>'
 
-	$npcName[150] = 'Erast'
-	$npcSurName[150] = 'Vagin'
-	$npcText[150] = 'He''s a huge boy and not a looker or clever, always polite and a little shy. When he is playing sport he changes into a demon, always fighting and often set off. He is the most popular kid during the ice hockey season and often found sparring with Ivan.'
-	grupNPC[150] = 50
-	npcPol[150] = 0
-	grupTipe[150] = 2
-	$npcGo[150] = '<a href="exec:numnpc = 150 & gt ''Snpc''"><<$npcName[150]>> <<$npcSurName[150]>></a>'
+!!Erast Vagin
+	$static_num[33] = 'A150'
+	npcPol[33] = 0
+	grupTipe[33] = 2
+	$npcGo[33] = '<a href="exec:numnpc = 150 & gt ''Snpc''"><<$npcName[150]>> <<$npcSurName[150]>></a>'
 
-	$npcName[35] = 'Evgeny'
-	$npcSurName[35] = 'Kuznetsov'
-	$npcText[35] = 'School chess champion, can always be found at chess club. He is shy and very intellegent, not showing any interest in girls or anyone really. No one would be surprised if he had mild autism.'
-	grupNPC[35] = 50
+!!Evgeny Kuznetsov
+	$static_num[35] = 'A151'
 	npcPol[35] = 0
-	grupTipe[35] = 1
-	$npcGo[35] = '<a href="exec:numnpc = 35 & gt ''Snpc''"><<$npcName[35]>> <<$npcSurName[35]>></a>'
+	grupTipe[35] = 3
+	$npcGo[35] = '<a href="exec:numnpc = 151 & gt ''Snpc''"><<$npcName[151]>> <<$npcSurName[151]>></a>'
 
-	$npcName[36] = 'Feofan'
-	$npcSurName[36] = 'Krupin'
-	$npcText[36] = 'Feofan is heavily into science fiction, fantasy, and the like. He is constantly planning on going to some convention or another and always in costume. He has a serious love of super heroes and talks about them, their movies and comic books all the time, not to mention his collection of cosplay outfits of all the most famous super heroes. He does well in school, but not as well as most would expect. He is a nerd''s nerd.'
-	grupNPC[36] = 50
+!!Feofan Krupin
+	$static_num[36] = 'A152'
 	npcPol[36] = 0
-	grupTipe[36] = 1
-	$npcGo[36] = '<a href="exec:numnpc = 36 & gt ''Snpc''"><<$npcName[36]>> <<$npcSurName[36]>></a>'
+	grupTipe[36] = 3
+	$npcGo[36] = '<a href="exec:numnpc = 152 & gt ''Snpc''"><<$npcName[152]>> <<$npcSurName[152]>></a>'
 
-	$npcName[37] = 'Gerasim'
-	$npcSurName[37] = 'Vasilyev'
-	$npcText[37] = 'Is confined to a wheelchair, from a early childhood accident. He is kind and nice to everyone, even if most don''t return the favor. He is well accepted by his fellow nerds and surprisingly a few of the jocks. Most of the rest see him as a easy target to bully and/or force him to do their homework.'
-	grupNPC[37] = 50
+!!Gerasim Vasilyev
+	$static_num[37] = 'A153'
 	npcPol[37] = 0
-	grupTipe[37] = 1
-	$npcGo[37] = '<a href="exec:numnpc = 37 & gt ''Snpc''"><<$npcName[37]>> <<$npcSurName[37]>></a>'
+	grupTipe[37] = 3
+	$npcGo[37] = '<a href="exec:numnpc = 153 & gt ''Snpc''"><<$npcName[153]>> <<$npcSurName[153]>></a>'
 
-	$npcName[39] = 'Radomir'
-	$npcSurName[39] = 'Popov'
-	$npcText[39] = 'Is the lead singer of a local underground rock/punk band. He is more or less an asshole, thinking he should already be a star, thus being arrogant to almost everybody. Some of the girls obviously adore him, because they think he is cool or just are groupies. He is more than happy to use his mini fame to let him use as many girls as he can.'
-	grupNPC[39] = 50
+!!Radomir Popov
+	$static_num[39] = 'A154'
 	npcPol[39] = 0
 	grupTipe[39] = 4
-	$npcGo[39] = '<a href="exec:numnpc = 39 & gt ''Snpc''"><<$npcName[39]>> <<$npcSurName[39]>></a>'
+	$npcGo[39] = '<a href="exec:numnpc = 154 & gt ''Snpc''"><<$npcName[154]>> <<$npcSurName[154]>></a>'
 
-	$npcName[40] = 'Lavrenti'
-	$npcSurName[40] = 'Romanov'
-	$npcText[40] = 'He comes from a wealthy family, a only child with parents that are rarely around. He use to be one of the cool kids, but his attitude abruptly changed last year. He became mean and violent, he and Dimika had a major falling out at the same time, since then started hanging with the gopniks. He is more of a hanger on, they like using his money, while tolerating him.'
-	grupNPC[40] = 50
+!!Lavrenti Romanov
+	$static_num[40] = 'A155'
 	npcPol[40] = 0
 	grupTipe[40] = 4
-	$npcGo[40] = '<a href="exec:numnpc = 40 & gt ''Snpc''"><<$npcName[40]>> <<$npcSurName[40]>></a>'
+	$npcGo[40] = '<a href="exec:numnpc = 155 & gt ''Snpc''"><<$npcName[155]>> <<$npcSurName[155]>></a>'
 
-	$npcName[41] = 'Arkadi'
-	$npcSurName[41] = 'Fyodorov'
-	$npcText[41] = 'He is the drummer in Radomir''s band. His family recently moved from the city, to Pavlovsk, he was also held back a year. He is very violent, especially with anyone outside the gopniks. He is also not shy about reminding everyone how much harder the city is and how lame Pav is.'
-	grupNPC[41] = 50
+!!Arkadi Fyodorov
+	$static_num[41] = 'A156'
 	npcPol[41] = 0
 	grupTipe[41] = 4
-	$npcGo[41] = '<a href="exec:numnpc = 41 & gt ''Snpc''"><<$npcName[41]>> <<$npcSurName[41]>></a>'
+	$npcGo[41] = '<a href="exec:numnpc = 156 & gt ''Snpc''"><<$npcName[156]>> <<$npcSurName[156]>></a>'
 
-	$npcName[42] = 'Roman'
-	$npcSurName[42] = 'Yakovlev'
-	$npcText[42] = 'A psychopath, he''s one of the smaller kids, but always causing trouble. He''ll start fights knowing the other gopnik will have his back. Always has a snide remark and not afraid to speak back to the teachers and other adults. Not doing great at school, not that he cares. The other gopnik find his attitude amusing and seem to like that he''s always getting them into situations.'
-	grupNPC[42] = 50
+!!Roman Yakovlev
+	$static_num[42] = 'A157'
 	npcPol[42] = 0
 	grupTipe[42] = 4
-	$npcGo[42] = '<a href="exec:numnpc = 42 & gt ''Snpc''"><<$npcName[42]>> <<$npcSurName[42]>></a>'
+	$npcGo[42] = '<a href="exec:numnpc = 157 & gt ''Snpc''"><<$npcName[157]>> <<$npcSurName[157]>></a>'
 
-	$npcName[43] = 'Valentin'
-	$npcSurName[43] = 'Bogdanov'
-	$npcText[43] = 'The bassist for Radomir''s band, he looks like Meatloaf in the Rocky Horror Picture Show. Doesn''t take any crap and the Gopnik let him hangout with them because he told them he was going to, not that they mind, he easily looks old enough to buy beer. Wants to make enough cash from the band to buy an old American motor bike and ride across the country.'
-	grupNPC[43] = 50
+!!Valentin Bogdanov
+	$static_num[43] = 'A158'
 	npcPol[43] = 0
 	grupTipe[43] = 4
-	$npcGo[43] = '<a href="exec:numnpc = 43 & gt ''Snpc''"><<$npcName[43]>> <<$npcSurName[43]>></a>'
+	$npcGo[43] = '<a href="exec:numnpc = 158 & gt ''Snpc''"><<$npcName[158]>> <<$npcSurName[158]>></a>'
 
-	$npcName[47] = 'Petia'
-	$npcSurName[47] = 'Alkaev'
-	$npcText[47] = 'The mooch of the class. Continually hits up others for food, money, cigarettes, etc. Can''t take a hint, and doesn''t know the meaning of "personal space." Unattractive guy who makes the pretty girls uncomfortable by hitting on them repeatedly.'
-	grupNPC[47] = 50
+!!Petia Alkaev
+	$static_num[47] = 'A159'
 	npcPol[47] = 0
-	grupTipe[47] = -1
-	$npcGo[47] = '<a href="exec:numnpc = 47 & gt ''Snpc''"><<$npcName[47]>> <<$npcSurName[47]>></a>'
+	grupTipe[47] = 5
+	$npcGo[47] = '<a href="exec:numnpc = 159 & gt ''Snpc''"><<$npcName[159]>> <<$npcSurName[159]>></a>'
 
 !!
 !!===========================Female Students=======================
 !!
-	$npcName[12] = 'Julia'
-	$npcSurName[12] = 'Milov'
-	$npcText[12] = 'Julia is a diligent and silent girl. She''s very nerdy, and doesn''t really have any friends in school.'
-	grupNPC[12] = 50
+!!Julia Milov
+	$static_num[12] = 'A12'
 	npcPol[12] = 1
-	grupTipe[12] = 1
+	grupTipe[12] = 3
 	$npcGo[12] = '<a href="exec:numnpc = 12 & gt ''Snpc''"><<$npcName[12]>> <<$npcSurName[12]>></a>'
 
-	$npcName[13] = 'Lariska'
-	$npcSurName[13] = 'Gruzdeva'
-	$npcText[13] = 'Lariska is a very athletic girl, with an exceptional talent for volleyball. She has a very weak personality though, and is very dependent on other people''s opinions of her.'
-	grupNPC[13] = 50
+!!Lariska Gruzdeva
+	$static_num[13] = 'A13'
 	npcPol[13] = 1
 	grupTipe[13] = 2
 	$npcGo[13] = '<a href="exec:numnpc = 13 & gt ''Snpc''"><<$npcName[13]>> <<$npcSurName[13]>></a>'
 
-	$npcName[14] = 'Katja'
-	$npcSurName[14] = 'Meynold'
-	$npcText[14] = 'Katja is a very attractive redhead, with a special interest in fashion and cosmetics. She can also be rather impulsive. Vicky is her twin sister.'
-	grupNPC[14] = 50
+!!Katja Meynold
+	$static_num[14] = 'A14'
 	npcPol[14] = 1
-	grupTipe[14] = 3
+	grupTipe[14] = 1
 	$npcGo[14] = '<a href="exec:numnpc = 14 & gt ''Snpc''"><<$npcName[14]>> <<$npcSurName[14]>></a>'
 
-	$npcName[15] = 'Vicky'
-	$npcSurName[15] = 'Meynold'
-	$npcText[15] = 'Vicky (Viktoriya) Meynold is a very sensible girl. Katja is her twin sister.'
-	grupNPC[15] = 50
+!!Vicky Meynold
+	$static_num[15] = 'A15'
 	npcPol[15] = 1
-	grupTipe[15] = 3
+	grupTipe[15] = 1
 	$npcGo[15] = '<a href="exec:numnpc = 15 & gt ''Snpc''"><<$npcName[15]>> <<$npcSurName[15]>></a>'
 
-	$npcName[16] = 'Natasha'
-	$npcSurName[16] = 'Belova'
-	$npcText[16] = 'Natasha is an excellent student. Her parents are very poor though, and it shows: Natasha is always dressed in second-hand clothes and can never afford to do anything fun. As a result, she doesn''t have many friends.'
-	grupNPC[16] = 50
+!!Natasha Belova
+	$static_num[16] = 'A16'
 	npcPol[16] = 1
-	grupTipe[16] = 1
+	grupTipe[16] = 3
 	$npcGo[16] = '<a href="exec:numnpc = 16 & gt ''Snpc''"><<$npcName[16]>> <<$npcSurName[16]>></a>'
 
-	$npcName[17] = 'Inna'
-	$npcSurName[17] = 'Devyatova'
-	$npcText[17] = 'Inna (Irina) Devyatova is a tall and pretty girl, and she knows it. She has a very arrogant and haughty personality hidden behind her sweet smile.'
-	grupNPC[17] = 50
+!!Inna Devyatova
+	$static_num[17] = 'A17'
 	npcPol[17] = 1
-	grupTipe[17] = 3
+	grupTipe[17] = 1
 	$npcGo[17] = '<a href="exec:numnpc = 17 & gt ''Snpc''"><<$npcName[17]>> <<$npcSurName[17]>></a>'
 
-	$npcName[18] = 'Christina'
-	$npcSurName[18] = 'Zvereva'
-	$npcText[18] = 'Christina is one of your school''s best athletes, and is the strongest girl you know. She also has leadership abilities that, together with her tenacity and intelligence, make her have a dominant presence wherever she goes.'
-	grupNPC[18] = 50
+!!Christina Zvereva
+	$static_num[18] = 'A18'
 	npcPol[18] = 1
 	grupTipe[18] = 2
 	$npcGo[18] = '<a href="exec:numnpc = 18 & gt ''Snpc''"><<$npcName[18]>> <<$npcSurName[18]>></a>'
 
-	$npcName[19] = 'Lina'
-	$npcSurName[19] = 'Starov'
-	$npcText[19] = 'Lina (Avelina) Starov is a mediocre athlete. She''s sort of Christina''s friend... that is: she usually does anything Christina wants her to do.'
-	grupNPC[19] = 50
+!!Lina Starov
+	$static_num[19] = 'A19'
 	npcPol[19] = 1
 	grupTipe[19] = 2
 	$npcGo[19] = '<a href="exec:numnpc = 19 & gt ''Snpc''"><<$npcName[19]>> <<$npcSurName[19]>></a>'
 
-	$npcName[20] = 'Lena'
-	$npcSurName[20] = 'Kotova'
-	$npcText[20] = 'Lena (Yelena) Kotova is Vitek''s twin sister. Just like her brother, she too has a chip on her shoulder and can be aggressive and unpredictable. She''s best friends with Lera, and they can often be found together smoking in the school''s restrooms.'
-	grupNPC[20] = 50
+!!Lena Kotova
+	$static_num[20] = 'A20'
 	npcPol[20] = 1
 	grupTipe[20] = 4
 	$npcGo[20] = '<a href="exec:numnpc = 20 & gt ''Snpc''"><<$npcName[20]>> <<$npcSurName[20]>></a>'
 
-	$npcName[21] = 'Lera'
-	$npcSurName[21] = 'Tsarev'
-	$npcText[21] = 'Lera (Valeria) Tsarev comes from a poor family, her father works at the school as a teacher. She''s best friends with Lena, and they can often be found together smoking in the school''s restrooms.'
-	grupNPC[21] = 50
+!!Lera Tsarev
+	$static_num[21] = 'A21'
 	npcPol[21] = 1
 	grupTipe[21] = 4
 	$npcGo[21] = '<a href="exec:numnpc = 21 & gt ''Snpc''"><<$npcName[21]>> <<$npcSurName[21]>></a>'
 
-	$npcName[22] = 'Bella'
-	$npcSurName[22] = 'Artamonov'
-	$npcText[22] = 'Bella is a beautiful and arrogant girl. You don''t know her very well.'
-	grupNPC[22] = 50
+!!Bella Artamonov
+	$static_num[22] = 'A22'
 	npcPol[22] = 1
 	grupTipe[22] = 2
 	$npcGo[22] = '<a href="exec:numnpc = 22 & gt ''Snpc''"><<$npcName[22]>> <<$npcSurName[22]>></a>'
 
-	$npcName[23] = 'Albina'
-	$npcSurName[23] = 'Barlovskaya'
-	$npcText[23] = 'Albina comes from a wealthy family. She always does her best to look and dress well, and is an excellent dancer.'
-	grupNPC[23] = 50
+!!Albina Barlovskaya
+	$static_num[23] = 'A23'
 	npcPol[23] = 1
-	grupTipe[23] = 3
+	grupTipe[23] = 1
 	$npcGo[23] = '<a href="exec:numnpc = 23 & gt ''Snpc''"><<$npcName[23]>> <<$npcSurName[23]>></a>'
 
-	$npcName[24] = 'Pauline'
-	$npcSurName[24] = 'Sebagotulina'
-	$npcText[24] = 'Pauline is a bit of a wild child; she''s very unpredictable. She often hangs out with the Gopniks in your class.'
-	grupNPC[24] = 50
+!!Pauline Sebagotulina
+	$static_num[24] = 'A24'
 	npcPol[24] = 1
 	grupTipe[24] = 4
 	$npcGo[24] = '<a href="exec:numnpc = 24 & gt ''Snpc''"><<$npcName[24]>> <<$npcSurName[24]>></a>'
 
-	$npcName[25] = 'Sonia'
-	$npcSurName[25] = 'Ivanko'
-	!!$npcText[25] = 'Sonia once inadvertently drunk and fucked her in a circle Witek Kotov and his friends. After that, the girls shunned Sonya, and the boys thought she was a whore. Local gopota regularly drove to Sonia proposals have sex.'
-	$npcText[25] = 'Sonia is an ordinary girl-next-door; no great student, but no poor student either. She gets along okay with a lot of your classmates, but doesn''t seem to be particularly friendly with any of them.'
-	grupNPC[25] = 50
+!!Sonia Ivanko
+	$static_num[25] = 'A25'
 	npcPol[25] = 1
-	grupTipe[25] = 3
+	grupTipe[25] = 1
 	$npcGo[25] = '<a href="exec:numnpc = 25 & gt ''Snpc''"><<$npcName[25]>> <<$npcSurName[25]>></a>'
 
-	$npcName[30] = 'Stasya'
-	$npcSurName[30] = 'Pavlov'
-	$npcText[30] = 'Stasya is a complete bitch, she always was, but now that her boyfriend Andrey seems to hang around Marcus more than her, she has become a lot worse. She doesn''t care for Marcus at all, but never says anything around Marcus or Andrey. Instead she seems to take out her anger on everyone around her, but especially the nerds and outcasts.'
-	grupNPC[30] = 50
+!!Stasya Pavlov
+	$static_num[30] = 'A139'
 	npcPol[30] = 1
-	grupTipe[30] = 3
-	$npcGo[30] = '<a href="exec:numnpc = 30 & gt ''Snpc''"><<$npcName[30]>> <<$npcSurName[30]>></a>'
+	grupTipe[30] = 1
+	$npcGo[30] = '<a href="exec:numnpc = 139 & gt ''Snpc''"><<$npcName[139]>> <<$npcSurName[139]>></a>'
 
-	$npcName[31] = 'Lizaveta'
-	$npcSurName[31] = 'Petrov'
-	$npcText[31] = 'Lizaveta wants to know everyone''s secrets, but is completely incapable of keeping them. Extremely nosy, and is the first to arrive at the scene of any commotion, eager to pry into the details. Not unattractive, but most boys avoid her since they don''t want everything they do to become public knowledge.'
-	grupNPC[31] = 50
+!!Lizaveta Petrov
+	$static_num[31] = 'A140'
 	npcPol[31] = 1
-	grupTipe[31] = 3
-	$npcGo[31] = '<a href="exec:numnpc = 31 & gt ''Snpc''"><<$npcName[31]>> <<$npcSurName[31]>></a>'
+	grupTipe[31] = 1
+	$npcGo[31] = '<a href="exec:numnpc = 140 & gt ''Snpc''"><<$npcName[140]>> <<$npcSurName[140]>></a>'
 
-	$npcName[34] = 'Veronika'
-	$npcSurName[34] = 'Sokolov'
-	$npcText[34] = 'She is called the ice queen by her fellow students and not always behind her back, for a couple of reasons: she is very talented on ice skates - there is even talk she might go to the next winter Olympics - and because she is cold and indifferent. She never lets anyone get close to her. She comes from a rich family.'
-	grupNPC[34] = 50
+!!Veronika Sokolov
+	$static_num[34] = 'A141'
 	npcPol[34] = 1
 	grupTipe[34] = 2
-	$npcGo[34] = '<a href="exec:numnpc = 34 & gt ''Snpc''"><<$npcName[34]>> <<$npcSurName[34]>></a>'
+	$npcGo[34] = '<a href="exec:numnpc = 141 & gt ''Snpc''"><<$npcName[141]>> <<$npcSurName[141]>></a>'
 
-	$npcName[38] = 'Zinaida'
-	$npcSurName[38] = 'Alkaev'
-	$npcText[38] = 'Zinaida is a mousey girl who is very plain looking. She never wears makeup, dresses in baggy clothes and barely bothers to brush her hair. She mostly keeps to herself, playing various games on her phone, although she is fairly popular with the nerd boys, for reasons that are not very clear to anyone else.'
-	grupNPC[38] = 50
+!!Zinaida Alkaev
+	$static_num[38] = 'A142'
 	npcPol[38] = 1
-	grupTipe[38] = 1
-	$npcGo[38] = '<a href="exec:numnpc = 38 & gt ''Snpc''"><<$npcName[38]>> <<$npcSurName[38]>></a>'
+	grupTipe[38] = 3
+	$npcGo[38] = '<a href="exec:numnpc = 142 & gt ''Snpc''"><<$npcName[142]>> <<$npcSurName[142]>></a>'
 
-	$npcName[44] = 'Alyona'
-	$npcSurName[44] = 'Alkaev'
-	$npcText[44] = 'This girl is a hardcore Gopnik, she comes from a fucked up family. Her parents are alcoholics and drug addicts, most view her as the apple that didn''t fall far from the tree. As such the teachers don''t even bother to try and work with her anymore.'
-	grupNPC[44] = 50
+!!Alyona Alkaev
+	$static_num[44] = 'A143'
 	npcPol[44] = 1
 	grupTipe[44] = 4
-	$npcGo[44] = '<a href="exec:numnpc = 44 & gt ''Snpc''"><<$npcName[44]>> <<$npcSurName[44]>></a>'
+	$npcGo[44] = '<a href="exec:numnpc = 143 & gt ''Snpc''"><<$npcName[143]>> <<$npcSurName[143]>></a>'
 
-	$npcName[45] = 'Anushka'
-	$npcSurName[45] = 'Konstantinov'
-	$npcText[45] = 'She is the lead guitarist in Radomir''s band. She has very strong political view, which she shares in her anarchist music she writes for the band. She has strong if untrained vocal ability as well, doing some of the singing. She is pretty dominant and can be cruel but not sadistic like some of the other goniks, she is also more than a bit of a exhibitionist.'
-	grupNPC[45] = 50
+!!Anushka Konstantinov
+	$static_num[45] = 'A144'
 	npcPol[45] = 1
 	grupTipe[45] = 4
-	$npcGo[45] = '<a href="exec:numnpc = 45 & gt ''Snpc''"><<$npcName[45]>> <<$npcSurName[45]>></a>'
+	$npcGo[45] = '<a href="exec:numnpc = 144 & gt ''Snpc''"><<$npcName[144]>> <<$npcSurName[144]>></a>'
 
-	$npcName[46] = 'Ekaterina'
-	$npcSurName[46] = 'Maksimov'
-	$npcText[46] = 'Known as Katyusha. According to her abilities she could have been a nerd, a jock or even a cool kid. She is pretty athletic and does surprisingly well in school considering how little of the school work she does when she bothers to attend. She is not a traditional beauty, her face is too masculine for that, but she is attractive and could be even more so if she bothered to try, but she doesn''t. She seems to care only about two things, booze and fighting. The booze she gets any way she can, like stealing or smooching from the boys in exchange for some favors. Or she buys it from her considerable amount of money (her father is an army Colonel, that is why he is rarely around). When she "plays" with the boys, it only goes as far as she wants it. She is the only girl other than Lena who can say that, but while they are afraid of Lena''s brother, Katyusha prefers to beat the boys herself. She practices Sambo in the park every day before school, regardless of weather. She often taunts or makes fun of the boxers, claiming boxing is for pussies, real fighters fight without rules. She doesn''t count herself a gopnik, only others consider her one. This doesn''t bother her because she only cares about the opinion of the people whom earn her respect. That is really hard to do.'
-	grupNPC[46] = 50
+!!Ekaterina Maksimov
+	$static_num[46] = 'A145'
 	npcPol[46] = 1
 	grupTipe[46] = 4
-	$npcGo[46] = '<a href="exec:numnpc = 46 & gt ''Snpc''"><<$npcName[46]>> <<$npcSurName[46]>></a>'
+	$npcGo[46] = '<a href="exec:numnpc = 145 & gt ''Snpc''"><<$npcName[145]>> <<$npcSurName[145]>></a>'
 
 !!
 !!===========================Teachers=======================
 !!
-	$npcName[26] = 'Anatoly E.'
-	$npcSurName[26] = 'Tsarev'
-	$npcText[26] = 'Your school''s math teacher. He''s a stern teacher, who always demands the best out of his students. His daughter Lera is in your class. He''s married to Vera, who works at the train station as a ticket saleswoman and as a cleaner in the garment factory.'
-	grupNPC[26] = 0
+!!Anatoly E. Tsarev
+	$static_num[26] = 'A26'
 	npcPol[26] = 0
-	grupTipe[26] = 0
+	grupTipe[26] = 6
 	$npcGo[26] = '<a href="exec:numnpc = 26 & GT ''Snpc''"><<$npcName[26]>> <<$npcSurName[26]>></a>'
 
-	$npcName[48] = 'Ilya'
-	$npcSurName[48] = 'Yenotin'
-	$npcText[48] = 'Your school''s Literature, Language and your homeroom teacher.'
-	grupNPC[48] = 0
+!!Ilya Yenotin
+	$static_num[48] = 'A130'
 	npcPol[48] = 0
-	grupTipe[48] = 0
-	$npcGo[48] = '<a href="exec:numnpc = 48 & GT ''Snpc''"><<$npcName[48]>> <<$npcSurName[48]>></a>'
+	grupTipe[48] = 6
+	$npcGo[48] = '<a href="exec:numnpc = 130 & GT ''Snpc''"><<$npcName[130]>> <<$npcSurName[130]>></a>'
 
-	$npcName[49] = 'Viktor'
-	$npcSurName[49] = 'Pavlovich'
-	$npcText[49] = 'Your school''s P.E. teacher.  He looks like a former weight lifter, having a power build with a massive upper body strength.  He keeps a black painted paddle he called the ''Black Widow'' hanging from his office.  He likes to use it on students, especially female students.  He is single, and is a player.  You often have seen him with different women around town.'
-	grupNPC[49] = 0
+!!Viktor Pavlovich
+	$static_num[49] = 'A131'
 	npcPol[49] = 0
-	grupTipe[49] = 0
-	$npcGo[49] = '<a href="exec:numnpc = 49 & GT ''Snpc''"><<$npcName[49]>> <<$npcSurName[49]>></a>'
+	grupTipe[49] = 6
+	$npcGo[49] = '<a href="exec:numnpc = 131 & GT ''Snpc''"><<$npcName[131]>> <<$npcSurName[131]>></a>'
 
-	$npcName[50] = 'Aleksandrina'
-	$npcSurName[50] = 'Volkov'
-	$npcText[50] = 'Your school''s new Director. A attractive woman in her mid to late thirties, who always dresses well. She was brought in to improve the education recently after the school was turning in low national averages in test scores. She has a reputation for being firm, yet fair, but cold and distant to the students.'
-	grupNPC[50] = 0
+!!Aleksandrina Volkov
+	$static_num[50] = 'A134'
 	npcPol[50] = 1
-	grupTipe[50] = 0
-	$npcGo[50] = '<a href="exec:numnpc = 50 & GT ''Snpc''"><<$npcName[50]>> <<$npcSurName[50]>></a>'
+	grupTipe[50] = 6
+	$npcGo[50] = '<a href="exec:numnpc = 134 & GT ''Snpc''"><<$npcName[134]>> <<$npcSurName[134]>></a>'
 
-	$npcName[51] = 'Yeva'
-	$npcSurName[51] = 'Sokoloff'
-	$npcText[51] = 'Your school''s Geography and history teacher. She is the oldest teacher at school and has a very firm no nonsense teaching style, but can also be very kind and motherly to students that work hard and behave.'
-	grupNPC[51] = 0
+!!Yeva Sokoloff
+	$static_num[51] = 'A135'
 	npcPol[51] = 1
-	grupTipe[51] = 0
-	$npcGo[51] = '<a href="exec:numnpc = 51 & GT ''Snpc''"><<$npcName[51]>> <<$npcSurName[51]>></a>'
+	grupTipe[51] = 6
+	$npcGo[51] = '<a href="exec:numnpc = 135 & GT ''Snpc''"><<$npcName[135]>> <<$npcSurName[135]>></a>'
 
-	$npcName[52] = 'Serafim'
-	$npcSurName[52] = 'Ivanov'
-	$npcText[52] = 'Your school''s Science and Computer Science teacher. A former student of the school that came back after college. He is a no nonsense, bitter teacher, who is known to pile on the homework, have many pop quizzes and be brutal with his grades. He is also known to be unfair, he gives nerds breaks with homework or even quizzes, that he never would with another student. He seems to almost take delight when he can catch one of the cool kids, jocks or gopniks out and show how little they know in class.'
-	grupNPC[52] = 0
+!!Serafim Ivanov
+	$static_num[52] = 'A129'
 	npcPol[52] = 0
-	grupTipe[52] = 0
-	$npcGo[52] = '<a href="exec:numnpc = 52 & GT ''Snpc''"><<$npcName[52]>> <<$npcSurName[52]>></a>'
+	grupTipe[52] = 6
+	$npcGo[52] = '<a href="exec:numnpc = 129 & GT ''Snpc''"><<$npcName[129]>> <<$npcSurName[129]>></a>'
 
-	$npcName[53] = 'Olga'
-	$npcSurName[53] = 'Aleksandrov'
-	$npcText[53] = 'Your school''s Nurse and Homec teacher.  Miss Aleksandrov just transfered to your school at the start of the year.  She is a true beauty.  Slim and stacked, as you have often heard the boys describing her.'
-	grupNPC[53] = 0
+!!Olga Aleksandrov
+	$static_num[53] = 'A136'
 	npcPol[53] = 1
-	grupTipe[53] = 0
-	$npcGo[53] = '<a href="exec:numnpc = 53 & GT ''Snpc''"><<$npcName[53]>> <<$npcSurName[53]>></a>'
+	grupTipe[53] = 6
+	$npcGo[53] = '<a href="exec:numnpc = 136 & GT ''Snpc''"><<$npcName[136]>> <<$npcSurName[136]>></a>'
 
-	$npcName[54] = 'Raven'
-	$npcSurName[54] = 'Braakman'
-	$npcText[54] = 'Your school''s Social Sciences and English teacher. She is from South Africa, she married and Russian man and moved to Pavlovsk, a few years ago her husband died in a car accident. She has a strict teacher style, accepting only the best out of her students. It is rumored she is a bit of a party goer in her off time.'
-	grupNPC[54] = 0
+!!Raven Braakman
+	$static_num[54] = 'A137'
 	npcPol[54] = 1
-	grupTipe[54] = 0
-	$npcGo[54] = '<a href="exec:numnpc = 54 & GT ''Snpc''"><<$npcName[54]>> <<$npcSurName[54]>></a>'
+	grupTipe[54] = 6
+	$npcGo[54] = '<a href="exec:numnpc = 137 & GT ''Snpc''"><<$npcName[137]>> <<$npcSurName[137]>></a>'
 
-	$npcName[55] = 'Arina'
-	$npcSurName[55] = 'Orlov'
-	$npcText[55] = 'Your school''s Biology and Health teacher. She is the youngest teacher at school, having just finished college and this is her first job. She is a bit shy and mousey, but kinda cute as well. Also not much older than her students, which causes the boys to pay extra special attention to her.'
-	grupNPC[55] = 0
+!!Arina Orlov
+	$static_num[55] = 'A138'
 	npcPol[55] = 1
-	grupTipe[55] = 0
-	$npcGo[55] = '<a href="exec:numnpc = 55 & GT ''Snpc''"><<$npcName[55]>> <<$npcSurName[55]>></a>'
+	grupTipe[55] = 6
+	$npcGo[55] = '<a href="exec:numnpc = 138 & GT ''Snpc''"><<$npcName[138]>> <<$npcSurName[138]>></a>'
 
-	$npcName[56] = 'Ruslan'
-	$npcSurName[56] = 'Kuznetsov'
-	$npcText[56] = 'Your school''s Assistant Dicrector, Career Advisor and Shop teacher.'
-	grupNPC[56] = 0
+!!Ruslan Kuznetsov
+	$static_num[56] = 'A132'
 	npcPol[56] = 0
-	grupTipe[56] = 0
-	$npcGo[56] = '<a href="exec:numnpc = 56 & GT ''Snpc''"><<$npcName[56]>> <<$npcSurName[56]>></a>'
+	grupTipe[56] = 6
+	$npcGo[56] = '<a href="exec:numnpc = 132 & GT ''Snpc''"><<$npcName[132]>> <<$npcSurName[132]>></a>'
 
-	$npcName[47] = 'Makar'
-	$npcSurName[47] = 'Vasilyev'
-	$npcText[47] = 'Your school''s Music, Art, and Drama teacher. He is always warm and friendly to all of his students and even those not in his class. He always has a smile and will always take the time to listen or help out the students. He is well liked by most of the students.'
-	grupNPC[47] = 0
-	npcPol[47] = 0
-	grupTipe[47] = 0
-	$npcGo[47] = '<a href="exec:numnpc = 47 & GT ''Snpc''"><<$npcName[47]>> <<$npcSurName[47]>></a>'
-
-	$npcName[57] = 'Rolan'
-	$npcSurName[57] = 'Matveev'
-	$npcText[57] = 'Your school''s Janitor and handyman. He is quiet and rarely interacts with the students. He rumored to go through the girls lockers and steal their panties, while others say he stalks the girls and photographs them.'
-	grupNPC[57] = 0
+!!Makar Vasilyev
+	$static_num[57] = 'A128'
 	npcPol[57] = 0
-	grupTipe[57] = 0
-	$npcGo[57] = '<a href="exec:numnpc = 57 & GT ''Snpc''"><<$npcName[57]>> <<$npcSurName[57]>></a>'
+	grupTipe[57] = 6
+	$npcGo[57] = '<a href="exec:numnpc = 128 & GT ''Snpc''"><<$npcName[128]>> <<$npcSurName[128]>></a>'
+
+!!Rolan Matveev
+	$static_num[58] = 'A133'
+	npcPol[58] = 0
+	grupTipe[58] = 0
+	$npcGo[58] = '<a href="exec:numnpc = 133 & GT ''Snpc''"><<$npcName[133]>> <<$npcSurName[133]>></a>'
 
 end
 
