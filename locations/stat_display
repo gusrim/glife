@@ -73,7 +73,6 @@ end
 !!!!!!!!!!!!!!!!!!!!!
 
 if pcs_sleep > 100: pcs_sleep = 100
-if water > 100: water = 100
 
 if Enable_statfsize>0:$stat_msg = '<font size=<<Enable_statfsize>>><<$stat_msg>>'
 
@@ -96,10 +95,10 @@ $stat_android += '<<$week[week]>> <<day>>/<<month>>, <<money>> ₽, <a href="exe
 
 $stat_msg += '<BR>'
 $pockets = 'pockets'
-if bag > 0:$pockets = 'purse'
+if bag > 0: $pockets = 'purse'
 $stat_msg += '<BR>You have <b><<money>> ₽</b> in your <<$pockets>>.'
-if karta > 0:$stat_msg += '<BR>You have <b><<karta>> ₽</b> in your bank account.'
-if stolmoney > 0:$stat_msg += '<BR>You have <b><<stolmoney>> ₽</b> in your desk drawer.'
+if karta > 0: $stat_msg += '<BR>You have <b><<karta>> ₽</b> in your bank account.'
+if stolmoney > 0: $stat_msg += '<BR>You have <b><<stolmoney>> ₽</b> in your desk drawer.'
 $stat_msg += '<BR>'
 
 if ETOmenu = 1:
@@ -118,24 +117,22 @@ else
 	gs 'indik', '1', pcs_health * 100 / healthmax, pcs_health
 	$stat_msg += '<BR><<$ind>> Health'
 
-	if mannamax <=0:
-		gs 'indik', '1', 0, pcs_manna
-	else
+	if MagikDostup = 0:
 		gs 'indik', '1', pcs_manna * 100 / mannamax, pcs_manna
+		$stat_msg += '<BR><<$ind>> Manna'
 	end
-	$stat_msg += '<BR><<$ind>> Manna'
 
 	gs 'indik', '1', pcs_willpwr * 100 / willpowermax, pcs_willpwr
 	$stat_msg += '<BR><<$ind>> Willpower'
+
+	gs 'indik', '1', pcs_stam * 100 / stammax, pcs_stam
+	$stat_msg += '<BR><<$ind>> Stamina'
 
 	gs 'indik', '1', pcs_mood, pcs_mood
 	$stat_msg += '<BR><<$ind>> Mood'
 
 	gs 'indik', '1', pcs_energy, pcs_energy
 	$stat_msg += '<BR><<$ind>> Hunger'
-
-	gs 'indik', '1', water, water
-	$stat_msg += '<BR><<$ind>> Thirst'
 
 	gs 'indik', '1', pcs_sleep, pcs_sleep
 	$stat_msg += '<BR><<$ind>> Sleep'
@@ -147,36 +144,42 @@ if Enable_showattr = 0:
 end
 if Enable_showattr = 1:
 	$stat_msg += '<BR> <a href="exec:Enable_showattr = 0 & gs ''$menu_obnovit''">Attributes:</a>'
-	gs 'indik', '1',pcs_stren , pcs_stren
-	$stat_msg += '<BR><<$ind>> Power'
-	gs'indik','1',speed,speed
-	$stat_msg += '<BR><<$ind>> Speed'
-	gs'indik','1',pcs_agil,pcs_agil
+	gs 'indik', '1', pcs_stren, pcs_stren
+	$stat_msg += '<BR><<$ind>> Strength'
+	gs 'indik', '1', pcs_agil, pcs_agil
 	$stat_msg += '<BR><<$ind>> Agility'
-	gs'indik','1',pcs_vital,pcs_vital
+	gs 'indik', '1', pcs_vital, pcs_vital
 	$stat_msg += '<BR><<$ind>> Endurance'
-	gs'indik','1',pcs_intel,pcs_intel
+	gs 'indik', '1', pcs_intel, pcs_intel
 	$stat_msg += '<BR><<$ind>> Intelligence'
-	gs'indik','1',pcs_sprt,pcs_sprt
+	gs 'indik', '1', pcs_sprt, pcs_sprt
 	$stat_msg += '<BR><<$ind>> Spirit'
-	gs'indik','1',pcs_react,pcs_react
-	$stat_msg += '<BR><<$ind>> Reaction'
-	gs'indik','1',pcs_apprnc / 2,pcs_apprnc
+	gs 'indik', '1', pcs_react, pcs_react
+	$stat_msg += '<BR><<$ind>> Mental Agility'
+	gs 'indik', '1', pcs_chrsm, pcs_chrsm
+	$stat_msg += '<BR><<$ind>> Charisma'
+	gs 'indik', '1', pcs_prcptn, pcs_prcptn
+	$stat_msg += '<BR><<$ind>> Perception'
+	if MagikDostup = 0:
+		gs 'indik', '1', pcs_magik, pcs_magik
+		$stat_msg += '<BR><<$ind>> Magic'
+	end
+	gs 'indik', '1', pcs_apprnc / 2, pcs_apprnc
 	$stat_msg += '<BR><<$ind>> Attractiveness'
 	if SUB > 0:
-			gs'indik','1',SUB,SUB
+		gs 'indik','1', SUB, SUB
 		$stat_msg += '<BR><<$ind>> Subordination'
 	end
 	if pcs_dom > 0:
-			gs'indik','1',pcs_dom,pcs_dom
+		gs 'indik', '1', pcs_dom, pcs_dom
 		$stat_msg += '<BR><<$ind>> Dominance'
 	end
 	if SchoolAtestat = 0 and StoryLine > 0:
-			gs'indik','1',pcs_grades,pcs_grades
+		gs 'indik', '1', pcs_grades, pcs_grades
 		$stat_msg += '<BR><<$ind>> School Grades'
 	end
 	if exhibi > 0:
-		gs'indik','1',exhibi*25,exhibi & !max at [dina], exhibi>=4
+		gs 'indik', '1', exhibi * 25, exhibi & !max at [dina], exhibi>=4
 		$stat_msg += '<BR><<$ind>> exhibitionism'
 	end
 end
@@ -187,22 +190,38 @@ end
 if Enable_showskill = 1:
 	st_count=0
 	$show_table=''
-	if workPTU > 1:gs'show_table','<<teachlevel>> Teacher credibility','2'
-	if pcs_magik > 0:gs'show_table','<<pcs_magik>> Magic','2'
-	if pcs_jab > 0:gs'show_table','<<pcs_jab>> Jabs','2'
-	if pcs_punch > 0:gs'show_table','<<pcs_punch>> Power Strikes','2'
-	if pcs_kick > 0:gs'show_table','<<pcs_kick>> Kicks','2'
-	if pcs_def > 0:gs'show_table','<<pcs_def>> Defense','2'
-	if pcs_run > 0:gs'show_table','<<pcs_run>> Running','2'
-	if pcs_vball > 0:gs'show_table','<<pcs_vball>> Volleyball','2'
-	if pcs_servng > 0:gs'show_table','<<pcs_servng>> Waitressing','2'
-	if pcs_vokal > 0:gs'show_table','<<pcs_vokal>> Vocal','2'
-	if pcs_danc > 0:gs'show_table','<<pcs_danc>> Dancing','2'
-	if pcs_dancero > 0:gs'show_table','<<pcs_dancero>> Striptease','2'
-	if pcs_dancpol > 0:gs'show_table','<<pcs_dancpol>> Pole dancing','2'
-	if pcs_shoot > 0:gs'show_table','<<pcs_shoot>> Marksmanship','2'
-	if pcs_sewng > 0:gs'show_table','<<pcs_sewng>> Tailoring','2'
-	if pcs_chess > 0:gs'show_table','<<pcs_chess>> Chess','2'
+	if pcs_splcstng > 0: gs 'show_table', '<<pcs_splcstng>> Spell Casting', '2'
+	if pcs_jab > 0: gs 'show_table', '<<pcs_jab>> Jabs', '2'
+	if pcs_punch > 0: gs 'show_table', '<<pcs_punch>> Power Strikes', '2'
+	if pcs_kick > 0: gs 'show_table', '<<pcs_kick>> Kicks', '2'
+	if pcs_def > 0: gs 'show_table', '<<pcs_def>> Defence', '2'
+	if pcs_shoot > 0: gs 'show_table', '<<pcs_shoot>> Marksmanship', '2'
+	if pcs_vokal > 0: gs 'show_table', '<<pcs_vokal>> Singing', '2'
+	if pcs_sewng > 0: gs 'show_table', '<<pcs_sewng>> Tailoring', '2'
+	if pcs_instrmusic > 0: gs 'show_table', '<<pcs_instrmusic>> Instrumental Music', '2'
+	if pcs_photoskl > 0: gs 'show_table', '<<pcs_photoskl>> Photography', '2'
+	if pcs_artskls > 0: gs 'show_table', '<<pcs_artskls>> Artistic Skills', '2'
+	if pcs_danc > 0: gs 'show_table', '<<pcs_danc>> Modern Dancing', '2'
+	if pcs_dancero > 0: gs 'show_table', '<<pcs_dancero>> Erotic Dancing', '2'
+	if pcs_dancpol > 0: gs 'show_table', '<<pcs_dancpol>> Pole Dancing', '2'
+	if pcs_chess > 0: gs 'show_table', '<<pcs_chess>> Chess', '2'
+	if pcs_ttgmng > 0: gs 'show_table', '<<pcs_ttgmng>> Gaming', '2'
+	if pcs_humint > 0: gs 'show_table', '<<pcs_humint>> People skills', '2'
+	if pcs_persuas > 0: gs 'show_table', '<<pcs_persuas>> Persuasion', '2'
+	if pcs_run > 0: gs 'show_table', '<<pcs_run>> Running', '2'
+	if pcs_vball > 0: gs 'show_table', '<<pcs_vball>> Volleyball', '2'
+	if pcs_icesktng > 0: gs 'show_table', '<<pcs_icesktng>> Ice Skating', '2'
+	if pcs_wrstlng > 0: gs 'show_table', '<<pcs_wrstlng>> Wrestling', '2'
+	if pcs_ftbll > 0: gs 'show_table', '<<pcs_ftbll>> Football', '2'
+	if pcs_observ > 0: gs 'show_table', '<<pcs_observ>> Observation', '2'
+	if pcs_makupskl > 0: gs 'show_table', '<<pcs_makupskl>> Makeup Skill', '2'
+	if pcs_compskl > 0: gs 'show_table', '<<pcs_compskl>> Computer Skill', '2'
+	if pcs_comphckng > 0: gs 'show_table', '<<pcs_comphckng>> Hacking', '2'
+	if pcs_hndiwrk > 0: gs 'show_table', '<<pcs_hndiwrk>> Handy-work', '2'
+	if pcs_servng > 0: gs 'show_table', '<<pcs_servng>> Serving', '2'
+	if pcs_mdlng > 0: gs 'show_table', '<<pcs_mdlng>> Modelling', '2'
+	if pcs_medcn > 0: gs 'show_table', '<<pcs_medcn>> Medicine', '2'
+	if workPTU > 1: gs 'show_table','<<teachlevel>> Teacher credibility','2'
 	if st_count > 0 :$stat_msg += '<BR> <a href="exec:Enable_showskill = 0 & gs ''$menu_obnovit''">Skills:</a> <TABLE BORDER=1><<$show_table>></TR></TABLE>'
 end
 if Enable_showrelation = 0:
@@ -267,7 +286,7 @@ if opPRE = 0: $stat_msg += '<BR><<$pcs_makeup>> and your hair is <<$pcs_hairbsh>
 
 if daystart - lastmens > 21 and thinkpreg = 0 and knowpreg = 0 and cycle ! 6 and pillcon <= 30000 and succubusflag ! 1 and cheatSlut = 0 and mesec = 0:
 	if daystart - lastmens < 28:
-		$stat_msg += '<BR><font color = #AB052A><b>Your period is late by <<daystart - lastmens - 20>> days.</b></font>'
+		$stat_msg += '<BR><font color = #AB052A><b>Your period is late by <<daystart - daylastperiod - 20>> days.</b></font>'
 	elseif daystart - lastmens < 35:
 		$stat_msg += '<BR><font color = #AB052A><b>Your period is late by more than a week!</b></font>'
 	elseif daystart - lastmens < 45:
@@ -299,8 +318,8 @@ if StoryLine > 0 and SchoolAtestat = 0 and $holyday ! '': $stat_msg += '<BR><<$h
 if birthday = day and birthmonth = month: $stat_msg += '<BR><b>Today is your birthday.</b>' & $stat_msg += '<BR>'
 
 !!if shame > 0:$stat_msg += '<BR><<$shame>>' & $stat_msg += '<BR>'
-$stat_msg += '<BR><b><<$pcs_mood>></b>'
-$stat_msg += '<BR>'
+
+if $pcs_mood ! '':$stat_msg += '<BR><font color="green"><b><<$pcs_mood>></b></font>' & $stat_msg += '<BR>'
 
 if mentats_dose >= 1:$stat_msg += '<BR><font color = green>You feel sharp and focused.</font>'
 if bcream_used = 1:$stat_msg += '<BR><font color = #DB7093>Your breasts are feeling hot and tingly.</font>'
@@ -316,16 +335,6 @@ elseif pcs_energy < 30:
 	$stat_msg += '<BR>You feel peckish and your thoughts sometimes drift towards food.'
 end
 
-if water < 5:
-	$stat_msg += '<BR><font color="red">You feel light-headed, if you don''t have something to drink very soon, you will pass out.</font>'
-elseif water < 10:
-	$stat_msg += '<BR><font color="red">You are dehydrated, you really need to have something to drink.</font>'
-elseif water < 20:
-	$stat_msg += '<BR>You are thirsty and your dry throat is irritating and distracting you.'
-elseif water < 30:
-	$stat_msg += '<BR>You feel a little thirsty and your mouth is a little dry.'
-end
-
 if pcs_sleep < 5:
 	$stat_msg += '<BR><font color="red">You can''t keep your eyes open, if you don''t go to bed now, you will fall asleep right here.</font>'
 elseif pcs_sleep < 10:
@@ -336,21 +345,20 @@ elseif pcs_sleep < 30:
 	$stat_msg += '<BR>You feel a little tired.'
 end
 
-if opPRE = 0 :
-    if tanga = 1 and clit_size >= 25:$stat_msg += '<BR><font color = #FF1493>Your panties keep rubbing against your clit and making you horny.</font>'
+if tanga = 1 and clit_size >= 25:$stat_msg += '<BR><font color = #FF1493>Your panties keep rubbing against your clit and making you horny.</font>'
 
-    if pcs_horny >= 50:
-	    if pcs_horny < 90 and tanga = 1:
-		    $stat_msg += '<BR><font color = #DB7093>You are a little nervous, feeling nice between your legs <a href="exec:view''images/pc/body/pussy/briefs1.jpg''">itchy</a> from arousal.</font>'
-	    elseif pcs_horny < 90 and tanga = 0:
-		    $stat_msg += '<BR><font color = #DB7093>You are a little nervous, feeling nice between your legs <a href="exec:view''images/pc/body/pussy/briefs1a.jpg''">itchy</a> from arousal.</font>'
-	    elseif tanga = 1:
-		    $stat_msg += '<BR><font color = #FF1493>You can''t stop thinking about sex, between your legs you are <a href="exec:view''images/pc/body/pussy/briefs2.jpg''">soaked</a> from your juices.</font>'
-	    else
-		    $stat_msg += '<BR><font color = #FF1493>You can''t stop thinking about sex, between your legs you are <a href="exec:view''images/pc/body/pussy/briefs2a.jpg''">soaked</a> from your juices.</font>'
-	    end
-    end
+if pcs_horny >= 50:
+	if pcs_horny < 90 and tanga = 1:
+		$stat_msg += '<BR><font color = #DB7093>You are a little nervous, feeling nice between your legs <a href="exec:view''images/pc/body/pussy/briefs1.jpg''">itchy</a> from arousal.</font>'
+	elseif pcs_horny < 90 and tanga = 0:
+		$stat_msg += '<BR><font color = #DB7093>You are a little nervous, feeling nice between your legs <a href="exec:view''images/pc/body/pussy/briefs1a.jpg''">itchy</a> from arousal.</font>'
+	elseif tanga = 1:
+		$stat_msg += '<BR><font color = #FF1493>You can''t stop thinking about sex, between your legs you are <a href="exec:view''images/pc/body/pussy/briefs2.jpg''">soaked</a> from your juices.</font>'
+	else
+		$stat_msg += '<BR><font color = #FF1493>You can''t stop thinking about sex, between your legs you are <a href="exec:view''images/pc/body/pussy/briefs2a.jpg''">soaked</a> from your juices.</font>'
+	end
 end
+
 
 $smoker = {
 	siga -= 1
@@ -364,7 +372,7 @@ $smoker = {
 	pcs_breath = 0
 	pcs_mood += 100
 	wipo += 100
-	if pcs_energy < 80:pcs_energy += 4
+	if pcs_energy < 80: pcs_energy += 4
 	gs '$menu_obnovit'
 }
 
@@ -384,9 +392,6 @@ elseif CondomToggle = 0 and Sprezik > 0:
 	Sprezik = 0
 end
 
-!!if $pcs_mood ! '':$stat_msg += '<BR><font color="green"><b><<$pcs_mood>></b></font>' & $stat_msg += '<BR>'
-$stat_msg += '<br>'
-
 if smoker >= 20:
 	if smokerNeed > 0:
 		if siga > 0:
@@ -405,7 +410,7 @@ elseif siga > 0:
 	$stat_msg += '<BR><a href="exec:dynamic $smoker"><font color = blue><b>You have <<siga>> cigarettes.</b></font></a><BR>'
 end
 
-if smokeHour = hour and smokeday = daystart and smokeminut >= minut:$stat_msg += '<BR><font color="green">You are smoking a cigarette.</font><BR>'
+if smokeHour = hour and smokeday = day and smokeminut >= minut:$stat_msg += '<BR><font color="green">You are smoking a cigarette.</font><BR>'
 
 if pcs_sweat < 0 : pcs_sweat = 0
 if pcs_sweat > 69 : pcs_sweat = 69
@@ -462,7 +467,6 @@ end
 if Enable_Hymenrestore = 1: pcs_vag = 0
 if Enable_tightrestore = 1: pcs_ass = 0 & if pcs_vag > 0:pcs_vag = 1
 if Enable_clearwrite > 0: body_write = 0 & face_write = 0
-!{
 if Enable_clearcum > 0:
 	killvar 'sparrvol[0]'
 end
@@ -471,7 +475,7 @@ if Enable_fbreath > 0:
 	gs 'cum_cleanup'
 	pcs_breath=1
 end
-}
+
 
 $clear_write = {
 	body_write = 0
@@ -480,7 +484,6 @@ $clear_write = {
 	gs '$menu_obnovit'
 	'It takes you 10 minutes to thoroughly wash the obscene "painting" from your body.'
 }
-
 
 if body_write > 0 or face_write > 0:
 	if body_write > 1 and face_write = 0:
@@ -918,7 +921,7 @@ if narkday ! daystart and narkoman = 1:$stat_msg += '<BR><b><font color="red">Yo
 if fingal > 0:$stat_msg += '<BR><b><font color="red">You have a black eye.</font></b>'
 
 ! WD: Bimbo look
-if bimbolevel > 0:$stat_msg += '<BR><<$bimbostatus>>'
+if bimbolevel > 0: $stat_msg += '<BR><<$bimbostatus>>'
 
 if tanga = 1 and $clothingworntype = 'nude':
 	$stat_msg += '<BR><b><font color = red>You are stripped down to your panties and your boobs sway invitingly as you walk</font></b>'
@@ -931,7 +934,7 @@ elseif tanga = 0:
 		$stat_msg += '<BR><b><font color = #FF1493>You like, totally forgot to put on any panties. You are such a bimbo.</font></b>'
 	elseif PCloSkirt > 3:
 		$stat_msg += '<BR><b><font color="red">Your face is flushed with shame, you are not wearing panties and your naked ass flashes from under your short skirt.</font></b>'
-	elseif opPRE = 0 and $clothingworntype ! 'nude':
+	elseif $clothingworntype ! 'nude':
 		$stat_msg += '<BR><b><font color="red">You are not wearing panties.</font></b>'
 	elseif towel = 1:
 		$stat_msg += '<BR><b><font color = red>Your naked body is covered only by a short towel.</font></b>'
@@ -1070,7 +1073,7 @@ if pfilmday[0] > 0:
 	end
 end
 if pornmiss = 1: $stat_msg += '<br><b>You missed a scheduled porno shoot!</b>'
-if prodcosttrue > 0: $stat_msg += '<br><b>You owe to the porn studio <<prodcost>>₽</b>'
+if prodcosttrue > 0: $stat_msg += '<br><b>You owe to the porn studio <<prodcost>>?</b>'
 if firstkasting > 0 and pfilmNO < 1 and pornstack < 10: $stat_msg += '<br><b>You can contract to <<10-pornstack>> porno movie.</b>'
 if hour < 22 and week >= 2 and week <= 4 and workKafe = 1:$stat_msg += '<BR><b><font color="red">Today you have a shift in cafe starting at 11:00.</font></b>'
 if hour < 17 and week < 5 and workSec >= 1 or hour < 17 and week < 5 and PersSecWork = 1:$stat_msg += '<BR><b><font color="red">Today you have a shift as a secretary from 9:00 to 17:00</font></b>'
@@ -1090,44 +1093,6 @@ proverka3 = 0
 proverka4 = 0
 proverka5 = 0
 
-! WD: Code for updating from old clothing system pre 0.5.0
-
-!!clothing converter, for old saves. Not complete listing.
-if remdrop = 0:
-	remdrop = 1
-
-	if jeans[1] = 1:cheap[15] = 1 & cheapH[15] = jeansH[1] & cheapB[15] = jeansB[1] & jeans[1] = 0
-	if jeans[205] = 1:average[65] = 1 & averageH[65] = jeansH[205] & averageB[65] = jeansB[205] & jeans[205] = 0
-	if jeans[202] = 1:average[64] = 1 & averageH[64] = jeansH[202] & averageB[64] = jeansB[202] & jeans[202] = 0
-	if jeans[2] = 1:average[62] = 1 & averageH[62] = jeansH[2] & averageB[62] = jeansB[2] & jeans[2] = 0
-	if jeans[222] = 1:average[75] = 1 & averageH[75] = jeansH[222] & averageB[75] = jeansB[222] & jeans[222] = 0
-	if jeans[223] = 1:average[76] = 1 & averageH[76] = jeansH[223] & averageB[76] = jeansB[223] & jeans[223] = 0
-	if jeans[224] = 1:average[78] = 1 & averageH[78] = jeansH[224] & averageB[78] = jeansB[224] & jeans[224] = 0
-	if jeans[232] = 1:average[79] = 1 & averageH[79] = jeansH[232] & averageB[79] = jeansB[232] & jeans[232] = 0
-	if jeans[233] = 1:average[80] = 1 & averageH[80] = jeansH[233] & averageB[80] = jeansB[233] & jeans[233] = 0
-	if jeans[267] = 1:expensive[3] = 1 & expensiveH[3] = jeansH[267] & expensiveB[3] = jeansB[267] & jeans[267] = 0
-	if jeans[263] = 1:expensive[18] = 1 & expensiveH[18] = jeansH[263] & expensiveB[18] = jeansB[263] & jeans[263] = 0
-	if jeans[234] = 1:expensive[71] = 1 & expensiveH[71] = jeansH[234] & expensiveB[71] = jeansB[234] & jeans[234] = 0
-	if jeans[231] = 1:expensive[124] = 1 & expensiveH[124] = jeansH[231] & expensiveB[124] = jeansB[231] & jeans[231] = 0
-	if yoga[1] = 1:exercise[1] = 1 & exerciseH[1] = yogaH[1] & yoga[1] = 0
-	if yoga[2] = 1:exercise[2] = 1 & exerciseH[2] = yogaH[2] & yoga[2] = 0
-	if yoga[4] = 1:exercise[4] = 1 & exerciseH[4] = yogaH[4] & yoga[4] = 0
-	if yoga[5] = 1:exercise[5] = 1 & exerciseH[5] = yogaH[5] & yoga[5] = 0
-	if yoga[6] = 1:exercise[6] = 1 & exerciseH[6] = yogaH[6] & yoga[6] = 0
-	if yoga[7] = 1:exercise[7] = 1 & exerciseH[7] = yogaH[7] & yoga[7] = 0
-	if yoga[8] = 1:exercise[8] = 1 & exerciseH[8] = yogaH[8] & yoga[8] = 0
-	if yoga[9] = 1:exercise[9] = 1 & exerciseH[9] = yogaH[9] & yoga[9] = 0
-	if yoga[10] = 1:exercise[10] = 1 & exerciseH[10] = yogaH[10] & yoga[10] = 0
-	if yoga[11] = 1:exercise[11] = 1 & exerciseH[11] = yogaH[11] & yoga[11] = 0
-	if yoga[12] = 1:exercise[12] = 1 & exerciseH[12] = yogaH[12] & yoga[12] = 0
-	if yoga[13] = 1:exercise[13] = 1 & exerciseH[13] = yogaH[13] & yoga[13] = 0
-	if yoga[14] = 1:exercise[14] = 1 & exerciseH[14] = yogaH[14] & yoga[14] = 0
-	if yoga[15] = 1:exercise[15] = 1 & exerciseH[15] = yogaH[15] & yoga[15] = 0
-	if yoga[16] = 1:exercise[16] = 1 & exerciseH[16] = yogaH[16] & yoga[16] = 0
-	if yoga[17] = 1:exercise[17] = 1 & exerciseH[17] = yogaH[17] & yoga[17] = 0
-	if yoga[18] = 1:exercise[18] = 1 & exerciseH[18] = yogaH[18] & yoga[18] = 0
-end
-
 if boletus + bilberry > 0:
 	if boletus + bilberry >= 10:
 		$stat_msg +='<br><b><font color = Olive>You have a full basket.</b></font> '
@@ -1138,7 +1103,7 @@ if boletus + bilberry > 0:
 	if bilberry > 0:$stat_msg +='berries: <b><<bilberry>></b> kg.'
 end
 
-if Enable_statfsize>0:$stat_msg += '<BR></font>' & !disable this, all texts comes from pl will have the same font size, like[time]
+if Enable_statfsize > 0: $stat_msg += '<BR></font>' & !disable this, all texts comes from pl will have the same font size, like[time]
 if Enable_faceturn = 1:	view FUNC('$face_image')
 if Enable_Android = 0:
 	pl '<<$stat_msg>>'

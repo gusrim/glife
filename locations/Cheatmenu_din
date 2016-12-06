@@ -105,14 +105,16 @@ $cheatmenu['Pirate'] = {
 }
 
 $cheatmenu['age'] = {
-!!	age = input("How many years you are now?")
-!!	if age <= 15:age = 15
+	:tooyoung
+	age = year - ((pcs_dob - (pcs_dob mod 10000)) / 10000)
+	if ((month * 100) + day) <= pcs_dob mod 10000: age -= 1
+	if age < 15: pcs_dob -= 10000 & jump 'tooyoung'
 	dynamic $cheatmenu['looks']
 }
 
 $cheatmenu['visualage'] = {
 	vidage = input("For how many years you want to look?")
-	if vidage <= 14:vidage = 14
+	if vidage <= 14: vidage = 14
 	dynamic $cheatmenu['looks']
 }
 
@@ -253,7 +255,7 @@ $cheatmenu['permanent'] = {
 		pl' <a href="exec:Enable_fbreath = 1 & dynamic $cheatmenu[''permanent'']">Always breath fresh: OFF</a>'
 	end
 	!remove them, add later after OOx system done
-	}
+	
 	if Enable_clearwrite = 1:
 		pl' <a href="exec:Enable_clearwrite = 0 & dynamic $cheatmenu[''permanent'']">Clean body write Instantly: ON</a>'
 	else
@@ -274,6 +276,7 @@ $cheatmenu['permanent'] = {
 	else
 		pl' <a href="exec:Enable_tightrestore = 1 & dynamic $cheatmenu[''permanent'']">Tighten Instantly: OFF</a>'
 	end
+}
 }
 
 $cheatmenu['avatar_hair_set'] = {
@@ -319,10 +322,10 @@ $cheatmenu['looks'] = {
 	pl'<a href="exec:dynamic $cheatmenu[''parameters'']">Show design parameters of body</a>'
 	pl'<a href="exec:dynamic $cheatmenu[''vneshpara'']">Show beauty parameters</a>'
 	pl''
-	pl'Now you are <<age>> years old'
-	!!if age >= 0:pl'<a href="exec:dynamic $cheatmenu[''age'']">Change age</a>'
+	pl'You are <a href="exec: pcs_dob += 10000 & dynamic $cheatmenu[''age'']">(-1)</a> <<age>> <a href="exec: pcs_dob -= 10000 & dynamic $cheatmenu[''age'']">(+1)</a> years old'
+	pl''
 	pl'<a href=>You look for <<vidage>> years</a>'
-	if vidage >= 0:pl'<a href="exec:dynamic $cheatmenu[''visualage'']">Change Visible age</a>'
+	pl'<a href="exec:dynamic $cheatmenu[''visualage'']">Change Visible age</a>'
 	pl''
 	pl 'You have <<$titsize>> breasts'
 	if tits => 0 and tits < 10:pl'<a href="exec:silicone += 5 & dynamic $cheatmenu[''looks'']">Enlarge breasts(silicone)</a>'
@@ -538,69 +541,63 @@ $cheatmenu['stats'] = {
 	clr
 	pl'<center><a href="exec:dynamic $cheatmenu"><b>Cheat menu</b></a></center>'
 	pl''
-	pl'Strength (<<pcs_stren>>): <a href="exec:pcs_stren += 1 & dynamic $cheatmenu[''stats'']">+1</a> <a href="exec:pcs_stren += 5 & dynamic $cheatmenu[''stats'']">+5</a> <a href="exec:pcs_stren += 10 & dynamic $cheatmenu[''stats'']">+10</a> <a href="exec:pcs_stren += 25 & dynamic $cheatmenu[''stats'']">+25</a> <a href="exec:pcs_stren -= 1 & dynamic $cheatmenu[''stats'']">-1</a> <a href="exec:pcs_stren -= 5 & dynamic $cheatmenu[''stats'']">-5</a> <a href="exec:pcs_stren -= 10 & dynamic $cheatmenu[''stats'']">-10</a> <a href="exec:pcs_stren -= 25 & dynamic $cheatmenu[''stats'']">-25</a>'
-	pl'Speed (<<speed>>): <a href="exec:speed += 1 & dynamic $cheatmenu[''stats'']">+1</a> <a href="exec:speed += 5 & dynamic $cheatmenu[''stats'']">+5</a> <a href="exec:speed += 10 & dynamic $cheatmenu[''stats'']">+10</a> <a href="exec:speed += 25 & dynamic $cheatmenu[''stats'']">+25</a> <a href="exec:speed -= 1 & dynamic $cheatmenu[''stats'']">-1</a> <a href="exec:speed -= 5 & dynamic $cheatmenu[''stats'']">-5</a> <a href="exec:speed -= 10 & dynamic $cheatmenu[''stats'']">-10</a> <a href="exec:speed -= 25 & dynamic $cheatmenu[''stats'']">-25</a>'
-	pl'Agility (<<pcs_agil>>): <a href="exec:pcs_agil += 1 & dynamic $cheatmenu[''stats'']">+1</a> <a href="exec:pcs_agil += 5 & dynamic $cheatmenu[''stats'']">+5</a> <a href="exec:pcs_agil += 10 & dynamic $cheatmenu[''stats'']">+10</a> <a href="exec:pcs_agil += 25 & dynamic $cheatmenu[''stats'']">+25</a> <a href="exec:pcs_agil -= 1 & dynamic $cheatmenu[''stats'']">-1</a> <a href="exec:pcs_agil -= 5 & dynamic $cheatmenu[''stats'']">-5</a> <a href="exec:pcs_agil -= 10 & dynamic $cheatmenu[''stats'']">-10</a> <a href="exec:pcs_agil -= 25 & dynamic $cheatmenu[''stats'']">-25</a>'
-	pl'Reaction (<<pcs_react>>): <a href="exec:pcs_react += 1 & dynamic $cheatmenu[''stats'']">+1</a> <a href="exec:pcs_react += 5 & dynamic $cheatmenu[''stats'']">+5</a> <a href="exec:pcs_react += 10 & dynamic $cheatmenu[''stats'']">+10</a> <a href="exec:pcs_react += 25 & dynamic $cheatmenu[''stats'']">+25</a> <a href="exec:pcs_react -= 1 & dynamic $cheatmenu[''stats'']">-1</a> <a href="exec:pcs_react -= 5 & dynamic $cheatmenu[''stats'']">-5</a> <a href="exec:pcs_react -= 10 & dynamic $cheatmenu[''stats'']">-10</a> <a href="exec:pcs_react -= 25 & dynamic $cheatmenu[''stats'']">-25</a>'
-	pl'Vitality (<<pcs_vital>>): <a href="exec:pcs_vital += 1 & dynamic $cheatmenu[''stats'']">+1</a> <a href="exec:pcs_vital += 5 & dynamic $cheatmenu[''stats'']">+5</a> <a href="exec:pcs_vital += 10 & dynamic $cheatmenu[''stats'']">+10</a> <a href="exec:pcs_vital += 25 & dynamic $cheatmenu[''stats'']">+25</a> <a href="exec:pcs_vital -= 1 & dynamic $cheatmenu[''stats'']">-1</a> <a href="exec:pcs_vital -= 5 & dynamic $cheatmenu[''stats'']">-5</a> <a href="exec:pcs_vital -= 10 & dynamic $cheatmenu[''stats'']">-10</a> <a href="exec:pcs_vital -= 25 & dynamic $cheatmenu[''stats'']">-25</a>'
-	pl'Spirit (<<pcs_sprt>>): <a href="exec:pcs_sprt += 1 & dynamic $cheatmenu[''stats'']">+1</a> <a href="exec:pcs_sprt += 5 & dynamic $cheatmenu[''stats'']">+5</a> <a href="exec:pcs_sprt += 10 & dynamic $cheatmenu[''stats'']">+10</a> <a href="exec:pcs_sprt += 25 & dynamic $cheatmenu[''stats'']">+25</a> <a href="exec:pcs_sprt -= 1 & dynamic $cheatmenu[''stats'']">-1</a> <a href="exec:pcs_sprt -= 5 & dynamic $cheatmenu[''stats'']">-5</a> <a href="exec:pcs_sprt -= 10 & dynamic $cheatmenu[''stats'']">-10</a> <a href="exec:pcs_sprt -= 25 & dynamic $cheatmenu[''stats'']">-25</a>'
-	pl'Intelligence (<<pcs_intel>>): <a href="exec:pcs_intel += 1 & dynamic $cheatmenu[''stats'']">+1</a> <a href="exec:pcs_intel += 5 & dynamic $cheatmenu[''stats'']">+5</a> <a href="exec:pcs_intel += 10 & dynamic $cheatmenu[''stats'']">+10</a> <a href="exec:pcs_intel += 25 & dynamic $cheatmenu[''stats'']">+25</a> <a href="exec:pcs_intel -= 1 & dynamic $cheatmenu[''stats'']">-1</a> <a href="exec:pcs_intel -= 5 & dynamic $cheatmenu[''stats'']">-5</a> <a href="exec:pcs_intel -= 10 & dynamic $cheatmenu[''stats'']">-10</a> <a href="exec:pcs_intel -= 25 & dynamic $cheatmenu[''stats'']">-25</a>'
+	pl 'Strength (<<stren_lvl>>): <a href="exec:stren_lvl += 1 & stren_lvlst = stren_lvl & dynamic $cheatmenu[''stats'']" >+1</a> <a href="exec:stren_lvl += 5 & stren_lvlst = stren_lvl & dynamic $cheatmenu[''stats'']" >+5</a> <a href="exec:stren_lvl += 10 & stren_lvlst = stren_lvl & dynamic $cheatmenu[''stats'']" >+10</a> <a href="exec:stren_lvl -= 1 & stren_lvlst = stren_lvl & dynamic $cheatmenu[''stats'']" >-1</a> <a href="exec:stren_lvl -= 5 & stren_lvlst = stren_lvl & dynamic $cheatmenu[''stats'']" >-5</a> <a href="exec:stren_lvl -= 10 & stren_lvlst = stren_lvl & dynamic $cheatmenu[''stats'']" >-10</a>'
+	pl 'Agility (<<agil_lvl>>): <a href="exec:agil_lvl += 1 & agil_lvlst = agil_lvl & dynamic $cheatmenu[''stats'']" >+1</a> <a href="exec:agil_lvl += 5 & agil_lvlst = agil_lvl & dynamic $cheatmenu[''stats'']" >+5</a> <a href="exec:agil_lvl += 10 & agil_lvlst = agil_lvl & dynamic $cheatmenu[''stats'']" >+10</a> <a href="exec:agil_lvl -= 1 & agil_lvlst = agil_lvl & dynamic $cheatmenu[''stats'']" >-1</a> <a href="exec:agil_lvl -= 5 & agil_lvlst = agil_lvl & dynamic $cheatmenu[''stats'']" >-5</a> <a href="exec:agil_lvl -= 10 & agil_lvlst = agil_lvl & dynamic $cheatmenu[''stats'']" >-10</a>'
+	pl 'Endurance (<<vital_lvl>>): <a href="exec:vital_lvl += 1 & vital_lvlst = vital_lvl & dynamic $cheatmenu[''stats'']" >+1</a> <a href="exec:vital_lvl += 5 & vital_lvlst = vital_lvl & dynamic $cheatmenu[''stats'']" >+5</a> <a href="exec:vital_lvl += 10 & vital_lvlst = vital_lvl & dynamic $cheatmenu[''stats'']" >+10</a> <a href="exec:vital_lvl -= 1 & vital_lvlst = vital_lvl & dynamic $cheatmenu[''stats'']" >-1</a> <a href="exec:vital_lvl -= 5 & vital_lvlst = vital_lvl & dynamic $cheatmenu[''stats'']" >-5</a> <a href="exec:vital_lvl -= 10 & vital_lvlst = vital_lvl & dynamic $cheatmenu[''stats'']" >-10</a>'
+	pl 'Intelligence (<<intel_lvl>>): <a href="exec:intel_lvl += 1 & intel_lvlst = intel_lvl & dynamic $cheatmenu[''stats'']" >+1</a> <a href="exec:intel_lvl += 5 & intel_lvlst = intel_lvl & dynamic $cheatmenu[''stats'']" >+5</a> <a href="exec:intel_lvl += 10 & intel_lvlst = intel_lvl & dynamic $cheatmenu[''stats'']" >+10</a> <a href="exec:intel_lvl -= 1 & intel_lvlst = intel_lvl & dynamic $cheatmenu[''stats'']" >-1</a> <a href="exec:intel_lvl -= 5 & intel_lvlst = intel_lvl & dynamic $cheatmenu[''stats'']" >-5</a> <a href="exec:intel_lvl -= 10 & intel_lvlst = intel_lvl & dynamic $cheatmenu[''stats'']" >-10</a>'
+	pl 'Mental Agility (<<react_lvl>>): <a href="exec:react_lvl += 1 & react_lvlst = react_lvl & dynamic $cheatmenu[''stats'']" >+1</a> <a href="exec:react_lvl += 5 & react_lvlst = react_lvl & dynamic $cheatmenu[''stats'']" >+5</a> <a href="exec:react_lvl += 10 & react_lvlst = react_lvl & dynamic $cheatmenu[''stats'']" >+10</a> <a href="exec:react_lvl -= 1 & react_lvlst = react_lvl & dynamic $cheatmenu[''stats'']" >-1</a> <a href="exec:react_lvl -= 5 & react_lvlst = react_lvl & dynamic $cheatmenu[''stats'']" >-5</a> <a href="exec:react_lvl -= 10 & react_lvlst = react_lvl & dynamic $cheatmenu[''stats'']" >-10</a>'
+	pl 'Sprit (<<sprt_lvl>>): <a href="exec:sprt_lvl += 1 & sprt_lvlst = sprt_lvl & dynamic $cheatmenu[''stats'']" >+1</a> <a href="exec:sprt_lvl += 5 & sprt_lvlst = sprt_lvl & dynamic $cheatmenu[''stats'']" >+5</a> <a href="exec:sprt_lvl += 10 & sprt_lvlst = sprt_lvl & dynamic $cheatmenu[''stats'']" >+10</a> <a href="exec:sprt_lvl -= 1 & sprt_lvlst = sprt_lvl & dynamic $cheatmenu[''stats'']" >-1</a> <a href="exec:sprt_lvl -= 5 & sprt_lvlst = sprt_lvl & dynamic $cheatmenu[''stats'']" >-5</a> <a href="exec:sprt_lvl -= 10 & sprt_lvlst = sprt_lvl & dynamic $cheatmenu[''stats'']" >-10</a>'
+	pl 'Charisma (<<chrsm_lvl>>): <a href="exec:chrsm_lvl += 1 & chrsm_lvlst = chrsm_lvl & dynamic $cheatmenu[''stats'']" >+1</a> <a href="exec:chrsm_lvl += 5 & chrsm_lvlst = chrsm_lvl & dynamic $cheatmenu[''stats'']" >+5</a> <a href="exec:chrsm_lvl += 10 & chrsm_lvlst = chrsm_lvl & dynamic $cheatmenu[''stats'']" >+10</a> <a href="exec:chrsm_lvl -= 1 & chrsm_lvlst = chrsm_lvl & dynamic $cheatmenu[''stats'']" >-1</a> <a href="exec:chrsm_lvl -= 5 & chrsm_lvlst = chrsm_lvl & dynamic $cheatmenu[''stats'']" >-5</a> <a href="exec:chrsm_lvl -= 10 & chrsm_lvlst = chrsm_lvl & dynamic $cheatmenu[''stats'']" >-10</a>'
+	pl 'Perception (<<prcptn_lvl>>): <a href="exec:prcptn_lvl += 1 & prcptn_lvlst = prcptn_lvl & dynamic $cheatmenu[''stats'']" >+1</a> <a href="exec:prcptn_lvl += 5 & prcptn_lvlst = prcptn_lvl & dynamic $cheatmenu[''stats'']" >+5</a> <a href="exec:prcptn_lvl += 10 & prcptn_lvlst = prcptn_lvl & dynamic $cheatmenu[''stats'']" >+10</a> <a href="exec:prcptn_lvl -= 1 & prcptn_lvlst = prcptn_lvl & dynamic $cheatmenu[''stats'']" >-1</a> <a href="exec:prcptn_lvl -= 5 & prcptn_lvlst = prcptn_lvl & dynamic $cheatmenu[''stats'']" >-5</a> <a href="exec:prcptn_lvl -= 10 & prcptn_lvlst = prcptn_lvl & dynamic $cheatmenu[''stats'']" >-10</a>'
+	if MagikDostup = 0: pl 'Magic (<<magik_lvl>>): <a href="exec:magik_lvl += 1 & magik_lvlst = magik_lvl & dynamic $cheatmenu[''stats'']" >+1</a> <a href="exec:magik_lvl += 5 & magik_lvlst = magik_lvl & dynamic $cheatmenu[''stats'']" >+5</a> <a href="exec:magik_lvl += 10 & magik_lvlst = magik_lvl & dynamic $cheatmenu[''stats'']" >+10</a> <a href="exec:magik_lvl -= 1 & magik_lvlst = magik_lvl & dynamic $cheatmenu[''stats'']" >-1</a> <a href="exec:magik_lvl -= 5 & magik_lvlst = magik_lvl & dynamic $cheatmenu[''stats'']" >-5</a> <a href="exec:magik_lvl -= 10 & magik_lvlst = magik_lvl & dynamic $cheatmenu[''stats'']" >-10</a>'
 	pl''
-	pl'Dominance (<<pcs_dom>>): <a href="exec:pcs_dom += 1 & dynamic $cheatmenu[''stats'']">+1</a> <a href="exec:pcs_dom += 5 & dynamic $cheatmenu[''stats'']">+5</a> <a href="exec:pcs_dom += 10 & dynamic $cheatmenu[''stats'']">+10</a> <a href="exec:pcs_dom -= 1 & dynamic $cheatmenu[''stats'']">-1</a> <a href="exec:pcs_dom -= 5 & dynamic $cheatmenu[''stats'']">-5</a> <a href="exec:pcs_dom -= 10 & dynamic $cheatmenu[''stats'']">-10</a>'
-	pl'Submissiveness (<<sub>>): <a href="exec:sub += 1 & dynamic $cheatmenu[''stats'']">+1</a> <a href="exec:sub += 5 & dynamic $cheatmenu[''stats'']">+5</a> <a href="exec:sub += 10 & dynamic $cheatmenu[''stats'']">+10</a> <a href="exec:sub -= 1 & dynamic $cheatmenu[''stats'']">-1</a> <a href="exec:sub -= 5 & dynamic $cheatmenu[''stats'']">-5</a> <a href="exec:sub -= 10 & dynamic $cheatmenu[''stats'']">-10</a>'
+	pl'<b>Combat:</b>'
+	pl 'Jabs (<<jab_lvl>>): <a href="exec:jab_lvl += 1 & jab_lvlst = jab_lvl & dynamic $cheatmenu[''stats'']" >+1</a> <a href="exec:jab_lvl += 5 & jab_lvlst = jab_lvl & dynamic $cheatmenu[''stats'']" >+5</a> <a href="exec:jab_lvl += 10 & jab_lvlst = jab_lvl & dynamic $cheatmenu[''stats'']" >+10</a> <a href="exec:jab_lvl -= 1 & jab_lvlst = jab_lvl & dynamic $cheatmenu[''stats'']" >-1</a> <a href="exec:jab_lvl -= 5 & jab_lvlst = jab_lvl & dynamic $cheatmenu[''stats'']" >-5</a> <a href="exec:jab_lvl -= 10 & jab_lvlst = jab_lvl & dynamic $cheatmenu[''stats'']" >-10</a>'
+	pl 'Power Strikes (<<punch_lvl>>): <a href="exec:punch_lvl += 1 & punch_lvlst = punch_lvl & dynamic $cheatmenu[''stats'']" >+1</a> <a href="exec:punch_lvl += 5 & punch_lvlst = punch_lvl & dynamic $cheatmenu[''stats'']" >+5</a> <a href="exec:punch_lvl += 10 & punch_lvlst = punch_lvl & dynamic $cheatmenu[''stats'']" >+10</a> <a href="exec:punch_lvl -= 1 & punch_lvlst = punch_lvl & dynamic $cheatmenu[''stats'']" >-1</a> <a href="exec:punch_lvl -= 5 & punch_lvlst = punch_lvl & dynamic $cheatmenu[''stats'']" >-5</a> <a href="exec:punch_lvl -= 10 & punch_lvlst = punch_lvl & dynamic $cheatmenu[''stats'']" >-10</a>'
+	pl 'Kicks (<<kick_lvl>>): <a href="exec:kick_lvl += 1 & kick_lvlst = kick_lvl & dynamic $cheatmenu[''stats'']" >+1</a> <a href="exec:kick_lvl += 5 & kick_lvlst = kick_lvl & dynamic $cheatmenu[''stats'']" >+5</a> <a href="exec:kick_lvl += 10 & kick_lvlst = kick_lvl & dynamic $cheatmenu[''stats'']" >+10</a> <a href="exec:kick_lvl -= 1 & kick_lvlst = kick_lvl & dynamic $cheatmenu[''stats'']" >-1</a> <a href="exec:kick_lvl -= 5 & kick_lvlst = kick_lvl & dynamic $cheatmenu[''stats'']" >-5</a> <a href="exec:kick_lvl -= 10 & kick_lvlst = kick_lvl & dynamic $cheatmenu[''stats'']" >-10</a>'
+	pl 'Defence (<<def_lvl>>): <a href="exec:def_lvl += 1 & def_lvlst = def_lvl & dynamic $cheatmenu[''stats'']" >+1</a> <a href="exec:def_lvl += 5 & def_lvlst = def_lvl & dynamic $cheatmenu[''stats'']" >+5</a> <a href="exec:def_lvl += 10 & def_lvlst = def_lvl & dynamic $cheatmenu[''stats'']" >+10</a> <a href="exec:def_lvl -= 1 & def_lvlst = def_lvl & dynamic $cheatmenu[''stats'']" >-1</a> <a href="exec:def_lvl -= 5 & def_lvlst = def_lvl & dynamic $cheatmenu[''stats'']" >-5</a> <a href="exec:def_lvl -= 10 & def_lvlst = def_lvl & dynamic $cheatmenu[''stats'']" >-10</a>'
+	pl 'Marksmanship (<<shoot_lvl>>): <a href="exec:shoot_lvl += 1 & shoot_lvlst = shoot_lvl & dynamic $cheatmenu[''stats'']" >+1</a> <a href="exec:shoot_lvl += 5 & shoot_lvlst = shoot_lvl & dynamic $cheatmenu[''stats'']" >+5</a> <a href="exec:shoot_lvl += 10 & shoot_lvlst = shoot_lvl & dynamic $cheatmenu[''stats'']" >+10</a> <a href="exec:shoot_lvl -= 1 & shoot_lvlst = shoot_lvl & dynamic $cheatmenu[''stats'']" >-1</a> <a href="exec:shoot_lvl -= 5 & shoot_lvlst = shoot_lvl & dynamic $cheatmenu[''stats'']" >-5</a> <a href="exec:shoot_lvl -= 10 & shoot_lvlst = shoot_lvl & dynamic $cheatmenu[''stats'']" >-10</a>'
 	pl''
-	if pcs_run >= 0:pl'<a href="exec:pcs_run += 25 & dynamic $cheatmenu[''stats'']">Running+25: <<pcs_run>></a>'
-	if pcs_run > 0:pl'<a href="exec:pcs_run -= 25 & dynamic $cheatmenu[''stats'']">Running-25: <<pcs_run>></a>'
-	if pcs_vball >= 0:pl'<a href="exec:pcs_vball += 25 & dynamic $cheatmenu[''stats'']">Volleyball+25: <<pcs_vball>></a>'
-	if pcs_vball >= 25:pl'<a href="exec:pcs_vball -= 25 & dynamic $cheatmenu[''stats'']">Volleyball-25: <<pcs_vball>></a>'
+	pl'<b>Craft:</b>'
+	pl 'Singing (<<vokal_lvl>>): <a href="exec:vokal_lvl += 1 & vokal_lvlst = vokal_lvl & dynamic $cheatmenu[''stats'']" >+1</a> <a href="exec:vokal_lvl += 5 & vokal_lvlst = vokal_lvl & dynamic $cheatmenu[''stats'']" >+5</a> <a href="exec:vokal_lvl += 10 & vokal_lvlst = vokal_lvl & dynamic $cheatmenu[''stats'']" >+10</a> <a href="exec:vokal_lvl -= 1 & vokal_lvlst = vokal_lvl & dynamic $cheatmenu[''stats'']" >-1</a> <a href="exec:vokal_lvl -= 5 & vokal_lvlst = vokal_lvl & dynamic $cheatmenu[''stats'']" >-5</a> <a href="exec:vokal_lvl -= 10 & vokal_lvlst = vokal_lvl & dynamic $cheatmenu[''stats'']" >-10</a>'
+	pl 'Tailoring (<<sewng_lvl>>): <a href="exec:sewng_lvl += 1 & sewng_lvlst = sewng_lvl & dynamic $cheatmenu[''stats'']" >+1</a> <a href="exec:sewng_lvl += 5 & sewng_lvlst = sewng_lvl & dynamic $cheatmenu[''stats'']" >+5</a> <a href="exec:sewng_lvl += 10 & sewng_lvlst = sewng_lvl & dynamic $cheatmenu[''stats'']" >+10</a> <a href="exec:sewng_lvl -= 1 & sewng_lvlst = sewng_lvl & dynamic $cheatmenu[''stats'']" >-1</a> <a href="exec:sewng_lvl -= 5 & sewng_lvlst = sewng_lvl & dynamic $cheatmenu[''stats'']" >-5</a> <a href="exec:sewng_lvl -= 10 & sewng_lvlst = sewng_lvl & dynamic $cheatmenu[''stats'']" >-10</a>'
+	pl 'Instrumental Music (<<instrmusic_lvl>>): <a href="exec:instrmusic_lvl += 1 & instrmusic_lvlst = instrmusic_lvl & dynamic $cheatmenu[''stats'']" >+1</a> <a href="exec:instrmusic_lvl += 5 & instrmusic_lvlst = instrmusic_lvl & dynamic $cheatmenu[''stats'']" >+5</a> <a href="exec:instrmusic_lvl += 10 & instrmusic_lvlst = instrmusic_lvl & dynamic $cheatmenu[''stats'']" >+10</a> <a href="exec:instrmusic_lvl -= 1 & instrmusic_lvlst = instrmusic_lvl & dynamic $cheatmenu[''stats'']" >-1</a> <a href="exec:instrmusic_lvl -= 5 & instrmusic_lvlst = instrmusic_lvl & dynamic $cheatmenu[''stats'']" >-5</a> <a href="exec:instrmusic_lvl -= 10 & instrmusic_lvlst = instrmusic_lvl & dynamic $cheatmenu[''stats'']" >-10</a>'
+	pl 'Photography (<<photoskl_lvl>>): <a href="exec:photoskl_lvl += 1 & photoskl_lvlst = photoskl_lvl & dynamic $cheatmenu[''stats'']" >+1</a> <a href="exec:photoskl_lvl += 5 & photoskl_lvlst = photoskl_lvl & dynamic $cheatmenu[''stats'']" >+5</a> <a href="exec:photoskl_lvl += 10 & photoskl_lvlst = photoskl_lvl & dynamic $cheatmenu[''stats'']" >+10</a> <a href="exec:photoskl_lvl -= 1 & photoskl_lvlst = photoskl_lvl & dynamic $cheatmenu[''stats'']" >-1</a> <a href="exec:photoskl_lvl -= 5 & photoskl_lvlst = photoskl_lvl & dynamic $cheatmenu[''stats'']" >-5</a> <a href="exec:photoskl_lvl -= 10 & photoskl_lvlst = photoskl_lvl & dynamic $cheatmenu[''stats'']" >-10</a>'
+	pl 'Artistic Skills (<<artskls_lvl>>): <a href="exec:artskls_lvl += 1 & artskls_lvlst = artskls_lvl & dynamic $cheatmenu[''stats'']" >+1</a> <a href="exec:artskls_lvl += 5 & artskls_lvlst = artskls_lvl & dynamic $cheatmenu[''stats'']" >+5</a> <a href="exec:artskls_lvl += 10 & artskls_lvlst = artskls_lvl & dynamic $cheatmenu[''stats'']" >+10</a> <a href="exec:artskls_lvl -= 1 & artskls_lvlst = artskls_lvl & dynamic $cheatmenu[''stats'']" >-1</a> <a href="exec:artskls_lvl -= 5 & artskls_lvlst = artskls_lvl & dynamic $cheatmenu[''stats'']" >-5</a> <a href="exec:artskls_lvl -= 10 & artskls_lvlst = artskls_lvl & dynamic $cheatmenu[''stats'']" >-10</a>'
 	pl''
-	if pcs_shoot >= 0:pl' <a href="exec:pcs_shoot += 25 & dynamic $cheatmenu[''stats'']">Shooting +25: <<pcs_shoot>></a>'
-	if pcs_shoot > 0:pl' <a href="exec:pcs_shoot -= 25 & dynamic $cheatmenu[''stats'']">Shooting -25: <<pcs_shoot>></a>'
-	if pcs_sewng >= 0:pl' <a href="exec:pcs_sewng += 25 & dynamic $cheatmenu[''stats'']">Sewing + 25: <<pcs_sewng>></a>'
-	if pcs_sewng > 0:pl' <a href="exec:pcs_sewng -= 25 & dynamic $cheatmenu[''stats'']">Sewing - 25: <<pcs_sewng>></a>'
-	if pcs_chess >= 0:pl' <a href="exec:pcs_chess += 25 & dynamic $cheatmenu[''stats'']">Chess + 25: <<pcs_chess>></a>'
-	if pcs_chess > 0:pl' <a href="exec:pcs_chess -= 25 & dynamic $cheatmenu[''stats'']">Chess - 25: <<pcs_chess>></a>'
-	if pcs_servng >= 0:pl' <a href="exec:pcs_servng += 25 & dynamic $cheatmenu[''stats'']">Serving + 25: <<pcs_servng>></a>'
-	if pcs_servng > 0:pl' <a href="exec:pcs_servng -= 25 & dynamic $cheatmenu[''stats'']">Serving - 25: <<pcs_servng>></a>'
+	pl'<b>Dance:</b>'
+	pl 'Modern Dancing (<<danc_lvl>>): <a href="exec:danc_lvl += 1 & danc_lvlst = danc_lvl & dynamic $cheatmenu[''stats'']" >+1</a> <a href="exec:danc_lvl += 5 & danc_lvlst = danc_lvl & dynamic $cheatmenu[''stats'']" >+5</a> <a href="exec:danc_lvl += 10 & danc_lvlst = danc_lvl & dynamic $cheatmenu[''stats'']" >+10</a> <a href="exec:danc_lvl -= 1 & danc_lvlst = danc_lvl & dynamic $cheatmenu[''stats'']" >-1</a> <a href="exec:danc_lvl -= 5 & danc_lvlst = danc_lvl & dynamic $cheatmenu[''stats'']" >-5</a> <a href="exec:danc_lvl -= 10 & danc_lvlst = danc_lvl & dynamic $cheatmenu[''stats'']" >-10</a>'
+	pl 'Erotic Dancing (<<dancero_lvl>>): <a href="exec:dancero_lvl += 1 & dancero_lvlst = dancero_lvl & dynamic $cheatmenu[''stats'']" >+1</a> <a href="exec:dancero_lvl += 5 & dancero_lvlst = dancero_lvl & dynamic $cheatmenu[''stats'']" >+5</a> <a href="exec:dancero_lvl += 10 & dancero_lvlst = dancero_lvl & dynamic $cheatmenu[''stats'']" >+10</a> <a href="exec:dancero_lvl -= 1 & dancero_lvlst = dancero_lvl & dynamic $cheatmenu[''stats'']" >-1</a> <a href="exec:dancero_lvl -= 5 & dancero_lvlst = dancero_lvl & dynamic $cheatmenu[''stats'']" >-5</a> <a href="exec:dancero_lvl -= 10 & dancero_lvlst = dancero_lvl & dynamic $cheatmenu[''stats'']" >-10</a>'
+	pl 'Pole Dancing (<<dancpol_lvl>>): <a href="exec:dancpol_lvl += 1 & dancpol_lvlst = dancpol_lvl & dynamic $cheatmenu[''stats'']" >+1</a> <a href="exec:dancpol_lvl += 5 & dancpol_lvlst = dancpol_lvl & dynamic $cheatmenu[''stats'']" >+5</a> <a href="exec:dancpol_lvl += 10 & dancpol_lvlst = dancpol_lvl & dynamic $cheatmenu[''stats'']" >+10</a> <a href="exec:dancpol_lvl -= 1 & dancpol_lvlst = dancpol_lvl & dynamic $cheatmenu[''stats'']" >-1</a> <a href="exec:dancpol_lvl -= 5 & dancpol_lvlst = dancpol_lvl & dynamic $cheatmenu[''stats'']" >-5</a> <a href="exec:dancpol_lvl -= 10 & dancpol_lvlst = dancpol_lvl & dynamic $cheatmenu[''stats'']" >-10</a>'
 	pl''
-	if pcs_danc >= 0:pl'<a href="exec:pcs_danc += 25 &dynamic $cheatmenu[''stats'']">Dancing +25: <<pcs_danc>></a>'
-	if pcs_danc > 0:pl'<a href="exec:pcs_danc -= 25 &dynamic $cheatmenu[''stats'']">Dancing -25: <<pcs_danc>></a>'
-	if pcs_dancero >= 0:pl'<a href="exec:pcs_dancero += 25 &dynamic $cheatmenu[''stats'']">Erotic dancing +25: <<pcs_dancero>></a>'
-	if pcs_dancero > 0:pl'<a href="exec:pcs_dancero -= 25 &dynamic $cheatmenu[''stats'']">Erotic dancing -25: <<pcs_dancero>></a>'
-	if pcs_dancpol >= 0:pl'<a href="exec:pcs_dancpol += 25 & dynamic $cheatmenu[''stats'']">Pole dancing +25: <<pcs_dancpol>></a>'
-	if pcs_dancpol > 0:pl'<a href="exec:pcs_dancpol -= 25 & dynamic $cheatmenu[''stats'']">Pole dancing -25: <<pcs_dancpol>></a>'
+	pl'<b>Sport:</b>'
+	pl 'Running (<<run_lvl>>): <a href="exec:run_lvl += 1 & run_lvlst = run_lvl & dynamic $cheatmenu[''stats'']" >+1</a> <a href="exec:run_lvl += 5 & run_lvlst = run_lvl & dynamic $cheatmenu[''stats'']" >+5</a> <a href="exec:run_lvl += 10 & run_lvlst = run_lvl & dynamic $cheatmenu[''stats'']" >+10</a> <a href="exec:run_lvl -= 1 & run_lvlst = run_lvl & dynamic $cheatmenu[''stats'']" >-1</a> <a href="exec:run_lvl -= 5 & run_lvlst = run_lvl & dynamic $cheatmenu[''stats'']" >-5</a> <a href="exec:run_lvl -= 10 & run_lvlst = run_lvl & dynamic $cheatmenu[''stats'']" >-10</a>'
+	pl 'Volleyball (<<vball_lvl>>): <a href="exec:vball_lvl += 1 & vball_lvlst = vball_lvl & dynamic $cheatmenu[''stats'']" >+1</a> <a href="exec:vball_lvl += 5 & vball_lvlst = vball_lvl & dynamic $cheatmenu[''stats'']" >+5</a> <a href="exec:vball_lvl += 10 & vball_lvlst = vball_lvl & dynamic $cheatmenu[''stats'']" >+10</a> <a href="exec:vball_lvl -= 1 & vball_lvlst = vball_lvl & dynamic $cheatmenu[''stats'']" >-1</a> <a href="exec:vball_lvl -= 5 & vball_lvlst = vball_lvl & dynamic $cheatmenu[''stats'']" >-5</a> <a href="exec:vball_lvl -= 10 & vball_lvlst = vball_lvl & dynamic $cheatmenu[''stats'']" >-10</a>'
+	pl 'Ice Skating (<<icesktng_lvl>>): <a href="exec:icesktng_lvl += 1 & icesktng_lvlst = icesktng_lvl & dynamic $cheatmenu[''stats'']" >+1</a> <a href="exec:icesktng_lvl += 5 & icesktng_lvlst = icesktng_lvl & dynamic $cheatmenu[''stats'']" >+5</a> <a href="exec:icesktng_lvl += 10 & icesktng_lvlst = icesktng_lvl & dynamic $cheatmenu[''stats'']" >+10</a> <a href="exec:icesktng_lvl -= 1 & icesktng_lvlst = icesktng_lvl & dynamic $cheatmenu[''stats'']" >-1</a> <a href="exec:icesktng_lvl -= 5 & icesktng_lvlst = icesktng_lvl & dynamic $cheatmenu[''stats'']" >-5</a> <a href="exec:icesktng_lvl -= 10 & icesktng_lvlst = icesktng_lvl & dynamic $cheatmenu[''stats'']" >-10</a>'
+	pl 'Wrestling (<<wrstlng_lvl>>): <a href="exec:wrstlng_lvl += 1 & wrstlng_lvlst = wrstlng_lvl & dynamic $cheatmenu[''stats'']" >+1</a> <a href="exec:wrstlng_lvl += 5 & wrstlng_lvlst = wrstlng_lvl & dynamic $cheatmenu[''stats'']" >+5</a> <a href="exec:wrstlng_lvl += 10 & wrstlng_lvlst = wrstlng_lvl & dynamic $cheatmenu[''stats'']" >+10</a> <a href="exec:wrstlng_lvl -= 1 & wrstlng_lvlst = wrstlng_lvl & dynamic $cheatmenu[''stats'']" >-1</a> <a href="exec:wrstlng_lvl -= 5 & wrstlng_lvlst = wrstlng_lvl & dynamic $cheatmenu[''stats'']" >-5</a> <a href="exec:wrstlng_lvl -= 10 & wrstlng_lvlst = wrstlng_lvl & dynamic $cheatmenu[''stats'']" >-10</a>'
+	pl 'Football (<<ftbll_lvl>>): <a href="exec:ftbll_lvl += 1 & ftbll_lvlst = ftbll_lvl & dynamic $cheatmenu[''stats'']" >+1</a> <a href="exec:ftbll_lvl += 5 & ftbll_lvlst = ftbll_lvl & dynamic $cheatmenu[''stats'']" >+5</a> <a href="exec:ftbll_lvl += 10 & ftbll_lvlst = ftbll_lvl & dynamic $cheatmenu[''stats'']" >+10</a> <a href="exec:ftbll_lvl -= 1 & ftbll_lvlst = ftbll_lvl & dynamic $cheatmenu[''stats'']" >-1</a> <a href="exec:ftbll_lvl -= 5 & ftbll_lvlst = ftbll_lvl & dynamic $cheatmenu[''stats'']" >-5</a> <a href="exec:ftbll_lvl -= 10 & ftbll_lvlst = ftbll_lvl & dynamic $cheatmenu[''stats'']" >-10</a>'
 	pl''
-	if pcs_vokal >= 0:pl'<a href="exec:pcs_vokal += 25 & dynamic $cheatmenu[''stats'']">Vocal skill +25: <<pcs_vokal>></a>'
-	if pcs_vokal > 0:pl'<a href="exec:pcs_vokal -= 25 & dynamic $cheatmenu[''stats'']">Vocal skill -25: <<pcs_vokal>></a>'
+	pl'<b>Work:</b>'
+	pl 'Serving (<<servng_lvl>>): <a href="exec:servng_lvl += 1 & servng_lvlst = servng_lvl & dynamic $cheatmenu[''stats'']" >+1</a> <a href="exec:servng_lvl += 5 & servng_lvlst = servng_lvl & dynamic $cheatmenu[''stats'']" >+5</a> <a href="exec:servng_lvl += 10 & servng_lvlst = servng_lvl & dynamic $cheatmenu[''stats'']" >+10</a> <a href="exec:servng_lvl -= 1 & servng_lvlst = servng_lvl & dynamic $cheatmenu[''stats'']" >-1</a> <a href="exec:servng_lvl -= 5 & servng_lvlst = servng_lvl & dynamic $cheatmenu[''stats'']" >-5</a> <a href="exec:servng_lvl -= 10 & servng_lvlst = servng_lvl & dynamic $cheatmenu[''stats'']" >-10</a>'
+	pl 'Modeling (<<mdlng_lvl>>): <a href="exec:mdlng_lvl += 1 & mdlng_lvlst = mdlng_lvl & dynamic $cheatmenu[''stats'']" >+1</a> <a href="exec:mdlng_lvl += 5 & mdlng_lvlst = mdlng_lvl & dynamic $cheatmenu[''stats'']" >+5</a> <a href="exec:mdlng_lvl += 10 & mdlng_lvlst = mdlng_lvl & dynamic $cheatmenu[''stats'']" >+10</a> <a href="exec:mdlng_lvl -= 1 & mdlng_lvlst = mdlng_lvl & dynamic $cheatmenu[''stats'']" >-1</a> <a href="exec:mdlng_lvl -= 5 & mdlng_lvlst = mdlng_lvl & dynamic $cheatmenu[''stats'']" >-5</a> <a href="exec:mdlng_lvl -= 10 & mdlng_lvlst = mdlng_lvl & dynamic $cheatmenu[''stats'']" >-10</a>'
+	pl 'Medicine (<<medcn_lvl>>): <a href="exec:medcn_lvl += 1 & medcn_lvlst = medcn_lvl & dynamic $cheatmenu[''stats'']" >+1</a> <a href="exec:medcn_lvl += 5 & medcn_lvlst = medcn_lvl & dynamic $cheatmenu[''stats'']" >+5</a> <a href="exec:medcn_lvl += 10 & medcn_lvlst = medcn_lvl & dynamic $cheatmenu[''stats'']" >+10</a> <a href="exec:medcn_lvl -= 1 & medcn_lvlst = medcn_lvl & dynamic $cheatmenu[''stats'']" >-1</a> <a href="exec:medcn_lvl -= 5 & medcn_lvlst = medcn_lvl & dynamic $cheatmenu[''stats'']" >-5</a> <a href="exec:medcn_lvl -= 10 & medcn_lvlst = medcn_lvl & dynamic $cheatmenu[''stats'']" >-10</a>'
+	pl''
+	pl'<b>Others:</b>'
+	pl 'Chess (<<chess_lvl>>): <a href="exec:chess_lvl += 1 & chess_lvlst = chess_lvl & dynamic $cheatmenu[''stats'']" >+1</a> <a href="exec:chess_lvl += 5 & chess_lvlst = chess_lvl & dynamic $cheatmenu[''stats'']" >+5</a> <a href="exec:chess_lvl += 10 & chess_lvlst = chess_lvl & dynamic $cheatmenu[''stats'']" >+10</a> <a href="exec:chess_lvl -= 1 & chess_lvlst = chess_lvl & dynamic $cheatmenu[''stats'']" >-1</a> <a href="exec:chess_lvl -= 5 & chess_lvlst = chess_lvl & dynamic $cheatmenu[''stats'']" >-5</a> <a href="exec:chess_lvl -= 10 & chess_lvlst = chess_lvl & dynamic $cheatmenu[''stats'']" >-10</a>'
+	pl 'Gaming (<<ttgmng_lvl>>): <a href="exec:ttgmng_lvl += 1 & ttgmng_lvlst = ttgmng_lvl & dynamic $cheatmenu[''stats'']" >+1</a> <a href="exec:ttgmng_lvl += 5 & ttgmng_lvlst = ttgmng_lvl & dynamic $cheatmenu[''stats'']" >+5</a> <a href="exec:ttgmng_lvl += 10 & ttgmng_lvlst = ttgmng_lvl & dynamic $cheatmenu[''stats'']" >+10</a> <a href="exec:ttgmng_lvl -= 1 & ttgmng_lvlst = ttgmng_lvl & dynamic $cheatmenu[''stats'']" >-1</a> <a href="exec:ttgmng_lvl -= 5 & ttgmng_lvlst = ttgmng_lvl & dynamic $cheatmenu[''stats'']" >-5</a> <a href="exec:ttgmng_lvl -= 10 & ttgmng_lvlst = ttgmng_lvl & dynamic $cheatmenu[''stats'']" >-10</a>'
+	pl 'People skills (<<humint_lvl>>): <a href="exec:humint_lvl += 1 & humint_lvlst = humint_lvl & dynamic $cheatmenu[''stats'']" >+1</a> <a href="exec:humint_lvl += 5 & humint_lvlst = humint_lvl & dynamic $cheatmenu[''stats'']" >+5</a> <a href="exec:humint_lvl += 10 & humint_lvlst = humint_lvl & dynamic $cheatmenu[''stats'']" >+10</a> <a href="exec:humint_lvl -= 1 & humint_lvlst = humint_lvl & dynamic $cheatmenu[''stats'']" >-1</a> <a href="exec:humint_lvl -= 5 & humint_lvlst = humint_lvl & dynamic $cheatmenu[''stats'']" >-5</a> <a href="exec:humint_lvl -= 10 & humint_lvlst = humint_lvl & dynamic $cheatmenu[''stats'']" >-10</a>'
+	pl 'Persuasion (<<persuas_lvl>>): <a href="exec:persuas_lvl += 1 & persuas_lvlst = persuas_lvl & dynamic $cheatmenu[''stats'']" >+1</a> <a href="exec:persuas_lvl += 5 & persuas_lvlst = persuas_lvl & dynamic $cheatmenu[''stats'']" >+5</a> <a href="exec:persuas_lvl += 10 & persuas_lvlst = persuas_lvl & dynamic $cheatmenu[''stats'']" >+10</a> <a href="exec:persuas_lvl -= 1 & persuas_lvlst = persuas_lvl & dynamic $cheatmenu[''stats'']" >-1</a> <a href="exec:persuas_lvl -= 5 & persuas_lvlst = persuas_lvl & dynamic $cheatmenu[''stats'']" >-5</a> <a href="exec:persuas_lvl -= 10 & persuas_lvlst = persuas_lvl & dynamic $cheatmenu[''stats'']" >-10</a>'
+	pl 'Observation (<<observ_lvl>>): <a href="exec:observ_lvl += 1 & observ_lvlst = observ_lvl & dynamic $cheatmenu[''stats'']" >+1</a> <a href="exec:observ_lvl += 5 & observ_lvlst = observ_lvl & dynamic $cheatmenu[''stats'']" >+5</a> <a href="exec:observ_lvl += 10 & observ_lvlst = observ_lvl & dynamic $cheatmenu[''stats'']" >+10</a> <a href="exec:observ_lvl -= 1 & observ_lvlst = observ_lvl & dynamic $cheatmenu[''stats'']" >-1</a> <a href="exec:observ_lvl -= 5 & observ_lvlst = observ_lvl & dynamic $cheatmenu[''stats'']" >-5</a> <a href="exec:observ_lvl -= 10 & observ_lvlst = observ_lvl & dynamic $cheatmenu[''stats'']" >-10</a>'
+	pl 'Makeup (<<makupskl_lvl>>): <a href="exec:makupskl_lvl += 1 & makupskl_lvlst = makupskl_lvl & dynamic $cheatmenu[''stats'']" >+1</a> <a href="exec:makupskl_lvl += 5 & makupskl_lvlst = makupskl_lvl & dynamic $cheatmenu[''stats'']" >+5</a> <a href="exec:makupskl_lvl += 10 & makupskl_lvlst = makupskl_lvl & dynamic $cheatmenu[''stats'']" >+10</a> <a href="exec:makupskl_lvl -= 1 & makupskl_lvlst = makupskl_lvl & dynamic $cheatmenu[''stats'']" >-1</a> <a href="exec:makupskl_lvl -= 5 & makupskl_lvlst = makupskl_lvl & dynamic $cheatmenu[''stats'']" >-5</a> <a href="exec:makupskl_lvl -= 10 & makupskl_lvlst = makupskl_lvl & dynamic $cheatmenu[''stats'']" >-10</a>'
+	pl 'Computer Skill (<<compskl_lvl>>): <a href="exec:compskl_lvl += 1 & compskl_lvlst = compskl_lvl & dynamic $cheatmenu[''stats'']" >+1</a> <a href="exec:compskl_lvl += 5 & compskl_lvlst = compskl_lvl & dynamic $cheatmenu[''stats'']" >+5</a> <a href="exec:compskl_lvl += 10 & compskl_lvlst = compskl_lvl & dynamic $cheatmenu[''stats'']" >+10</a> <a href="exec:compskl_lvl -= 1 & compskl_lvlst = compskl_lvl & dynamic $cheatmenu[''stats'']" >-1</a> <a href="exec:compskl_lvl -= 5 & compskl_lvlst = compskl_lvl & dynamic $cheatmenu[''stats'']" >-5</a> <a href="exec:compskl_lvl -= 10 & compskl_lvlst = compskl_lvl & dynamic $cheatmenu[''stats'']" >-10</a>'
+	pl 'Hacking (<<comphckng_lvl>>): <a href="exec:comphckng_lvl += 1 & comphckng_lvlst = comphckng_lvl & dynamic $cheatmenu[''stats'']" >+1</a> <a href="exec:comphckng_lvl += 5 & comphckng_lvlst = comphckng_lvl & dynamic $cheatmenu[''stats'']" >+5</a> <a href="exec:comphckng_lvl += 10 & comphckng_lvlst = comphckng_lvl & dynamic $cheatmenu[''stats'']" >+10</a> <a href="exec:comphckng_lvl -= 1 & comphckng_lvlst = comphckng_lvl & dynamic $cheatmenu[''stats'']" >-1</a> <a href="exec:comphckng_lvl -= 5 & comphckng_lvlst = comphckng_lvl & dynamic $cheatmenu[''stats'']" >-5</a> <a href="exec:comphckng_lvl -= 10 & comphckng_lvlst = comphckng_lvl & dynamic $cheatmenu[''stats'']" >-10</a>'
+	pl 'Handy-work (<<hndiwrk_lvl>>): <a href="exec:hndiwrk_lvl += 1 & hndiwrk_lvlst = hndiwrk_lvl & dynamic $cheatmenu[''stats'']" >+1</a> <a href="exec:hndiwrk_lvl += 5 & hndiwrk_lvlst = hndiwrk_lvl & dynamic $cheatmenu[''stats'']" >+5</a> <a href="exec:hndiwrk_lvl += 10 & hndiwrk_lvlst = hndiwrk_lvl & dynamic $cheatmenu[''stats'']" >+10</a> <a href="exec:hndiwrk_lvl -= 1 & hndiwrk_lvlst = hndiwrk_lvl & dynamic $cheatmenu[''stats'']" >-1</a> <a href="exec:hndiwrk_lvl -= 5 & hndiwrk_lvlst = hndiwrk_lvl & dynamic $cheatmenu[''stats'']" >-5</a> <a href="exec:hndiwrk_lvl -= 10 & hndiwrk_lvlst = hndiwrk_lvl & dynamic $cheatmenu[''stats'']" >-10</a>'
+	if MagikDostup = 0: pl 'Spell Casting (<<splcstng_lvl>>): <a href="exec:splcstng_lvl += 1 & splcstng_lvlst = splcstng_lvl & dynamic $cheatmenu[''stats'']" >+1</a> <a href="exec:splcstng_lvl += 5 & splcstng_lvlst = splcstng_lvl & dynamic $cheatmenu[''stats'']" >+5</a> <a href="exec:splcstng_lvl += 10 & splcstng_lvlst = splcstng_lvl & dynamic $cheatmenu[''stats'']" >+10</a> <a href="exec:splcstng_lvl -= 1 & splcstng_lvlst = splcstng_lvl & dynamic $cheatmenu[''stats'']" >-1</a> <a href="exec:splcstng_lvl -= 5 & splcstng_lvlst = splcstng_lvl & dynamic $cheatmenu[''stats'']" >-5</a> <a href="exec:splcstng_lvl -= 10 & splcstng_lvlst = splcstng_lvl & dynamic $cheatmenu[''stats'']" >-10</a>'
 	pl''
 	if workPTU > 1:pl'<a href="exec:teachlevel += 10 & dynamic $cheatmenu[''stats'']">Reputation teacher+10: <<teachlevel>></a>'
 	if workPTU > 1:pl'<a href="exec:teachlevel -= 10 & dynamic $cheatmenu[''stats'']">Reputation teacher-10: <<teachlevel>></a>'
 	if pcs_grades >= 0:pl'<a href="exec:pcs_grades += 10 & dynamic $cheatmenu[''stats'']">Improve their academic performance: <<pcs_grades>></a>'
 	if schoolprogul >= 0:pl'<a href="exec:schoolprogul = 0 & dynamic $cheatmenu[''stats'']">Zero Absenteeism: <<schoolprogul>></a>'
-	pl''
-	pl'<b>Kickboxing:</b>'
-	if pcs_jab >= 0:pl'<a href="exec:pcs_jab += 25 & dynamic $cheatmenu[''stats'']">Jab +25: <<pcs_jab>></a>'
-	if pcs_jab > 0:pl'<a href="exec:pcs_jab -= 25 & dynamic $cheatmenu[''stats'']">Jab -25: <<pcs_jab>></a>'
-	if pcs_punch >= 0:pl'<a href="exec:pcs_punch += 25 & dynamic $cheatmenu[''stats'']">Power punch +25: <<pcs_punch>></a>'
-	if pcs_punch > 0:pl'<a href="exec:pcs_punch -= 25 & dynamic $cheatmenu[''stats'']">Power punch -25: <<pcs_punch>></a>'
-	if pcs_kick >= 0:pl'<a href="exec:pcs_kick += 25 & dynamic $cheatmenu[''stats'']">Kicks +25: <<pcs_kick>></a>'
-	if pcs_kick > 0:pl'<a href="exec:pcs_kick -= 25 & dynamic $cheatmenu[''stats'']">Kicks -25: <<pcs_kick>></a>'
-	if pcs_def >= 0:pl'<a href="exec:pcs_def += 25 & dynamic $cheatmenu[''stats'']">Defense +25: <<pcs_def>></a>'
-	if pcs_def > 0:pl'<a href="exec:pcs_def -= 25 & dynamic $cheatmenu[''stats'']">Defense -25: <<pcs_def>></a>'
-	pl''
-	pl'<b>Test options</b> present in the mechanism of the game, but not involved in the game quests:'
-	if mutagenP = 0:pl'Mutagen strength <a href="exec:mutagenP = 1 & pcs_stren = 150 & dynamic $cheatmenu[''stats'']">1Level</a>'
-	if mutagenP = 1:pl'Mutagen strength <a href="exec:mutagenP = 2 & pcs_stren = 200 & dynamic $cheatmenu[''stats'']">2Level</a>'
-	if mutagenP = 2:pl'Mutagen strength <a href="exec:mutagenP = 3 & pcs_stren = 250 & dynamic $cheatmenu[''stats'']">3Level</a>'
-	if mutagenP > 0:pl'Mutagen strength <a href="exec:mutagenP = 0 & pcs_stren = 100 & dynamic $cheatmenu[''stats'']">Set to zero</a>'
-	if mutagenV = 0:pl'Mutagen endurance <a href="exec:mutagenV = 1 & pcs_vital = 150 & dynamic $cheatmenu[''stats'']">1Level</a>'
-	if mutagenV = 1:pl'Mutagen endurance <a href="exec:mutagenV = 2 & pcs_vital = 200 & dynamic $cheatmenu[''stats'']">2Level</a>'
-	if mutagenV = 2:pl'Mutagen endurance <a href="exec:mutagenV = 3 & pcs_vital = 250 & dynamic $cheatmenu[''stats'']">3Level</a>'
-	if mutagenV > 0:pl'Mutagen endurance <a href="exec:mutagenV = 0 & pcs_vital = 100 & dynamic $cheatmenu[''stats'']">Set to zero</a>'
-	if mutagenA = 0:pl'Mutagen Agility <a href="exec:mutagenA = 1 & pcs_agil = 150 & dynamic $cheatmenu[''stats'']">1Level</a>'
-	if mutagenA = 1:pl'Mutagen Agility <a href="exec:mutagenA = 2 & pcs_agil = 200 & dynamic $cheatmenu[''stats'']">2Level</a>'
-	if mutagenA = 2:pl'Mutagen Agility <a href="exec:mutagenA = 3 & pcs_agil = 250 & dynamic $cheatmenu[''stats'']">3Level</a>'
-	if mutagenA > 0:pl'Mutagen Agility <a href="exec:mutagenA = 0 & pcs_agil = 100 & dynamic $cheatmenu[''stats'']">Set to zero</a>'
 }
 
 $cheatmenu['reputation'] = {
@@ -787,8 +784,9 @@ $cheatmenu['time'] = {
 	gs 'daystart'
 	gs 'stat'
 
-	temp_daystart = (year - 2015) * 365
-	temp_daystart += ((year - 2015) + 3) / 4
+	temp_daystart = (year - 2016) * 365
+!!2016 is a leapyear so no adjustment before division
+	temp_daystart += (year - 2016) / 4
 	i=1
 	:temp_daystart
 	if temp_month > i:
@@ -1029,11 +1027,10 @@ $cheatmenu['force_preg'] = {
 	preg = 1
 	cycle = 5
 	PregChem = 150
-	gs 'npcgeneratec', 0, 'A sperm donor', rand(18,34)
-	gs 'npcpreservec', $npclastgenerated
+	$wombthfath = 'A sperm donor'
 	babyembryo += 1
 	if fertegg = 0:
-		nextbaby = arrsize('$ChildFath')
+		Nextbaby = arrsize('$ChildFath')
 		Temppolkid = rand(0,1)
 		polkid[nextbaby] = Temppolkid
 		$kidname[nextbaby] = 'unborn'
@@ -1042,8 +1039,8 @@ $cheatmenu['force_preg'] = {
 		monthkid[nextbaby] = 0
 		yearkid[nextbaby] = 0
 		Babyptype[nextbaby] = 0
-		$ChildFath[nextbaby] = $npclastsaved
-		$ChildThFath[nextbaby] = $npclastsaved
+		$ChildFath[nextbaby] = 'A sperm donor'
+		$ChildThFath[nextbaby] = 'A sperm donor'
 		hairkid[nextbaby] = rand(0, 3)
 		eyeskid[nextbaby] = rand(0, 3)
 		ChildConType[nextbaby] = 0
