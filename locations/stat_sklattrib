@@ -132,7 +132,13 @@ if attsklupdate = 0:
 		$attskltmp = $skl_name[i]
 	end
 
-	dynamic "if pcs_<<$attskltmp>> > 0 and <<$attskltmp>>_lvl = 0: <<$attskltmp>>_exp = (expadj * (pcs_<<$attskltmp>> - 1) * (pcs_<<$attskltmp>> - 1) / 60) + 1 & <<$attskltmp>>_lvl = pcs_<<$attskltmp>>"
+	dynamic "
+		if pcs_<<$attskltmp>> > 0 and <<$attskltmp>>_lvl = 0:
+			<<$attskltmp>>_exp = (expadj * (pcs_<<$attskltmp>> - 1) * (pcs_<<$attskltmp>> - 1) / 60) + 1
+			<<$attskltmp>>_lvl = pcs_<<$attskltmp>>
+			<<$attskltmp>>_lvlst = <<$attskltmp>>_lvl
+		end
+	"
 	killvar 'expadj' & killvar '$attskltmp'
 	i += 1
 	if (x = 1 and i < arrsize ('$att_name')) or (x = 2 and i < arrsize ('$skl_name')): jump 'rstloop'
