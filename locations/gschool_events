@@ -203,8 +203,7 @@ if $ARGS[0] = 'teacher_greet':
 end
 
 if $ARGS[0] = 'rand_gopnic':
-	gs 'npcgeneratec', 0, $npcName[i], rand(12,25)
-	gs 'boyStat', $npclastgenerated
+	gs 'boyStat', $static_num
 	'<center><img src="images/qwest/alter/npc/<<i>>.jpg"></center>'
 	'You look at <<$boydesc>> with contempt, "What the fuck do you want?" He''s not impressed in the slightest, your loose reputation undermining any authority you try to impose.'
 	act 'Continue': 
@@ -313,8 +312,7 @@ if $ARGS[0] = 'rand_scoolboy':
 		'You notice the confident stares of <<$boydesc>> it must''ve been him.'
 		act 'Taunt him':
 			pcs_horny += 50
-			gs 'npcgeneratec', 0, $npcName[i], rand(15,17)
-			gs 'boyStat', $npclastgenerated
+			gs 'boyStat', $static_num
 			gs'stat'
 			*clr & cla
 			'<center><img src="images/qwest/alter/uroc/rand_scoolboy4.jpg"></center>'
@@ -741,7 +739,7 @@ if $ARGS[0] = 'rand_class':
 	if RAND(0,5) > 0:
 		*clr
 		cla
-		school_event_hour = daystart
+		school_event_hour = 1
 		scooltiperand = RAND(1,22)
 
 		if scooltiperand  = 1 and Katja_tanga_end = 1 and tanga = 1:
@@ -1031,17 +1029,17 @@ if $ARGS[0] = 'rand_class':
 
 			:rnd_friend_loop
 			r = rand(0,47)
-			
-			if npcPol[r] = 0 or npc_rel[r] =< 50:
+
+			$static_num = $static_num[r]
+			if npcPol[r] = 0 or npc_rel[$static_num] =< 50:
 				jump 'rnd_friend_loop'
-			
+
 			end
 			
-			$rand_friend = $npcName[r]
-			npc_rel[r] += 3
+			npc_rel[$static_num] += 3
 			
-			if npc_rel[r] > 100: npc_rel[r] = 100
-			'You and <<$rand_friend>> sit next to each other during class. You spend much of the class talking quietly to each other, often getting looks from the teacher when you get to loud. He clears his throat a few times and even hushes you once, finally he tells you to be quiet or he will send you to the principals office.'
+			if npc_rel[$static_num] > 100: npc_rel[$static_num] = 100
+			'You and <<$npc_firstname[$static_num]>> sit next to each other during class. You spend much of the class talking quietly to each other, often getting looks from the teacher when you get to loud. He clears his throat a few times and even hushes you once, finally he tells you to be quiet or he will send you to the principals office.'
 			!!rand_friend is random boy or girl that Sveta has a high friendship with.
 
 		elseif scooltiperand = 22:
@@ -1067,15 +1065,15 @@ if $ARGS[0] = 'rand_class':
 			end
 
 		elseif n_tanga = 3:
-			*clr
-			cla
 			'<center><img src="images/qwest/alter/katja/tanga5_6.jpg"></center>'
 			'As you sit in the classroom you hear Katja asking from behind you, "<<$pcs_nickname>>, I dropped my pen, be a dear and pick it up for me?" You sigh and look under her desk, immediately noticing her bare pussy between her widely spread legs. The little minx is doing it on purpose! A bit flustered, you pick up her pen and hand it back to her. When you do, she gives you an innocent grin and gets back to what she was doing as if nothing happened.'
-			
+
 			act 'Wait for the end of the lesson': gt 'gschool_lunch', 'lunch'
 		else
 			'<center><img src="images/qwest/alter/uroc/scoolrand_8.jpg"></center>'
 			'The class was rather boring, and nothing worth noting happened.'
+
+			act 'Wait for the end of the lesson': gt 'gschool_lunch', 'lunch'
 		end
 	else
 		if n_tanga = 3:
@@ -1087,7 +1085,10 @@ if $ARGS[0] = 'rand_class':
 			act 'Wait for the end of the lesson': gt 'gschool_lunch', 'lunch'
 		
 		else
-			gt 'gschool_lunch', 'lunch'
+			'<center><img src="images/qwest/alter/uroc/scoolrand_8.jpg"></center>'
+			'The class was rather boring, and nothing worth noting happened.'
+
+			act 'Wait for the end of the lesson': gt 'gschool_lunch', 'lunch'
 		end
 	end
 end
@@ -1243,7 +1244,7 @@ if $ARGS[0] = 'rand_boy_arg':
 	r = rand(0,55)
 	if r <= 55 and npcPol[r] = 0 and (grupTipe[r] = grup0 or grupTipe[r] = grup1 or grupTipe[r] = grup2 or grupTipe[r] = grup3 or grupTipe[r] = grup4 or grupTipe[r] = grup5):
 		$static_num = $static_num[r]
-		$rand_boy = $npcName[$static_num]
+		$rand_boy = $npc_firstname[$static_num]
 	else
 		jump 'rnd_boy_loop'
 	end
@@ -1266,7 +1267,7 @@ if $ARGS[0] = 'rand_boy_arg1':
 	r = rand(0,55)
 	if r <= 55 and npcPol[r] = 0 and (grupTipe[r] = grup0 or grupTipe[r] = grup1 or grupTipe[r] = grup2 or grupTipe[r] = grup3 or grupTipe[r] = grup4 or grupTipe[r] = grup5):
 		$static_num = $static_num[r]
-		$rand_boy1 = $npcName[$static_num]
+		$rand_boy1 = $npc_firstname[$static_num]
 		if $rand_boy = $rand_boy1: jump 'rnd_boy1_loop'
 	else
 		jump 'rnd_boy1_loop'
@@ -1290,7 +1291,7 @@ if $ARGS[0] = 'rand_girl_arg':
 	r = rand(0,55)
 	if r <= 55 and npcPol[r] = 1 and (grupTipe[r] = grup0 or grupTipe[r] = grup1 or grupTipe[r] = grup2 or grupTipe[r] = grup3 or grupTipe[r] = grup4 or grupTipe[r] = grup5):
 		$static_num = $static_num[r]
-		$rand_girl = $npcName[$static_num]
+		$rand_girl = $npc_firstname[$static_num]
 	else
 		jump 'rnd_girl_loop'
 	end
