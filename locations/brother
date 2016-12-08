@@ -25,134 +25,192 @@ if npc_QW['A34'] > 20 and npc_QW['A34'] < 25: npc_QW['A34'] = 20
 ! brother_ev1
 ! brotherConfidence: if it is over 10 he might try and touch you during a homework (not used yet)
 
+if $ARGS[0] = 'start':
 
+	gs 'stat'
+	'<center><b><font color="maroon">Kolka</font></b></center>'
+	'<center><img src="images/qwest/alter/brother.jpg"></center>'
+	'Your brother Kolka is younger than you, he''s <<brotherAge>> years old. While you share the same mother, unlike you and your sister, Kolka''s dad is your stepfather. He is a student at the same school as you, and enjoys soccer.'
 
-gs 'stat'
-'<center><b><font color="maroon">Kolka</font></b></center>'
-'<center><img src="images/qwest/alter/brother.jpg"></center>'
-'Your brother Kolka is younger than you, he''s <<brotherAge>> years old. While you share the same mother, unlike you and your sister, Kolka''s dad is your stepfather. He is a student at the same school as you, and enjoys soccer.'
-
-if npc_rel['A34'] < 20:'You and your brother argue all the time.'
-if npc_rel['A34'] >= 20 and npc_rel['A34'] < 40:'You and your brother bicker sometimes.'
-if npc_rel['A34'] >= 40 and npc_rel['A34'] < 60:'You and your brother have a normal relationship.'
-if npc_rel['A34'] >= 60 and npc_rel['A34'] < 80:'You have a good relationship with your brother.'
-if npc_rel['A34'] >= 80:'You have a great relationship with your brother.'
-*nl
-if hour >= 7 and hour < 21:
-	! WD: Fix old nude variable
-	if spdirtyn > 0 and $clothingworntype = 'nude':
-		if tanga = 0 and arrpos('sparrloc',1):
+	if npc_rel['A34'] < 20:'You and your brother argue all the time.'
+	if npc_rel['A34'] >= 20 and npc_rel['A34'] < 40:'You and your brother bicker sometimes.'
+	if npc_rel['A34'] >= 40 and npc_rel['A34'] < 60:'You and your brother have a normal relationship.'
+	if npc_rel['A34'] >= 60 and npc_rel['A34'] < 80:'You have a good relationship with your brother.'
+	if npc_rel['A34'] >= 80:'You have a great relationship with your brother.'
+	*nl
+	if hour >= 7 and hour < 21:
+		! WD: Fix old nude variable
+		if spdirtyn > 0 and $clothingworntype = 'nude':
+			if tanga = 0 and arrpos('sparrloc',1):
+				if brotherknowslut < 1: brotherknowslut = 1
+				'"Go wash yourself, you''ve got something on your pussy."'
+				if brotherSex = 0:
+					npc_rel['A34'] -= 1
+					act 'Move away':gt $loc, $metka
+					exit
+				end
+			elseif tanga = 0 and arrpos('sparrloc',4):
+				if brotherknowslut < 1: brotherknowslut = 1
+				'"Go wash yourself, you''ve got something on your butt."'
+				if brotherSex = 0:
+					npc_rel['A34'] -= 1
+					act 'Move away':gt $loc, $metka
+					exit
+				end
+			else
+				if brotherknowslut < 1: brotherknowslut = 1
+				'"Go wash yourself, you''re covered in cum and it''s disgusting."'
+				if brotherSex = 0:
+					npc_rel['A34'] -= 1
+					act 'Move away':gt $loc, $metka
+					exit
+				end
+			end
+		end
+		if spdirtyv = 1 and evgenQW <= 3:
 			if brotherknowslut < 1: brotherknowslut = 1
-			'"Go wash yourself, you''ve got something on your pussy."'
+			if arrpos('sparrloc',11) ! -1:
+				'"Is that cum on your face? That''s disgusting! Wash it off."'
+			else
+				'"Is that cum? That''s disgusting! Wash it off."'
+			end
 			if brotherSex = 0:
 				npc_rel['A34'] -= 1
 				act 'Move away':gt $loc, $metka
 				exit
 			end
-		elseif tanga = 0 and arrpos('sparrloc',4):
-			if brotherknowslut < 1: brotherknowslut = 1
-			'"Go wash yourself, you''ve got something on your butt."'
-			if brotherSex = 0:
-				npc_rel['A34'] -= 1
-				act 'Move away':gt $loc, $metka
-				exit
+		end
+
+		! WD: Fix old nude variable
+		if spdirtyc > 0 and $clothingworntype ! 'nude':
+			'"Your clothes are dirty. Wash them, or at least get mum to do it."'
+		end
+		if spanked > 1 and $clothingworntype = 'nude' and tanga = 0:
+			'"Got a sore bum? Did someone punish you? You bad girl."'
+		end
+		!The reaction to the pregnancy
+		if $clothingworntype = 'nude' and pregTalkbrother = 0 and pregchem > 2000:
+			'Surprised, your brother looks at your tummy. "<<$pcs_nickname>>, are you pregnant? '
+			pregTalkbrother = 1
+		end
+
+			if $clothingworntype ! 'nude' and pregTalkbrother = 0 and pregchem > 3460:
+			'Surprised, your brother looks at your tummy, "<<$pcs_nickname>>, why didn''t you tell me I''m going to be an uncle? '
+			pregTalkbrother = 1
+		end
+
+		if $clothingworntype = 'nude' and towel = 1 and tanga = 0:
+			if brotherSex < 1:
+				'Your brother sarcastically comments on the small towel you are wearing:'
+				'<<$pcs_nickname>>, Are you sure that is not a hand towel?'
+			elseif brotherSex >= 1:
+				'Your brother sarcastically comments on the small towel you are wearing:'
+				'Sister, are you wearing that for me?'
 			end
-		else
-			if brotherknowslut < 1: brotherknowslut = 1
-			'"Go wash yourself, you''re covered in cum and it''s disgusting."'
-			if brotherSex = 0:
-				npc_rel['A34'] -= 1
-				act 'Move away':gt $loc, $metka
-				exit
+		elseif $clothingworntype = 'nude' and pcs_pubes > 2 and tanga = 0:
+			'"You should have shaved," your brother comments, "it looks like you''re growing a forest."'
+		elseif $clothingworntype = 'nude':
+			if brotherSex >= 1:
+				'"<<$pcs_nickname>>, you have an amazing body"'
+			else
+				'"What a view! Have you decided to be a nudist?"'
+				npc_rel['A34'] += 1
 			end
 		end
 	end
-	if spdirtyv = 1 and evgenQW <= 3:
-		if brotherknowslut < 1: brotherknowslut = 1
-		if arrpos('sparrloc',11) ! -1:
-			'"Is that cum on your face? That''s disgusting! Wash it off."'
-		else
-			'"Is that cum? That''s disgusting! Wash it off."'
-		end
-		if brotherSex = 0:
-			npc_rel['A34'] -= 1
+
+	if $loc = 'gschool_grounds':
+		if npc_rel['A34'] < 40:
+			'Your brother frowns "I come here to get away from you!"'
+
 			act 'Move away':gt $loc, $metka
 			exit
-		end
-	end
-
-	! WD: Fix old nude variable
-	if spdirtyc > 0 and $clothingworntype ! 'nude':
-		'"Your clothes are dirty. Wash them, or at least get mum to do it."'
-	end
-	if spanked > 1 and $clothingworntype = 'nude' and tanga = 0:
-		'"Got a sore bum? Did someone punish you? You bad girl."'
-	end
-	!The reaction to the pregnancy
-	if $clothingworntype = 'nude' and pregTalkbrother = 0 and pregchem > 2000:
-		'Surprised, your brother looks at your tummy. "<<$pcs_nickname>>, are you pregnant? '
-		pregTalkbrother = 1
-	end
-
-		if $clothingworntype ! 'nude' and pregTalkbrother = 0 and pregchem > 3460:
-		'Surprised, your brother looks at your tummy, "<<$pcs_nickname>>, why didn''t you tell me I''m going to be an uncle? '
-		pregTalkbrother = 1
-	end
-
-	if $clothingworntype = 'nude' and towel = 1 and tanga = 0:
-		if brotherSex < 1:
-			'Your brother sarcastically comments on the small towel you are wearing:'
-			'<<$pcs_nickname>>, Are you sure that is not a hand towel?'
-		elseif brotherSex >= 1:
-			'Your brother sarcastically comments on the small towel you are wearing:'
-			'Sister, are you wearing that for me?'
-		end
-	elseif $clothingworntype = 'nude' and pcs_pubes > 2 and tanga = 0:
-		'"You should have shaved," your brother comments, "it looks like you''re growing a forest."'
-	elseif $clothingworntype = 'nude':
-		if brotherSex >= 1:
-			'"<<$pcs_nickname>>, you have an amazing body"'
 		else
-			'"What a view! Have you decided to be a nudist?"'
-			npc_rel['A34'] += 1
-		end
-	end
-end
+			! WD: Unused Var 'BJBeerQW' use 'GorSlut'
+			if evgenQW >= 4 and GorSlut >= 3:
+				'Your brother grins "Hello, Sis. Why play football, when you can go with us to watch porn?"'
 
-if $loc = 'gschool_grounds':
-	if npc_rel['A34'] < 40:
-		'Your brother frowns "I come here to get away from you!"'
+				act 'Go watch porn':minut += 5 & gt 'seeporn'
+			elseif evgenQW >= 4:
+				'The guys gather together and tell you "We just finished playing soccer, Let''s go watch porn."'
 
-		act 'Move away':gt $loc, $metka
-		exit
-	else
-		! WD: Unused Var 'BJBeerQW' use 'GorSlut'
-		if evgenQW >= 4 and GorSlut >= 3:
-			'Your brother grins "Hello, Sis. Why play football, when you can go with us to watch porn?"'
+				act 'Go watch porn':minut += 5 & gt 'seeporn'
+			elseif evgenQW < 4:
+				'Your brother grins "Hi <<$pcs_nickname>>. Fancy a game of football?"'
+				if $clothingworntype ! 'exercise':
+					'"Oh, you can''t play dressed like that, put on some sportswear first, or you can watch us."'
+				else
+					'"Or you could just watch us."'
+					act 'Play football':
+						cls
+						minut += 60
+						npc_rel['A34'] += 5
+						agil_exp += rand(0, 2)
+						speed += rand(0, 2)
+						pcs_sweat += 30
+						run_exp += rand(0, 2)
+						fat -= rand(2, 7)
+						gs 'stat'
+						'You spend an hour running around chasing the ball across the field with your brother and his friends Beshin and Zhendos.'
 
-			act 'Go watch porn':minut += 5 & gt 'seeporn'
-		elseif evgenQW >= 4:
-			'The guys gather together and tell you "We just finished playing soccer, Let''s go watch porn."'
+						if rand(0, 1) = 0 and seepornofut = 0:
+							'The boys are whispering something to each other.'
+							act 'What you are talking about?':
+								cls
+								gs 'stat'
+								'The boys hesitate, "Err.. nothing".'
 
-			act 'Go watch porn':minut += 5 & gt 'seeporn'
-		elseif evgenQW < 4:
-			'Your brother grins "Hi <<$pcs_nickname>>. Fancy a game of football?"'
-			if $clothingworntype ! 'exercise':
-				'"Oh, you can''t play dressed like that, put on some sportswear first, or you can watch us."'
-			else
-				'"Or you could just watch us."'
-				act 'Play football':
+								if pcs_dom > 0:
+									'You press them on it, "What are you? A bunch of girls whispering about which boy you want to kiss?." One of the boys immediately spits out "No, we want to go look at porn, but didn''t think a girl like you could handle it."'
+									act 'Move away':gt $loc, $metka
+									act 'Prove them wrong':
+										cls
+										gs 'stat'
+										'You tell them, if they''re going to look porn, they''ll need a babysitter. The guys aren''t pleased, but you don''t give them a choice.'
+										'They have found spare key for an AV lounge at the school that is not used in the evenings and you all sneak in.'
+
+										act 'Go watch porn':minut += 5 & gt 'seeporn'
+									end
+
+								elseif npc_QW['A34'] >=3:
+									'Kolka hesitates for a moment then looks at you funny. "Actually <<$pcs_nickname>>, we want to go look at porn, but, you know what, I think a girl like you could handle it."'
+									act 'Move away':gt $loc, $metka
+									act 'Show interest':
+										cls
+										gs 'stat'
+										'You tell them that you are curious. The guys aren''t pleased, but Kolka persuades them.'
+										'They have found spare key for an AV lounge at the school that is not used in the evenings and you all sneak in.'
+
+										act 'Go watch porn':minut += 5 & gt 'seeporn'
+
+									end
+								else
+									act 'Move away':gt $loc, $metka
+
+								end
+							end
+						end
+						if seepornofut >= 1:
+							'The guys gather together and ask you, "<<$pcs_nickname>>, want to watch some porn?"'
+
+							act 'Go watch porn':minut += 5 & gt 'seeporn'
+						end
+
+						act 'Move away':gt $loc, $metka
+					end
+				end
+				act'Watch as they play':
 					cls
+					picrand = RAND(1,2)
 					minut += 60
 					npc_rel['A34'] += 5
-					agil_exp += rand(0, 2)
-					speed += rand(0, 2)
-					pcs_sweat += 30
-					run_exp += rand(0, 2)
-					fat -= rand(2, 7)
-					gs 'stat'
-					'You spend an hour running around chasing the ball across the field with your brother and his friends Beshin and Zhendos.'
-
+						'<center><b><font color = maroon>School - football field</font></b></center>'
+					if month=1 or month=2 or month=12:
+						'<center><img src="images/qwest/alter/ev2/football4.jpg"></center>'
+					else
+						'<center><img src="images/qwest/alter/ev2/football<<picrand>>.jpg"></center>'
+					end
+					'You spend an hour sitting on the bench, watching the guys play football.'
 					if rand(0, 1) = 0 and seepornofut = 0:
 						'The boys are whispering something to each other.'
 						act 'What you are talking about?':
@@ -167,7 +225,6 @@ if $loc = 'gschool_grounds':
 									cls
 									gs 'stat'
 									'You tell them, if they''re going to look porn, they''ll need a babysitter. The guys aren''t pleased, but you don''t give them a choice.'
-									'They have found spare key for an AV lounge at the school that is not used in the evenings and you all sneak in.'
 
 									act 'Go watch porn':minut += 5 & gt 'seeporn'
 								end
@@ -179,7 +236,6 @@ if $loc = 'gschool_grounds':
 									cls
 									gs 'stat'
 									'You tell them that you are curious. The guys aren''t pleased, but Kolka persuades them.'
-									'They have found spare key for an AV lounge at the school that is not used in the evenings and you all sneak in.'
 
 									act 'Go watch porn':minut += 5 & gt 'seeporn'
 
@@ -190,8 +246,9 @@ if $loc = 'gschool_grounds':
 							end
 						end
 					end
+
 					if seepornofut >= 1:
-						'The guys gather together and ask you, "<<$pcs_nickname>>, want to watch some porn?"'
+						'The guys gather together and ask you "<<$pcs_nickname>>, want to watch some porn?"'
 
 						act 'Go watch porn':minut += 5 & gt 'seeporn'
 					end
@@ -199,647 +256,593 @@ if $loc = 'gschool_grounds':
 					act 'Move away':gt $loc, $metka
 				end
 			end
-			act'Watch as they play':
+		end
+	end
+
+	if $loc = 'sitrPar':
+
+		gs 'brother', 'brotherSexCount'
+
+		if indorf = 0 and $clothingworntype ! 'nude' and brothersawpirsF=0 and father_go = 1 and npc_rel['A34'] > 85 and hour >= 18 and hour < 21 and pirsF > 0:
+			act 'Show off your nipple piercings':
 				cls
-				picrand = RAND(1,2)
-				minut += 60
-				npc_rel['A34'] += 5
-					'<center><b><font color = maroon>School - football field</font></b></center>'
-				if month=1 or month=2 or month=12:
-					'<center><img src="images/qwest/alter/ev2/football4.jpg"></center>'
+				gs 'stat'
+				minut+=1
+				pcs_horny += 3
+				brothersawpirsF=1
+				npc_rel['A34'] += 3
+				'<center><img src="images/qwest/alter/placer/9vh2v.jpg" ></center>'
+				'"Look what I have," you walk up to Kolka, your chest bare, showing off your nipple pircings, "Don''t be shy, you can touch them."'
+				'Your brother, dumbfounded by your suggestion, hesitantly touches the piercing in one of your nipples, causing you to moan gently.'
+				if  brotherSex = 0:
+					'He abruptly withdraws his hand and apologizes for his rudeness. You have no choice, but to apologise, that wasn''t fair. You cover your chest.'
 				else
-					'<center><img src="images/qwest/alter/ev2/football<<picrand>>.jpg"></center>'
+					'Seeing the pleasure playing with your nipples brings you, he begins to play harder with your piercings, sometimes squeezing your exposed Breasts.
+					After playing for a while, he lets go of your breasts, and says, "I really like your new additions."'
 				end
-				'You spend an hour sitting on the bench, watching the guys play football.'
-				if rand(0, 1) = 0 and seepornofut = 0:
-					'The boys are whispering something to each other.'
-					act 'What you are talking about?':
-						cls
-						gs 'stat'
-						'The boys hesitate, "Err.. nothing".'
-
-						if pcs_dom > 0:
-							'You press them on it, "What are you? A bunch of girls whispering about which boy you want to kiss?." One of the boys immediately spits out "No, we want to go look at porn, but didn''t think a girl like you could handle it."'
-							act 'Move away':gt $loc, $metka
-							act 'Prove them wrong':
-								cls
-								gs 'stat'
-								'You tell them, if they''re going to look porn, they''ll need a babysitter. The guys aren''t pleased, but you don''t give them a choice.'
-
-								act 'Go watch porn':minut += 5 & gt 'seeporn'
-							end
-
-						elseif npc_QW['A34'] >=3:
-							'Kolka hesitates for a moment then looks at you funny. "Actually <<$pcs_nickname>>, we want to go look at porn, but, you know what, I think a girl like you could handle it."'
-							act 'Move away':gt $loc, $metka
-							act 'Show interest':
-								cls
-								gs 'stat'
-								'You tell them that you are curious. The guys aren''t pleased, but Kolka persuades them.'
-
-								act 'Go watch porn':minut += 5 & gt 'seeporn'
-
-							end
-						else
-							act 'Move away':gt $loc, $metka
-
-						end
-					end
-				end
-
-				if seepornofut >= 1:
-					'The guys gather together and ask you "<<$pcs_nickname>>, want to watch some porn?"'
-
-					act 'Go watch porn':minut += 5 & gt 'seeporn'
-				end
-
-				act 'Move away':gt $loc, $metka
+				pcs_horny += 10
+				act '<B>Move away</B>':gt 'sitrPar'
+				exit
 			end
 		end
-	end
-end
 
-! WD: Fix old nude variable
-if $loc = 'sitrPar':
 
-	dynamic $brotherSexCount
-
-	if indorf = 0 and $clothingworntype ! 'nude' and brothersawpirsF=0 and father_go = 1 and npc_rel['A34'] > 85 and hour >= 18 and hour < 21 and pirsF > 0:
-		act 'Show off your nipple piercings':
-			cls
-			gs 'stat'
-			minut+=1
-			pcs_horny += 3
-			brothersawpirsF=1
-			npc_rel['A34'] += 3
-			'<center><img src="images/qwest/alter/placer/9vh2v.jpg" ></center>'
-			'"Look what I have," you walk up to Kolka, your chest bare, showing off your nipple pircings, "Don''t be shy, you can touch them."'
-			'Your brother, dumbfounded by your suggestion, hesitantly touches the piercing in one of your nipples, causing you to moan gently.'
+		if indorf = 0 and $clothingworntype = 'nude' and pirsF>0 and brothersawpirsF =0:
 			if  brotherSex = 0:
-				'He abruptly withdraws his hand and apologizes for his rudeness. You have no choice, but to apologise, that wasn''t fair. You cover your chest.'
+				if npc_rel['A34'] >=70:
+					'"Looks good on you." your brother winks, and points toward your pierced nipples.'
+					npc_rel['A34'] += 1
+					brothersawpirsF=1
+					act '<B>Move away</B>':gt 'sitrPar'
+					exit
+				else
+					'"I don''t get it, why would you do that to yourself?" Kolka says noticing your pierced nipples.'
+					brothersawpirsF=1
+					act '<B>Move away</B>':gt 'sitrPar'
+					exit
+				end
 			else
-				'Seeing the pleasure playing with your nipples brings you, he begins to play harder with your piercings, sometimes squeezing your exposed Breasts.
-				After playing for a while, he lets go of your breasts, and says, "I really like your new additions."'
-			end
-			pcs_horny += 10
-			act '<B>Move away</B>':gt 'sitrPar'
-			exit
-		end
-	end
-
-
-! if $loc = 'sitrPar' and indorf = 0 and nude=1 and pirsF>0 and brothersawpirsF =0:
-	if indorf = 0 and $clothingworntype = 'nude' and pirsF>0 and brothersawpirsF =0:
-		if  brotherSex = 0:
-			if npc_rel['A34'] >=70:
-				'"Looks good on you." your brother winks, and points toward your pierced nipples.'
-				npc_rel['A34'] += 1
-				brothersawpirsF=1
-				act '<B>Move away</B>':gt 'sitrPar'
-				exit
-			else
-				'"I don''t get it, why would you do that to yourself?" Kolka says noticing your pierced nipples.'
-				brothersawpirsF=1
-				act '<B>Move away</B>':gt 'sitrPar'
-				exit
-			end
-		else
-			if father_go = 1 and hour >= 18 and hour < 21:
-				'"How lovely." Kolka plays with your pierced nipples'
-				npc_rel['A34'] += 3
-				brothersawpirsF=1
-				pcs_horny += 10
-				act '<B>Move away</B>':gt 'sitrPar'
-				exit
-			elseif father_go = 0 and hour >= 18 and hour < 21:
-				'"Beautiful." Kolka gently cups your breasts and strokes your pierced nipples.'
-				npc_rel['A34'] += 3
-				brothersawpirsF=1
-				pcs_horny += 10
-				act '<B>Move away</B>':gt 'sitrPar'
-				exit
-			end
-		end
-	end
-
-
-	if indorf = 0 and brotherSexCount > 0 and brotherDay = daystart:
-		brotherRand = rand(0,10)
-		if hour >= 5 and hour < 7 and brotherSex > 0 and brotherMorningSex ! daystart and brotherRand < 2:
-			'Going up to your sleeping brother, you see he''s pitching a tent.'
-			if pcs_horny >= 90 and brothersex > 6:
-				act 'Mount him':
-					if brotherSex > 10: brotherSex = 10
-					cls
-					minut += 5
+				if father_go = 1 and hour >= 18 and hour < 21:
+					'"How lovely." Kolka plays with your pierced nipples'
+					npc_rel['A34'] += 3
+					brothersawpirsF=1
 					pcs_horny += 10
-					gs 'boyStat', 34
-					pose = 0
+					act '<B>Move away</B>':gt 'sitrPar'
+					exit
+				elseif father_go = 0 and hour >= 18 and hour < 21:
+					'"Beautiful." Kolka gently cups your breasts and strokes your pierced nipples.'
+					npc_rel['A34'] += 3
+					brothersawpirsF=1
+					pcs_horny += 10
+					act '<B>Move away</B>':gt 'sitrPar'
+					exit
+				end
+			end
+		end
 
-					gs 'stat'
 
-					'<center><img src="images/img/sex/nae22.jpg"></center>'
-					'Approaching your brother, you gently pull back the covers and carefully straddle his sleeping body, taking care not to wake him.'
-					if pcs_sleep <= 50 and rand(0,4) =0:
+		if indorf = 0 and brotherSexCount > 0 and brotherDay = daystart:
+			brotherRand = rand(0,10)
+			if hour >= 5 and hour < 7 and brotherSex > 0 and brotherMorningSex ! daystart and brotherRand < 2:
+				'Going up to your sleeping brother, you see he''s pitching a tent.'
+				if pcs_horny >= 90 and brothersex > 6:
+					act 'Mount him':
+						if brotherSex > 10: brotherSex = 10
+						cls
+						minut += 5
+						pcs_horny += 10
+						gs 'boyStat', 34
+						pose = 0
 
+						gs 'stat'
+
+						'<center><img src="images/img/sex/nae22.jpg"></center>'
+						'Approaching your brother, you gently pull back the covers and carefully straddle his sleeping body, taking care not to wake him.'
+						if pcs_sleep <= 50 and rand(0,4) =0:
+
+							$risk_boy = 'your own brother'
+							dynamic $sexstart3
+							dynamic $sleepsexcum
+							dynamic $brothersleepSexEnd
+						else
+							protect = 0
+							vidageday -= 1
+
+							if prezik > 0:
+								dynamic $prezik
+								protect = 1
+								if preziktype = 2:
+									sexcontra = 7
+									'You take a sabotaged condom and put it on <<$boydesc>>.'
+								else
+									sexcontra = 3
+									'You take a condom and put it on <<$boydesc>>.'
+								end
+
+							end
 						$risk_boy = 'your own brother'
 						dynamic $sexstart3
 						dynamic $sleepsexcum
 						dynamic $brothersleepSexEnd
-					else
-						protect = 0
-						vidageday -= 1
-
-						if prezik > 0:
-							dynamic $prezik
-							protect = 1
-							if preziktype = 2:
-								sexcontra = 7
-								'You take a sabotaged condom and put it on <<$boydesc>>.'
-							else
-								sexcontra = 3
-								'You take a condom and put it on <<$boydesc>>.'
-							end
-
 						end
-					$risk_boy = 'your own brother'
-					dynamic $sexstart3
-					dynamic $sleepsexcum
-					dynamic $brothersleepSexEnd
+					end
+				else
+					act 'Solve your brother''s morning problem':
+						cls
+						minut += 5
+						pcs_horny += 10
+						stat['bj'] += 1
+						gs 'boyStat', 34
+						spafinloc = 12
+						sexpartkno = 1
+						gs 'cum_manage'
+						swallow += 1
+						brotherSex += 1
+						brotherSexCount -= 1
+						brotherMorningSex = daystart
+						gs 'stat'
+
+						'<center><img src="images/qwest/alexey/bj6.jpg"></center>'
+						'Approaching your brother, you gently pull back the covers and begin to suck his <<dick>> cm dick. After a few minutes, he moans softly in his sleep and his cock twitches.'
+						'Your mouth quickly fills with warm sperm and you feel its sharp taste.'
+						'Swallowing the semen, you gently replace the blanket and, seeing a slight smile on your sleeping brother, you leave.'
+
+						act '<B>Move away</B>':gt 'sitrPar'
+						exit
 					end
 				end
+			end
+
+			if hour >= 21 and hour < 24 and brotherSex > 0 and brotherNightSex ! daystart:
+				'When you get close, he suddenly opens his eyes and says,:'
+				! WD: Unused Var 'BJBeerQW' use 'GorSlut'
+				if sub > 0 or (evgenQW >= 4 and GorSlut >= 3):
+					'"<<$pcs_nickname>>, help me sleep." Then he throws back the blanket, revealing his erection.'
+					gs 'boyStat', 34
+					brotherSexCount -= 1
+					brotherNightSex = daystart
+
+					dynamic $brotherSexStart
+				else
+					'"Sis, I didn''t get any sleep, can you help?" He points to the mound under his blanket.'
+					cla
+					act 'Help him':
+						gs 'boyStat', 34
+						'"Yes, I know what to do" Then he pulls back the blanket and reveals his erection.'
+						brotherSexCount -= 1
+						brotherNightSex = daystart
+
+						dynamic $brotherSexStart
+					end
+					act 'He''s on his own there':
+						'"You''ve got 2 perfectly good hands, I mean eww...", You turn around and leave.'
+						cla
+						act '<B>Move away</B>':gt 'sitrPar'
+						exit
+					end
+				end
+			end
+
+			if father_go = 1 and hour >= 18 and hour < 21 and brotherSex > 0 and brotherEvSex ! daystart:
+				'When you get close, He turns to you and says,:'
+				! WD: Unused Var 'BJBeerQW' use 'GorSlut'
+				if sub > 0 or (evgenQW >= 4 and GorSlut >= 3):
+					gs 'boyStat', 34
+					'"<<$pcs_nickname>>, Come on you have work to do, and quitely, you don''t want to wake our parents up." Then he drops his pants, and you see his hard <<dick>> cm dick.'
+					brotherSexCount -= 1
+					brotherEvSex = daystart
+
+					dynamic $brotherSexStart
+				else
+					'"Sis, I''ve got a problem, can you help me solve it?" Then he looks points at the hump in his pants.'
+					cla
+					act 'Help him':
+						gs 'boyStat', 34
+						'"I know, what will solve this problem, quietly now, take off your pants." With those words Kolka smiles and takes off his pants, exposing his erect <<dick>> cm dick.'
+						brotherSexCount -= 1
+						brotherEvSex = daystart
+
+						dynamic $brotherSexStart
+					end
+					act 'That is so his problem':
+						'"Dearest brother they sell porn in the shop, I''m sure you''ll work out the rest" You leave.'
+						cla
+						act '<B>Move away</B>':gt 'sitrPar'
+						exit
+					end
+				end
+			end
+		end
+	end
+
+	$sleepsexcum = {
+
+		if protect ! 1:
+			!!Unprotected sex
+
+			if rand(0, 100) > pcs_horny:
+				!!Inside
+				sexpartkno = 1
+				gs 'cum_manage'
+				'<<$boydesc>> groans and you feel a jet of sperm fill your pussy.'
+				pcs_mood -= 15
+				pcs_willpwr -= 15
+
+				gs 'cuminsidereact', 'your own brother'
 			else
-				act 'Solve your brother''s morning problem':
+				!!Out
+
+				if pose = 0:
+					if rand(0,1) = 0:
+						spafinloc = 14
+						'<<$boydesc>> groans and you quickly pull yourself off of his dick. His hot sperm squirts on your stomach.'
+					else
+						spafinloc = 1
+						'<<$boydesc>> groans and you quickly pull yourself off of his dick. His hot sperm squirts on your exposed pussy.'
+					end
+					sexpartkno = 1
+					gs 'cum_manage'
+				elseif pose = 1:
+					if rand(0,1) = 0:
+						spafinloc = 8
+						'<<$boydesc>> groans and you quickly pull yourself off of his dick. His hot sperm squirts on your back.'
+					else
+						spafinloc = 4
+						'<<$boydesc>> groans and you quickly pull yourself off of his dick. His hot sperm squirts on your ass.'
+					end
+					sexpartkno = 1
+					gs 'cum_manage'
+				end
+			end
+		elseif protect = 1:
+			protect = 0
+
+			if rand(0, 89) = 0:sexcontra = 4
+			sexpartkno = 1
+			gs 'cum_manage'
+			if sexcontra = 4:
+				'You pull off of <<$boydesc>> and look at his dick. and think "Oh shit! The condom burst."'
+			elseif sexcontra = 5:
+				'You pull off of <<$boydesc>> and look at his dick. and think "Oh shit! The condom is missing!"'
+			else
+				'<<$boydesc>> groans and you realize that he came in the condom.'
+			end
+			gs 'cuminsidereact', 'your own brother'
+		end
+
+		pose = 0
+		if sexcontra > 0: sexcontra = 0
+	}
+
+	$brothersleepSexEnd = {
+		brotherSex += 1
+		minut += 15
+
+		gs 'stat'
+
+		'You catch your breath then carefully climb off your still sleeping, though smiling, brother. You gently replace the blanket and quietly step away.'
+		act 'Leave':gt $loc
+	}
+
+	$brother_showbody = {
+		cla
+		if npc_QW['A34'] = 3:
+			cls
+			cla
+			minut += RAND(3,5)
+			gs'stat'
+			'<center><b><font color = maroon>Kolka</font></b></center>'
+			'<center><img src="images/qwest/alter/ev2/brother/homework1.jpg"></center>'
+			'After you both finish studying, Kolka goes red with excitement and asks:'
+			'"<<$pcs_nickname>>, I have to learn about human anatomy, but I am having trouble with it. Can you help me?'
+			'"What do you mean?" You ask, a little confused.'
+			'"Well, um..." Kolka hesitated, "Can you show me what girls look like...'
+			if sub < 30:
+				act'No way':
+					cla
+					'"How the fuck can I do that? Should I just take my clothes off in front of you and let you gawk at me? I''m your sister!"'
+					'"Yes, you are right. I''m sorry..." Kolka responded in embarrassment.'
+					act 'Finish':gt $loc
+				end
+			end
+			if sub < 30: act'Takeout':gt $CURLOC
+
+			act'Huh...':
+				cla
+				npc_QW['A34'] = 4
+				'You briefly reflect on your brother''s request and reply, "How would you want me to do that? Should I just take my clothes off in front of you and let you gawk at me!?"'
+				'"Well... That would help but you could also explain each part." He adds.'
+				'You sigh and shake your head, "Surely your text books have pictures"'
+				'"There are pictures, but everything is so badly written, and the teacher skipped the lesson, saying "You already know everything." He explains with flushed face.'
+				'"Okay, I will help you, but only if you don''t tell anyone. Agreed? I''m serious, not a single person!" You say in a strict tone.'
+				'"<<$pcs_nickname>>, I promise not a word to anyone!"'
+				'After his promise you consider what to do.'
+				act'Undress':gt'brother','brother_voyeur_ev4'
+			end
+			exit
+		elseif npc_QW['A34'] > 3:
+			if sub < 30: act'Takeout':gt $CURLOC
+			act'Undress':gt'brother','brother_voyeur_ev4'
+			exit
+		else
+			if sub < 30: act'Takeout':gt $CURLOC
+			act'Undress':gt'brother','brother_voyeur_ev4'
+			exit
+		act 'Finish':gt $loc
+		end
+	}
+
+	$brother_homework = {
+		cls
+		gs'stat'
+		brother_homework = daystart
+		npc_rel['A34'] += 1
+		minut += RAND(50,70)
+		ivrand = RAND(1,2)
+		'<center><b><font color = maroon>Kolka</font></b></center>'
+		'<center><img src="images/qwest/alter/ev2/brother/homework1.jpg"></center>'
+		'You help your brother with his homework for an hour.'
+		if npc_QW['A34'] >= 2 and npc_rel['A34'] >= 60 and ivrand = 1:
+			cls
+			gs'stat'
+			'<center><b><font color = maroon>Kolka</font></b></center>'
+			'<center><img src="images/qwest/alter/ev2/brother/homework_touch.gif" width="1000" height="422"></center>'
+			if npc_QW['A34'] = 2:
+				cla
+				pcs_horny += RAND(5,10)
+				'As you explain the material, Kolka suddenly began to slowly stroke your leg with his hand. You freeze in surprise, not knowing what to do.'
+				act'Ignore and continue':
+					cla
+					npc_QW['A34'] = 3
+					npc_rel['A34'] += 2
+					pcs_horny += RAND(5,10)
+					'You decide to continue to do homework, trying not to pay attention to Kolka''s hand on your leg. He realizes that you don''t mind so he continues to stroke higher up your leg.'
+					act 'Finish':gt $loc
+				end
+				act'Remove hand and continue':
+					cla
+					pcs_horny += RAND(1,5)
+					pcs_dom += 1
+					'You decide to remove his hand and continue to do homework. Kolka begins to blush and startS to try hard to solve the problems. While not looking you in the eye.'
+					act 'Finish':gt $loc
+				end
+				exit
+			elseif npc_QW['A34'] >= 3:
+				cla
+				pcs_horny += RAND(5,10)
+				'As soon as you begin to explain the material, Kolka begins again to stroke your leg his hand.'
+				act'Ignore and continue':
+					cla
+					npc_rel['A34'] += 2
+					pcs_horny += RAND(5,10)
+					'You continue to do the homework, trying hard not to pay attention to Kolka''s hand on your leg. Kolka knowing that you do not mind continues to have nice feel of your leg. You feel the warm rush of excitement.'
+					ivrand = RAND(1,3)
+					if brotherSex > 0 and father_go = 1 and ivrand = 1 and brotherEvSex ! daystart:
+						cla
+						'After you finish explaining the new material, Kolka goes red with excitement and asks:'
+						'"<<$pcs_nickname>>, Can you help me out here now?"'
+						dynamic $brotherSexStart
+						act 'Takeout':gt $loc
+					elseif ivrand = 2 and brotherEvSex ! daystart:
+						dynamic $brother_showbody
+						exit
+					elseif ivrand = 3 and brotherEvSex ! daystart:
+					end
+					act 'Finish':gt $loc
+				end
+				act'Remove hand and continue':
+					cls
+					cla
+					pcs_horny += RAND(1,5)
+					npc_rel['A34'] -= 5
+					'<center><b><font color = maroon>Kolka</font></b></center>'
+					'<center><img src="images/qwest/alter/ev2/brother/homework1.jpg"></center>'
+					'You whisper:'
+					'"Don''t, Our parents will see us." You remove his hand from your leg.'
+					'Kolka mutters something under his breath with grim resentment on his face.'
+					act 'Finish':gt $loc
+				end
+				exit
+			end
+		end
+		act 'Finish':gt $loc
+	}
+
+	$brother_homework[1] = {
+		cla
+		cls
+		gs'stat'
+		minut += 1
+		textrand = RAND(1,3)
+		if textrand = 1:$brother_textrand1 = '"Kolka, would you like help with your homework?"
+	"Yes, that would be good."'
+		if textrand = 2:$brother_textrand1 = '"Kolka, How are you going with your classes? Do you want help?"
+	"Yes, that would be good."'
+		if textrand = 3:$brother_textrand1 = '"Kolka, do you need help with your homework?"
+	"Yes, I need help."'
+		'<center><b><font color = maroon>Kolka</font></b></center>'
+		'<center><img src="images/qwest/alter/brother.jpg"></center>'
+		'Your brother Kolka is younger than you, he''s <<brotherAge>> years old. While you share the same mother, unlike you and your sister, Kolka''s dad is your stepfather. He is a student at the same school as you, and enjoys soccer.'
+		''
+		'<<$brother_textrand1>>'
+		act 'Further': dynamic $brother_homework
+	}
+
+	if (week = 6 and brother_homework = daystart - 1) or (week = 7 and brother_homework = daystart - 2): brother_homework = daystart
+	if $loc = 'sitrPar' and brotherAge < 18 and kanikuli = 0 and npc_rel['A34'] >= 40 and brother_homework ! daystart and hour >= 18 and hour < 20:
+		if RAND(1,3) = 1:
+			cla
+			cls
+			gs'stat'
+			'<center><b><font color = maroon>Kolka</font></b></center>'
+			'<center><img src="images/qwest/alter/brother.jpg"></center>'
+			'Your brother Kolka is younger than you, he''s <<brotherAge>> years old. While you share the same mother, unlike you and your sister, Kolka''s dad is your stepfather. He is a student at the same school as you, and enjoys soccer.'
+			''
+			'"<<$pcs_nickname>>, can you help me with my homework? I have a problem here I can''t solve."'
+			act'Certainly, I will help you':dynamic $brother_homework
+			act'Later, I am busy now.':
+				cla
+				'Sorry, I''m busy right now.'
+				act 'Leave':gt $loc
+			end
+		else
+			act'Offer help with homework': dynamic $brother_homework[1]
+		end
+	end
+
+	act 'Move away':gt $loc, $metka
+
+
+
+
+	act 'Move away':gt $loc, $metka
+end
+	$brotherSexStart = {
+		cla
+		gs 'boyStat', 34
+		if brotherSex = 0:brotherSex = 1 & guy += 1
+		act 'Jerk your brother':
+			cls
+			minut += 5
+			stat['hj'] += 1
+			gs 'stat'
+
+			'<center><img src="images/qwest/alter/artom/hj.jpg"></center>'
+			'You take his hard cock in your hand and begin to masturbate him. Finally your brother groans and you watch sperm erupt from his cock.'
+			spafinloc = 13
+			sexpartkno = 1
+			gs 'cum_manage'
+			dynamic $brotherSexEnd
+		end
+		if brotherSex > 4:
+			act 'Suck your brother':
+				cls
+				minut += 5
+				pcs_horny += 10
+				stat['bj'] += 1
+				gs 'stat'
+
+				'<center><img src="images/nigma/gor/ш0,<<rand(0,6)>>.gif"></center>'
+				'You sit down in front of your brother and move your face toward his cock.'
+
+				dynamic $dinrandbj
+
+				'Soon Kolka groans "<<$pcs_nickname>>, I''m cumming."'
+
+				act 'Suck on':
 					cls
 					minut += 5
 					pcs_horny += 10
-					stat['bj'] += 1
 					gs 'boyStat', 34
 					spafinloc = 12
 					sexpartkno = 1
 					gs 'cum_manage'
 					swallow += 1
-					brotherSex += 1
-					brotherSexCount -= 1
-					brotherMorningSex = daystart
 					gs 'stat'
 
-					'<center><img src="images/qwest/alexey/bj6.jpg"></center>'
-					'Approaching your brother, you gently pull back the covers and begin to suck his <<dick>> cm dick. After a few minutes, he moans softly in his sleep and his cock twitches.'
-					'Your mouth quickly fills with warm sperm and you feel its sharp taste.'
-					'Swallowing the semen, you gently replace the blanket and, seeing a slight smile on your sleeping brother, you leave.'
+					'<center><img src="images/nigma/gor/с0,<<rand(0,11)>>.gif"></center>'
 
-					act '<B>Move away</B>':gt 'sitrPar'
-					exit
+					dynamic $dinrandswallow
+
+					dynamic $brotherSexEnd
 				end
-			end
-		end
-
-		if hour >= 21 and hour < 24 and brotherSex > 0 and brotherNightSex ! daystart:
-			'When you get close, he suddenly opens his eyes and says,:'
-			! WD: Unused Var 'BJBeerQW' use 'GorSlut'
-			if sub > 0 or (evgenQW >= 4 and GorSlut >= 3):
-				'"<<$pcs_nickname>>, help me sleep." Then he throws back the blanket, revealing his erection.'
-				gs 'boyStat', 34
-				brotherSexCount -= 1
-				brotherNightSex = daystart
-
-				dynamic $brotherSexStart
-			else
-				'"Sis, I didn''t get any sleep, can you help?" He points to the mound under his blanket.'
-				cla
-				act 'Help him':
-					gs 'boyStat', 34
-					'"Yes, I know what to do" Then he pulls back the blanket and reveals his erection.'
-					brotherSexCount -= 1
-					brotherNightSex = daystart
-
-					dynamic $brotherSexStart
-				end
-				act 'He''s on his own there':
-					'"You''ve got 2 perfectly good hands, I mean eww...", You turn around and leave.'
-					cla
-					act '<B>Move away</B>':gt 'sitrPar'
-					exit
-				end
-			end
-		end
-
-		if father_go = 1 and hour >= 18 and hour < 21 and brotherSex > 0 and brotherEvSex ! daystart:
-			'When you get close, He turns to you and says,:'
-			! WD: Unused Var 'BJBeerQW' use 'GorSlut'
-			if sub > 0 or (evgenQW >= 4 and GorSlut >= 3):
-				gs 'boyStat', 34
-				'"<<$pcs_nickname>>, Come on you have work to do, and quitely, you don''t want to wake our parents up." Then he drops his pants, and you see his hard <<dick>> cm dick.'
-				brotherSexCount -= 1
-				brotherEvSex = daystart
-
-				dynamic $brotherSexStart
-			else
-				'"Sis, I''ve got a problem, can you help me solve it?" Then he looks points at the hump in his pants.'
-				cla
-				act 'Help him':
-					gs 'boyStat', 34
-					'"I know, what will solve this problem, quietly now, take off your pants." With those words Kolka smiles and takes off his pants, exposing his erect <<dick>> cm dick.'
-					brotherSexCount -= 1
-					brotherEvSex = daystart
-
-					dynamic $brotherSexStart
-				end
-				act 'That is so his problem':
-					'"Dearest brother they sell porn in the shop, I''m sure you''ll work out the rest" You leave.'
-					cla
-					act '<B>Move away</B>':gt 'sitrPar'
-					exit
-				end
-			end
-		end
-	end
-end
-
-$sleepsexcum = {
-
-	if protect ! 1:
-		!!Unprotected sex
-
-		if rand(0, 100) > pcs_horny:
-			!!Inside
-			sexpartkno = 1
-			gs 'cum_manage'
-			'<<$boydesc>> groans and you feel a jet of sperm fill your pussy.'
-			pcs_mood -= 15
-			pcs_willpwr -= 15
-
-			gs 'cuminsidereact', 'your own brother'
-		else
-			!!Out
-
-			if pose = 0:
-				if rand(0,1) = 0:
-					spafinloc = 14
-					'<<$boydesc>> groans and you quickly pull yourself off of his dick. His hot sperm squirts on your stomach.'
-				else
-					spafinloc = 1
-					'<<$boydesc>> groans and you quickly pull yourself off of his dick. His hot sperm squirts on your exposed pussy.'
-				end
-				sexpartkno = 1
-				gs 'cum_manage'
-			elseif pose = 1:
-				if rand(0,1) = 0:
-					spafinloc = 8
-					'<<$boydesc>> groans and you quickly pull yourself off of his dick. His hot sperm squirts on your back.'
-				else
-					spafinloc = 4
-					'<<$boydesc>> groans and you quickly pull yourself off of his dick. His hot sperm squirts on your ass.'
-				end
-				sexpartkno = 1
-				gs 'cum_manage'
-			end
-		end
-	elseif protect = 1:
-		protect = 0
-
-		if rand(0, 89) = 0:sexcontra = 4
-		sexpartkno = 1
-		gs 'cum_manage'
-		if sexcontra = 4:
-			'You pull off of <<$boydesc>> and look at his dick. and think "Oh shit! The condom burst."'
-		elseif sexcontra = 5:
-			'You pull off of <<$boydesc>> and look at his dick. and think "Oh shit! The condom is missing!"'
-		else
-			'<<$boydesc>> groans and you realize that he came in the condom.'
-		end
-		gs 'cuminsidereact', 'your own brother'
-	end
-
-	pose = 0
-	if sexcontra > 0: sexcontra = 0
-}
-
-$brothersleepSexEnd = {
-	brotherSex += 1
-	minut += 15
-
-	gs 'stat'
-
-	'You catch your breath then carefully climb off your still sleeping, though smiling, brother. You gently replace the blanket and quietly step away.'
-	act 'Leave':gt $loc
-}
-
-$brother_showbody = {
-	cla
-	if npc_QW['A34'] = 3:
-		cls
-		cla
-		minut += RAND(3,5)
-		gs'stat'
-		'<center><b><font color = maroon>Kolka</font></b></center>'
-		'<center><img src="images/qwest/alter/ev2/brother/homework1.jpg"></center>'
-		'After you both finish studying, Kolka goes red with excitement and asks:'
-		'"<<$pcs_nickname>>, I have to learn about human anatomy, but I am having trouble with it. Can you help me?'
-		'"What do you mean?" You ask, a little confused.'
-		'"Well, um..." Kolka hesitated, "Can you show me what girls look like...'
-		if sub < 30:
-			act'No way':
-				cla
-				'"How the fuck can I do that? Should I just take my clothes off in front of you and let you gawk at me? I''m your sister!"'
-				'"Yes, you are right. I''m sorry..." Kolka responded in embarrassment.'
-				act 'Finish':gt $loc
-			end
-		end
-		if sub < 30: act'Takeout':gt $CURLOC
-
-		act'Huh...':
-			cla
-			npc_QW['A34'] = 4
-			'You briefly reflect on your brother''s request and reply, "How would you want me to do that? Should I just take my clothes off in front of you and let you gawk at me!?"'
-			'"Well... That would help but you could also explain each part." He adds.'
-			'You sigh and shake your head, "Surely your text books have pictures"'
-			'"There are pictures, but everything is so badly written, and the teacher skipped the lesson, saying "You already know everything." He explains with flushed face.'
-			'"Okay, I will help you, but only if you don''t tell anyone. Agreed? I''m serious, not a single person!" You say in a strict tone.'
-			'"<<$pcs_nickname>>, I promise not a word to anyone!"'
-			'After his promise you consider what to do.'
-			act'Undress':gt'brother','brother_voyeur_ev4'
-		end
-		exit
-	elseif npc_QW['A34'] > 3:
-		if sub < 30: act'Takeout':gt $CURLOC
-		act'Undress':gt'brother','brother_voyeur_ev4'
-		exit
-	else
-		if sub < 30: act'Takeout':gt $CURLOC
-		act'Undress':gt'brother','brother_voyeur_ev4'
-		exit
-	act 'Finish':gt $loc
-	end
-}
-
-$brother_homework = {
-	cls
-	gs'stat'
-	brother_homework = daystart
-	npc_rel['A34'] += 1
-	minut += RAND(50,70)
-	ivrand = RAND(1,2)
-	'<center><b><font color = maroon>Kolka</font></b></center>'
-	'<center><img src="images/qwest/alter/ev2/brother/homework1.jpg"></center>'
-	'You help your brother with his homework for an hour.'
-	if npc_QW['A34'] >= 2 and npc_rel['A34'] >= 60 and ivrand = 1:
-		cls
-		gs'stat'
-		'<center><b><font color = maroon>Kolka</font></b></center>'
-		'<center><img src="images/qwest/alter/ev2/brother/homework_touch.gif" width="1000" height="422"></center>'
-		if npc_QW['A34'] = 2:
-			cla
-			pcs_horny += RAND(5,10)
-			'As you explain the material, Kolka suddenly began to slowly stroke your leg with his hand. You freeze in surprise, not knowing what to do.'
-			act'Ignore and continue':
-				cla
-				npc_QW['A34'] = 3
-				npc_rel['A34'] += 2
-				pcs_horny += RAND(5,10)
-				'You decide to continue to do homework, trying not to pay attention to Kolka''s hand on your leg. He realizes that you don''t mind so he continues to stroke higher up your leg.'
-				act 'Finish':gt $loc
-			end
-			act'Remove hand and continue':
-				cla
-				pcs_horny += RAND(1,5)
-				pcs_dom += 1
-				'You decide to remove his hand and continue to do homework. Kolka begins to blush and startS to try hard to solve the problems. While not looking you in the eye.'
-				act 'Finish':gt $loc
-			end
-			exit
-		elseif npc_QW['A34'] >= 3:
-			cla
-			pcs_horny += RAND(5,10)
-			'As soon as you begin to explain the material, Kolka begins again to stroke your leg his hand.'
-			act'Ignore and continue':
-				cla
-				npc_rel['A34'] += 2
-				pcs_horny += RAND(5,10)
-				'You continue to do the homework, trying hard not to pay attention to Kolka''s hand on your leg. Kolka knowing that you do not mind continues to have nice feel of your leg. You feel the warm rush of excitement.'
-				ivrand = RAND(1,3)
-				if brotherSex > 0 and father_go = 1 and ivrand = 1 and brotherEvSex ! daystart:
-					cla
-					'After you finish explaining the new material, Kolka goes red with excitement and asks:'
-					'"<<$pcs_nickname>>, Can you help me out here now?"'
-					dynamic $brotherSexStart
-					act 'Takeout':gt $loc
-				elseif ivrand = 2 and brotherEvSex ! daystart:
-					dynamic $brother_showbody
-					exit
-				elseif ivrand = 3 and brotherEvSex ! daystart:
-				end
-				act 'Finish':gt $loc
-			end
-			act'Remove hand and continue':
-				cls
-				cla
-				pcs_horny += RAND(1,5)
-				npc_rel['A34'] -= 5
-				'<center><b><font color = maroon>Kolka</font></b></center>'
-				'<center><img src="images/qwest/alter/ev2/brother/homework1.jpg"></center>'
-				'You whisper:'
-				'"Don''t, Our parents will see us." You remove his hand from your leg.'
-				'Kolka mutters something under his breath with grim resentment on his face.'
-				act 'Finish':gt $loc
-			end
-			exit
-		end
-	end
-	act 'Finish':gt $loc
-}
-
-$brother_homework[1] = {
-	cla
-	cls
-	gs'stat'
-	minut += 1
-	textrand = RAND(1,3)
-	if textrand = 1:$brother_textrand1 = '"Kolka, would you like help with your homework?"
-"Yes, that would be good."'
-	if textrand = 2:$brother_textrand1 = '"Kolka, How are you going with your classes? Do you want help?"
-"Yes, that would be good."'
-	if textrand = 3:$brother_textrand1 = '"Kolka, do you need help with your homework?"
-"Yes, I need help."'
-	'<center><b><font color = maroon>Kolka</font></b></center>'
-	'<center><img src="images/qwest/alter/brother.jpg"></center>'
-	'Your brother Kolka is younger than you, he''s <<brotherAge>> years old. While you share the same mother, unlike you and your sister, Kolka''s dad is your stepfather. He is a student at the same school as you, and enjoys soccer.'
-	''
-	'<<$brother_textrand1>>'
-	act 'Further': dynamic $brother_homework
-}
-
-if (week = 6 and brother_homework = daystart - 1) or (week = 7 and brother_homework = daystart - 2): brother_homework = daystart
-if $loc = 'sitrPar' and brotherAge < 18 and kanikuli = 0 and npc_rel['A34'] >= 40 and brother_homework ! daystart and hour >= 18 and hour < 20:
-	if RAND(1,3) = 1:
-		cla
-		cls
-		gs'stat'
-		'<center><b><font color = maroon>Kolka</font></b></center>'
-		'<center><img src="images/qwest/alter/brother.jpg"></center>'
-		'Your brother Kolka is younger than you, he''s <<brotherAge>> years old. While you share the same mother, unlike you and your sister, Kolka''s dad is your stepfather. He is a student at the same school as you, and enjoys soccer.'
-		''
-		'"<<$pcs_nickname>>, can you help me with my homework? I have a problem here I can''t solve."'
-		act'Certainly, I will help you':dynamic $brother_homework
-		act'Later, I am busy now.':
-			cla
-			'Sorry, I''m busy right now.'
-			act 'Leave':gt $loc
-		end
-	else
-		act'Offer help with homework': dynamic $brother_homework[1]
-	end
-end
-
-act 'Move away':gt $loc, $metka
-
-$brotherSexStart = {
-	cla
-	gs 'boyStat', 34
-	if brotherSex = 0:brotherSex = 1 & guy += 1
-	act 'Jerk your brother':
-		cls
-		minut += 5
-		stat['hj'] += 1
-		gs 'stat'
-
-		'<center><img src="images/qwest/alter/artom/hj.jpg"></center>'
-		'You take his hard cock in your hand and begin to masturbate him. Finally your brother groans and you watch sperm erupt from his cock.'
-		spafinloc = 13
-		sexpartkno = 1
-		gs 'cum_manage'
-		dynamic $brotherSexEnd
-	end
-	if brotherSex > 4:
-		act 'Suck your brother':
-			cls
-			minut += 5
-			pcs_horny += 10
-			stat['bj'] += 1
-			gs 'stat'
-
-			'<center><img src="images/nigma/gor/ш0,<<rand(0,6)>>.gif"></center>'
-			'You sit down in front of your brother and move your face toward his cock.'
-
-			dynamic $dinrandbj
-
-			'Soon Kolka groans "<<$pcs_nickname>>, I''m cumming."'
-
-			act 'Suck on':
-				cls
-				minut += 5
-				pcs_horny += 10
-				gs 'boyStat', 34
-				spafinloc = 12
-				sexpartkno = 1
-				gs 'cum_manage'
-				swallow += 1
-				gs 'stat'
-
-				'<center><img src="images/nigma/gor/с0,<<rand(0,11)>>.gif"></center>'
-
-				dynamic $dinrandswallow
-
-				dynamic $brotherSexEnd
-			end
-			act 'Remove from your mouth':
-				cls
-				minut += 5
-				pcs_horny += 10
-				gs 'boyStat', 34
-				spafinloc = 11
-				sexpartkno = 1
-				gs 'cum_manage'
-				facial += 1
-				gs 'stat'
-
-				'<center><img src="images/qwest/alter/ev/cocksuckerfacial.jpg"></center>'
-				'You take his dick out of your mouth and you feel a hot jet of sperm hit your face then a few more cover your face until finally your brother is spent and your face is covered in his cum.'
-
-				dynamic $brotherSexEnd
-			end
-			if brotherSex > 6:
-				act 'Give yourself to your brother':
-					if brotherSex > 10: brotherSex = 10
+				act 'Remove from your mouth':
 					cls
 					minut += 5
 					pcs_horny += 10
 					gs 'boyStat', 34
-
+					spafinloc = 11
+					sexpartkno = 1
+					gs 'cum_manage'
+					facial += 1
 					gs 'stat'
 
-					'<center><img src="images/nigma/gor/ш1,<<rand(0,11)>>.gif"></center>'
-					'You lie on the sofa and brother lies on top of you.'
-
-					$risk_boy = 'your own brother'
-					dynamic $sexstart
-					dynamic $sexstart2
-					dynamic $sexcum
+					'<center><img src="images/qwest/alter/ev/cocksuckerfacial.jpg"></center>'
+					'You take his dick out of your mouth and you feel a hot jet of sperm hit your face then a few more cover your face until finally your brother is spent and your face is covered in his cum.'
 
 					dynamic $brotherSexEnd
 				end
-			end
-			if brotherSex >= 10:
-				act 'Offer your ass to your brother':
-					cls
-					minut += 5
-					pcs_horny += 10
-					gs 'boyStat', 34
+				if brotherSex > 6:
+					act 'Give yourself to your brother':
+						if brotherSex > 10: brotherSex = 10
+						cls
+						minut += 5
+						pcs_horny += 10
+						gs 'boyStat', 34
 
-					gs 'stat'
+						gs 'stat'
 
-					!Pictures already in folder - Gifs should be added.
-					'<center><img src="images/nigma/gor/ш3,<<rand(0,4)>>.gif"></center>'
-					'You turn away from Kolka and give him an inviting look while you spread your butt. He doesn''t need more encouragement than that.'
+						'<center><img src="images/nigma/gor/ш1,<<rand(0,11)>>.gif"></center>'
+						'You lie on the sofa and brother lies on top of you.'
 
-					dynamic $analsex
+						$risk_boy = 'your own brother'
+						dynamic $sexstart
+						dynamic $sexstart2
+						dynamic $sexcum
 
-					dynamic $brotherSexEnd
+						dynamic $brotherSexEnd
+					end
+				end
+				if brotherSex >= 10:
+					act 'Offer your ass to your brother':
+						cls
+						minut += 5
+						pcs_horny += 10
+						gs 'boyStat', 34
+
+						gs 'stat'
+
+						!Pictures already in folder - Gifs should be added.
+						'<center><img src="images/nigma/gor/ш3,<<rand(0,4)>>.gif"></center>'
+						'You turn away from Kolka and give him an inviting look while you spread your butt. He doesn''t need more encouragement than that.'
+
+						dynamic $analsex
+
+						dynamic $brotherSexEnd
+					end
 				end
 			end
 		end
-	end
-	if brotherSex > 6:
-		act 'Give yourself to your brother':
-			if brotherSex > 10: brotherSex = 10
-			cls
-			minut += 5
-			pcs_horny += 10
-			gs 'boyStat', 34
+		if brotherSex > 6:
+			act 'Give yourself to your brother':
+				if brotherSex > 10: brotherSex = 10
+				cls
+				minut += 5
+				pcs_horny += 10
+				gs 'boyStat', 34
 
-			gs 'stat'
+				gs 'stat'
 
-			'<center><img src="images/nigma/gor/ш1,<<rand(0,11)>>.gif"></center>'
-			'You lie on the sofa and brother lies on top of you.'
+				'<center><img src="images/nigma/gor/ш1,<<rand(0,11)>>.gif"></center>'
+				'You lie on the sofa and brother lies on top of you.'
 
-			$risk_boy = 'your own brother'
-			dynamic $sexstart
-			dynamic $sexstart2
-			dynamic $sexcum
+				$risk_boy = 'your own brother'
+				dynamic $sexstart
+				dynamic $sexstart2
+				dynamic $sexcum
 
-			dynamic $brotherSexEnd
+				dynamic $brotherSexEnd
+			end
 		end
-	end
-	if brotherSex >= 10:
-		act 'Offer your ass to your brother':
-			cls
-			minut += 5
-			pcs_horny += 10
-			gs 'boyStat', 34
+		if brotherSex >= 10:
+			act 'Offer your ass to your brother':
+				cls
+				minut += 5
+				pcs_horny += 10
+				gs 'boyStat', 34
 
-			gs 'stat'
+				gs 'stat'
 
-			!Pictures already in folder - Gifs should be added.
-			'<center><img src="images/nigma/gor/ш3,<<rand(0,4)>>.gif"></center>'
-			'You turn away from Kolka and give him an inviting look while you spread your butt. He doesn''t need more encouragement than that.'
+				!Pictures already in folder - Gifs should be added.
+				'<center><img src="images/nigma/gor/ш3,<<rand(0,4)>>.gif"></center>'
+				'You turn away from Kolka and give him an inviting look while you spread your butt. He doesn''t need more encouragement than that.'
 
-			dynamic $analsex
+				dynamic $analsex
 
-			dynamic $brotherSexEnd
+				dynamic $brotherSexEnd
+			end
 		end
-	end
-}
+	}
 
 $brotherSexEnd = {
 	brotherSex += 1
@@ -883,7 +886,7 @@ $brotherSexEnd = {
 	end
 }
 
-$brotherSexCount = {
+if $ARGS[0] = 'brotherSexCount':
 	if brotherDay = daystart - 1 and brotherSexCount > 0:brotherSexCount = 5
 
 	if brotherMorningSex ! daystart:brotherMorningSex = daystart - 1
@@ -899,10 +902,7 @@ $brotherSexCount = {
 
 	if brotherDay = 0:brotherDay = 1
 
-}
-
-
-act 'Move away':gt $loc, $metka
+end
 
 if $ARGS[0] = 'brother_go_away':
 	cla
