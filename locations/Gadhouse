@@ -116,27 +116,33 @@ if $ARGS[0]='':
 	'<center><H4>Your Grandparents'' Cottage</H4></center>'
 	'<center><img src="images/qwest/gadukino/izba.jpg"></center>'
 	'A fairly simple cottage in the village of Gadyukino which your grandparents call home. In the main room there is a huge wardrobe (where you can <a href="exec:gt ''clothing'', ''view_clothing_list'', ''wardrobe''">organize your clothes</a> or <a href="exec:gt ''clothing_QV'', ''list''"> pick something to wear</a>) and a <a href="exec:gad = 1 & gt ''bed2''">bed</a> where you can rest. The bed is more comfortable than what it looks like.'
-	'There is an old <a href="exec:gt ''tvPar''">television</a> in the living room. It''s positioned next to a body length <a href="exec:gt ''mirror'', ''start''">mirror</a>.'
-	if catday = daystart:
-		'On the table by the window <a href="exec: gt ''Gadhouse'',''villagecat''">Boniface</a> lies lazily, soaking in the heat from the rays of sunshine coming through the window.'
-	else
-		if hour < 8:
-			temp = RAND(0,9)
-			if temp = 0:catday = daystart & 'On the table by the window <a href="exec: gt ''Gadhouse'',''villagecat''">Boniface</a> lies lazily, soaking up some sunshine rays.'
-		elseif hour >= 8 and hour < 12:
-			temp = RAND(0,2)
-			if temp = 1:catday = daystart & 'On the table by the window <a href="exec: gt ''Gadhouse'',''villagecat''">Boniface</a> is busy cleaning himself with his tongue.'
-		elseif hour >= 12 and hour < 18:
-			temp = RAND(0,5)
-			if temp = 3:catday = daystart & 'Next to the table by the window <a href="exec: gt ''Gadhouse'',''villagecat''">Boniface</a> stretches and meows loudly, it''s time for dinner.'
-		elseif hour >= 18 and hour < 22:
-			temp = RAND(0,3)
-			if temp = 0:catday = daystart & '<a href="exec: gt ''Gadhouse'',''villagecat''">Boniface</a> is stalking around the main floor, looking for a nice juicy mouse to play with.'
-		elseif hour >= 22:
-			temp = RAND(0,2)
-			if temp = 1:catday = daystart & 'On the table by the window <a href="exec: gt ''Gadhouse'',''villagecat''">Boniface</a> lies lazily, soaking up some sunshine rays.'
-		end	
-	end
+	'There is an old <a href="exec:gt ''TV'',''gad''">television</a> in the living room. It''s positioned next to a body length <a href="exec:gt ''mirror'', ''start''">mirror</a>.'
+	
+	if hour < 8:
+		temp = RAND(0,9)
+		if temp = 0:'In a box filled with scraps of cloth, <a href="exec: gt ''Gadhouse'',''villagecat''">Boniface</a> is curled up sleeping peacefully.'
+	elseif hour >= 8 and hour < 12 and sunWeather = 1:
+		temp = RAND(0,2)
+		if temp = 1:'On the table by the window <a href="exec: gt ''Gadhouse'',''villagecat''">Boniface</a> is busy cleaning himself with his tongue.'
+		if temp = 2:'On the table by the window <a href="exec: gt ''Gadhouse'',''villagecat''">Boniface</a> lies lazily, soaking up some sunshine rays.'
+	elseif hour >= 8 and hour < 12 and sunWeather = 0:
+		temp = rand(0,1)
+		if temp = 0: 'In a box filled with scraps of cloth, <a href="exec: gt ''Gadhouse'',''villagecat''">Boniface</a> is curled up sleeping peacefully.'
+		if temp = 1: 'On the table by the window <a href="exec: gt ''Gadhouse'',''villagecat''">Boniface</a> is staring in disgust at the rain outside.'
+	elseif hour >= 12 and hour < 18:
+		temp = RAND(0,5)
+		if temp = 3:'Next to the table by the window <a href="exec:feedcat = 1 & gt ''Gadhouse'',''villagecat''">Boniface</a> stretches and meows loudly, it''s time for dinner.'
+		if temp = 4 and sunWeather = 1: 'On the table by the window <a href="exec: gt ''Gadhouse'',''villagecat''">Boniface</a> lies lazily, soaking up some sunshine rays.'
+		if temp = 4 and sunWeather = 0: 'In a box filled with scraps of cloth, <a href="exec: gt ''Gadhouse'',''villagecat''">Boniface</a> is curled up sleeping peacefully.'
+	elseif hour >= 18 and hour < 22 and catout ! 2:
+		temp = RAND(0,3)
+		if temp = 0:'<a href="exec: gt ''Gadhouse'',''villagecat''">Boniface</a> is stalking around the main floor, looking for a nice juicy mouse to play with.'
+		if temp = 1 and catout = 0: catout = 1 &'<a href="exec: gt ''Gadhouse'',''villagecat''">Boniface</a> twines around your ankles then goes to the door meowing pitifully.'
+	elseif hour >= 22:
+		temp = RAND(0,2)
+		if temp = 1:'In a box filled with scraps of cloth, <a href="exec: gt ''Gadhouse'',''villagecat''">Boniface</a> is curled up sleeping peacefully.'
+	end	
+
 
 	if hour >= 6 and hour < 22:
 		'Your <a href="exec: gt ''Gadhouse'',''grandma'' ">grandmother</a> is sitting on her bed. She looks a bit confused, as if she''s not sure where to go.'
@@ -162,10 +168,13 @@ if $ARGS[0]='':
 		gs 'gadukino_event', 'go_home'
 	end
 	}
+	if week = 6 and hour > 12 and family_trip_month ! month: indorf = 1
+	
 	if indorf = 1:
 		'Your parents are relaxing inside.'
-		gs 'gadukino_event', 'go_home'
-	end	
+
+		if staygad ! daystart: gs 'gadukino_event', 'go_home'
+	end		
 	
 	if grandmahelp > 0 and monthgrandmahelp ! month and hour >= 6 and hour < 22:
 		monthgrandmahelp = month
@@ -560,7 +569,40 @@ if $ARGS[0]='villagecat':
 		
 		act 'Continue':minut += 2 & gt 'Gadhouse'
 	end
-	
+
+	if feedcat = 1:
+		act 'Feed Boniface':
+			cla
+			*clr
+			minute +=5
+			gs 'stat'
+			feedcat = 2
+			'<center><img src="images/locations/gadukino/grandparents/feedboniface.gif"></center>'
+			'When Boniface sees you moving towards the cupboard, he jumps down off of the table and runs to his food dish. It is obvious that he feels that you are moving far too slowly and rattles his bowl to make sure you understand that he is starving while you dawdle.'
+			act 'Continue': gt 'Gadhouse'
+		end
+	end
+
+	if catout = 1:
+		act 'Let Boniface Out':
+			if sunWeather = 0: 
+				cla
+				*clr
+				minute += 10
+				gs 'stat'
+				'You open the door for Boniface who saunters around you only to stop in the doorway as he becomes aware that it is raining out. He glares up at you as if the rain was your fault. He stares out into the wet for another moment then sedately turns around and goes back to his box.'
+				act 'Continue': gt 'Gadhouse'
+			else
+				cla
+				*clr
+				minute +=10
+				gs 'stat'
+				catout = 2
+				'You open the door for Boniface who saunters around you only to stop in the doorway as he stops to consider if he really wants to go outside. After considering all the pros and cons, he finally decides to go out.'
+				act 'Continue': gt 'Gadhouse'
+			end
+		end
+	end
 	act 'Leave Boniface alone':minut += 2 & gt 'Gadhouse'
 end
 
