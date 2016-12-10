@@ -342,8 +342,7 @@ if $ARGS[0] = 'start':
 
 							$risk_boy = 'your own brother'
 							dynamic $sexstart3
-							dynamic $sleepsexcum
-							dynamic $brothersleepSexEnd
+							gs 'brother', 'sleepsexcum'
 						else
 							protect = 0
 							vidageday -= 1
@@ -362,8 +361,7 @@ if $ARGS[0] = 'start':
 							end
 						$risk_boy = 'your own brother'
 						dynamic $sexstart3
-						dynamic $sleepsexcum
-						dynamic $brothersleepSexEnd
+						gs 'brother', 'sleepsexcum'
 						end
 					end
 				else
@@ -455,219 +453,6 @@ if $ARGS[0] = 'start':
 		end
 	end
 
-	$sleepsexcum = {
-
-		if protect ! 1:
-			!!Unprotected sex
-
-			if rand(0, 100) > pcs_horny:
-				!!Inside
-				sexpartkno = 1
-				gs 'cum_manage'
-				'<<$boydesc>> groans and you feel a jet of sperm fill your pussy.'
-				pcs_mood -= 15
-				pcs_willpwr -= 15
-
-				gs 'cuminsidereact', 'your own brother'
-			else
-				!!Out
-
-				if pose = 0:
-					if rand(0,1) = 0:
-						spafinloc = 14
-						'<<$boydesc>> groans and you quickly pull yourself off of his dick. His hot sperm squirts on your stomach.'
-					else
-						spafinloc = 1
-						'<<$boydesc>> groans and you quickly pull yourself off of his dick. His hot sperm squirts on your exposed pussy.'
-					end
-					sexpartkno = 1
-					gs 'cum_manage'
-				elseif pose = 1:
-					if rand(0,1) = 0:
-						spafinloc = 8
-						'<<$boydesc>> groans and you quickly pull yourself off of his dick. His hot sperm squirts on your back.'
-					else
-						spafinloc = 4
-						'<<$boydesc>> groans and you quickly pull yourself off of his dick. His hot sperm squirts on your ass.'
-					end
-					sexpartkno = 1
-					gs 'cum_manage'
-				end
-			end
-		elseif protect = 1:
-			protect = 0
-
-			if rand(0, 89) = 0:sexcontra = 4
-			sexpartkno = 1
-			gs 'cum_manage'
-			if sexcontra = 4:
-				'You pull off of <<$boydesc>> and look at his dick. and think "Oh shit! The condom burst."'
-			elseif sexcontra = 5:
-				'You pull off of <<$boydesc>> and look at his dick. and think "Oh shit! The condom is missing!"'
-			else
-				'<<$boydesc>> groans and you realize that he came in the condom.'
-			end
-			gs 'cuminsidereact', 'your own brother'
-		end
-
-		pose = 0
-		if sexcontra > 0: sexcontra = 0
-	}
-
-	$brothersleepSexEnd = {
-		brotherSex += 1
-		minut += 15
-
-		gs 'stat'
-
-		'You catch your breath then carefully climb off your still sleeping, though smiling, brother. You gently replace the blanket and quietly step away.'
-		act 'Leave':gt $loc
-	}
-
-	$brother_showbody = {
-		cla
-		if npc_QW['A34'] = 3:
-			cls
-			cla
-			minut += RAND(3,5)
-			gs'stat'
-			'<center><b><font color = maroon>Kolka</font></b></center>'
-			'<center><img src="images/qwest/alter/ev2/brother/homework1.jpg"></center>'
-			'After you both finish studying, Kolka goes red with excitement and asks:'
-			'"<<$pcs_nickname>>, I have to learn about human anatomy, but I am having trouble with it. Can you help me?'
-			'"What do you mean?" You ask, a little confused.'
-			'"Well, um..." Kolka hesitated, "Can you show me what girls look like...'
-			if sub < 30:
-				act'No way':
-					cla
-					'"How the fuck can I do that? Should I just take my clothes off in front of you and let you gawk at me? I''m your sister!"'
-					'"Yes, you are right. I''m sorry..." Kolka responded in embarrassment.'
-					act 'Finish':gt $loc
-				end
-			end
-			if sub < 30: act'Takeout':gt $CURLOC
-
-			act'Huh...':
-				cla
-				npc_QW['A34'] = 4
-				'You briefly reflect on your brother''s request and reply, "How would you want me to do that? Should I just take my clothes off in front of you and let you gawk at me!?"'
-				'"Well... That would help but you could also explain each part." He adds.'
-				'You sigh and shake your head, "Surely your text books have pictures"'
-				'"There are pictures, but everything is so badly written, and the teacher skipped the lesson, saying "You already know everything." He explains with flushed face.'
-				'"Okay, I will help you, but only if you don''t tell anyone. Agreed? I''m serious, not a single person!" You say in a strict tone.'
-				'"<<$pcs_nickname>>, I promise not a word to anyone!"'
-				'After his promise you consider what to do.'
-				act'Undress':gt'brother','brother_voyeur_ev4'
-			end
-			exit
-		elseif npc_QW['A34'] > 3:
-			if sub < 30: act'Takeout':gt $CURLOC
-			act'Undress':gt'brother','brother_voyeur_ev4'
-			exit
-		else
-			if sub < 30: act'Takeout':gt $CURLOC
-			act'Undress':gt'brother','brother_voyeur_ev4'
-			exit
-		act 'Finish':gt $loc
-		end
-	}
-
-	$brother_homework = {
-		cls
-		gs'stat'
-		brother_homework = daystart
-		npc_rel['A34'] += 1
-		minut += RAND(50,70)
-		ivrand = RAND(1,2)
-		'<center><b><font color = maroon>Kolka</font></b></center>'
-		'<center><img src="images/qwest/alter/ev2/brother/homework1.jpg"></center>'
-		'You help your brother with his homework for an hour.'
-		if npc_QW['A34'] >= 2 and npc_rel['A34'] >= 60 and ivrand = 1:
-			cls
-			gs'stat'
-			'<center><b><font color = maroon>Kolka</font></b></center>'
-			'<center><img src="images/qwest/alter/ev2/brother/homework_touch.gif" width="1000" height="422"></center>'
-			if npc_QW['A34'] = 2:
-				cla
-				pcs_horny += RAND(5,10)
-				'As you explain the material, Kolka suddenly began to slowly stroke your leg with his hand. You freeze in surprise, not knowing what to do.'
-				act'Ignore and continue':
-					cla
-					npc_QW['A34'] = 3
-					npc_rel['A34'] += 2
-					pcs_horny += RAND(5,10)
-					'You decide to continue to do homework, trying not to pay attention to Kolka''s hand on your leg. He realizes that you don''t mind so he continues to stroke higher up your leg.'
-					act 'Finish':gt $loc
-				end
-				act'Remove hand and continue':
-					cla
-					pcs_horny += RAND(1,5)
-					pcs_dom += 1
-					'You decide to remove his hand and continue to do homework. Kolka begins to blush and startS to try hard to solve the problems. While not looking you in the eye.'
-					act 'Finish':gt $loc
-				end
-				exit
-			elseif npc_QW['A34'] >= 3:
-				cla
-				pcs_horny += RAND(5,10)
-				'As soon as you begin to explain the material, Kolka begins again to stroke your leg his hand.'
-				act'Ignore and continue':
-					cla
-					npc_rel['A34'] += 2
-					pcs_horny += RAND(5,10)
-					'You continue to do the homework, trying hard not to pay attention to Kolka''s hand on your leg. Kolka knowing that you do not mind continues to have nice feel of your leg. You feel the warm rush of excitement.'
-					ivrand = RAND(1,3)
-					if brotherSex > 0 and father_go = 1 and ivrand = 1 and brotherEvSex ! daystart:
-						cla
-						'After you finish explaining the new material, Kolka goes red with excitement and asks:'
-						'"<<$pcs_nickname>>, Can you help me out here now?"'
-						gs 'brother', 'brotherSexStart'
-						act 'Takeout':gt $loc
-					elseif ivrand = 2 and brotherEvSex ! daystart:
-						dynamic $brother_showbody
-						exit
-					elseif ivrand = 3 and brotherEvSex ! daystart:
-					end
-					act 'Finish':gt $loc
-				end
-				act'Remove hand and continue':
-					cls
-					cla
-					pcs_horny += RAND(1,5)
-					npc_rel['A34'] -= 5
-					'<center><b><font color = maroon>Kolka</font></b></center>'
-					'<center><img src="images/qwest/alter/ev2/brother/homework1.jpg"></center>'
-					'You whisper:'
-					'"Don''t, Our parents will see us." You remove his hand from your leg.'
-					'Kolka mutters something under his breath with grim resentment on his face.'
-					act 'Finish':gt $loc
-				end
-				exit
-			end
-		end
-		act 'Finish':gt $loc
-	}
-
-	$brother_homework[1] = {
-		cla
-		cls
-		gs'stat'
-		minut += 1
-		textrand = RAND(1,3)
-		if textrand = 1:$brother_textrand1 = '"Kolka, would you like help with your homework?"
-	"Yes, that would be good."'
-		if textrand = 2:$brother_textrand1 = '"Kolka, How are you going with your classes? Do you want help?"
-	"Yes, that would be good."'
-		if textrand = 3:$brother_textrand1 = '"Kolka, do you need help with your homework?"
-	"Yes, I need help."'
-		'<center><b><font color = maroon>Kolka</font></b></center>'
-		'<center><img src="images/qwest/alter/brother.jpg"></center>'
-		'Your brother Kolka is younger than you, he''s <<brotherAge>> years old. While you share the same mother, unlike you and your sister, Kolka''s dad is your stepfather. He is a student at the same school as you, and enjoys soccer.'
-		''
-		'<<$brother_textrand1>>'
-		act 'Further': dynamic $brother_homework
-	}
-
 	if (week = 6 and brother_homework = daystart - 1) or (week = 7 and brother_homework = daystart - 2): brother_homework = daystart
 	if $loc = 'sitrPar' and brotherAge < 18 and kanikuli = 0 and npc_rel['A34'] >= 40 and brother_homework ! daystart and hour >= 18 and hour < 20:
 		if RAND(1,3) = 1:
@@ -679,23 +464,229 @@ if $ARGS[0] = 'start':
 			'Your brother Kolka is younger than you, he''s <<brotherAge>> years old. While you share the same mother, unlike you and your sister, Kolka''s dad is your stepfather. He is a student at the same school as you, and enjoys soccer.'
 			''
 			'"<<$pcs_nickname>>, can you help me with my homework? I have a problem here I can''t solve."'
-			act'Certainly, I will help you':dynamic $brother_homework
+			act'Certainly, I will help you':gt 'brother', 'homework2'
 			act'Later, I am busy now.':
 				cla
 				'Sorry, I''m busy right now.'
-				act 'Leave':gt $loc
+				act 'Leave': gt 'sitrPar'
 			end
 		else
-			act'Offer help with homework': dynamic $brother_homework[1]
+			act'Offer help with homework': gt 'brother', 'homework'
 		end
 	end
 
 	act 'Move away':gt $loc, $metka
+end
 
+if $ARGS[0] = 'sleepsexcum':
+	brotherSex += 1
+	minut += 15
+	if protect ! 1:
+		!!Unprotected sex
 
+		if rand(0, 100) > pcs_horny:
+			!!Inside
+			sexpartkno = 1
+			gs 'cum_manage'
+			'<<$boydesc>> groans and you feel a jet of sperm fill your pussy.'
+			pcs_mood -= 15
+			pcs_willpwr -= 15
 
+			gs 'cuminsidereact', 'your own brother'
+		else
+			!!Out
 
-	act 'Move away':gt $loc, $metka
+			if pose = 0:
+				if rand(0,1) = 0:
+					spafinloc = 14
+					'<<$boydesc>> groans and you quickly pull yourself off of his dick. His hot sperm squirts on your stomach.'
+				else
+					spafinloc = 1
+					'<<$boydesc>> groans and you quickly pull yourself off of his dick. His hot sperm squirts on your exposed pussy.'
+				end
+				sexpartkno = 1
+				gs 'cum_manage'
+			elseif pose = 1:
+				if rand(0,1) = 0:
+					spafinloc = 8
+					'<<$boydesc>> groans and you quickly pull yourself off of his dick. His hot sperm squirts on your back.'
+				else
+					spafinloc = 4
+					'<<$boydesc>> groans and you quickly pull yourself off of his dick. His hot sperm squirts on your ass.'
+				end
+				sexpartkno = 1
+				gs 'cum_manage'
+			end
+		end
+	elseif protect = 1:
+		protect = 0
+
+		if rand(0, 89) = 0:sexcontra = 4
+		sexpartkno = 1
+		gs 'cum_manage'
+		if sexcontra = 4:
+			'You pull off of <<$boydesc>> and look at his dick. and think "Oh shit! The condom burst."'
+		elseif sexcontra = 5:
+			'You pull off of <<$boydesc>> and look at his dick. and think "Oh shit! The condom is missing!"'
+		else
+			'<<$boydesc>> groans and you realize that he came in the condom.'
+		end
+		gs 'cuminsidereact', 'your own brother'
+	end
+
+	pose = 0
+	if sexcontra > 0: sexcontra = 0
+
+	gs 'stat'
+
+	'You catch your breath then carefully climb off your still sleeping, though smiling, brother. You gently replace the blanket and quietly step away.'
+	act 'Leave':gt $loc, $metka
+end
+
+if $ARGS[0] = 'showbody':
+	cla
+	if npc_QW['A34'] = 3:
+		cls
+		cla
+		minut += RAND(3,5)
+		gs'stat'
+		'<center><b><font color = maroon>Kolka</font></b></center>'
+		'<center><img src="images/qwest/alter/ev2/brother/homework1.jpg"></center>'
+		'After you both finish studying, Kolka goes red with excitement and asks:'
+		'"<<$pcs_nickname>>, I have to learn about human anatomy, but I am having trouble with it. Can you help me?'
+		'"What do you mean?" You ask, a little confused.'
+		'"Well, um..." Kolka hesitated, "Can you show me what girls look like...'
+		if sub < 30:
+			act'No way':
+				cla
+				'"How the fuck can I do that? Should I just take my clothes off in front of you and let you gawk at me? I''m your sister!"'
+				'"Yes, you are right. I''m sorry..." Kolka responded in embarrassment.'
+				act 'Finish':gt $loc, $metka
+			end
+		end
+
+		act'Huh...':
+			cla
+			npc_QW['A34'] = 4
+			'You briefly reflect on your brother''s request and reply, "How would you want me to do that? Should I just take my clothes off in front of you and let you gawk at me!?"'
+			'"Well... That would help but you could also explain each part." He adds.'
+			'You sigh and shake your head, "Surely your text books have pictures"'
+			'"There are pictures, but everything is so badly written, and the teacher skipped the lesson, saying "You already know everything." He explains with flushed face.'
+			'"Okay, I will help you, but only if you don''t tell anyone. Agreed? I''m serious, not a single person!" You say in a strict tone.'
+			'"<<$pcs_nickname>>, I promise not a word to anyone!"'
+			'After his promise you consider what to do.'
+
+			act'Undress':gt'brother','brother_voyeur_ev4'
+			act'Don''t do it':gt 'brother'
+		end
+	elseif npc_QW['A34'] > 3:
+		act'Undress again':gt'brother','brother_voyeur_ev4'
+
+		if sub < 30: act'Enough for today':gt 'brother'
+		exit
+	else
+		act 'Finish':gt $loc, $metka
+	end
+end
+
+if $ARGS[0] = 'homework':
+	cla
+	cls
+	gs'stat'
+	minut += 1
+	'<center><b><font color = maroon>Kolka</font></b></center>'
+	'<center><img src="images/qwest/alter/brother.jpg"></center>'
+	'Your brother Kolka is younger than you, he''s <<brotherAge>> years old. While you share the same mother, unlike you and your sister, Kolka''s dad is your stepfather. He is a student at the same school as you, and enjoys soccer.'
+	''
+	textrand = RAND(1,3)
+	if textrand = 1:
+		'"Kolka, would you like help with your homework?"'
+		'"Yes, that would be good."'
+	elseif textrand = 2:
+		'"Kolka, How are you going with your classes? Do you want help?"'
+		'"Yes, that would be good."'
+	elseif textrand = 3:
+		'"Kolka, do you need help with your homework?"'
+		'"Yes, I need help."'
+	end
+
+	act 'Further': gt 'brother', 'homework2'
+end
+
+if $ARGS[0] = 'homework2':
+	brother_homework = daystart
+	npc_rel['A34'] += 1
+	minut += RAND(50,70)
+	ivrand = RAND(1,2)
+	if npc_QW['A34'] >= 2 and npc_rel['A34'] >= 60 and ivrand = 1:
+		cls
+		gs'stat'
+		'<center><b><font color = maroon>Kolka</font></b></center>'
+		'<center><img src="images/qwest/alter/ev2/brother/homework_touch.gif" width="1000" height="422"></center>'
+		if npc_QW['A34'] = 2:
+			cla
+			pcs_horny += RAND(5,10)
+			'As you explain the material, Kolka suddenly began to slowly stroke your leg with his hand. You freeze in surprise, not knowing what to do.'
+			act'Ignore and continue':
+				cla
+				npc_QW['A34'] = 3
+				npc_rel['A34'] += 2
+				pcs_horny += RAND(5,10)
+				'You decide to continue to do homework, trying not to pay attention to Kolka''s hand on your leg. He realizes that you don''t mind so he continues to stroke higher up your leg.'
+				act 'Finish': gt 'sitrPar'
+			end
+			act'Remove hand and continue':
+				cla
+				pcs_horny += RAND(1,5)
+				pcs_dom += 1
+				'You decide to remove his hand and continue to do homework. Kolka begins to blush and startS to try hard to solve the problems. While not looking you in the eye.'
+				act 'Finish': gt 'sitrPar'
+			end
+		elseif npc_QW['A34'] >= 3:
+			cla
+			pcs_horny += RAND(5,10)
+			'As soon as you begin to explain the material, Kolka begins again to stroke your leg his hand.'
+			act'Ignore and continue':
+				cla
+				npc_rel['A34'] += 2
+				pcs_horny += RAND(5,10)
+				'You continue to do the homework, trying hard not to pay attention to Kolka''s hand on your leg. Kolka knowing that you do not mind continues to have nice feel of your leg. You feel the warm rush of excitement.'
+				ivrand = RAND(1,3)
+				if brotherSex > 0 and father_go = 1 and ivrand = 1 and brotherEvSex ! daystart:
+					cla
+					'After you finish explaining the new material, Kolka goes red with excitement and asks:'
+					'"<<$pcs_nickname>>, Can you help me out here now?"'
+					gs 'brother', 'brotherSexStart'
+					act 'No':gt $loc, $metka
+				elseif ivrand = 2 and brotherEvSex ! daystart:
+					gs 'brother', 'showbody'
+				else
+					act 'Finish': gt 'sitrPar'
+				end
+			end
+			act'Remove hand and continue':
+				cls
+				cla
+				pcs_horny += RAND(1,5)
+				npc_rel['A34'] -= 5
+				'<center><b><font color = maroon>Kolka</font></b></center>'
+				'<center><img src="images/qwest/alter/ev2/brother/homework1.jpg"></center>'
+				'You whisper:'
+				'"Don''t, Our parents will see us." You remove his hand from your leg.'
+				'Kolka mutters something under his breath with grim resentment on his face.'
+
+				act 'Finish': gt 'sitrPar'
+			end
+		end
+	else
+		cls
+		gs'stat'
+		'<center><b><font color = maroon>Kolka</font></b></center>'
+		'<center><img src="images/qwest/alter/ev2/brother/homework1.jpg"></center>'
+		'You help your brother with his homework for an hour.'
+
+		act 'Finish':gt $loc, $metka
+	end
 end
 
 if $ARGS[0] = 'brotherSexStart':
@@ -855,14 +846,14 @@ if $ARGS[0] = 'brotherSexEnd':
 			gs 'stat'
 
 			'Kolka catches his breath, then says, "Nice one <<$pcs_nickname>>, good job, just remember this is our little secret!", He continues to go about his business.'
-			act 'Leave':gt $loc
+			act 'Leave':gt $loc, $metka
 		elseif $loc = 'sitrPar':
 			minut += 15
 
 			gs 'stat'
 
 			'Kolka catches his breath, then says, "Nice one <<$pcs_nickname>>, you''re well trained. Now don''t tell anyone!", and falls asleep.'
-			act 'Leave':gt $loc
+			act 'Leave':gt $loc, $metka
 		else
 			'Kolka says, "Nice one <<$pcs_nickname>>, you''re well trained, Now don''t tell anyone!", and leaves.'
 		end
@@ -873,14 +864,14 @@ if $ARGS[0] = 'brotherSexEnd':
 			gs 'stat'
 
 			'Kolka catches his breath, then says, "Many thanks, <<$pcs_nickname>>, You helped me a lot", He continues to go about his business.'
-			act 'Leave':gt $loc
+			act 'Leave':gt $loc, $metka
 		elseif $loc = 'sitrPar':
 			minut += 15
 
 			gs 'stat'
 
 			'Kolka catches his breath, then says, "Thank you, <<$pcs_nickname>>, You saved me , now I can finally sleep.", and goes to sleep.'
-			act 'Leave':gt $loc
+			act 'Leave':gt $loc, $metka
 		else
 			'Kolka says, "Thanks for everything, Sis. Well, I''m off.", and leaves.'
 		end
@@ -1078,11 +1069,13 @@ if $ARGS[0] = 'brother_voyeur_ev4':
 		'"No-no, I need help!"'
 		'"Good, the faster start we start - the quicker we finish"'
 		'"Erm.. yeah."'
+
 		act'Further':gt 'brother','brother_voyeur_ev5'
 	elseif npc_QW['A34'] >= 4:
 		'You check whether the door is closed to the hall, then silently and quickly removed your clothes and sit down on the chair next to the sofa, you slightly cover your breasts with your hands hands:'
 		'"They say repetition is the mother of learning." Your brother says.'
 		'"Something like that" you smile as you reply.'
+
 		act'Further':gt 'brother','brother_voyeur_ev5'
 	end
 end
