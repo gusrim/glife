@@ -7,7 +7,7 @@ if $ARGS[0] = 'vann':
 	$location_type = 'bathroom'
 	'<center><h4><font color="maroon">Bathroom</font></h4></center>'
 	'<center><img  src="images/qwest/alter/kruglov/vann.jpg"></center>'
-	'Bathroom. Here you can take a shower.'
+	'The bathroom has a large sink area and tile floors.  The toilet sits along the far wall.  You also see a walk-in shower.  Very nice.'
 
 	act 'Take a shower':
 		*clr & cla
@@ -16,11 +16,11 @@ if $ARGS[0] = 'vann':
 		gs 'stat'
 		'<center><h4><font color="maroon">Bathroom</font></h4></center>'
 		'<center><img  src="'+'images/qwest/alter/kruglov/mitsa.gif'+'"></center>'
-		'You took a shower.'
+		'You take a quick shower.'
 
-		act 'Out': gt 'IgorHome','kor'
+		act 'Get out of the shower': gt 'IgorHome','kor'
 	end
-	act 'Out': gt 'IgorHome', 'kor'
+	act 'Leave the bathroom': gt 'IgorHome', 'kor'
 end
 
 if $ARGS[0] = 'kor':
@@ -30,32 +30,46 @@ if $ARGS[0] = 'kor':
 	'<center><h4><font color="maroon">Entrance hall</font></h4></center>'
 	'<center><img  src="images/qwest/alter/kruglov/kor.jpg"></center>'
 
-	act 'Room Igor': gt 'IgorHome','Igorkom'
+	act 'Igor''s Room': gt 'IgorHome','Igorkom'
 	act 'Bathroom': gt 'IgorHome','vann'
-	act 'Go': gt 'pavResidential'
+	act 'Leave Igor''s home': gt 'pavResidential'
+	if igor_krossdresssex >= 1:
+		act 'Igor''s sister`s room': gt 'IgorHome','igorsisterkom'
+	end
 end
 
 if $ARGS[0] = 'Igorkom':
 	*clr & cla
 	minut += 5
 	gs 'stat'
-	'<center><h4><font color="maroon">Room Igor</font></h4></center>'
+	'<center><h4><font color="maroon">Igor''s Room</font></h4></center>'
 	'<center><img  src="images/qwest/alter/kruglov/kom.jpg"></center>'
-	'You see <a href="exec:GT ''IgorEv'', ''hometalk''">Igor</a>.' + iif(DimaLoveIgor>1,'On the bed lies a Teddy bear with a heart in hands.','')
+	'You see <a href="exec:GT ''IgorEv'', ''hometalk''">Igor</a>.' + iif(DimaLoveIgor>1,'Sitting on the bed is a Teddy Bear with a red heart in it''s little hands.','')
 
-	act 'Out':gt 'IgorHome','kor'
+	act 'Leave':gt 'IgorHome','kor'
 end
 
+if $ARGS[0] = 'igorsisterkom':
+	*clr & cla
+	minut += 5
+	gs 'stat'
+	'<center><b><font color = maroon>Igor''s sister`s room</font></b></center>'
+	'<center><img src="images/qwest/alter/kruglov/crossdress/komsister.jpg"></center>'
+	
+	act 'Look around':gt 'IgorEv','din_krossdresssex'
+	act 'Leave':gt 'IgorHome','kor'
+end
+	
 if hour = 20:
 	*clr & cla
-	'Igor looked at his watch and asked: "Go to disco?"'
-	act 'To go with Igor': & minut += 20 & gt 'gdkin'
+	'Igor looks at his watch and asks you: "Do you want to go to dance?"'
+	act 'Go with Igor to the dance': & minut += 20 & gt 'gdkin'
 	act 'Say goodbye and go home': gt 'pavResidential'
 end
 
 if hour = 23:
 	*clr & cla
-	'You looked at the clock and said you should go home.'
+	'You look at the clock and tell Igor that you need to head home.'
 	act 'Say goodbye and go home': gt 'pavResidential'
 end
 
