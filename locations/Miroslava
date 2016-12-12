@@ -95,7 +95,7 @@ if $ARGS[0] = 'Ask for Mira':
 			!if mirasex = 1 and mitkasextimes < 13 and miralick > 0 and MiraLoc = 2 and pcs_horny >= 40:act 'Ordered to lick':gt 'Meadow','lesb_talk_mira3'  - Not certain this belongs here, looks like it belongs in Meadow
 			!if mirasex = 2 and MiraLoc = 2 and pcs_horny >= 40 and miraQW >= 15:act 'Stick':gt 'Meadow','lesb_mira'   - not certain this belongs here, looks like it belongs in Meadow               
 			act 'Chat':dynamic $miratalk
-			if mira_temp >= 10 and sunWeather = 1 and temper >= 20 and hour < 20 and MiraLoc ! 0 and Mira_no = 0:
+			if mira_temp >= 10 and sunWeather = 1 and temper >= 15 and hour < 20 and MiraLoc ! 0 and Mira_no = 0:
 				act 'Go to river':gt 'gadriver','start'
 					cls
 					minut += 2
@@ -120,52 +120,57 @@ if $ARGS[0] = 'Ask for Mira':
 			if month >= 4 and month <= 10 and sunWeather = 1:	    
 				act 'Offer to walk together':
 					cls
-					!if Mira_no = 0:  Another variable that I have no idea what its for.  I have only found a single place where this goes above 0, but is reduced by -1 each day.  What is this?
-					if mitkasextimes < 13 or miraperversion >= 10 or mirasex > 1:
-						if MiraLoc ! 3:minut += 40
-						if MiraLoc = 3:minut += 85
-						if miraQW < 15:miraQW += 1
-						MiraLoc ! 2
-						MiraLoc ! 1
-						mira_guest = 0
-						inriver = 0
-						MiraLoc ! 3
-						MiraLoc ! 0
-						if ($clothingworntype = 'nude' or $clothingworntype = 'swimwear'):
-							tanga = flag_tanga
-							gs 'clothing', 'wear', $lastwornclothingtype, lastwornclothingnumber
-						end
-						gs 'stat'
-						
-						'<center><img src="images/locations/gadukino/village/girls_walking'+rand(1,3)+'.jpg"></center>'
-						'You invite her along to wander around the village and she gladly accepts, then you walk together around the small village, telling each other different stories from your lives.'
-						if mitkasextimes > 15 and miraperversion > 15 and gadriver_gang < 3:
-							temp = rand(1,20)
-							if mitkarand = 1 and hour >= 7 and hour <= 16 and mitkaday ! daystart and week <= 5: 
-								gt 'gadukino_event', 'mira_mitka'
-							elseif mitkarand = 2 and hour >= 7 and hour <= 16 and kolyambaday ! daystart and week <= 5: 
-								gt 'gadukino_event', 'mira_kolyamba'
-							elseif mitkarand = 3 and hour >= 7 and hour <= 16 and vasyanday ! daystart and week <= 5:
-								gt 'gadukino_event', 'mira_vasyan'
-							elseif mitkarand = 4 and hour >= 17 and hour <= 19 and gadboyday ! daystart and week <= 5: 
-								gt 'gadukino_event', 'mira_2boys'
-							elseif mitkarand <= 5 and hour >= 7 and hour <= 19 and gadboyday ! daystart and week > 5: 
-								gt 'gadukino_event', 'mira_3boys'			                
-							else    
-								act 'Leave':mira_guest = 0 & gt 'gadukino'
+					if Mira_no = 0: &!This is a counter for Mira not wanting to leave the house due to em-bare-ass-ment.
+						if mitkasextimes < 13 or miraperversion >= 10 or mirasex > 1:
+							if MiraLoc ! 3:minut += 40
+							if MiraLoc = 3:minut += 85
+							if miraQW < 15:miraQW += 1
+							MiraLoc = 0
+							mira_guest = 0
+							if ($clothingworntype = 'nude' or $clothingworntype = 'swimwear'):
+								tanga = flag_tanga
+								gs 'clothing', 'wear', $lastwornclothingtype, lastwornclothingnumber
 							end
-						else 			            			       
-							act 'Finish':mira_guest = 0 & gt 'gadukino'
-						end    
+							gs 'stat'
+							
+							'<center><img src="images/locations/gadukino/village/girls_walking'+rand(1,3)+'.jpg"></center>'
+							'You invite her along to wander around the village and she gladly accepts, then you walk together around the small village, telling each other different stories from your lives.'
+							if mitkasextimes > 15 and miraperversion > 15 and gadriver_gang < 3:
+								temp = rand(1,20)
+								if mitkarand = 1 and hour >= 7 and hour <= 16 and mitkaday ! daystart and week <= 5: 
+									gt 'gadukino_event', 'mira_mitka'
+								elseif mitkarand = 2 and hour >= 7 and hour <= 16 and kolyambaday ! daystart and week <= 5: 
+									gt 'gadukino_event', 'mira_kolyamba'
+								elseif mitkarand = 3 and hour >= 7 and hour <= 16 and vasyanday ! daystart and week <= 5:
+									gt 'gadukino_event', 'mira_vasyan'
+								elseif mitkarand = 4 and hour >= 17 and hour <= 19 and gadboyday ! daystart and week <= 5: 
+									gt 'gadukino_event', 'mira_2boys'
+								elseif mitkarand <= 5 and hour >= 7 and hour <= 19 and gadboyday ! daystart and week > 5: 
+									gt 'gadukino_event', 'mira_3boys'			                
+								else    
+									act 'Leave':mira_guest = 0 & gt 'gadukino'
+								end
+							else 			            			       
+								act 'Finish':mira_guest = 0 & gt 'gadukino'
+							end    
+						else
+							minut += 5
+							gs 'stat'
+								
+							'<center><img src="images/characters/village/mira/Mira_said_no.jpg"></center>'
+							'You ask Mira to walk around the village, but she tells you that she does not want people to see you walking together and then wonder if she, too, is such a whore...'
+									
+							act 'Leave':gt $loc, $metka    
+						end
 					else
 						minut += 5
 						gs 'stat'
-							
-						'<center><img src="images/characters/village/mira/Mira_said_no.jpg"></center>'
-						'You ask Mira to walk around the village, but she tells you that she does not want people to see you walking together and then wonder if she, too, is such a whore...'
-								
+						
+						'<center><img src="images/characters/village/mira/Mira_shy.jpg"></center>'
+						'You ask Mira to take a stroll around the village, but Mira only shakes her head, saying that she is too ashamed to leave the house.'
+						
 						act 'Leave':gt $loc, $metka    
-					end
+					end	
 				end
 			end
 		
@@ -176,9 +181,7 @@ if $ARGS[0] = 'Ask for Mira':
 					miraQW += 2
 					meadow = 2
 					MiraLoc = 2
-					MiraLoc ! 1
 					mira_guest = 0
-					MiraLoc ! 0
 					if ($clothingworntype = 'nude' or $clothingworntype = 'swimwear'): 
 						gs 'clothing', 'wear', $lastwornclothingtype, lastwornclothingnumber
 						tanga = flag_tanga
@@ -199,11 +202,7 @@ if $ARGS[0] = 'Ask for Mira':
 						if mitkasextimes < 13 or miraperversion >= 5 or mirasex > 1:
 							if miraQW < 50:miraQW += 1
 							MiraLoc = 2
-							MiraLoc ! 1
 							mira_guest = 0
-							inriver = 0
-							MiraLoc ! 3
-							MiraLoc ! 0
 							if ($clothingworntype = 'nude' or $clothingworntype = 'swimwear'): 
 								gs 'clothing', 'wear', $lastwornclothingtype, lastwornclothingnumber
 								tanga = flag_tanga
@@ -228,10 +227,10 @@ if $ARGS[0] = 'Ask for Mira':
 						gs 'stat'
 						
 						'<center><img src="images/characters/village/mira/Mira_shy.jpg"></center>'
-						'You have to offer Mira take a stroll outside the village, but Mira only shakes his head, saying that after such a shame she will will not leave the house.'
+						'You ask Mira ifg she wants to go to the meadow, but Mira only shakes her head, saying that she is too ashamed to leave the house.'
 						
-						act 'Leave':gt $loc, $metka						    
-					end						    
+						act 'Leave':gt $loc, $metka    
+					end							    
 				end
 			end
 			
@@ -242,11 +241,7 @@ if $ARGS[0] = 'Ask for Mira':
 					miraQW += 1
 					MiraLoc = 5
 					miraperversion = 1
-					MiraLoc ! 2
-					MiraLoc ! 1
 					mira_guest = 0
-					inriver = 0
-					MiraLoc ! 0
 					if ($clothingworntype = 'nude' or $clothingworntype = 'swimwear'): 
 						gs 'clothing', 'wear', $lastwornclothingtype, lastwornclothingnumber
 						tanga = flag_tanga
@@ -267,8 +262,6 @@ if $ARGS[0] = 'Ask for Mira':
 						minut += 5
 						if miraQW < 20:miraQW += 1
 						MiraLoc = 5
-						MiraLoc ! 2
-						MiraLoc ! 1
 						if ($clothingworntype = 'nude' or $clothingworntype = 'swimwear'): 
 							gs 'clothing', 'wear', $lastwornclothingtype, lastwornclothingnumber
 							tanga = flag_tanga
@@ -282,16 +275,16 @@ if $ARGS[0] = 'Ask for Mira':
 							'You suggest drinking with the village boys and Mira readily agrees, then asks you to wait a couple of minutes while she changes. When she comes out, you go to to drink with the group of boys near your house....'
 						end
 						if miraperversion > 15 and mitkasextimes > 15 and gadriver_gang < 3 :
-							act 'Further':mira_guest = 0 & MiraLoc ! 1 & MiraLoc ! 2 & minut += 15 & temp = 0 & miralko = 0 & gt 'mitkabuh_group'
+							act 'Further':mira_guest = 0 & minut += 15 & temp = 0 & miralko = 0 & gt 'mitkabuh_group'
 						else
-							act 'Further':mira_guest = 0 & MiraLoc ! 1 & MiraLoc ! 2 & minut += 15 & temp = 0 & miralko = 0 & gt 'mitkabuh'
+							act 'Further':mira_guest = 0 & minut += 15 & temp = 0 & miralko = 0 & gt 'mitkabuh'
 						end	
 					else
 						minut += 5
 						gs 'stat'
 						
 						'<center><img src="images/characters/village/mira/Mira_shy.jpg"></center>'
-						'You offer Mira to drink with the village, but Mira only shakes his head, saying that after such a shame she will will not leave the house.'
+						'You ask Mira if she wants to go drink with the boys, but she only shakes her head, saying that she is too ashamed and she will will not leave the house.'
 						
 						act 'Leave':gt $loc, $metka						    
 					end			    
@@ -305,24 +298,25 @@ if $ARGS[0] = 'Ask for Mira':
 							cls
 							minut += 10
 							if miraQW < 50:miraQW += 1
-							MiraLoc ! 2
-							MiraLoc ! 1
-							mira_guest = 0
-							MiraLoc ! 0
+							mira_guest = 1
 							if ($clothingworntype = 'nude' or $clothingworntype = 'swimwear'): 
 								gs 'clothing', 'wear', $lastwornclothingtype, lastwornclothingnumber
 								tanga = flag_tanga
-							end		                
+							end	
+							if MiraLoc ! 3:minut += 40
+							if MiraLoc = 3:minut += 85
+							mira = 1
 							gs 'stat'
 
 							dynamic $miraclothes
 						   'You offer Mira the opportunity to relax with you in the bath.  She pauses for a few moments to think, but then agrees slowly.  You led her into your grandparent''s backyard...'
 								
-							if MiraLoc ! 3:act 'Further':minut += 15 & mira = 1 & gt 'Gadbana'
-							if MiraLoc = 3:act 'Further':MiraLoc ! 3 & mira = 1 & minut += 45 & gt 'Gadbana'                         
+							act 'Further':gt 'Gadbana'
+							                         
 						else
 							cls
 							minut += 5
+							MiraLoc = 0
 							gs 'stat'
 							
 							'<center><img src="images/characters/village/mira/Mira_said_no.jpg"></center>'
@@ -332,38 +326,40 @@ if $ARGS[0] = 'Ask for Mira':
 						end
 					else
 						minut += 5
+						MiraLoc = 0
 						gs 'stat'
 						
 						'<center><img src="images/characters/village/mira/Mira_shy.jpg"></center>'
-						'You offer Mira to relax you in the bath, but Mira only shakes his head, saying that after such a shame she will will not leave the house.'
+						'You ask Mira is she wants to come over and take a steam bath, but she only shakes her head, saying that after what she did she is too ashamed to leave the house.'
 						act 'Leave':gt $loc, $metka						    
 					end
 				end
 			end    
 			
-			if sunWeather = 1 and temper >= 20 and month >= 5 and month <= 9 and MiraLoc ! 1:			
+			if sunWeather = 1 and temper >= 15 and month >= 5 and month <= 9 and MiraLoc ! 1:			
 				act 'Offer to go to the river':
 					cls
 					if Mira_no = 0:					
 						if mitkasextimes < 13 or miraperversion >= 10 or mirasex > 1:
 							minut += 2
 							if miraQW < 30:miraQW += 1
-							MiraLoc = 1
-							MiraLoc ! 2
 							mira_guest = 0
-							inriver = 1
-							MiraLoc ! 0
 							if ($clothingworntype = 'nude' or $clothingworntype = 'swimwear'): 
 								gs 'clothing', 'wear', $lastwornclothingtype, lastwornclothingnumber
 								tanga = flag_tanga
-							end						    
+							end	
+							if MiraLoc ! 3: minut += 15
+							if MiraLoc = 3: minut += 45
+							MiraLoc = 1
 							gs 'stat'
 
 							dynamic $miraclothes	
 							'You suggest going to the river to swim or sunbathe, Mira readily agrees.'
-							if MiraLoc ! 3:act 'Go to the river':minut += 15 & gt 'Gadriver', 'Gadbitch'
-							if MiraLoc = 3:act 'Go to the river':MiraLoc ! 3 & minut += 45 & gt 'Gadriver', 'Gadbitch'
+							
+							act 'Go to the river':gt 'Gadriver', 'Gadbitch'
+							
 						else
+							MiraLoc = 0
 							minut += 5
 							gs 'stat'
 							
@@ -373,11 +369,12 @@ if $ARGS[0] = 'Ask for Mira':
 							act 'Leave':gt $loc, $metka
 						end
 					else
+						MiraLoc = 0
 						minut += 5
 						gs 'stat'
 						
 						'<center><img src="images/characters/village/mira/Mira_shy.jpg"></center>'
-						'You have to offer Mira together to go to the river, but Mira only shakes his head, saying that after this humiliation she will will not leave the house.'
+						'You ask Mira if she wants to go to the river with you, but she only shakes her head, saying that after her humiliation she will not leave the house.'
 						act 'Leave':gt $loc, $metka
 					end
 				end    
@@ -416,19 +413,15 @@ if $ARGS[0] = 'Ask for Mira':
 				end    
 			end
 			
-			if sunWeather = 1 and temper >= 20 and month >= 5 and month <= 9 and MiraLoc ! 3 and miratalkforest > 0 and miraQW >= 5:			
+			if sunWeather = 1 and temper >= 15 and month >= 5 and month <= 9 and MiraLoc ! 3 and miratalkforest > 0 and miraQW >= 5:			
 				act 'Offer to go to the forest':
 					cls
 					if Mira_no = 0:					
 						if mitkasextimes < 13 or miraperversion >= 10 or mirasex > 1:
 							minut += 2
 							if miraQW < 30:miraQW += 1					    
-							MiraLoc ! 1
-							MiraLoc ! 2
 							mira_guest = 0
-							inriver = 0
 							MiraLoc = 3
-							MiraLoc ! 0
 							if ($clothingworntype = 'nude' or $clothingworntype = 'swimwear'): 
 								gs 'clothing', 'wear', $lastwornclothingtype, lastwornclothingnumber
 								tanga = flag_tanga
@@ -437,9 +430,10 @@ if $ARGS[0] = 'Ask for Mira':
 
 							dynamic $miraclothes	
 							'You offer her to go to the forest for mushrooms and berries and she willingly agrees.'
-							act 'Go into the woods':mira_guest = 0 & minut += 45 & gt'gadforest','1'
+							act 'Go into the woods':minut += 45 & gt'gadforest','1'
 						else
 							minut += 5
+							MiraLoc = 0
 							gs 'stat'
 							
 							'<center><img src="images/characters/village/mira/Mira_said_no.jpg"></center>'
@@ -452,13 +446,13 @@ if $ARGS[0] = 'Ask for Mira':
 						gs 'stat'
 						
 						'<center><img src="images/characters/village/mira/Mira_shy.jpg"></center>'
-						'You have to offer Mira together to go to the forest for mushrooms and berries, but Mira only shakes his head, saying that after this humiliation she will will not leave the house.'
+						'You ask Mira to go to the forest with you to look for mushrooms and berries, but she only shakes her head, saying that after her humiliation she will not leave the house.'
 						act 'Leave':gt $loc, $metka
 					end
 				end    
 			end
 
-			if sunWeather = 1 and temper >= 20 and month >= 5 and month <= 9 and MiraLoc = 3 and miratalkforest > 1 and miraQW >= 5 and $clothingworntype ! 'nude' and forestpicnic = 0:			
+			if sunWeather = 1 and temper >= 15 and month >= 5 and month <= 9 and MiraLoc = 3 and miratalkforest > 1 and miraQW >= 5 and $clothingworntype ! 'nude' and forestpicnic = 0:			
 				act 'Offer to walk naked':
 					cls
 					!the clothing remains in the woods
@@ -480,11 +474,7 @@ if $ARGS[0] = 'Ask for Mira':
 				act '<b>Make your third wish</b>':
 					cls
 					minut += 2
-					MiraLoc ! 1
-					MiraLoc ! 2
 					mira_guest = 0
-					inriver = 0
-					MiraLoc ! 0                
 					if ($clothingworntype = 'nude' or $clothingworntype = 'swimwear'): 
 						gs 'clothing', 'wear', $lastwornclothingtype, lastwornclothingnumber
 						tanga = flag_tanga
@@ -511,7 +501,7 @@ if $ARGS[0] = 'Ask for Mira':
 							'Mira in silence and looks at you, then looks around at the village street on which people walk about their business.'
 							'"<<$pcs_nickname>>, please don''t make this your wish.  I will die of embarrassment!" - Mira plaintively begs hoping it will change your mind.'
 							
-							act 'To confirm his words':
+							act 'Confirm your words':
 								cls
 								minut += 5
 								pcs_horny += RAND(5,10)
@@ -546,7 +536,7 @@ if $ARGS[0] = 'Ask for Mira':
 										'"<<$pcs_nickname>>, we`re even!", - Mira states and looks at you emploringly.'
 										'You nodding his head while handing her clothes back.  After watching a few more minutes as Mira dresses several of the village men are hooting as she sprint to her house, slowly the men settle down and go about their business.'
 									
-										act 'Finish':mira_guest = 0 & gt 'gadukino'
+										act 'Finish':mira_guest = 0 & MiraLoc = 0 & gt 'gadukino'
 									end    
 								end
 							end
@@ -688,10 +678,6 @@ if $ARGS[0] = 'Ask for Mira':
 						cls
 						minut += 5
 						mira_guest = 1
-						MiraLoc ! 1
-						MiraLoc ! 2
-						inriver = 0
-						MiraLoc ! 0
 						if miraQW < 30:miraQW += 1				    
 						gs 'stat'
 						
@@ -706,9 +692,6 @@ if $ARGS[0] = 'Ask for Mira':
 								*clr
 								minut += 5
 								mira_guest = 1
-								MiraLoc ! 1
-								MiraLoc ! 2
-								inriver = 0
 								tanga = flag_tanga
 								gs 'clothing', 'wear', $lastwornclothingtype, lastwornclothingnumber
 								'<center><img src="images/locations/gadukino/river/dressbch.jpg"></center>'
@@ -743,11 +726,9 @@ if $ARGS[0] = 'Ask for Mira':
 							'You ask your grandparents if Mira can sleep over.  They tell you it''s fine with them.  So you invite Mira to sleep over.'
 							*nl
 							'You and Mira head over to the huge wardrobe where your cloths are and you spend an hour trying on different cloths and underwear.'
-							'You then head to the kitchen to make a quick snack'
 						
-							'Your feeling tired. You and Mira head to your bed and crawl under the covers together and get into bed.'
-						act 'Mira and you raid the kitchen for a late night snack (0:15)': gs 'food', 'snack'
-						act 'Go to sleep': gt 'bed2'
+						act 'Mira and you raid the kitchen for a late night snack (0:15)': 'You and Mira head to the kitchen to make a quick snack' & gs 'food', 'snack'
+						act 'Go to sleep':'You''re feeling tired. You and Mira head to your bed and crawl under the covers together and get into bed.' & gt 'bed2'
 						act 'Finish': mira_guest = 0 & gt $loc, $metka
 						end
 					end		        
@@ -757,6 +738,7 @@ if $ARGS[0] = 'Ask for Mira':
 						cls
 						minut += 5
 						mira_guest = 0
+						MiraLoc = 0
 						gs 'stat'
 
 						dynamic $miraclothes
@@ -769,37 +751,13 @@ if $ARGS[0] = 'Ask for Mira':
 		act 'Leave':gt 'gadukino'    
 	end     	 
 end
-
-! This is part of the meadow.  Remarking it out.	
-!if meadow = 2:
-!	cls
-!	minut += 2
-!	miraQW += 1
-!	gs 'stat'
-	        
-!	dynamic $miraclothes
-!   '"I know I haven''t been in the village for long here, but I have not hear anyone ever talk about this place.  Wow," Mira laughs and looks around the meadow.  "Now I know where I can come to too get away from the old crones in the village and get a little time alone.  You don`t mind, do you?"'
-!   act 'Sure, allow her to come here on her own':
-!		cls
-!		meadow = 3
-!	    minut += 2
-!	    miraQW += 1
-!	    gs 'stat'
-			    
- !       dynamic $miraclothes	
-!		'You respond that you don`t mind and can come over whenever she felt like, but you ask her word that she didn`t tell anyone about this place. Mira, happy as an elephant, you actively nods his head and says he`ll take this secret to the grave, but if not, then, like a Genie, will fulfill any three of your desire...'
-!		'She looks very happy and after some time decides to tell you a very terrible thing-a terrible secret...'
-!		'Are you intrigued agree in anticipation, of what such can tell you Mirka, and she soon tells you that she saw her father masturbating... It turns out that after his wife died - Mirkin mom - he didn`t have no woman, so he... In General, little Mira and at the same time sorry father, but also to help he can do nothing, though and very much loves. You expected something more, but because he heard such nonsense, of course, said it was not a secret, and it`s nonsense. Mirka sister, his whole appearance showing injured innocence. But after a couple of minutes, to my surprise, you felt unexpectedly nice blainey and itchy in your crotch thinking about Myroslavna father...'
-!		act 'Finish':gt 'meadow'
-!	end
-!end
-  
+ 
 if graze_cow = 1:	   
     act 'Talking to Mira':
 		cla
 		*clr
         minut += 60        
-        if temper >= 30 and sunWeather = 1:water -= 12
+        if temper >= 25 and sunWeather = 1:water -= 12
         if miraQW < 50: miraQW += 1
         gs 'stat'
         
@@ -820,7 +778,7 @@ if graze_cow = 1:
 		    run_exp += 1
 		    pcs_sweat += 10
 		    pcs_mood += 5     
-		    if temper >= 30 and sunWeather = 1:water -= 24
+		    if temper >= 25 and sunWeather = 1:water -= 24
 		    gs 'stat'
 		    
 		    '<center><img src="images/characters/village/mira/graze_cow_run_mira.jpg"></center>'
@@ -830,7 +788,7 @@ if graze_cow = 1:
 		    if hour >= 16:act 'Further':gt'gadfield','cow3'
 		end
          
-        if temper >= 20 and sunWeather = 1:               
+        if temper >= 15 and sunWeather = 1:               
             act 'Tan':
 			    cla
 			    *clr
@@ -848,7 +806,7 @@ if graze_cow = 1:
             end 
         end
     end    
-    if hour >= 13 and hour < 16 and temper >= 20 and sunWeather = 1:
+    if hour >= 13 and hour < 16 and temper >= 15 and sunWeather = 1:
         act 'Swim':
 			cla
 			*clr
@@ -897,7 +855,7 @@ if mira_temp = 0 and mira_go_blok = 0 and meadow > 2 or hour = 23:
 	if MiraLoc ! 1:dynamic $miraclothes
 	'"<<$pcs_nickname>>, your fun to be with, but I gotta get home.  Dad has chores for me to work on.," Mare tells you.'
     
-    act 'Further':mira_guest = 0 & MiraLoc ! 1 & MiraLoc ! 2 & MiraLoc ! 3 & gt 'Gadhouse'
+    act 'Further':mira_guest = 0 & MiraLoc = 0 & gt $loc, $metka
 end
 
 if miraQW >= 15 and Mira_no = 0 and (mitkasextimes < 13 or miraperversion >= 10 or mirasex > 1):
@@ -909,27 +867,27 @@ if miraQW >= 15 and Mira_no = 0 and (mitkasextimes < 13 or miraperversion >= 10 
 	  
         if MiraLoc = 1:dynamic $mira_river   
 	    if MiraLoc ! 1:dynamic $miraclothes
-        '"<<$pcs_nickname>>, something boring here, and come home to you`ll go, " offered you Mira.'
+        '"<<$pcs_nickname>>, it''s so boring here," Mira pouts, "I know! Let''s go to your place." Mira suggests brightly.'
         
         act'Agree':
 		    if ($clothingworntype ! 'nude' and $clothingworntype ! 'swimwear'):
-		        mira_go_blok = 1 & MiraLoc ! 2 & MiraLoc ! 0 & MiraLoc ! 1 & MiraLoc ! 1 & mira_guest = 1 & mira_go_blok = 1 & minut += 15 & miraQW += 1 & gt'Gadhouse'
+		        mira_go_blok = 1
+				mira_guest = 1
+				minut += 15
+				miraQW += 1
+				gt'Gadhouse'
 	        else
 			    cla
 			    *clr
 			    miraQW += 1
 			    mira_go_blok = 1
 			    mira_guest = 1
-			    MiraLoc ! 1
-			    MiraLoc ! 2
-			    MiraLoc ! 0
-			    inriver = 0
 			    if miraQW < 30:miraQW += 1
 			    minut += 20
 			    tanga = flag_tanga
 			    gs 'clothing', 'wear', $lastwornclothingtype, lastwornclothingnumber
 			    '<center><img src="images/locations/gadukino/river/dressbch.jpg"></center>'
-			    'You changed into your clothes and went with Mira to your home.'
+			    'You change into your clothes and go home with Mira.'
 			    	
 			    act 'Further': gt'Gadhouse'
 	        end	
@@ -996,12 +954,9 @@ if miraQW >= 15 and Mira_no = 0 and (mitkasextimes < 13 or miraperversion >= 10 
 			minut += 15
 			if miraQW < 50:miraQW += 1
 		    mira_guest = 0
-		    MiraLoc ! 1
-		    MiraLoc = 2
-            inriver = 0
+			MiraLoc = 2
             mira_go_blok = 1
-            MiraLoc ! 0
-			if ($clothingworntype = 'nude' or $clothingworntype = 'swimwear'): 
+            if ($clothingworntype = 'nude' or $clothingworntype = 'swimwear'): 
                 gs 'clothing', 'wear', $lastwornclothingtype, lastwornclothingnumber
 	            tanga = flag_tanga
 	        end			    
@@ -1023,7 +978,7 @@ if miraQW >= 15 and Mira_no = 0 and (mitkasextimes < 13 or miraperversion >= 10 
             act 'Further': gt $loc, $metka
         end
 	end
-	if MiraLoc ! 1 and mira_temp >= 6 and mira_temp <= 7 and sunWeather = 1 and temper >= 20 and mira_go_blok = 0 and MiraLoc ! 3 and hour < 18:
+	if MiraLoc ! 1 and mira_temp >= 6 and mira_temp <= 7 and sunWeather = 1 and temper >= 15 and mira_go_blok = 0 and MiraLoc ! 3 and hour < 18:
 	    cla
 	    *clr
         minut += 1   
@@ -1039,18 +994,15 @@ if miraQW >= 15 and Mira_no = 0 and (mitkasextimes < 13 or miraperversion >= 10 
 			if miraQW < 30:miraQW += 1
 		    mira_guest = 0
 		    MiraLoc = 1
-		    MiraLoc ! 2
-		    inriver = 1
 		    mira_go_blok = 1
-		    MiraLoc ! 0
-			if ($clothingworntype = 'nude' or $clothingworntype = 'swimwear'): 
+		    if ($clothingworntype = 'nude' or $clothingworntype = 'swimwear'): 
                 gs 'clothing', 'wear', $lastwornclothingtype, lastwornclothingnumber
 	            tanga = flag_tanga
 	        end			    
 			gs 'stat'
 			
 			'<center><img src="images/locations/gadukino/village/girls_go.jpg"></center>'
-			'You decided to go with Mira to the village beach and all the way she goes, merrily chirping and telling stories.'
+			'You decided to go with Mira to the village beach and all the way she goes, merrily chattering and telling stories.'
 			act 'Further': gt'Gadriver', 'Gadbitch'
 		end	
         act'Refuse':
@@ -1072,12 +1024,8 @@ if miraQW >= 15 and Mira_no = 0 and (mitkasextimes < 13 or miraperversion >= 10 
         minut += 1
         mira_go_blok = 1
         MiraLoc = 5
-        MiraLoc ! 0
-		mira_guest = 0
-		MiraLoc ! 1
-		MiraLoc = 2
-        inriver = 0        
-	    if ($clothingworntype = 'nude' or $clothingworntype = 'swimwear'): 
+        mira_guest = 0
+		if ($clothingworntype = 'nude' or $clothingworntype = 'swimwear'): 
             gs 'clothing', 'wear', $lastwornclothingtype, lastwornclothingnumber
 	        tanga = flag_tanga
 	    end	    
@@ -1087,9 +1035,9 @@ if miraQW >= 15 and Mira_no = 0 and (mitkasextimes < 13 or miraperversion >= 10 
         '"<<$pcs_nickname>>, let''s go hang out with those guys and drink a little?"  Mira asks you.  "I''m bored and want to party."'
         
 	    if miraperversion > 15 and mitkasextimes > 15:
-		    act 'Agree':mira_guest = 0 & inriver = 0 & MiraLoc ! 1 & MiraLoc ! 2 & MiraLoc = 5 & minut += 15 & temp = 0 & miralko = 0 & gt 'mitkabuh_group'
+		    act 'Agree':mira_guest = 0 & MiraLoc = 5 & minut += 15 & temp = 0 & miralko = 0 & gt 'mitkabuh_group'
 		else
-		    act 'Agree':mira_guest = 0 & inriver = 0 & MiraLoc ! 1 & MiraLoc ! 2 & MiraLoc = 5 & minut += 15 & temp = 0 & miralko = 0 & gt 'mitkabuh'
+		    act 'Agree':mira_guest = 0 & MiraLoc = 5 & minut += 15 & temp = 0 & miralko = 0 & gt 'mitkabuh'
 	    end	
         act'Refuse':
             cla
@@ -1127,7 +1075,7 @@ if miraQW >= 15 and Mira_no = 0 and (mitkasextimes < 13 or miraperversion >= 10 
             act 'Further': gt $loc, $metka
         end
 	end
-	if MiraLoc = 1 and mira_temp >= 8 and mira_temp <= 9 and sunWeather = 1 and temper >= 20:
+	if MiraLoc = 1 and mira_temp >= 8 and mira_temp <= 9 and sunWeather = 1 and temper >= 15:
 	    cla
 	    *clr
         minut += 1   
@@ -1163,8 +1111,7 @@ if miraQW >= 15 and Mira_no = 0 and (mitkasextimes < 13 or miraperversion >= 10 
 			    minut += 5
 			    flag_tanga = tanga
 			    tanga = 0
-			    inriver = 1
-                gs 'clothing', 'wear', $lastwornclothingtype, lastwornclothingnumber
+			    gs 'clothing', 'wear', $lastwornclothingtype, lastwornclothingnumber
 			    '<center><img src="images/locations/gadukino/river/undressbch.jpg"></center>'
 			    '"Now Mirka, only swimsuit wear," cried you her response, though she hardly heard you, already splashing around in the river.'
 			    'You took off my clothes, put on a swimsuit and coulis in the water after Mira.'
@@ -1260,7 +1207,7 @@ $miratalk = {
 				miraperversion = 2
 				gs 'stat'
 				'<center><img src="images/characters/village/mira/mira3.jpg"></center>'
-				'You ask Mira, is there-something between her and Mitka.  She looks at you a little timidly, but responds yes, there is.  She refuses to go into further detail, so you decide to leave the subject until a more appropriate time come up...'
+				'You ask Mira if there is something between her and Mitka.  She looks at you a little timidly, but responds yes, there is.  She refuses to go into further detail, so you decide to leave the subject until a more appropriate time come up...'
 				act 'Finish':gt $loc, $metka
 			end
 		end

@@ -3,7 +3,11 @@ gs 'stat'
 '<center><b><font color="maroon">Mitka Kingpin</font></b></center>'
 '<center><img src="images/locations/gadukino/village/mitka.jpg"></center>'
 *nl
-'He is barely older than you, you remember him from your childhood.  You both use to swim in the local river together.'
+'He is barely older than you, you remember him from your childhood.  You both used to swim in the local river together.'
+if mitkasextimes = 0 and rand(0,3) = 0: 
+	'You blush as you recall that you used to swim naked when you were little.'
+	if pcs_horny >= 40: 'You bite your lip and glance down at his crotch and can''t help but wonder how much he has grown since then.'
+end
 *nl
 
 $mitkaInvitation = 'Listen, we have a fresh batch of our home brew. Come to our party at eight o''clock. We''ll hang out with some friends, drink and have fun. What do you say?'
@@ -28,56 +32,57 @@ else
 			
 			act 'I don''t know.  My mother is obsessed with me staying a virgin.':
 				'You turn away and slowly walk away from Mitka.  You know you want him, but you promised your mother...'
-				wait 1500
-				gt 'gadukino'
+				act 'Continue': gt 'gadukino'
 			end
-			act 'Hmm. No sex, Mitka.  I will give you a blowjob only.':
-				cls
-				gs 'boyStat', 63
-				minut += 10
-				pcs_horny += 10
-				mitkasextimes += 1
-				stat['bj'] += 1
-				gs'stat'
-
-				'<center><img src="images/locations/gadukino/sex/mitka/mitkabjhome.jpg"></center>'
-				*nl
-				'Mitka takes you to his house and onto the veranda.  You kneel down on your knees and smiling up at him take his cock out of his pants and start to suck...'
-				gs'oral','start'
-
-				act 'Swallow':
+			if pcs_horny >= 50:
+				act 'Hmm. No sex, Mitka.  I will give you a blowjob only.':
 					cls
+					gs 'boyStat', 63
 					minut += 10
 					pcs_horny += 10
-					sub += RAND(0,1)
-					temp = rand(0,5)
+					mitkasextimes += 1
+					stat['bj'] += 1
+					gs'stat'
 
-					if temp = 5:
-						spafinloc = 12
-						swallow += 1
-						'<center><img src="images/locations/gadukino/sex/mitka/mitkabjhomecum3.jpg"></center>'
-						*nl
-						'You bob your head up and down on his cock, trying to cram as much of his cock deep into your mouth. Sometimes you gag as it enters your throat. Eventually, you feel Mitka''s cock pulse and a few seconds later your mouth is filled with his salty sperm.'
-					elseif temp >= 3:
-						spafinloc = 11
-						'<center><img src="images/locations/gadukino/sex/mitka/mitkabjhomecum2.jpg"></center>'
-						*nl
-						'Mitka takes his cock in his hand and begins to furiously jacking off right in your face. Within a minute Mitka is panting hard and suddenly you feel hot spunk slapping into your face and mouth. It feels wonderful.'
+					'<center><img src="images/locations/gadukino/sex/mitka/mitkabjhome.jpg"></center>'
+					*nl
+					'Mitka takes you to his house and onto the veranda.  You kneel down on your knees and smiling up at him take his cock out of his pants and start to suck...'
+					gs'oral','start'
 
-					else
-						spafinloc = 12
-						swallow += 1
-						'<center><img src="images/locations/gadukino/sex/mitka/mitkabjhomecum1.jpg"></center>'
-						*nl
-						'Mitya places his large hands on the back of your head and roughly force you to take his cock deep into your throat. Slowly he builds up a rhythm and finally finishes in your mouth.'
+					act 'Swallow':
+						cls
+						minut += 10
+						pcs_horny += 10
+						sub += RAND(0,1)
+						temp = rand(0,5)
+
+						if temp = 5:
+							spafinloc = 12
+							swallow += 1
+							'<center><img src="images/locations/gadukino/sex/mitka/mitkabjhomecum3.jpg"></center>'
+							*nl
+							'You bob your head up and down on his cock, trying to cram as much of his cock deep into your mouth. Sometimes you gag as it enters your throat. Eventually, you feel Mitka''s cock pulse and a few seconds later your mouth is filled with his salty sperm.'
+						elseif temp >= 3:
+							spafinloc = 11
+							'<center><img src="images/locations/gadukino/sex/mitka/mitkabjhomecum2.jpg"></center>'
+							*nl
+							'Mitka takes his cock in his hand and begins to furiously jacking off right in your face. Within a minute Mitka is panting hard and suddenly you feel hot spunk slapping into your face and mouth. It feels wonderful.'
+
+						else
+							spafinloc = 12
+							swallow += 1
+							'<center><img src="images/locations/gadukino/sex/mitka/mitkabjhomecum1.jpg"></center>'
+							*nl
+							'Mitya places his large hands on the back of your head and roughly force you to take his cock deep into your throat. Slowly he builds up a rhythm and finally finishes in your mouth.'
+						end
+
+						gs 'cum_manage'
+						gs 'stat'
+						act 'Leave':gt 'gadukino'
 					end
-
-					gs 'cum_manage'
-					gs 'stat'
-					act 'Leave':gt 'gadukino'
 				end
-			end	
-		elseif mitkasextimes < 13:
+			end
+		elseif mitkasextimes < 13 or miraperversion > 10:
 			temp = RAND(0,5)
 			*nl
 			'Mitka scratches his balls and adds with a grin: "Hey <<$pcs_nickname>>, do you want to have some fun?"'
@@ -184,6 +189,20 @@ else
 				end
 				act 'Leave':gt 'gadukino'
 			end
+		elseif mitkasextimes < 13 and miraperversion >= 2 and miraperversion <= 10:
+			temp = RAND(3,10)
+			*nl
+			'Mitka scratches his balls and adds with a grin: "Hey <<$pcs_nickname>>, do you want to have some fun?"'
+			
+			'You hesitate for a moment then look at him sternly.'
+			'"What about Mira? Aren''t you going out with her?"'
+			'Mitka smiles sheepishly and has the decentcy to blush. He looks around to make sure Mira isn''t nearby then tries to explain.'
+			'"Well, I just figured since, you know, we already did stuff..." he trails off as he notices that you aren''t going for it.'
+			'"You thought wrong." you tell him coldly, "Unlike boys, girls don''t fool around with their best friend''s boyfriend."'
+			'You turn around and walk away and Mitka kicks at the ground in frustration. You decide not to mention this to Mira.' 
+			
+			act 'Leave':gt 'gadukino'
+		
 		else
 			act 'Leave':gt 'gadukino'
 		end
