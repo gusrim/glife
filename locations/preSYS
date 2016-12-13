@@ -88,7 +88,7 @@ if $ARGS[0] = 'SGStart':
 	$pcs_nickname = input("What is your nick name? (Note: If you chose a custom name, you have to enter something here!)")
 
 	if $pcs_nickname = '':$pcs_nickname = 'Sveta'
-    '<center><img src="images/pre/SYS/altstart.jpg"></center>'
+	'<center><img src="images/pre/SYS/altstart.jpg"></center>'
 	'Your name is <<$pcs_firstname>> <<$pcs_lastname>>, Friends and family sometimes call you <<$pcs_nickname>>.'
 
 	act 'Re-enter name/s': gt 'preSYS', 'SGStart'
@@ -97,12 +97,12 @@ if $ARGS[0] = 'SGStart':
 		'<center><img src="images/pre/SYS/altstart1.jpg"></center>'
 		'Please select how long you have left in school.'
 		act 'Begin at the last year of school, age 16 or 17':
-			birthyear = 1999
+			birthyear = 2000
 			yearlefttemp = 1
 			gt 'preSYS', 'SGStart2'
 		end
 		act 'Begin at the second-last year of school, age 15 or 16':
-			birthyear = 2000
+			birthyear = 2001
 			yearlefttemp = 2
 			gt 'preSYS', 'SGStart2'
 		end
@@ -110,8 +110,8 @@ if $ARGS[0] = 'SGStart':
 end
 
 if $ARGS[0] = 'SGStart2':
-!!make sure this image shows up above the text that shows your birthday.
-    '<center><img src="images/pre/SYS/altstart2.jpg"></center>'
+!!make sure this image shows up above the text that shows your birthday
+	'<center><img src="images/pre/SYS/altstart2.jpg"></center>'
 	if birthday < 10 and birthmonth < 10:
 		$startdob = 'Your birthday: <B>0<<birthmonth>>/0<<birthday>>/<<birthyear>></B> (MM/DD/YYYY)'
 	elseif birthday < 10 and birthmonth >= 10:
@@ -129,6 +129,14 @@ if $ARGS[0] = 'SGStart2':
 	end
 	'<center><img src="images/pre/SYS/altstart26.jpg"></center>'
 	'You can begin your game at the end of the summer holiday, very close to starting the new school year. Alternatively, you can start at the beginning of the holiday.'
+!!	This is to account for the school year not matching up with the calendar year.
+	if birthmonth >= 7:
+		if yearlefttemp = 1:
+			birthyear = 1999
+		else
+			birthyear = 2000
+		end
+	end
 	killvar '$startdob'
 	act 'Start at the end of August <B>(recommended for new players)</B>':
 !!		This is the default start
@@ -136,13 +144,18 @@ if $ARGS[0] = 'SGStart2':
 		gt 'preSYS', 'SGStart3'
 	end
 
-	act 'Start at the beginning of June':
-		month = 6
-		$month = 'June'
-		day = 1
-		week = 3
-		kanicont = 92
-		gt 'preSYS', 'SGStart3'
+!!	This is to prevent to player from starting at 14
+	if birthmonth = 6 and yearlefttemp = 2:
+		act '<i>Start at the beginning of June</i> June Start restricted due to set birthday': gt 'preSYS', 'SGStart2'
+	else
+		act 'Start at the beginning of June':
+			month = 6
+			$month = 'June'
+			day = 1
+			week = 3
+			kanicont = 92
+			gt 'preSYS', 'SGStart3'
+		end
 	end
 end
 

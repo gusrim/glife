@@ -181,7 +181,6 @@ if $ARGS[0] = 'gadriver_gang':
 	pcs_dom -= 10
 	if pcs_health <= 100:pcs_health += 100
 	gs'stat'
-	!gs'time'
 
     '<center><img src="images/locations/gadukino/sex/river/gadriver_gang.jpg"></center>'
     'You walked along the path, fully immersed in your inner thoughts, you didn''t immediately notice the crowd of drunken village men. Noticing you alone the men turn their attention towards you.' 
@@ -821,6 +820,7 @@ if $args[0] = 'go_home':
 				'Mom asks you "Well, <<$pcs_nickname>>, are you coming home with us or are you going to stay in the village with your grandparents?"'
 				act 'Stay': 
 					staygad = daystart
+					gadstay = 1 & !Flag to monthly pay scene
 					indorf = 0
 					gt 'gadhouse'
 				end
@@ -838,11 +838,12 @@ end
 if $args[0] = 'go_home_ender':
 	*clr & cla
 	minut += rand(15,25)
-	!if grandma_task_counter > 0:
-	!	'Before leaving grandma for your help gave you <<grandma_task_counter*200>> rubles.'
-	!	money += grandma_task_counter*200
-	!	grandma_task_counter = 0
-	!end
+	if grandmahelp > 0:
+		'Before leaving grandma gives you <<grandmahelp*50>> rubles.'
+		money += grandmahelp*50
+		grandmahelp = 0
+	end
+	gadstay = 0
 	gs 'stat'
 	'You get into the Volga with the rest of your family and before you know it, you''ve arrived back in Pavlovo.'
 	act 'Go to your room': gt 'bedrPar'
