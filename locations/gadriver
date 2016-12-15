@@ -28,18 +28,11 @@ if $ARGS[0] = 'start':
 	
 	if hour >= 6 and hour < 21 and sunWeather = 1: 'You see the local <a href="exec:gt ''Gadriver'', ''fishers''">fishermen</a> fishing with their rods on the riverbank.'
 	
-
-	
-	!if rand(0,20) < 4 and hour >= 6 and hour < 21 and month >= 5 and month <= 9 and sunWeather = 1:
-	!	fishers = daystart
-	!	'You notice the local <a href="exec:gt ''Gadriver'', ''fishers''">fishermen</a> fishing on the riverbank.'
-	!elseif fishers = daystart and hour < 21 and sunWeather = 1:
-	
 	temp = rand(0,20)
 
-	if temp = 1 and hour < 5 and month >= 5 and month <= 9 and miraperversion >= 20: 'Right next to the path leading to the river, you see <a href="exec: gt ''Gadriver'', ''mirapunish'' ">Mira</a> naked, bound with ropes between two trees...'
+	if temp = 1 and hour < 5 and month >= 5 and month <= 9 and npc_QW['A60'] >= 20: 'Right next to the path leading to the river, you see <a href="exec: gt ''Gadriver'', ''mirapunish'' ">Mira</a> naked, bound with ropes between two trees...'
 	
-	if temp = 4 and MiraLoc ! 1 and mitkasextimes >= 13 and hour >= 5 and sub > 0:
+	if temp = 4 and MiraLoc ! 1 and npc_QW['A63'] >= 13 and hour >= 5 and sub > 0:
 		if mitkaguysriver ! daystart:
 			mitkaguysriver = daystart
 			'While going to the river you meet Kolyamba and Vasya. They first invite you to join them, then insist you go with them.'
@@ -69,7 +62,7 @@ if $ARGS[0] = 'start':
 			act 'To the beach':minut += 5 & gt 'Gadriver', 'Gadbitch'
 			act 'To the village':minut += 20 & MiraLoc ! 1 & gt 'gadukino'
 		end
-	elseif temp = 5 and MiraLoc ! 1 and mitkasextimes >= 13 and hour >= 5 and sub > 0:
+	elseif temp = 5 and MiraLoc ! 1 and npc_QW['A63'] >= 13 and hour >= 5 and sub > 0:
 		if mitkaguysriver ! daystart:
 			mitkaguysriver = daystart
 			'While walking towards the river you meet the village boys, whom you''ve been drinking with recently. They ask you to go with them.'
@@ -99,7 +92,7 @@ if $ARGS[0] = 'start':
 			act 'Go to the beach':minut += 5 & gt 'Gadriver', 'Gadbitch'
 			act 'Go to the village':minut += 20 & MiraLoc ! 1 & gt 'gadukino'
 		end
-	elseif temp = 6 and MiraLoc ! 1 and mitkasextimes >= 13 and hour >= 5 and sub > 0:
+	elseif temp = 6 and MiraLoc ! 1 and npc_QW['A63'] >= 13 and hour >= 5 and sub > 0:
 		if mitkaguysriver ! daystart:
 			mitkaguysriver = daystart
 			'On your way to the river you meet Vasya, he insists you follow him home...'
@@ -184,8 +177,84 @@ if $ARGS[0] = 'Gadbitch':
 	    '<center><img src="images/locations/gadukino/river/mira_in_river.jpg"></center>'
 	    'Arriving at the beach, you see Mira laying down, sunbathing on a towel.'
 	    
-        act 'Further': gt'Gadriver', 'Gadbitch'
-		exit
+        act 'Further': 
+		
+			if rand(0,3) = 0 and Miraswimday ! daystart:
+				cla
+				*clr
+				minut += 1
+				Miraswimday = daystart
+				gs 'stat'
+				
+				gs 'Miroslava', 'miraclothes'
+				'"<<$pcs_nickname>>, Why are you moping about on the shore, get in the water and swim with me?" - Mira called out to you as she waded into the river.'
+				
+				act'Agree':
+					if ($clothingworntype = 'nude' or $clothingworntype = 'swimwear'):
+						cla
+						*clr
+						temp = RAND(0,15)
+						cumspclnt = 4 & gs 'cum_cleanup'
+						minut += 30
+						pcs_sweat = 10 + rand(0,4)
+						pcs_mood += 5			    
+						pcs_willpwr += 5
+						if pcs_stren < 30:stren_exp += 1
+						gs'stat'
+						
+						if $clothingworntype = 'swimwear':
+							'<center><img src="images/locations/gadukino/river/RiverTwoGirls.jpg"></center>'
+							'You wade into the river, you have fun with Mira spraying each other with water.'
+						else
+							'<center><img src="images/locations/gadukino/river/RiverTwoGirlsNude'+rand(0,5)+'.jpg"></center>'
+							'You wade into the river, you have fun with Mira spraying each other with water.'
+						end    
+
+						act 'Get out of the water':gt'Gadriver', 'Gadbitch'
+
+					else
+						cla
+						*clr
+						minut += 5
+						flag_tanga = tanga
+						tanga = 0
+						gs 'clothing', 'wear', $lastwornclothingtype, lastwornclothingnumber
+						'<center><img src="images/locations/gadukino/river/undressbch.jpg"></center>'
+						'"Wait Mira, I have to change into my swimsuit!" you cry in response, although she could hardly hear you as she is already splashing around in the river.'
+						'You take off your clothes, put on a swimsuit and run into the water after Mira.'
+						
+						act'Swim':
+							cla
+							*clr
+							temp = RAND(0,15)
+							cumspclnt = 4 & gs 'cum_cleanup'
+							minut += 30
+							pcs_sweat = 10 + rand(0,4)
+							pcs_mood += 5			    
+							pcs_willpwr += 5
+							if pcs_stren < 30:stren_exp += 1
+							gs'stat'
+						
+							'<center><img src="images/locations/gadukino/river/RiverTwoGirls.jpg"></center>'
+							'You wade into the river, you have fun with Mira spraying each other with water.'
+		  
+							act 'Get out of the water':gt'Gadriver', 'Gadbitch'		
+						end
+					end
+				end
+				act'Refuse':
+					cla
+					*clr
+					minut += 1
+					npc_rel['A60'] -= 1
+					gs 'stat'
+					
+					'<center><img src="images/locations/gadukino/river/mirariver.jpg"></center>'
+					'"No, Mira I don''t feel like swimming just now," you replied you her. "I''m going to stay on the shore for a bit."'
+					act 'Further': gt'Gadriver', 'Gadbitch'
+				end
+			end	
+		end
 	end   	
 
 	!125e	
@@ -222,7 +291,7 @@ if $ARGS[0] = 'Gadbitch':
 		end
 	end
 
-	if MiraLoc ! 1 and mitkasextimes >= 13 and RAND(0,10) = 0 and hour >= 8 and hour < 20 and month >= 5 and month <= 9 and temper >= 15 and sunWeather = 1:'<a href="exec: gt ''Gadriver'', ''GuysRiver'' ">Bob Colby</a> is resting on the riverbank.'
+	if MiraLoc ! 1 and npc_QW['A63'] >= 13 and RAND(0,10) = 0 and hour >= 8 and hour < 20 and month >= 5 and month <= 9 and temper >= 15 and sunWeather = 1:'<a href="exec: gt ''Gadriver'', ''GuysRiver'' ">Bob Colby</a> is resting on the riverbank.'
 
 	if temper >= 15 and month >= 5 and month <= 9:
 
@@ -258,7 +327,7 @@ if $ARGS[0] = 'Gadbitch':
 				end
 				
 				act 'Get out of the water':
-					if MiraLoc ! 1 and mitkasextimes >= 13 and temp = 0 and hour >= 8 and hour < 20:
+					if MiraLoc ! 1 and npc_QW['A63'] >= 13 and temp = 0 and hour >= 8 and hour < 20:
 						cls
 						minut += 20
 						pcs_horny = RAND(50,90)
@@ -281,7 +350,7 @@ if $ARGS[0] = 'Gadbitch':
 						'They quickly undress and jump in the water. Within a few seconds you are surrounded by the grinning boys. Without a word they reach for you and roughly take turns forcing you to suck their cocks.'
 						
 						act 'Finish':minut += 5 & gt'Gadriver', 'Gadbitch'
-					elseif MiraLoc ! 1 and mitkasextimes >= 13 and temp = 1 and hour >= 8 and hour < 20 and sub > 0:
+					elseif MiraLoc ! 1 and npc_QW['A63'] >= 13 and temp = 1 and hour >= 8 and hour < 20 and sub > 0:
 						cls
 						minut += 20
 						pcs_horny = RAND(50,90)
@@ -330,13 +399,11 @@ if $ARGS[0] = 'Gadbitch':
 				end
 			end
 			act 'Get out of the water':
-				if MiraLoc ! 1 and mitkasextimes >= 13 and temp = 0 and hour >= 8 and hour < 20:
+				if MiraLoc ! 1 and npc_QW['A63'] >= 13 and temp = 0 and hour >= 8 and hour < 20:
 					cls
 					minut += 30
 					pcs_horny = RAND(50,90)
 					gs 'boyStat', 63
-	
-		
 					pose = 1
 					sub += RAND(0,4)
 					pcs_ass += 1
@@ -346,7 +413,6 @@ if $ARGS[0] = 'Gadbitch':
 					spafinloc = 11
 					gs 'cum_manage'
 					spafinloc = 3
-					gs 'cum_manage'
 					gs 'cum_manage'
 					gang += 1
 					swallow += RAND(0,1)
@@ -420,7 +486,7 @@ if $ARGS[0] = 'Gadbitch':
 						end
 						act 'Finish':
 
-							if MiraLoc ! 1 and mitkasextimes >= 13 and temp = 0 and hour >= 8 and hour < 20:
+							if MiraLoc ! 1 and npc_QW['A63'] >= 13 and temp = 0 and hour >= 8 and hour < 20:
 								cls
 								minut += 30
 								pcs_horny = RAND(50,90)
@@ -453,7 +519,7 @@ if $ARGS[0] = 'Gadbitch':
 								dynamic $sexstart2
 								dynamic $sexcum
 								act 'Finish':minut += 5 & gt'Gadriver', 'Gadbitch'
-							elseif MiraLoc = 1 and miraperversion >= 15 and temp = 1 and hour >= 8 and hour < 20:
+							elseif MiraLoc = 1 and npc_QW['A60'] >= 15 and temp = 1 and hour >= 8 and hour < 20:
 								cls
 								minut += 30
 								pcs_horny = RAND(50,100)
@@ -493,7 +559,7 @@ if $ARGS[0] = 'Gadbitch':
 					pcs_tan += 3
 				end
 				act 'Finish sunbathing and get dressed':
-					if MiraLoc ! 1 and mitkasextimes >= 13 and temp = 0 and hour >= 8 and hour < 20:
+					if MiraLoc ! 1 and npc_QW['A63'] >= 13 and temp = 0 and hour >= 8 and hour < 20:
 						cls
 						minut += 30
 						pcs_horny = RAND(50,90)
@@ -550,13 +616,13 @@ if $ARGS[0] = 'Mira':
 
 
 	if sun = 1:
-		if miraperversion < 12:
+		if npc_QW['A60'] < 12:
 			'<center><img src="images/locations/gadukino/river/mirabeach.jpg"></center>'
 		else
 			'<center><img src="images/locations/gadukino/river/mirabeachnude.jpg"></center>'
 		end
 	else
-		if miraperversion < 12:
+		if npc_QW['A60'] < 12:
 			'<center><img src="images/locations/gadukino/river/mirariver.jpg"></center>'
 		else
 			'<center><img src="images/locations/gadukino/river/mirarivernude.jpg"></center>'
@@ -570,38 +636,38 @@ if $ARGS[0] = 'Mira':
 		pcs_mood += 10
 		gs 'stat'
 		if sun = 1:
-			if miraperversion < 12:
+			if npc_QW['A60'] < 12:
 				'<center><img src="images/locations/gadukino/river/mirabeach.jpg"></center>'
 			else
 				'<center><img src="images/locations/gadukino/river/mirabeachnude.jpg"></center>'
 			end
 		else
-			if miraperversion < 12:
+			if npc_QW['A60'] < 12:
 				'<center><img src="images/locations/gadukino/river/mirariver.jpg"></center>'
 			else
 				'<center><img src="images/locations/gadukino/river/mirarivernude.jpg"></center>'
 			end
 		end
-		if miraperversion >= 0:
-            if miraperversion >= 0 and miraperversion < 7 and sunWeather = 1:
+		if npc_QW['A60'] >= 0:
+            if npc_QW['A60'] >= 0 and npc_QW['A60'] < 7 and sunWeather = 1:
 				'You and Mira are chatting about trivial things.'
-            elseif miraperversion = 7 and sunWeather = 1:
+            elseif npc_QW['A60'] = 7 and sunWeather = 1:
 				'You decide to strike up some conversation with Mira, "So what is there to do here in the village?"'
 				'"Its a lot quicker than town, we do have a shop, this lovely beach and there are some beautiful walks. Other than that there''s only the gopnik guys but they are just after one thing and I don''t want that, plus dad would kill me."'
-            elseif miraperversion >= 8 and sunWeather = 1:
+            elseif npc_QW['A60'] >= 8 and sunWeather = 1:
 				'Mira breaks the silence, "What brings you here to the village?"'
 				'"My granma-ma and Pop-pop live here, my folks like to come here over the summer. They think the country air will be good for me."'
-            elseif miraperversion >= 9 and sunWeather = 1:
+            elseif npc_QW['A60'] >= 9 and sunWeather = 1:
 				'Placeholder Text'
-            elseif miraperversion >= 11 and sunWeather = 1:
+            elseif npc_QW['A60'] >= 11 and sunWeather = 1:
 				'Placeholder Text'
-            elseif miraperversion >= 15 and sunWeather = 1:
+            elseif npc_QW['A60'] >= 15 and sunWeather = 1:
 				'Placeholder Text'
-            elseif miraperversion >= 20 and sunWeather = 1:
+            elseif npc_QW['A60'] >= 20 and sunWeather = 1:
 				'Placeholder Text'
-            elseif miraperversion >= 20 and sunWeather = 1:
+            elseif npc_QW['A60'] >= 20 and sunWeather = 1:
 				'Placeholder Text'
-            elseif miraperversion >= 30 and miraprost > 0 and sunWeather = 1:
+            elseif npc_QW['A60'] >= 30 and miraprost > 0 and sunWeather = 1:
 				'You and Mira talk about her being the village prostitute and how she can improve her performance.'
 			end
 		end
@@ -1007,7 +1073,7 @@ if $ARGS[0] = 'fishing':
 					gs 'stat'
 					
 					'<center><img src="images/locations/gadukino/river/talkfishers.jpg"></center>'
-					'You give all the fish you caught to uncle Stepan and he reluctantly accepts them, you can see he is quite happy with this arrangement.'
+					'You give all the fish you caught to uncle Stepan and he makes a show out of reluctantly accepting them, but you can see that he is actually quite happy with this arrangement.'
 					
 					act 'Leave':minut += 5 & gt $loc, $metka
 				end
@@ -1015,14 +1081,24 @@ if $ARGS[0] = 'fishing':
 					cla
 					*clr
 					minut += 5
-					fish = 0
+					fish -= 1
 					pcs_mood += RAND(15,40)
 					gs 'stat'
 					
 					'<center><img src="images/locations/gadukino/village/villcat2.jpg"></center>'
-					'As soon as you enter the house, the furry beast immediately jumps to your feet and starts meowing very loudly. He detected a faint smell of fresh fish. You treat Boniface to the small fish and within a few minutes all that remains is a pile of fish bones.'
+					'As soon as you enter the house, Boniface immediately jumps down to the floor and twines around your feet. The furry beast starts yowling very loudly and pawing at your legs. He has obviously detected the smell of fresh fish. You treat Boniface to a small fish and within a few minutes all that remains is a pile of fish bones.' 
+					if fish >0: fish = 0 & 'You try to give the rest of the fish to your grandmother, but she takes one look at the intact fish and point at your grandfather. He sighs heavily then takes the fish outside to clean them.'
 					
-					act 'Finish':minut += 2 & gt 'Gadhouse'
+					act 'Finish': gt 'Gadhouse'
+				end
+				act 'Give the fish to your grandmother':
+					cla
+					*clr
+					minute += 5
+					'<center><img src="images/locations/gadukino/grandparents/givefish.jpg"></center>'
+					'You try to give the fish to your grandmother, but she takes one look at the intact fish and point at your grandfather. He sighs heavily then takes the fish outside to clean them.'
+
+					act 'Finish': gt 'Gadhouse'
 				end
 			else
 				act 'Leave':minut += 5 & gt $loc, $metka
@@ -1067,14 +1143,24 @@ if $ARGS[0] = 'fishing':
 				cla
 				*clr
 				minut += 5
-				fish = 0
+				fish -= 1
 				pcs_mood += RAND(15,40)
 				gs 'stat'
 				
 				'<center><img src="images/locations/gadukino/village/villcat2.jpg"></center>'
-				'As soon as you enter the house, the furry beast immediately jumps to your feet and starts meowing very loudly. He detected a faint smell of fresh fish. You treat Boniface to a small fish and within a few minutes all that remains is a pile of fish bones.'
+				'As soon as you enter the house, Boniface immediately jumps down to the floor and twines around your feet. The furry beast starts yowling very loudly and pawing at your legs. He has obviously detected the smell of fresh fish. You treat Boniface to a small fish and within a few minutes all that remains is a pile of fish bones.' 
+				if fish >0: fish = 0 & 'You try to give the rest of the fish to your grandmother, but she takes one look at the intact fish and point at your grandfather. He sighs heavily then takes the fish outside to clean them.'
 				
-				act 'Finish':minut += 2 & gt 'Gadhouse'
+				act 'Finish': gt 'Gadhouse'
+			end
+			act 'Give the fish to your grandmother':
+				cla
+				*clr
+				minute += 5
+				'<center><img src="images/locations/gadukino/grandparents/givefish.jpg"></center>'
+				'You try to give the fish to your grandmother, but she takes one look at the intact fish and point at your grandfather. He sighs heavily then takes the fish outside to clean them.'
+
+				act 'Finish': gt 'Gadhouse'
 			end
 		else
 			act 'Leave':minut += 5 & gt $loc, $metka
