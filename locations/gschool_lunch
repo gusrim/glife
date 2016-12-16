@@ -35,15 +35,20 @@ if $ARGS[0] = 'lunch':
 		if money >= 50:
 			act 'Buy food (50 <b>₽</b>)':
 				money -= 50
+				gs 'gschool_gossip', 'buying'
 				gs 'food', 'dyn_meal'
 				act 'Continue your break': gt 'gschool_lunch', 'break'
 			end
 		end
 		act 'Eat bagged lunch':
+			gs 'gschool_gossip', 'bagged'
 			gs 'food', 'bag_lunch'
 			act 'Continue your break': gt 'gschool_lunch', 'break'
 		end
-		act 'Skip lunch': gt 'gschool_lunch', 'break'
+		act 'Skip lunch':
+			gs 'gschool_gossip', 'skipping'
+			act 'Continue': gt 'gschool_lunch', 'break'
+		end
 	end
 end
 
@@ -51,10 +56,6 @@ if $ARGS[0] = 'break':
 	urand = rand(0, 12)
 	'<center><img src="images/qwest/alter/urok<<urand>>.jpg"></center>'
 	cla
-	if hour > 13: 
-		gt 'gschool_grounds', 'main'
-		exit
-	end
 	gs'stat'
 
 !!Lunch events requiring unlock
