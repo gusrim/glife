@@ -1,30 +1,33 @@
 # pornhist
-i = 1
-$pfilmhistory = ''
-:pornhistloop
-	dynamic $pornfilmdesc, pornfilmType[i]
-!	if $porntitle[i] = '':lastvariable += 1 & $pornt[i] = '<a href="exec:$porntitle[lastvariable] = input(''WARNING! No matter where you clicked, it will rename the last unnamed movie!'')"><<i>>. Movie</a>'
-	if pornfilmMonth[i] >= 10 and pornfilmDay[i] >= 10:
-		$pornfilmDate[i] = '<<pornfilmYear[i]>>-<<pornfilmMonth[i]>>-<<pornfilmDay[i]>>'
-	elseif pornfilmMonth[i] >= 10 and pornfilmDay[i] < 10:
-		$pornfilmDate[i] = '<<pornfilmYear[i]>>-<<pornfilmMonth[i]>>-0<<pornfilmDay[i]>>'
-	elseif pornfilmMonth[i] < 10 and pornfilmDay[i] >= 10:
-		$pornfilmDate[i] = '<<pornfilmYear[i]>>-0<<pornfilmMonth[i]>>-<<pornfilmDay[i]>>'
-	else
-		$pornfilmDate[i] = '<<pornfilmYear[i]>>-0<<pornfilmMonth[i]>>-0<<pornfilmDay[i]>>'
-	end
-
-	if $porntitle[i] = '':
-		$pfilmhistory += '● <b><<i>>. Movie</b><br><font size=2>'+$pfilmtext+'</font><br>'
-	else
-		if i = 1:
-			$pfilmhistory += '● <b>'+$porntitle[i]+'<<$pfname>></b><br><font size=2>'+$pfilmtext+'</font><br>'
+!! Short description of made movies, without details
+if $ARGS[0] = 'short':
+	i = 1
+	$pfilmhistory = ''
+	:pornhistloop
+		dynamic $pornfilmdesc, pornfilmType[i]
+		if pornfilmMonth[i] >= 10 and pornfilmDay[i] >= 10:
+			$pornfilmDate[i] = '<<pornfilmYear[i]>>-<<pornfilmMonth[i]>>-<<pornfilmDay[i]>>'
+		elseif pornfilmMonth[i] >= 10 and pornfilmDay[i] < 10:
+			$pornfilmDate[i] = '<<pornfilmYear[i]>>-<<pornfilmMonth[i]>>-0<<pornfilmDay[i]>>'
+		elseif pornfilmMonth[i] < 10 and pornfilmDay[i] >= 10:
+			$pornfilmDate[i] = '<<pornfilmYear[i]>>-0<<pornfilmMonth[i]>>-<<pornfilmDay[i]>>'
 		else
-			$pfilmhistory += '● <b>'+$porntitle[i]+'</b><br><font size=2>'+$pfilmtext+'</font><br>'
+			$pornfilmDate[i] = '<<pornfilmYear[i]>>-0<<pornfilmMonth[i]>>-0<<pornfilmDay[i]>>'
 		end
-	end
-if i < film: i += 1 & jump 'pornhistloop'
 
+		if $porntitle[i] = '':
+			$pfilmhistory += '● <b><<i>>. Movie</b><br><font size=2>'+$pfilmtext+'</font><br>'
+		else
+			if i = 1:
+				$pfilmhistory += '● <b>'+$porntitle[i]+'<<$pfname>></b><br><font size=2>'+$pfilmtext+'</font><br>'
+			else
+				$pfilmhistory += '● <b>'+$porntitle[i]+'</b><br><font size=2>'+$pfilmtext+'</font><br>'
+			end
+		end
+	if i < film: i += 1 & jump 'pornhistloop'
+end
+
+!! Detailed description of movies, only available after selecting the "Filmography" link
 if $ARGS[0] = 'pdetail':
 	clr
 	i = 1
@@ -97,6 +100,10 @@ if $ARGS[0] = 'pdetail':
 	pl '<a href="exec:gs ''obj_din'', ''stats'' & killvar ''pornfilmdesc'' & killvar ''porntag''"><br>Return</a>'
 end
 
+!! Dynamic of selectable porn movies, called from:
+!!	pornhist: 'short', 'pdetail'
+!!	pornschedule: 'pornmiss'
+!!	pornstudio: 'options', 'medical', 'postvideo'
 $pornfilmdesc = {
 	film_type = ARGS[0]
 	killvar '$pstory'
