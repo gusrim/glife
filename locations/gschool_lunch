@@ -3,7 +3,6 @@
 if $ARGS[0] = 'lesson_end':
 	cla
 
-
 	if school_event_hour = 0:
 
 		gt 'gschool_events', 'rand_class'
@@ -35,15 +34,20 @@ if $ARGS[0] = 'lunch':
 		if money >= 50:
 			act 'Buy food (50 <b>₽</b>)':
 				money -= 50
+				gs 'gschool_gossip', 'buying'
 				gs 'food', 'dyn_meal'
 				act 'Continue your break': gt 'gschool_lunch', 'break'
 			end
 		end
 		act 'Eat bagged lunch':
+			gs 'gschool_gossip', 'bagged'
 			gs 'food', 'bag_lunch'
 			act 'Continue your break': gt 'gschool_lunch', 'break'
 		end
-		act 'Skip lunch': gt 'gschool_lunch', 'break'
+		act 'Skip lunch':
+			gs 'gschool_gossip', 'skipping'
+			act 'Continue': gt 'gschool_lunch', 'break'
+		end
 	end
 end
 
@@ -51,10 +55,6 @@ if $ARGS[0] = 'break':
 	urand = rand(0, 12)
 	'<center><img src="images/qwest/alter/urok<<urand>>.jpg"></center>'
 	cla
-	if hour > 13: 
-		gt 'gschool_grounds', 'main'
-		exit
-	end
 	gs'stat'
 
 !!Lunch events requiring unlock
@@ -70,7 +70,7 @@ if $ARGS[0] = 'break':
 		gs 'stat'
 		'<center><img src="images/qwest/alter/peremena<<urand>>.jpg"></center>'
 		'You decide to spend your break in a classroom. As you enter, you find several classmates already sitting there: the <a href="exec:gt ''Sgrup1''">smart kids</a> decided to get an early start on their homework assignments, while the <a href="exec:gt ''Sgrup5''">outcasts</a> are mostly just hoping no one will pick on them today.'
-		if rand(1,6) = 1 and vagina > 12 and mesec <= 0:
+		if rand(1,6) = 1 and pcs_vag > 12 and mesec <= 0:
 			'<center><img src="images/qwest/alter/uroc/boysex_tualet.jpg"></center>'
 			'When you enter the class, you feel someone moving up behind you and pulling up your skirt. Then you feel hands pawing your ass. When you move to turn around, the hand quickly pulls away. By the time you can see who''s behind you, you find half the guys in your class standing there, all looking in different directions inconspicuously, a few of them even having the gall to whistle innocently. You try to tell from their faces which one of them just touched you.'
 			act 'Identify the perpetrator':gt 'gschool_events', 'rand_scoolboy'
