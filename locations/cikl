@@ -916,6 +916,8 @@ end
 
 gs 'outdoors', 'weather'
 
+killvar 'holyday'
+killvar 'kanikuli'
 if storyline = 1:
 !!Party refresh if you didn''t see sis
 	if week = 1:
@@ -935,77 +937,103 @@ if storyline = 1:
 		end
 	end
 
-	if SchoolAtestat = 0:
-		$holyday = ''
-		$backtoschool = '<b>, back to school tomorrow.</b>'
-		kanikuli = 0
-
-		!holiday countdown (kanicont) by illume. countdown in [cikl], summer vacation pre-set in [startalt]
-		if (month = 10 and day >= 27) or (month = 11 and day <= 4):
-			if month = 11:
-				kanicont = 5 - day
+	if SchoolAtestat = 0:	
+		if month = 12 and day > 25:
+			if day < 31: 
+				$holyday = '<b>Winter Break in <<32-day>> days.</b>'
 			else
-				kanicont = monthsEnd[10] - day + 1 + 4
+				$holyday = '<b>Winter Break starts tomorrow.</b>'
 			end
-			if month = 10 and day = 27:kanicont = 9
-			$holyday = '<b>Autumn holidays</b>'
-			kanikuli = 1
-			if month = 11 and day = 4:$holyday += $backtoschool
-		elseif (month = 12 and day >= 29) or (month = 1 and day <= 13):
-			if month = 1:
-				kanicont = 14 - day
-			else
-				kanicont = monthsEnd[12] - day + 1 + 13
-			end
-			$holyday = '<b>Winter Break</b>'
+		elseif month = 1 and day <= 15:
 			kanikuli = 2
-			if month = 1 and day = 13:$holyday += $backtoschool
-		elseif (month = 3 and day >= 25):
-			if kanicount = 0:kanicont = monthsEnd[3] - day + 1
-			$holyday = '<b>Spring Break</b>'
-			kanikuli = 3
-			if month = 3 and day = 31:$holyday += $backtoschool
-		elseif (month = 5 and day >= 25) or month = 6 or month = 7 or month = 8:
-			if month = 5 and day = 25:
-				if schoool_year = 2001 and year = 2018:
+			if day < 13: 
+				$holyday = '<b>Winter Break.</b>'
+			elseif day < 15: 
+				$holyday = '<b>Winter Break ends in <<16-day>> days.</b>'
+			else
+				$holyday = '<b>Last day of Winter Break.</b>'
+			end
+		elseif month = 3 and day > 13:
+			if day < 19: 
+				$holyday = '<b>Spring Break starts in <<20-day>> days.</b>'
+			elseif day = 19: 
+				$holyday = '<b>Spring Break starts tomorrow.</b>'
+			elseif day >= 20 and day <= 26: 
+				kanikuli = 3
+				if day < 24: 
+					$holyday = '<b>Spring Break.</b>'
+				elseif day < 26: 
+					$holyday = '<b>Spring Break ends in <<27-day>> days.</b>'
+				else 
+					$holyday = '<b>Last day of Spring Break.</b>'
+				end
+			end
+		elseif month = 5:
+			if ( (schoool_year = 2000 and year = 2017) or (schoool_year = 2001 and year = 2018) ) and day >= 19 and day <= 25:
+				if day = 25: 
 					$holyday = '<b>Your graduation is today. Be there by 8:00.</b>'
-					kanikuli = 6
-				elseif schoool_year = 2000:
-					$holyday = '<b>Your graduation is today. Be there by 8:00.</b>'
-					kanikuli = 6
+				elseif day = 24:
+					$holyday = '<b>Your graduation is tomorrow. Be there by 8:00.</b>'
+				else
+					$holyday = '<b>Your graduation is in <<26-day>> days.</b>'
+				end
+			elseif day >= 25:
+				if day = 31: 
+					$holyday = '<b>Summer Break starts tomorrow.</b>'
+				else
+					$holyday = '<b>Summer Break starts in <<32-day>> days.</b>'
+				end
+			end
+		elseif month = 6 or month = 7 or month = 8:
+			kanikuli = 4
+			if month = 8 and day >= 25:
+				if day = 31:
+					$holyday = '<b>Last day of Summer Break.</b>'
+				else
+					$holyday = '<b>Summer Break ends in <<32-day>> days.</b>'
 				end
 			else
-				if month = 8:
-					kanicont = monthsEnd[8] - day + 1
-				elseif month = 7:
-					kanicont = monthsEnd[7] - day + 1 + monthsEnd[8]
-				elseif month = 6:
-					kanicont = monthsEnd[6] - day + 1 + monthsEnd[7] + monthsEnd[8]
-				else
-					kanicont = monthsEnd[5] - day + 1 + monthsEnd[6] + monthsEnd[7] + monthsEnd[8]
-				end
-				$holyday = '<b>Summer holidays</b>'
-				kanikuli = 4
-				if month = 8 and day = 31:$holyday += $backtoschool
+				$holyday = '<b>Summer Break.</b>'
 			end
-		elseif month = 1 and day = 1:
-			$holyday = '<b>New Year!</b>'
-			kanikuli = 5
-		else
-			kanicount = 0
-			!cleanup if not holidays.
-		end
-
-		if month = 5 and day = 24:
-			if schoool_year = 2001 and year = 2018:
-				$holyday = '<b>Your graduation is tomorrow. Be there by 8:00</b>'
-			elseif schoool_year = 2000:
-				$holyday = '<b>Your graduation is tomorrow. Be there by 8:00</b>'
+		elseif month = 10 and day >= 29:
+			$holyday = '<b>Autumn Break starts in <<35-day>> days.</b>'
+		elseif month = 11:
+			if day < 3: 
+				$holyday = '<b>Autumn Break starts in <<4-day>> days.</b>'
+			elseif day = 3:
+				$holyday = '<b>Autumn Break starts tomorrow.</b>'
+			elseif day < 6:
+				kanikuli = 1
+				$holyday = '<b>Autumn Break.</b>'
+			elseif day < 11:
+				kanikuli = 1
+				$holyday = '<b>Autumn Break ends in <<12-day>> days.</b>'
+			elseif day = 11:
+				kanikuli = 1
+				$holyday = '<b>Last day of Autumn Break.</b>'
 			end
-		else
-			if kanikuli > 0 and kanikuli < 5:$holyday += ', <<kanicont>> days left.</b>'
 		end
 	end
+end
+
+killvar 'natholi'
+if month = 1 and day >= 1 and day <= 8:
+	$natholi = 'New Year holidays'
+	natholi = 1
+	if day = 1:$natholi += ', New Year'
+	if day = 7:$natholi += ', Christmas'
+end
+if month = 2 and day = 23:$natholi = 'Defender of Fatherland Day' & natholi = 1
+if month = 3 and day = 8:$natholi = 'Women''s Day' & natholi = 1
+if month = 5 and day = 1:$natholi = 'Spring and Labor Day' & natholi = 1
+if month = 5 and day = 2:$natholi = 'National holiday' & natholi = 1
+if month = 5 and day = 9:$natholi = 'Victory Day' & natholi = 1
+if month = 6 and day = 12:$natholi = 'Russia Day' & natholi = 1
+if month = 6 and day = 13:$natholi = 'National holiday' & natholi = 1
+if month = 11 and day = 4:$natholi = 'Unity Day' & natholi = 1
+if natholi = 1:
+	if $holyday ! '': $holyday += '<br>'
+	$holiday += $natholi
 end
 
 if bcream_used >= 1:
