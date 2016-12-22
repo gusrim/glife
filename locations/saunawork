@@ -45,7 +45,7 @@ if workDolg > 0 and pcs_apprnc = -10 or workDolg > 0 and SLomka > 0:
 end
 
 act 'Sit on the couch (1:00)':
-	if pcs_makeup > 1 and pcs_hairbsh = 1 and pcs_sweat < 26 and pcs_leghair <= 0 and pcs_pubes <= 0:
+	if pcs_makeup > 1 and pcs_hairbsh = 1 and pcs_sweat < 26 and pcs_leghair <= 3 and pcs_pubes <= 3:
 		cls
 		minut += 60
 		gs 'stat'
@@ -77,17 +77,17 @@ act 'Sit on the couch (1:00)':
 			else
 				'Client examines you closely but turns away to chose another girl.'
 
-				act 'Leave':gt $curloc
+				act 'Leave':gt 'saunawork'
 			end
 		else
 			'Looking at you the client immediately turns away and choses another girl.'
 
-			act 'Leave':gt $curloc
+			act 'Leave':gt 'saunawork'
 		end
 
 	else
 		'The brothel madam comes over to you and says, "Our customers expect you to be clean, shaven, made-up and with your hair looking nice. Go and sort yourself out, now!"'
-		act 'Leave':gt $curloc
+		act 'Leave':gt 'saunawork'
 	end
 	
 	exit
@@ -105,7 +105,7 @@ if clenerSauna ! daystart:
 		'<center><img src="images/etogame/clener2.jpg"></center>'
 		'You scrub the sauna toilets for an hour until they shine.'
 
-		act 'Leave':gt $curloc
+		act 'Leave':gt 'saunawork'
 	end
 end
 
@@ -121,7 +121,7 @@ if clenerSauna2 ! daystart:
 		'<center><img src="images/etogame/clener1.jpg"></center>'
 		'You spend an hour mopping and scrubbing all the floors.'
 
-		act 'Leave':gt $curloc
+		act 'Leave':gt 'saunawork'
 	end
 end
 
@@ -140,7 +140,7 @@ act 'Take a shower (0:15)':
 	'<center><img src="images/pics/dush.jpg"></center>'
 	'You go into the bathroom and turn on the shower. Lather your body and wash it off in the shower.'
 
-	if pcs_leghair > 0 or pcs_pubes > 0:
+	if pcs_leghair > 3 or pcs_pubes > 3:
 		act 'Get razor':dynamic $saunabrit
 	end
 
@@ -157,7 +157,7 @@ act 'Take a shower (0:15)':
 			'<center><img src="images/pics/wash2.jpg"></center>'
 			'You turn the shower head on your pussy and let the jet of warm water caress you. Soon you feel like a warm wave covers your entire body and you begin to shudder in orgasm.'
 
-			act 'Get out and get dressed':gt $curloc
+			act 'Get out and get dressed':gt 'saunawork'
 		end
 	elseif pcs_horny >= 40 and pcs_horny < 90:
 		act 'Point shower at pussy':
@@ -170,11 +170,11 @@ act 'Take a shower (0:15)':
 			'<center><img src="images/pics/wash2.jpg"></center>'
 			'You turn the shower head on your pussy and let the jet of warm water caress you. First you find this very nice, but after a while, it gets a little painful. You realise this is pointless and stop masturbating.'
 
-			act 'Get out and get dressed':gt $curloc
+			act 'Get out and get dressed':gt 'saunawork'
 		end
 	end
 
-	act 'Get out and get dressed':gt $curloc
+	act 'Get out and get dressed':gt 'saunawork'
 end
 
 $saunabrit = {
@@ -185,12 +185,28 @@ $saunabrit = {
 		'You rinse the razor blade it will be good for another <<stanok>> uses.'
 	end
 
-	if pcs_leghair > 0:
+	if pcs_pubes > 3 or pcs_leghair > 3:
+		act 'Shave legs and pubes (0:20)':
+			cla
+			*clr
+			minut += 20
+			pcs_leghair = 0
+			pcs_pubes = 0
+			pcs_horny += 10
+			if workDolg = 0:stanok -= 1
+			'<center><img src="images/pics/shave3.jpg"></center>'
+			'You lathered your pubis and legs, then shave all the hair off them. You run your hands over your lower body to make sure its nice and smooth which makes you feel a bit horny.'
+
+			act 'Get out and get dressed':gt 'saunawork'
+		end
+	end
+
+	if pcs_leghair > 3:
 		act 'Shave your legs (0:15)':
 			cla
 			*clr
 			minut += 15
-			pcs_leghair = -5
+			pcs_leghair = 0
 			pcs_horny += 5
 			if workDolg = 0:stanok -= 1
 			'<center><img src="images/pics/shave.jpg"></center>'
@@ -200,12 +216,12 @@ $saunabrit = {
 		end
 	end
 
-	if pcs_pubes > 0:
+	if pcs_pubes > 3:
 		act 'Shave pubes (0:15)':
 			cla
 			*clr
 			minut += 15
-			pcs_pubes = -5
+			pcs_pubes = 0
 			pcs_horny += 5
 			if workDolg = 0:stanok -= 1
 			'<center><img src="images/pics/shave3.jpg"></center>'
@@ -215,7 +231,7 @@ $saunabrit = {
 		end
 	end
 
-	act 'Get out and get dressed':gt $curloc
+	act 'Get out and get dressed':gt 'saunawork'
 }
 
 if mesec > 0 and isprok = 0 and workdolg > 0:

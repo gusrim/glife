@@ -1,5 +1,10 @@
 # din_van
 
+!!pcs_leghair = leg hair 0 - 3 for smooth <= 6 for stubble <= 9 for light after that hairy
+!!pcs_pubes = pubes 0 - 3 for smooth <= 10 for stubble <= 20 for light hair after that its hairy
+!!stanok = razor
+!!$brit = shaving dynamic
+
 $showerdin = {
 	cumspclnt = 1
 	gs 'cum_cleanup'
@@ -91,10 +96,6 @@ $shower = {
 			'The idea that the door is open occupies your mind while you are showering. It would be very embarrassing if your brother or stepfather looked in at the wrong time.'
 		end
 
-		if (pcs_leghair > 0 or pcs_pubes > 0) and stanok > 0:
-			act 'Shave':dynamic $brit
-		end
-
 		if pcs_horny >= 40:
 			act 'Use the shower head on your pussy':
 				cla
@@ -128,6 +129,7 @@ $shower = {
 			end
 		end	
 
+		dynamic $brit
 		dynamic $dryOff
 	end
 }
@@ -193,10 +195,6 @@ $bath = {
 			act 'Examine yourself closer while drying off and getting dressed...': gt 'din_van', 'buffpick'
 		end
 
-		if (pcs_leghair > 0 or pcs_pubes > 0) and  stanok > 0:
-			act 'Get your razor':dynamic $brit
-		end
-
 		if obdysh = 1:vannmastrand = rand(0, 5)
 
 		if pcs_horny >= 40:
@@ -232,20 +230,54 @@ $bath = {
 			act 'Masturbate':gt 'selfplay'
 		end
 
+		dynamic $brit
 		dynamic $dryOff
 	end
 }
 
 $brit = {
 	cla
-	'You rinse the razor blade which looks in good enough shape for <b><<stanok>></b> more shaves.'
+	'Your razor blade looks in good enough shape for <b><<stanok>></b> more shaves.'
 
-	if pcs_leghair > 0 and stanok > 0:
+
+	if (pcs_leghair > 3 or pcs_pubes > 3) and stanok > 1:
+		act 'Shave your legs and pussy (0:15)':
+			cla
+			*clr
+			minut += 15
+			pcs_leghair = 0
+			pcs_pubes = 0
+			pcs_horny += 5
+			stanok -= 2
+
+			if obdysh = 1 and obbritinvent = 0:
+				britrand = rand(0, 5)
+				if britrand = 5:gt 'vann', 'brit1'
+			end
+
+			'<center><img src="images/pics/shave3.jpg"></center>'
+			*nl
+			if daystart < 10 and StoryLine = 0:
+				'You can''t shake off the fact that you''re a girl now, so you decide it''d be best to shave your legs. You begin to lather your legs, still marveling at how soft and round they are. Then you take the razor in your hand and begin to shave your legs.'
+				'You feel really awkward, never having done this before as a guy. Luckily, you had more than enough experience with shaving your face and technically this isn''t really all that different. So in the end you get a pretty decent job done.'
+			elseif daystart < 30 and StoryLine = 0:
+				pcs_mood += 10
+				'With a newfound routine you lather up your legs and start shaving, careful not to miss a spot. After washing away the foam you softly glide your hands over your smooth legs, feeling good to know that you don''t need to hide your legs in pants. Maybe you should wear a skirt tomorrow?'
+			else
+				'You lather up your legs and crotch and then start carefully shaving them. Once you''re finished you gently glide your hands over your smooth pussy and legs, enjoying the smooth feeling and getting slightly more aroused by the touch.'
+			end
+
+			act 'Put the razor away':dynamic $brit
+		end
+	end
+	
+	
+	if pcs_leghair > 3 and stanok > 0:
 		act 'Shave your legs (0:15)':
 			cla
 			*clr
 			minut += 15
-			pcs_leghair = -5
+			pcs_leghair = 0
 			pcs_horny += 5
 			stanok -= 1
 			'<center><img src="images/pics/shave.jpg"></center>'
@@ -264,12 +296,12 @@ $brit = {
 		end
 	end
 
-	if pcs_pubes > 0 and stanok > 0:
+	if pcs_pubes > 3 and stanok > 0:
 		act 'Shave your pussy (0:15)':
 			cla
 			*clr
 			minut += 15
-			pcs_pubes = -5
+			pcs_pubes = 0
 			pcs_horny += 5
 			stanok -= 1
 
@@ -665,19 +697,45 @@ if $ARGS[0] = 'private':
         end
     end
 
+	if (pcs_leghair > 3 or pcs_pubes > 3) and stanok > 1:
+		act 'Shave your legs and pussy (0:15)':
+			cla
+			*clr
+			minut += 15
+			pcs_leghair = 0
+			pcs_pubes = 0
+			pcs_horny += 5
+			stanok -= 2
+
+			'<center><img src="images/pics/shave3.jpg"></center>'
+			*nl
+			if daystart < 10 and StoryLine = 0:
+				'You can''t shake off the fact that you''re a girl now, so you decide it''d be best to shave your legs. You begin to lather your legs, still marveling at how soft and round they are. Then you take the razor in your hand and begin to shave your legs.'
+				'You feel really awkward, never having done this before as a guy. Luckily, you had more than enough experience with shaving your face and technically this isn''t really all that different. So in the end you get a pretty decent job done.'
+			elseif daystart < 30 and StoryLine = 0:
+				pcs_mood += 10
+				'With a newfound routine you lather up your legs and start shaving, careful not to miss a spot. After washing away the foam you softly glide your hands over your smooth legs, feeling good to know that you don''t need to hide your legs in pants. Maybe you should wear a skirt tomorrow?'
+			else
+				'You lather up your legs and crotch and then start carefully shaving them. Once you''re finished you gently glide your hands over your smooth pussy and legs, enjoying the smooth feeling and getting slightly more aroused by the touch.'
+			end
+
+			act 'Return to showering':gt $locM, $metkaM
+		end
+	end
+
     if pcs_leghair > 0 and stanok > 0:
         act 'Shave your legs (0:15)':
             cla
             *clr
             minut += 15
-            pcs_leghair = -5
+            pcs_leghair = 0
             pcs_horny += 5
             stanok -= 1
             '<center><img src="images/pics/shave.jpg"></center>'
             *nl
             'You lather your legs up with some soapy water and shave your legs. After a few swift movements, your legs are smooth as silk. The feeling of your smooth legs turns you on a little.'
 
-            act 'Return to showering':gt $locM, $metkaM
+			act 'Return to showering':gt $locM, $metkaM
         end
     end
 
@@ -686,7 +744,7 @@ if $ARGS[0] = 'private':
             cla
             *clr
             minut += 15
-            pcs_pubes = -5
+            pcs_pubes = 0
             pcs_horny += 5
             stanok -= 1
             '<center><img src="images/pics/shave3.jpg"></center>'
