@@ -267,14 +267,15 @@ end
 if $ARGS[0] = 'cyc1':
 	FertEgg = 0
 	if FocH <= 150:
-		EggRH +=1
-		FocH +=1
-		if rand(0,1) = 1: EggRH += 1
-		temprand = rand(0,1000)
-		temprand -= sterileov
-		temprand += tempovbonus
-		if temprand <= 0: EggRH -= 1
-		if pillcon > 7000: EggRH -= 1
+		if pillcon <= 7000: EggRH += 1
+		if rand(0,9) = 0: EggRH += 1
+		FocH += 1
+		temprand = rand(0,9) - sterileov + tempovbonus
+		if temprand < 0: 
+			EggRH -= 1
+		elseif temprand > 9: 
+			EggRH += 1
+		end
 	else
 		!{If you are ready to ovulate, it creates a chance to double ovulate. That chance is increased by your age. Then it does the same for a triple ovulation. Then it sets the ovulation tag, ovulation hour count, and begins a ticker for the life of the eggs.}
 		Temprand = rand(0,20)
@@ -435,14 +436,11 @@ if $ARGS[0] = 'cyc2':
 	end
 
 !!{Ovulation to Luteal. It checks to see if you are on the ovulation cycle. If you are, it checks you for your pillcon. If it is high enough, no egg is released. Under high concentrations of pill chemical, ovulation ticks away quicker. Otherwise, it checks to see if your ovulation hormone is high enough, and if it is it gives you an egg and drops a good chunk down on your ovulation hormone. if its still high, it drops another egg. Then it checks your ovulation hours. If its down to 0, it starts the Luteal phase. Otherwise, it adds an hour to the egg age and reduces the ovulation window by an hour.}
-	if pillcon > 26000:
-		if rand(0,400) ! 1: EggRH = 0
-		ovulate -= 2
-	end
+	if pillcon > 26000 and rand(0,400) ! 0: EggRH = 0
 	:OviLoop
 	If EggRH > ((UnfertEgg + FertEgg) * 150):
 		UnfertEgg += 1
-		EggRH -= (200*UnfertEgg)
+		EggRH -= (200 * UnfertEgg)
 		jump 'OviLoop'
 	end
 	If ovulate <= 0:
