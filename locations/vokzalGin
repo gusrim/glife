@@ -12,9 +12,15 @@ if $ARGS[0] = '':
 	gs 'vokdin'
 	gs 'vokdinvera'
 	gs 'stat'
-	fcolor = rgb(0, 0, 0)
-	bcolor = rgb(255, 255, 255)
-	lcolor = rgb(106, 90, 205)
+	if night_mode = 1:
+		fcolor = rgb(255, 255, 255)
+		bcolor = rgb(0, 0, 0)
+		lcolor = rgb(106, 90, 205)
+	else
+		fcolor = rgb(0, 0, 0)
+		bcolor = rgb(255, 255, 255)
+		lcolor = rgb(106, 90, 205)
+	end
 
 
 	'<center><h4>Pavlovsk train station interior</h4></center>'
@@ -215,7 +221,12 @@ if $ARGS[0] = 'oldtown':
 	'<center><img src="images/etogame/electri.jpg"></center>'
 	'You pay for the ticket and board the next train going to St. Petersburg.'
 	'After 5 minutes, you see the familiar old buildings and the train stops at the station near the old town.'
-	act 'Get off the train at this station':gt 'train', 'oldtown'
+	act 'Get off the train at this station':
+		$loc = 'train'
+		$metka = 'oldtown'
+		if train_event = 0 and rand(1, 100) <= 5: gt 'train_incidental', 'end'
+		gt 'train', 'oldtown'
+	end
 	if train_dest < 3 and rand(0, 100) < 15: gt 'train', 'private'
 	if train_dest < 5:
 		act 'Continue your journey':
