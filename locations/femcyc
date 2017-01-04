@@ -267,14 +267,15 @@ end
 if $ARGS[0] = 'cyc1':
 	FertEgg = 0
 	if FocH <= 150:
-		EggRH +=1
-		FocH +=1
-		if rand(0,1) = 1: EggRH += 1
-		temprand = rand(0,1000)
-		temprand -= sterileov
-		temprand += tempovbonus
-		if temprand <= 0: EggRH -= 1
-		if pillcon > 7000: EggRH -= 1
+		if pillcon <= 7000: EggRH += 1
+		if rand(0,9) = 0: EggRH += 1
+		FocH += 1
+		temprand = rand(0,9) - sterileov + tempovbonus
+		if temprand < 0: 
+			EggRH -= 1
+		elseif temprand > 9: 
+			EggRH += 1
+		end
 	else
 		!{If you are ready to ovulate, it creates a chance to double ovulate. That chance is increased by your age. Then it does the same for a triple ovulation. Then it sets the ovulation tag, ovulation hour count, and begins a ticker for the life of the eggs.}
 		Temprand = rand(0,20)
@@ -420,6 +421,12 @@ if $ARGS[0] = 'cyc2':
 				hairkid[nextbaby] = rand(0, 3)
 				eyeskid[nextbaby] = rand(0, 3)
 				ChildConType = cumarrcon[nextbaby]
+				if fertegg > 1:
+					$childtype[nextbaby] = 'paternal twin'
+					$childtype[nextbaby-1] = 'paternal twin'
+				else
+					$childtype[nextbaby] = ''
+				end
 			end
 			egg_idx += 1
 			jump 'FertLoop'
@@ -429,19 +436,35 @@ if $ARGS[0] = 'cyc2':
 	end
 
 !!{Ovulation to Luteal. It checks to see if you are on the ovulation cycle. If you are, it checks you for your pillcon. If it is high enough, no egg is released. Under high concentrations of pill chemical, ovulation ticks away quicker. Otherwise, it checks to see if your ovulation hormone is high enough, and if it is it gives you an egg and drops a good chunk down on your ovulation hormone. if its still high, it drops another egg. Then it checks your ovulation hours. If its down to 0, it starts the Luteal phase. Otherwise, it adds an hour to the egg age and reduces the ovulation window by an hour.}
-	if pillcon > 26000:
-		if rand(0,400) ! 1: EggRH = 0
-		ovulate -= 2
-	end
+	if pillcon > 26000 and rand(0,400) ! 0: EggRH = 0
 	:OviLoop
 	If EggRH > ((UnfertEgg + FertEgg) * 150):
 		UnfertEgg += 1
-		EggRH -= (200*UnfertEgg)
+		EggRH -= (200 * UnfertEgg)
 		jump 'OviLoop'
 	end
 	If ovulate <= 0:
 		cycle = 3
 		UnfertEgg = 0
+	end
+	if fertegg = 1 and ferteggage < 330:
+		if rand(0,(2000 - age*20)) = 0:
+			fertegg += 1
+			nextbaby = arrsize('$ChildFath')
+			polkid[nextbaby] = polkid[nextbaby-1]
+			$kidname[nextbaby] = 'unborn'
+			kidage[nextbaby] = 0
+			daykid[nextbaby] = 0
+			monthkid[nextbaby] = 0
+			yearkid[nextbaby] = 0
+			Babyptype[nextbaby] = Babyptype[nextbaby-1]
+			$ChildFath[nextbaby] = $ChildFath[nextbaby-1]
+			hairkid[nextbaby] = hairkid[nextbaby-1]
+			eyeskid[nextbaby] = eyeskid[nextbaby-1]
+			cumarrcon[nextbaby] = cumarrcon[nextbaby-1]
+			$childtype[nextbaby] = 'identical twin'
+			$childtype[nextbaby-1] = 'identical twin'
+		end
 	end
 	ferteggage += 1
 	Ovulate -= 1
@@ -453,6 +476,25 @@ end
 !{Otherwise, it adds your womb sterility factor to the imp_rand. Then it checks if your imp_rand crosses a threshold for implantation. Younger women implant easier. It then sets the next baby to the next unimplanted baby in your kid array. It registers the kid as a normal pregnancy, removes a fertilized egg and adds an embryo. Then it adds some pregnancy hormone if you arent already pregnant, and calls you officially pregnant.}
 
 if $ARGS[0] = 'cyc3':
+	if fertegg = 1 and ferteggage < 330:
+		if rand(0,(2000 - age*20)) = 0:
+			fertegg += 1
+			nextbaby = arrsize('$ChildFath')
+			polkid[nextbaby] = polkid[nextbaby-1]
+			$kidname[nextbaby] = 'unborn'
+			kidage[nextbaby] = 0
+			daykid[nextbaby] = 0
+			monthkid[nextbaby] = 0
+			yearkid[nextbaby] = 0
+			Babyptype[nextbaby] = Babyptype[nextbaby-1]
+			$ChildFath[nextbaby] = $ChildFath[nextbaby-1]
+			hairkid[nextbaby] = hairkid[nextbaby-1]
+			eyeskid[nextbaby] = eyeskid[nextbaby-1]
+			cumarrcon[nextbaby] = cumarrcon[nextbaby-1]
+			$childtype[nextbaby] = 'identical twin'
+			$childtype[nextbaby-1] = 'identical twin'
+		end
+	end
 	ferteggage += 1
 	implant_idx = 0
 	implant_sz = arrsize('Babyptype')
@@ -593,6 +635,26 @@ end
 !{Pregnancy Progression. It checks to see if you are in the pregnancy phase of a cycle. If you are, it progresses your pregnancy chemical. Then it gives a fluxuation of possible due dates. If you cross the due date threshold, you enter labor, marked by preg = 2. Other milestones will also be placed in here, including body deformations. Right now this is mostly an empty placeholder.}
 
 if $ARGS[0] = 'preg':
+	if fertegg = 1 and ferteggage < 330:
+		if rand(0,(2000 - age*20)) = 0:
+			babyembryo += 1
+			PregChem += rand(10,30)
+			nextbaby = arrsize('$ChildFath')
+			polkid[nextbaby] = polkid[nextbaby-1]
+			$kidname[nextbaby] = 'unborn'
+			kidage[nextbaby] = 0
+			daykid[nextbaby] = 0
+			monthkid[nextbaby] = 0
+			yearkid[nextbaby] = 0
+			Babyptype[nextbaby] = Babyptype[nextbaby-1]
+			$ChildFath[nextbaby] = $ChildFath[nextbaby-1]
+			hairkid[nextbaby] = hairkid[nextbaby-1]
+			eyeskid[nextbaby] = eyeskid[nextbaby-1]
+			cumarrcon[nextbaby] = cumarrcon[nextbaby-1]
+			$childtype[nextbaby] = 'identical twin'
+			$childtype[nextbaby-1] = 'identical twin'
+		end
+	end
 	PregChem += 1
 	temprand = rand(-400,800)
 	temprand -= (babyembryo-1)*588
