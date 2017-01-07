@@ -16,6 +16,10 @@ end
 if $ARGS[0] = 'TGStart':
 !!	Nothing here for now
 
+	gs 'npcstatic1'
+	gs 'npcstatic2'
+	gs 'npcstatic3'
+	gs 'npcstatic4'
 	
 	if tgs_skipinto = 1:
 		gt 'preCUST', 'TGStart'
@@ -169,6 +173,14 @@ end
 
 if $ARGS[0] = 'SGStart3':
 !!From here on down it is all new and changed. I would like it once you choose your start date, that it goes to a page with the image below and text with the 5 social groups to choose from. Then when you click on a main social group it takes you to a page with a image and text, with a list of sub social groups. When you click on a subsocial group, it takes you to a page with a image and text explaining what that subgroup is like. Then you click customize and then it goes to the page that lets you change hair, eye color etc and eventually the traits when we add them.
+
+	gs 'npcstatic1'
+	gs 'npcstatic2'
+	gs 'npcstatic3'
+	gs 'npcstatic4'
+
+	gs 'gschool_lessons', 'npc_data'
+
 	'<center><img src="images/pre/SYS/altstart27.jpg"></center>'
 	'Select your personality/social group. Your social group will have a major defining impact on your life in school. While you can with work change groups, it takes time and effort. So choose wisely.'
 	*nl
@@ -182,9 +194,20 @@ if $ARGS[0] = 'SGStart3':
 	'Gopniks, Rebels, Punks, or Troublemakers. - They don''t play by the rules and often happily will piss on the rules if given half a chance. They are in decent shape from the fighting, more focused on strength than speed and are quite sociable. They are not the most well liked students, Teachers and parents take a dim view of them, as does the local police. Most of the students, either fear them, since they have no problem kicking someones ass, or secretly envy their carefree attitude.'
 	*nl
 	'Losers, Teachers pets, Sluts, or the Ugly. - They are the outcasts, the kids no one likes to spend time with, other than to pick on them. Perhaps they are socially awkward and never made friends, broke one of the unwritten rules, are a tattle tell, a slut, ugly and/or an outed gay boy. Either way they all have one thing in common, a easy target to make fun of.'
-	
+
+!!default friendship is 30 for all students, except Vasily Shulgin who starts at 60
+	r = 1
+	:default_friendship_loop
+	$static_num = $static_num[r]
+	if grupTipe[r] ! 5:npc_rel[$static_num] = 30
+	r += 1
+	if r <= 55:jump 'default_friendship_loop'
+
+	npc_rel[11] = 60
+
 	act 'Nerd, Geek, Student':
 		!!average appearance and below average physically fit.
+!!if we can set up different school uniforms then Nerds she get a appropriate uniform.
         cls
 		pcs_tan = 0
 		pcs_ttgmng = 20
@@ -197,6 +220,11 @@ if $ARGS[0] = 'SGStart3':
 		pcs_lip = 0
 		pcs_lashes = 0
 		pcs_skin = 0
+!!friendship code starts
+		gs 'preSYS', 'socialgroup_setting', -10, 0, 25, 0, 0, 0
+		npc_rel[129] += 10
+!!Social group code all social groups starts at 0
+		grpNerd = 30
 		fat = 100
 		salo = 100
 		'<center><img src="images/pre/SYS/altstart3.jpg"></center>'
@@ -212,6 +240,11 @@ if $ARGS[0] = 'SGStart3':
 			pcs_humint = 10
             pcs_persuas = 10
             pcs_makupskl = 10
+!!friendship code starts
+			gs 'preSYS', 'socialgroup_setting', 10, 5, 10, 5, 5, 0
+!!Social group code all social groups starts at 0
+			grpNerd = 50
+			grpCool = 10
 		    if player_avatar ! 1: pcs_hairlng = 165
 		    if player_avatar ! 1: pcs_haircol = 1
 			pcs_eyesize = 1
@@ -245,6 +278,13 @@ if $ARGS[0] = 'SGStart3':
 			pcs_compskl = 40
             pcs_comphckng = 20
 			pcs_ttgmng = 30
+!!friendship code starts
+			npc_rel[152] += 10
+			npc_rel[153] += 10
+			npc_rel[142] += 15
+			npc_rel[129] += 10
+!!starts with a laptop computer
+			komp = 1
 		    if player_avatar ! 1: pcs_hairlng = 50
 			'<center><img src="images/pre/SYS/altstart10.jpg"></center>'
 			alterstrtimg = 10
@@ -258,6 +298,8 @@ if $ARGS[0] = 'SGStart3':
 		    pcs_intel = 40
 		    pcs_grades = 80
 			pcs_chess = 40
+!!friendship code starts
+			npc_rel[151] += 20
 		    if player_avatar ! 1: pcs_hairlng = 90
 			'<center><img src="images/pre/SYS/altstart11.jpg"></center>'
 			alterstrtimg = 11
@@ -284,6 +326,11 @@ if $ARGS[0] = 'SGStart3':
 		pcs_humint = 10
         pcs_makupskl = 10
 		pcs_dom = 10
+!!friendship code starts
+		gs 'preSYS', 'socialgroup_setting', 10, 25, 0, 0, -5, 0
+		npc_rel[129] -= 10
+!!Social group code all social groups starts at 0
+		grpJock = 30
 		if player_avatar ! 1: pcs_hairlng = 97
 		if player_avatar ! 1: pcs_haircol = 3
 		hscrunch = 10
@@ -302,6 +349,9 @@ if $ARGS[0] = 'SGStart3':
 			fat = 60
 			salo = 60
 		    pcs_vball = 60
+!!friendship code starts
+			npc_rel[13] += 10
+			npc_rel[69] += 10
 			'<center><img src="images/pre/SYS/altstart12.jpg"></center>'
 			alterstrtimg = 12
 			$startgrptemp = 'Ever since you first tried volleyball, you have been in love with the sport. You spent a lot of your free time trying to get better at it, and it paid off: you''re actually quite good now! However, your obsession with volleyball has had some repercussions on your school performance; you''re a sub-par student, and you haven''t made many friends.'
@@ -313,6 +363,10 @@ if $ARGS[0] = 'SGStart3':
             cls
 			if player_avatar ! 1: pcs_hairlng = 120
 		    pcs_danc = 40
+!!friendship code starts
+			npc_rel[23] += 10
+!!Social group code all social groups starts at 0
+			grpPop = 20
 			'<center><img src="images/pre/SYS/altstart13.jpg"></center>'
 			alterstrtimg = 13
 			$startgrptemp = 'Ever since you first danced, you have been in love with dancing. You spent a lot of your free time trying to get better at it, and it paid off: you''re actually quite good now! However, your obsession with dancing has had some repercussions on your school performance; you''re a sub-par student, and you haven''t made many friends.'
@@ -323,6 +377,12 @@ if $ARGS[0] = 'SGStart3':
         act 'I am an avid runner!':
             cls
 		    pcs_run = 40
+!!friendship code starts
+			npc_rel[3] += 10
+			npc_rel[5] += 10
+			npc_rel[8] += 5
+			npc_rel[18] -= 35
+			npc_rel[131] += 10
 			'<center><img src="images/pre/SYS/altstart14.jpg"></center>'
 			alterstrtimg = 14
 			$startgrptemp = 'Ever since you first tried track, you have been in love with the sport. You spent a lot of your free time trying to get better at it, and it paid off: you''re actually quite good now! However, your obsession with running has had some repercussions on your school performance; you''re a sub-par student, and you haven''t made many friends.'
@@ -335,6 +395,9 @@ if $ARGS[0] = 'SGStart3':
 			fat = 60
 			salo = 60
 		    pcs_ftbll = 40
+!!friendship code starts
+			npc_rel[131] += 10
+			npc_rel[149] += 10
 			'<center><img src="images/pre/SYS/altstart15.jpg"></center>'
 			alterstrtimg = 15
 			$startgrptemp = 'Ever since you first tried football, you have been in love with the sport. You spent a lot of your free time trying to get better at it, and it paid off: you''re actually quite good now! However, your obsession with running has had some repercussions on your school performance; you''re a sub-par student, and you haven''t made many friends.'
@@ -345,6 +408,7 @@ if $ARGS[0] = 'SGStart3':
 
     act 'Popular, Cool, Beautiful':
 		!!average shape, above average skin and appearance.
+!!if we can do school uniforms gets a appropriate or borderline uniform.
         cls
 		pcs_sprt = 20
 		pcs_chrsm = 20
@@ -353,6 +417,11 @@ if $ARGS[0] = 'SGStart3':
 		pcs_grades = 60
 		pcs_icesktng = 10
         pcs_persuas = 30
+!!friendship code starts
+		gs 'preSYS', 'socialgroup_setting', 25, 15, 0, -10, -20, 0
+		npc_rel[129] -= 20
+!!Social group code all social groups starts at 0
+		grpPop = 30
 		if player_avatar ! 1: pcs_hairlng = 160
 		if player_avatar ! 1: pcs_haircol = 2
 		pcs_tan = 30
@@ -369,6 +438,9 @@ if $ARGS[0] = 'SGStart3':
 		    pcs_chrsm = 30
 			pcs_humint = 40
             pcs_makupskl = 30
+!!friendship code starts
+			gs 'preSYS', 'socialgroup_setting', 10, 5, 0, 0, 0, 0
+			npc_rel[140] += 10
 			fat = 80
 			salo = 80
 			'<center><img src="images/pre/SYS/altstart16.jpg"></center>'
@@ -383,6 +455,8 @@ if $ARGS[0] = 'SGStart3':
 			pcs_humint = 20
             pcs_makupskl = 40
 			pcs_skin = 30
+!!friendship code starts
+			gs 'preSYS', 'socialgroup_setting_boys', 20, 20, 20, 20, 20, 0
 			fat = 60
 			salo = 60
 			'<center><img src="images/pre/SYS/altstart17.jpg"></center>'
@@ -395,6 +469,8 @@ if $ARGS[0] = 'SGStart3':
 
     act 'Gopnik, Rebel, Punk, Troublemaker':
 		!!above average fitness
+!!If you can do uniforms then they can choose inappropriate or borderline
+!!can pick 1-3 tattoo''s at start
         cls
 		pcs_sprt = 20
 		pcs_stren = 20
@@ -402,6 +478,11 @@ if $ARGS[0] = 'SGStart3':
 		pcs_react = 20
 		pcs_agil = 20
 		pcs_grades = 40
+!!friendship code starts
+		gs 'preSYS', 'socialgroup_setting', 0, 0, -10, 25, 0, 0
+		npc_rel[129] -= 30
+!!Social group code all social groups starts at 0
+		grpGop = 30
 		fat = 80
 		salo = 80
 		tampon = 20
@@ -427,6 +508,14 @@ if $ARGS[0] = 'SGStart3':
             pcs_punch = 30
             pcs_kick = 30
             pcs_def = 30
+!!friendship code starts
+			npc_rel[9] += 10
+			npc_rel[10] += 10
+			npc_rel[11] += 10
+			npc_rel[20] += 10
+			npc_rel[21] += 10
+			npc_rel[24] += 10
+			gs 'preSYS', 'socialgroup_setting', -10, -10, -10, 0, -10, 0
 			'<center><img src="images/pre/SYS/altstart18.jpg"></center>'
 			alterstrtimg = 18
 			$startgrptemp = 'You are a gopnik, you proved yourself to the others are while still low in the pecking order of things, you have proven yourself already and are fully accepted by the rest. Because of your behavior, you have problems at home. Especially with your mother and step father, who see you going down the wrong path, the teachers and the police all know your one of the local gopniks.'
@@ -440,6 +529,14 @@ if $ARGS[0] = 'SGStart3':
 			pcs_humint = 20
 			pcs_persuas = 10
             pcs_makupskl = 20
+!!friendship code starts
+			npc_rel[24] += 10
+			npc_rel[155] += 15
+			npc_rel[157] += 10
+			npc_rel[143] += 10
+			npc_rel[144] += 15
+			npc_rel[145] += 20
+			gs 'preSYS', 'socialgroup_setting', 0, 0, -10, 0, -10, 0
 			'<center><img src="images/pre/SYS/altstart19.jpg"></center>'
 			alterstrtimg = 19
 			$startgrptemp = 'You are a troublemaker, nothing makes you happier than causing problems. Whether it be petty larceny, getting into fights, or vandalize. You live for the thrill of breaking the rules, you get along fairly well with the gopniks and they accept you as a kindred spirit even if you are not strictly one.'
@@ -452,6 +549,13 @@ if $ARGS[0] = 'SGStart3':
 		    pcs_chrsm = 20
 			pcs_humint = 20
             pcs_makupskl = 20
+!!friendship code starts
+			npc_rel[9] += 30
+			npc_rel[10] += 5
+			npc_rel[11] += 5
+			npc_rel[20] += 15
+			npc_rel[21] += 10
+			npc_rel[24] -= 10
 			pcs_eyesize = 2
 			pcs_lip = 2
 			pcs_lashes = 1
@@ -466,6 +570,7 @@ if $ARGS[0] = 'SGStart3':
 		end
 
         act 'I am a Punk, Rebel, or Alt':
+!!can choose two more starting tattoo''s
             cls
 		    pcs_jab = 20
             pcs_punch = 20
@@ -473,6 +578,13 @@ if $ARGS[0] = 'SGStart3':
             pcs_def = 20
 			pcs_humint = 20
             pcs_makupskl = 20
+!!friendship code starts
+			npc_rel[154] += 10
+			npc_rel[155] += 10
+			npc_rel[156] += 10
+			npc_rel[158] += 10
+			npc_rel[143] += 10
+			npc_rel[144] += 15
 			'<center><img src="images/pre/SYS/altstart21.jpg"></center>'
 			alterstrtimg = 21
 			$startgrptemp = 'You march to your own tune, you are not a follower but a leader, but you have no desire to lead anything. You just do what you want, when you want and fuck everything else. The local gopniks respect you and for the most part you get along with them, but you are not one of them, just a kindred spirit looking to walk your own path and raise a little hell on the way.'
@@ -482,10 +594,14 @@ if $ARGS[0] = 'SGStart3':
 	end
 
     act 'Outcast, Loser, Goth, Ugly':
+!!If you can do uniforms then they can choose appropriate
 		!!not in good shape, below average skin. With exception of slut below.
         cls
 		pcs_prcptn = 20
 		pcs_grades = 40
+!!friendship code starts
+		gs 'preSYS', 'socialgroup_setting', -10, -10, -10, -10, 0, 0
+		npc_rel[133] += 20
 		if player_avatar ! 1: pcs_haircol = 0
 		pcs_eyesize = 0
 		pcs_lip = 0
@@ -497,6 +613,8 @@ if $ARGS[0] = 'SGStart3':
 
         act 'I have no friends':
             cls
+!!friendship code starts
+			gs 'preSYS', 'socialgroup_setting', -10, -10, -10, -10, -10, 0
 			fat = 100
 			salo = 100
             '<center><img src="images/pre/SYS/altstart22.jpg"></center>'
@@ -508,7 +626,9 @@ if $ARGS[0] = 'SGStart3':
 
         act 'I am a Ugly duckling':
             cls
-			!!low in all things that effect appearance.
+!!friendship code starts
+			gs 'preSYS', 'socialgroup_setting_boys', -10, -10, -10, -10, 0, 0
+!!low in all things that effect appearance.
 			fat = 120
 			salo = 120
             '<center><img src="images/pre/SYS/altstart23.jpg"></center>'
@@ -520,6 +640,9 @@ if $ARGS[0] = 'SGStart3':
 
         act 'I am a Good girl':
             cls
+!!friendship code starts
+			gs 'preSYS', 'socialgroup_setting', -5, -5, 0, -20, 0, 0
+			npc_rel[25] -= 5
 			fat = 80
 			salo = 80
             '<center><img src="images/pre/SYS/altstart24.jpg"></center>'
@@ -530,8 +653,14 @@ if $ARGS[0] = 'SGStart3':
 		end
 
         act 'I am a slut':
+!!If you can do uniforms then they can choose inappropriate
             cls
-			!!above average in all things that add to appearance.
+!!friendship code starts
+			gs 'preSYS', 'socialgroup_setting_boys', 20, 20, 0, 30, 0, 0
+			npc_rel[25] += 30
+!!Social group code all social groups starts at 0
+			+10 Gopnik social group
+!!above average in all things that add to appearance.
 			pcs_eyesize = 2
 			pcs_lip = 2
 			pcs_lashes = 1
@@ -553,6 +682,72 @@ if $ARGS[0] = 'SGStart3':
 			act 'Continue': gt 'preCUST', 'SGStart'
 		end
 	end
+end
+
+if $ARGS[0] = 'socialgroup_setting':
+	grup0 = 0
+	grup1 = 0
+	grup2 = 0
+	grup3 = 0
+	grup4 = 0
+	grup5 = 0
+	if ARGS[1] ! 0:grup0 = ARGS[1]
+	if ARGS[2] ! 0:grup1 = ARGS[2]
+	if ARGS[3] ! 0:grup2 = ARGS[3]
+	if ARGS[4] ! 0:grup3 = ARGS[4]
+	if ARGS[5] ! 0:grup4 = ARGS[5]
+	if ARGS[6] ! 0:grup5 = ARGS[6]
+	r = 1
+	:socialgroup_loop
+	$static_num = $static_num[r]
+	if grupTipe[r] = 1 and grup0 ! 0:
+		npc_rel[$static_num] += grup0
+	elseif grupTipe[r] = 2 and grup1 ! 0:
+		npc_rel[$static_num] += grup1
+	elseif grupTipe[r] = 3 and grup2 ! 0:
+		npc_rel[$static_num] += grup2
+	elseif grupTipe[r] = 4 and grup3 ! 0:
+		npc_rel[$static_num] += grup3
+	elseif grupTipe[r] = 5 and grup4 ! 0:
+		npc_rel[$static_num] += grup4
+	elseif grupTipe[r] = 6 and grup5 ! 0:
+		npc_rel[$static_num] += grup5
+	end
+	r += 1
+	if r <= 55:jump 'socialgroup_loop'
+end
+
+if $ARGS[0] = 'socialgroup_setting_boys':
+	grup0 = 0
+	grup1 = 0
+	grup2 = 0
+	grup3 = 0
+	grup4 = 0
+	grup5 = 0
+	if ARGS[1] ! 0:grup0 = ARGS[1]
+	if ARGS[2] ! 0:grup1 = ARGS[2]
+	if ARGS[3] ! 0:grup2 = ARGS[3]
+	if ARGS[4] ! 0:grup3 = ARGS[4]
+	if ARGS[5] ! 0:grup4 = ARGS[5]
+	if ARGS[6] ! 0:grup5 = ARGS[6]
+	r = 1
+	:socialgroup2_loop
+	$static_num = $static_num[r]
+	if grupTipe[r] = 1 and grup0 ! 0:
+		npc_rel[$static_num] += grup0
+	elseif grupTipe[r] = 2 and grup1 ! 0:
+		npc_rel[$static_num] += grup1
+	elseif grupTipe[r] = 3 and grup2 ! 0:
+		npc_rel[$static_num] += grup2
+	elseif grupTipe[r] = 4 and grup3 ! 0:
+		npc_rel[$static_num] += grup3
+	elseif grupTipe[r] = 5 and grup4 ! 0:
+		npc_rel[$static_num] += grup4
+	elseif grupTipe[r] = 6 and grup5 ! 0:
+		npc_rel[$static_num] += grup5
+	end
+	r += 1
+	if r <= 55:jump 'socialgroup2_loop'
 end
 
 --- preSYS ---------------------------------
