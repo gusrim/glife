@@ -26,19 +26,6 @@
 !! imgset6ovr[x] and imgset7ovr[x] = a flag to indicate that an image set (x) has its own image 6 and/or 7
 
 if $ARGS[0] = '':
-!!Fall of muscularity over time
-	if pcs_stren >= 26 and pcs_vital >= 26 and sftrstflag = 0:
-		if downmusl >= 5:
-			downmusl = 0
-			stren_deg -= 1
-			vital_deg -= 1
-			agil_deg -= 1
-			fat += 5
-		else
-			downmusl += rand (0,1)
-		end
-	end
-
 !!This controls the gradual change in stat to -buf
 	if strenbuf > pcs_stren: strenbuf -= 1
 	if strenbuf < pcs_stren: strenbuf += 1
@@ -120,14 +107,13 @@ if $ARGS[0] = '':
 
 	killvar 'hrtemp'
 
-!!Salo Handling; the plus/minus 2 is to give working room normally, but exact on reset
-if sftrstflag = 1:
-   if salo > fat: salo -= 1
-   if salo < fat: salo += 1
-else
-   if salo > fat + 2: salo -= 1
-   if salo < fat - 2: salo += 1
-end
+!!Salo Handling; the first part is because during a reset fat is not used and should be cleared
+	if sftrstflag = 1:
+		fat = 0
+	else
+		if fat > (2 + vitalbuf / 25): salo += 1 & fat = 0
+		if fat < (-2 - (vitalbuf / 10)): salo -= 1 & fat = 0
+	end
 
 !!This calculates the current salo category; ranges are 20 points, seemed to balance best if the range is x10 the hip devisor
 	:salocatloop
@@ -200,10 +186,10 @@ end
 	if salo < 1:
 		if fat >= 1:
 			salo = 1
-			if fat > 1: fat -= 1
+			fat -= 1
 		elseif fat <= 0 and pcs_stren + pcs_vital > 0:
-			stren_deg -= 1
-			vital_deg -= 1
+			stren_deg -= 1000
+			vital_deg -= 1000
 			salo = 1
 		else
 			if Enable_nogameover = 0:
@@ -224,6 +210,8 @@ end
 	
 	if vhips > vhtmp: vhips -= 1
 	if vhips < vhtmp: vhips += 1
+!!	Because a reset should be updating hip size instantly (this set is a bit redundant anyway)
+	if sftrstflag = 1: vhips = vhtmp
 
 	if (pcs_hgt * hratio) / 100 + vhips > (pcs_hgt * 72) / 100:
 		vofat = ((pcs_hgt * hratio) / 100 + vhips - (pcs_hgt * 72) / 100) / 2
@@ -250,25 +238,10 @@ end
 	if salocatnow < salocatlast: salocatlast -= 1
 	if salocatnow > salocatlast: salocatlast += 1
 
-!!This is for use in the warning code
+!!This is for use in the warning code and as part of the reset routines
 	if salolast > salo: salolast -= 1
 	if salolast < salo: salolast += 1
 
-!!This accounts for higher Stats keeping the body shape stable and a bypass for resets (the plus/minus 5 is to give some working room)
-	if salo + 5 < fat and sftrstflag = 0:
-		if salo + 5 < fat - ((agilbuf + strenbuf + vitalbuf)/30):
-			fat -= (agilbuf + strenbuf + vitalbuf)/30
-		else
-			fat = salo + 5
-		end
-	elseif salo - 5 > fat and sftrstflag = 0:
-		if salo - 5 > fat + ((agilbuf + strenbuf + vitalbuf)/30):
-			fat += (agilbuf + strenbuf + vitalbuf)/30
-		else
-			fat = salo - 5
-		end
-	end
-	
 !!This modifies bodykoef for high or low salo values
 	if salocatnow = 0 or salocatnow >= 7:
 		bodykoef -= 8
@@ -284,11 +257,10 @@ end
 end
 
 if $ARGS[0] = 'softreset':
-!!This is for use in immediately updating shape if something has forced salo = fat by
-!!cycling the main code the number of times it would have normally w/ a change in fat
+!!This is for use in immediately updating shape if something has caused a large change in salo, primarily fat burners and plastic surgery
 	sftrstflag = 1
 	:resetloop
-	if salo ! fat:
+	if salo ! salolast:
 		if gmstrtflag = 1: salobustdo = 1
 		gs 'body_shape'
 		jump 'resetloop'
@@ -304,12 +276,12 @@ if $ARGS[0] = 'hardreset':
 !!This is primarily for canceling out "dounspell" and setting salo to whatever value will result in the current hip size then balancing everything out.
 !!Also could be built in as a means to in-game undo "dounspell", other than the cheat.
 	if dounspell = 1 and dounsplkil > 0:
-		fat = 12 & salo = 12
+		salo = 12
+		fat = 0
 		agilbuf = pcs_agil & strenbuf = pcs_stren & vitalbuf = pcs_vital
 		salobustdo = 1 & sftrstflag = 1 & normbuffpick = -1
 		gs 'body_shape'
 		salo = (pcs_hips * 2) - ((pcs_hgt * hratio) / 50) + 80
-		fat = salo
 		if salo < 10:
 			salocatnow = 0
 		else
@@ -336,13 +308,12 @@ if $ARGS[0] = 'hardreset':
 		gs 'body_shape'
 		gs 'stat'
 	else
-		'If you''re seeing this, something odd happened.'
+		'If you''re seeing this, something odd happened. Please make a bug report that the body shape hard reset improperly fired and what you were doing.'
 	end
 end
 
 if $ARGS[0] = 'initial':
-	if fat ! salo: fat = salo
-	if fat <= 0: fat = 80
+!!	Sets the genetic bust size if it was not set in the start routines
 	if genbsize = 0:
 		genbsize = 12 & nbsize = 12
 	else
@@ -350,13 +321,14 @@ if $ARGS[0] = 'initial':
 	end
 	agilbuf = pcs_agil & strenbuf = pcs_stren & vitalbuf = pcs_vital
 	normbuffpick = -1 & gmstrtflag = 1
-	salo = 0
+!!	Calling soft reset will cause the main code to cycle up to the starting value of salo
 	gs 'body_shape', 'softreset'
+!!	This sets/resets the controler variables
 	salocatlast = salocatnow
 	normbuffpick = 0 & magf2bdo = 0
 	killvar 'gmstrtflag'
 	newbdsp = 1
-!!   This does all the body shape setting before the first stat call
+!!	This does all the body shape setting before the first stat call
 	pcs_hips = (pcs_hgt * hratio) / 100 + vhips
 	pcs_waist = (pcs_hips * wratio) / 100 + vofat
 	pcs_band = (pcs_waist * bratio) / 100 + vofat
