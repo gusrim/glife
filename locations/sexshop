@@ -157,10 +157,14 @@ if $ARGS[0] = 'start':
 		end
 	end
 
-	act 'View clothing':
-		cla
-		minut += 5
+	act 'View fetish clothing':
+		minut += 1
 		gt 'sexshop', 'clo'
+	end
+
+	act 'View burlesque clothing':
+		minut += 1
+		gt 'sexshop', 'clo2'
 	end
 
 	if money >= 300:
@@ -338,8 +342,8 @@ if $ARGS[0] = 'start':
 end
 
 if $ARGS[0] = 'clo':
-	$metka = $ARGS[0]
-	$loc = $CURLOC
+	$metka = 'clo'
+	$loc = 'sexshop'
 	cls
 	gs'stat'
 	'Fetish clothing - for all your personal needs.'
@@ -352,17 +356,21 @@ if $ARGS[0] = 'clo':
 
 	i = Clothingstock + 1
 
-	if Clothingstock - 18 > 0:
-		i -= 18
-	elseif Clothingstock - 12 > 0:
+	if Clothingstock > 20:
+		i -= 20
+	elseif Clothingstock > 16:
+		i -= 16
+	elseif Clothingstock > 12:
 		i -= 12
-	elseif Clothingstock - 6 > 0:
-		i -= 6
+	elseif Clothingstock > 8:
+		i -= 8
+	elseif Clothingstock > 4:
+		i -= 4
 	end
 
 	:loopfetish
 		if fetish[i] = 0:*p '<a href="exec: i = <<i>> & gt ''sexshop'', ''fetish''"><img src="images/pc/clothing/8fetish/<<i>>.jpg" 	height="250" /></a>'
-		i += 6
+		i += 4
 	if i <= 67:jump 'loopfetish'
 end
 
@@ -375,6 +383,42 @@ if $ARGS[0] = 'fetish':
 	end
 
 	gt 'clothing', 'view_clothing_item', 'shop', 'fetish',i, 1000
+end
+
+if $ARGS[0] = 'clo2':
+	$metka = 'clo2'
+	$loc = 'sexshop'
+	cls
+	gs'stat'
+	'Burlesque clothing - for entertainers and those most special of occasions.'
+
+	act 'Return':
+		cla
+		minut += 5
+		gt 'sexshop', 'start'
+	end
+
+	if Clothingstock > 11:
+		i = 1
+	else
+		i = 2
+	end
+
+	:loopburlesque
+		if burlesque[i] = 0:*p '<a href="exec: i = <<i>> & gt ''sexshop'', ''burlesque''"><img src="images/pc/clothing/13burlesque/<<i>>.jpg" 	height="250" /></a>'
+		i += 2
+	if i <= 22:jump 'loopburlesque'
+end
+
+if $ARGS[0] = 'burlesque':
+	cla
+	
+	if burlesque[i] ! 0:
+		msg 'You already own these clothes.'
+		gt 'sexshop', 'clo2'
+	end
+
+	gt 'clothing', 'view_clothing_item', 'shop', 'burlesque',i, 1500
 end
 
 if $ARGS[0] = 'podval':
