@@ -269,6 +269,8 @@ if $ARGS[0] = 'view_clothing_item':
 		if dyneval('RESULT = <<$ARGS[2]>>[<<ARGS[3]>>]') = 1:
 			'You already own this item.'
 			act 'Leave': gt $loc, $metka
+		elseif CloExhibit > pcs_exhibition:
+			'You don''t feel confident enough to wear an outfit this revealing and can''t bring yourself to buy it.'
 		else
 			if $ARGS[2] = 'coat' and ARGS[3] = 5:
 				price = ARGS[4]
@@ -376,10 +378,15 @@ if $ARGS[0] = 'view_clothing_item':
 		end
 
 		if $ARGS[2] ! 'coat' and $ARGS[2] ! 'swimwear':
-			act 'Wear':
-				gs 'clothing', 'wear', $ARGS[2], ARGS[3]
-				dynamic $ARGS[2] + 'W[<<ARGS[3]>>] = 1'
-				gt 'clothing', 'view_clothing_list', $ARGS[1]
+		
+			if CloExhibit > pcs_exhibition:
+				'You don''t feel confident enough to wear an outfit this revealing.'
+			else
+				act 'Wear':
+					gs 'clothing', 'wear', $ARGS[2], ARGS[3]
+					dynamic $ARGS[2] + 'W[<<ARGS[3]>>] = 1'
+					gt 'clothing', 'view_clothing_list', $ARGS[1]
+				end
 			end
 		end
 	elseif $ARGS[1] = 'store' or $ARGS[1] = 'unwanted':
