@@ -269,8 +269,6 @@ if $ARGS[0] = 'view_clothing_item':
 		if dyneval('RESULT = <<$ARGS[2]>>[<<ARGS[3]>>]') = 1:
 			'You already own this item.'
 			act 'Leave': gt $loc, $metka
-		elseif CloExhibit > pcs_exhibition:
-			'You don''t feel confident enough to wear an outfit this revealing and can''t bring yourself to buy it.'
 		else
 			if $ARGS[2] = 'coat' and ARGS[3] = 5:
 				price = ARGS[4]
@@ -280,7 +278,9 @@ if $ARGS[0] = 'view_clothing_item':
 			end
 			'Price: <<price>>'
 			act 'Leave': gt $loc, $metka
-			if money >= Price:
+			if CloExhibit > pcs_exhibition:
+				'You don''t feel confident enough to wear an outfit this revealing and can''t bring yourself to buy it.'
+			elseif money >= Price:
 				act 'Buy':
 					h = 0
 					if CloStyle = 2:h = 10
