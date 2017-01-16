@@ -278,7 +278,9 @@ if $ARGS[0] = 'view_clothing_item':
 			end
 			'Price: <<price>>'
 			act 'Leave': gt $loc, $metka
-			if money >= Price:
+			if CloExhibit >= pcs_exhibition:
+				'You don''t feel confident enough to wear an outfit this revealing and can''t bring yourself to buy it.'
+			elseif money >= Price:
 				act 'Buy':
 					h = 0
 					if CloStyle = 2:h = 10
@@ -376,10 +378,15 @@ if $ARGS[0] = 'view_clothing_item':
 		end
 
 		if $ARGS[2] ! 'coat' and $ARGS[2] ! 'swimwear':
-			act 'Wear':
-				gs 'clothing', 'wear', $ARGS[2], ARGS[3]
-				dynamic $ARGS[2] + 'W[<<ARGS[3]>>] = 1'
-				gt 'clothing', 'view_clothing_list', $ARGS[1]
+		
+			if CloExhibit >= pcs_exhibition:
+				'You don''t feel confident enough to wear an outfit this revealing.'
+			else
+				act 'Wear':
+					gs 'clothing', 'wear', $ARGS[2], ARGS[3]
+					dynamic $ARGS[2] + 'W[<<ARGS[3]>>] = 1'
+					gt 'clothing', 'view_clothing_list', $ARGS[1]
+				end
 			end
 		end
 	elseif $ARGS[1] = 'store' or $ARGS[1] = 'unwanted':
@@ -458,9 +465,12 @@ if $ARGS[0] = 'strip':
 	CloQuality = 0
 	CloThinness = 0
 	CloTopCut = 0
+	CloBra = 0
 	CloPantsShortness = 0
 	CloSkirtShortness = 0
+	CloPanties = 0
 	CloStyle = 0
+	CloStyle2 = 0
 	CloBimbo = 0
 	PCloQuality = 0
 	PCloThinness = 0
@@ -468,7 +478,9 @@ if $ARGS[0] = 'strip':
 	PCloPants = 0
 	PCloSkirt = 0
 	PCloStyle = 0
+	PCloStyle2 = 0
 	PCloBimbo = 0
+	PCloExhibit = 0
 	PXCloThinness = 0
 	PXCloTopCut = 0
 	PXCloSkirtShortness = 0
@@ -508,10 +520,13 @@ if $ARGS[0] = 'wear':
 	PCloQuality = CloQuality
 	PCloThinness = CloThinness
 	PCloTopCut = CloTopCut
+	PCloBra = CloBra
 	PCloPants = CloPantsShortness
 	PCloSkirt = CloSkirtShortness
+	PCloPanties = CloPanties
 	PCloStyle = CloStyle
 	PCloStyle2 = CloStyle2
+	PCloExhibit = CloExhibit
 	PCloBimbo = CloBimbo
 	if CloBimbo = 1:bimbocl = 1
 
