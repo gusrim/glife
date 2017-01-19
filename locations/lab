@@ -44,7 +44,7 @@ if $ARGS[0] = 'start':
 		gt 'lab', 'Gustav'
 	end
 
-	act 'Train with Tatiana':
+	act 'Talk with Tatiana':
 		cla
 		gt 'lab', 'Tatiana'
 	end
@@ -194,7 +194,7 @@ if $ARGS[0] = 'Tatiana':
 	'Tatiana is always studying something.'
 
 	if succubusflag = 1:
-		if tatianasucsex > 0 and sucinfoday ! 0 and sucinfoday <= daystart:
+		if tatisucsex > 0 and sucinfoday ! 0 and sucinfoday <= daystart:
 			'"Hey <<$pcs_nickname>>!'
 			'"I''ve gotten some more information about Succubae!"'
 			if sucpcinfo = 4 and succublvl >= 2:
@@ -219,13 +219,7 @@ if $ARGS[0] = 'Tatiana':
 			end
 		end
 
-		if Tatianasucsexask ! daystart:
-			if Tatianasucsex = 0:
-				act 'Ask Tatiana if she wants to try Succubus Sex': Tatianasucsexask = daystart & gt 'lab', 'Tatianasucsexask'
-			else
-				act 'Ask if she want''s to have sex': tatianasucsexask = daystart & gt 'lab', 'Tatianasuctalk'
-			end
-		end
+		if tatisucsex ! 0 and tatisucsexask ! daystart: act 'Ask if she want''s to have sex': tatianasucsexask = daystart & gt 'lab', 'Tatianasucsexask'
 
 		if sucpcinfo >= 4: act 'Ask her about Succubae': gt 'lab', 'Tatianasuctalk'
 	end
@@ -435,7 +429,7 @@ if $ARGS[0] = 'Tatiana':
 				'You spend 30 minutes meditating, with Tatiana in a light link with you as she shows you how to tell what your Succubus energy levels are.'
 				'You open your eyes and look at Tatiana sitting across from you.'
 				'She is flushed, breathing hard, and her nipples are showing clearly through her blouse.'
-				if 1 + (succublvl * 2) + tatianasucsex < 20 and rand(0,100) < 90:
+				if 1 + (succublvl * 2) + tatisucsex < 20 and rand(0,100) < 90:
 					'After a moment, she gives herself a shake and pulls herself together, before saying, "There you go!"'
 					'She then stands up and goes back to her studying.'
 					act 'Finish': gt 'lab', 'Tatiana'
@@ -461,7 +455,7 @@ if $ARGS[0] = 'Tatiana':
 				'Tatiana shows you how to build a storage reservoir that draws the excess energy in before your body uses it.'
 				'Once you''re finished, Tatiana is again showing clear signs of arousal and she says, "You know, touching your power is a really, <i>really</i>, intense experience!"'
 				'She then closes her eyes and visibly tries to get ahold of herself.'
-				if tatianasucsex >= 20 or rand(1,100) < 95:
+				if tatisucsex >= 20 or rand(1,100) < 95:
 					'After several moments, she pulls herself together, opens her eyes, smiles at you, and says, "There, I knew I could do it!"'
 					'She then stands up and goes back to her studying.'
 					act 'Finish': gt 'lab', 'Tatiana'
@@ -486,9 +480,9 @@ if $ARGS[0] = 'Tatiana':
 						cla
 						money -= 5000
 						sctrainprep = 1
-						Tatianasucsexday = daystart + 7
+						tatisucsexday = daystart + 7
 						'"Ok, I''ll get started! Be here next <<$week[week]>> with 3 days of reserves and 100 units of stored energy."'
-						if tatianasucsex > 0:
+						if tatisucsex > 0:
 							'She then pulls you in for a quick kiss before adding, "Now get out of here, I can''t have you distracting me!"'
 						else
 							'She then surprises you with a peck on the cheek before adding, "Now get out of here, I can''t have you distracting me!"'
@@ -508,7 +502,7 @@ if $ARGS[0] = 'Tatiana':
 						cla
 						money -= 2000
 						sctrainprep = 1
-						Tatianasucsexday = daystart + 7
+						tatisucsexday = daystart + 7
 						'"Ok, I''ll get started! Be here next <<$week[week]>> with 3 days of reserves and 100 units of stored energy."'
 						'"Now get out of here, I can''t have you distracting me!"'
 						act 'Leave':
@@ -537,7 +531,7 @@ if $ARGS[0] = 'Tatiana':
 					act 'Continue':
 						pcs_horny = 0
 						'As you''re finishing, you notice Tatiana has her eyes closed and is visibly trying to get ahold of herself.'
-						if Tatianasucsexday < daystart or rand(1,100) > 95:
+						if tatisucsexday < daystart or rand(1,100) > 95:
 							'Then her eyes snap open and you feel arousal suddenly flooding the link!'
 							xgt 'lab', 'suctrainsex'
 						else
@@ -587,7 +581,7 @@ if $ARGS[0] = 'Tatianasuctalk':
 		exit
 	end
 
-	if Tatianasucsex = 0: act 'Ask Tatiana if she wants to try Succubus Sex': Tatianasucsexask = daystart & gt 'lab', 'Tatianasucsexask'
+	if tatisucsex = 0 and tatisucsexask ! daystart: act 'Ask Tatiana if she wants to try Succubus Sex': tatisucsexask = daystart & gt 'lab', 'Tatianasucsexask'
 
 	act 'Ask her to repeat what she knows about Succubae': gt 'succubus', 'tatianaask'
 
@@ -637,7 +631,7 @@ if $ARGS[0] = 'Tatianasucsexask':
 	end
 	'<center><b><font color="maroon">Tatiana</font></b></center>'
 	'<center><img src="images/pre/shared/karinpre.jpg"></center>'
-	If tatianasucsex = 0:
+	if tatisucsex = 0:
 		if TatianaSex = 1:
 			'You give Tatiana what you hope is a "come hither" smile and ask,'
 			'"So, you want to give Succubus sex a try?"'
@@ -651,10 +645,10 @@ if $ARGS[0] = 'Tatianasucsexask':
 	end
 	act 'She answers:':
 		cla
-		If tatianasucsex = 0:
+		if tatisucsex = 0:
 			'She gives you a wide eyed look before saying,'
 			if succublvl + TatianaSex < rand(0,6):
-				'"I''m sorry, <<$pcs_nickname>>, I just don''t have the time now."'
+				'"I''m sorry, <<$pcs_firstname>>, I just don''t have the time now."'
 				act 'Move on to something else': gt 'lab', 'Tatiana'
 			else
 				'"I would love to!", with a wide smile.'
@@ -662,8 +656,8 @@ if $ARGS[0] = 'Tatianasucsexask':
 				act 'Proceed': gt 'succubus', 'tatianasex'
 			end
 		else
-			If tatianasucsexday <= daystart:
-				if 1 + (succublvl * 2) + tatianasucsex < rand(1,20):
+			if tatisucsexday <= daystart:
+				if 1 + (succublvl * 2) + tatisucsex < rand(1,20):
 					'"I''m sorry, <<$pcs_nickname>>, I just don''t have the time now."'
 					act 'Move on to something else': gt 'lab', 'Tatiana'
 				else
@@ -673,13 +667,13 @@ if $ARGS[0] = 'Tatianasucsexask':
 					act 'Proceed': gt 'succubus', 'tatianasex'
 				end
 			else
-				if tatianasucsexday - daystart > 1:
+				if tatisucsexday - daystart > 1:
 					$scsextmp = 'days'
 				else
 					$scsextmp = 'day'
 				end
 				'She looks at you with a sad smile and says,'
-				'"I''m sorry, <<$pcs_nickname>>, I need at least <<Tatianasucsexday - daystart>> more <<$scsextmp>>."'
+				'"I''m sorry, <<$pcs_nickname>>, I need at least <<tatisucsexday - daystart>> more <<$scsextmp>>."'
 				killvar '$scsextmp'
 				act 'Move on to something else': gt 'lab', 'Tatiana'
 			end
@@ -738,7 +732,7 @@ if $ARGS[0] = 'suctraining':
 		act 'Follow her': gt 'lab', 'Tatianasuctalk'
 		exit
 	elseif sucpcinfo >= 6 and sucskill < 3 and sctrainprep = 1:
-		if tatianasucsexday > daystart and tatianasucsexday - 5 >= daystart:
+		if tatisucsexday > daystart and tatisucsexday - 5 >= daystart:
 			cla
 			clr
 			*clr
@@ -750,7 +744,7 @@ if $ARGS[0] = 'suctraining':
 				'"Are you sure?"'
 				act 'Yes, I''m sure':
 					cla
-					if tatianasucsexday = daystart + 7:
+					if tatisucsexday = daystart + 7:
 						sctrainprep = 0
 						money += 5000
 						'"Ok, good thing I hadn''t bought anything yet." and she hands you back the 5000 <b>?</b> before going back to her studying.'
@@ -771,28 +765,30 @@ if $ARGS[0] = 'suctraining':
 			act 'No...':
 				cla
 				'You say, "No, I just wanted to see you."'
-				'She answers, "That''s sweet, but I can''t have you distracting me, come back all charged up in <<tatianasucsexday - daystart>> days!"'
+				'She answers, "That''s sweet, but I can''t have you distracting me, come back all charged up in <<tatisucsexday - daystart>> days!"'
 				act 'Leave':
 					minut += 3
 					gt 'down'
 				end
 			end
 			exit
-		elseif tatianasucsexday > daystart and tatianasucsexday - 5 < daystart:
-			if tatianasucsexday - daystart > 1:
+		elseif tatisucsexday > daystart and tatisucsexday - 5 < daystart:
+			if tatisucsexday - daystart > 1:
 				$scsextmp = 'days'
 			else
 				$scsextmp = 'day'
 			end
-			'You attempt to enter Tatiana''s lab but an invisible barrier stops you, but Tatiana apparently heard you as she shouts from across the lab, "I''ve already taken the first potion so I can''t come anywhere near you, come back all charged up in <<tatianasucsexday - daystart>> <<$scsextmp>>!"'
+			'You attempt to enter Tatiana''s lab but an invisible barrier stops you, but Tatiana apparently heard you as she shouts from across the lab, "I''ve already taken the first potion so I can''t come anywhere near you, come back all charged up in <<tatisucsexday - daystart>> <<$scsextmp>>!"'
 			killvar '$scsextmp'
 			act 'Leave':
 				minut += 3
 				gt 'down'
 			end
 			exit
-		elseif tatianasucsexday = daystart or tatianasucsexday = daystart - 1:
-			cls
+		elseif tatisucsexday = daystart or tatisucsexday = daystart - 1:
+			cla
+			clr
+			*clr
 			gs 'stat'
 			'<center><b><font color="maroon">Tatiana</font></b></center>'
 			'<center><img src="images/pre/shared/karinpre.jpg"></center>'
@@ -808,11 +804,11 @@ if $ARGS[0] = 'suctraining':
 				'Once there, you both sit down facing each other, she looks at you with burning lust, and says, "Do it!"'
 				act 'Proceed': gt 'succubus', 'tatianasex'
 				exit
-			elseif sucexcess < 100 and succhungry > -2 and tatianasucsexday = daystart:
+			elseif sucexcess < 100 and succhungry > -2 and tatisucsexday = daystart:
 				'She then says, "Damn! You don''t have enough reserve <i>or</i> stored energy! Run over to the Park and find some robbers or something, then get back here tomorrow!"'
-			elseif succhungry > -2 and tatianasucsexday = daystart:
+			elseif succhungry > -2 and tatisucsexday = daystart:
 				'She then says, Damn! You don''t have enough reserve energy! Run over to the Park and find some robbers or something, then get back here tomorrow!'
-			elseif succhungry > -2 and tatianasucsexday = daystart - 1:
+			elseif succhungry > -2 and tatisucsexday = daystart - 1:
 				'She then says, "Damn! You don''t have enough reserve energy and there isn''t enough time for you to build it up." She then sighs and says, "Go ahead and take off, I need to bleed this energy off safely."'
 				sctrainprep = -1
 			else
