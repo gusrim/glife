@@ -1,22 +1,28 @@
 # metro
+
 if $ARGS[0] = 'start':
 	CLOSE ALL
 	if sound = 0:PLAY 'sound/metro.mp3',30
 	'<center><b><font color="maroon">Metro station</font></b></center>'
 	if $loc = 'street':
 		'<center><b><font color="maroon">Residential area</font></b></center>'
-		'<center><img src="images/locations/city/shared/metro/tagan.jpg"></center>'
+		'<center><img src="images/locations/city/shared/metro/platresident.jpg"></center>'
 	elseif $loc = 'down':
-		'<center><b><font color="maroon">Center</font></b></center>'
-		'<center><img src="images/locations/city/shared/metro/center.jpg"></center>'
+		'<center><b><font color="maroon">City Center</font></b></center>'
+		'<center><img src="images/locations/city/shared/metro/platcenter.jpg"></center>'
 	elseif $loc = 'Nord':
-		'<center><b><font color="maroon">Northern region</font></b></center>'
-		'<center><img src="images/locations/city/shared/metro/sever.jpg"></center>'
-	else
-		'<center><img src="images/locations/city/shared/metro/metro.jpg"></center>'
+		'<center><b><font color="maroon">City Industrial Area</font></b></center>'
+		'<center><img src="images/locations/city/shared/metro/platindust.jpg"></center>'
+!!new locations for the metro, you will have to see how the code works and for now the island will be commented out until we add that area of the city
+	elseif $loc = 'psiklin':
+		'<center><b><font color="maroon">City Suburbs</font></b></center>'
+		'<center><img src="images/locations/city/shared/metro/platsuburb.jpg"></center>'
+	!!elseif $loc = 'island': !!for now calling it island, will have to check what we name the file.
+		!!'<center><b><font color="maroon">Vasilievsky Island</font></b></center>'
+		!!'<center><img src="images/locations/city/shared/metro/platisland.jpg"></center>'
+!!should be able to delete below here since now all the locations have their own image.
 	end
 
-	!'<center><img src="images/locations/city/shared/metro/metro.jpg"></center>'
 	'Subway fare costs 16 <b>₽</b>.'
 	minut += 5
 	clr
@@ -40,6 +46,7 @@ if $ARGS[0] = 'start':
 		if $loc ! 'street':
 			act 'Go to the <b>Residential Area</b> (16 <b>₽</b>)':
 				$loc = 'street'
+				$metka = ''
 				gt 'metro', 'vagon'
 			end
 		end
@@ -47,6 +54,7 @@ if $ARGS[0] = 'start':
 		if $loc ! 'down':
 			act 'Go to the <b>City Center</b> (16 <b>₽</b>)':
 				$loc = 'down'
+				$metka = ''
 				gt 'metro', 'vagon'
 			end
 		end
@@ -54,14 +62,31 @@ if $ARGS[0] = 'start':
 		if $loc ! 'Nord':
 			act 'Go to the <b>City Industrial Area</b> (16 <b>₽</b>)':
 				$loc = 'Nord'
+				$metka = ''
 				gt 'metro', 'vagon'
 			end
 		end
+
+		if $loc ! 'psiklin':
+			act 'Go to the <b>City Suburbs</b> (16 <b>₽</b>)':
+				$loc = 'psiklin'
+				$metka = 'start'
+				gt 'metro', 'vagon'
+			end
+		end
+
+!!		if $loc ! 'island':
+!!			act 'Go to the <b>Vasilievsky Island</b> (16 <b>₽</b>)':
+!!				$loc = 'island'
+!!				$metka = ''
+!!				gt 'metro', 'vagon'
+!!			end
+!!		end
 	end
 
-	act 'Get off the subway':
+	act 'Get off the Metro':
 		minut += 15
-		gt '<<$loc>>'
+		gt $loc, $metka
 	end
 	
 	if pusher = 1 and dealer = 0:
@@ -91,14 +116,43 @@ if $ARGS[0] = 'vagon':
 		bcolor = rgb(255, 255, 255)
 		lcolor = rgb(106, 90, 205)
 	end
-	'<center><b><font color="maroon">Subway car</font></b></center>'
-	if hour < 5 or hour > 10 and hour < 15 or hour > 24:
-		'<center><img src="images/locations/city/shared/metro/vagon.jpg"></center>'
-		'In the car are just a few passengers vacantly reading magazines and papers.'
-	elseif hour >= 5 and hour <= 10 or hour >= 15 and hour <= 24:
-		'<center><img src="images/locations/city/shared/metro/vagonfull.jpg"></center>'
-		'In the car there are lots of people all standing like statues, trying not to make eye conteact with each other.'
-		frotrand = rand(0, 100)
+
+	'<center><b><font color="maroon">Metro car</font></b></center>'
+	if hour < 7 or hour >=22:
+		if rand(0,1) = 0:
+			metro_busy = 0
+		else
+			metro_busy = 1
+		end
+	elseif (hour >= 9 and hour < 16) or (hour >= 18 and hour < 22):
+		if rand(0,1) = 0:
+			metro_busy = 1
+		else
+			metro_busy = 2
+		end
+	else
+		if rand(0,1) = 0:
+			metro_busy = 2
+		else
+			metro_busy = 3
+		end
+	end
+
+	if metro_busy = 0:
+		'<center><img src="images/locations/city/shared/metro/metroempty.jpg"></center>'
+		'The car is almost completely empty, one or two other passengers are in the car with you. It seems a bit odd and a little creepy seeing the car this empty. You have practically the whole car to yourself and pick the cleanest spot to sit.'
+	elseif metro_busy = 1:
+		'<center><img src="images/locations/city/shared/metro/metro.jpg"></center>'
+		'The car is mostly empty, leaving you a choice of seats. You easily find a place for yourself, leaving you plenty of room to get comfortable. The few other people on the car, mind their own business, leaving you to your own thoughts.'
+	elseif metro_busy = 2:
+		'<center><img src="images/locations/city/shared/metro/metrofull<<rand(1,5)>>.jpg"></center>'
+		'The car is full of people, all of the seats are taken, but only a few people are forced to stand. You easily find a place for yourself, at least it is not packed, leaving you plenty of room to get comfortable.'
+	else
+		'<center><img src="images/locations/city/shared/metro/metropacked.jpg"></center>'
+		'The car is packed with people, most of them are forced to stand, as there is not enough seats. It is so tightly packed that people are crammed tight up against each other either in the seats or standing up. You manage to squeeze yourself in among the people, you can feel other bodies pressed up tightly against yours, it is very uncomfortable and hot.'
+	end
+
+	frotrand = rand(0, 100)
 
 		if frotrand >= 90 - (frot * 10) and frot < 3:
 'FROT 1 <<frot>>'
@@ -126,14 +180,14 @@ if $ARGS[0] = 'vagon':
 		if hour = 7 or hour = 15:
 			sosedMetroRand = rand(0, 100)
 
-			if sosedMetroRand >= 60 and sosedMetroDay ! daystart:'You notice in the subway <a href="exec:gt ''TimofeiMetro''">Timothy</a>, your neighbor.'
+			if sosedMetroRand >= 60 and sosedMetroDay ! daystart:'You notice your neighbor <a href="exec:gt ''TimofeiMetro''">Timothy</a>, in the metro car.'
 		end
 	end
 
 	if spdirtyc > 0 or spdirtyv > 0:
 		if hour >= 7 and hour <= 21:
 			pcs_mood -= 10
-			'Several passengers are shocked, looking at where you are cum smeared.'
+			'Several passengers are shocked, looking at the cum smears on you.'
 		end
 	end
 
@@ -144,7 +198,7 @@ if $ARGS[0] = 'shop':
 	cls
 	'<b>What''s it gonna be?</b>'
 
-	'Small box filled with red and blue pills. There are 20 pieces inside.'
+	'Small box filled with red and blue pills. There is about two dozen of each pill inside.'
 	if money >= 1000:
 		'<a href="exec:money - 1000 & mentats_have += 20 & gt ''metro'', ''shop''">Buy neuroboosters</a> 1000 <b>₽</b>'
 	else
@@ -179,9 +233,10 @@ end
 
 if $ARGS[0] = 'dealer':
 	cls
-	'He sizes you up with suspicion.<br><b>"Hey miss, saw you buying Lady in the park."</b> <br>He clears his throat and spits onto the tracks.<b> "That shit will mess you up."</b><br>He opens his coat and you flinch thinking he is going to flash you, but instead you see he is wearing a business suit beneath.<br>He gestures at numerous pockets lining insides of his coat. They are filled to bursting with various packages, pills and ampoules.<br><b>"Here, my product is much better. Great times and guaranteed not to kill you."</b>'
+	'He sizes you up with suspicion.<br><b>"Hey miss, saw you buying Lady in the park."</b> <br>He clears his throat and spits onto the tracks.<b> "That shit will mess you up."</b><br>He opens his coat and you flinch thinking he is going to flash you, but instead you see he is wearing a business suit beneath.<br>He gestures at numerous pockets lining insides of his coat. They are filled to bursting with various packages, pills and ampules.<br><b>"Here, my product is much better. Great times and guaranteed not to kill you."</b>'
 
 	act 'Continue':gt 'metro','shop'
 end
+
 --- metro ---------------------------------
 
