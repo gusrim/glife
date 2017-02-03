@@ -1,451 +1,454 @@
 # swamphouse
-$location_type = 'indoors'
-$metkaM = $ARGS[0]
-$locM = $CURLOC
-$metka = $ARGS[0]
-$loc = $CURLOC
-frost = 0
-bonusZ = 0
-clr
-gs'stat'
-FColor = RGB(0,0,0)
-BColor = RGB(255,255,255)
-LColor = RGB(106,90,205)
-hantslutsexrand = rand(1,3)
-temp = rand(1,5)
 
-'<center><H4>Hut</H4></center>'
-'<center><img src="images/locations/gadukino/hunters/swampizba.jpg"></center>'
-'A small hunting cabin. The cabin contains a small room with a low ceiling. You see a <a href="exec:GT ''bed'',''start''">couch</a> where you can sleep.'
-if bucket > 0:
-	'There''s a <a href="exec: dynamic $bucket ">bucket</a> filled with water placed in the corner.'
-else
-	'There''s an empty bucket placed in the corner.'
-end
-'You see an old <a href="exec: dynamic $washstand ">sink</a>, and under it there is a <a href="exec: dynamic $basin">basin</a>.'
-if swamp_enema = 1:'You found an enema syringe on the shelf.'
-'In the other corner you see a small <a href="exec: dynamic $stove">stove</a>. There is running water and some mushrooms so you can cook simple food. You can also warm the water so you can bathe in the basin.'
-'Beside the stove, there''s a stack of old <a href="exec: dynamic $stackmagazines">magazines</a>, most likely used for ignition.'
-if clothesswamphouse = 1 and clearclothes = 0:'Your clothes hang on the shelf.'
-if clearclothes > 0 and clearclothesH = 1: 'Your clothes are drying above the stove.'
-if hour = 20 and hanters = 1 and hantersKnow > 0 or hour = 7 and hanters = 1 and hantersKnow > 0:'The <a href="exec:dynamic $hanterstable">hunters</a> are sitting around the table.'
-if hour > 20 and hour < 23 and hanters = 1 and hantersKnow > 0:'You see the <a href="exec:dynamic $hantersrelax">hunters</a> hanging in the hut.'
-if hour = 23 and hanters = 1 and hantersKnow > 0 or hour >= 0 and hour < 7 and hanters = 1 and hantersKnow > 0:'The hunters are sleeping on the couch.'
-
-if edahot > 0:
-    act 'Eat a meal':
-		gs 'food', 'm_meal'&!use current one, cls will clear messages
-		cla
-	    *clr
-	    edahot = 0
-	    gs'stat'
-
-	    '<center><img src="images/locations/gadukino/hunters/soup.jpg"></center>'
-		
-	    if pcs_energy >= 100:
-		    fat += 3
-
-		    'You''re stuffed. You can''t eat anymore.'
-	    elseif pcs_energy >= 80:
-		    fat += 1
-		    pcs_energy += 30
-
-		    'You force yourself to take another sip of the mushroom soup.'
-	    else
-		    pcs_energy += 20
-
-		    'You love to eat warm mushroom soup.'
-	    end
-
-	    gs'stat'
-
-	    act 'Get up from the table':gt $locM, $metkaM
-	end
-end
-!re-arrange it, there should be no logic error now by illume
-if $clothingworntype ! 'nude' or swamp_clothes = 1:
-	!have cloth, or rag on
-	act'Undress':
-		if hantersKnowSlut > 0 or hanters = 0 or hanters = 1 and hour >= 8 and hour < 20 and hantersKnowSlut = 0:
-			cla
-			*clr
-			if $clothingworntype ! 'nude':
-				flag_tanga = tanga
-				clothesswamphouse = 1
-				gs 'clothing', 'strip'
-			end
-			swamp_clothes = 0
-			minut+=5
-			tanga = 0
-			minut+=5
-
-			'<center><img src="images/locations/gadukino/hunters/swamphouseundress.jpg"></center>'
-			'Feeling the heat in the cabin, you start removing your clothes.'
-			act'Back':gt'swamphouse'
-		else
-			cla
-			*clr
-		    '<center><img src="images/locations/gadukino/hunters/noundress.jpg"></center>'
-			'Despite the heat you''re still too shy to get undressed, what if someone suddenly comes in?'
-			act'Back':gt'swamphouse'
-		end
-	end
-end
-if clothesswamphouse = 1 and clearclothes = 0:
-	!clothes are ready
-	if $clothingworntype = 'nude':
-		act 'Get dressed':
-			gs 'clothing', 'wear', $lastwornclothingtype, lastwornclothingnumber
-			clothesswamphouse = 0
-			swamp_clothes = 0
-			tanga = flag_tanga
-			gt $locM, $metkaM
-		end
-	else
-		act 'Pick up your clothes':
-			cla
-			*clr
-			clothesswamphouse = 0
-			'You picked up your clothes.'
-			act 'Back': gt $loc, $metka
-		end
-	end
-end
-if pcs_horny >= 50 and hanters = 0 or pcs_horny >= 50 and hanters = 1 and hour >= 8 and hour < 20:
-	act 'Masturbate':
-		gt'selfplay'
-	end
-end
-if $clothingworntype = 'nude' and swamp_clothes = 0:
-	act 'Look for your clothes':
-		cla
-		*clr
-		minut += 10
-	    if swamp_enema = 0:
-		    swamp_enema = 1
-		    gs'stat'
-		    '<center><img src="images/locations/gadukino/hunters/enema.jpg"></center>'
-		    'You search for your clothes, but only manage to find an enema syringe... "What is this doing here?" you wonder.'
-            act 'Further':gt'swamphouse'
-		else
-		    swamp_clothes = 1
-		    !gs 'clothing', 'wear', $lastwornclothingtype, lastwornclothingnumber
-		    '<center><img src="images/locations/gadukino/hunters/swamphouse_tkancloth.jpg"></center>'
-		    'You find a piece of burlap... "Well, at least it''s something." you say to yourself.'
-		    act 'Back.':gt'swamphouse'
-		end
-	end
-end
-if klismaday ! daystart and swamp_enema = 1 and analplugin = 0 and hour >= 8 and hour < 20 and hanters = 1 or klismaday ! daystart and swamp_enema = 1 and analplugin = 0 and hanters = 0:
-	act 'Perform an enema':
-		cla
-		*clr
-		minut += 5
-		klismaday = daystart
-		'<center><img src="images/locations/gadukino/hunters/swamp_enema.jpg"></center>'
-		'You perform an enema on yourself and manage to cleanse your bowel, your ass is now ready for anal sex.'
-		act 'Finish': gt'swamphouse'
-	end
-end
-
-if dirty_swamphouse > 25:act 'Clean the hut':hanterslut -= 1 & dynamic $dirty_swamphouse
-
-act 'Go outside':hanter_refuse = 0 & minut += 5 & gt'swamp_yard'
-!sex with Igor
-if hantersIgorLove > 0 and hour > 8 and hour < 19 and hantersIgorQw >= 10 and temp = 1 and hantersIgorsex = 0:
-	cls
-    minut += 5
-    pcs_horny += 5
- 	hantersIgorsex += rand(12,36)
-	gs 'stat'
-
-	'<center><img src="images/locations/gadukino/hunters/hanterlove1.4.jpg"></center>'
-	'Entering the hut you see Igor. He smiles and walks over to you, grabs hold of you and gives you a passionate kiss.'
-	'"<<$pcs_nickname>>, I want you," he whispers.'
-
-	act 'Agree':
-	    cls
-	    minut += 5
-	    hantersIgorQw += 1
-		gs 'stat'
-
-		'<center><img src="images/locations/gadukino/hunters/hanterflirt2.'+rand(4,6)+'.jpg"></center>'
-		'Smiling you look straight into Igor''s eyes telling him all he needs to know. Without any hesitation he takes you by the hand and leads you...'
-	    act 'Go':gt'HanterLoveSex'
-    end
-	act 'Refuse':
-	    cls
-	    minut += 5
-	    hantersIgorQw -= 1
-		gs 'stat'
-
-        '<center><img src="images/pc/speak_to_the_hand.jpg"></center>'
-        '"I''m sorry, Igor. I''m not in the mood." you say avoiding eye contact. Igor leaves disappointed...' 	
-	    act 'Go':gt $loc, $metka
-    end
-end
-!sex with Sergei
-if hantersSergeiLove > 0 and pcs_horny <= 60 and hantersSergeiQw >= 10 and temp = 1 and hantersSergeisex = 0 and hour > 8 and hour < 19:
-	cls
-    minut += 5
-    pcs_horny += 5
-    hantersSergeisex += rand(9,30)
-	gs 'stat'
-
-	'<center><img src="images/locations/gadukino/hunters/hanterlove1.4.jpg"></center>'
-	'Entering the hut you see Sergei. He smiles and walks over to you, grabs hold of you and gives you a passionate kiss.'
-	'"<<$pcs_nickname>>, I want you," he whispers.'
-
-	act 'Agree':
-	    cls
-	    minut += 5
-	    hantersSergeiQw += 1
-		gs 'stat'
-
-		'<center><img src="images/locations/gadukino/hunters/hanterflirt2.'+rand(4,6)+'.jpg"></center>'
-		'Smiling you look straight into Sergei''s eyes telling him all he needs to know. Without any hesitation he takes you by the hand and leads you...'
-	    act 'Go':gt'HanterLoveSex'
-    end
-	act 'Refuse':
-	    cls
-	    minut += 5
-	    hantersSergeiQw -= 1
-		gs 'stat'
-
-        '<center><img src="images/pc/speak_to_the_hand.jpg"></center>'
-        '"I''m sorry, Sergei. I''m not in the mood." you say avoiding eye contact. Sergei leaves disappointed...' 	
-	    act 'Go':gt $loc, $metka
-    end
-end
-! sex with Andrew
-if hantersAndreiLove > 0 and pcs_horny <= 60 and hantersAndreiQw >= 10 and temp = 1 and hantersAndreisex = 0 and hour > 8 and hour < 19:
-	cls
-    minut += 5
-    pcs_horny += 5
-    hantersAndreisex += rand(6,24)
-	gs 'stat'
-
-	'<center><img src="images/locations/gadukino/hunters/hanterlove1.4.jpg"></center>'
-	'Entering the hut you see Andrei. He smiles and walks over to you, grabs hold of you and gives you a passionate kiss.'
-	'"<<$pcs_nickname>>, I want you," he whispers.'
-	
-	act 'Agree':
-	    cls
-	    minut += 5
-	    hantersAndreiQw += 1
-	    pcs_horny += 5
-		gs 'stat'
-
-		'<center><img src="images/locations/gadukino/hunters/hanterhands.jpg"></center>'
-		'Smiling you look straight into Andrei''s eyes telling him all he needs to know. Without any hesitation he takes you by the hand and leads you...'
-	    act 'Further':gt'HanterLoveSex'
-    end
-	act 'Refuse':
-	    cls
-	    minut += 5
-	    hantersAndreiQw -= 1
-		gs 'stat'
-
-        '<center><img src="images/pc/speak_to_the_hand.jpg"></center>'
-        '"I''m sorry, Andrei. I''m not in the mood." you say avoiding eye contact. Andrei leaves disappointed...' 	
-	    act 'Go':gt $loc, $metka
-    end
-end
-! trio of HS, Andrei and Sergei, if love
-if hanters > 0 and doublehanterlove = 1 and hour >= 8 and hour < 20 and (hantersAndreisex = 0 or hantersSergeisex = 0):
-	cls
-    minut += 5
-    hantersAndreisex += rand(6,24)
-    hantersSergeisex += rand(9,30)
-	gs 'stat'
-
-	'<center><img src="images/locations/gadukino/hunters/hanterswork1.2.jpg"></center>'
-	'You see Andrei talking with Sergei in the hut.'
-	'"Come in <<$pcs_nickname>>, it''s time to consummate the marriage," Andrew jokingly remarked. "I hope you''re willing to do anything we say.'
-	if klismaday ! daystart:'"I''m sorry, I don''t know if I''m ready yet..." you say . "I haven''t been able to clean myself as you asked, maybe we could skip it this time?.'
-	if klismaday ! daystart:'Well, we could <<$pcs_nickname>>..." said Andrew. "But since you''re already here, you not being all dolled up doesn''t matter to us. But don''t dare to try to fool us next time, we will not forget."'
-	'"There are some bushes not far from here, we could take her with us there, no one would be able to find us. Should we tell Igor to join us?" said Sergei. "Nevermind Igor, it would take him to long time to join us."'
-
-	act 'Follow the guys':
-	    cls
-	    minut += 5
-	    hantersAndreiQw += 1
-	    hantersSergeiQw += 1
-	    pcs_horny += 5
-	    doublelovesex = 1
-	    hanterslut += 1
-	    temphant = 1
-	    if klismaday ! daystart:hanterslut += 1
-		gs 'stat'
-
-		'<center><img src="images/locations/gadukino/hunters/doublehanterlove.jpg"></center>'
-		'The men hold your hands leading you away from the hut. You''re fully aware of their plans but you don''t really mind.'
-	    act 'Further':gt'hantersex'
-    end
-	act 'Refuse':
-	    cls
-	    minut += 5
-	    hantersAndreiQw -= 1
-	    hantersSergeiQw -= 1
-		gs 'stat'
-
-        '<center><img src="images/pc/speak_to_the_hand.jpg"></center>'
-        '"No, I refuse, this is something I don''t want part of," you say and without hesitating you turn around and walk away.'
-	    act 'Go':gt $loc, $metka
-    end
-end
-!hunters are invited to the table
-if hour = 20 and hanters = 1 and hantersKnow > 0 and hantersKnowSlut = 0 and hanter_refuse = 0:
-    cla
-    *clr
-	if hour >= 20 and hour <= 23 :
-        hantersdrink = 1
-    else
-        hantersdrink = 0
-    end
+if $ARGS[0] = 'start' or $ARGS[0] = '':
+	$location_type = 'indoors'
+	$metkaM = $ARGS[0]
+	$locM = $CURLOC
+	$metka = $ARGS[0]
+	$loc = $CURLOC
+	frost = 0
+	bonusZ = 0
+	clr
 	gs'stat'
+	FColor = RGB(0,0,0)
+	BColor = RGB(255,255,255)
+	LColor = RGB(106,90,205)
+	hantslutsexrand = rand(1,3)
+	temp = rand(1,5)
 
-    if hantersdrink = 1:
-        cls
-		minut += 1
-		temp = rand(1,4)
+	'<center><H4>Hut</H4></center>'
+	'<center><img src="images/locations/gadukino/hunters/swampizba.jpg"></center>'
+	'A small hunting cabin. The cabin contains a small room with a low ceiling. You see a <a href="exec:GT ''bed'',''start''">couch</a> where you can sleep.'
+	if bucket > 0:
+		'There''s a <a href="exec: gs ''swamphouse'', ''bucket'' ">bucket</a> filled with water placed in the corner.'
+	else
+		'There''s an empty bucket placed in the corner.'
+	end
+	'You see an old <a href="exec: gs ''swamphouse'', ''washstand'' ">sink</a>, and under it there is a <a href="exec: gs ''swamphouse'', ''basin''">basin</a>.'
+	if swamp_enema = 1:'You found an enema syringe on the shelf.'
+	'In the other corner you see a small <a href="exec: gs ''swamphouse'', ''stove''">stove</a>. There is running water and some mushrooms so you can cook simple food. You can also warm the water so you can bathe in the basin.'
+	'Beside the stove, there''s a stack of old <a href="exec: gs ''swamphouse'', ''stackmagazines''">magazines</a>, most likely used for ignition.'
+	if clothesswamphouse = 1 and clearclothes = 0:'Your clothes hang on the shelf.'
+	if clearclothes > 0 and clearclothesH = 1: 'Your clothes are drying above the stove.'
+	if hour = 20 and hanters = 1 and hantersKnow > 0 or hour = 7 and hanters = 1 and hantersKnow > 0:'The <a href="exec:gs ''swamphouse'', ''hanterstable''">hunters</a> are sitting around the table.'
+	if hour > 20 and hour < 23 and hanters = 1 and hantersKnow > 0:'You see the <a href="exec:gs ''swamphouse'', ''hantersrelax''">hunters</a> hanging in the hut.'
+	if hour = 23 and hanters = 1 and hantersKnow > 0 or hour >= 0 and hour < 7 and hanters = 1 and hantersKnow > 0:'The hunters are sleeping on the couch.'
+
+	if edahot > 0:
+		act 'Eat a meal':
+			gs 'food', 'm_meal'&!use current one, cls will clear messages
+			cla
+			*clr
+			edahot = 0
+			gs'stat'
+
+			'<center><img src="images/locations/gadukino/hunters/soup.jpg"></center>'
+			
+			if pcs_energy >= 100:
+				fat += 3
+
+				'You''re stuffed. You can''t eat anymore.'
+			elseif pcs_energy >= 80:
+				fat += 1
+				pcs_energy += 30
+
+				'You force yourself to take another sip of the mushroom soup.'
+			else
+				pcs_energy += 20
+
+				'You love to eat warm mushroom soup.'
+			end
+
+			gs'stat'
+
+			act 'Get up from the table':gt 'swamphouse', 'start'
+		end
+	end
+	!re-arrange it, there should be no logic error now by illume
+	if $clothingworntype ! 'nude' or swamp_clothes = 1:
+		!have cloth, or rag on
+		act'Undress':
+			if hantersKnowSlut > 0 or hanters = 0 or hanters = 1 and hour >= 8 and hour < 20 and hantersKnowSlut = 0:
+				cla
+				*clr
+				if $clothingworntype ! 'nude':
+					flag_tanga = tanga
+					clothesswamphouse = 1
+					gs 'clothing', 'strip'
+				end
+				swamp_clothes = 0
+				minut+=5
+				tanga = 0
+				minut+=5
+
+				'<center><img src="images/locations/gadukino/hunters/swamphouseundress.jpg"></center>'
+				'Feeling the heat in the cabin, you start removing your clothes.'
+				act'Back':gt'swamphouse', 'start'
+			else
+				cla
+				*clr
+				'<center><img src="images/locations/gadukino/hunters/noundress.jpg"></center>'
+				'Despite the heat you''re still too shy to get undressed, what if someone suddenly comes in?'
+				act'Back':gt'swamphouse', 'start'
+			end
+		end
+	end
+	if clothesswamphouse = 1 and clearclothes = 0:
+		!clothes are ready
+		if $clothingworntype = 'nude':
+			act 'Get dressed':
+				gs 'clothing', 'wear', $lastwornclothingtype, lastwornclothingnumber
+				clothesswamphouse = 0
+				swamp_clothes = 0
+				tanga = flag_tanga
+				gt 'swamphouse', 'start'
+			end
+		else
+			act 'Pick up your clothes':
+				cla
+				*clr
+				clothesswamphouse = 0
+				'You picked up your clothes.'
+				act 'Back': gt $loc, $metka
+			end
+		end
+	end
+	if pcs_horny >= 50 and hanters = 0 or pcs_horny >= 50 and hanters = 1 and hour >= 8 and hour < 20:
+		act 'Masturbate':
+			gt'selfplay'
+		end
+	end
+	if $clothingworntype = 'nude' and swamp_clothes = 0:
+		act 'Look for your clothes':
+			cla
+			*clr
+			minut += 10
+			if swamp_enema = 0:
+				swamp_enema = 1
+				gs'stat'
+				'<center><img src="images/locations/gadukino/hunters/enema.jpg"></center>'
+				'You search for your clothes, but only manage to find an enema syringe... "What is this doing here?" you wonder.'
+				act 'Further':gt'swamphouse', 'start'
+			else
+				swamp_clothes = 1
+				!gs 'clothing', 'wear', $lastwornclothingtype, lastwornclothingnumber
+				'<center><img src="images/locations/gadukino/hunters/swamphouse_tkancloth.jpg"></center>'
+				'You find a piece of burlap... "Well, at least it''s something." you say to yourself.'
+				act 'Back.':gt'swamphouse', 'start'
+			end
+		end
+	end
+	if klismaday ! daystart and swamp_enema = 1 and analplugin = 0 and hour >= 8 and hour < 20 and hanters = 1 or klismaday ! daystart and swamp_enema = 1 and analplugin = 0 and hanters = 0:
+		act 'Perform an enema':
+			cla
+			*clr
+			minut += 5
+			klismaday = daystart
+			'<center><img src="images/locations/gadukino/hunters/swamp_enema.jpg"></center>'
+			'You perform an enema on yourself and manage to cleanse your bowel, your ass is now ready for anal sex.'
+			act 'Finish': gt'swamphouse', 'start'
+		end
+	end
+
+	if dirty_swamphouse > 25:act 'Clean the hut':hanterslut -= 1 & gs 'swamphouse', 'dirty_swamphouse'
+
+	act 'Go outside':hanter_refuse = 0 & minut += 5 & gt'swamp_yard'
+	!sex with Igor
+	if hantersIgorLove > 0 and hour > 8 and hour < 19 and hantersIgorQw >= 10 and temp = 1 and hantersIgorsex = 0:
+		cls
+		minut += 5
+		pcs_horny += 5
+		hantersIgorsex += rand(12,36)
+		gs 'stat'
+
+		'<center><img src="images/locations/gadukino/hunters/hanterlove1.4.jpg"></center>'
+		'Entering the hut you see Igor. He smiles and walks over to you, grabs hold of you and gives you a passionate kiss.'
+		'"<<$pcs_nickname>>, I want you," he whispers.'
+
+		act 'Agree':
+			cls
+			minut += 5
+			hantersIgorQw += 1
+			gs 'stat'
+
+			'<center><img src="images/locations/gadukino/hunters/hanterflirt2.'+rand(4,6)+'.jpg"></center>'
+			'Smiling you look straight into Igor''s eyes telling him all he needs to know. Without any hesitation he takes you by the hand and leads you...'
+			act 'Go':gt'HanterLoveSex'
+		end
+		act 'Refuse':
+			cls
+			minut += 5
+			hantersIgorQw -= 1
+			gs 'stat'
+
+			'<center><img src="images/pc/speak_to_the_hand.jpg"></center>'
+			'"I''m sorry, Igor. I''m not in the mood." you say avoiding eye contact. Igor leaves disappointed...' 	
+			act 'Go':gt $loc, $metka
+		end
+	end
+	!sex with Sergei
+	if hantersSergeiLove > 0 and pcs_horny <= 60 and hantersSergeiQw >= 10 and temp = 1 and hantersSergeisex = 0 and hour > 8 and hour < 19:
+		cls
+		minut += 5
+		pcs_horny += 5
+		hantersSergeisex += rand(9,30)
+		gs 'stat'
+
+		'<center><img src="images/locations/gadukino/hunters/hanterlove1.4.jpg"></center>'
+		'Entering the hut you see Sergei. He smiles and walks over to you, grabs hold of you and gives you a passionate kiss.'
+		'"<<$pcs_nickname>>, I want you," he whispers.'
+
+		act 'Agree':
+			cls
+			minut += 5
+			hantersSergeiQw += 1
+			gs 'stat'
+
+			'<center><img src="images/locations/gadukino/hunters/hanterflirt2.'+rand(4,6)+'.jpg"></center>'
+			'Smiling you look straight into Sergei''s eyes telling him all he needs to know. Without any hesitation he takes you by the hand and leads you...'
+			act 'Go':gt'HanterLoveSex'
+		end
+		act 'Refuse':
+			cls
+			minut += 5
+			hantersSergeiQw -= 1
+			gs 'stat'
+
+			'<center><img src="images/pc/speak_to_the_hand.jpg"></center>'
+			'"I''m sorry, Sergei. I''m not in the mood." you say avoiding eye contact. Sergei leaves disappointed...' 	
+			act 'Go':gt $loc, $metka
+		end
+	end
+	! sex with Andrew
+	if hantersAndreiLove > 0 and pcs_horny <= 60 and hantersAndreiQw >= 10 and temp = 1 and hantersAndreisex = 0 and hour > 8 and hour < 19:
+		cls
+		minut += 5
+		pcs_horny += 5
+		hantersAndreisex += rand(6,24)
+		gs 'stat'
+
+		'<center><img src="images/locations/gadukino/hunters/hanterlove1.4.jpg"></center>'
+		'Entering the hut you see Andrei. He smiles and walks over to you, grabs hold of you and gives you a passionate kiss.'
+		'"<<$pcs_nickname>>, I want you," he whispers.'
+		
+		act 'Agree':
+			cls
+			minut += 5
+			hantersAndreiQw += 1
+			pcs_horny += 5
+			gs 'stat'
+
+			'<center><img src="images/locations/gadukino/hunters/hanterhands.jpg"></center>'
+			'Smiling you look straight into Andrei''s eyes telling him all he needs to know. Without any hesitation he takes you by the hand and leads you...'
+			act 'Further':gt'HanterLoveSex'
+		end
+		act 'Refuse':
+			cls
+			minut += 5
+			hantersAndreiQw -= 1
+			gs 'stat'
+
+			'<center><img src="images/pc/speak_to_the_hand.jpg"></center>'
+			'"I''m sorry, Andrei. I''m not in the mood." you say avoiding eye contact. Andrei leaves disappointed...' 	
+			act 'Go':gt $loc, $metka
+		end
+	end
+	! trio of HS, Andrei and Sergei, if love
+	if hanters > 0 and doublehanterlove = 1 and hour >= 8 and hour < 20 and (hantersAndreisex = 0 or hantersSergeisex = 0):
+		cls
+		minut += 5
+		hantersAndreisex += rand(6,24)
+		hantersSergeisex += rand(9,30)
+		gs 'stat'
+
+		'<center><img src="images/locations/gadukino/hunters/hanterswork1.2.jpg"></center>'
+		'You see Andrei talking with Sergei in the hut.'
+		'"Come in <<$pcs_nickname>>, it''s time to consummate the marriage," Andrew jokingly remarked. "I hope you''re willing to do anything we say.'
+		if klismaday ! daystart:'"I''m sorry, I don''t know if I''m ready yet..." you say . "I haven''t been able to clean myself as you asked, maybe we could skip it this time?.'
+		if klismaday ! daystart:'Well, we could <<$pcs_nickname>>..." said Andrew. "But since you''re already here, you not being all dolled up doesn''t matter to us. But don''t dare to try to fool us next time, we will not forget."'
+		'"There are some bushes not far from here, we could take her with us there, no one would be able to find us. Should we tell Igor to join us?" said Sergei. "Nevermind Igor, it would take him to long time to join us."'
+
+		act 'Follow the guys':
+			cls
+			minut += 5
+			hantersAndreiQw += 1
+			hantersSergeiQw += 1
+			pcs_horny += 5
+			doublelovesex = 1
+			hanterslut += 1
+			temphant = 1
+			if klismaday ! daystart:hanterslut += 1
+			gs 'stat'
+
+			'<center><img src="images/locations/gadukino/hunters/doublehanterlove.jpg"></center>'
+			'The men hold your hands leading you away from the hut. You''re fully aware of their plans but you don''t really mind.'
+			act 'Further':gt'hantersex'
+		end
+		act 'Refuse':
+			cls
+			minut += 5
+			hantersAndreiQw -= 1
+			hantersSergeiQw -= 1
+			gs 'stat'
+
+			'<center><img src="images/pc/speak_to_the_hand.jpg"></center>'
+			'"No, I refuse, this is something I don''t want part of," you say and without hesitating you turn around and walk away.'
+			act 'Go':gt $loc, $metka
+		end
+	end
+	!hunters are invited to the table
+	if hour = 20 and hanters = 1 and hantersKnow > 0 and hantersKnowSlut = 0 and hanter_refuse = 0:
+		cla
+		*clr
+		if hour >= 20 and hour <= 23 :
+			hantersdrink = 1
+		else
+			hantersdrink = 0
+		end
 		gs'stat'
 
-		if temp = 1:
-		    '<center><img src="images/locations/gadukino/hunters/hanterstable.jpg"></center>'
-		    'You enter the hut and notice the plastered hunters.'
-		    '"Oh look who''s showed up. <<$pcs_nickname>>, come, join us for a drink!" they invite you in.'
-		    act 'Join':dynamic $hanterstable
-            act 'Politely decline':hanter_refuse = 1 & gt $locM, $metkaM
+		if hantersdrink = 1:
+			cls
+			minut += 1
+			temp = rand(1,4)
+			gs'stat'
+
+			if temp = 1:
+				'<center><img src="images/locations/gadukino/hunters/hanterstable.jpg"></center>'
+				'You enter the hut and notice the plastered hunters.'
+				'"Oh look who''s showed up. <<$pcs_nickname>>, come, join us for a drink!" they invite you in.'
+				act 'Join':gs 'swamphouse', 'hanterstable'
+				act 'Politely decline':hanter_refuse = 1 & gt 'swamphouse', 'start'
+			end
+			if temp = 2:
+				hantersAndreiQw += 1
+				'<center><img src="images/locations/gadukino/hunters/AndreiHanter.jpg"></center>'
+				'You enter the hut and notice the plastered hunters.'
+				'Oh, <<$pcs_nickname>>, come join us for a drink!" said Andrei.'
+				act 'Join':gs 'swamphouse', 'hanterstable'
+				act 'Politely decline':hanter_refuse = 1 & gt 'swamphouse', 'start'
+			end
+			if temp = 3:
+				hantersSergeiQw += 1
+				'<center><img src="images/locations/gadukino/hunters/SergeiHanter.jpg"></center>'
+				'You enter the hut and notice the plastered hunters.'
+				'Oh, <<$pcs_nickname>>, come join us for a drink!" Sergei says noticing you entering.'
+				act 'Join':gs 'swamphouse', 'hanterstable'
+				act 'Politely decline':hanter_refuse = 1 & gt 'swamphouse', 'start'
+			end
+			if temp = 4:
+				hantersIgorQw += 1
+				'<center><img src="images/locations/gadukino/hunters/IgorHanter.jpg"></center>'
+				'You enter the hut and notice the plastered hunters.'
+				'Oh, <<$pcs_nickname>>, come join us for a drink!" Igor shouts ignoring the other conversation.'
+				act 'Join':gs 'swamphouse', 'hanterstable'
+				act 'Politely decline':hanter_refuse = 1 & gt 'swamphouse', 'start'
+			end
+		else
+			'<center><img src="images/locations/gadukino/hunters/hanterstable.jpg"></center>'
+			'You went into the hut and notice that the hunters have prepared breakfast.'
+			'"Oh, <<$pcs_nickname>>, you''re just in time, come join us!"'
+			act 'Join':gs 'swamphouse', 'hanterstable'
+			act 'Politely decline':hanter_refuse = 1 & gt 'swamphouse', 'start'
 		end
-		if temp = 2:
-		    hantersAndreiQw += 1
-		    '<center><img src="images/locations/gadukino/hunters/AndreiHanter.jpg"></center>'
-		    'You enter the hut and notice the plastered hunters.'
-		    'Oh, <<$pcs_nickname>>, come join us for a drink!" said Andrei.'
-		    act 'Join':dynamic $hanterstable
-            act 'Politely decline':hanter_refuse = 1 & gt $locM, $metkaM
+	end
+	!if GG naked and hunters in the hut
+	if $clothingworntype = 'nude' and hanters = 1 and hour >= 20 and hour < 23 and hanterknowday ! daystart or $clothingworntype = 'nude' and hanters = 1 and hour = 7 and hanterknowday ! daystart:
+		cla
+		*clr
+		temp =rand(1,3)
+		gs'stat'
+		if hantersKnowSlut = 0:
+			cla
+			*clr
+			gs'stat'
+
+			'<center><img src="images/locations/gadukino/hunters/swamphousenude.jpg"></center>'
+			'You hear the hunters nearing the hut, grabbing the handle, about to open the door. You quickly hide your privare parts behind the hands...'
+
+			if clothesswamphouse = 1 and clearclothes = 0:
+				act'Get dressed':
+					cla
+					*clr
+					clothesswamphouse = 0
+					minut += 5
+					tanga = flag_tanga
+					gs 'clothing', 'wear', $lastwornclothingtype, lastwornclothingnumber
+					!tkan_cloth = 0
+
+					'<center><img src="images/locations/gadukino/hunters/swampdvornude1.jpg"></center>'
+					'You look around searching for your clothes, spooting and dashing over to grabbing them.'
+					act'Further':gt'swamphouse', 'start'
+				end
+			else
+				act'Cover yourself':
+					cla
+					*clr
+					minut+=5
+					swamp_clothes = 1
+					gs 'clothing', 'wear', $lastwornclothingtype, lastwornclothingnumber
+					'<center><img src="images/locations/gadukino/hunters/tkan_cloth.jpg"></center>'
+					'You look around searching for your clothes but can''t seem to find them, instead you hide behind a piece of burlap... It''s better than nothing.'
+					act'Further':gt'swamphouse', 'start'
+				end
+			end
+			act'Stay naked':
+				cla
+				*clr
+				hanterslut += 1
+				hanterknowday = daystart
+				gs'stat'
+				'<center><img src="images/locations/gadukino/hunters/swamphousenude1.jpg"></center>'
+				'You take a deep breath and decided to disregard your nerves and leave it as it is. Upon entering the hut, the hunters can''t help themselves, they start staring at your most private parts.'
+				'"Damn, <<$pcs_nickname>>, you look really good. The things I would want to do to you..." said an somewhat aroused Andrei.'
+				act'Further':gt'swamphouse', 'start'
+			end
 		end
-		if temp = 3:
-		    hantersSergeiQw += 1
-		    '<center><img src="images/locations/gadukino/hunters/SergeiHanter.jpg"></center>'
-		    'You enter the hut and notice the plastered hunters.'
-		    'Oh, <<$pcs_nickname>>, come join us for a drink!" Sergei says noticing you entering.'
-		    act 'Join':dynamic $hanterstable
-            act 'Politely decline':hanter_refuse = 1 & gt $locM, $metkaM
+		if hantersKnowSlut > 0:
+			if hantslutsex = 0:
+				cls
+				gs'stat'
+
+				'<center><img src="images/locations/gadukino/hunters/swamphousenude1.jpg"></center>'
+				'Seeing you naked, the men get quickly aroused...'
+				'"Come here <<$pcs_nickname>>, come to us," one of the guys calls out to you.'
+
+				act'Further':hantersexnude = 1 & gt'hantersex'
+			else
+				hanterknowday = daystart
+				'<center><img src="images/locations/gadukino/hunters/swamphousenude1.jpg"></center>'
+				'Seeing you naked, the men just shake their heads...'
+				'"Look here <<$pcs_nickname>>, if you want to charm us, you will need to think of something else." said one of the guys.'
+
+				act'Further':gt'swamphouse', 'start'
+			end
 		end
-		if temp = 4:
-		    hantersIgorQw += 1
-		    '<center><img src="images/locations/gadukino/hunters/IgorHanter.jpg"></center>'
-		    'You enter the hut and notice the plastered hunters.'
-		    'Oh, <<$pcs_nickname>>, come join us for a drink!" Igor shouts ignoring the other conversation.'
-		    act 'Join':dynamic $hanterstable
-            act 'Politely decline':hanter_refuse = 1 & gt $locM, $metkaM
-		end
-	else
-		'<center><img src="images/locations/gadukino/hunters/hanterstable.jpg"></center>'
-		'You went into the hut and notice that the hunters have prepared breakfast.'
-		'"Oh, <<$pcs_nickname>>, you''re just in time, come join us!"'
-        act 'Join':dynamic $hanterstable
-        act 'Politely decline':hanter_refuse = 1 & gt $locM, $metkaM
-    end
+	end
+
+	! sex if GG whore
+	if hanters > 0 and hantersRape = 5 and hantslutsexrand = 1 and hantslutsex = 0 and hour >= 7 and hour < 23:
+		cls
+		minut += 5
+		temphant = rand(1,3)
+		! the choice of who will fuck GG
+		sluthomesex = 1
+		gs 'stat'
+
+		if temphant = 1:'<center><img src="images/locations/gadukino/hunters/AndreiHanter.jpg"></center>'
+		if temphant = 2:'<center><img src="images/locations/gadukino/hunters/SergeiHanter.jpg"></center>'
+		if temphant = 3:'<center><img src="images/locations/gadukino/hunters/IgorHanter.jpg"></center>'
+		if temphant = 1:'You enter the hut and bump into Andrei. "Come here <<$pcs_nickname>>," not saying anything more while he throws you on the bed.'
+		if temphant = 2:'You enter the hut and bump into Sergei. Noticing you he heads toward you saying "<<$pcs_nickname>>, I''ve got an itch that only you can help scratch."'
+		if temphant = 3:'You enter the hut and bump into Igor. He comes over saying smiling "<<$pcs_nickname>>, I need to empty my sack, help me out..."'
+		if pcs_horny < 40:' You obediently follow suit, knowing what he wants.'
+		if pcs_horny >= 40 and pcs_horny < 70:'"Come and get me..." is all you manage to say before spreading your legs.'
+		if pcs_horny >= 70:'"I was hoping this would happend," you think to yourself, feeling your wet pussy screaming with desire. You jump on him, taking charge, leaving him stunned about who wants it more.'
+
+		act 'Go': gt'hantersex'
+	end
 end
-!if GG naked and hunters in the hut
-if $clothingworntype = 'nude' and hanters = 1 and hour >= 20 and hour < 23 and hanterknowday ! daystart or $clothingworntype = 'nude' and hanters = 1 and hour = 7 and hanterknowday ! daystart:
-    cla
-    *clr
-    temp =rand(1,3)
-	gs'stat'
-    if hantersKnowSlut = 0:
-        cla
-        *clr
-        gs'stat'
 
-        '<center><img src="images/locations/gadukino/hunters/swamphousenude.jpg"></center>'
-		'You hear the hunters nearing the hut, grabbing the handle, about to open the door. You quickly hide your privare parts behind the hands...'
-
-		if clothesswamphouse = 1 and clearclothes = 0:
-	        act'Get dressed':
-		        cla
-		        *clr
-			    clothesswamphouse = 0
-			    minut += 5
-			    tanga = flag_tanga
-			    gs 'clothing', 'wear', $lastwornclothingtype, lastwornclothingnumber
-		        !tkan_cloth = 0
-
-		        '<center><img src="images/locations/gadukino/hunters/swampdvornude1.jpg"></center>'
-		        'You look around searching for your clothes, spooting and dashing over to grabbing them.'
-		        act'Further':gt'swamphouse'
-		    end
-        else
-            act'Cover yourself':
-                cla
-                *clr
-                minut+=5
-                swamp_clothes = 1
-		        gs 'clothing', 'wear', $lastwornclothingtype, lastwornclothingnumber
-		        '<center><img src="images/locations/gadukino/hunters/tkan_cloth.jpg"></center>'
-		        'You look around searching for your clothes but can''t seem to find them, instead you hide behind a piece of burlap... It''s better than nothing.'
-		        act'Further':gt'swamphouse'
-		    end
-        end
-        act'Stay naked':
-            cla
-            *clr
-            hanterslut += 1
-            hanterknowday = daystart
-            gs'stat'
-            '<center><img src="images/locations/gadukino/hunters/swamphousenude1.jpg"></center>'
-            'You take a deep breath and decided to disregard your nerves and leave it as it is. Upon entering the hut, the hunters can''t help themselves, they start staring at your most private parts.'
-            '"Damn, <<$pcs_nickname>>, you look really good. The things I would want to do to you..." said an somewhat aroused Andrei.'
-            act'Further':gt'swamphouse'
-        end
-    end
-    if hantersKnowSlut > 0:
-        if hantslutsex = 0:
-            cls
-            gs'stat'
-
-            '<center><img src="images/locations/gadukino/hunters/swamphousenude1.jpg"></center>'
-		    'Seeing you naked, the men get quickly aroused...'
-            '"Come here <<$pcs_nickname>>, come to us," one of the guys calls out to you.'
-
-            act'Further':hantersexnude = 1 & gt'hantersex'
-        else
-            hanterknowday = daystart
-            '<center><img src="images/locations/gadukino/hunters/swamphousenude1.jpg"></center>'
-		    'Seeing you naked, the men just shake their heads...'
-            '"Look here <<$pcs_nickname>>, if you want to charm us, you will need to think of something else." said one of the guys.'
-
-            act'Further':gt'swamphouse'
-        end
-    end
-end
-
-! sex if GG whore
-if hanters > 0 and hantersRape = 5 and hantslutsexrand = 1 and hantslutsex = 0 and hour >= 7 and hour < 23:
-	cls
-    minut += 5
-    temphant = rand(1,3)
-    ! the choice of who will fuck GG
-    sluthomesex = 1
-	gs 'stat'
-
-	if temphant = 1:'<center><img src="images/locations/gadukino/hunters/AndreiHanter.jpg"></center>'
-	if temphant = 2:'<center><img src="images/locations/gadukino/hunters/SergeiHanter.jpg"></center>'
-	if temphant = 3:'<center><img src="images/locations/gadukino/hunters/IgorHanter.jpg"></center>'
-	if temphant = 1:'You enter the hut and bump into Andrei. "Come here <<$pcs_nickname>>," not saying anything more while he throws you on the bed.'
-	if temphant = 2:'You enter the hut and bump into Sergei. Noticing you he heads toward you saying "<<$pcs_nickname>>, I''ve got an itch that only you can help scratch."'
-	if temphant = 3:'You enter the hut and bump into Igor. He comes over saying smiling "<<$pcs_nickname>>, I need to empty my sack, help me out..."'
-	if pcs_horny < 40:' You obediently follow suit, knowing what he wants.'
-	if pcs_horny >= 40 and pcs_horny < 70:'"Come and get me..." is all you manage to say before spreading your legs.'
-	if pcs_horny >= 70:'"I was hoping this would happend," you think to yourself, feeling your wet pussy screaming with desire. You jump on him, taking charge, leaving him stunned about who wants it more.'
-
-    act 'Go': gt'hantersex'
-end
-
-$bucket = {
+if $ARGS[0] = 'bucket':
 	cla
 	*clr
 	if bucket > 10:bucket = 10
@@ -468,13 +471,13 @@ $bucket = {
 			pcs_breath = 0
 			'You take a sip from bucket, quenching your thirst.'
 		end
-	    act 'Further':gt $locM, $metkaM
+	    act 'Further':gt 'swamphouse', 'start'
 	end
-    act'Move Away':gt $locM, $metkaM
+    act'Move Away':gt 'swamphouse', 'start'
 
-}
+end
 
-$washstand = {
+if $ARGS[0] = 'washstand':
 	cla
 	*clr
 	minut += 1
@@ -486,13 +489,13 @@ $washstand = {
 	if bucket > 0:
 		!use current by illume
 		dynamic $wearpan
-		dynamic $basin
+		gs 'swamphouse', 'basin'
     end
-    act'Move away':gt $locM, $metkaM
+    act'Move away':gt 'swamphouse', 'start'
 
-}
+end
 
-$stove = {
+if $ARGS[0] = 'stove':
 	cla
 	*clr
 	minut += 1
@@ -514,7 +517,7 @@ $stove = {
 		    '<center><img src="images/locations/gadukino/hunters/hotsoup.jpg"></center>'
 		    'You made a simple mushroom soup.'
 
-		    act 'Further':gt $locM, $metkaM
+		    act 'Further':gt 'swamphouse', 'start'
 	    end
     end
     if bucket >= 5 and hotwater = 0:
@@ -529,20 +532,20 @@ $stove = {
 	        '<center><img src="images/locations/gadukino/hunters/hotwater.jpg"></center>'
 	        'With the heated water, You can now clean yourself with the basin or wash your clothes.'
 
-	        act 'Further':gt $locM, $metkaM
+	        act 'Further':gt 'swamphouse', 'start'
 	    end
     end
-    act'Move away':gt $locM, $metkaM
+    act'Move away':gt 'swamphouse', 'start'
 
-}
+end
 
-$clothes_read_magazines = {
+if $ARGS[0] = 'clothes_read_magazines':
     if $clothingworntype ! 'nude':'<center><img src="images/locations/gadukino/hunters/readmagazines.jpg"></center>'
     if $clothingworntype = 'nude' and tanga = 1:'<center><img src="images/locations/gadukino/hunters/readmagazines_tanga.jpg"></center>'
     if $clothingworntype = 'nude' and tanga = 0:'<center><img src="images/locations/gadukino/hunters/readmagazines_nude.jpg"></center>'
-}
+end
 
-$stackmagazines = {
+if $ARGS[0] = 'stackmagazines':
 	cla
 	*clr
 	minut += 1
@@ -566,10 +569,10 @@ $stackmagazines = {
 		minut += 60
 		gs 'stat'
 
-        dynamic $clothes_read_magazines
+        gs 'swamphouse', 'clothes_read_magazines'
 		'You decide to look through the scientific journal, trying to understand all sorts of clever things written in the magazine.'
 
-		act 'Further':dynamic $stackmagazines
+		act 'Further':gs 'swamphouse', 'stackmagazines'
 	end
 	act 'Read the literary magazine (1:00)':
 		cla
@@ -587,10 +590,10 @@ $stackmagazines = {
 		pcs_grades+=1
 		gs 'stat'
 
-        dynamic $clothes_read_magazines
+        gs 'swamphouse', 'clothes_read_magazines'
 		'You decided to look through the literary magazine... It''s a real drag, you almost fall asleep several times while reading it.'
 
-		act 'Further':dynamic $stackmagazines
+		act 'Further':gs 'swamphouse', 'stackmagazines'
 	end
 	act 'Read the entertainment magazine (1:00)':
 		cla
@@ -608,10 +611,10 @@ $stackmagazines = {
 		minut += 60
 		gs 'stat'
 
-        dynamic $clothes_read_magazines
+        gs 'swamphouse', 'clothes_read_magazines'
 		'You flick entertainment magazine, you delve into the world of the rich and famous.'
 
-		act 'Further':dynamic $stackmagazines
+		act 'Further':gs 'swamphouse', 'stackmagazines'
 	end
 	act 'Read the porn magazine (1:00)':
 		cla
@@ -628,13 +631,13 @@ $stackmagazines = {
         if $clothingworntype = 'nude' and tanga = 0:'<center><img src="images/locations/gadukino/hunters/readpornomag_nude.jpg"></center>'
 		'You''re flipping through a porn magazine, reading the stories and looking at pictures, when all of a sudden you realize you''ve started touching yourself.'
 
-		act 'Further':dynamic $stackmagazines
+		act 'Further':gs 'swamphouse', 'stackmagazines'
 	end
-    act'Move away':gt $locM, $metkaM
-}
+    act'Move away':gt 'swamphouse', 'start'
+end
 
 
-$basin = {
+if $ARGS[0] = 'basin':
 	cla
 	*clr
 	minut += 1
@@ -660,7 +663,7 @@ $basin = {
 		    '<center><img src="images/locations/gadukino/hunters/basinswim.jpg"></center>'
 		    'You fill the basin with warm water, strip, sitting in the basin you clean yourself. You feel rejuvenated again.'
 
-		    act 'Further':gt $locM, $metkaM
+		    act 'Further':gt 'swamphouse', 'start'
 	    end
     end
     if hotwater = 1  and dirtyclothes = 1 and $clothingworntype = 'nude' and clothesswamphouse = 1:
@@ -694,7 +697,7 @@ $basin = {
 	            end
 	            'You hang the clothes to dry inside the hut.'
 
-	            act 'Further':gt $locM, $metkaM
+	            act 'Further':gt 'swamphouse', 'start'
 	        end
             if month >= 5 and month <= 9:
 	            act 'Hang the clothes on a clothesline':
@@ -716,10 +719,10 @@ $basin = {
             end
 	    end
     end
-    act'Move away':gt $locM, $metkaM
-}
+    act'Move away':gt 'swamphouse', 'start' 
+end
 
-$hanterstableBJ = {
+if $ARGS[0] = 'hanterstableBJ':
 	cla
 	*clr
 	minut += 1
@@ -762,7 +765,7 @@ $hanterstableBJ = {
                     'Andrei didn''t last more for a minute or two, his thighs tensed up and his load started shooting out and hitting your face several times.'
 					'When he was all done you cleaned Andrei the best you could, and then you put his cock back in his pants and zipped him up.' 
 
-                    act 'Further':dynamic $hanterstableBJ
+                    act 'Further':gs 'swamphouse', 'hanterstableBJ'
                 end
             else
                 act 'Keep sucking':
@@ -778,7 +781,7 @@ $hanterstableBJ = {
 					'You could feel Andrei''s cock tensing up, ready to explode. You hear a grunt and before you can react Andrei unloads his warm spunk in your mouth...'
                     dynamic $dinrandswallow
 
-                    act 'Further':dynamic $hanterstableBJ
+                    act 'Further':gs 'swamphouse', 'hanterstableBJ'
                 end
 	        end
 	    end
@@ -815,7 +818,7 @@ $hanterstableBJ = {
                     'Sergei didn''t last more for a minute or two, his thighs tensed up and his load started shooting out and hitting your face several times.'
 					'When he was all done you cleaned Andrei the best you could, and then you put his cock back in his pants and zipped him up.'
 					
-                    act 'Further':dynamic $hanterstableBJ
+                    act 'Further':gs 'swamphouse', 'hanterstableBJ'
                 end
             else
                 act 'Keep sucking':
@@ -831,7 +834,7 @@ $hanterstableBJ = {
 					'You could feel Sergei''s cock tensing up, ready to explode. You hear a grunt and before you can react Andrei unloads his warm spunk in your mouth...'
                     dynamic $dinrandswallow
 
-                    act 'Further':dynamic $hanterstableBJ
+                    act 'Further':gs 'swamphouse', 'hanterstableBJ'
                 end
 	        end
 	    end
@@ -868,7 +871,7 @@ $hanterstableBJ = {
                     'Igor didn''t last more for a minute or two, his thighs tensed up and his load started shooting out and hitting your face several times.'
 					'When he was all done you cleaned Andrei the best you could, and then you put his cock back in his pants and zipped him up.'
 					
-                    act 'Further':dynamic $hanterstableBJ
+                    act 'Further':gs 'swamphouse', 'hanterstableBJ'
                 end
             else
                 act 'Keep sucking':
@@ -884,16 +887,16 @@ $hanterstableBJ = {
 					'You could feel Igor''s cock tensing up, ready to explode. You hear a grunt and before you can react Andrei unloads his warm spunk in your mouth...'
                     dynamic $dinrandswallow
 
-                    act 'Further':dynamic $hanterstableBJ
+                    act 'Further':gs 'swamphouse', 'hanterstableBJ'
                 end
 	        end
 	    end
     end
-    if hanterstableBJA = 1 and hanterstableBJS = 1 and hanterstableBJI = 1:act'Get out from under the table':edahot = 1 & dynamic $hanterstable
+    if hanterstableBJA = 1 and hanterstableBJS = 1 and hanterstableBJI = 1:act'Get out from under the table':edahot = 1 & gs 'swamphouse', 'hanterstable'
 
-}
+end
 
-$hanterstable = {
+if $ARGS[0] = 'hanterstable':
 	cla
 	*clr
 	if hour >= 20 and hour <= 23 :
@@ -924,7 +927,7 @@ $hanterstable = {
 		    '<center><img src="images/locations/pavlovsk/shulgahome/vodka2.jpg"></center>'
 		    'You take a shot of vodka. The men laugh at the funny face you''re making after the shot.'
 
-		    act 'Further':dynamic $hanterstable
+		    act 'Further':gs 'swamphouse', 'hanterstable'
 	    end
 	    act 'Drink beer':
 		    cls
@@ -937,7 +940,7 @@ $hanterstable = {
 		    '<center><img src="images/locations/pavlovsk/shulgahome/beer2.jpg"></center>'
 		    'You take a bottle of bear, open it and start drinking it.'
 
-		    act 'Further':dynamic $hanterstable
+		    act 'Further':gs 'swamphouse', 'hanterstable'
 	    end
         act 'Eat a snack':
 			gs 'food', 'snack'&!use current one, cls will clear messages
@@ -947,7 +950,7 @@ $hanterstable = {
 
 	        '<center><img src="images/locations/gadukino/hunters/snack1.'+rand(1,2)+'.jpg"></center>'
 			'You grab something to eat, so you don''t get drunk to quickly.'
-	        act 'Further':dynamic $hanterstable
+	        act 'Further':gs 'swamphouse', 'hanterstable'
 		end
 	    act 'Chat':
 		    cls
@@ -960,9 +963,9 @@ $hanterstable = {
 		    '<center><img src="images/locations/gadukino/hunters/hanterstable.jpg"></center>'
 		    'You chat with the men about various topics... You try to keep up with their lingo but sometime fail and you all have a laugh about it.'
 
-		    act 'Further':dynamic $hanterstable
+		    act 'Further':gs 'swamphouse', 'hanterstable'
 	    end
-        act'Move away from the table':hantersdrink = 0 & hanter_refuse = 1 & gt $locM, $metkaM
+        act'Move away from the table':hantersdrink = 0 & hanter_refuse = 1 & gt 'swamphouse', 'start'
 	    if alko > 3 and alko < 8 and smokertemp = 1:
 	        cls
 		    temp = rand(1,4)
@@ -992,9 +995,9 @@ $hanterstable = {
 	                '<center><img src="images/locations/gadukino/hunters/hantersmoker2.jpg"></center>'
                     'You follow them outside, they give you a cigarette, you light it and smoke it...'
 
-                    act 'Return to the table':dynamic $hanterstable
+                    act 'Return to the table':gs 'swamphouse', 'hanterstable'
                 end
-                act 'Refuse': dynamic $hanterstable
+                act 'Refuse': gs 'swamphouse', 'hanterstable'
  		    end
 		    if temp = 2:
 		        cls
@@ -1019,7 +1022,7 @@ $hanterstable = {
 	                    '<center><img src="images/locations/gadukino/hunters/hantersmoker2.jpg"></center>'
                         'The two of you walk outside, Andrei hands you a cigarette. You start talking about your feelings for each other.'
 
-                        act 'Return to the table':dynamic $hanterstable
+                        act 'Return to the table':gs 'swamphouse', 'hanterstable'
                     end
                 end
                 if hantersAndreiQw >= 15 and hantersAndreiLove = 0 and hantersKnowSlut = 0:
@@ -1043,7 +1046,7 @@ $hanterstable = {
                             '"Of course, Andrei, I''ll be glad to." you replied. "What do you need help with?" you asked a bit worried.'
                             '"As you know <<$pcs_nickname>>, I have long been divorced for a long time," Andrei began. "But as every normal man, I need to relieve stress sometimes, well, you know what I mean..."'
                             'You look at his frankness with astonishment.'
-                            '"Now <<$pcs_nickname>>, if you could help me out now and then, I would be very grateful," Andrei continued.'
+                            '"Now <<$pcs_nickname>>, if you could help me out now and then, I would be very graIn the sput of the moment, while the men cheer you on, you remove your topteful," Andrei continued.'
                             'You watch in disbelief, he''s clearly not joking around. You can see on Andrei''s facial expression that he''s being dead serious.'
                             '"I won''t tell anybody about this, don''t worry, no one will know." he adds quickly. "Well, <<$pcs_nickname>>, what do you say?'
 
@@ -1063,7 +1066,7 @@ $hanterstable = {
                                 '"Damn, <<$pcs_nickname>>, I knew you would," he replied. "Well, I wouldn''t mind a blowjob now and then, that''s good enough for me."'
                                 '"Go back to the hut, and crawl under the table so no one notices." he adds while getting up from the bench.'
 
-                                act 'Go':dynamic $hantersmokBJ
+                                act 'Go':gs 'swamphouse', 'hantersmokBJ'
                             end
 
                             if alko < 6:
@@ -1079,7 +1082,7 @@ $hanterstable = {
                                     '"No Andrei, I''m sorry but I refuse." you answer. "How could you even think that I would be accepting your offer?'
                                     'You got up from the bench and quickly went back to the hut.'
 
-                                    act 'Return to the table':dynamic $hanterstable
+                                    act 'Return to the table':gs 'swamphouse', 'hanterstable'
                                 end
                             end
                         end
@@ -1097,7 +1100,7 @@ $hanterstable = {
                             'You went outside for a smoke, with Andrei following after you, immediately saying:'
                             '"Forget the cigarette <<$pcs_nickname>>, go back inside and crawl under the table, I need you so bad right now...'
 
-                            act 'Go':dynamic $hantersmokBJ
+                            act 'Go':gs 'swamphouse', 'hantersmokBJ'
                             if alko < 6:
                                 act 'Refuse':
                                     cls
@@ -1110,7 +1113,7 @@ $hanterstable = {
                                     '"You know what Andrei, I''ve changed my mind. I''m more than happy to help a friend in need, but I''m not some whore that only exists for your pleasure."'
                                     'You got up from the bench and quickly went back to the hut.'
 
-                                    act 'Return to the table':dynamic $hanterstable
+                                    act 'Return to the table':gs 'swamphouse', 'hanterstable'
                                 end
                             end
                         end
@@ -1128,10 +1131,10 @@ $hanterstable = {
                         'You went outside for a smoke, with Andrei following after you, immediately saying:'
                         '"To hell with the cigarette <<$pcs_nickname>>, I need to relieve some stress."'
 
-                        act 'Go':dynamic $hantersmokBJ
+                        act 'Go':gs 'swamphouse', 'hantersmokBJ'
                     end
                 end
-                act 'Refuse':dynamic $hanterstable
+                act 'Refuse':gs 'swamphouse', 'hanterstable'
  		    end
 		    if temp = 3:
 		        cls
@@ -1156,9 +1159,9 @@ $hanterstable = {
                     'You followed Sergei outside. He gives you a cigarette, and the two of you continue on with your conversation.'
 
 
-                    act 'Return to the table':dynamic $hanterstable
+                    act 'Return to the table':gs 'swamphouse', 'hanterstable'
                 end
-                act 'Refuse':dynamic $hanterstable
+                act 'Refuse':gs 'swamphouse', 'hanterstable'
  		    end
 		    if temp = 4:
 		        cls
@@ -1182,9 +1185,9 @@ $hanterstable = {
 	                '<center><img src="images/locations/gadukino/hunters/hantersmoker2.jpg"></center>'
                     'You followed Igor outside. He gives you a cigarette, and the two of you continue on with your conversation.'
 
-                    act 'Return to the table':dynamic $hanterstable
+                    act 'Return to the table':gs 'swamphouse', 'hanterstable'
                 end
-                act 'Refuse':dynamic $hanterstable
+                act 'Refuse':gs 'swamphouse', 'hanterstable'
  		    end
 		end
 	    if alko >= 8 and hantersKnowSlut = 0:
@@ -1216,7 +1219,7 @@ $hanterstable = {
 	                        '<center><img src="images/locations/pavlovsk/shulgahome/bigroom/drunk_ev/pohmel1.jpg"></center>'
 	                        'Three hours later you wake up in the middle of the night. You''ve got a headache and vaguely remember yesterday.'
 
-	                        act 'Further': gt $locM, $metkaM
+	                        act 'Further': gt 'swamphouse', 'start'
                         end
                     end
                 end
@@ -1241,7 +1244,7 @@ $hanterstable = {
 	                        '<center><img src="images/locations/pavlovsk/shulgahome/bigroom/drunk_ev/pohmel4.jpg"></center>'
 	                        'Four hours later you wake up in the middle of the night. You''ve got a headache and vaguely remember yesterday.'
 
-	                        act 'Further': gt $locM, $metkaM
+	                        act 'Further': gt 'swamphouse', 'start'
                         end
                     end
                 end
@@ -1265,7 +1268,7 @@ $hanterstable = {
 	                        '<center><img src="images/locations/pavlovsk/shulgahome/bigroom/drunk_ev/pohmel2.jpg"></center>'
 	                        'You sleep for awhile, waking up barely able to lift your head from the pillow. You''ve got a headache and vaguely remember yesterday.'
 
-	                        act 'Further': gt $locM, $metkaM
+	                        act 'Further': gt 'swamphouse', 'start'
                         end
                     end
                 end
@@ -1297,7 +1300,7 @@ $hanterstable = {
 	                                '<center><img src="images/locations/pavlovsk/shulgahome/bigroom/drunk_ev/pohmel2.jpg"></center>'
 	                                'You sleep for awhile, waking up barely able to get out of bed. You''ve got a headache and vaguely remember yesterday.'
 
-	                                act 'Further': gt $locM, $metkaM
+	                                act 'Further': gt 'swamphouse', 'start'
 	                            end
                             end
                         end
@@ -1355,12 +1358,35 @@ $hanterstable = {
 	                                                    '<center><img src="images/locations/pavlovsk/shulgahome/bigroom/drunk_ev/pohmel4.jpg"></center>'
 	                                                    'You sleep for four hours, waking up in the middle night, barely able to get up off the floor. You''ve got a headache and vaguely remember yesterday.'
 
-	                                                    act 'Further': gt $locM, $metkaM
+	                                                    act 'Further': gt 'swamphouse', 'start'
                                                     end
                                                 end
                                             end
-                                        end
-                                    end
+										else
+											act 'Pass out':
+												cls
+												minut += 5
+												gs 'stat'
+												'<center><img src="images/locations/pavlovsk/shulgahome/bigroom/drunk_ev/sleep11.jpg"></center>'
+												'After a while of dancing, your legs aren''t longer able to keep up, so you decide to go to sleep much to the mens disappointment.'
+
+												act 'Wake up':
+													cls
+													minut += 360
+													pcs_sleep += 36
+													pcs_health -= 15
+													pcs_mood -= 25
+													pcs_willpwr -=10
+													gs 'stat'
+	
+													'<center><img src="images/locations/pavlovsk/shulgahome/bigroom/drunk_ev/pohmel2.jpg"></center>'
+													'You sleep for awhile, waking up barely able to get out of bed. You''ve got a headache and vaguely remember yesterday.'
+
+													act 'Further': gt 'swamphouse', 'start'
+												end
+											end
+										end
+									end
                                 else
                                     act 'Pass out':
                                         cls
@@ -1381,7 +1407,7 @@ $hanterstable = {
 	                                       '<center><img src="images/locations/pavlovsk/shulgahome/bigroom/drunk_ev/pohmel2.jpg"></center>'
 	                                       'You sleep for awhile, waking up barely able to get out of bed. You''ve got a headache and vaguely remember yesterday.'
 
-	                                        act 'Further': gt $locM, $metkaM
+	                                        act 'Further': gt 'swamphouse', 'start'
                                         end
                                     end
                                 end
@@ -1463,7 +1489,7 @@ $hanterstable = {
 	                                            '<center><img src="images/locations/pavlovsk/shulgahome/bigroom/drunk_ev/pohmel3.jpg"></center>'
 	                                            'You sleep for four hours, waking up in the middle night, barely able to get up off the floor. You''ve got a headache and vaguely remember yesterday.'
 
-	                                            act 'Further': gt $locM, $metkaM
+	                                            act 'Further': gt 'swamphouse', 'start'
                                             end
                                         end
                                     else
@@ -1513,7 +1539,7 @@ $hanterstable = {
 	                    '<center><img src="images/locations/pavlovsk/shulgahome/bigroom/drunk_ev/pohmel1.jpg"></center>'
 	                    'Three hours later you wake up in the middle of the night. You''ve got a headache and vaguely remember yesterday.'
 
-	                    act 'Further': gt $locM, $metkaM
+	                    act 'Further': gt 'swamphouse', 'start'
                     end
                 end
             end
@@ -1537,7 +1563,7 @@ $hanterstable = {
 	                    '<center><img src="images/locations/pavlovsk/shulgahome/bigroom/drunk_ev/pohmel4.jpg"></center>'
 	                    'Four hours later you wake up in the middle of the night. You''ve got a headache and vaguely remember yesterday.'
 
-	                    act 'Further': gt $locM, $metkaM
+	                    act 'Further': gt 'swamphouse', 'start'
                     end
                 end
             end
@@ -1561,7 +1587,7 @@ $hanterstable = {
 	                    '<center><img src="images/locations/pavlovsk/shulgahome/bigroom/drunk_ev/pohmel2.jpg"></center>'
 	                    'You sleep for awhile, waking up barely able to lift your head from the pillow. You''ve got a headache and vaguely remember yesterday.'
 
-	                    act 'Further': gt $locM, $metkaM
+	                    act 'Further': gt 'swamphouse', 'start'
                     end
                 end
             end
@@ -1626,7 +1652,7 @@ $hanterstable = {
 	                                            '<center><img src="images/locations/pavlovsk/shulgahome/bigroom/drunk_ev/pohmel3.jpg"></center>'
 	                                            'You sleep for four hours, waking up in the middle night, barely able to get up off the floor. You''ve got a headache and vaguely remember yesterday.'
 
-	                                            act 'Further': gt $locM, $metkaM
+	                                            act 'Further': gt 'swamphouse', 'start'
                                             end
                                         end
                                     else
@@ -1664,9 +1690,9 @@ $hanterstable = {
 		    '<center><img src="images/locations/gadukino/hunters/hanterstable.jpg"></center>'
 		    'You start chating with the guys about trivial stuff...'
 
-		    act 'Move away from the table':gt $locM, $metkaM
+		    act 'Move away from the table':gt 'swamphouse', 'start'
         end
-        act'Move away from the table':hanter_refuse = 1 & gt $locM, $metkaM
+        act'Move away from the table':hanter_refuse = 1 & gt 'swamphouse', 'start'
     end
     if hantersKnowSlut > 0 and hanterstableBJ = 0:
         if hantersdrink = 0:
@@ -1679,8 +1705,8 @@ $hanterstable = {
             '"Not so fast <<$pcs_nickname>>, Andrei said with a smile on his face. "You understand that the only free cheese is the one found in the mousetrap."'
             '"Want to eat with us, you need to do some work," he mockingly grinned and pointed under the table.'
 
-            act 'Crawl under the table':pcs_dom -= 1 & dynamic $hanterstableBJ
-            act 'Refuse':gt $locM, $metkaM
+            act 'Crawl under the table':pcs_dom -= 1 & gs 'swamphouse', 'hanterstableBJ'
+            act 'Refuse':gt 'swamphouse', 'start'
 	    else
 	        cls
 	        minut += 1
@@ -1690,7 +1716,7 @@ $hanterstable = {
             'Noticing you, the men start grinning...'
             '"About time! Our <<$pcs_nickname>> has arrived. Come here, join us at the table." said Andrei.'
 
-            act 'Sit at the table':hanterstableBJ = 1 & dynamic $hanterstable
+            act 'Sit at the table':hanterstableBJ = 1 & gs 'swamphouse', 'hanterstable'
 	    end
 	end
 	if ($clothingworntype = 'nude' and arrsize('sparrvol') > 0) or arrpos('sparrloc',11) ! -1:
@@ -1703,12 +1729,12 @@ $hanterstable = {
         'You sit down at the table, wanting to eat with the guys, before you can begin you hear...'
         '"Damn, <<$pcs_nickname>>, I know you like our artistic work on your face, but you need to wash up before you sit down with us.'
 
-        act 'Go':gt $locM, $metkaM
+        act 'Go':gt 'swamphouse', 'start'
 	end
 
-}
+end
 
-$hantersrelax = {
+if $ARGS[0] = 'hantersrelax':
 	cla
 	*clr
 	minut += 1
@@ -1720,11 +1746,11 @@ $hantersrelax = {
     act'Speak with Andrei':gt'AndreiHanter'
     act'Speak with Sergei':gt'SergeiHanter'
     act'Speak with Igor':gt'IgorHanter'
-    act'Move away':gt $locM, $metkaM
+    act'Move away':gt 'swamphouse', 'start'
 
-}
+end
 
-$hantersmokBJ = {
+if $ARGS[0] = 'hantersmokBJ':
     cls
 	gs 'boyStat', 172
     minut += 5
@@ -1738,7 +1764,7 @@ $hantersmokBJ = {
     if hantersmokBJ = 1:'Andrei did not finish, so you continue to suck...'
 	gs'oral','start'
 
-    if temp = 1:act 'Keep sucking':hantersmokBJ = 1 & dynamic $hantersmokBJ
+    if temp = 1:act 'Keep sucking':hantersmokBJ = 1 & gs 'swamphouse', 'hantersmokBJ'
     if temp = 2:
         act 'Keep sucking':
 		    cls
@@ -1755,12 +1781,12 @@ $hantersmokBJ = {
 			'"You''re really good at this, <<$pcs_nickname>>," said a pleased Andrei. "You''re the perfect stress reliever.'
             'You clean yourself up before walking back to the hut with Andrei.'
 
-            act 'Return to the table':dynamic $hanterstable
+            act 'Return to the table':gs 'swamphouse', 'hanterstable'
         end
 	end
-}
+end
 
-$dirty_swamphouse = {
+if $ARGS[0] = 'dirty_swamphouse':
 	cla
 	*clr
 	if dirty_swamphouse > 10:minut += 60 & pcs_sweat += 10
@@ -1775,8 +1801,9 @@ $dirty_swamphouse = {
 	'Visiting the hut, you notice that the hut has gotten pretty dirty. "I need to do something about this." you think to yourself. You grab a broom and a rag and began cleaning.'
 	'After a while you''ve finished cleaning and put back everything in order again. You''re quite pleased with yourself.'
 
-    act 'Further':dirty_swamphouse = 0 & gt'swamphouse'
-}
+    act 'Further':dirty_swamphouse = 0 & gt'swamphouse', 'start'
+end
+
 
 --- swamphouse ---------------------------------
 
