@@ -3,7 +3,7 @@ CLOSE ALL
 gs 'KatjaHomeDin'
 gs 'stat'
 '<center><b><font color="maroon"><<$npc_firstname[''A14'']>> <<$npc_lastname[''A14'']>></font></b></center>'
-'<center><img src="images/characters/pavlovsk/shared/14.jpg"></center>'
+'<center><img src="images/characters/pavlovsk/school/head/14.jpg"></center>'
 
 if pcs_sweat >= 20:
 	'Katja wrinkles her nose "<<$pcs_nickname>>, you''re all sweaty. Do you want to use my shower?"'
@@ -124,7 +124,7 @@ else
 			minut += 15
 			gs 'stat'
 			'<center><b><font color="maroon"><<$npc_firstname[''A14'']>> <<$npc_lastname[''A14'']>></font></b></center>'
-			'<center><img src="images/characters/pavlovsk/shared/14.jpg"></center>'
+			'<center><img src="images/characters/pavlovsk/school/head/14.jpg"></center>'
 !			if flag_KissEV > 3:
 !				Act 'To continue the dispute':
 !					cla
@@ -206,7 +206,7 @@ else
 				cls
 				gs 'stat'
 				'<center><b><font color="maroon"><<$npc_firstname[''A14'']>> <<$npc_lastname[''A14'']>></font></b></center>'
-				'<center><img src="images/characters/pavlovsk/shared/14.jpg"></center>'
+				'<center><img src="images/characters/pavlovsk/school/head/14.jpg"></center>'
 				dynamic $d_katjahornykiss
 			end
 		end
@@ -217,6 +217,240 @@ else
 		'Katja says, "Let''s go to the disco."'
 
 		if money >= 25:act 'Go to the disco':money -= 25 & minut += 15 & gt 'gdkin'
+	end
+end
+
+if pregTalkKatja = 0 and KatjaConflict = 0 and kid = 0:
+	if knowKatjaPreg = 1 and pregtime >= 150:
+		cla
+		gs 'stat'
+		minut += 5
+		KatjaConflict = 1
+		KatConCheck = daystart
+		'"Are you pregnant? Why didn''t you tell me? I thought we were closer than that. I told you that I was pregnant. I need to think. We''ll talk later"'
+
+		act 'Say goodbye and go home':gt 'pavResidential'
+	elseif knowKatjaPreg = 1 and knowpreg = 1 and pregtime > 0 and pregtime < 150:
+		act 'Tell her you''re pregnant':
+			cls
+			'"What? That''s so exiting! You didn''t get pregnant just to be like me, did you?" she asks playfully.'
+			*nl
+			act 'Next':gt 'KatjaHomeTalk', 'katjaknows'
+		end
+	elseif KatjaPreg = 0 and pregtime >= 150:
+		cla
+		*nl
+		minut += 5
+		KatjaConflict = 1
+		KatConCheck = daystart
+		'"Are you pregnant? Why didn''t you tell me? I thought we were closer than that. I need to think. We''ll talk later"'
+
+		act 'Say goodbye and go home':gt 'pavResidential'
+	elseif KatjaPreg = 0 and knowpreg = 1 and pregtime > 0 and pregtime < 150:
+		act 'Tell her you''re pregnant':
+			cls
+			'"What? That''s so exiting!'
+			*nl
+			act 'Next':gt 'KatjaHomeTalk', 'katjaknows'
+		end
+	end
+end
+
+if pregTalkKatja = 0 and (KatjaConflict = 0 or katjaconflict = 2) and kid > 0:
+	if knowKatjaPreg = 1 and pregtime >= 150:
+		cla
+		gs 'stat'
+		minut += 5
+		KatjaConflict += 1
+		KatConCheck = daystart
+		'"You''re pregnant again?" Her face turns red and her expression is far angrier than you''ve ever seen her. "After everything, you still didn''t trust me enough to tell me," she screams. "I thought there was something special between us." Tears begin rolling down her cheeks. "Just leave me alone, I don''t even want to see you right now."'
+		act 'Say goodbye and go home':gt 'pavResidential'
+	elseif knowKatjaPreg = 1 and knowpreg = 1 and pregtime > 0 and (KatjaConflict = 0 or katjaconflict = 2) and pregtime < 150:
+		act 'Tell her you''re pregnant':
+			cls
+			gs 'stat'
+			'Katja’s face lights up. "Congratulations! This is even more exciting than last time! Every time you tell me you’re pregnant, I feel even better about my own teen pregnancy. Hell, that''s probably the reason you keep getting pregnant, isn''t it?" She giggles while looking at you affectionately.'
+			*nl
+			act 'Next':gt 'KatjaHomeTalk', 'katjaknows1'
+		end
+	end
+end
+
+if pregTalkKatja = 0 and KatjaConflict = 1 and KatConCheck ! daystart and kid = 0:
+	act 'Apologize':
+		cls
+		gs 'stat'
+		KatjaConflict = 2
+		'"I''m really sorry I didn''t tell you I was pregnant sooner. I was just so embarrassed."'
+		'Katja sighs. "I understand. I just want you to know you can trust me and it hurts to realize that you don''t."'
+		'"I do trust you. I promise I won''t keep anything else like this from you in the future."'
+		'"Good. Now let''s get down to business."'
+		*nl
+		act 'Next':gt 'KatjaHomeTalk', 'katjaknows'
+	end
+end
+
+if pregTalkKatja = 0 and KatjaConflict = 1 and KatConCheck ! daystart and kid > 0:
+	act 'Apologize':
+		cls
+		gs 'stat'
+		KatjaConflict = 2
+		'"I''m really sorry I didn''t tell you I was pregnant sooner. I was just so embarrassed."'
+		'Katja sighs. "I understand. I just want you to know you can trust me and it hurts to realize that you don''t."'
+		'"I do trust you. I promise I won''t keep anything else like this from you in the future."'
+		'"Good. Now let''s get down to business."'
+		*nl
+		act 'Next':gt 'KatjaHomeTalk', 'katjaknows1'
+	end
+end
+
+if $ARGS[0] = 'katjaknows':
+   cla
+   pregTalkKatja = 1
+	*nl
+	if KatjaSlut < 60 and $wombthfath = 'Kolka' and npc_rel['A34'] > 50:
+		minut += 10
+		'"So, who''s the baby-daddy?" Katja teases.'
+		''
+		'You tell Katja that you''re having Kolka''s baby.'
+		'"You were knocked up by your brother!? That''s so crazy. Is he at least good in bed?"' 
+		'"I wouldn''t be pregnant if he wasn''t," you laugh. "I only let the best cock inside of me."'
+		'Katja blushes and you give her a quick kiss before she can react.'
+
+		act 'Continue':gt 'KatjaHomeTalk'
+	elseif KatjaSlut < 60 and $wombthfath = 'Stepfather' and npc_rel['A28'] > 50:
+		minut += 10
+		'"So, who''s the baby-daddy?" Katja teases.'
+		''
+		'You tell Katja that you''re having your step-father''s baby.'
+		'"You were knocked up by your Step-dad!? That''s so crazy"'
+		'Katja blushes and you give her a quick kiss before she can react.'
+
+		act 'Continue':gt 'KatjaHomeTalk'
+	elseif KatjaSlut < 60 and $wombthfath = 'Biological Father' and npc_rel['A29'] > 50:
+		minut += 10
+		'"So, who''s the baby-daddy?" Katja teases.'
+		''
+		'You tell Katja that you''re having your biological father''s baby.'
+		'"You were knocked up by your own father!? That''s so crazy"'
+		'Katja blushes and you give her a quick kiss before she can react.'
+
+		act 'Continue':gt 'KatjaHomeTalk'
+	elseif KatjaSlut < 60 and $wombthfath = '':
+		minut += 10
+		'"So, who''s the baby-daddy?" Katja teases.'
+		''
+		'You tell her that you don''t actually know whose baby is growing inside of you.'
+		'"No way! Really?" She is completely flabbergasted.'
+		'"Yeah, I sometimes feel like my life is spinning out of control."'
+		'Katja places a hand on your choulder "<<$pcs_nickname>>, if I can do anything to make your life a little easier, please let me know."'
+		'You blush and thank her, before placing a quick kiss on her cheek.'
+
+		act 'Continue':gt 'KatjaHomeTalk'
+	elseif KatjaSlut >= 60 and $wombthfath = 'Kolka' and npc_rel['A34'] > 50:
+		minut += 10
+		'"Who''d you let pump their cum into that wonderful body of yours?" Katja asks while biting her bottom lip.'
+		''
+		'You tell Katja that you''re having Kolka''s baby.'
+		'"You were knocked up by your brother!? That''s so sexy," moans Katja before going in for a passionate kiss.'
+		'As your <<$liptalk3>> separate from hers, you look into her eyes. "I didn''t think admitting to incest would get me rewarded."'
+		'Katja chuckles. "I appreciate honesty and I think everyone should be free to explore their passions. Even if those passions revolve around riding your brother''s dick."'
+		'You find yourself questioning what you did to deserve such a wonderful woman in your life.'
+
+		act 'Continue':gt 'KatjaHomeTalk'
+	elseif KatjaSlut >= 60 and $wombthfath = 'Stepfather' and npc_rel['A28'] > 50:
+		minut += 10
+		'"Who''d you let pump their cum into that wonderful body of yours?" Katja asks while biting her bottom lip.'
+		''
+		'You tell Katja that you''re having your step-father''s baby.'
+		'"You were knocked up by your brother!? That''s so sexy," moans Katja before going in for a passionate kiss.'
+		'As your <<$liptalk3>> separate from hers, you look into her eyes. "I didn''t think admitting to incest would get me rewarded."'
+		'Katja chuckles. "I appreciate honesty and I think everyone should be free to explore their passions. Even if those passions are part of an Electra complex."'
+		'You find yourself questioning what you did to deserve such a wonderful woman in your life.'
+
+		act 'Continue':gt 'KatjaHomeTalk'
+	elseif KatjaSlut >= 60 and $wombthfath = 'Biological Father' and npc_rel['A29'] > 50:
+		minut += 10
+		'"Who''d you let pump their cum into that wonderful body of yours?" Katja asks while biting her bottom lip.'
+		''
+		'You tell Katja that you''re having your biological father''s baby.'
+		'"You were knocked up by your brother!? That''s so sexy," moans Katja before going in for a passionate kiss.'
+		'As your <<$liptalk3>> separate from hers, you look into her eyes. "I didn''t think admitting to incest would get me rewarded."'
+		'Katja chuckles. "I appreciate honesty and I think everyone should be free to explore their passions. Even if those passions are part of an Electra complex."'
+		'You find yourself questioning what you did to deserve such a wonderful woman in your life.'
+
+		act 'Continue':gt 'KatjaHomeTalk'
+	elseif KatjaSlut >= 60 and $wombthfath = '':
+		minut += 10
+		'"Who''d you let pump their cum into that wonderful body of yours?" Katja asks while biting her bottom lip.'
+		''
+		'You tell her that you don''t actually know whose baby is growing inside of you.'
+		'"You''re such a sexy slut," moans Katja before going in for a passionate kiss.'
+		'As your <<$liptalk3>> separate from hers, you look into her eyes. "I''m really glad you''re not judging me like a lot of other people have."'
+		'"<<$pcs_nickname>>, I would never judge you. Plus, if I''m being honest, I''m a little jealous. I wish I could let myself have that much fun."'
+		'You find yourself questioning what you did to deserve such a wonderful woman in your life.'
+
+		act 'Continue':gt 'KatjaHomeTalk'
+	else
+		minut += 10
+		'"So, who''s the baby-daddy?" Katja teases.'
+		''
+		'"It looks like I got knocked up by <<$wombthfath>>"'
+		'"I hope they know how lucky they are," Katja says, clearly blushing.'
+
+		act 'Continue':gt 'KatjaHomeTalk'
+	end
+end
+
+if $ARGS[0] = 'katjaknows1':
+	cla
+	pregTalkKatja = 1
+	if KatjaSlut < 60: '"So, hot stuff. Same father as last time?"'
+	if KatjaSlut >= 60: '"Fuck, I love seeing you pregnant. I hope you''re up for having lots of babies." She blushes intensely and kisses you. "So, who put this one into you?"'
+	*nl
+	if KatjaSlut < 60 and (($wombthfath = 'Kolka' and npc_rel['A34'] > 50) and ($ChildThFath - 1 = 'Kolka')) or (($wombthfath = 'Stepfather' and npc_rel['A28'] > 50) and ($ChildThFath - 1 = 'Stepfather')) or (($wombthfath = 'Biological Father' and npc_rel['A29'] > 50) and ($ChildThFath - 1 = 'Biological Father')):
+		'You tell Katja that the same man as before got you pregnant.'
+		'"Damn, I never thought I''d meet someone who wanted to be an incest baby factory."'
+		'"I just hope he makes you happy. It''s sometimes hard to believe that you''re the woman I fell in love with." Her eyes widen and her cheeks redden at the realization that she just admitted she loves you. Before you can respond, she cuts you off with a passionate kiss.'
+
+		act 'Continue':minut += 10 & gt 'KatjaHomeTalk'	
+	elseif KatjaSlut >= 60 and (($wombthfath = 'Kolka' and npc_rel['A34'] > 50) and ($ChildThFath - 1 = 'Kolka')) or (($wombthfath = 'Stepfather' and npc_rel['A28'] > 50) and ($ChildThFath - 1 = 'Stepfather')) or (($wombthfath = 'Biological Father' and npc_rel['A29'] > 50) and ($ChildThFath - 1 = 'Biological Father')):
+		'You tell Katja that the same man as before got you pregnant.'
+		'"Damn, I never thought I''d meet someone who wanted to be an incest baby factory."'
+		'"God, you''re the hottest bitch I know. I didn''t think I could be any more in love with you." Her eyes widen and her cheeks redden at the realization that she just admitted she loves you. Before you can respond, she cuts you off with a passionate kiss.'  
+		'After a few minutes, she breaks the kiss, but keeps her lips millimeters from yours. "Don''t let this distract from my wanting you to become his breeding bitch. I want him to keep you pregnant. I need something to masturbate about when you’re not around." As soon as she finishes speaking, her lips are magnetically pulled back to yours.'
+
+		act 'Continue':minut += 10 & gt 'KatjaHomeTalk'
+	elseif KatjaSlut < 60 and (($wombthfath = 'Kolka' and npc_rel['A34'] > 50) and ($ChildThFath - 1 = 'Stepfather') or ($ChildThFath - 1 = 'Biological Father')) or (($wombthfath = 'Stepfather' and npc_rel['A28'] > 50) and ($ChildThFath - 1 = 'Kolka') or ($ChildThFath - 1 = 'Biological Father')) or (($wombthfath = 'Biological Father' and npc_rel['A29'] > 50) and ($ChildThFath - 1 = 'Kolka') or ($ChildThFath - 1 = 'Stepfather')):
+		'Blushing, you tell Katja that a member of your family impregnated you, but not the same one as last time.'
+		'Her eyes widen. "wow, your family must be really close," she chuckles.'
+		'"To think I''d fall in love with a woman who lets multiple members of her own family knock her up." Her eyes widen and her cheeks redden at the realization that she just admitted she loves you. Before you can respond, she cuts you off with a passionate kiss.'
+
+		act 'Continue':minut += 10 & gt 'KatjaHomeTalk'
+	elseif KatjaSlut >= 60 and (($wombthfath = 'Kolka' and npc_rel['A34'] > 50) and ($ChildThFath - 1 = 'Stepfather') or ($ChildThFath - 1 = 'Biological Father')) or (($wombthfath = 'Stepfather' and npc_rel['A28'] > 50) and ($ChildThFath - 1 = 'Kolka') or ($ChildThFath - 1 = 'Biological Father')) or (($wombthfath = 'Biological Father' and npc_rel['A29'] > 50) and ($ChildThFath - 1 = 'Kolka') or ($ChildThFath - 1 = 'Stepfather')):
+		'Blushing, you tell Katja that a member of your family impregnated you, but not the same one as last time.'
+		'Her eyes widen. "wow, your family must be really close," she chuckles.'
+		'"Shit, ‘which of your family members did you like being knocked up by the most?’ might be the hottest question anyone has ever made me think of. Just when I started thinking I couldn''t love you any more." Her eyes widen and her cheeks redden at the realization that she just admitted she loves you. Before you can respond, she cuts you off with a passionate kiss.'
+		'After a few minutes, she breaks the kiss, but keeps her lips millimeters from yours. "Don''t think I''ll forget the image of you being passed around your family like a good little slut. I need something to masturbate about when you''re not around." As soon as she finishes speaking, her lips are magnetically pulled back to yours.'
+
+		act 'Continue':minut += 10 & gt 'KatjaHomeTalk'
+	elseif $wombthfath = $ChildThFath - 1 and ($wombthfath ! 'Kolka' and $wombthfath ! 'Stepfather' and $wombthfath ! 'Biological Father'):
+		'"I hope he makes you happy. And that he doesn''t mind sharing you with me," she blushes. "I would hate to completely lose the woman I love." Her eyes widen and her cheeks redden at the realization that she just admitted she loves you. Before you can respond, she cuts you off with a passionate kiss.'
+
+		act 'Continue':minut += 10 & gt 'KatjaHomeTalk'
+	elseif $wombthfath ! $ChildThFath - 1 and ($wombthfath ! 'Kolka' and $wombthfath ! 'Stepfather' and $wombthfath ! 'Biological Father'):
+		'"I''m glad you realize you''re too special to limit yourself to one man. I love you too much to let you do anything less." Her eyes widen and her cheeks redden at the realization that she just admitted she loves you. Before you can respond, she cuts you off with a passionate kiss.'
+
+		act 'Continue':minut += 10 & gt 'KatjaHomeTalk'
+	elseif KatjaSlut < 60 and $wombthfath = '':
+		'"Seems like you had a little too much fun then," She chuckles.'
+
+		act 'Continue':minut += 10 & gt 'KatjaHomeTalk'
+	elseif KatjaSlut >= 60 and $wombthfath = '':
+		'"Seems like you had a little too much fun then," She chuckles.'
+		'"I hope you''ll include me next time."'
+
+		act 'Continue':minut += 10 & gt 'KatjaHomeTalk'
 	end
 end
 

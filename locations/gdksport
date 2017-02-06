@@ -80,16 +80,20 @@ if $ARGS[0] = 'start':
 		act 'Wash in the shower':gt 'gdksport', 'shower'
 	end
 	if hour < 16 or hour >= 20: exit
-	if gsAboDance > 0 and $clothingworntype = 'exercise' and albinaQWdance = 0: 
+	if gsAboDance > 0 and $clothingworntype = 'exercise' and albinaQWdance = 0 and pregTalkStarlets = 0: 
 		act 'Take a dance lesson, you have <<gsAboDance>> lessons remaining':gt 'gdksport', 'dance2'
 	end
-	if albinaQWdance > 0 and AlbinaBlokDance = 0 and ZvezdEnd = 0 and $clothingworntype = 'exercise':
-		act 'Train with Starlets':gt 'gdksport', 'starlets'
+	if albinaQWdance > 0 and AlbinaBlokDance = 0 and ZvezdEnd = 0 and $clothingworntype = 'exercise' and pregTalkStarlets = 0:
+		if pregtime >= 90:
+			act 'Train with Starlets':gt 'gdksport', 'Starletsreact'
+		else
+			act 'Train with Starlets':gt 'gdksport', 'starlets'
+		end
 	end
-	if gsAboBeg > 0 and $clothingworntype = 'exercise':
+	if gsAboBeg > 0 and $clothingworntype = 'exercise' and pregTalkTrack = 0:
 		act 'Take a track lesson, you have <<gsAboBeg>> lessons remaining':gt 'gdksport', 'racing2'
 	end
-	if gsAboVolley > 0 and volleysostav = 0 and $clothingworntype = 'exercise':
+	if gsAboVolley > 0 and volleysostav = 0 and $clothingworntype = 'exercise' and pregTalkvball = 0:
 		if week ! 5:
 			act 'Take a volleyball lesson, you have <<gsAboVolley>> lessons remaining':gt 'gdksport', 'vball2'
 		else
@@ -101,6 +105,8 @@ if $ARGS[0] = 'start':
 			act 'Play with the team':gt 'gdksport', 'vball4'
 		elseif week = 6 and sorevday ! daystart:
 			act 'Play in Tournament': gt 'gdksport', 'vball5'
+		elseif pregtime >= 90:
+			act 'Play with the team':gt 'gdksport', 'vballreact'
 		end
 	end
 end
@@ -700,7 +706,7 @@ if $ARGS[0] = 'vball4':
 			*clr & cla
 			TrenerLust += 3
 			Voltrenersee += 1 & ! setcheck on gg without panties 
-			'<center><img src="images/locations/pavlovsk/community/gym/volley/sex/game'+rand(1,2)+'.jpg"></center>'
+			'<center><img src="images/locations/pavlovsk/community/gym/volley/event/game'+rand(1,2)+'.jpg"></center>'
 			'It seems the coach noticed you wasn''t wearing any panties, his eyes lit up and he said turning away: "<<$pcs_lastname>>. Come see me after training. I need to show you UH  ... a few things" '
 			act 'Leave':gs'stat'& gt 'gdksport', 'start' 
 			act 'Go to the coach''s office':gt 'Voltrenersex', 'start'
@@ -779,13 +785,13 @@ if $ARGS[0] = 'volley':
 		'During the break, both teams have a rest.'
 
 		if volpointv = 0:
-			'<center><img src="images/characters/pavlovsk/resident/mikhail/volleytrener6.jpg"></center>'
+			'<center><img src="images/characters/pavlovsk/school/teacher/mikhail/volleytrener6.jpg"></center>'
 			'Coach tells the team that you can''t relax, though winning you still need to be focused and not let the opponents back into the game.'
 		elseif volpoint = 0:
-			'<center><img src="images/characters/pavlovsk/resident/mikhail/volleytrener2.jpg"></center>'
+			'<center><img src="images/characters/pavlovsk/school/teacher//mikhail/volleytrener2.jpg"></center>'
 			'Coach tells the team that losing the first half is bad, but it''s not a disaster, you pick yourselves up and go out and kick their asses. You can still win this game in the second half.'
 		else
-			'<center><img src="images/characters/pavlovsk/resident/mikhail/volleytrener1.jpg"></center>'
+			'<center><img src="images/characters/pavlovsk/school/teacher/mikhail/volleytrener1.jpg"></center>'
 			'Coach tells the team that there is no draws in volleyball, he expects you to keep doing the things that you are doing well, but increase pressure. With more discipline and toughness, you can win this game. '
 		end
 
@@ -1052,8 +1058,10 @@ if $ARGS[0] = 'ShowerWithIvan':
 
 						if pcs_horny >= 100:
 							if stat['anal'] >= 10 and orgasm > 0:
-							pcs_mood += 20
-							'Your whole body contracts and then you cry out in orgasm.'
+								pcs_horny = 0
+								orgasm += 1
+								pcs_mood += 20
+								'Your whole body contracts and then you cry out in orgasm.'
 							end
 						end
 						'Your moans of pleasure start to turn into grunts of pain. Apparently sensing your growing discomfort he makes one more powerful thrust with a grunt. His body spasms against yours as you feel him cumming in your ass. Once he is done he pulls out of your ass and goes back to showering, he quickly finishes up and starts to get dressed.'
@@ -1200,6 +1208,16 @@ if $ARGS[0] = 'fedor_date':
 			end
 		end
 	end
+end
+if $ARGS[0] = 'Starletsreact':
+	cla
+	'As you approach the Starlets, Albina looks at you in disgust. Loudly enough for the whole team to hear, she says "<<$pcs_nickname>>, no one wants to see some pregnant whore dance. Leave. You''re done." Tears welling in your eyes, you leave, the sound of laughter and taunting following your departure.'
+	act 'Continue':pregtalkStarlets = 1 & gt 'gdk'	
+end
+if $ARGS[0] = 'vballreact':
+	cla
+	'As you approach the team, your coach notices you and calls you aside. "<<$pcs_firstname>>, are you pregnant? I can''t let you play like that. Also, a pregnant teenager would definitely reflect poorly on me and the rest of the team. Sorry, but off the team." Tears welling in your eyes, you leave.'
+	act 'Continue':pregtalkvball = 1 & gt 'gdk'	
 end
 
 --- gdksport ---------------------------------

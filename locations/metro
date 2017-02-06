@@ -20,7 +20,6 @@ if $ARGS[0] = 'start':
 	!!elseif $loc = 'island': !!for now calling it island, will have to check what we name the file.
 		!!'<center><b><font color="maroon">Vasilievsky Island</font></b></center>'
 		!!'<center><img src="images/locations/city/shared/metro/platisland.jpg"></center>'
-!!should be able to delete below here since now all the locations have their own image.
 	end
 
 	'Subway fare costs 16 <b>₽</b>.'
@@ -47,6 +46,7 @@ if $ARGS[0] = 'start':
 			act 'Go to the <b>Residential Area</b> (16 <b>₽</b>)':
 				$loc = 'street'
 				$metka = ''
+				money -= 16
 				gt 'metro', 'vagon'
 			end
 		end
@@ -55,6 +55,7 @@ if $ARGS[0] = 'start':
 			act 'Go to the <b>City Center</b> (16 <b>₽</b>)':
 				$loc = 'down'
 				$metka = ''
+				money -= 16
 				gt 'metro', 'vagon'
 			end
 		end
@@ -63,6 +64,7 @@ if $ARGS[0] = 'start':
 			act 'Go to the <b>City Industrial Area</b> (16 <b>₽</b>)':
 				$loc = 'Nord'
 				$metka = ''
+				money -= 16
 				gt 'metro', 'vagon'
 			end
 		end
@@ -71,6 +73,7 @@ if $ARGS[0] = 'start':
 			act 'Go to the <b>City Suburbs</b> (16 <b>₽</b>)':
 				$loc = 'psiklin'
 				$metka = 'start'
+				money -= 16
 				gt 'metro', 'vagon'
 			end
 		end
@@ -79,13 +82,14 @@ if $ARGS[0] = 'start':
 !!			act 'Go to the <b>Vasilievsky Island</b> (16 <b>₽</b>)':
 !!				$loc = 'island'
 !!				$metka = ''
+!!				money -= 16
 !!				gt 'metro', 'vagon'
 !!			end
 !!		end
 	end
 
-	act 'Get off the Metro':
-		minut += 15
+	act 'Leave the Metro station':
+		minut += 5
 		gt $loc, $metka
 	end
 	
@@ -101,11 +105,9 @@ if $ARGS[0] = 'start':
 end
 
 if $ARGS[0] = 'vagon':
-	cla
-	clr
+	cls
 	CLOSE ALL
 	if sound = 0:PLAY 'sound/metro1.mp3',30
-	money -= 16
 	gs 'stat'
 	if night_mode = 1:
 		fcolor = rgb(255, 255, 255)
@@ -119,18 +121,21 @@ if $ARGS[0] = 'vagon':
 
 	'<center><b><font color="maroon">Metro car</font></b></center>'
 	if hour < 7 or hour >=22:
+		if rand(0, 100) >= 70:gt 'metro_events', 'frot'
 		if rand(0,1) = 0:
 			metro_busy = 0
 		else
 			metro_busy = 1
 		end
 	elseif (hour >= 9 and hour < 16) or (hour >= 18 and hour < 22):
+		if rand(0, 100) >= 80:gt 'metro_events', 'frot'
 		if rand(0,1) = 0:
 			metro_busy = 1
 		else
 			metro_busy = 2
 		end
 	else
+		if rand(0, 100) >= 90:gt 'metro_events', 'frot'
 		if rand(0,1) = 0:
 			metro_busy = 2
 		else
@@ -152,28 +157,6 @@ if $ARGS[0] = 'vagon':
 		'The car is packed with people, most of them are forced to stand, as there is not enough seats. It is so tightly packed that people are crammed tight up against each other either in the seats or standing up. You manage to squeeze yourself in among the people, you can feel other bodies pressed up tightly against yours, it is very uncomfortable and hot.'
 	end
 
-	frotrand = rand(0, 100)
-
-		if frotrand >= 90 - (frot * 10) and frot < 3:
-'FROT 1 <<frot>>'
-			gt 'frot', 'a'
-		elseif frotrand >= 90 - (frot * 10) and frot >= 3 and spdirtyc = 0 and PCloSkirt > 0:
-'FROT 2 <<frot>>'
-			tipfrot = rand(0, 2)
-
-			if tipfrot = 0:gt 'frot', 'b'
-			if tipfrot = 1:gt 'frot', 'd1'
-			if tipfrot = 2:gt 'frot', 'c'
-
-			!!gt 'frot', 'b'
-		elseif frotrand >= 90 - (frot * 10) and frot >= 3 and spdirtyc = 0 and PCloSkirt = 0:
-'FROT 3 <<frot>>'
-			tipfrot = rand(0, 2)
-
-			if tipfrot =0:gt 'frot', 'c'
-			if tipfrot =1:gt 'frot', 'd'
-			if tipfrot =2:gt 'frot', 'e'
-		end
 	end
 
 	if sosedQW >= 1:
@@ -191,7 +174,16 @@ if $ARGS[0] = 'vagon':
 		end
 	end
 
-	act 'Get out of the car':gt 'metro', 'start'
+	act 'Get out of the car':
+		if hour < 7 or hour >=22:
+			if rand(0, 100) >= 70:gt 'metro_events', 'station'
+		elseif (hour >= 9 and hour < 16) or (hour >= 18 and hour < 22):
+			if rand(1,100) >= 80:gt 'metro_events', 'station'
+		else
+			if rand(1,100) >= 90:gt 'metro_events', 'station'
+		end			
+		gt 'metro', 'start'
+	end
 end
 
 if $ARGS[0] = 'shop':
