@@ -1,67 +1,143 @@
 # parks
 
-cla
-gs'stat'
-$location_type = 'public_outdoors'
-'<center><B>Old Town Park</B></center>'
-'<center><img src="images/locations/oldtown/park/parkus.jpg" ></center>'
-'The lack of amusements is compensated for by the wonderful, landscaped gardens and tranquil atmosphere.'
-'The old park is a favorite vacation spot for families.'
-
-'Close to the narrow <a href="exec:GT ''parks'',''allea''">footpath</a> .'
-'Wander through the <a href="exec:GT ''lug'',''start''">park</a> .'
-
-
-act 'Walk 1 h':
-    cla
-    minut+=60
-	pcs_mood += 10
-	pcs_willpwr += 10
+if $ARGS[0] = '':
+	cls
+	$location_type = 'public_outdoors'
+	$metka = ''
+	$loc = 'parks'
 	gs'stat'
-	'You leisurely stroll through the park of the Old Town. Breathe in the fresh air, reflecting on the vicissitudes of fate.'
-	act 'Complete outing':gt'parks','start'
-end
+	'<center><B>Old Town Park</B></center>'
+	'<center><img src="images/locations/oldtown/park/parkus.jpg" ></center>'
+	'These gardens of the old palace have been sculpted over many years into wonderful, landscaped gardens with a tranquil atmosphere.'
+	'The old park is a favorite vacation spot for tourists and the main feature of old town.'
 
-if month = 5 or month = 6 or month = 7 or month = 8 or month = 9:
-	if hour > 6 and hour < 23:
-		act 'Rest on the bench':
-			cla
-        	*clr
-        	'<center><img src="images/locations/shared/park/bench_6.jpg"></center>'
+	'Explore the narrow <a href="exec:GT ''parks'',''allea''">footpath</a> .'
+	'Wander deeper into the <a href="exec:GT ''lug'',''start''">park</a> .'
 
-			waiting = input ("How many minutes of sitting? (Not more 120 minutes)")
 
-			if waiting <= 0 or waiting > 120:
-				minut = minut + 15
-			elseif waiting > 0 and waiting <= 120:
-				minut = minut + waiting
-				pcs_mood += 10
-				pcs_willpwr = pcs_willpwr + 10
-				if pcs_sleep < 90:pcs_sleep += 10
+	act 'Go to the high street': minut += 10 &  gt 'liames'
+
+	act 'Go to the town center': minut += 10 & gt 'liam'
+
+	act 'Walk around the park (1 hour)':
+		if pcs_exhibit >= 50 and exhibitQW = 0: gt 'kseniya', 'event1', 1
+		cla
+		minut += 60
+		pcs_mood += 10
+		pcs_willpwr += 10
+		gs'stat'
+		'You leisurely stroll through the park of the Old Town. Breathe in the fresh air, reflecting on the vicissitudes of fate.'
+		act 'Complete outing':gt'parks','start'
+	end
+
+	if month = 5 or month = 6 or month = 7 or month = 8 or month = 9:
+		if hour > 6 and hour < 23:
+			act 'Rest on the bench':
+				cla
+				*clr
+				'<center><img src="images/locations/shared/park/bench_6.jpg"></center>'
+
+				waiting = input ("How many minutes of sitting? (Not more 120 minutes)")
+
+				if waiting <= 0 or waiting > 120:
+					minut = minut + 15
+				elseif waiting > 0 and waiting <= 120:
+					minut = minut + waiting
+					pcs_mood += 10
+					pcs_willpwr = pcs_willpwr + 10
+					if pcs_sleep < 90:pcs_sleep += 10
+				end
+
+				act 'Consult a watch':gt curloc
 			end
+		end	
+	end
 
-			act 'Consult a watch':gt curloc
+	if pcs_exhibition >= 35:
+		act 'Flash your tits':
+			if pcs_exhibit >= 50 and exhibitQW = 0: gt 'kseniya', 'event1'
+			cls
+			minut += 5
+			exhibition_exp += 3
+			gs 'stat'
+
+			'<center><img src="images/shared/sex/exhibitionism/flash_tits.jpg"></center>'
+			'You find an area far from where the children play in the park and flash your tits to some passers-by.'
+
+			act 'Continue': gt 'parks'
 		end
-	end	
+	end
+
+	if pcs_exhibition >= 40:
+		act 'Flash your pussy':
+			if pcs_exhibit >= 50 and exhibitQW = 0: gt 'kseniya', 'event1'
+			cls
+			minut += 5
+			exhibition_exp += 5
+			gs 'stat'
+
+
+			if pcs_pubes >= 10:
+				'<center><img src="images/shared/sex/exhibitionism/flash_hairy.jpg"></center>'
+			else
+				'<center><img src="images/shared/sex/exhibitionism/flash_nohairy.jpg"></center>'
+			end
+			'You find an area far from where the children play in the park and flash your pussy to some passers-by.'
+
+			act 'Continue': gt 'parks'
+		end
+	end
 end
 
 if $ARGS[0] = 'allea':
-    cls
-    gs'stat'
+	cls
+	$location_type = 'public_outdoors'
+	$metka = 'allea'
+	$loc = 'parks'
+	gs'stat'
     '<center><img src="images/pic/allea.jpg" ></center>'
-    'Wander through the <a href="exec:GT ''lug'',''luzhayka''">park</a>.'
+    'Wander still further into the <a href="exec:GT ''lug'',''luzhayka''">park</a>.'
 
-    act 'Go back':
+    act 'Go back toward the old town':
         minut += 15
         gt'parks'
     end
+
+	if pcs_exhibition >= 35:
+		act 'Flash your tits':
+			if pcs_exhibit >= 50 and exhibitQW = 0: gt 'kseniya', 'event1'
+			cls
+			minut += 5
+			exhibition_exp += 3
+			gs 'stat'
+
+			'<center><img src="images/shared/sex/exhibitionism/flash_tits.jpg"></center>'
+			'You find an area far from where the children play in the park and flash your tits to some passers-by.'
+
+			act 'Continue': gt 'parks'
+		end
+	end
+
+	if pcs_exhibition >= 40:
+		act 'Flash your pussy':
+			if pcs_exhibit >= 50 and exhibitQW = 0: gt 'kseniya', 'event1'
+			cls
+			minut += 5
+			exhibition_exp += 5
+			gs 'stat'
+
+
+			if pcs_pubes >= 10:
+				'<center><img src="images/shared/sex/exhibitionism/flash_hairy.jpg"></center>'
+			else
+				'<center><img src="images/shared/sex/exhibitionism/flash_nohairy.jpg"></center>'
+			end
+			'You find an area far from where the children play in the park and flash your pussy to some passers-by.'
+
+			act 'Continue': gt 'parks'
+		end
+	end
 end
-
-act 'View the abandoned building':gt'psiklin','ps2'
-
-act 'Go to the high street': minut += 10 &  gt 'liames'
-
-act 'Go to the town center': minut += 10 & gt 'liam'
 
 --- parks ---------------------------------
 
