@@ -413,16 +413,28 @@ if $ARGS[0] = '':
 							act 'Try on the clothes she brings you':
 								cls
 								gs 'stat'
+								loop_counter = 0
 								:markbuyclomother
-								numrand = rand(1, 85)
-
-								if cheap[numrand] = 0:
-									cheap[numrand] = 1
-									cheapH[numrand] = 50
-									cheapB[numrand] = pcs_hips
-									'<center><img src="images/pc/clothing/1cheap/<<numrand>>.jpg"></center>'
+								loop_counter += 1
+								if loop_counter = 300:
+									After 30 minutes of trying on various outfits you are unable to find any that you either don't already own or that you are willing to wear.'
 								else
-									jump 'markbuyclomother'
+									numrand = rand(1, 85)
+
+									gs 'clothing_attributes', 'cheap', numrand
+									!!not prostitute
+									if CloStyle = 4:jump 'markbuyclomother'
+									!!Sveta can wear it and not too revealing
+									if CloExhibit > pcs_exhibition or CloExhibit > 30:jump 'markbuyclomother'
+
+									if cheap[numrand] = 0:
+										cheap[numrand] = 1
+										cheapH[numrand] = 50
+										cheapB[numrand] = pcs_hips
+										'<center><img src="images/pc/clothing/1cheap/<<numrand>>.jpg"></center>'
+									else
+										jump 'markbuyclomother'
+									end
 								end
 
 								'You enter a changing booth and spend 30 minutes trying on various outfits: short ones, long ones, light ones, dark ones... Then finally her eyes light up, and she beams: "This one! This one is perfect!" She buys the outfit for you, and you go back home together. You thank your mother and give her a hug.'
