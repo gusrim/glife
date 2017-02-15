@@ -15,18 +15,18 @@
 if serge_sleep_sex_day ! daystart: serge_sleep_sex_count = 2
 
 if $ARGS[0] = 'rep':
-	if serge_shulgin<10:'You don''t really know Sergey at all.'
-	if serge_shulgin>=10 and serge_shulgin<20:'You know some things about Sergey, but your relationship is still a bit tenuous.'
-	if serge_shulgin>=20 and serge_shulgin<30:'You get along alright with Sergey, though there''s still a lot you don''t know about him.'
-	if serge_shulgin>=30 and serge_shulgin<50:'Sergey doesn''t mind your company, and likes to talk with you when he''s not busy.'
-	if serge_shulgin>=50 and serge_shulgin<80:'You have a friendly relationship with Sergey, and he enjoys spending time with you.'
-	if serge_shulgin>=80:'You have an excellent relationship with Sergey, and you''re always welcome in his home.'
+	if npc_rel['A112']<10:'You don''t really know Sergey at all.'
+	if npc_rel['A112']>=10 and npc_rel['A112']<20:'You know some things about Sergey, but your relationship is still a bit tenuous.'
+	if npc_rel['A112']>=20 and npc_rel['A112']<30:'You get along alright with Sergey, though there''s still a lot you don''t know about him.'
+	if npc_rel['A112']>=30 and npc_rel['A112']<50:'Sergey doesn''t mind your company, and likes to talk with you when he''s not busy.'
+	if npc_rel['A112']>=50 and npc_rel['A112']<80:'You have a friendly relationship with Sergey, and he enjoys spending time with you.'
+	if npc_rel['A112']>=80:'You have an excellent relationship with Sergey, and you''re always welcome in his home.'
 	''
 end
 
 $serg_bazar_rep = {
-	if serge_shulgin<30:'You sit down on a chair in his bedroom.'
-	if serge_shulgin>=30:'You signal for Sergey to scooch over, and lie down on the bed next to him.'
+	if npc_rel['A112']<30:'You sit down on a chair in his bedroom.'
+	if npc_rel['A112']>=30:'You signal for Sergey to scooch over, and lie down on the bed next to him.'
 	''
 }
 
@@ -51,7 +51,7 @@ if $ARGS[0] = 'tv':
 		minut += 15
 		sergebazar_day = daystart
 		sergebazar_count -= 1
-		if sergebazar_count > 0: serge_shulgin +=1
+		if sergebazar_count > 0: npc_rel['A112'] +=1
 		gs'stat'
 	serge_textb = RAND(0,6)
 		if serge_textb = 0:$serge_textb = 'When you ask about Vasily''s mother, Sergey shrugs: "It''s a short story, really. I met Vasily''s mother at my graduation party. We all got drunk and she and I had some fun. When she turned out to be pregnant, we got married. We didn''t have much of a say in the matter, that''s just how it worked back then. Shulga was born a few months after that. We tried to make it work, but she got bored and left me a year later when she got offered a job abroad, leaving Shulga with me. I haven''t heard from her since. It''s fine, though... me and him managed just fine, without her."'
@@ -74,12 +74,12 @@ The secretary blushes as she begins to unbutton her shirt, and replies: "For 100
 		'Sergey is relaxing on his bed, watching some TV.' 
 		dynamic $serg_bazar_rep
 		if sergebazar_count <= 0:'Sergey seems a tad annoyed when he says: "Not now, <<$pcs_nickname>>! Sorry, but this important match just started and I really want to watch it."'
-		if serge_shulgin < 30 and sergebazar_count > 0:'<<$serge_textb>>'
-		if serge_shulgin > 50 and sergebazar_count > 0:'<<$serge_textb2>>'
+		if npc_rel['A112'] < 30 and sergebazar_count > 0:'<<$serge_textb>>'
+		if npc_rel['A112'] > 50 and sergebazar_count > 0:'<<$serge_textb2>>'
 		act 'Continue': gt 'Serge_Shulgin','tv'
 	end
 
-	if serge_shulgin > 30: 
+	if npc_rel['A112'] > 30: 
 		act 'Lie down next to him and watch TV together': dynamic $serge_tv
 	end
 end
@@ -91,8 +91,8 @@ if $ARGS[0] = 'sleep':
 		'Sergey is sound asleep.'
 	act 'Get out of bed': gt 'shulgabed'	
 	act 'Wake him up': 
-		if serge_shulgin < 50: dynamic $sleep_serge_otkaz
-		if serge_shulgin >= 50: dynamic $sleep_serge_soglasie
+		if npc_rel['A112'] < 50: dynamic $sleep_serge_otkaz
+		if npc_rel['A112'] >= 50: dynamic $sleep_serge_soglasie
 	end
 end
 !--------------------!
@@ -101,7 +101,7 @@ end
 $sleep_serge_otkaz = {
 	cla
 	minut += 2
-	serge_shulgin -=1
+	npc_rel['A112'] -=1
 	gs'stat'
 	'Sergey rubs his eyes, a bit irritated that you woke him up: "What do you want, <<$pcs_nickname>>? You really shouldn''t be waking me up, I need my sleep!"'
 	'You bite your lip, feeling bad for waking him up. You ask him: "Sorry, uncle Sergey. Would you mind if I take a nap with you?"'
@@ -120,14 +120,14 @@ $sleep_serge_soglasie = {
 	'He sighs and wordlessly moves over to one side of the bed, offering you the other half while he clutches his pillow.'
 	act 'Take a nap': dynamic $sleep_serge_bed
 	
-	if serge_shulgin >= 50 and mesec <= 0: act 'Try to arouse him': dynamic $sleep_prstsex
+	if npc_rel['A112'] >= 50 and mesec <= 0: act 'Try to arouse him': dynamic $sleep_prstsex
 }
 !---------------------------------------!
 !Sleep next to Sergey!
 !---------------------------------------!
 $sleep_serge_bed = {
 	cla
-	serge_shulgin += 1
+	npc_rel['A112'] += 1
 	if pcs_sleep < 75:
 		pcs_sleep += 25
 	else
@@ -148,11 +148,11 @@ $sleep_prstsex = {
 	'<center><img src="images/locations/pavlovsk/resident/apartment/shulginhome/smroom/event/vert/dr'+rand(1,6)+'.gif"></center>'
 	'You idly rub your hands over your body, occasionally touching his groin or chest to make sure you have his attention. When you let out a soft moan, you can feel him stirring next to you in the bed; he''s definitely paying attention to you now! You secretly smile to yourself: he''s such a typical guy... all you have to do is rub your tits and ass a little, and there''s no way he can resist your charms!'
 randnamek=rand(1,100)
-	if serge_sleep_sex_count > 0 and serge_shulgin >= 70 and randnamek < 80: dynamic $sleep_nameksex_oral
-	if serge_sleep_sex_count > 0 and serge_shulgin >= 70 and randnamek >= 80 and randnamek <= 90: dynamic $sleep_nameksex_rought
-	if serge_sleep_sex_count > 0 and serge_shulgin >= 70 and randnamek > 90: dynamic $sleep_nameksex_lick	
-	if serge_sleep_sex_count <= 0 and serge_shulgin >= 70: dynamic $serge_sleep_sex_perebor
-	if serge_shulgin >=50 and serge_shulgin <70: dynamic $sleep_nameksex_otkaz	
+	if serge_sleep_sex_count > 0 and npc_rel['A112'] >= 70 and randnamek < 80: dynamic $sleep_nameksex_oral
+	if serge_sleep_sex_count > 0 and npc_rel['A112'] >= 70 and randnamek >= 80 and randnamek <= 90: dynamic $sleep_nameksex_rought
+	if serge_sleep_sex_count > 0 and npc_rel['A112'] >= 70 and randnamek > 90: dynamic $sleep_nameksex_lick	
+	if serge_sleep_sex_count <= 0 and npc_rel['A112'] >= 70: dynamic $serge_sleep_sex_perebor
+	if npc_rel['A112'] >=50 and npc_rel['A112'] <70: dynamic $sleep_nameksex_otkaz	
 }
 !-------------------------------------------------------------------------!
 !if relation<70, Sergey refuses to have sex with you!
@@ -646,7 +646,7 @@ rndtv=rand(1,100)
 		if rndtv <= 10:'<center><img src="images/locations/pavlovsk/resident/apartment/shulginhome/tv/tvrekl'+rand(1,4)+'.gif" width="748" height="540"></center> Ugh, commercials...'
 		act 'Get out of bed': gt 'shulgabed'
 		act 'Change the channel': dynamic $serge_tv
-		if serge_shulgin > 50:
+		if npc_rel['A112'] > 50:
 			act 'Switch to the porn channel': 
 				cls
 				pcs_horny += 10
@@ -658,7 +658,7 @@ rndtv=rand(1,100)
 					'You feel Sergey''s body shifting a lot during a particularly rough part of the porn scene, and he''s awkwardly covering his groin with his hands. The large bulge in his pants gives away his obvious erection anyway.'
 				end	
 				act 'Get out of bed': gt 'shulgabed'	
-				if serge_shulgin > 70 and pcs_horny > 30 and mesec <= 0: 
+				if npc_rel['A112'] > 70 and pcs_horny > 30 and mesec <= 0: 
 					act 'Molest Sergey': dynamic $sleep_prstsex
 				end
 			end
