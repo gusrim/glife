@@ -1,5 +1,6 @@
 # swamphouse
 
+
 if $ARGS[0] = 'start' or $ARGS[0] = '':
 	$location_type = 'indoors'
 	$metkaM = $ARGS[0]
@@ -15,6 +16,8 @@ if $ARGS[0] = 'start' or $ARGS[0] = '':
 	LColor = RGB(106,90,205)
 	hantslutsexrand = rand(1,3)
 	temp = rand(1,5)
+	clothesAtLocation = FUNC('lost_clothes_here',$CURLOC)
+	clothesOnLine = FUNC('lost_clothes_here','clothesline_swamp')
 
 	'<center><H4>Hut</H4></center>'
 	'<center><img src="images/locations/gadukino/hunters/swampizba.jpg"></center>'
@@ -28,8 +31,8 @@ if $ARGS[0] = 'start' or $ARGS[0] = '':
 	if swamp_enema = 1:'You found an enema syringe on the shelf.'
 	'In the other corner you see a small <a href="exec: gs ''swamphouse'', ''stove''">stove</a>. There is running water and some mushrooms so you can cook simple food. You can also warm the water so you can bathe in the basin.'
 	'Beside the stove, there''s a stack of old <a href="exec: gs ''swamphouse'', ''stackmagazines''">magazines</a>, most likely used for ignition.'
-	if clothesswamphouse = 1 and clearclothes = 0:'Your clothes hang on the shelf.'
-	if clearclothes > 0 and clearclothesH = 1: 'Your clothes are drying above the stove.'
+	if clothesAtLocation = 1 and clearclothes = 0:'Your clothes are laying on the shelf.'
+	if clearclothes > 0 and clothesOnLine = 0: 'Your clothes are drying above the stove.'
 	if hour = 20 and hanters = 1 and hantersKnow > 0 or hour = 7 and hanters = 1 and hantersKnow > 0:'The <a href="exec:gs ''swamphouse'', ''hanterstable''">hunters</a> are sitting around the table.'
 	if hour > 20 and hour < 23 and hanters = 1 and hantersKnow > 0:'You see the <a href="exec:gs ''swamphouse'', ''hantersrelax''">hunters</a> hanging in the hut.'
 	if hour = 23 and hanters = 1 and hantersKnow > 0 or hour >= 0 and hour < 7 and hanters = 1 and hantersKnow > 0:'The hunters are sleeping on the couch.'
@@ -73,8 +76,7 @@ if $ARGS[0] = 'start' or $ARGS[0] = '':
 				*clr
 				if $clothingworntype ! 'nude':
 					flag_tanga = tanga
-					clothesswamphouse = 1
-					gs 'clothing', 'strip'
+					gs 'clothing', 'strip', $CURLOC
 				end
 				swamp_clothes = 0
 				minut+=5
@@ -93,12 +95,11 @@ if $ARGS[0] = 'start' or $ARGS[0] = '':
 			end
 		end
 	end
-	if clothesswamphouse = 1 and clearclothes = 0:
+	if clothesAtLocation = 1 and clearclothes = 0:
 		!clothes are ready
 		if $clothingworntype = 'nude':
 			act 'Get dressed':
-				gs 'clothing', 'wear', $lastwornclothingtype, lastwornclothingnumber
-				clothesswamphouse = 0
+				gs 'recover_lost_clothes', $CURLOC, 1
 				swamp_clothes = 0
 				tanga = flag_tanga
 				gt 'swamphouse', 'start'
@@ -107,7 +108,25 @@ if $ARGS[0] = 'start' or $ARGS[0] = '':
 			act 'Pick up your clothes':
 				cla
 				*clr
-				clothesswamphouse = 0
+				gs 'recover_lost_clothes', $CURLOC
+				'You picked up your clothes.'
+				act 'Back': gt $loc, $metka
+			end
+		end
+	elseif clothesOnLine = 1 and clearclothes = 0:
+		!clothes are ready
+		if $clothingworntype = 'nude':
+			act 'Get dressed':
+				gs 'recover_lost_clothes', 'clothesline_swamp', 1
+				swamp_clothes = 0
+				tanga = flag_tanga
+				gt 'swamphouse', 'start'
+			end
+		else
+			act 'Pick up your clothes':
+				cla
+				*clr
+				gs 'recover_lost_clothes', 'clothesline_swamp'
 				'You picked up your clothes.'
 				act 'Back': gt $loc, $metka
 			end
@@ -150,7 +169,7 @@ if $ARGS[0] = 'start' or $ARGS[0] = '':
 		end
 	end
 
-	if dirty_swamphouse > 25:act 'Clean the hut':hanterslut -= 1 & gs 'swamphouse', 'dirty_swamphouse'
+	if dirty_swamphouse > 25:act 'Clean the hut':hanterslut -= 1 & dynamic $dirty_swamphouse
 
 	act 'Go outside':hanter_refuse = 0 & minut += 5 & gt'swamp_yard'
 	!sex with Igor
@@ -366,14 +385,13 @@ if $ARGS[0] = 'start' or $ARGS[0] = '':
 			'<center><img src="images/locations/gadukino/hunters/swamphousenude.jpg"></center>'
 			'You hear the hunters nearing the hut, grabbing the handle, about to open the door. You quickly hide your privare parts behind the hands...'
 
-			if clothesswamphouse = 1 and clearclothes = 0:
+			if (clothesAtLocation = 1 or clothesOnLine = 1) and clearclothes = 0:
 				act'Get dressed':
 					cla
 					*clr
-					clothesswamphouse = 0
 					minut += 5
 					tanga = flag_tanga
-					gs 'clothing', 'wear', $lastwornclothingtype, lastwornclothingnumber
+					gs 'clothing', 'recover_lost_clothes', $CURLOC
 					!tkan_cloth = 0
 
 					'<center><img src="images/locations/gadukino/hunters/swampdvornude1.jpg"></center>'
@@ -386,7 +404,6 @@ if $ARGS[0] = 'start' or $ARGS[0] = '':
 					*clr
 					minut+=5
 					swamp_clothes = 1
-					gs 'clothing', 'wear', $lastwornclothingtype, lastwornclothingnumber
 					'<center><img src="images/locations/gadukino/hunters/tkan_cloth.jpg"></center>'
 					'You look around searching for your clothes but can''t seem to find them, instead you hide behind a piece of burlap... It''s better than nothing.'
 					act'Further':gt'swamphouse', 'start'
@@ -666,7 +683,7 @@ if $ARGS[0] = 'basin':
 		    act 'Further':gt 'swamphouse', 'start'
 	    end
     end
-    if hotwater = 1  and dirtyclothes = 1 and $clothingworntype = 'nude' and clothesswamphouse = 1:
+    if hotwater = 1  and dirtyclothes = 1 and ($clothingworntype = 'nude' and clothesAtLocation = 1) or ($clothingworntype ! 'nude' and clothesAtLocation = 0 and clothesOnLine = 0):
 		!fix logic and remove clearclothesH. cloth may only appear in swamphouse or backwater, so fit it. by illume
         act 'Wash your clothes (1:00)':
 	        cla
@@ -681,15 +698,15 @@ if $ARGS[0] = 'basin':
 	            '<center><img src="images/locations/gadukino/hunters/basinwash.jpg"></center>'
 	        else
                 '<center><img src="images/locations/gadukino/new/Washclothes1.jpg"></center>'
-            end
-	        'You undress and wash your dirty clothes.'
+                 'You undress and wash your dirty clothes.'
+            end	       
 
 	        act 'Hang your clothes in the hut':
 	            cla
 		        *clr
 	            minut += 5
 	            clearclothes = 5
-	            clearclothesH = 1
+	            gs 'clothing', 'strip', $CURLOC
 	            if $clothingworntype = 'nude':
 	                '<center><img src="images/locations/gadukino/hunters/basinwash1.jpg"></center>'
 	            else
@@ -699,13 +716,13 @@ if $ARGS[0] = 'basin':
 
 	            act 'Further':gt 'swamphouse', 'start'
 	        end
-            if month >= 5 and month <= 9:
+            if month >= 5 and month <= 9 and clothesOnLine = 0:
 	            act 'Hang the clothes on a clothesline':
 	                cla
 		            *clr
 	                minut += 10
 	                clearclothes = 3
-	                clearclothesH = 0
+					gs 'clothing', 'strip', 'clothesline_swamp'
 
 	                if $clothingworntype = 'nude':
 	                    '<center><img src="images/locations/gadukino/hunters/basinwash2.jpg"></center>'
@@ -1786,7 +1803,7 @@ if $ARGS[0] = 'hantersmokBJ':
 	end
 end
 
-if $ARGS[0] = 'dirty_swamphouse':
+$dirty_swamphouse = {
 	cla
 	*clr
 	if dirty_swamphouse > 10:minut += 60 & pcs_sweat += 10
@@ -1802,7 +1819,9 @@ if $ARGS[0] = 'dirty_swamphouse':
 	'After a while you''ve finished cleaning and put back everything in order again. You''re quite pleased with yourself.'
 
     act 'Further':dirty_swamphouse = 0 & gt'swamphouse', 'start'
-end
+}
+
+
 
 
 --- swamphouse ---------------------------------
