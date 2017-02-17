@@ -1,6 +1,8 @@
 # clothing
 
 
+
+
 $clothing_list_line = {
 	!! a single line in a clothing list (wardrobe, etc)
 	!! ARGS 0 - action type (wardrobe, sell, resize, store, forsale)
@@ -57,7 +59,7 @@ $clothing_list_line = {
 		if StoryLine = 1 and SchoolAtestat = 0 and SchoolBlock = 0 and $ARGS[1] = 'school' and ARGS[2] = 6:
 			$RESULT += ' <a href="exec:gs ''clothing'', ''wear'', ''<<$ARGS[1]>>'', <<ARGS[2]>> & gt ''clothing'', ''view_clothing_list'', ''wardrobe''">Wear</a></TD>'
 		elseif ($ARGS[1] ! 'coat' and $ARGS[1] ! 'swimwear') and dyneval('RESULT = <<$ARGS[1]>>H[<<ARGS[2]>>]') > 0:
-			if $ARGS[1] ! 'exercise' and CloStyle ! 5 and (dyneval('RESULT = <<$ARGS[1]>>B[<<ARGS[2]>>]') < (pcs_hips - 8) or dyneval('RESULT = <<$ARGS[1]>>B[<<ARGS[2]>>]') > (pcs_hips + 8)):
+			if $ARGS[1] ! 'exercise' and CloStyle ! 5 and (dyneval('RESULT = <<$ARGS[1]>>B[<<ARGS[2]>>]') < (pcs_hips - 8) or dyneval('RESULT = <<$ARGS[1]>>B[<<ARGS[2]>>]') > (pcs_hips + 8)) or (ARRPOS('$CloLosTyp', $ARGS[1]) ! -1 and ARRPOS('CloLosNum',ARGS[2]) ! -1):
 				$RESULT += '</TD>'
 			else
 				$RESULT += ' <a href="exec:gs ''clothing'', ''wear'', ''<<$ARGS[1]>>'', <<ARGS[2]>> & gt ''clothing'', ''view_clothing_list'', ''wardrobe''">Wear</a></TD>'
@@ -101,10 +103,7 @@ if $ARGS[0] = 'view_clothing_list':
 	!! ARGS 2 - brothel flag (brothel)
 
 	!access locker means you are out of swamp and find road now, disable effect, and get all cloth back
-	dirtyclothes = 0
-	clothesswamphouse = 0
-	clothesbackwater = 0
-	clothesforest = 0
+	dirtyclothes = 0	
 	swamp_clothes = 0
 	
 	act 'Leave':gt $loc, $metka
@@ -381,6 +380,8 @@ if $ARGS[0] = 'view_clothing_item':
 		
 			if CloExhibit > pcs_exhibition:
 				'You don''t feel confident enough to wear an outfit this revealing.'
+			elseif ARRPOS('$CloLosTyp', $ARGS[2]) ! -1 and ARRPOS('CloLosNum',ARGS[3]) ! -1 :
+				'You lost these clothes somewhere, maybe you can find them again?.'				
 			else
 				act 'Wear':
 					gs 'clothing', 'wear', $ARGS[2], ARGS[3]
@@ -449,6 +450,7 @@ if $ARGS[0] = 'view_clothing_item':
 end
 
 if $ARGS[0] = 'strip':
+	!$ARGS[1] = location when stripping outdoors
 	if $clothingworntype = 'nude': exit
 	cumspclnt = 6
 	gs 'cum_cleanup'
@@ -457,9 +459,23 @@ if $ARGS[0] = 'strip':
 	else
 		last_vid = 0
 	end
+	
 	if $clothingworntype = 'school':schtype = clothingwornnumber
-	$lastwornclothingtype = $clothingworntype
-	lastwornclothingnumber = clothingwornnumber
+		
+	if $ARGS[1] ! '' :	
+		DYNAMIC '$CloLos<<$clothingworntype>>[<<clothingwornnumber>>]=''<<$ARGS[1]>>'''		
+		$CloLosLoc[] = $ARGS[1]			
+		$CloLosTyp[$ARGS[1]] = $clothingworntype		
+		CloLosNum[$ARGS[1]] = clothingwornnumber
+		CloLosDay[$ARGS[1]] = daystart
+		KILLVAR '$lastwornclothingtype'
+		KILLVAR 'lastwornclothingnumber'
+	else
+		$lastwornclothingtype = $clothingworntype
+		lastwornclothingnumber = clothingwornnumber
+	end
+	
+
 	$clothingworntype = 'nude'
 	clothingwornnumber = 0
 	CloQuality = 0
@@ -494,7 +510,41 @@ if $ARGS[0] = 'strip':
 	! WD: Bimbo look
 	cloth_vid = 0
 	exhibiHideNewCloth = 0
+end
 
+
+if $ARGS[0] = 'recover_lost_clothes':
+	!$ARGS[1] = location
+	!ARGS[2] = 1 : wear the clothes, ARGS[2] = 2 : Return to shop (lost FOREVAH!)
+	$cloLoc = $ARGS[1]
+	cloAction = ARGS[2]
+	
+	$clothType = $CloLosTyp[$cloLoc]		
+	clothNumber = CloLosNum[$cloLoc]
+	dayLost = CloLosDay[$cloLoc]
+		
+	DYNAMIC 'KILLVAR ''$CloLos<<$clothingworntype>>'', <<clothingwornnumber>>'
+	findLocInd = ARRPOS('$CloLosTyp', $clothType)
+	KILLVAR '$CloLosTyp', findLocInd
+	findLocInd = ARRPOS('CloLosNum', clothNumber)
+	KILLVAR 'CloLosNum', findLocInd		
+	findLocInd = ARRPOS('CloLosDay', CloLosDay[$cloLoc])
+	KILLVAR 'CloLosDay', findLocInd
+	findLocInd = ARRPOS('$CloLosLoc', $cloLoc)
+	KILLVAR '$CloLosLoc', findLocationIndex
+	KILLVAR 'findLocInd'
+	
+	if cloAction = 1:
+		gs 'clothing', 'wear', $clothType, clothNumber
+		if dayLost < daystart and  $cloLoc ! 'swamphouse' : dirtyclothes = 1
+	elseif cloAction = 2 :
+		dynamic $clothType + 'S[<<clothNumber>>] = 1'
+	end
+	
+	KILLVAR '$cloLoc'
+	KILLVAR 'cloAction'
+	KILLVAR '$clothType'
+	KILLVAR 'clothNumber'
 end
 
 if $ARGS[0] = 'wear':
@@ -613,6 +663,7 @@ end
 if $ARGS[0] = 'wear_last_worn':
 	gs 'clothing', 'wear', $lastwornclothingtype, lastwornclothingnumber
 end
+
 
 --- clothing ---------------------------------
 
