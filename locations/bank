@@ -60,7 +60,7 @@ if $ARGS[0] = 'start':
 			kartaIN = input ("How much money you want to deposit into the account?")
 
 			if kartaIN <= 0 or kartaIN > money:
-				'Not correct operation.'
+				'That is not a valid operation.'
 			else
 				karta += kartaIN
 				money -= kartaIN
@@ -70,7 +70,7 @@ if $ARGS[0] = 'start':
 					bankDebtLimit = 5000
 				end
 				
-				'<br>You put on the account <<kartaIN>> <b>₽</b>, now you have <<karta>> <b>₽</b> on it.'
+				'<br>You deposited <<kartaIN>> <b>₽</b>, your account balance is now <<karta>> <b>₽</b>.'
 			end
 
 			act 'Move away':gt 'bank', 'start'
@@ -84,13 +84,18 @@ if $ARGS[0] = 'start':
 			kartaOUT = input ("How much do you want to withdraw from account?")
 
 			if kartaOUT <= 0 or kartaOUT > karta + bankDebtLimit:
-				'Not correct operation.'
+				'That is not a valid operation.'
 			else
 				karta -= kartaOUT
 				money += kartaOUT
-				'<br>You debited <<kartaOUT>> <b>₽</b>, now you have <<karta>> <b>₽</b> on it.'
+				if karta > 0:
+					'<br>You withdraw <<kartaOUT>> <b>₽</b>. You have <<karta>> <b>₽</b> left in your bank account.'
+				elseif karta = 0:
+					'<br>You withdraw <<kartaOUT>> <b>₽</b>. You have no money left in your bank account.'
+				else
+					'<br>You withdraw <<kartaOUT>> <b>₽</b>. <font color="red">Your bank account is overdrawn by <b><<karta>> ₽</b>.</font>'
+				end
 			end
-
 			act 'Move away':gt 'bank', 'start'
 		end
 	end
