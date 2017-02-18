@@ -550,13 +550,33 @@ if pcs_horny < 0:pcs_horny = 0
 !!------------------------------------------------------------------------------------------------------------
 
 !!Exhibitionism
+
+if exhibition_outdoors > 0:
+	if exhibition_outdoors <= 5:
+		exhibition_exp += rand(2,5)
+	elseif exhibition_outdoors <= 10:
+		exhibition_exp += rand(3,6)
+	elseif exhibition_outdoors <= 15:
+		exhibition_exp += rand(4,8)
+	elseif exhibition_outdoors <= 20:
+		exhibition_exp += rand(5,10)
+	elseif exhibition_outdoors <= 25:
+		exhibition_exp += rand(7,12)
+	elseif exhibition_outdoors <= 30:
+		exhibition_exp += rand(8,15)
+	else
+		exhibition_exp += rand(10,16)
+	end
+end
+
+exhibition_outdoors = 0
+
 if pcs_exhibition = 0:
 	if exhibition_exp >= 10: pcs_exhibition = 1 & exhibition_exp -= 10
 else
 	if exhibition_exp >= 10 * pcs_exhibition: exhibition_exp -= 10 * pcs_exhibition & pcs_exhibition += 1
 end	
-if pcs_exhibition > 50 and exhibition_QW = 0: pcs_exhibition = 50
-
+if pcs_exhibition > 50 and exhibition_QW < 3: pcs_exhibition = 50
 
 !counter for Dimka avoidance
 if dimaFilm = 1 and dimaRudeBlock = 0:
@@ -931,7 +951,7 @@ killvar 'holyday'
 killvar 'kanikuli'
 if storyline = 1:
 !!Party refresh if you didn''t see sis
-	if week = 1:
+	if week = 1 and sisboyparty ! 2:
 		if sisboyparty = -1: sisboyparty = 1
 
 		if sisboypartyQW >= 2 and sisboyparty > 0:
@@ -1086,6 +1106,17 @@ if Mira_no > 0: Mira_no -= 1
 if Mira_no < 0: Mira_no = 0
 if catout ! 0: catout = 0
 if feedcat ! 0: feedcat = 0
+
+loc_count = ARRSIZE('$CloLosLoc')
+i = loc_count - 1
+:loopCloLoc	
+	$CloLoc = $CloLosLoc[i]
+	CloLostOn = CloLosDay[$CloLoc]
+	if CloLostOn + RAND(7,14) < daystart :		
+		gs 'clothing', 'recover_lost_clothes', $CloLoc, 2			
+	end
+	i -=1
+if i > -1 :jump 'loopCloLoc'
 
 --- cikl ---------------------------------
 

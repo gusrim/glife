@@ -1,14 +1,16 @@
 # backwater
 
+
 $location_type = 'secluded'
 $metka = $ARGS[0]
 $loc = $CURLOC
 gs 'gadukino_event', 'sound'
 cls
 gs'stat'
+clothesAtLocation = FUNC('lost_clothes_here',$CURLOC)
 
 !events before everything
-if $clothingworntype = 'nude' and hantersKnowSlut = 0 and hanters = 1 and hour > 8 and hour < 20:
+if $clothingworntype = 'nude' and hantersKnowSlut = 0 and hanters = 1 and hour > 8 and hour < 20 and hanterknowday < day:
     cla
 	*clr
 	minut += 5
@@ -17,13 +19,12 @@ if $clothingworntype = 'nude' and hantersKnowSlut = 0 and hanters = 1 and hour >
 	'<center><img src="images/locations/gadukino/hunters/hunter_looks.jpg"></center>'
 	'While cleaning yourself in the backwater, you suddenly get the feeling that you are not alone here. Turning around, you see one of the hunters. He''s just standing there watching you, his camouflage is almost indistinguishable compared to the bushes and trees.'    
 		
-	if clothesbackwater = 1 and clearclothes = 0 and $lastwornclothingtype ! 'nude':
+	if clothesAtLocation = 1 and clearclothes = 0 :
 	    act'Get dressed':
 		    cls
-			clothesbackwater = 0
 			minut += 5
 			tanga = flag_tanga
-			gs 'clothing', 'wear_last_worn'
+			gs 'clothing', 'recover_lost_clothes', $CURLOC, 1
 
 		    '<center><img src="images/locations/gadukino/hunters/swampbackwaternude1.jpg"></center>'
 		    'Noticing the hunter, you rush over to your clothes and begin dressed yourself in panic. As you get fully dressed, you look over your shoulder, expecting the hunter standing there, but there is no one there.'
@@ -68,17 +69,15 @@ else
 end
 
 'A small creek with relatively clean water. If the weather is warm you can clean yourself up. Also, if your clothes are dirty you can wash them here.'
-if clothesbackwater = 1:'Your clothes lie on the shore.'
+if clothesAtLocation = 1:'Your clothes lie on the shore.'
 
 !re-arrange it, there should be no logic error now by illume
-if clothesbackwater = 0:
+if clothesAtLocation = 0:
 	if $clothingworntype ! 'nude' and temper >= 15:
 		act'Undress':
 			if hantersKnowSlut > 0 or hanters = 0 or hour < 8 or hour >= 20 or modelfoto > 0 or film > 0 or pcs_dancero > 0 or stripdancesum > 0 or pcs_exhibition > 0 or guy > 4 or girl > 2:
 				cla
-				*clr			 
-				!clothing remains on location
-				clothesbackwater = 1
+				*clr			 								
 				minut+=5
 				flag_tanga = tanga
 				tanga = 0			
@@ -89,7 +88,7 @@ if clothesbackwater = 0:
 				else
 					'<center><img src="images/locations/gadukino/hunters/backwaterundress.jpg"></center>'			
 				end
-				gs 'clothing', 'strip'	
+				gs 'clothing', 'strip', $CURLOC
 				'You do not hesitate getting undressed, not caring if anyone is watching.'
 				act'Back':gt'backwater'		
 			else
@@ -102,19 +101,24 @@ if clothesbackwater = 0:
 		end
 	end
 else
-	if $clothingworntype = 'nude':
+	if $clothingworntype ! 'nude':
 		act 'Pick up your clothes':
 			cla
 			*clr
-			clothesbackwater = 0
+			gs 'clothing', 'recover_lost_clothes', $CURLOC
 			'You pick up your clothes laying on the ground.'
-			act 'Get dressed':
-				gs 'clothing', 'wear_last_worn'
-				clothesbackwater = 0
-				tanga = flag_tanga
-				gt $loc, $metka
-			end
+			gt $loc, $metka
 		end
+	else
+		act 'Get dressed':
+			cla
+			*clr
+			gs 'clothing', 'recover_lost_clothes', $CURLOC, 1
+			tanga = flag_tanga			
+			'You pick up your clothes laying on the ground and get dressed.'
+			gt $loc, $metka
+		end
+		
 	end
 end
 
@@ -139,7 +143,7 @@ if $clothingworntype = 'nude':
 
 		act 'Further':gt 'backwater'     
     end
-	if dirtyclothes = 1:
+	if dirtyclothes = 1 and clothesAtLocation = 1:
 		act 'Wash your clothes':
 			cla
 			*clr
@@ -156,10 +160,9 @@ if $clothingworntype = 'nude':
 	            cla
 		        *clr
 	            minut += 5
-	            clearclothes = 5
-	            clearclothesH = 1
-				clothesswamphouse = 1
-				clothesbackwater = 0
+	            clearclothes = 5	            
+				gs 'clothes','recover_lost_clothes',$CURLOC, 1
+				gs 'clothes', 'strip', 'swamphouse'
 	            if $clothingworntype = 'nude':
 	                '<center><img src="images/locations/gadukino/hunters/basinwash1.jpg"></center>'
 	            else
@@ -175,9 +178,8 @@ if $clothingworntype = 'nude':
 		            *clr
 	                minut += 10
 	                clearclothes = 3
-	                clearclothesH = 0
-					clothesswamphouse = 1
-	                clothesbackwater = 0
+	                gs 'clothes','recover_lost_clothes',$CURLOC, 1
+					gs 'clothes', 'strip', 'clothesline_swamp'
 	                if $clothingworntype = 'nude':
 	                    '<center><img src="images/locations/gadukino/hunters/basinwash2.jpg"></center>'
 	                else
@@ -272,11 +274,12 @@ if hantersRape = 2:
 	hantersRape = 3
 	gs 'stat'
 	
-	'<center><img src="images/locations/gadukino/hantersex/backwaterrelax.jpg"></center>'
+	'<center><img src="images/locations/gadukino/sex/hunter/backwaterrelax.jpg"></center>'
 	'You sit down by the shore, resting.'
 	
 	act 'Further':gt 'hanters'
 end
+
 
 --- backwater ---------------------------------
 
