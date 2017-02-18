@@ -782,15 +782,37 @@ klismaday1 = 0
 !!Not very realistic but wont make anyone too rich.
 
 if bankAccount = 1:
+	kartatotal = karta
+	:kartaloop
+	if kartatotal > 20000000:
+		kartacount += 1
+		largekarta[kartacount] = 20000000
+		kartatotal -= 20000000
+		jump 'kartaloop'
+	else 
+		largekarta[0] = kartatotal
+	end
 	if karta >= 2000000:
 		!! yearly interest of 2.3% recalculated into daily interest = 0.006% daily
-		smallmoneypos += (karta * 60)
+		intrate = 60
 	elseif karta >= 0:
-		!! yearly interest of ... recalculated into daily interest = 0.003% daily
-		smallmoneypos += (karta * 30)
+		!! yearly interest of 1.15% recalculated into daily interest = 0.003% daily	
+		intrate = 30
 	else
-		!! yearly overdraft interest of 20% recalculated into daily interest = 0.055% daily
-		smallmoneypos -= (karta * 550)
+		!! yearly overdraft interest of 20% recalculated into daily interest = 0.055% daily		
+		intrate = -550
+	end
+	:intloop
+	if kartacount > 0:
+		smallmoneypos += (largekarta[kartacount] * intrate)
+		if smallmoneypos >= 1000000 or smallmoneypos <= -1000000: karta += smallmoneypos / 1000000 & smallmoneypos = smallmoneypos mod 1000000
+		largekarta[kartacount] = 0
+		kartacount -= 1
+		jump 'intloop'
+	else
+		smallmoneypos += (largekarta[0] * intrate)
+		largekarta[0] = 0
+		if kartacount ! 0: kartacount = 0
 	end
 
 	if smallmoneypos >= 1000000 or smallmoneypos <= -1000000:
