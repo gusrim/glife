@@ -461,11 +461,44 @@ killvar 'know_no_pirat'
 	$npc_dna['A188'] = '1437373624 1498180021 1914707319 1923163911 1520364264 2110725762 1260967419'
 	$npc_dna['A189'] = '1492342621 1736208516 1680470700 1919367231 1804680320 1756178566 1187568265'
 	$npc_dna['A190'] = '1492342626 1736208516 1680470700 1919367231 1804680320 1756178566 1187568265'
+	$npc_dna['A191'] = '7140667332 7978651826 7440682263 1631105202 2145357995 1540785413 1172036362'
+	$npc_dna['A192'] = '7008670756 7958693370 7059741341 1566986214 1732880506 1281239619 1634169768'
+	$npc_dna['A193'] = '1086487692 7476661390 7698010724 1870038241 1870978496 1236988759 1677200479'
 	
 	if StoryLine = 1:
 		$pcs_dna = func('dna','generate',$npc_dna['A29'],$npc_dna['A35'])
 	else
 		$pcs_dna = func('dna','create')
+	end
+	
+	a = arrsize('npc_dob')
+	w = 0
+	:NpcDnaLoop
+		if $npc_pic['B<<w>>'] ! '':$npc_dna['B<<w>>'] = func('DNA','create')
+		if $npc_pic['C<<w>>'] ! '':$npc_dna['C<<w>>'] = func('DNA','create')
+	if w < a:w += 1 & jump 'NpcDnaLoop'
+	killvar 'w'
+	killvar 'a'
+	
+	if arrsize('$ChildFath') > 0:
+		i = 0
+		x = 0
+		j = arrsize('$ChildFath')-1
+		:kidDNAloop
+			$ChildFathDNA[i] = $npc_dna[$ChildFath[i]]
+			if $childtype[i] ! 'identical twin':
+				$kid_dna[i] = func('dna','generate',$pcs_dna,$ChildFathDNA[i])
+			elseif x = 0:
+				x = 1
+				$kid_dna[i] = func('dna','generate',$pcs_dna,$ChildFathDNA[i])
+			else
+				$kid_dna[i] = $kid_dna[i-1]
+				x = 0
+			end
+		if i < j: i += 1 & jump 'kidDNAloop'
+		killvar 'i'
+		killvar 'j'
+		killvar 'x'
 	end
 end
 }
