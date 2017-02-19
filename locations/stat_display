@@ -97,7 +97,13 @@ $stat_msg += '<BR>'
 $pockets = 'pockets'
 if bag > 0: $pockets = 'purse'
 $stat_msg += '<BR>You have <b><<money>> ₽</b> in your <<$pockets>>.'
-if karta > 0: $stat_msg += '<BR>You have <b><<karta>> ₽</b> in your bank account.'
+if bankAccount = 1:
+	if karta >= 0:
+		$stat_msg += '<BR>You have <b><<karta>> ₽</b> in your bank account.'
+	else
+		$stat_msg += '<BR><font color="red">Your bank account is overdrawn by <b><<karta>> ₽</b>!!</font>'
+	end
+end
 if stolmoney > 0: $stat_msg += '<BR>You have <b><<stolmoney>> ₽</b> in your desk drawer.'
 $stat_msg += '<BR>'
 
@@ -272,7 +278,7 @@ end
 if Enable_showrelation = 1:
 	st_count=0
 	$show_table=''
-	if nastjaqw > 0:gs'show_table','<<nastjaqw>> Nastja','2'
+	if npc_QW['A192'] > 0:gs'show_table','<<npc_QW['A192']>> Nastja','2'
 	if tanya > 0:gs'show_table','<<tanya>> Tanya','2'
 	if kat > 0:gs'show_table','<<kat>> Kate','2'
 	if vika > 0:gs'show_table','<<vika>> Vika','2'
@@ -301,11 +307,11 @@ if Enable_showrelation = 1:
 end
 	$stat_msg += '<BR>'
 
-if BuyHous = 2 and ArendHouseSL <= 0:'<font color="red"><b>The rent on your apartment expires today.</b></font>'
+if BuyHous = 2 and ArendHouseSL <= 0:'<font color="red"><b>The rent on your apartment is due today.</b></font>'
 
 if BuyHous = 2 and ArendHouseSL <= 0:
-	'<font color="red"><b>The rent on your apartment expires today.</b></font>'
-	if money >= 6000 or stolmoney >= 6000 or money + stolmoney >= 6000 or karta >= 6000:
+	'<font color="red"><b>The rent on your apartment is due today.</b></font>'
+	if money >= 6000 or stolmoney >= 6000 or money + stolmoney >= 6000 or karta + bankDebtLimit >= 6000:
 		*P ' Renew with '
 		if money >= 6000:
 			*P ' <a href="exec:money -= 6000 & housr = 1 & BuyHous = 2 & ArendHouseSL += 30" & gs ''$menu_obnovit''>cash</a>'
@@ -316,9 +322,13 @@ if BuyHous = 2 and ArendHouseSL <= 0:
 			*P ' <a href="exec:money -= 6000 - stolmoney & stolmoney = 0 & housr = 1 & BuyHous = 2 & ArendHouseSL += 30" & gs ''$menu_obnovit''>cash from purse and drawer</a>'
 		end
 		!from purse, drawer or both
-		if karta >= 6000: *P ' <a href="exec:karta -= 6000 & housr = 1 & BuyHous = 2 & ArendHouseSL += 30 & gs ''$menu_obnovit''">bank account</a>'
+		if karta >= 6000: 
+			*P ' <a href="exec:karta -= 6000 & housr = 1 & BuyHous = 2 & ArendHouseSL += 30 & gs ''$menu_obnovit''">bank account</a>'
+		elseif karta + bankDebtLimit >= 6000: 
+			*P ' <a href="exec:karta -= 6000 & housr = 1 & BuyHous = 2 & ArendHouseSL += 30 & gs ''$menu_obnovit''">bank account, but you will be overdrawn.</a>'
+		end	
 	else
-		*P ' But you can''t afford to renew the lease.'
+		*P ' But you can''t afford to pay the rent.'
 	end
 end
 
@@ -482,9 +492,9 @@ jump 'statDswt<<pcs_sweat/10>>'
 
 if dirtyclothes = 1:
 	if pcs_sweat > 40:
-		$stat_msg +='<br><font color = red>You from head to toe <a href="exec:view''images/locations/gadukino/Swamp/dirtyclothes1.jpg''">smeared</a> in the mud.</font><BR>'
+		$stat_msg +='<br><font color = red>You from head to toe <a href="exec:view''images/locations/gadukino/hunters/dirtyclothes1.jpg''">smeared</a> in the mud.</font><BR>'
 	else
-		$stat_msg +='<br><font color = red>Your <a href="exec:view''images/locations/gadukino/Swamp/dirtyclothes2.jpg''">cloth</a> is dirty.</font><BR>'
+		$stat_msg +='<br><font color = red>Your <a href="exec:view''images/locations/gadukino/hunters/dirtyclothes2.jpg''">cloth</a> is dirty.</font><BR>'
 	end
 end
 

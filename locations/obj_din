@@ -266,22 +266,26 @@ if $ARGS[0] = 'stats_gen':
 	nl
 	if opPRE = 0:pl 'It has been <<daystart>> days since the game started.'
 	nl
-	if BuyHous = 2 and ArendHouseSL >0:pl 'You have rented an apartment in the residential area for <<ArendHouseSL>> days.' & nl
-
 	if BuyHous = 2 and ArendHouseSL >0:
 		pl 'You have rented an apartment in the residential area for <<ArendHouseSL>> days.'
-			if money >= 6000 or stolmoney >= 6000 or money + stolmoney >= 6000 or karta >= 6000:
+		if money >= 6000 or stolmoney >= 6000 or money + stolmoney >= 6000 or karta + bankDebtLimit >= 6000:
 			*P ' Renew with '
 			if money >= 6000:
-				*P ' <a href="exec:money -= 6000 & housr = 1 & BuyHous = 2 & ArendHouseSL += 30 & gs ''obj_din'', ''stats''">cash</a>'
+				*P ' <a href="exec:money -= 6000 & housr = 1 & BuyHous = 2 & ArendHouseSL += 30" & gs ''$menu_obnovit''>cash</a>'
 			elseif stolmoney >= 6000:
-				*P ' <a href="exec:stolmoney -= 6000 & housr = 1 & BuyHous = 2 & ArendHouseSL += 30 & gs ''obj_din'', ''stats''">cash from drawer</a>'
+				*P ' <a href="exec:stolmoney -= 6000 & housr = 1 & BuyHous = 2 & ArendHouseSL += 30" & gs ''$menu_obnovit''>cash from drawer</a>'
 			elseif money + stolmoney >= 6000:
 				!both < 6000, so money = money - 6000 + stolmoney
-				*P ' <a href="exec:money -= 6000 - stolmoney & stolmoney = 0 & housr = 1 & BuyHous = 2 & ArendHouseSL += 30 & gs ''obj_din'', ''stats''">cash from purse and drawer</a>'
+				*P ' <a href="exec:money -= 6000 - stolmoney & stolmoney = 0 & housr = 1 & BuyHous = 2 & ArendHouseSL += 30" & gs ''$menu_obnovit''>cash from purse and drawer</a>'
 			end
 			!from purse, drawer or both
-			if karta >= 6000: *P ' <a href="exec:karta -= 6000 & housr = 1 & BuyHous = 2 & ArendHouseSL += 30 & gs ''obj_din'', ''stats''">bank account</a>'
+			if karta >= 6000: 
+				*P ' <a href="exec:karta -= 6000 & housr = 1 & BuyHous = 2 & ArendHouseSL += 30 & gs ''$menu_obnovit''">bank account</a>'
+			elseif karta + bankDebtLimit >= 6000: 
+				*P ' <a href="exec:karta -= 6000 & housr = 1 & BuyHous = 2 & ArendHouseSL += 30 & gs ''$menu_obnovit''">bank account, but you will be overdrawn.</a>'
+			end	
+		else
+			*P ' But you can''t afford to pay the rent right now.'
 		end
 		nl
 	end
@@ -305,7 +309,7 @@ if $ARGS[0] = 'stats_gen':
 	end
  	if workPTU > 1:pl 'Reputation as a teacher <<teachlevel>>'
 	nl
-	if nastjaQW > 0:pl 'Friendship with Nastya <<nastjaqw>>'
+	if npc_QW['A192'] > 0:pl 'Friendship with Nastya <<npc_QW['A192']>>'
 	if tanya > 0:pl 'Friendship with Tanya <<tanya>>'
 	if kat > 0:pl 'Friendship with Kate <<kat>>'
 	if vika > 0:pl 'Friendship with Vika <<vika>>'
@@ -320,7 +324,7 @@ if $ARGS[0] = 'stats_gen':
 	if trenerepa > 0:pl'Friendship with Mikhail Nikolaevich  <<trenerepa>>'
 
 	!!!WD: Formatting
-	if (Irina + Givi + Ashot + Tamara + Dmitry + afra + gosh + vika + kat + nastjaqw + tanya) > 0:nl
+	if (Irina + Givi + Ashot + Tamara + Dmitry + afra + gosh + vika + kat + npc_QW['A192'] + tanya) > 0:nl
 end
 
 if $ARGS[0] = 'stats_achievements':

@@ -1,5 +1,6 @@
 # swamp_yard
 
+
 $location_type = 'secluded'
 $metka = $ARGS[0]
 $loc = $CURLOC
@@ -190,7 +191,7 @@ if hanterhelp = 2 and hantersKnow = 0:
     end
     !swamp_clothes - temporary clothing if he came naked     
     if $clothingworntype = 'nude' and hantersKnowSlut = 0:
-        act 'Take the burlap':
+        act 'Take the burlap and walk away':
             cls 
             hanterhelp = 0
             swamp_clothes = 1
@@ -200,7 +201,7 @@ if hanterhelp = 2 and hantersKnow = 0:
 		    'You thank them and quickly cover yourself with the piece of burlap... It''s not much but it''s at least better than nothing.'
 		    act'Further':gt'swamp_yard'
         end
-        act 'Take the burlap':
+        act 'Take the burlap and stay':
             cls 
             hanterhelp = 0
             swamp_clothes = 1
@@ -233,7 +234,7 @@ if hanters > 0 and hantersKnow = 1 and hour >= 8 and hour < 20 and dirty_swampho
     if hantersKnowSlut = 0:'"<<$pcs_nickname>>," he says. "The house is a mess, could you take care of it?"'
     if hantersKnowSlut = 1:'"<<$pcs_nickname>>," he uses his sternly voice. "The house is a mess, clean it up."'
     
-    act 'Clean the hut':hanterslut -= 1 & dynamic $dirty_swamphouse 
+    act 'Clean the hut':hanterslut -= 1 & gt 'swamphouse', 'dirty_swamphouse' 
     if hantersKnowSlut = 0:
         act 'Refuse':
             cls
@@ -356,13 +357,12 @@ if $clothingworntype = 'nude' and swamp_clothes = 0 and hanters = 1 and hour >= 
         '<center><img src="images/locations/gadukino/hunters/swampdvornude.jpg"></center>'
 		'Seeing some men in the yard, you try to cover up your private parts...'
 		
-		if clothesswamphouse = 1 and clearclothes = 0 and $lastwornclothingtype ! 'nude':
+		if FUNC('lost_clothes_here','swamphouse') = 1 and clearclothes = 0 and $lastwornclothingtype ! 'nude':
 	        act'Get dressed':
 		        cls
-			    clothesswamphouse = 0
 			    minut += 5
 			    tanga = flag_tanga
-			    gs 'clothing', 'wear', $lastwornclothingtype, lastwornclothingnumber
+			    gs 'clothing', 'recover_lost_clothes', 'swamphouse'
 
 		        '<center><img src="images/locations/gadukino/hunters/swampdvornude1.jpg"></center>'
 		        'You rush inside the hut so you can get dressed.'
@@ -372,8 +372,7 @@ if $clothingworntype = 'nude' and swamp_clothes = 0 and hanters = 1 and hour >= 
             act'Dress':
                 cls
                 minut+=5
-           		swamp_clothes = 1
-		        gs 'clothing', 'wear', $lastwornclothingtype, lastwornclothingnumber
+           		swamp_clothes = 1		        
 		        '<center><img src="images/locations/gadukino/hunters/tkan_cloth.jpg"></center>'
 		        'You quickly rush inside the hut and hide behind a piece of burlap... It''s not much, but at least it''s better than nothing.'
 		        act'Further':gt'swamphouse'
@@ -1015,6 +1014,7 @@ $dirty_swamp_yard = {
 	
     act 'Further':dirty_swamp_yard = 0 & gt'swamp_yard'         
 }
+
 
 --- swamp_yard ---------------------------------
 
