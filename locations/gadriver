@@ -196,10 +196,8 @@ if $ARGS[0] = 'Gadbitch':
 						temp = RAND(0,15)
 						cumspclnt = 4 & gs 'cum_cleanup'
 						minut += 30
+						gs 'exercise', 'tier1', 1, 'stren_exp', 'exhibition_exp'
 						pcs_sweat = 10 + rand(0,4)
-						pcs_mood += 5			    
-						pcs_willpwr += 5
-						if pcs_stren < 30:stren_exp += 1
 						gs'stat'
 						
 						if $clothingworntype = 'swimwear':
@@ -229,10 +227,8 @@ if $ARGS[0] = 'Gadbitch':
 							temp = RAND(0,15)
 							cumspclnt = 4 & gs 'cum_cleanup'
 							minut += 30
+							gs 'exercise', 'tier1', 1, 'stren_exp'
 							pcs_sweat = 10 + rand(0,4)
-							pcs_mood += 5			    
-							pcs_willpwr += 5
-							if pcs_stren < 30:stren_exp += 1
 							gs'stat'
 						
 							'<center><img src="images/characters/village/mira/riverTwoGirls.jpg"></center>'
@@ -295,18 +291,17 @@ if $ARGS[0] = 'Gadbitch':
 
 	if temper >= 15 and month >= 5 and month <= 9:
 
-		if $clothingworntype = 'swimwear':
+		if $clothingworntype = 'swimwear' or $clothingworntype = 'nude':
 			act 'Go for a swim':
 				cla
 				*clr
 				cumspclnt = 4
 				gs 'cum_cleanup'
 				minut += 30
+				if $clothingworntype = 'nude': gs 'exercise', 'tier1', 1, 'stren_exp', 'exhibition_exp'
+				if $clothingworntype ! 'nude': gs 'exercise', 'tier1', 1, 'stren_exp'
 				pcs_sweat = 10 + rand(0,4)
-				pcs_mood += 5
-				pcs_willpwr += 5
 				temp = RAND(0,9)
-				if pcs_stren < 30:stren_exp += 1 + (steroid_dose - rand(0,steroid_dose)) & gs 'obj_din', 'steroids'
 				if hour >= 22 or hour <= 6:
 					if RAND(0,10) < 5 and MiraLoc = 1:
 						'<center><img src="images/characters/village/mira/rivertwogirls.jpg"></center>'
@@ -445,7 +440,7 @@ if $ARGS[0] = 'Gadbitch':
 			end
 		end
 		if hour >= 8 and hour < 20 and sunWeather = 1:
-			if $clothingworntype = 'swimwear':
+			if $clothingworntype = 'swimwear' or $clothingworntype = 'nude':
 				act 'Sunbathe (1:00)':
 					if Mira_no = 0 and MiraLoc ! 1 and rand(1,10) > 7 and hour > 8 and hour < 20 and sunWeather = 1 and temper >= 15:
 						cla
@@ -602,6 +597,9 @@ if $ARGS[0] = 'Gadbitch':
 		if $clothingworntype = 'swimwear':
 			cla
 			'You need to dress in regular clothes first.'
+			act'Return':gt'Gadriver', 'Gadbitch'
+		elseif $clothingworntype = 'nude':
+			'You need to put some clothes on first.'
 			act'Return':gt'Gadriver', 'Gadbitch'
 		else
 			minut += 5

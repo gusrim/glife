@@ -103,8 +103,13 @@ if $ARGS[0] = 'start':
 	if volleysostav > 0 and $clothingworntype = 'exercise':
 		if week ! 6 and volkomday ! daystart:
 			act 'Play with the team':gt 'gdksport', 'vball4'
-		elseif week = 6 and sorevday ! daystart:
+		elseif week = 6 and sorevday ! daystart and hour <= 18:
 			act 'Play in Tournament': gt 'gdksport', 'vball5'
+		elseif week = 6 and sorevday ! daystart and hour > 18:
+			'As you look around, you don''t see anyone from the team. You suddenly realize that there was a tournament game today and you were supposed to be here at 18:00! You missed the bus and the coach is going to be furious!'
+			npc_rel['A69'] -= 20
+			sorevday = daystart
+			act 'Back': gt 'gdksport', 'start'
 		elseif pregtime >= 90:
 			act 'Play with the team':gt 'gdksport', 'vballreact'
 		end
@@ -172,27 +177,24 @@ if $ARGS[0] = 'dance2':
 	cla
 	*clr
 	gsAboDance -= 1
-	minut += 120
-	fat -= 5
-
-	if pcs_agil< 50:agil_exp += rand(1, 3)
-	if pcs_agil >= 50 and pcs_agil < 80:agil_exp += rand(0, 2)
-	if pcs_agil >= 80:agil_exp += rand(0, 1)
-
-	pcs_mood -= 5
-	pcs_sweat += 30
-
-	if pcs_danc < pcs_agil and pcs_danc < 75:danc_exp += rand(0,2)
 
 	gs 'stat'
 	'<center><img src="images/locations/shared/gym/fit1.jpg"></center>'
 	if pcs_danc < 75:
+		timemult = 8
+		loopcount = 1
+		:timeloop
+		gs 'exercise', 'tier2', 0, 'agil_exp', 'danc_exp'
+		if loopcount < timemult: loopcount += 1 $ jump 'timeloop'
+		loopcount = 0
+		timemult = 0
+
 		'You take a lesson in modern dance, which is very popular with people your age.'
 
 		if pcs_danc < pcs_agil:
 			'Your skill still has a ways to go, but your agility helps you pull off some of the dance moves.'
 		else
-			'Your body lacks the agility to perform the dance moves as you was taught.'
+			'Your body lacks the agility to perform the dance moves that you are being taught.'
 		end
 
 		!place for use in events
@@ -395,13 +397,16 @@ end
 
 if $ARGS[0] = 'starlets':
 	cls
-	minut += 120
-	fat -= 5
-	agil_exp += rand(1, 3)
 
+	timemult = 8
+	loopcount = 1
+	:timeloop
+	gs 'exercise', 'tier2', 0, 'agil_exp', 'dancero_exp'
+	if loopcount < timemult: loopcount += 1 $ jump 'timeloop'
+	loopcount = 0
+	timemult = 0
 	pcs_mood -= 5
-	pcs_sweat += 30
-	dancero_exp += rand(1, 3)
+
 	gs 'stat'
 	'<center><img src="images/locations/shared/gym/fit1.jpg"></center>'
 
@@ -444,7 +449,13 @@ if $ARGS[0] = 'starlets':
 
 			act 'Do the show':
 				cls
-				minut += 120
+				timemult = 8
+				loopcount = 1
+				:timeloop
+				gs 'exercise', 'tier2', 0, 'agil_exp', 'danc_exp'
+				if loopcount < timemult: loopcount += 1 $ jump 'timeloop'
+				loopcount = 0
+				timemult = 0
 				money += albpayrand * 1000
 				dynamic $showerdin
 				profiDanceTime += 1
@@ -572,12 +583,14 @@ if $ARGS[0] = 'racing2':
 	cla
 	*clr
 	gsAboBeg -= 1
-	minut += 120
-	pcs_mood -= 5
+	timemult = 8
+	loopcount = 1
+	:timeloop
+	gs 'exercise', 'tier2', 0, 'run_exp'
+	if loopcount < timemult: loopcount += 1 $ jump 'timeloop'
+	loopcount = 0
+	timemult = 0
 
-	fat -= 5
-	pcs_sweat += 30
-	run_exp += rand(1,3)
 	gs 'stat'
 	'<center><img src="images/locations/shared/park/parkbeg.jpg"></center>'
 	'You spend 20 minutes on warm up, run for 90 minutes then spend 10 minutes on your cool down.'
@@ -593,44 +606,27 @@ if $ARGS[0] = 'vball2':
 	minut += 120
 
 	if alko = 0:
-		trenerepa += rand(0,2)
-		vball_exp += rand(1, 3)
-		run_exp += rand(0,2)
-
-		if pcs_agil < 50:
-			agil_exp += rand(1, 3)
-		elseif pcs_agil < 80:
-			agil_exp += rand(0, 2)
-		else
-			agil_exp += rand(0, 1)
-		end
-		if pcs_stren < 10:
-			stren_exp += rand(1, 3) + (steroid_dose - rand(0,steroid_dose)) & gs 'obj_din', 'steroids'
-		elseif pcs_stren < 20:
-			stren_exp += rand(1, 2) + (steroid_dose - rand(0,steroid_dose)) & gs 'obj_din', 'steroids'
-		elseif pcs_stren < 30:
-			stren_exp += 1 + (steroid_dose - rand(0,steroid_dose)) & gs 'obj_din', 'steroids'
-		elseif pcs_stren < 40:
-			stren_exp += rand(0, 1) + (steroid_dose - rand(0,steroid_dose)) & gs 'obj_din', 'steroids'
-		end
-		if pcs_vital < 10:
-			vital_exp += rand(1, 3) + (steroid_dose - rand(0,steroid_dose)) & gs 'obj_din', 'steroids'
-		elseif pcs_vital < 20:
-			vital_exp += rand(1, 2) + (steroid_dose - rand(0,steroid_dose)) & gs 'obj_din', 'steroids'
-		elseif pcs_vital < 30:
-			vital_exp += 1 + (steroid_dose - rand(0,steroid_dose)) & gs 'obj_din', 'steroids'
-		elseif pcs_vital < 40:
-			vital_exp += rand(0, 1) + (steroid_dose - rand(0,steroid_dose)) & gs 'obj_din', 'steroids'
-		end
+		npc_rel['A69'] += rand(0,2)
+		timemult = 8
+		loopcount = 1
+		:timeloop
+		gs 'exercise', 'tier2', 0, 'vball_exp', 'run_exp', 'agil_exp', 'stren_exp', 'vital_exp'
+		if loopcount < timemult: loopcount += 1 $ jump 'timeloop'
+		loopcount = 0
+		timemult = 0
+	else
+		timemult = 8
+		loopcount = 1
+		:timeloop
+		gs 'exercise', 'tier1', 0, 'run_exp'
+		if loopcount < timemult: loopcount += 1 $ jump 'timeloop'
+		loopcount = 0
+		timemult = 0
 	end
-
-	pcs_mood -= 5
-	fat -= 5
-	pcs_sweat += 30
 	gs 'stat'
 	'<center><img src="images/locations/pavlovsk/community/gym/volley/gdksport.jpg"></center>'
 	if alko = 0:'At the beginning of the workout you ran a few laps around the gym. After some sprints, you did abdominal exercises. Afterwards, you practiced volleying and serving the ball.'
-	if alko > 0: trenerepa -= rand(0,2) & 'You tried to train, but your level of intoxication doesn''t let you focus. The coach sent you to spend the lesson doing laps.'
+	if alko > 0: npc_rel['A69'] -= rand(0,2) & 'You tried to train, but your level of intoxication doesn''t let you focus. The coach sent you to spend the lesson doing laps.'
 
 	act 'Leave':gt 'gdksport', 'start'
 	act 'Speak to coach':gt 'Voltrener', 'start'
@@ -640,25 +636,18 @@ if $ARGS[0] = 'vball3':
 	cla
 	*clr
 	gsAboVolley -= 1
-	minut += 120
-
-	if alko = 0:
-		vball_exp += rand(1, 3)
-		agil_exp += rand(0,2)
-		if pcs_stren < 40:stren_exp += rand(0,2) + (steroid_dose - rand(0,steroid_dose)) & gs 'obj_din', 'steroids'
-		if pcs_vital < 40:vital_exp += rand(0,2) + (steroid_dose - rand(0,steroid_dose)) & gs 'obj_din', 'steroids'
-		run_exp += rand(1, 2)
-		pcs_dom += 1
-	end
-
-	pcs_mood -= 5
-	fat -= 5
-	pcs_sweat += 30
 	gs 'stat'
 	'<center><img src="images/locations/pavlovsk/community/gym/volley/gdksport.jpg"></center>'
 	'On Fridays they hold intramural competitions. Scouts for professional teams sometime come to see who the stronger and more talented players are.'
 
 	if alko = 0:
+		timemult = 8
+		loopcount = 1
+		:timeloop
+		gs 'exercise', 'tier2', 0, 'vball_exp', 'run_exp', 'agil_exp', 'stren_exp', 'vital_exp'
+		if loopcount < timemult: loopcount += 1 $ jump 'timeloop'
+		loopcount = 0
+		timemult = 0
 		if pcs_vball < 25:
 			'You were an absolutely lousy player and made constant mistakes. Eventually, the coach had enough and he removed you from the court.'
 		elseif pcs_vball < 50:
@@ -675,6 +664,7 @@ if $ARGS[0] = 'vball3':
 			end
 		end
 	else
+		minut += 120
 		'You took to the court, but kept missing plays because you were too drunk to focus. The coach noticed your state and removed you from the game.'
 	end
 	act 'Leave':gt 'gdksport', 'start'
@@ -685,16 +675,14 @@ if $ARGS[0] = 'vball4':
 	cla
 	*clr
 	volkomday = daystart
-	minut += 120
-	agil_exp += rand(1, 3)
-	if pcs_stren < 50:stren_exp += rand(1, 3) + (steroid_dose - rand(0,steroid_dose)) & gs 'obj_din', 'steroids'
-	if pcs_vital < 50:vital_exp += rand(1, 3) + (steroid_dose - rand(0,steroid_dose)) & gs 'obj_din', 'steroids'
-	pcs_mood -= 5
-	fat -= 5
-	pcs_sweat += 30
-	run_exp += rand(1, 2)
-	vball_exp += rand(1, 3)
-	trenerepa += 1
+	timemult = 8
+	loopcount = 1
+	:timeloop
+	gs 'exercise', 'tier2', 0, 'vball_exp', 'run_exp', 'agil_exp', 'stren_exp', 'vital_exp'
+	if loopcount < timemult: loopcount += 1 $ jump 'timeloop'
+	loopcount = 0
+	timemult = 0
+	npc_rel['A69'] += 1
 	pcs_dom += 1
 	gs 'stat'
 	'<center><img src="images/locations/pavlovsk/community/gym/volley/gdksport.jpg"></center>'
@@ -722,17 +710,17 @@ if $ARGS[0] = 'vball5':
 	if poverkomand = 0:poverkomand = 600
 	volltime = 0
 	sorevday = daystart
-	minut += 180
-	agil_exp += rand(1, 3)
-	if pcs_stren < 60:stren_exp += rand(1, 3) + (steroid_dose - rand(0,steroid_dose)) & gs 'obj_din', 'steroids'
-	if pcs_vital < 60:vital_exp += rand(1, 3) + (steroid_dose - rand(0,steroid_dose)) & gs 'obj_din', 'steroids'
-	pcs_mood -= 5
-	fat -= 5
-	pcs_sweat += 30
-	run_exp += rand(1, 2)
-	vball_exp += rand(1, 3)
+	if hour < 19: hour = 19
+	timemult = 8
+	loopcount = 1
+	:timeloop
+	gs 'exercise', 'tier2', 0, 'vball_exp', 'run_exp', 'agil_exp', 'stren_exp', 'vital_exp'
+	if loopcount < timemult: loopcount += 1 $ jump 'timeloop'
+	loopcount = 0
+	timemult = 0
 	pcs_dom += 1
-	trenerepa += 2
+	npc_rel['A69'] += 2
+	minut += 120 & !total time should be 4 hours, 2 hours for the game and 2 hours travel
 	gs 'stat'
 	'<center><img src="images/locations/pavlovsk/community/gym/volley/gdksport.jpg"></center>'
 	'You gathered your things together with the rest of the team and got on a bus that took you to the out of town match.'
@@ -807,7 +795,7 @@ if $ARGS[0] = 'volley':
 					cls
 					gs 'stat'
 
-					if trenerepa >= rand(0, 80):
+					if npc_rel['A69'] >= rand(0, 80):
 						volleysostav = 2
 						pcs_dom += 1
 						poverkomand += ((pcs_vball*2) + ((pcs_stren + pcs_vital + pcs_agil + pcs_react)/2))/2
@@ -839,18 +827,18 @@ if $ARGS[0] = 'volley':
 			'Your team plays better than your opponents.'
 
 			!! you came in and your team scored when they would not have without you
-			if volleysostav = 2 and volpointv = 1:trenerepa += 10
+			if volleysostav = 2 and volpointv = 1:npc_rel['A69'] += 10
 		elseif poverkomand < poverkomandV:
 		volpointv += 1
 			'Your opponents play better than your team.'
 
 			!! you came in and your team gave up a point they would not have without you
-			if volleysostav = 2 and volpoint = 1:trenerepa -= 10
+			if volleysostav = 2 and volpoint = 1:npc_rel['A69'] -= 10
 		else
 			'The scoring varies one way, then the other, obviously the teams are evenly matched.'
 
 			!! you came in and your team tied when they would not lost without you
-			if volleysostav = 2 and volpointv = 1:trenerepa += 5
+			if volleysostav = 2 and volpointv = 1:npc_rel['A69'] += 5
 		end
 
 		act 'Continue':volltime = 3 & gt 'gdksport', 'volley'

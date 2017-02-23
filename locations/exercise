@@ -1,0 +1,364 @@
+# exercise
+
+!{This will centralize calls for exercise. For calls where you wish to allow multiple types of exercises, such as a bedroom or yard, use gs 'exercise', 'start' 
+For direct calls use this format: gs 'exercise', $ARGS[0], ARG[1], $ARGS[2], $ARGS[3], $ARGS[4]
+$ARGS[0] is the workout tier and the higher the tier, the greater the workout intensity.
+	Values: 'tier1' 'tier2' 'tier3' 'tier4'
+ARG[1] is the time override. By default the tiers are in 15 minute segments if being called from an event with predetermined time set this to 1
+	Values: 0 (default of 15 minutes) 1 (time set to 0)
+$ARGS[2] and on are the stats to be affected by the workout NOTE: use the _exp variant, not the pcs_!!!! 
+	Values: 'stren_exp' 'vital_exp' 'agil_exp' 'sprt_exp' 'react_exp' 
+	Other stats can be added if desired - for a dance-a-thon you might use gs 'exercise', 'tier1', 0, 'agil_exp', 'danc_exp'
+
+}
+
+
+if $ARGS[0] = 'start':
+	if $loc = 'meadow':
+		if sunWeather = 1:
+			if pcs_stam >=30:
+				if $clothingworntype ! 'exercise' and pcs_exhibition < 35:
+					'<center>You could do some exercises here if you were wearing workout clothes.</center>'
+				elseif $clothingworntype ! 'exercise' and pcs_exhibition >= 35 and Miraloc ! 2 and temper >= 10:
+					'<center>Your meadow is a perfect place to do some exercises. There is no one around, so you could do it <a href="exec: gt ''exercise'', ''workout'', ''nude'', ''meadow''"> in the nude</a>.</center>'
+				else
+					'<center>Your meadow is a perfect place to do some <a href="exec: gt ''exercise'', ''workout''">exercises</a>.</center>'
+				end
+			else
+				'<center>Your meadow is a perfect place to do some exercises, but you don''t have the energy right now.</center>'
+			end
+		end
+	elseif pcs_stam >=30 and $loc ! 'meadow': 
+		'<center>There is enough space in the room to <a href="exec: gt ''exercise'', ''workout''">exercise</a>.</center>'
+	else
+		'<center>There is enough space in the room for a variety of exercises, but you don''t have the energy to work out now.</center>'
+	end
+end
+
+if $ARGS[0] = 'workout':
+	cla
+	if $ARGS[2] ! '': $sportloc = $ARGS[2]
+	gs 'stat'
+	if $ARGS[1] = 'nude': 
+		gs 'clothing', 'strip', $sportloc
+		gs 'arousal', 'foreplay', 15, 'exhibitionism'
+		gs 'arousal', 'end'
+		minut -= 15
+		gs 'stat'
+		if exhibitionQW < 3: 'Your cheeks feel hot with embarrassment as you strip off your clothes. You giggle nervously at the thought of getting caught in the nude - the thought terrifies you but it also excites you.'
+	end
+	if pcs_stam >= 30:
+		Act 'Do pushups for 15 minutes': timemult = 1 gs 'exercise', 'timestring' & gt 'exercise', 'push'
+		Act 'Do crunches for 15 minutes': timemult = 1 & gt 'exercise', 'press'
+		if skak > 0 and $loc ! 'meadow':
+			Act 'Jump rope for 15 minutes': timemult = 1 & gt 'exercise', 'rope'
+		end
+		if bookYog > 0:
+			Act 'Do yoga for 15 minutes': timemult = 1 & gt 'exercise', 'yoga'
+		end
+		if obruch > 0 and $loc ! 'meadow': 
+			Act 'Use your hula hoop for 15 minutes': timemult = 1 & gt 'exercise', 'hula'
+		end
+	end
+	if pcs_stam >= 40:
+		Act 'Do pushups for 30 minutes': timemult = 2 & gt 'exercise', 'push'
+		Act 'Do crunches for 30 minutes': timemult = 2 & gt 'exercise', 'press'
+		if skak > 0 and $loc ! 'meadow':
+			Act 'Jump rope for 30 minutes': timemult = 2 & gt 'exercise', 'rope'
+		end
+		if bookYog > 0:
+			Act 'Do yoga for 30 minutes': timemult = 2 & gt 'exercise', 'yoga'
+		end
+		if obruch > 0 and $loc ! 'meadow': 
+			Act 'Use your hula hoop for 30 minutes': timemult = 2 & gt 'exercise', 'hula'
+		end
+	end
+	if pcs_stam >= 50:
+		Act 'Do pushups for 45 minutes': timemult = 3 & gt 'exercise', 'push'
+		Act 'Do crunches for 45 minutes': timemult = 3 & gt 'exercise', 'press'
+		if skak > 0 and $loc ! 'meadow':
+			Act 'Jump rope for 45 minutes': timemult = 3 & gt 'exercise', 'rope'
+		end
+		if bookYog > 0:
+			Act 'Do yoga for 45 minutes': timemult = 3 & gt 'exercise', 'yoga'
+		end
+		if obruch > 0 and $loc ! 'meadow': 
+			Act 'Use your hula hoop for 45 minutes': timemult = 3 & gt 'exercise', 'hula'
+		end
+	end
+	if pcs_stam >= 60:
+		Act 'Do pushups for 60 minutes': timemult = 4 & gt 'exercise', 'push'
+		Act 'Do crunches for 60 minutes': timemult = 4 & gt 'exercise', 'press'
+		if skak > 0 and $loc ! 'meadow':
+			Act 'Jump rope for 60 minutes': timemult = 4 & gt 'exercise', 'rope'
+		end
+		if bookYog > 0:
+			Act 'Do yoga for 60 minutes': timemult = 4 & gt 'exercise', 'yoga'
+		end
+		if obruch > 0 and $loc ! 'meadow': 
+			Act 'Use your hula hoop for 60 minutes': timemult = 4 & gt 'exercise', 'hula'
+		end
+	end
+	if pcs_stam < 30:
+		'You don''t have the energy to work out anymore now.'
+	end
+	if clothesAtLocation = 1 and $clothingworntype = 'nude':
+		Act 'End workout and get dressed':
+			cla
+			minut += 5
+			gs 'clothing', 'recover_lost_clothes', $sportloc, 1
+			gt $loc, $metka
+		end
+	else	
+		Act 'Leave': gt $loc, $metka
+	end
+end
+
+if $ARGS[0] = 'hula':
+	cla
+	*clr
+	loopcount = 1
+	:timeloop
+	gs 'exercise', 'tier2', 0, 'agil_exp', 'react_exp'
+	if loopcount < timemult: loopcount += 1 $ jump 'timeloop'
+	loopcount = 0
+	timemult = 0
+	if $clothingworntype ! 'nude':
+		if $location_type = 'secluded':
+			if month >=5 and month <= 9:
+				'<center><img src="images/pc/activities/hulaoutdoors.jpg"></center>'
+			else
+				'<center><img src="images/pc/activities/hulawinter.gif"></center>'
+			end
+		else
+			'<center><img src="images/pc/activities/huladressed.gif"></center>'
+		end
+	else
+		'<center><img src="images/pc/activities/obruch.gif"></center>'
+	end
+	'You develop your dexterity by using your hula hoop for <<$timestring>> minutes.'
+
+	Act 'Continue': gt 'exercise', 'workout'
+end
+
+if $ARGS[0] = 'yoga':
+	cla
+	*clr
+	loopcount = 1
+	:timeloop
+	gs 'exercise', 'tier2', 0, 'sprt_exp', 'agil_exp', 'pcs_willpwr'
+	if loopcount < timemult: loopcount += 1 $ jump 'timeloop'
+	loopcount = 0
+	timemult = 0
+
+	if $clothingworntype ! 'nude':
+		'<center><img src="images/pc/activities/yoga_dressed.jpg"></center>'
+	elseif tanga = 1:
+		'<center><img src="images/pc/activities/yoga_underwear.jpg"></center>'
+	else
+		'<center><img src="images/pc/activities/yoga_naked.png"></center>'
+	end
+
+	'You meditate for <<$timestring>> minutes, developing your will.'
+
+	Act 'Continue': gt 'exercise', 'workout'
+end
+
+if $ARGS[0] = 'rope':
+	cla
+	*clr
+	loopcount = 1
+	:timeloop
+	gs 'exercise', 'tier3', 0, 'agil_exp', 'react_exp'
+	if loopcount < timemult: loopcount += 1 $ jump 'timeloop'
+	loopcount = 0
+	timemult = 0
+	
+	if $clothingworntype ! 'nude':
+		'<center><img src="images/pc/activities/rope_dressed.jpg"></center>'
+	elseif tanga = 1:
+		'<center><img src="images/pc/activities/rope_underwear.jpg"></center>'
+	else
+		'<center><img src="images/pc/activities/rope_naked.jpg"></center>'
+	end
+
+	'You jump rope for <<$timestring>> minutes, developing your speed.'
+
+	Act 'Continue': gt 'exercise', 'workout'
+end
+
+if $ARGS[0] = 'press':
+	cla
+	*clr
+	loopcount = 1
+	:timeloop
+	gs 'exercise', 'tier3', 0, 'vital_exp'
+	if loopcount < timemult: loopcount += 1 $ jump 'timeloop'
+	loopcount = 0
+	timemult = 0
+	
+	if $clothingworntype ! 'nude':
+		'<center><img src="images/pc/activities/abdominal_dressed.jpg"></center>'
+	elseif tanga = 1:
+		'<center><img src="images/pc/activities/abdominal_underwear.jpg"></center>'
+	else
+		'<center><img src="images/pc/activities/abdominal_naked.jpg"></center>'
+	end
+
+	'You do a series of abdominal exercises for <<$timestring>> minutes, developing your endurance.'
+
+	Act 'Continue': gt 'exercise', 'workout'
+end
+
+if $ARGS[0] = 'push':
+	cla
+	*clr
+	loopcount = 1
+	:timeloop
+	gs 'exercise', 'tier3', 0, 'stren_exp'
+	if loopcount < timemult: loopcount += 1 $ jump 'timeloop'
+	loopcount = 0
+	timemult = 0
+
+	if $clothingworntype ! 'nude':
+		'<center><img src="images/pc/activities/push_dressed.jpg"></center>'
+	elseif tanga = 1:
+		'<center><img src="images/pc/activities/push_underwear.jpg"></center>'
+	else
+		'<center><img src="images/pc/activities/push_naked.jpg"></center>'
+	end
+	'You do push-ups for <<$timestring>> minutes, developing your strength.'
+	pushnum = pcs_stren * pcs_sleep * rand(1,3) / 200
+	'<br>You managed to do <<pushnum>> push-ups. Your previous record is <<pushrecord>>.'
+
+	if pushrecord < pushnum:pushrecord = pushnum & 'This is a new record!'
+
+	Act 'Continue': gt 'exercise', 'workout'
+end
+
+if $ARGS[0] = 'tier1':
+	if ARGS[1] = 0: minut += 15
+	pcs_stam -= 5
+	pcs_sweat += 3
+	fat -= 1
+	pcs_mood += 3
+	pcs_willpwr += 3
+	if $ARGS[3] = '':
+		$ARGS[2] += 1
+		if $ARGS[2] = 'vital_exp' or if $ARGS[1] = 'stren_exp':
+			$ARGS[2] += rand(0,steroid_dose)
+			if steroid_dose > 0 and rand(1,5) <= steroid_dose:clit_size += rand(0,1) 
+		end
+	else
+		i = 2
+		:exploop
+		if $ARGS[i] ! '': 
+			$ARGS[i] += rand(0,1)
+			if $ARGS[i] = 'vital_exp' or if $ARGS[i] = 'stren_exp': $ARGS[i] += rand(0,steroid_dose) & steroidcheck = 1
+			i += 1
+			jump 'exploop'
+		else
+			if steroidcheck = 1 and steroid_dose > 0 and rand(1,5) <= steroid_dose:clit_size += rand(0,1)
+			killvar 'steroidcheck'
+			killvar 'i'
+			exit
+		end
+	end
+end
+	
+if $ARGS[0] = 'tier2':
+	if ARGS[1] = 0: minut += 15
+	pcs_stam -= 10
+	pcs_sweat += 10
+	fat -= 3
+	pcs_mood += 5
+	pcs_willpwr += 5
+	if $ARGS[3] = '':
+		$ARGS[1] += rand(2,3)
+		if $ARGS[1] = 'vital_exp' or if $ARGS[1] = 'stren_exp':
+			$ARGS[1] += rand(0,steroid_dose)
+			if steroid_dose > 0 and rand(1,5) <= steroid_dose:clit_size += rand(0,1) 
+		end
+	else
+		i = 2
+		:exploop
+		if $ARGS[i] ! '': 
+			$ARGS[i] += rand(1,2)
+			if $ARGS[i] = 'vital_exp' or if $ARGS[i] = 'stren_exp': $ARGS[i] += rand(0,steroid_dose) & steroidcheck = 1
+			i += 1
+			jump 'exploop'
+		else
+			if steroidcheck = 1 and steroid_dose > 0 and rand(1,5) <= steroid_dose:clit_size += rand(0,1)
+			killvar 'steroidcheck'
+			killvar 'i'
+		end
+	end
+end
+
+if $ARGS[0] = 'tier3':
+	if ARGS[1] = 0: minut += 15
+	pcs_stam -= 15
+	pcs_sweat += 15
+	fat -= 5
+	pcs_mood += 5
+	pcs_willpwr += 5
+	if $ARGS[3] = '':
+		$ARGS[1] += rand(3,5)
+		if $ARGS[1] = 'vital_exp' or if $ARGS[1] = 'stren_exp':
+			$ARGS[1] += rand(0,steroid_dose)
+			if steroid_dose > 0 and rand(1,5) <= steroid_dose:clit_size += rand(0,1) 
+		end
+	else
+		i = 2
+		:exploop
+		if $ARGS[i] ! '': 
+			$ARGS[i] += rand(2,3)
+			if $ARGS[i] = 'vital_exp' or if $ARGS[i] = 'stren_exp': $ARGS[i] += rand(0,steroid_dose) & steroidcheck = 1
+			i += 1
+			jump 'exploop'
+		else
+			if steroidcheck = 1 and steroid_dose > 0 and rand(1,5) <= steroid_dose:clit_size += rand(0,1)
+			killvar 'steroidcheck'
+			killvar 'i'
+		end
+	end
+end
+
+if $ARGS[0] = 'tier4':
+	if ARGS[1] = 0: minut += 15
+	pcs_stam -= 25
+	pcs_sweat += 25
+	fat -= 8
+	pcs_mood += 5
+	pcs_willpwr += 5
+	if $ARGS[3] = '':
+		$ARGS[1] += rand(7,10)
+		if $ARGS[1] = 'vital_exp' or if $ARGS[1] = 'stren_exp':
+			$ARGS[1] += rand(0,steroid_dose)
+			if steroid_dose > 0 and rand(1,5) <= steroid_dose:clit_size += rand(0,1) 
+		end
+	else
+		i = 2
+		:exploop
+		if $ARGS[i] ! '': 
+			$ARGS[i] += rand(3,5)
+			if $ARGS[i] = 'vital_exp' or if $ARGS[i] = 'stren_exp': $ARGS[i] += rand(0,steroid_dose) & steroidcheck = 1
+			i += 1
+			jump 'exploop'
+		else
+			if steroidcheck = 1 and steroid_dose > 0 and rand(1,5) <= steroid_dose:clit_size += rand(0,1)
+			killvar 'steroidcheck'
+			killvar 'i'
+		end
+	end
+end
+
+if $ARGS[0] = 'timestring':
+	if timemult = 1: $timestring = 'fifteen' 
+	if timemult = 2: $timestring = 'thirty'
+	if timemult = 3: $timestring = 'forty-five'
+	if timemult = 4: $timestring = 'sixty'
+end
+
+--- exercise ---------------------------------
+
