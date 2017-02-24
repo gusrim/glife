@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -x
 
 # Set those lines to fit your setup.
 # This is where glife.qsp will be copied. If you don't want to move it just comment (#) the line below.
@@ -15,7 +16,11 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
 elif [[ "$OSTYPE" == "darwin"* ]]; then
 	./txt2gam.mac glife.txt "${QSPFILE}" 1> /dev/null
 elif [[ "$OSTYPE" == "msys" ]]; then
-	./txt2gam.exe glife.txt "${QSPFILE}" 1> /dev/null
+	if [[ "$MSYSTEM_CARCH" == "x86_64" ]]; then
+		./txt2gam64.exe glife.txt "${QSPFILE}" 1> /dev/null
+	else
+		./txt2gam.exe glife.txt "${QSPFILE}" 1> /dev/null
+	fi
 fi
 if [ -d "${DESTDIR}" ]; then
 	cp --reflink=auto "${QSPFILE}" "${DESTDIR}"
