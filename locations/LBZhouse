@@ -4,15 +4,13 @@ CLOSE ALL
 $LBZH_sex={
 	act'Give':
 		cls
-		temp_sex+=1
-		temp_guy+=1
 		gs'stat' 
 		mrapic=rand(0,7)
 		!'<<mrapic>>'
 		'<center><img src="images/characters/pavlovsk/vadim/sex/mitka<<mrapic>>.gif"></center>'
 		''
-		dynamic $sexstart4
-		dynamic $sexcum
+		gs 'arousal', 'vaginal', 10, 'sub'
+		gs 'stat'
 
 		act'Up':dynamic $LBZH_end
 	end
@@ -21,14 +19,14 @@ $LBZH_sex={
 $LBZH_anal={
 	act'Writing in the ass':
 		cls
-		temp_sex+=1
-		temp_guy+=1
 		gs'stat' 
 		mrapic=rand(0,7)
 		!'<<mrapic>>'
 		'<center><img src="images/shared/sex/anal/doggy/anal<<mrapic>>.gif"></center>'
 		''
-		dynamic $analsex2
+		gs 'arousal', 'anal', 10, 'sub'
+		gs 'stat'
+		
 		spafinloc = 3
 gs 'cum_manage'
 		'<<$boydesc>> groaned and came filling your ass with his warm sperm.'
@@ -40,14 +38,15 @@ gs 'cum_manage'
 $LBZH_bj={
 	act'Suck':
 		cls
-		temp_bj+=1
-		temp_guy+=1
 		gs'stat' 
 		mrapic=rand(0,12)
 		'<center><img src="images/shared/sex/blowjob/bj<<mrapic>>.gif"></center>'
 		'You take a cock in your mouth and start sucking it, you get busy working up and down his dick with your mouth. Your lips lock tightly around his shaft while your tongue licks and plays with his dick.'
 		'Soon <<$bname>> starts to pant heavily and moans out. "<<$pcs_nickname>>, I''m about to cum."'
 
+		gs 'arousal', 'bj', 5, 'sub'
+		gs 'stat'
+			
 		 act'Swallow':
 			cls
 			spafinloc = 12
@@ -70,10 +69,6 @@ $LBZH_bj={
 $LBZH_end={
 	cls
 	gs'stat'
-	if temp_sex>0:stat['vaginal'] += 1
-	if temp_bj>0:stat['bj'] += 1
-	if temp_hj>0:stat['hj'] += 1
-	if temp_anal>0:stat['anal'] += 1
 	if temp_guy>0:guy += 1
 	'Once finished you get up and go to the bathroom.'
 
@@ -93,7 +88,13 @@ $LBZH_end={
 			cls
 			gs'stat'
 			'After you are done washing you get dressed and blow <<$bname>> a kiss before you leave.'
-			act'Leave':gt'pavResidential'
+			
+			
+			act'Leave':
+				gs 'arousal', 'end'
+				gs 'stat'
+				gt'pavResidential'
+			end
 		end
 	end
 }
@@ -127,6 +128,10 @@ act'Sex':
 			'<center><img src="images/shared/sex/handjob/hj<<mrapic>>.gif"></center>'
 			'You immediately take his cock in your hand and start jerking him off.'
 			'Soon <<$bname>> starts to pant heavily and moans out. "<<$pcs_nickname>>, I''m about to cum."'
+			
+			gs 'arousal', 'hj', 5, 'sub'
+			gs 'stat'
+			
 			dynamic $LBZH_sex
 			dynamic $LBZH_anal
 		end
