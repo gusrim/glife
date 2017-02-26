@@ -19,11 +19,13 @@ $d_park_placer_bj = {
 $d_pp_hand = {
 	act 'Take the member in your hand':
 		cls
-		pphj += 1
-		minut += 1
 		gs 'stat'
 		'<center><img src="images/shared/sex/handjob/hj.jpg"></center>'
 		'You clasp your fingers around the erect <<dick>>cm cock and pull back the skin to reveal the crimson head then start to slowly move your hands back and forth.'
+		
+		gs 'arousal', 'hj', 1, 'sub'
+		gs 'stat'
+		
 		if rand(0, 1) = 0:
 			if rand(0, 4) = 0:
 				'<<$boydesc>> takes you by the shoulders and pushes, trying to force you to kneel.'
@@ -47,8 +49,7 @@ $d_pp_hand = {
 $d_pp_hjcum = {
 	act 'Faster':
 		cls
-		pphj += 1
-		minut += 1
+		gs 'arousal', 'hj', 1, 'sub'
 		gs 'stat'
 
 		if rand(1, 100) >= 80:
@@ -79,13 +80,13 @@ $d_pp_squat = {
 $d_pp_bj = {
 	act 'Suck':
 		cls
-		ppbj += 1
-		minut += 5
 		parkslut += 1
 		ppBoyTipe[parkfuckboy] = 2
 		gs 'stat'
 		'<center><img src="images/locations/pavlovsk/park/sex/ppbj.jpg"></center>'
 		'Your lips wrapped around a hard <<dick>>cm cock, and you suck it carefully feeling his tongue and lips.'
+		gs 'arousal', 'bj', 5, 'sub'
+		gs 'stat'
 		tiprand = rand(1, 100)
 
 		if tiprand = 100:
@@ -126,14 +127,15 @@ gs 'cum_manage'
 $d_pp_sex = {
 	act 'Bend over':
 		cls
-		minut += 1
-		ppsex += 1
 		pose = 1
 		gs 'stat'
 		'<center><img src="images/locations/pavlovsk/park/sex/ppsex.jpg"></center>'
 		'You bared her butt and bending framed his boyfriend'
 		dynamic $sexstart
 		dynamic $sexstart4
+		
+		gs 'arousal', 'vaginal', 10, 'sub'
+		gs 'stat'
 
 		if rand(1, 100) >= 20:
 			dynamic $sexcum
@@ -151,21 +153,22 @@ $d_pp_double = {
 		ppBoyTipe[parkfuckboy] = 3
 		parkslut += 10
 		guy += 1
-		gang += 1
-		stat['bj'] += 1
-		ppbj += 1
-		minut += 5
 		gs 'stat'
 		'<center><img src="images/locations/pavlovsk/park/sex/ppbjdouble.jpg"></center>'
 		'It all happened quickly and you do not even have time to realize in both your hands turned over the penis, their purple heads were right in front of your face. One of the guys hand impatiently pushed your head against a member.'
 
+		gs 'arousal', 'bj', 5, 'sub', 'group'
+		gs 'stat'
+		
 		act 'Sucking two members':
 			cls
-			minut += 15
 			gs 'stat'
 			'<center><img src="images/locations/pavlovsk/park/sex/ppbjdouble2.jpg"></center>'
 			'You have become a polished just two bow with her wet lips spitted her mouth purple hat guys take turns. soon <<$boydesc>> groaned "Open your mouth slut"'
 
+			gs 'arousal', 'bj', 15, 'sub', 'group'
+			gs 'stat'
+		
 			act 'open your mouth':
 				cls
 				minut += 15
@@ -200,11 +203,6 @@ $d_pp_goend = {
 	act 'Brush up':
 		cls
 
-		if ppbj > 0:stat['bj'] += 1
-		if pphj > 0:stat['hj'] += 1
-		if ppsex > 0:stat['vaginal'] += 1
-		if ppanal > 0:stat['anal'] += 1
-
 		minut += 5
 		gs 'stat'
 
@@ -216,7 +214,10 @@ $d_pp_goend = {
 
 		'You began to brush up. <<$boydesc>> pretty buttoned pants "Well pokeda <<$pcs_nickname>>, I still have things, can be seen as a."'
 
-		act 'Leave':gt 'gskver'
+		act 'Leave':
+			gs 'arousal', 'end'
+			gt 'gskver'
+		end
 	end
 }
 
