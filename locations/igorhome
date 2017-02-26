@@ -1,5 +1,7 @@
 # Igorhome
 
+!!Igor = A4
+
 if $ARGS[0] = '' or $ARGS[0] = 'start':
 	gs 'stat'
 	'<center><h4><font color="maroon">Igor Kruglov</font></h4></center>'
@@ -21,30 +23,31 @@ if $ARGS[0] = '' or $ARGS[0] = 'start':
 			'You follow Igor home. Once you get to his place, he nervously starts scrambling with the keys. He turns to you, nervously laughing...'
 			act 'Walk around his home': gt 'Igorhome', 'kor'
 			act 'Go to his room': gt 'Igorhome', 'Igorkom'
-			end
 		end
 		act 'Decline his invitation and leave':IgorLove -= 1 & gt 'pavResidential'		
 	elseif IgorLove <= 0:
 		IgorLoverQW = -1
-		'<center><img  src="images/locations/pavlovsk/school/walk_home'+ rand(1,3) +'.jpg"></center>'
-		!!if winter use this instead
-		'<center><img  src="images/locations/pavlovsk/school/walk_homew'+ rand(1,2) +'.jpg"></center>'
+		if month > 8 or month < 4:
+			'<center><img  src="images/locations/pavlovsk/school/walk_homew'+ rand(1,2) +'.jpg"></center>'
+		else
+			'<center><img  src="images/locations/pavlovsk/school/walk_home'+ rand(1,3) +'.jpg"></center>'
+		end
 		'As you walk towards Igor''s house, he starts having second thoughts "<<$pcs_firstname>>, you know I love you very much, but we don''t know each other well enough, so I''m wondering if we should let it be."'
 		act 'Leave': gt 'pavResidential'
 	end
 !!this one is if Igor is a tutor in history
-		'Igor is waiting for you after school. As you approach he asks you, "You ready to go?"'
-		act 'Go to Igor''s house':
-			cls
-			minut += 15
-			gs 'stat'
-			'<center><img  src="images/locations/pavlovsk/school/walk_homeb1.jpg"></center>'
-			'You follow Igor home. Once you get to his place, he unlocks the door and invites you in.'
-			act 'Walk around his home': gt 'Igorhome', 'kor'
-			act 'Go to his room': gt 'Igorhome', 'Igorkom'
-			end
-		end
-	end
+!!	if igor_history = 1:
+!!		'Igor is waiting for you after school. As you approach he asks you, "You ready to go?"'
+!!		act 'Go to Igor''s house':
+!!			cls
+!!			minut += 15
+!!			gs 'stat'
+!!			'<center><img  src="images/locations/pavlovsk/school/walk_homeb1.jpg"></center>'
+!!			'You follow Igor home. Once you get to his place, he unlocks the door and invites you in.'
+!!			act 'Walk around his home': gt 'Igorhome', 'kor'
+!!			act 'Go to his room': gt 'Igorhome', 'Igorkom'
+!!		end
+!!	end
 end
 
 if $ARGS[0] = 'kor':
@@ -57,28 +60,33 @@ if $ARGS[0] = 'kor':
 	'This is the entrance hall to Igor''s house, it is tastefully decorated. It leads to all the other rooms in the house.'
 	act 'Igor''s Room': gt 'Igorhome','Igorkom'
 	act 'Bathroom': gt 'Igorhome','vann'
-	if igor_krossdresssex >= 1:
-!!I think Sveta should be able to go into his sisters room any time, not just after he starts cross dressing. 
-		act 'Igor''s sister''s room': gt 'Igorhome','igorsisterkom'
+	act 'Igor''s sister''s room': gt 'Igorhome','igorsisterkom'
 	act 'Living Room': : gt 'Igorhome','living'
 	act 'Kitchen': gt 'Igorhome','kitchen'
 	act 'Parents Room': gt 'Igorhome','igorparents'
 	act 'Leave Igor''s home': gt 'pavResidential'
 !!going to add the parents bedroom, living room and kitchen. They will be down below, they will need to be moved where you want and coded of course.
-	end
 end
 
 if $ARGS[0] = 'vann':
-	*clr & cla
+	cls
 	minut += 1
+	$metka = 'vann'
+	$loc = 'igorhome'
+	$metkaM = 'vann'
+	$locM = 'igorhome'
 	gs 'stat'
 	$location_type = 'bathroom'
 	'<center><h4><font color="maroon">Bathroom</font></h4></center>'
 	'<center><img  src="images/locations/pavlovsk/resident/Igorhome/vann.jpg"></center>'
-	'The bathroom has a large sink area and tile floors. The toilet sits along the far wall. There is also a walk-in shower and bath tube. It all looks very nice.'
-!!bathroom should have the mirror option to brush hair, apply makeup etc. Also I think allowing Sveta to take a bath would be nice as well.
+	'The bathroom has a large sink area and tile floors. The toilet sits along the far wall. There is also a walk-in shower and bath tub. It all looks very nice.'
+	'You can do your hair and makeup in the <a href="exec:gt ''mirror'', ''start''">mirror</a> above the sink.'
+	*nl
+	
+    if pirsA + pirsB + pirsC + pirsD + pirsE + pirsF + pirsN + pirsG + pirsGL > 0:'<a href="exec:dynamic $pirManage">Manage Piercings</a>'
+
 	act 'Take a shower':
-		*clr & cla
+		cls
 		minut += 10
 		dynamic $showerdin
 		gs 'stat'
@@ -87,89 +95,44 @@ if $ARGS[0] = 'vann':
 		'You take a quick shower.'
 		act 'Get out of the shower': gt 'Igorhome','kor'
 	end
+	dynamic $bath
+	dynamic $quickwash
+	dynamic $bteeth
+    dynamic $tampon
+    dynamic $basin
+
 	act 'Leave the bathroom': gt 'Igorhome', 'kor'
 end
 
 if $ARGS[0] = 'Igorkom':
-	*clr & cla
+	cls
 	minut += 1
 	gs 'stat'
 	'<center><h4><font color="maroon">Igor''s Room</font></h4></center>'
 	'<center><img  src="images/locations/pavlovsk/resident/Igorhome/kom.jpg"></center>'
 	'The room is surprisingly clean and organized for a boys room. It is fairly tastefully decorated. In the center of the room against one wall is a single narrow bed. Against the opposite wall is a desk and a chair, with a computer sitting on the desk. Next to the desk is a book shelf with a fairly large collection of books, just below the shelves leaning against the wall rests a guitar.'
 !!This one I think is if he is dating Dima, not sure.
-!!	+ if(DimaLoveIgor>1,
-	'Sitting on the bed is a Teddy Bear with a red heart in it''s little hands.'
+	if DimaLoveIgor > 1:'Sitting on the bed is a Teddy Bear with a red heart in it''s little hands.'
 	!!if igor is home the following is added.
 	'You see sitting on the edge of his bed.' 
 	act 'Excuse yourself': gt 'Igorhome', 'kor'
-    act 'Study':
-		!!takes a hour and small boost to school grades and +5 friendship to Igor.
-		'<center><h4><font color="maroon">Igor''s Room</font></h4></center>'
-	    '<center><img  src="images/characters/pavlovsk/school/boys/igor/study.jpg"></center>'
-		'You sit down next to Igor and he pulls out his history book and notes. He starts tutoring you in history, he is very good tutor and your learn a lot.'
-		act 'Study More':gt 'Igorhome','study' !!just repeats the above.
-		act 'Chat':gt 'Igorhome','Chat'
-		act 'Excuse yourself': gt 'Igorhome', 'kor'
-	act 'Chat':
+    act 'Study': gt 'Igorhome','study'
+	act 'Chat': gt 'Igorhome','study'
+	!!if they are dating this happens instead of the above at these times.
+	if hour = 23:
 		*clr & cla
-		minut += 5
-		gs 'stat'
-		'<center><h4><font color="maroon">Igor''s Room</font></h4></center>'
-	    '<center><img  src="images/characters/pavlovsk/school/boys/igor/talk.jpg"></center>'
-!!there is two images the one above is the default one, if they are dating then use this image instead.
-		'<center><img  src="images/characters/pavlovsk/school/boys/igor/talkgf.jpg"></center>'
-		$zz_str[0] = 'You talk about school, classes, teachers, and how fucked up the system is.'
-		$zz_str[1] = 'You talk about what you both want to do after high school.'
-		$zz_str[2] = 'You listen as he tells you some interesting local history. You realize that Igor really knows the history of Pavlovsk.'
-		$zz_str[3] = 'You both talk about nothing in particular.'
-		$zz_str[4] = 'You and Igor chat. Igor tells you that his parents promised to buy him a new car if he gets into the University.'
-		$zz_str[5] = 'You learn from the conversation that Igor''s parents are quite wealthy, owning several businesses and homes around town.'
-		$zz_str[6] = 'Igor talks about his older sister, "Every week she buys new clothes, but I`m sure she hasn''t worn half of them yet!"'
-!!a couple of new ones that only happen once Igor has a friendship value of 51+
-        $zz_str[7] = 'You talk about a cute outfit you seen the other day, which leads to a long conversation about girls clothes, Igor knows a surprising amount about them.'
-		$zz_str[8] = 'You talk about makeup and Igor asks you a lot of in depth questions about makeup.'
-		$zz_str[9] = 'You talk about the boys at school, which turns into you talking about which ones you think are cute. Igor happily joins in, though he thinks Dimka is the cutest boy in school.'
-		$zz_str[10] = 'As you talk about varies things Igor asks you what it''s like being a girl. You start telling him but he ends up having a lot of questions, he seems to really want to know what it is like being a girl.'
-		gs 'igorEv', 'kruglov_desc'
-		'You spend some time talking with Igor.'
-		*pl $zz_str[rand(0,6)]
-		killvar '$zz_str'
-		act 'Continue': gt 'IgorEv', 'hometalk'
-!!this is extra options that show up only if certain things have happened.
-!!this option only shows up if $zz_str[6] has happened.
-		act 'Clothes': 
-			'"So your sister has that many clothes?" you ask Igor.'
-			'He nods his head vigerously. "Hell yeah, it is crazy, she has more clothes than some stores."'
-			'You grin at him. "Think I could see them?"'
-			'He rolls his eyes. "What is it with girls and clothes? Come on." He gets up and leads you to his sisters room.'
-			act 'Continue': gt 'IgorEv', 'din_sisterkom'
-!!if dating Igor these options show up.
-		act 'Kiss': gt 'IgorEv', 'Kiss'
-		act 'Date':
-		    '<center><h4><font color="maroon">Igor''s Room</font></h4></center>'
-			'<center><img  src="images/characters/pavlovsk/school/boys/igor/talk.jpg"></center>'
-!!there is two images the one above is the default one, if they are dating then use this image instead.
-			'<center><img  src="images/characters/pavlovsk/school/boys/igor/talkgf.jpg"></center>'
-			'Igor asks you, "<<$pcs_nickname>> lets go see a movie, my treat."'
-			act 'Agree': gt 'IgorEv', 'Movies'
-			act 'Decline':
-				'<center><h4><font color="maroon">Igor''s Room</font></h4></center>'
-				'<center><img  src="images/characters/pavlovsk/school/boys/igor/talk.jpg"></center>'
-!!there is two images the one above is the default one, if they are dating then use this image instead.
-				'<center><img  src="images/characters/pavlovsk/school/boys/igor/talkgf.jpg"></center>'
-				'You shake your head no. "I would rather just stay here." He nods and smiles.'
-				act 'Continue': gt 'IgorEv', 'hometalk'
-!!this only shows up if Sveta knows Igor cross dresses.
-		act 'Lets go for walk': gt 'IgorEv', 'Lets take another walk'
-!!this only shows up if they are not dating but Sveta knows Igor crossdresses and owns a strapon. Still needs fixed and expanded, for now commented out.
-		!!act 'Be my bitch.': gt 'IgorEv', 'Be my bitch'
-!!This one only shows up if Igor went on a date with Dimka.
-		act 'How was your date?': gt 'IgorEv', 'Ask about Diana''s date'
+		'Igor looks at his watch. "If you stay any later, my mom will come in and make a fuse and talk about how unseemly it is for a boy to have a girl in his room this late."'
+		'You nod to him. "I understand, then I guess I will see you later."'
+		act 'Say goodbye and go home': gt 'pavResidential'
+		act 'Kiss':
+			'<center><img src="images/characters/pavlovsk/school/boy/igor/kiss.gif"></center>'
+			'You lean in and give him a quick kiss, he is a bit surprised at first but then returns it. Once you break the kiss you leave.'
+			act 'Say goodbye and go home': gt 'pavResidential'
+		end
 	end
-!!If they are not dating these happen at these times
+	!!If they are not dating these happen at these times
 	if hour >= 23:
-		*clr & cla
+		cls
 		'<center><h4><font color="maroon">Igor''s Room</font></h4></center>'
 	    '<center><img  src="images/characters/pavlovsk/school/boys/igor/talk.jpg"></center>'
 !!there is two images the one above is the default one, if they are dating then use this image instead.
@@ -177,36 +140,92 @@ if $ARGS[0] = 'Igorkom':
 		'You look at the clock saying that it''s really late and that you need to go home.'
 		act 'Say goodbye and go home': gt 'pavResidential'
 	elseif hour >= 20:
-		*clr & cla
+		cls
 		'<center><h4><font color="maroon">Igor''s Room</font></h4></center>'
 	    '<center><img  src="images/characters/pavlovsk/school/boys/igor/talk.jpg"></center>'
 !!there is two images the one above is the default one, if they are dating then use this image instead.
 		'<center><img  src="images/characters/pavlovsk/school/boys/igor/talkgf.jpg"></center>'
 		'Igor looks at his watch and asks you "I want to have fun tonight. Let''s go to the disco!"'
-		act 'Agree': & minut += 20 & gt 'gdkin' !!if they are dating I will add a new version but have not written it yet.
+		act 'Agree': & minut += 20 & gt 'gdkin' & !!if they are dating I will add a new version but have not written it yet.
 		act 'Decline and go home': gt 'pavResidential'
 		act 'Decline and chat instead':gt 'Igorhome','Chat'
 	end
-if hour = 20:
-	*clr & cla
-	'Igor looks at his watch and asks you: "Do you want to go to the dance?"'
-	act 'Go with Igor to the dance': & minut += 20 & gt 'gdkin' !!eventually this will go to a special event at the dance for now just leave it as it is
-	act 'Say goodbye and go home': gt 'pavResidential'
-	act 'Decline and chat instead':gt 'Igorhome','Chat'
 end
 
-!!if they are dating this happens instead of the above at these times.
-if hour = 23:
+
+if $ARGS[0] = 'chat':
 	*clr & cla
-	'Igor looks at his watch. "If you stay any later, my mom will come in and make a fuse and talk about how unseemly it is for a boy to have a girl in his room this late."'
-	'You nod to him. "I understand, then I guess I will see you later."'
-	act 'Say goodbye and go home': gt 'pavResidential'
-	act 'Kiss':
-	    '<center><img src="images/characters/pavlovsk/school/boy/igor/kiss.gif"></center>'
-		'You lean in and give him a quick kiss, he is a bit surprised at first but then returns it. Once you break the kiss you leave.'
-		act 'Say goodbye and go home': gt 'pavResidential'
+	minut += 5
+	gs 'stat'
+	'<center><h4><font color="maroon">Igor''s Room</font></h4></center>'
+	'<center><img  src="images/characters/pavlovsk/school/boys/igor/talk.jpg"></center>'
+!!there is two images the one above is the default one, if they are dating then use this image instead.
+	'<center><img  src="images/characters/pavlovsk/school/boys/igor/talkgf.jpg"></center>'
+	$zz_str[0] = 'You talk about school, classes, teachers, and how fucked up the system is.'
+	$zz_str[1] = 'You talk about what you both want to do after high school.'
+	$zz_str[2] = 'You listen as he tells you some interesting local history. You realize that Igor really knows the history of Pavlovsk.'
+	$zz_str[3] = 'You both talk about nothing in particular.'
+	$zz_str[4] = 'You and Igor chat. Igor tells you that his parents promised to buy him a new car if he gets into the University.'
+	$zz_str[5] = 'You learn from the conversation that Igor''s parents are quite wealthy, owning several businesses and homes around town.'
+	$zz_str[6] = 'Igor talks about his older sister, "Every week she buys new clothes, but I`m sure she hasn''t worn half of them yet!"'
+!!a couple of new ones that only happen once Igor has a friendship value of 51+
+	$zz_str[7] = 'You talk about a cute outfit you seen the other day, which leads to a long conversation about girls clothes, Igor knows a surprising amount about them.'
+	$zz_str[8] = 'You talk about makeup and Igor asks you a lot of in depth questions about makeup.'
+	$zz_str[9] = 'You talk about the boys at school, which turns into you talking about which ones you think are cute. Igor happily joins in, though he thinks Dimka is the cutest boy in school.'
+	$zz_str[10] = 'As you talk about varies things Igor asks you what it''s like being a girl. You start telling him but he ends up having a lot of questions, he seems to really want to know what it is like being a girl.'
+	gs 'igorEv', 'kruglov_desc'
+	'You spend some time talking with Igor.'
+	*pl $zz_str[rand(0,6)]
+	killvar '$zz_str'
+	act 'Continue': gt 'IgorEv', 'hometalk'
+!!this is extra options that show up only if certain things have happened.
+!!this option only shows up if $zz_str[6] has happened.
+	act 'Clothes': 
+		'"So your sister has that many clothes?" you ask Igor.'
+		'He nods his head vigorously. "Hell yeah, it is crazy, she has more clothes than some stores."'
+		'You grin at him. "Think I could see them?"'
+		'He rolls his eyes. "What is it with girls and clothes? Come on." He gets up and leads you to his sisters room.'
+		act 'Continue': gt 'IgorEv', 'din_sisterkom'
+	end
+!!if dating Igor these options show up.
+	act 'Kiss': gt 'IgorEv', 'Kiss'
+	act 'Date':
+		'<center><h4><font color="maroon">Igor''s Room</font></h4></center>'
+		'<center><img  src="images/characters/pavlovsk/school/boys/igor/talk.jpg"></center>'
+!!there is two images the one above is the default one, if they are dating then use this image instead.
+		'<center><img  src="images/characters/pavlovsk/school/boys/igor/talkgf.jpg"></center>'
+		'Igor asks you, "<<$pcs_nickname>> lets go see a movie, my treat."'
+		act 'Agree': gt 'IgorEv', 'Movies'
+		act 'Decline':
+			'<center><h4><font color="maroon">Igor''s Room</font></h4></center>'
+			'<center><img  src="images/characters/pavlovsk/school/boys/igor/talk.jpg"></center>'
+!!there is two images the one above is the default one, if they are dating then use this image instead.
+			'<center><img  src="images/characters/pavlovsk/school/boys/igor/talkgf.jpg"></center>'
+			'You shake your head no. "I would rather just stay here." He nods and smiles.'
+			act 'Continue': gt 'IgorEv', 'hometalk'
 		end
 	end
+!!this only shows up if Sveta knows Igor cross dresses.
+	act 'Lets go for walk': gt 'IgorEv', 'Lets take another walk'
+!!this only shows up if they are not dating but Sveta knows Igor crossdresses and owns a strapon. Still needs fixed and expanded, for now commented out.
+	!!act 'Be my bitch.': gt 'IgorEv', 'Be my bitch'
+!!This one only shows up if Igor went on a date with Dimka.
+	act 'How was your date?': gt 'IgorEv', 'Ask about Diana''s date'
+end
+
+
+if $ARGS[0] = 'study':
+	minut += 60
+	npc_rel['A4'] += 5
+	pcs_grades += rand(0,2)
+	cls
+	gs 'stat'
+	'<center><h4><font color="maroon">Igor''s Room</font></h4></center>'
+	'<center><img  src="images/characters/pavlovsk/school/boys/igor/study.jpg"></center>'
+	'You sit down next to Igor and he pulls out his history book and notes. He starts tutoring you in history, he is very good tutor and your learn a lot.'
+	act 'Study More':gt 'Igorhome','study'
+	act 'Chat':gt 'Igorhome','Chat'
+	act 'Excuse yourself': gt 'Igorhome', 'kor'
 end
 
 if $ARGS[0] = 'igorsisterkom':
@@ -233,17 +252,17 @@ if $ARGS[0] = 'igorsisterkom':
 	'"It''s the holidays so I wanted to spend some time with the family before heading back to the University."'
 	end
 	act 'So you''re Igor''s sister?':
-	*clr & cla
+		*clr & cla
 		'Looking wide-eyed at her you ask if she''s Ivan''s sister.'
 		'"Yeah, my name is Galina and who might you be?"'
 		'"My name is <<$pcs_nickname>>. And I''m one of Igor''s classmates..." you say trying to be as vague as possible as you still don''t know how Galina will react.'
 		'"That''s great news!" Galina exclaims. "I''m so glad that Igor got a female friend. Finally I''ve been waiting for this day for a long time." she grins.'
 		act 'How come?':
-		*clr & cla
+			*clr & cla
 			'You look at her a bit confused asking her "How come? Igor is great and gentle..."'
 			'"Well, I don''t want to denigrate my little brother but he lacks confidence and is quite shy. And he''s always following that boy around like a little puppy."'
 			act 'Dimka?':
-			*clr & cla
+				*clr & cla
 				'"Yes, that''s his name! He''s a creep and I think he''s really bad influence on my brother. I''ve caught him several times over the years of him spying on me as I was changing or taking a shower."'
 				!!if Dimka hasn''t recorded him and Sveta having sex and Sveta considers Dimka still being a sweet guy.
 					'You, a bit taken aback by the relevation tell her that you didn''t know that Dimka was like that...'
@@ -254,15 +273,15 @@ if $ARGS[0] = 'igorsisterkom':
 					'You look down on the floor ashamed about what you''re about to tell Galina, "I know what you mean. That creep hid a camera in his room and taped me having sex with him."'
 					'Galina takes pity on you, "You must feel awful. I need to tell Igor about this there is no way he''s getting away with this..."'
 					'"No, please don''t tell Igor I don''t want it to damage my relationship with him."'
-					'Galina reassures, "Don''t worry. I won''t tell. I appricate your honesty and I rather have Igor hanging out with you rather than that slime ball Dimka. Igor will soon attend the University so it''s good for him to socialize with different people."'
+					'Galina reassures, "Don''t worry. I won''t tell. I appreciate your honesty and I''d rather have Igor hanging out with you rather than that slime ball Dimka. Igor will soon attend the University so it''s good for him to socialize with different people."'
 				!end
 				act 'How is the University?':
-				*clr & cla
+					*clr & cla
 					'As Galina mentions the University you eagerly ask her how the classes are. And if the party rumors are true and if there are any cute boys.'
 					'Galina smiles and tells you that she loves attending the University, especially how she can party all the time and have fun, not being scrutinized by her mother.'
 					'"I''m also doing fine grade wise, I think. It depends who you ask, but I guess it could always be better..." she laughs.'
 					act 'Tell her the reason you were in her room':
-					*clr & cla
+						*clr & cla
 						'You take a deep breath and tell Galina that the reason you visited her room was because you love her fashion style and that you can''t help yourself sneaking into her room at times.'
 						'Once again she laughs, thanking you, telling you she gets the inspiration from the fashion magazines.'
 						'"I''ll let you in on a little secret..." she says. "You''re not the only one going through my outfits. My dear little brother is also doing the same thing, the perverted little bastard... But please don''t mention it to him, he''s just a teenage boy going through a phase in life."'
@@ -279,30 +298,30 @@ if $ARGS[0] = 'igorsisterkom':
 	'She sighs as she wants to say no to him, but as she looks up she smiles as she sees Igor with a girl.'
 	'"Sure, little brother. Come in, come in. Who''s your female friend? Don''t tell me that you''ve got yourself a girlfriend?"'
 	act 'This is...':
-	*clr & cla
+		*clr & cla
 		!!if girlfriend
 		'"This is m-my girlfriend, <<$pcs_nickname>>. We''ve been dating for a while."'
 		'"I''m so happy for you. It was really about time for you getting a real girlfriend, I was getting worried about you... as you were fascinated by girl stuff, and when I caught you looking through my most feminine clothes and reading girly magazines, I thought you were interested in those things."'
 		'Igor blushes as Galina revealed a big secret Igor had. He angrily replies "T-that is not true at all. Why are you lying? Are you trying to destroy my relationship?"'
 		'"I didn''t know what to think. I mean I didn''t see you hooking up with other girls... No need to get all defensive about it I''m sure your girlfriend won''t mind."'
 		act 'I don''t really mind':
-		*clr & cla
+			*clr & cla
 			'Not knowing if Galina is telling the truth or not, you try to defuse the tense situation by saying that you don''t really care.'
 			'"Not you too... I haven''t been doing anything like that! She''s clearly lying."'
 			'"Sheesh, you''re so sensitive. I was only kidding." Galina laughs.'
 			'Igor calms down a bit but he''s still upset. As Galina doesn''t want to keep on teasing him, she turns to you.'
 			act 'Listen to her':
-			*clr & cla
+				*clr & cla
 				'"I don''t know if you''ve met our parents yet? They''re really nice... My mother is a control freak and she has my father wrapped around her little finger."'
 				'Before being able to answer her Igor speaks up instead...' 
 				'"You really shouldn''t be talking about our parents that way. You know they''ve always done everything for you."'
 				act 'Step in':
-				*clr & cla
+					*clr & cla
 					'As you''re tired of hearing them bickering, you ask Galina what attending the University is like?'
 					'She gleams as you ask her that question and she tells you that she''s having the best time of her life. There are lots of interesting stuff going on all the time. And don''t get me started on all the parties going on.'
 					'"Sounds like great fun. I look forward to the experience."'
 					act 'Further':
-					*clr & cla
+						*clr & cla
 						'"Are you still pouting?" Galina asks Igor.'
 						'Igor refuses to answer.'
 						'"Well, if you''re going to act like that you might as well leave my room."'
@@ -321,22 +340,22 @@ if $ARGS[0] = 'igorsisterkom':
 	'"Hi Galina. I would like to introduce you to this girl from my school."'
 	'"Well, well not bad Igor. And who might you be?"'
 	act 'Introduce yourself':
-	*clr & cla
+		*clr & cla
 		'"My name is <<$pcs_nickname>>. Nice to meet you."'
 		'Galina looks at you, inspecting you from head to toe.'
 		'"Nice to meet you too." she says smiling. "Nice to see you with a girl Igor. So tell me are the two of you dating?"'
 		act 'Further':
-		*clr & cla
+			*clr & cla
 			'The two of you look at each other, shaking your heads.'
 			'Igor begins explaining, "No, we''re only friends. We are doing a school project togheter..."'
 			'"That''s too bad, I was hoping that you had gotten yourself a girlfriend."'
 			'Igor starts blushing as Galina mentions that the two of you would be a cute couple.'
 			act 'Intermeddle':
-			*clr & cla
+				*clr & cla
 				'"You never know what might happen. We''re taking it slowly and we''re just friends."'
 				'"I''m quite protective of my little brother as he''s shy and quiet. And I know he''s being used by his friend?"'
 				act 'Dimka, you mean?':
-				*clr & cla
+					*clr & cla
 					'"Yeah, that little creep. I''ve caught him several times over the years of him spying on me as I was changing or taking a shower."'
 					'"He''s also dragging Igor around into all kinds of troubles, using him..."'
 					!!if Dimka hasn''t recorded him and Sveta having sex and Sveta considers Dimka still being a sweet guy.
@@ -349,20 +368,21 @@ if $ARGS[0] = 'igorsisterkom':
 						'"Well I for one don''t believe you. I spend a lot of time with him and he''s never done anything like that. People are jealous of Dimka, they only want to destroy his reputation..."'
 					end
 					act 'Further':
-					*clr & cla
+						*clr & cla
 						'"Never mind. I''m really happy that Igor got a new friend, hopefully he''ll break away from Dimka."'
 						'"Don''t be like that, sis. Dimka is my only real friend..." Igor looks at you, wanting to move on.'
 						'You nod, turning to Galina saying, "It was really fun to get to know you. I look forward seeing you again."'
 						'"You too. Just don''t hurt my brother or you''ll have to deal with me." Galina looks seriously at you.'
 						'You take a step back as she threatens you...'
 						'"I''m only kidding." she says. "Don''t be afraid." she laughs.'
-					act 'Leave the room': gt 'IgorHome', 'kor'
+
+						act 'Leave the room': gt 'IgorHome', 'kor'
 					end
 				end
 			end
 		end
 	end
-		
+end	
 
 !!adding all the new rooms to the bottom here, put them where you like and make sure I got the code right.
 if $ARGS[0] = 'living':
@@ -414,7 +434,7 @@ if $ARGS[0] = 'living':
 							'"I wouldn''t get my hopes up... It might be for the best if you took the first step, you know, just to loosen him up and make him more confident in himself."'
 							'"But don''t worry I''ll have a talk with him and push him on. Maybe he will actually listen to my advice for once..."'
 							'Feeling happy about what you''ve just heard, you tell him that you need to return to Igor and you can''t wait for them to have the talk.'
-						act 'Leave the living room': gt 'Igorhome', 'kor'
+							act 'Leave the living room': gt 'Igorhome', 'kor'
 						end
 						!!if girlfriend
 						act 'Actually...':
@@ -505,16 +525,17 @@ if $ARGS[0] = 'living':
 		'Instead you take charge, "Hello, My name is <<$pcs_nickname>> <<$pcs_lastname>>."'
 		'"Such a true beauty, a real gem. Have you had the pleasure meeting my wife? I wonder how she reacted when she saw you?" Gemorgen says laughing. "She can be quite over-bearing when it comes to Igor."'
 		if met_IgorMother = 1 
-		act 'Yes, I''ve met her':
-			*clr & cla
-			'"It was really interesting, I could probably get along with her, but she needs to stop with the disapproving attitude."'
-			'"I''m truly sorry you had to experience that side of my wife. She likes to keep up an illusion as if she''s mother Theresa or something, back in the days me and her used to all get in all sorts of trouble."'
-		end 
+			act 'Yes, I''ve met her':
+				*clr & cla
+				'"It was really interesting, I could probably get along with her, but she needs to stop with the disapproving attitude."'
+				'"I''m truly sorry you had to experience that side of my wife. She likes to keep up an illusion as if she''s mother Theresa or something, back in the days me and her used to all get in all sorts of trouble."'
+			end 
 		else
-		act 'Unfortunately, I haven''t had the pleasure yet':
-			*clr & cla
-			'Gemorgen looks at you laughing, "Maybe it''s for the best. She can be quite a handful when it comes to a certain kind of girls..."'
-			'The two of you laugh as Gemorgen hints that his wife feels threatend when someone more beautiful comes visits them.'
+			act 'Unfortunately, I haven''t had the pleasure yet':
+				*clr & cla
+				'Gemorgen looks at you laughing, "Maybe it''s for the best. She can be quite a handful when it comes to a certain kind of girls..."'
+				'The two of you laugh as Gemorgen hints that his wife feels threatend when someone more beautiful comes visits them.'
+			end
 		end
 			act 'You hear a sigh':
 				*clr & cla
@@ -540,28 +561,27 @@ if $ARGS[0] = 'living':
 					act 'Leave the living room': gt 'Igorhome', 'kor'
 					end
 				end
-				!!if girlfriend 
-				act 'Should we tell him':
-					*clr & cla
-					'You and Igor look at each other, you nodding at Igor he should speak up. Igor takes a deep breath and tells his father that the two of you are dating.'
-					'"That''s the best news I''ve heard this week! You''ve really picked an attractive girl. I knew you had it in you. So tell me have you had the chance to bang your pretty girlfriend yet?"'
-					'Igor looks stunned not knowing what to answer. He looks at you, asking to help him out...'
-					!!if had sex with Igor
-						'"Well, you can say that the two of us have had quite some good moments." you look at Igor smiling. "But, since Igor is inexperienced we''re taking it slow. I''m positive he''ll improve..."'
-						'"Well, I''m sure you''re quite the teacher... I''m just glad Igor has found someone to look after him..."'
-						'You wink at the father as not to worry. You grab Igor by the arm, and the two of you leave the living room feeling relieved that you''ve told Gemorgen.'
-						act 'Leave the living room': gt 'Igorhome', 'kor'
-					end
-					!!else if not had sex with Igor but not virgin
-						'"I hope something will happen soon he''s been avoiding that part of our relationship..." you say a bit disappointed.'
-						'"Don''t worry I''ll have a talk man to man. He''s innocent like a little lamb. He probably doesn''t know what to do..."'
-						'Igor blushes while you thank the father for wanting to help out. The two of you leave the living room.'
-						act 'Leave the living room': gt 'Igorhome', 'kor'
-					end
-					!!else virgin
-						'"No, I''m still a virgin and I''m not ready yet to lose it yet and Igor is really understanding. One day maybe but not right now..."'
-						'Gemorgen looks a bit disappointed at Igor but doesn''t say anything since his son as he doesn''t want to jeopardize the relationship....'
-						act 'Leave the living room': gt 'Igorhome', 'kor'
+				if igor_gf = 1: 
+					act 'Should we tell him':
+						*clr & cla
+						'You and Igor look at each other, you nodding at Igor he should speak up. Igor takes a deep breath and tells his father that the two of you are dating.'
+						'"That''s the best news I''ve heard this week! You''ve really picked an attractive girl. I knew you had it in you. So tell me have you had the chance to bang your pretty girlfriend yet?"'
+						'Igor looks stunned not knowing what to answer. He looks at you, asking to help him out...'
+						if Igor_sex > 0:
+							'"Well, you can say that the two of us have had quite some good moments." you look at Igor smiling. "But, since Igor is inexperienced we''re taking it slow. I''m positive he''ll improve..."'
+							'"Well, I''m sure you''re quite the teacher... I''m just glad Igor has found someone to look after him..."'
+							'You wink at the father as not to worry. You grab Igor by the arm, and the two of you leave the living room feeling relieved that you''ve told Gemorgen.'
+							act 'Leave the living room': gt 'Igorhome', 'kor'
+						elseif pcs_vag ! 0:
+							'"I hope something will happen soon he''s been avoiding that part of our relationship..." you say a bit disappointed.'
+							'"Don''t worry I''ll have a talk man to man. He''s innocent like a little lamb. He probably doesn''t know what to do..."'
+							'Igor blushes while you thank the father for wanting to help out. The two of you leave the living room.'
+							act 'Leave the living room': gt 'Igorhome', 'kor'
+						elseif pcs_vag = 0:
+							'"No, I''m still a virgin and I''m not ready yet to lose it yet and Igor is really understanding. One day maybe but not right now..."'
+							'Gemorgen looks a bit disappointed at Igor but doesn''t say anything since his son as he doesn''t want to jeopardize the relationship....'
+							act 'Leave the living room': gt 'Igorhome', 'kor'
+						end
 					end
 				end
 			end
@@ -649,7 +669,7 @@ if $ARGS[0] = 'kitchen':
 				'"No no, not at all, it''s just that I can see a lot of her in you..." she adds.'
 				act 'Igor told me a lot about your family':
 					*clr & cla
-				    'You stand there in silence for a minute akwardly looking at each other when suddenly a question pops in your head. What about the family?' 
+				    'You stand there in silence for a minute awkwardly looking at each other when suddenly a question pops in your head. What about the family?' 
 					'She shines up as you mention the family, "Only good things I hope. My pride and joy is studying at the university in the city. She''s at the top of her class, not that I ever doubted, she''s a real go getter."'
 				    '"I''m so proud of her, at first I was worried how she would handle herself in the big city. I talked to my little baby every day, just to make sure she was okay..."'
 				    'Igor''s sister must really be curled you think to yourself, a spoiled brat thats always gotten everything served on a silver platter.'
@@ -657,7 +677,7 @@ if $ARGS[0] = 'kitchen':
 				    '"I met my husband in my twenties, he was so good looking. Right away I knew we would be the perfect couple. The first years were rough but as soon my husband was done with the studies, he''s an accountant by the way, we got married and I got pregnant with my pride and joy."'
 				    '"Two years later I had Igor and went back to my work as a secretary at a law firm."'
 				    '"So for a more important question, how did you and my sweet little Igor meet?"'
-					act 'We met through a mutual schoolmate, Dimka.':
+					act 'We met through a mutual schoolmate, Dimka':
 						*clr & cla
 					    '"Well, we are classmates, but it was through Dimka we started hanging out with each other. He thought we would get along really well."'
 					    '"Oh, Dimka, that sweet sweet boy. He''s been Igor''s friend as long as I can remember. How''s Dimka doing, it''s been a while since I''ve seen him?"'
@@ -963,15 +983,16 @@ if $ARGS[0] = 'home':
 	'<center><img  src="images/locations/pavlovsk/resident/Igorhome/house.jpg"></center>'
 	'You walk up to the front door and knock.'
 !!This will have a lot of if's and elseif's.
-!!If during the week and no school holiday or summer and it is in between 08:00 and 14:30 then this happens.
+	if week < 6 and hour >= 8 and (hour < 15 or (hour = 15 and minut >= 30)) and SchoolAtestat = 0 and kanikuli = 0:
         'After knocking several times, no one answers. It seems no one is home.'
 		act 'Leave Igor''s home': gt 'pavResidential'
-!!If during the week after 18:00 to 22:00 or on weekends after 09:00 to 22:00 this happens
+	elseif (week < 6 and hour >= 18 and hour < 22 and SchoolAtestat = 0 and kanikuli = 0) or (week >= 6 and hour >= 9 and hour < 22):
 		'A few moments later Igor''s mom answers the door and invites you in.'
 		act 'Enter': gt 'Igorhome', 'kor'
 !!If during school during the week after 14:30 to 18:00 or during summer during the week after 09:00 to 18:00 this happens, there is a 25% the one below happens instead of this version.
 		'A few moments later Igor answers the door and invites you in.'
 		act 'Enter': gt 'Igorhome', 'kor'
+	else
 !!There is a 25% chance this happens instead of Igor answers then door in the above one. He is home just currently cross dressing and is afraid to answer the door.
 !!Igor in drag
 		'No one answers and you are just about to leave when you see movement inside. Maybe they don''t want to be disturbed or maybe they didn''t hear you knocking, or maybe someone broke into their house. What should you do?'
