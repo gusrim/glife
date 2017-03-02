@@ -1,42 +1,43 @@
 # mey_home
 
-*clr & cla
-$metkaM = $ARGS[0]
-$locM = 'mey_home'
-$metka = $ARGS[0]
-$loc = 'mey_home'
 FColor = RGB(0,0,0)
 BColor = RGB(255,255,255)
 LColor = RGB(106,90,205)
 $location_type = 'indoors'
-!! a crutch for the action in the kitchen
-if val($args[0]) > 0: args[0] = val($args[0])
-!! check for availability
-if args[0] < 0:
-	$_str[0] = 'No time to walk-in guests...'
-	$_str[1] = 'You walked up to the Meynolds residence and rang the doorbell...'
-	$_str[2] = 'No one opens the door, you notice nobody''s home.'
-	$_str[3] = 'After a short wait, you hear the lock click and you see Katja''s mom Kathy and sister Vicky standing by the door: <br><do>Oh hi, <<$pcs_nickname>>, welcome! Come in, make yourself at home.</do>'
-	$_str[4] = 'Katja opens the door and quickly drags you to her room.'
-	$_str[5] = 'You opened the door with the key and entered the house.'
+
+!! corporate only at the end of the month on weekends, check
+if day <= 25 and mey_vika['mey_vika_qw'] > 40: mey_vika['mey_vika_qw'] = 40
+
+if $args[0] = 'door':
+	$metkaM = 'door'
+	$locM = 'mey_home'
+	$metka = 'door'
+	$loc = 'mey_home'
+	cls
+	gs'stat'
+	'<center><h4><font color="maroon">Meynold''s house</font></h4></center>'
+	'<center><img src="images/locations/pavlovsk/resident/meynolds/mey_home.jpg"></center>'
 
 	if mey_vika['key'] = 1:
-		$_str[5]
+		'You opened the door with the key and entered the house.'
 
-		act 'Enter': gt 'mey_home', 0
+		act 'Enter': gt 'mey_home', 'start'
 		exit
 	end
 
 	if hour < 20 and ((week < 6 and hour >= 17) or (week >= 6 and hour > 10)):
-		if mey_vika['mey_vika_qw'] >= 27:
-			if mey_vika['mey_vika_qw'] = 27: gt 'mey_tamara_events', 'next_meet'
-			i = 3
+		if mey_vika['mey_vika_qw'] = 27: gt 'mey_tamara_events', 'next_meet'
+		if mey_vika['mey_vika_qw'] > 27:
+			'<center><img src="images/locations/pavlovsk/resident/meynolds/tamara_tea1.jpg"></center>'
+			'You walk up to the Meynolds residence and ring the doorbell...'
+			'After a short wait, you hear the lock click and you see Katja''s mom Kathy and sister Vicky standing by the door: <br><do>Oh hi, <<$pcs_nickname>>, welcome! Come in, make yourself at home.</do>'
+
+			act 'Enter': gt 'mey_home', 'start'
+			exit
 		else
-			i = 2
-		end
-		if i = 2:
 			cla
-			$_str[1]+ '<br>' +$_str[4]
+			'You walk up to the Meynolds residence and ring the doorbell...'
+			'Katja opens the door and quickly drags you to her room.'
 
 			act 'Go to Katjas room': 
 				if frost > 0: frost = 0 
@@ -44,106 +45,32 @@ if args[0] < 0:
 			end
 			exit
 		end
-		if i = 3:
-			'<center><img src="images/locations/pavlovsk/resident/meynolds/tamara_tea1.jpg"></center>'
-			$_str[1]+ '<br>' +$_str[3]
-
-			act 'Enter': gt 'mey_home', 0
-			exit
-		end
 	else
 		'<center><img src="images/locations/pavlovsk/resident/meynolds/tamara_tea0.jpg"></center>'
-		iif(hour < 10 or hour > 20,$_str[0],$_str[1]+ '<br>' +$_str[2])
+		'You walk up to the Meynolds residence and ring the doorbell...'
+		'No one opens the door, it looks like nobody''s home or they are all asleep.'
+		'Maybe you should try again at a more sociable time?'
 
 		act 'Go back': minut += 10 & gt 'pavResidential'
 		exit
 	end
 end
 
-killvar '$_str'
-
-mey_loc_id = args[0]
-minut += 1
-gs 'stat'
-! ----- NAV array ----- !
-$mey_desc[0+"_"+'name'] = 'Hall'
-$mey_desc[1+"_"+'name'] = 'Kitchen'
-$mey_desc[2+"_"+'name'] = 'Bathroom'
-$mey_desc[3+"_"+'name'] = 'Guest Room'
-$mey_desc[4+"_"+'name'] = 'Living-room'
-$mey_desc[5+"_"+'name'] = 'Katja''s Room'
-$mey_desc[6+"_"+'name'] = 'Vicky''s Room'
-$mey_desc[7+"_"+'name'] = 'Tamara Mikhailovna''s Room'
-$mey_desc[8+"_"+'name'] = 'Veranda'
-$mey_desc[9+"_"+'name'] = 'The yard'
-
-$mey_desc[0+"_"+'image'] = 'hall'
-$mey_desc[1+"_"+'image'] = 'kitchen'
-$mey_desc[2+"_"+'image'] = 'bathroom'
-$mey_desc[3+"_"+'image'] = 'guestroom'
-$mey_desc[4+"_"+'image'] = 'living-room'
-$mey_desc[5+"_"+'image'] = 'katya_room'
-$mey_desc[6+"_"+'image'] = 'vika_room'
-$mey_desc[7+"_"+'image'] = 'tamara_room'
-$mey_desc[8+"_"+'image'] = 'terrace'
-$mey_desc[9+"_"+'image'] = 'courtyard'
-
-$mey_desc[0+"_"+'text'] = 'A large and bright hall, this "hallway" stretches for quite a bit, you''ve never seen anything like this before! There is a mirror covering half of one of the walls. You see the kitchen from the hallway, there''s a big oval dining table. There are stairs leading to the second floor. You can also see two doors where the signs say "Toilet" and "Bathroom".'
-$mey_desc[1+"_"+'text'] = 'The kitchen is huge and luxurious. It is decorated in a minimalist high-tech style. An oval dining room table standing in the middle of the room. The appliances are all hidden. The kitchen is sparkling clean.'
-$mey_desc[2+"_"+'text'] = 'A spacious bathroom with a shower cubicle with glass door, toilet with bidet, and a large hot tub that occupies a big part of the bathroom, it feels more like a small pool.'
-$mey_desc[3+"_"+'text'] = 'It feels and looks like a standard room in a hotel. There is a bed, a small wardrobe, a desk, bedsides the table hangs a mirror on the wall.'
-$mey_desc[4+"_"+'text'] = 'Spacious room with a sofa and armchairs, on the wall hangs a large plasma TV, located next to the bookcase, and on the opposite side is the fireplace, from the hall there is access to a bright veranda, overgrown with grapes'
-$mey_desc[5+"_"+'text'] = 'Katja''s room feels like someone is living there temporarily and will soon move out. The stuff in the room are in the perfect order, depicting the feeling off a "non-residential premise". There are numerous flowers in the pots on the windowsill, there are pots hanging on the walls and there are even plants in pots on the floor giving the room a greenhouse feeling. There is a computer desk in one of the corners, opposite of the bed. In another corner is a hidden wardrobe. Lastly a well hidden bookshelf can be seen in the room, but it is kinda hard to spot because of wildly overgrown plants.'
-$mey_desc[6+"_"+'text'] = 'Vicky''s room is always in a mess. It''s clean, but everything is scattered all over the place. There are soft toys laying around in enormous quantities, and all the walls are plastered with posters of pop stars and film actors. There''s a laptop on the table by the window, it accidentally brings a sense of orderliness. The stacks of magazines resemble music speakers. The rooms centerpiece is the ginormous bed, next to it is a wardrobe. There''s a lone chair somewhere in the corner hidden under all the stuff.'
-$mey_desc[7+"_"+'text'] = 'You would say Tamara Mikhailovna''s room resembles an office, if it was not for the bed in the corner. There''s a computer on a desk, a wardrobe, and a big but a pretty modest bed. The room is quite small and cramped. There are no decorations but one, a sword hanging on the wall. It''s unclear what it''s doing there.'
-$mey_desc[8+"_"+'text'] = 'You can see the yard looking from the porch. The neighbors wiew is obscured by a high fence and braided grapes. There is a summer kitchen with a grill and a collection of wicker furniture, few chairs, a table and a sunbed mattress.'	
-$mey_desc[9+"_"+'text'] = 'A car belonging to Tamara Mikhailovna is parked in the yard, there''s also a small pool.'
-
-'<center><h4><font color="maroon">'+$mey_desc[mey_loc_id+'_'+name]+'</font></h4></center>'
-'<center><img src="images/characters/pavlovsk/school/girl/meynolds/event/'+$mey_desc[mey_loc_id+"_"+'image'] + '.jpg"></center>'
-$mey_desc[mey_loc_id+"_"+'text']
-
-killvar '$mey_desc'
-! ---------------------- !
-
-! actions
-if mey_loc_id = 0:
-	act '<b>On the street</b>': killvar 'mey_loc_id' & gt 'pavResidential'
-	act 'Patio': gt $curloc, 9
-end
-if mey_loc_id ! 0: act 'Hallway': gt $curloc, 0
-if mey_loc_id ! 1: act 'Kitchen': gt $curloc, 1
-if mey_loc_id ! 2: act 'Bathroom': gt $curloc, 2
-act '<center><img src="images/locations/pavlovsk/resident/meynolds/splitter.png" width=100% height=1></center>': exit
-if mey_loc_id ! 3: act 'Guest room': gt $curloc, 3
-if mey_loc_id ! 4: act 'Hall': gt $curloc, 4
-if mey_loc_id = 4: act 'Veranda': gt $curloc, 8
-if mey_loc_id ! 5: act 'Katja''s room': gt $curloc, 5
-if mey_loc_id ! 6: act 'Vicky''s room': gt $curloc, 6
-if mey_loc_id ! 7: act 'Tamara Mikhailovna''s room': gt $curloc, 7
-
-! corporate only at the end of the month on weekends, check
-if day <= 25 and mey_vika['mey_vika_qw'] > 40: mey_vika['mey_vika_qw'] = 40
-
-if mey_loc_id = 2: 
-	!bathroom
-	*clr & cla
-	$locM = 'mey_home'
-	$metkaM = '2'
-	minut += 1
-	gs 'stat'
-	$location_type = 'bathroom'	
-	'<center><b><font color = maroon></font></b></center>'
-	'<center><img src="images/locations/pavlovsk/hotel/hotel.room.best1.jpg"></center>'
-	'A luxurious bathroom looking like the five-star hotel bathrooms you read about in the magazines.'	
-	!acts copy from [shulgabath]
-	act 'Return to the hallway': gt $loc, $metka
-
-	gs 'din_van', 'private'
-end
-
 ! hall
-if mey_loc_id = 0:
+if $ARGS[0] = 'start':
+	$metkaM = 'start'
+	$locM = 'mey_home'
+	$metka = 'start'
+	$loc = 'mey_home'
+	cls
+	gs'stat'
+	'<center><h4><font color="maroon">Hall</font></h4></center>'
+	'<center><img src="images/locations/pavlovsk/resident/meynolds/corridor.jpg"></center>'
+	'A large and bright hall, this "hallway" stretches for quite a bit, you''ve never seen anything like this before! There is a mirror covering half of one of the walls. You see the kitchen from the hallway, there''s a big oval dining table.'
+	'There are stairs leading to the second floor. You can also see two doors where the signs say "Toilet" and "Bathroom".'
+
+	act '<b>Leave the house</b>': gt 'pavResidential'
+
 	if mey_vika['mey_vika_qw'] = 30 and mey_vika['qw_day'] ! daystart and hour = 23: gs 'mey_vika_events', 'case_gift'
 	if week mod 2 ! 0 and mey_vika['mey_vika_qw'] >= 32 and mey_vika['gym_day'] ! daystart and hour = 16 and minut >= 30: gs 'mey_vika_events', 'gym0'
 	if week mod 2 ! 0 and mey_vika['mey_vika_qw'] >= 32 and mey_vika['gym_day'] ! daystart and hour = 17 and minut >= 30: gs 'mey_vika_events', 'gym1'
@@ -187,19 +114,35 @@ if mey_loc_id = 0:
 				else
 					'<br>You take out a hefty vacuum cleaner from the closet, and it takes you about an hour to vacuum the house.'
 
-					act 'Finish': gt 'mey_home', 0
+					act 'Finish': gt 'mey_home', 'start'
 				end
 			end
 		end
 	end
+	act 'Kitchen': gt 'mey_home', '1'
+	act 'Bathroom': gt 'mey_home', '2'
+	act 'Guest room': gt 'mey_home', '3'
+	act 'Lounge': gt 'mey_home', '4'
+	act 'Katja''s room': gt 'mey_home', '5'
+	act 'Vicky''s room': gt 'mey_home', '6'
+	act 'Tamara Mikhailovna''s room': gt 'mey_home', '7'
+	act 'Garden': gt 'mey_home', '8'
+
 	if rand (0,2) ! 0:gs 'din_bad' & dynamic $mobile_check	
 end
 
 ! kitchen
-if mey_loc_id = 1:
-	cla
-	$loc = $curloc
-	$metka = str(mey_loc_id)
+if $ARGS[0] = '1':
+	cls
+	$loc = 'mey_home'
+	$metka = '1'
+	gt 'stat'
+	'<center><h4><font color="maroon">Kitchen</font></h4></center>'
+	'<center><img src="images/locations/pavlovsk/resident/meynolds/kitchen.jpg"></center>'
+	'The kitchen is huge and luxurious. It is decorated in a minimalist high-tech style. An oval dining room table standing in the middle of the room. The appliances are all hidden. The kitchen is sparkling clean.'
+	
+	act 'Return to hallway': gt 'mey_home', 'start'
+
 	if mey_vika['mey_vika_qw'] >= 32 and ((week < 6 and hour >= 16 and hour < 20) or (week = 6 and hour >= 10 and hour < 20)) and mey_tamara['help_day'] ! daystart:
 		act 'Cook for the whole family':
 			cla
@@ -209,7 +152,7 @@ if mey_loc_id = 1:
 			gs 'stat'
 			'<br>You take out the food from the refrigerator, and start cooking for the whole family. It takes you about an hour to finish.'
 
-			act 'Finish': gt 'mey_home', 0
+			act 'Finish': gt 'mey_home', '1'
 		end
 	end
 	!copy acts from [gadhouse]
@@ -231,7 +174,7 @@ if mey_loc_id = 1:
 
 		gs 'stat'
 
-		act 'Get up from the table':gt 'mey_home'
+		act 'Get up from the table':gt 'mey_home', '1'
 	end
 
 	if pranik > 0:
@@ -255,7 +198,7 @@ if mey_loc_id = 1:
 			'<center><img src="images/shared/food/food.jpg"></center>'
 			'You enjoy a cup of tea while you eat some cookies. You know they''re too sweet and can''t be good for your figure, but they taste so good!'
 
-			act 'Get up from the table':gt 'mey_home'
+			act 'Get up from the table':gt 'mey_home', '1'
 		end
 	end
 
@@ -289,7 +232,7 @@ if mey_loc_id = 1:
 				'You have a cup of tea, quenching your thirst.'
 			end
 
-			act 'Get up from the table':gt 'mey_home'
+			act 'Get up from the table':gt 'mey_home', '1'
 		end
 	end
 
@@ -312,7 +255,7 @@ if mey_loc_id = 1:
 				'<center><img src="images/locations/shared/apartment/event/sick/lekr<<picrand>>.jpg"></center>'
 				'You swallow the pill, and shortly after you feel a bit better.'
 
-				act 'Continue':gt 'mey_home'
+				act 'Continue':gt 'mey_home', '1'
 			end
 		end
 	end
@@ -340,40 +283,60 @@ if mey_loc_id = 1:
 
 				'You take some vitamins to stay healthy.'
 
-				act 'Continue':gt 'mey_home'
+				act 'Continue':gt 'mey_home', '1'
 			end
 		end
 	end
 
 	gs 'events', 'read'
 
-	
-	act 'Leave': gt 'mey_home', 0
 	if rand (0,2) ! 0:gs 'din_bad' & dynamic $mobile_check
 end
 
+if $ARGS[0] = '2': 
+	!bathroom
+	$locM = 'mey_home'
+	$metkaM = '2'
+	minut += 1
+	cls
+	gs'stat'
+	$location_type = 'bathroom'	
+	'<center><b><font color = maroon>Bathroom</font></b></center>'
+	'<center><img src="images/locations/pavlovsk/hotel/hotel.room.best1.jpg"></center>'
+	'A luxurious bathroom looking like the five-star hotel bathrooms you read about in the magazines.'	
+	!acts copy from [shulgabath]
+	act 'Return to the hallway': gt 'mey_home', 'start'
+
+	gs 'din_van', 'private'
+end
+
 ! guestroom
-if mey_loc_id = 3:
-	cla
-	$loc = $curloc
-	$metka = str(mey_loc_id)
-	!add room function from [bedrpar]
+if $ARGS[0] = '3':
+	cls
+	$loc = 'mey_home'
+	$metka = '3'
+	minut += 1
+	gs 'stat'
+	'<center><h4><font color="maroon">Guest room</font></h4></center>'
+	'<center><img src="images/locations/pavlovsk/resident/meynolds/guestroom.jpg"></center>'
+	'It feels and looks like a standard room in a hotel. There is a bed, a small wardrobe, a desk, bedsides the table hangs a mirror on the wall.'
+
 	'A <a href="exec:gt ''mirror'', ''start''">mirror</a> hangs on the wall near the front door, besides that are the <a href="exec:gt ''cloakroom'', ''view_coat_list''">coat hooks</a>.'
 	if komp = 1:'Your <a href="exec:GT ''Komp'',''start''">laptop</a> is on the desk.'
-	
-	act '<b>Go outside</b>':
+
+	act 'Exit to hallway':
 		if ($clothingworntype = 'nude' or $clothingworntype = 'swimwear'):
 			*clr
 			'<center><img src="'+'images/pc/clothing/'+iif(tanga=0,'0','tanga')+'.jpg'+'"></center>'
 			'<center><font color=red><b>You can''t go out dressed like this!</b></font></center>'
 			exit
 		end
-		gt 'mey_home', 0
+		gt 'mey_home', 'start'
 	end
 
 	act 'Sleep': gs 'bed', 'start'		
 	
-	act 'Cabinet': gt 'clothing', 'view_clothing_list', 'wardrobe'
+	act 'Wardrobe': gt 'clothing', 'view_clothing_list', 'wardrobe'
 
 	gs 'exercise', 'start'
 
@@ -400,7 +363,7 @@ if mey_loc_id = 3:
 			'<center><img src="images/shared/drugs/dur.jpg"></center>'
 			'You snort some White Lady, feeling dizzy for a moment. After that you feel fantastic, and incredibly horny.'
 
-			act 'Continue':gt $curloc
+			act 'Continue':gt 'mey_home'
 		end
 	end
 
@@ -408,13 +371,13 @@ if mey_loc_id = 3:
 		act 'Wear underwear':
 			cla
 			tanga = 1
-			gt $curloc
+			gt 'mey_home'
 		end
 	elseif tanga = 1:
 		act 'Take off your underwear':
 			cla
 			tanga = 0
-			gt $curloc
+			gt 'mey_home'
 		end
 	end
 	
@@ -434,19 +397,32 @@ if mey_loc_id = 3:
 	if rand (0,2) ! 0:gs 'din_bad' & dynamic $mobile_check	
 end
 
-! courtyard
-if mey_loc_id = 9:
-	if hour = 7 and minut >= 30 and week < 6:
-		'<a href="exec:gs''mey_tamara_events'',''tamara''">Aunt Tamara</a> is in the yard talking on the phone.'
+if $ARGS[0] = '4':
+	cls
+	$loc = 'mey_home'
+	$metka = '4'
+	minut += 1
+	gs 'stat'
+	'<center><h4><font color="maroon">Lounge</font></h4></center>'
+	'<center><img src="images/locations/pavlovsk/resident/meynolds/hall.jpg"></center>'
+	'Spacious room with a sofa and armchairs, on the wall hangs a large plasma TV, located next to the bookcase, and on the opposite side is the fireplace, from the hall there is access to a bright garden, overgrown with grapes'
 
-	end
+	act 'Return to hallway': gt 'mey_home', 'start'
+	act 'Garden': gt 'mey_home', '9'
 end
 
-if mey_loc_id = 5:
+if $ARGS[0] = '5':
 !add room katja
-	cla
-	$loc = $curloc
-	$metka = str(mey_loc_id)
+	cls
+	$loc = 'mey_home'
+	$metka = '5'
+	minut += 1
+	gs 'stat'
+	'<center><h4><font color="maroon">Katja''s room</font></h4></center>'
+	'<center><img src="images/locations/pavlovsk/resident/meynolds/katya_room.jpg"></center>'
+	'Katja''s room feels like someone is living there temporarily and will soon move out. The stuff in the room are in the perfect order, depicting the feeling off a "non-residential premise".'
+	'There are numerous flowers in the pots on the windowsill, there are pots hanging on the walls and there are even plants in pots on the floor giving the room a greenhouse feeling.'
+	'There is a computer desk in one of the corners, opposite of the bed. In another corner is a hidden wardrobe. Lastly a well hidden bookshelf can be seen in the room, but it is kinda hard to spot because of wildly overgrown plants.'
 	if katjaFirstKiss >= 1:
 		if hour >= 17 and week < 6 and kanikuli = 0 and hour < 20 or hour >= 9 and week >= 6 and kanikuli = 0 and hour < 20 or hour >= 9 and kanikuli > 0 and hour < 20:
 			act 'Chat with Katja': gt'KatjaHomeTalk'
@@ -454,7 +430,51 @@ if mey_loc_id = 5:
 	else
 		'<font color=red>Your relationship with Katja is not good enough to just barge into her room, better leave as soon as possible.</font>'
 	end
-	act '<b>Out</b>': gt 'mey_home', 0
+	act '<b>Leave</b>': gt 'mey_home', 'start'
+end
+
+if $ARGS[0] = '6':
+	cls
+	$loc = 'mey_home'
+	$metka = '6'
+	minut += 1
+	gs 'stat'
+	'<center><h4><font color="maroon">Vicky''s room</font></h4></center>'
+	'<center><img src="images/locations/pavlovsk/resident/meynolds/vika_room.jpg"></center>'
+	'Vicky''s room is always in a mess. It''s clean, but everything is scattered all over the place. There are soft toys laying around in enormous quantities, and all the walls are plastered with posters of pop stars and film actors.'
+	'There''s a laptop on the table by the window, it accidentally brings a sense of orderliness. The stacks of magazines resemble music speakers. The rooms centerpiece is the ginormous bed, next to it is a wardrobe. There''s a lone chair somewhere in the corner hidden under all the stuff.'
+
+	act 'Return to hallway': gt 'mey_home', 'start'
+end
+
+if $ARGS[0] = '7':
+	cls
+	$loc = 'mey_home'
+	$metka = '7'
+	minut += 1
+	gs 'stat'
+	'<center><h4><font color="maroon">Tamara''s room</font></h4></center>'
+	'<center><img src="images/locations/pavlovsk/resident/meynolds/tamara_room.jpg"></center>'
+	'You would say Tamara Mikhailovna''s room resembles an office, if it was not for the bed in the corner. There''s a computer on a desk, a wardrobe, and a big but a pretty modest bed. The room is quite small and cramped. There are no decorations but one, a sword hanging on the wall. It''s unclear what it''s doing there.'
+
+	act 'Return to hallway': gt 'mey_home', 'start'
+end
+
+! courtyard
+if $ARGS[0] = '8':
+	cls
+	$loc = 'mey_home'
+	$metka = '8'
+	minut += 1
+	gs 'stat'
+	'<center><h4><font color="maroon">Garden</font></h4></center>'
+	'<center><img src="images/locations/pavlovsk/resident/meynolds/courtyard.jpg"></center>'
+	'The garden is quite small for the house and overgrown, most of the space is taken up by a small pool.'
+	'A car belonging to Tamara Mikhailovna is parked on the drive next to the garden.'
+	if hour = 7 and minut >= 30 and week < 6:
+		'<a href="exec:gs''mey_tamara_events'',''tamara''">Aunt Tamara</a> is here talking on her phone.'
+	end
+	act 'Return to hallway': gt 'mey_home', 'start'
 end
 
 --- mey_home ---------------------------------
