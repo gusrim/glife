@@ -44,6 +44,7 @@ if $ARGS[0] = 'workout':
 		gs 'clothing', 'strip', $sportloc
 		gs 'arousal', 'foreplay', 15, 'exhibitionism'
 		gs 'arousal', 'end'
+		clothesAtLocation = FUNC('lost_clothes_here',$sportloc)
 		minut -= 15
 		gs 'stat'
 		if exhibitionQW < 3: 'Your cheeks feel hot with embarrassment as you strip off your clothes. You giggle nervously at the thought of getting caught in the nude - the thought terrifies you but it also excites you.'
@@ -113,6 +114,79 @@ if $ARGS[0] = 'workout':
 	else	
 		Act 'Leave': gt $loc, $metka
 	end
+end
+
+if $ARGS[0] = 'setup':
+!!exer_rout1 = default
+end
+
+if $ARGS[0] = 'matrix':
+	*clr
+	cla
+	X = ARGS[0]
+	act'Confirm':
+		dynamic (exer_rout<<X>>[0] = exer_routX[0])
+		dynamic (exer_rout<<X>>[1] = exer_routX[1])
+		dynamic (exer_rout<<X>>[2] = exer_routX[2])
+		dynamic (exer_rout<<X>>[3] = exer_routX[3])
+		dynamic (exer_rout<<X>>[4] = exer_routX[4])
+		
+		dynamic (exer_stam<<X>> = exer_stam[0] + exer_stam[1] + exer_stam[2] + exer_stam[3] + exer_stam[4])
+		gt 'exercise', 'setup'
+	end
+
+	$exer_matrix = {
+
+	$bgcolor = iif($bgcolor='#f3f4ee','#ffffff','#f3f4ee')
+
+	$RESULT = '<TR bgcolor='+$bgcolor+'>'
+
+	$RESULT += '<TD><<$ARGS[1]>></TD>'
+
+	if exer_routX[ARGS[0]] = 0:
+		exer_stam[ARGS[0]] = 0
+		$RESULT += '<TD>Selected</TD>'
+	else
+		$RESULT += '<TD><a href="exec:exer_routX[<<ARGS[0]>>] = 0 & gt ''exercise'', ''matrix''">Select</a></TD>'
+	end
+
+	if exer_routX[ARGS[0]] = 1:
+		exer_stam[ARGS[0]] = 30
+		$RESULT += '<TD>Selected</TD>'
+	else
+		$RESULT += '<TD><a href="exec:exer_routX[<<ARGS[0]>>] = 1 & gt ''exercise'', ''matrix''">Select</a></TD>'
+	end
+
+	if exer_routX[ARGS[0]] = 2:
+		exer_stam[ARGS[0]] = 40
+		$RESULT += '<TD>Selected</TD>'
+	else
+		$RESULT += '<TD><a href="exec:exer_routX[<<ARGS[0]>>] = 2 & gt ''exercise'', ''matrix''">Select</a></TD>'
+	end
+
+	if exer_routX[ARGS[0]] = 3:
+		exer_stam[ARGS[0]] = 50
+		$RESULT += '<TD>Selected</TD>'
+	else
+		$RESULT += '<TD><a href="exec:exer_routX[<<ARGS[0]>>] = 3 & gt ''exercise'', ''matrix''">Select</a></TD>'
+	end
+
+	if exer_routX[ARGS[0]] = 4:
+		exer_stam[ARGS[0]] = 60
+		$RESULT += '<TD>Selected</TD>'
+	else
+		$RESULT += '<TD><a href="exec:exer_routX[<<ARGS[0]>>] = 4 & gt ''exercise'', ''matrix''">Select</a></TD>'
+	end
+	}
+	'Choose your exercise options from the following table:'
+	'<center><table border=0 cellspacing=0 cellpadding=10 width=1000><TH>Exercise</TH><TH>None</TH><TH>15 mins</TH><TH>30 mins</TH><TH>45 mins</TH><TH>60 mins</TH>'
+	*P dyneval($exer_matrix, 1, 'Push ups')
+	*P dyneval($exer_matrix, 2, 'Crunches')
+	if skak > 0 and $loc ! 'meadow':*P dyneval($exer_matrix, 3, 'Jump rope')
+	if bookYog > 0:*P dyneval($exer_matrix, 4, 'Yoga')
+	if obruch > 0 and $loc ! 'meadow':*P dyneval($exer_matrix, 5, 'Hula hoop')
+
+	'</center></table>'
 end
 
 if $ARGS[0] = 'hula':
