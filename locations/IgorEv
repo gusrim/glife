@@ -1,4 +1,4 @@
-# IgorEV
+# IgorEv
 
 !!Igor = A4
 
@@ -44,15 +44,15 @@ Russian 1.2.5 [igor], combine with [IgorEv]
 add: Talk with Igor in his home (only after IgorLove > 0), 
 corresponding table between Russian and ECV:
 none	gt 'igorEv', 'hometalk'
-dynamic $kruglov_desc	gs 'igorEv', 'kruglov_desc'
-dynamic $din_sex	gs 'igorEv', 'din_sex'
-dynamic $din_sisterkom	gs 'igorEv', 'din_sisterkom'
-dynamic $din_sisterkom_krossdress	gs 'igorEv', 'din_sisterkom_krossdress'
-dynamic $din_krossdresssex	gs 'igorEv', 'din_krossdresssex'
-dynamic $din_sexstrapon	gs 'igorEv', 'din_sexstrapon'
-dynamic $din_igor_end	gs 'igorEv', 'din_igor_end'
-dynamic $din_dimanosov	gs 'igorEv', 'din_dimanosov'
-dynamic $din_progulka_dima	gs 'igorEv', 'din_progulka_dima'
+dynamic $kruglov_desc	gs 'IgorEv', 'kruglov_desc'
+dynamic $din_sex	gs 'IgorEv', 'din_sex'
+dynamic $din_sisterkom	gs 'IgorEv', 'din_sisterkom'
+dynamic $din_sisterkom_krossdress	gs 'IgorEv', 'din_sisterkom_krossdress'
+dynamic $din_krossdresssex	gs 'IgorEv', 'din_krossdresssex'
+dynamic $din_sexstrapon	gs 'IgorEv', 'din_sexstrapon'
+dynamic $din_igor_end	gs 'IgorEv', 'din_igor_end'
+dynamic $din_dimanosov	gs 'IgorEv', 'din_dimanosov'
+dynamic $din_progulka_dima	gs 'IgorEv', 'din_progulka_dima'
 
 nomore	igor_nomore
 sexstrapon igor_sexstrapon	
@@ -75,7 +75,25 @@ qwday	igor_qwday
 $location_type = 'event'
 
 	! walk, movie
-if $ARGS[0] = 'Movies':
+if $ARGS[0] = 'Movies': gt 'IgorEv_Movies'
+if $ARGS[0] = 'Kiss': gt 'IgorEv_Kiss'
+if $ARGS[0] = 'din_sex': gt 'IgorEv_din_sex'
+if $ARGS[0] = 'din_igor_end': gt 'IgorEv_din_igor_end'
+if $ARGS[0] = 'din_krossdresssex': gt 'IgorEv_din_krossdresssex'
+if $ARGS[0] = 'A hint of a strap-on': gt 'IgorEv_hint'
+if $ARGS[0] = 'din_sisterkom': gt 'IgorEv_din_sisterkom'
+if $ARGS[0] = 'din_sisterkom_krossdress': gt 'IgorEv_din_krossdress'
+if $ARGS[0] = 'caught': gt 'IgorEv_caught'
+if $ARGS[0] = 'Lets take another walk': gt 'IgorEv_walk'
+if $ARGS[0] = 'Dimka': gt 'IgorEv_Dimka'
+if $ARGS[0] = 'Ask about Dianas date': gt 'IgorEv_Diana_date'
+if $ARGS[0] = 'Go for a walk': gt 'IgorEv_parkwalk'
+if $ARGS[0] = 'kruglov_desc': gs 'IgorEv_kruglov_desc'
+if $ARGS[0] = 'hometalk': gt 'IgorEv_hometalk'
+-
+
+!if $ARGS[0] = 'Movies':
+#IgorEv_Movies
 	act 'Walk to the theater':
 		cls
 		igor_qweday = day
@@ -126,9 +144,10 @@ if $ARGS[0] = 'Movies':
 			end
 		end
 	end
-end
-
-if $ARGS[0] = 'Kiss':
+!end
+-
+!if $ARGS[0] = 'Kiss':
+#IgorEv_Kiss
 	if Igorhorny < 40 and pcs_horny < 40:
 		cls
 		pcs_mood += 50
@@ -154,33 +173,35 @@ if $ARGS[0] = 'Kiss':
 		'The two of you kiss, he starts groping your breasts and stroking your crotch. He whispers in your ear, "I want you so bad, come on baby." Igor grabs you and pushes you onto the bed.'
 		gs 'arousal', 'kiss', 5
 		gs 'stat'
-		act'Agree to have sex':IgorLove += 10 & gs 'igorEv', 'din_sex'
+		act'Agree to have sex':IgorLove += 10 & gt 'igorEv','din_sex'
 		act 'Stop him':
 			cla
 			igorsub += 1
 			'"Please, let''s stop now." you tell Igor, but he continues to kiss your neck and lightly blows in your ear, not taking no for an answer.'
 			act 'I said NO': igorsub += 2 & gt 'IgorEv', 'hometalk'
-			act 'Well...': gs 'igorEv', 'din_sex'
+			act 'Well...': gt 'igorEv', 'din_sex'
 		end
 !!I want to change the following. Now if they are dating and Sveta just needs a dom/will of 20 and knows Igor cross dresses.
 		if dom >= 20 and igor_krossdresssex >= 1 and igor_kdsexday ! daystart:
 			cla
 			*nl
 			'As you''re not that keen getting penetrated you suggest that you want to introduce Igor to some special kind of kinky sex that turns you on.'
-			act'Propose "special" sex instead':IgorLove += 10 & gs 'igorEv', 'din_krossdresssex'
+			act'Propose "special" sex instead':IgorLove += 10 & gt 'IgorEv', 'din_krossdresssex'
 		end
 !!same as above and owns a strapon, then this option shows up.
 		if strapon >= 1:
-			act'Take out the strap-on': gs 'igorEv', 'A hint of a strap-on'
+			act'Take out the strap-on': gt 'IgorEv', 'A hint of a strap-on'
 		end
 	end
-end
-
+!end
+-
 !!start of dating sex story arc.
 !!this one should only be if Sveta is dating Igor.
-if $ARGS[0] = 'din_sex':
+!if $ARGS[0] = 'din_sex':
+#IgorEv_din_sex
 	if igor_htday ! daystart:
 		*clr & cla
+		$boy = 'Igor'
 		igor_htday = daystart
 		gs 'stat'
 		'Both of you quickly undress, kissing, as you pull the clothes off each other.'
@@ -208,9 +229,10 @@ if $ARGS[0] = 'din_sex':
 					water -= 10
 					gs 'stat'
 					'<center><img src="images/pc/body/cum/swallow/swallow7.jpg"></center>'
-					'You continue sucking his erupted cock and swallow the cum as soon as it reaches your mouth. The stream of sperm is never ending so instead of swallowing everything you let it flow out onto the cock. Finally the flow dies down and you let go of the limp cock out of your mouth. Your <<$liptalk3>> is wet from all the semen.'gs 'igorEv', 'din_igor_end'
+					'You continue sucking his erupted cock and swallow the cum as soon as it reaches your mouth. The stream of sperm is never ending so instead of swallowing everything you let it flow out onto the cock. Finally the flow dies down and you let go of the limp cock out of your mouth. Your <<$liptalk3>> is wet from all the semen.'
 					gs 'arousal', 'bj', 10
 					gs 'stat'
+					gt 'igorEv', 'din_igor_end'
 				end
 				act 'Remove his cock from your mouth':
 					cls
@@ -219,7 +241,7 @@ if $ARGS[0] = 'din_sex':
 					gs 'cum_call', 'face', $boy
 					gs 'arousal', 'end'
 					gs 'stat'
-					gs 'igorEv', 'din_igor_end'
+					gt 'igorEv', 'din_igor_end'
 				end
 			end
 			act 'Have anal sex':
@@ -237,7 +259,7 @@ if $ARGS[0] = 'din_sex':
 				gs 'arousal', 'anal', 15
 				gs 'arousal', 'end'
 				gs 'stat'
-				gs 'igorEv', 'din_igor_end'
+				gt 'igorEv', 'din_igor_end'
 			end
 			if vagina >= 1 and sex >= 1:
 				act 'Tell him to fuck you in the pussy':
@@ -256,7 +278,7 @@ if $ARGS[0] = 'din_sex':
 					gs 'arousal', 'vaginal', 15
 					gs 'arousal', 'end'
 					gs 'stat'
-					gs 'igorEv', 'din_igor_end'
+					gt 'igorEv', 'din_igor_end'
 				end
 			end
 		end
@@ -276,13 +298,30 @@ if $ARGS[0] = 'din_sex':
 				gs 'arousal', 'cuni', 15
 				gs 'arousal', 'end'
 				gs 'stat'
-				gs 'igorEv', 'din_igor_end'
+				gt 'igorEv', 'din_igor_end'
 			end
 		end
+	else
+			*clr & cla
+			igor_qwday = daystart
+			gs 'stat'
+			act 'Lick my pussy':
+				*clr & cla
+				igorkuni += 1
+				gs 'stat'
+				'<center><img src="images/characters/pavlovsk/school/boy/igor/sex/home/kuni_'+ rand(1,8) +'.gif"></center>'
+				'Both of you get undressed and start caressing each other. You tell him that you want him to please you instead.'
+				'You have had sex today already'
+				gs 'arousal', 'cuni', 15
+				gs 'arousal', 'end'
+				gs 'stat'
+				act 'Finish': gt 'igorEv', 'din_igor_end'
+			end
 	end
-end
-
-if $ARGS[0] = 'din_igor_end':
+!end
+-
+!if $ARGS[0] = 'din_igor_end':
+#IgorEv_din_igor_end
 	*nl
 	if $loc = 'gdkin':
 		'With Igor having taken you to his house you should take advantage and use his bathroom to freshen up.'
@@ -290,12 +329,13 @@ if $ARGS[0] = 'din_igor_end':
 		'You should go to the bathroom to freshen up.'
 	end
 	act 'Go to the bathroom': gt 'igorhome', 'vann'
-end		
-
-if $ARGS[0] = 'din_krossdresssex':
+!end
+-
+!if $ARGS[0] = 'din_krossdresssex':
+#IgorEv_din_krossdresssex
 	*clr & cla
 	gs 'stat'
-	gs 'igorEv', 'kruglov_desc'
+	gs 'IgorEv', 'kruglov_desc'
 	'<center><img src="images/characters/pavlovsk/school/boy/igor/talkgf.jpg"></center>'
 	'"You know what, I really enjoyed having sex when you were dressed as a girl!" you tell Igor.'
 	'"Is that so? I have to admit... I enjoyed it too. The sex, that is..." Igor responds.'
@@ -336,10 +376,11 @@ if $ARGS[0] = 'din_krossdresssex':
 			end
 		end
 	end
-end
-
-if $ARGS[0] = 'A hint of a strap-on':
+!end
+-
+!if $ARGS[0] = 'A hint of a strap-on':
 !!this is just the first time they have strapon sex.
+#IgorEv_hint
 	if igor_net < 1:
 		act 'Give Igor a hint about your recent purchase':
 			*clr & cla
@@ -590,10 +631,11 @@ if $ARGS[0] = 'A hint of a strap-on':
 			end
 		end
 	end
-end
-
+;end
+-
 !!this one shows up if they go to the sisters room and Sveta is not dating Igor and does not know he cross dresses.
-if $ARGS[0] = 'din_sisterkom':
+!if $ARGS[0] = 'din_sisterkom':
+#IgorEv_din_sisterkom
 	*clr & cla
 	'<center><b><font color = maroon>Igor''s sister''s room</font></b></center>'
 	'<center><img src="images/locations/pavlovsk/resident/igorhome/komsister.jpg"></center>'
@@ -655,10 +697,11 @@ if $ARGS[0] = 'din_sisterkom':
 			end
 		end
 	end
-end
-
+!end
+-
 !!this shows up in place of the above if they are dating.
-if $ARGS[0] = 'din_sisterkom_krossdress':
+!if $ARGS[0] = 'din_sisterkom_krossdress':
+#IgorEv_din_krossdress
 	*clr & cla
 	'<center><b><font color = maroon>Igor''s sister''s room</font></b></center>'
 	'<center><img src="images/locations/pavlovsk/resident/igorhome/komsister.jpg"></center>'
@@ -801,12 +844,12 @@ if $ARGS[0] = 'din_sisterkom_krossdress':
 			end
 		end
 	end
-end
-
-
+!end
+-
 !!start of crossdressing story arc.
 !!new scene of catching Igor cross dressing.
-if $ARGS[0] = 'caught':
+!if $ARGS[0] = 'caught':
+#IgorEv_caught
     '<center><h4><font color="maroon">Entrance hall</font></h4></center>'
 	'<center><img  src="images/locations/pavlovsk/resident/igorhome/kor.jpg"></center>'
 	'"Igor I think we need to talk, can we go to your room?" you ask him.'
@@ -947,14 +990,14 @@ if $ARGS[0] = 'caught':
 			end
 		end
 	end
-end
-
-
-if $ARGS[0] = 'Lets take another walk':
+!end
+-
+!if $ARGS[0] = 'Lets take another walk':
+#IgorEv_walk
 	if igor_kdprogulka < 2:
 !!this one happens the first time Sveta asks Igor in the chat options to go for a walk, this would be their second crossdressing walk, after caught or first walking if they dating, after having had sex while he was crossdressed in 'din_sisterkom_krossdress':
 		*clr & cla
-		gs 'igorEv', 'kruglov_desc'
+		gs 'IgorEv', 'kruglov_desc'
 		'<center><img src="images/characters/pavlovsk/school/boy/igor/crossdress/getdressed.jpg"></center>'
 		'"I miss my girl friend, so let''s get dressed." you say smiling.'
 		'"Sure, <<$pcs_nickname>>. I''ve waited for some time for you mention it again." he says, excited.'
@@ -1016,7 +1059,7 @@ if $ARGS[0] = 'Lets take another walk':
 	!!This takes the place of the above if they have already had that walk.
 		act 'Take another walk while crossdressed':
 			*clr & cla
-			gs 'igorEv', 'kruglov_desc'
+			gs 'IgorEv', 'kruglov_desc'
 			'<center><img src="images/characters/pavlovsk/school/boy/igor/crossdress/getdressed.jpg"></center>'
 			'"Come on, let''s get you dressed and go for a walk." you say as you''re pulling out the makeup kit. Igor gladly changes into one of his sisters outfits.'
 			act 'Further':
@@ -1056,7 +1099,7 @@ if $ARGS[0] = 'Lets take another walk':
 		act 'Ask Igor if he wants to take a walk':
 			*clr & cla
 			igor_progulkaday = day
-			gs 'igorEv', 'kruglov_desc'
+			gs 'IgorEv', 'kruglov_desc'
 			'<center><img src="images/characters/pavlovsk/school/boy/igor/crossdress/getdressed.jpg"></center>'
 			'"Let''s get you dressed and go for a walk."'
 			'As you start to get out your makeup, Igor says. "I bought some makeup of my own, so I don''t have to keep using yours or my sisters."'
@@ -1093,20 +1136,22 @@ if $ARGS[0] = 'Lets take another walk':
 						cla
 						igorevent1 = 1
 	!!This is a elseif it has a 20% chance of this happening instead of 'Back to Igor''s house' each walk. Each option can only happen once and if it triggers there is a 50/50 chance which one happens. Once one of them has happened then the other one is the one that happens.
-						act 'Dimka': gt 'IgorEV', 'Dimka'
+						act 'Dimka': gt 'IgorEv', 'Dimka'
 	!!This one is commented out for now as I have not written it, i will come back and add it once I have the rest working.
-						!!act 'Anushka': gt 'IgorEV', 'Anushka'
+						!!act 'Anushka': gt 'IgorEv', 'Anushka'
 					end
 				end
 			end
 		end
 	end
-end
+!end
+-
 !!end of crossdressing going for a walk options.
 
 !!Dimka/Igor dating story arc starts.
 !!This is the first time Dimka see''s Sveta walking with Diana/Igor in drag.
-if $ARGS[0] = 'Dimka':
+!if $ARGS[0] = 'Dimka':
+#IgorEv_Dimka
 	if igor_DimaNos = 0:
 		igor_DimaNos = 1
 		'<center><img src="images/characters/pavlovsk/school/boy/igor/crossdress/progulka_4.jpg"></center>'
@@ -1271,7 +1316,7 @@ if $ARGS[0] = 'Dimka':
 								minut += 23
 								igor_DimaNos = 2
 								gs 'stat'
-								gs 'igorEv', 'kruglov_desc'
+								gs 'IgorEv', 'kruglov_desc'
 								'<center><img src="images/characters/pavlovsk/school/boy/igor/talk.jpg"></center>'
 								'"Igor, I think you should go! You know you want to!" you slowly start.'
 								'"Why is that?" he asks you, surprising you a bit.'
@@ -1288,14 +1333,15 @@ if $ARGS[0] = 'Dimka':
 			end
 		end
 	end
-end
+!end
 
 !!first date with Dimka
-if $ARGS[0] = 'Ask about Diana''s date':
+!if $ARGS[0] = 'Ask about Dianas date':
+#IgorEv_Diana_date
 	if igor_DimaNos = 2:
 		*clr & cla
 		igor_DimaNos = 3
-		gs 'igorEv', 'kruglov_desc'
+		gs 'IgorEv', 'kruglov_desc'
 		'<center><img src="images/characters/pavlovsk/school/boy/igor/talk.jpg"></center>'
 		'"How did your date with Dimka go?" you ask.'
 		'"It went well, we took a walk together." Igor replied.'
@@ -1387,7 +1433,7 @@ if $ARGS[0] = 'Ask about Diana''s date':
 																	act 'How did it all end':
 																		*clr & cla
 																		DimaLoveIgor = 2
-																		gs 'igorEv', 'kruglov_desc'
+																		gs 'IgorEv', 'kruglov_desc'
 																		'<center><img src="images/characters/pavlovsk/school/boy/igor/sex/dimdate/cum.jpg"></center>'
 																		'"So you kept sucking his cock?" you said. "Did he cum in your mouth?"'
 																		'"Yeah... Not knowing what else to do, I even swallowed it... As soon as he was done, I got up and went home." Igor answered.'
@@ -1421,7 +1467,7 @@ if $ARGS[0] = 'Ask about Diana''s date':
 		igor_DimaNos = 4
 !!This shows up in place of the above if Igor went on a second date with Dimka
 		*clr & cla
-		gs 'igorEv', 'kruglov_desc'
+		gs 'IgorEv', 'kruglov_desc'
 		'<center><img src="images/characters/pavlovsk/school/boy/igor/talk.jpg"></center>'
 		'"How did your second date with Dimka go?" you ask.'
 		'"It went well, we took a walk together." Igor replied.'
@@ -1505,8 +1551,26 @@ if $ARGS[0] = 'Ask about Diana''s date':
 			end
 		end
 	end
-end
+!end
+-
+#IgorEv_parkwalk
+	*clr & cla
+	gs 'stat'
+	'<center><img src="images/characters/pavlovsk/school/boy/igor/crossdress/progulka_1.jpg"></center>'
+	'You and Diana go for a walk in the park. The two of you talk about many different things. You hear someone behind you calling out your names "<<$pcs_nickname>>, Diana, wait up."'
+	act 'Turn back': gt 'Igorhome',''
+	end
+-
+#IgorEv_kruglov_desc
+	'probably I should describe someone?'
+	end
+-
+#IgorEv_hometalk
+	'what about to chat for a while?'
+	gt 'igorhome', 'Chat'
+	end
+-
 !!end of Dimka/Igor dating story arc scenes. I will add more later.
 
---- IgorEV ---------------------------------
+--- IgorEv ---------------------------------
 
