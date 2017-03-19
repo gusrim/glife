@@ -2,7 +2,20 @@
 
 !!Igor = A4
 
-if $ARGS[0] = '' or $ARGS[0] = 'start':
+if $ARGS[0] = '' or $ARGS[0] = 'start': gt 'igorhome_entrance'
+if $ARGS[0] = 'kor': gt 'igorhome_hallway'
+if $ARGS[0] = 'vann': gt 'igorhome_bathroom'
+if $ARGS[0] = 'Igorkom': gt 'igorhome_igorroom'
+if $ARGS[0] = 'Chat': gt 'igorhome_chat'
+if $ARGS[0] = 'study': gt 'igorhome_study'
+if $ARGS[0] = 'igorsisterkom':gt 'igorhome_sisterroom'
+if $ARGS[0] = 'living':gt 'igorhome_livingroom'
+if $ARGS[0] = 'kitchen':gt 'igorhome_kitchen'
+if $ARGS[0] = 'igorparents':gt 'igorhome_parents'
+if $ARGS[0] = 'home': gt 'igorhome_home'
+-
+
+#igorhome_entrance
 	gs 'stat'
 	'<center><h4><font color="maroon">Igor Kruglov</font></h4></center>'
 	'<center><img src="images/characters/pavlovsk/school/head/4.jpg"></center>'
@@ -48,9 +61,9 @@ if $ARGS[0] = '' or $ARGS[0] = 'start':
 !!			act 'Go to his room': gt 'Igorhome', 'Igorkom'
 !!		end
 !!	end
-end
-
-if $ARGS[0] = 'kor':
+!end
+-
+#igorhome_hallway
 	$location_type = 'indoors'
 	cls
 	minut += 1
@@ -61,14 +74,14 @@ if $ARGS[0] = 'kor':
 	act 'Igor''s Room': gt 'Igorhome','Igorkom'
 	act 'Bathroom': gt 'Igorhome','vann'
 	act 'Igor''s sister''s room': gt 'Igorhome','igorsisterkom'
-	act 'Living Room': : gt 'Igorhome','living'
+	act 'Living Room': gt 'Igorhome','living'
 	act 'Kitchen': gt 'Igorhome','kitchen'
 	act 'Parents Room': gt 'Igorhome','igorparents'
 	act 'Leave Igor''s home': gt 'pavResidential'
 !!going to add the parents bedroom, living room and kitchen. They will be down below, they will need to be moved where you want and coded of course.
-end
-
-if $ARGS[0] = 'vann':
+!end
+-
+#igorhome_bathroom
 	cls
 	minut += 1
 	$metka = 'vann'
@@ -102,9 +115,9 @@ if $ARGS[0] = 'vann':
     dynamic $basin
 
 	act 'Leave the bathroom': gt 'Igorhome', 'kor'
-end
-
-if $ARGS[0] = 'Igorkom':
+!end
+-
+#igorhome_igorroom
 	cls
 	minut += 1
 	gs 'stat'
@@ -116,8 +129,8 @@ if $ARGS[0] = 'Igorkom':
 	!!if igor is home the following is added.
 	'You see sitting on the edge of his bed.' 
 	act 'Excuse yourself': gt 'Igorhome', 'kor'
-    act 'Study': gt 'Igorhome','study'
-	act 'Chat': gt 'Igorhome','study'
+	act 'Study': gt 'Igorhome','study'
+	act 'Chat': gt 'Igorhome','Chat'
 	if hour = 23:
 		if IgorloverQW = 1:
 			*clr & cla
@@ -151,10 +164,10 @@ if $ARGS[0] = 'Igorkom':
 		act 'Decline and go home': gt 'pavResidential'
 		act 'Decline and chat instead':gt 'Igorhome','Chat'
 	end
-end
-
-
-if $ARGS[0] = 'chat':
+	act 'Leave Igor''s room': gt 'Igorhome', 'kor'
+!end
+-
+#igorhome_chat
 	*clr & cla
 	minut += 5
 	gs 'stat'
@@ -169,12 +182,10 @@ if $ARGS[0] = 'chat':
 	else
 		i = rand(0,6)
 	end
-
 	gs 'igorEv', 'kruglov_desc'
 	*nl
 	'You spend some time talking with Igor.'
 	*nl
-
 	if i = 0:
 		'You talk about school, classes, teachers, and how fucked up the system is.'
 	elseif i = 1:
@@ -199,7 +210,6 @@ if $ARGS[0] = 'chat':
 	elseif i = 10:
 		'As you talk about varies things Igor asks you what it''s like being a girl. You start telling him but he ends up having a lot of questions, he seems to really want to know what it is like being a girl.'
 	end
-
 	act 'Continue': gt 'IgorEv', 'hometalk'
 !!this is extra options that show up only if certain things have happened.
 !!this option only shows up if $zz_str[6] has happened.
@@ -213,7 +223,6 @@ if $ARGS[0] = 'chat':
 			act 'Continue': gt 'IgorEv', 'din_sisterkom'
 		end
 	end
-
 	if IgorloverQW = 1:
 		act 'Kiss': gt 'IgorEv', 'Kiss'
 		act 'Date':
@@ -248,12 +257,11 @@ if $ARGS[0] = 'chat':
 	act 'Lets go for walk': gt 'IgorEv', 'Lets take another walk'
 !!This one only shows up if Igor went on a date with Dimka.
 	if igor_DimaNos = 2 or igor_DimaNos = 3:
-		act 'How was your date?': gt 'IgorEv', 'Ask about Diana''s date'
+		act 'How was your date?': gt 'IgorEv', 'Ask about Dianas date'
 	end
-end
-
-
-if $ARGS[0] = 'study':
+!end
+-
+#igorhome_study
 	minut += 60
 	npc_rel['A4'] += 5
 	pcs_grades += rand(0,2)
@@ -265,9 +273,10 @@ if $ARGS[0] = 'study':
 	act 'Study More':gt 'Igorhome','study'
 	act 'Chat':gt 'Igorhome','Chat'
 	act 'Excuse yourself': gt 'Igorhome', 'kor'
-end
-
-if $ARGS[0] = 'igorsisterkom':
+	act 'Leave Igor''s room': gt 'Igorhome', 'kor'
+!end
+-
+#igorhome_sisterroom
 	*clr & cla
 	minut += 1
 	gs 'stat'
@@ -279,6 +288,7 @@ if $ARGS[0] = 'igorsisterkom':
 	!!this is a elseif, if it is 09:00 to 18:00 Igor''s sister is here during school holidays or the summer. Basically when she would be home from the university.
 	'You see Galina laying on her bed using her phone to text with, you don''t think she has noticed you yet.'
 	act 'Talk':
+		*clr & cla
 		'<center><img src="images/locations/pavlovsk/resident/igorhome/sister.jpg"></center>'
 		!!if alone
 			'"Oh, hi! I didn''t think anyone would be here." not expecting anyone being there.'
@@ -422,10 +432,10 @@ if $ARGS[0] = 'igorsisterkom':
 			end
 		end
 	end
-end
-
+!end
+-
 !!adding all the new rooms to the bottom here, put them where you like and make sure I got the code right.
-if $ARGS[0] = 'living':
+#igorhome_livingroom
 	*clr & cla
 	minut += 1
 	gs 'stat'
@@ -577,51 +587,50 @@ if $ARGS[0] = 'living':
 						'The two of you laugh as Gemorgen hints that his wife feels threatend when someone more beautiful comes visits them.'
 					end
 				end
-					act 'You hear a sigh':
+				act 'You hear a sigh':
+					*clr & cla
+					'Igor is clearly dissatisfied how his father is acting, telling him that he shouldn''t be talking about his wife the way he does in front of strangers.'
+					'Gemorgen quickly responds by saying that he''s only joking. And out of nowhere asks Igor if the two of you are dating.'
+					'Igor, visibly blushing answers no and that you''re just friends.' 
+					'"You need to be upfront, son. Look at her, you might never get another shot at a girl like this. Don''t let this one off the hook."'
+					act 'Defend Igor':
 						*clr & cla
-						'Igor is clearly dissatisfied how his father is acting, telling him that he shouldn''t be talking about his wife the way he does in front of strangers.'
-						'Gemorgen quickly responds by saying that he''s only joking. And out of nowhere asks Igor if the two of you are dating.'
-						'Igor, visibly blushing answers no and that you''re just friends.' 
-						'"You need to be upfront, son. Look at her, you might never get another shot at a girl like this. Don''t let this one off the hook."'
-						act 'Defend Igor':
+						'As you notice that Igor is shook by his father’s comments, you step in and say, "We don''t need to rush anything. If it''s meant to be it''s meant to be, otherwise I''m just glad being Igor''s friend."'
+						'"You see son, you''ve just been friend-zoned. It''s no wonder, you''re too much of a wimp and now you''ve chased away <<$pcs_nickname>>."'
+						'Gemorgen looking troubled turns towards you, "You have to forgive my gawky son."'
+						'You take pity on Igor as he''s about to cry. "You shouldn''t be so hard on your son... He''s got feelings too."'
+						!!relationship with Igor goes up
+						act 'Changing the subject':
 							*clr & cla
-							'As you notice that Igor is shook by his father’s comments, you step in and say, "We don''t need to rush anything. If it''s meant to be it''s meant to be, otherwise I''m just glad being Igor''s friend."'
-							'"You see son, you''ve just been friend-zoned. It''s no wonder, you''re too much of a wimp and now you''ve chased away <<$pcs_nickname>>."'
-							'Gemorgen looking troubled turns towards you, "You have to forgive my gawky son."'
-							'You take pity on Igor as he''s about to cry. "You shouldn''t be so hard on your son... He''s got feelings too."'
-							!!relationship with Igor goes up
-							act 'Changing the subject':
-								*clr & cla
-								'"I mean there is plenty to be proud of when it comes to Igor, he''s got really good grades and he''s really kind to everyone."'
-								'Gemorgen doesn''t seem to pay much attention to what you''re saying and instead begins lewdly commenting your looks.'
-								'Not wanting to be rude, you thank him for his kind words, but add fiercely that you have no interest in older men...'
-								'He starts laughing loudly, telling Igor that this one is a keeper, that you have plenty of spunk and he likes it.'
-								'Igor begins tearing up, yells at his father, and shortly thereafter runs away from the room. As you try to catch up with Igor you give the father a stern look...'
-								'You can hear Gemorgen yelling that him running away won''t help with anything...'
+							'"I mean there is plenty to be proud of when it comes to Igor, he''s got really good grades and he''s really kind to everyone."'
+							'Gemorgen doesn''t seem to pay much attention to what you''re saying and instead begins lewdly commenting your looks.'
+							'Not wanting to be rude, you thank him for his kind words, but add fiercely that you have no interest in older men...'
+							'He starts laughing loudly, telling Igor that this one is a keeper, that you have plenty of spunk and he likes it.'
+							'Igor begins tearing up, yells at his father, and shortly thereafter runs away from the room. As you try to catch up with Igor you give the father a stern look...'
+							'You can hear Gemorgen yelling that him running away won''t help with anything...'
 							act 'Leave the living room': gt 'Igorhome', 'kor'
-							end
 						end
-						if IgorLoverQW > 0:
-							act 'Should we tell him':
-								*clr & cla
-								'You and Igor look at each other, you nodding at Igor he should speak up. Igor takes a deep breath and tells his father that the two of you are dating.'
-								'"That''s the best news I''ve heard this week! You''ve really picked an attractive girl. I knew you had it in you. So tell me have you had the chance to bang your pretty girlfriend yet?"'
-								'Igor looks stunned not knowing what to answer. He looks at you, asking to help him out...'
-								if npc_sex['A4'] > 0:
-									'"Well, you can say that the two of us have had quite some good moments." you look at Igor smiling. "But, since Igor is inexperienced we''re taking it slow. I''m positive he''ll improve..."'
-									'"Well, I''m sure you''re quite the teacher... I''m just glad Igor has found someone to look after him..."'
-									'You wink at the father as not to worry. You grab Igor by the arm, and the two of you leave the living room feeling relieved that you''ve told Gemorgen.'
-									act 'Leave the living room': gt 'Igorhome', 'kor'
-								elseif pcs_vag ! 0:
-									'"I hope something will happen soon he''s been avoiding that part of our relationship..." you say a bit disappointed.'
-									'"Don''t worry I''ll have a talk man to man. He''s innocent like a little lamb. He probably doesn''t know what to do..."'
-									'Igor blushes while you thank the father for wanting to help out. The two of you leave the living room.'
-									act 'Leave the living room': gt 'Igorhome', 'kor'
-								elseif pcs_vag = 0:
-									'"No, I''m still a virgin and I''m not ready yet to lose it yet and Igor is really understanding. One day maybe but not right now..."'
-									'Gemorgen looks a bit disappointed at Igor but doesn''t say anything since his son as he doesn''t want to jeopardize the relationship....'
-									act 'Leave the living room': gt 'Igorhome', 'kor'
-								end
+					end
+					if IgorLoverQW > 0:
+						act 'Should we tell him':
+							*clr & cla
+							'You and Igor look at each other, you nodding at Igor he should speak up. Igor takes a deep breath and tells his father that the two of you are dating.'
+							'"That''s the best news I''ve heard this week! You''ve really picked an attractive girl. I knew you had it in you. So tell me have you had the chance to bang your pretty girlfriend yet?"'
+							'Igor looks stunned not knowing what to answer. He looks at you, asking to help him out...'
+							if npc_sex['A4'] > 0:
+								'"Well, you can say that the two of us have had quite some good moments." you look at Igor smiling. "But, since Igor is inexperienced we''re taking it slow. I''m positive he''ll improve..."'
+								'"Well, I''m sure you''re quite the teacher... I''m just glad Igor has found someone to look after him..."'
+								'You wink at the father as not to worry. You grab Igor by the arm, and the two of you leave the living room feeling relieved that you''ve told Gemorgen.'
+								act 'Leave the living room': gt 'Igorhome', 'kor'
+							elseif pcs_vag ! 0:
+								'"I hope something will happen soon he''s been avoiding that part of our relationship..." you say a bit disappointed.'
+								'"Don''t worry I''ll have a talk man to man. He''s innocent like a little lamb. He probably doesn''t know what to do..."'
+								'Igor blushes while you thank the father for wanting to help out. The two of you leave the living room.'
+								act 'Leave the living room': gt 'Igorhome', 'kor'
+							elseif pcs_vag = 0:
+								'"No, I''m still a virgin and I''m not ready yet to lose it yet and Igor is really understanding. One day maybe but not right now..."'
+								'Gemorgen looks a bit disappointed at Igor but doesn''t say anything since his son as he doesn''t want to jeopardize the relationship....'
+								act 'Leave the living room': gt 'Igorhome', 'kor'
 							end
 						end
 					end
@@ -677,11 +686,13 @@ if $ARGS[0] = 'living':
 					end
 				end
 			end
-		end
+	else 
+		act 'Leave the living room': gt 'Igorhome', 'kor'
 	end
-end
-
-if $ARGS[0] = 'kitchen':
+!end
+-
+!if $ARGS[0] = 'kitchen':
+#igorhome_kitchen
     *clr & cla
     minut += 1
     gs 'stat'
@@ -691,7 +702,8 @@ if $ARGS[0] = 'kitchen':
 !!this is a elseif, if it is 06:00 to 07:00 igors mother is here, or if it is 18:00 to 23:00 she is here during the week. On weekends she is here from 08:00 to 23:00
     'You see Igor''s mother Inga is in the kitchen drinking tea. She is very neatly dressed, you don''t think she has noticed you yet.'
 	act 'Talk':
-        '<center><img src="images/locations/pavlovsk/resident/Igorhome/mother.jpg"></center>'
+		*clr & cla
+		'<center><img src="images/locations/pavlovsk/resident/Igorhome/mother.jpg"></center>'
 		!!if Sveta is friends with Igor and they''re together in the kitchen + Sveta is wearing Bimbo/slutty outfit
 			'As the two of you walk into the kitchen, you notice a woman in her mid-forties sitting by the table drinking tea. Igor whispers that that''s his mother.'
 			'She looks up eyeing you from head to toe, turning to Igor saying...'
@@ -1002,10 +1014,12 @@ if $ARGS[0] = 'kitchen':
 				end
 			end
 		!!end
-	end	
-end
-
-if $ARGS[0] = 'igorparents':
+	end
+	act 'Leave the kitchen': gt 'Igorhome', 'kor'
+!end
+-
+!if $ARGS[0] = 'igorparents':
+#igorhome_parents
 	*clr & cla
 	minut += 1
 	gs 'stat'
@@ -1013,19 +1027,20 @@ if $ARGS[0] = 'igorparents':
 	'<center><img src="images/locations/pavlovsk/resident/Igorhome/bedroom.jpg"></center>'
 	'The room is very clean and neat. Everything is perfectly in place, the furniture is all wood with a high polish. In fact the room is beautifully decorated.'
 	act 'Look around':
-	    minut += 10
+		*clr
+		minut += 10
 		'<center><b><font color = maroon>Igor''s parent''s room</font></b></center>'
-	    '<center><img src="images/locations/pavlovsk/resident/Igorhome/bedroom.jpg"></center>'
-	    'You snoop around, opening drawers, and looking in the closet. Everything is perfectly in place and neatly arranged. You don''t find anything of interest, Igor''s parents seem pretty boring.'
-
+		'<center><img src="images/locations/pavlovsk/resident/Igorhome/bedroom.jpg"></center>'
+		'You snoop around, opening drawers, and looking in the closet. Everything is perfectly in place and neatly arranged. You don''t find anything of interest, Igor''s parents seem pretty boring.'
 		act 'Leave':gt 'Igorhome','kor'
 	end
 
 	act 'Leave':gt 'Igorhome','kor'
-end
+-
+!end
 
 !!new scene for going to Igors house with out following him from school.
-if $ARGS[0] = 'home':
+#igorhome_home
 	'<center><img  src="images/locations/pavlovsk/resident/Igorhome/house.jpg"></center>'
 	'You walk up to the front door and knock.'
 !!This will have a lot of if's and elseif's.
@@ -1063,7 +1078,7 @@ if $ARGS[0] = 'home':
 			end
 		end
 	end
-end
-				
+!end
+-
 --- igorhome ---------------------------------
 
