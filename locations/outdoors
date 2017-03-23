@@ -310,17 +310,6 @@ if $ARGS[0] = 'main':
 		*nl
 	end
 
-	if isprok = 0 and isprokp = 0 and mesec > 0 and preg = 0:
-		'<b><font color="red">You have the blood flowing down your legs and staining your clothes.</font></b>'
-
-		if clrbelo > 0 and tanga = 1:clrbelo -= 1 & tanga = 0 & '<b><font color="red">Your panties have been ruined and you discreetly remove and dispose of them.</font></b>'
-
-		pcs_sweat += 10
-		pcs_mood -= 10
-		pcs_willpwr -= 10
-		dynamic '<<$clothingworntype>>H[<<clothingwornnumber>>] -= 1'
-	end
-
 	if temper <= 0:
 		if (totminut - Time15Minute) >= 15:
 			!reset Time15Minute
@@ -363,24 +352,39 @@ if $ARGS[0] = 'main':
 			if (totminut - Time15Minute) >= 15:jump 'Time15MinuteLoop'
 		end
 	end
-end
+
+!!15 minute check to stop refreshes causing early gameover and cheating at exhibitionism
+	if outdoors_checks + 15 < totminut:
+		outdoors_checks = totminut
+		if isprok = 0 and isprokp = 0 and mesec > 0 and preg = 0:
+			'<b><font color="red">You have the blood flowing down your legs and staining your clothes.</font></b>'
+
+			if clrbelo > 0 and tanga = 1:clrbelo -= 1 & tanga = 0 & '<b><font color="red">Your panties have been ruined and you discreetly remove and dispose of them.</font></b>'
+
+			pcs_sweat += 10
+			pcs_mood -= 3
+			pcs_willpwr -= 10
+			dynamic '<<$clothingworntype>>H[<<clothingwornnumber>>] -= 1'
+		end
 
 !!Exhibitionism
 
-if CloExhibit >= pcs_exhibition - 10:
-	exhibition_outdoors += 1
-	if pcs_exhibition < 45 and PCloPanties = 1: exhibition_outdoors += 1
-end
+		if CloExhibit >= pcs_exhibition - 10:
+			exhibition_outdoors += 1
+			if pcs_exhibition < 45 and PCloPanties = 1: exhibition_outdoors += 1
+		end
 
-if tanga = 0:
-	if PCloSkirt = 3:
-		exhibition_outdoors += 1
-	elseif PCloSkirt = 4:
-		exhibition_outdoors += 2
-	elseif PCloSkirt = 5:
-		exhibition_outdoors += 3
-	elseif PCloSkirt = 6:
-		exhibition_outdoors += 4
+		if tanga = 0:
+			if PCloSkirt = 3:
+				exhibition_outdoors += 1
+			elseif PCloSkirt = 4:
+				exhibition_outdoors += 2
+			elseif PCloSkirt = 5:
+				exhibition_outdoors += 3
+			elseif PCloSkirt = 6:
+				exhibition_outdoors += 4
+			end
+		end
 	end
 end
 
