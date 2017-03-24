@@ -1,4 +1,5 @@
 # qwBarPolet
+
 minut += 5
 gs 'stat'
 if night_mode = 1:
@@ -11,16 +12,275 @@ else
 	lcolor = rgb(106, 90, 205)
 end
 
-'<center><b><font color="maroon">Bar "Flight"</font></b></center>'
-
-if hour >= 10:
-	'<center><img src="images/locations/city/industrial/bar/bar.jpg"></center>'
-	'At the bar sat a few visitors. Bartender with a face scarred missing pours beer mugs.'
-else
-	'The bar is closed and inlet written "hours with 10 to 24-hours."'
+if MartinTalkDaystart ! daystart:
+	MartinTalkDaystart = daystart
+	MartinTalkDay = 0
 end
 
+'<center><b><font color="maroon">Bar "Rabotnik"</font></b></center>'
+
+!if hour >= 10:
+!	'<center><img src="images/locations/city/industrial/bar/bar.jpg"></center>'
+!	'This place has a rowdy air about itself: The smell of spilled beer, schnaps, and a hint of vomit and blood are hard to miss, and some of the stools and billard cues look like they''ve been used in fights before. It is obviously a worker pub and not trying to be anything fancier than that, but that gives it an odd charm of its own.'
+!	*nl
+!	'Even at this early hour, a few patrons are sitting at the bar, drowning their sorrows, indulging in their alcohol addiction, or nursing a hangover with the very thing that caused it in the first place.' 
+!	'The bartender, a burly man with a scarred face and more tattoos than you can count, doesn''t look particularly sympathetic at first glance, but he seems to be talking to some of the guys and only begrudgingly fills their glasses back up again.'
+!	'He looks up when he hears you open the door and gives you a look somewhere between surprise, curiosity and intimidation, but then continues talking to a drunk guy who just started sobbing.'
+!	'It takes you only a moment to realize that women probably don''t come here often.'
+if hour >= 16:
+	'<center><img src="images/locations/city/industrial/bar/bar.jpg"></center>'
+	'This place has a rowdy air about itself: The smell of spilled beer, schnaps, and a hint of vomit and blood are hard to miss, and some of the stools and billard cues look like they''ve been used in fights before. It is obviously a worker pub and not trying to be anything fancier than that, but that gives it an odd charm of its own.'
+	*nl
+	'The bar is filling rapidly as people get off work in the surrounding factories, looking to get a beer with their friends before heading home or to get piss drunk to get their mind off their problems.'
+	'The bartender, a burly man with a scarred face and more tattoos than you can count, greets most of the men by name as they come in and prepares their drinks before they have even reached reached the counter.'
+	if knowMartin = 0:
+		'He, along with some of the regulars, shoot you a quick glance and you realize that young women are probably a rare sight around here. You spot a handful of women, spread out over all the occupied tables, but judging by how they are treated, most of the men they''re with seem to see them as "one of the guys".'
+	end
+
+elseif hour >= 21:
+	'<center><img src="images/locations/city/industrial/bar/bar.jpg"></center>'
+	'This place has a rowdy air about itself: The smell of spilled beer, schnaps, and a hint of vomit and blood are hard to miss, and some of the stools and billard cues look like they''ve been used in fights before. It is obviously a worker pub and not trying to be anything fancier than that, but that gives it an odd charm of its own.'
+	*nl
+	'Even though there aren''t too many people here, the place is fairly loud, most of the noise being produced by the two groups of young guys playing billard; most of the men at the bar are quietly drinking though, talking among themselves.'
+	'The bartender, a burly man with a scarred face and more tattoos than you can count, pays little attention to you, absorbed in a conversation with two of his regulars.'
+	if knowMartin = 0:
+		'He, along with some of the regulars, shoot you a quick glance and you realize that young women are probably a rare sight around here. You spot a handful of women, spread out over all the occupied tables, but judging by how they are treated, most of the men they''re with seem to see them as "one of the guys".'
+	end
+end
+
+act 'Order a beer (5 <b>₽</b>)':
+	'You go to the counter, sit down on one of the stools and, when the bartender notices you, ask: "Hey, could you bring me a beer?"'
+	if knowMartin = 1:
+		money -= 5
+		minut += 15
+		alko += 2
+		MartinRand = RAND(1,7)
+		!if alko >= 7:
+		!
+		![if alko >= 7, Martin will not give you another drink (unless somebody else is ordering it?)]
+
+		if MartinRand <= 2:
+			![RANDOM EVENTS (Strangers inviting her to have beer or something else with them - FRIENDLY - interacts with friends or has consensual sex)?]
+			gt 'qwBarPolet', 'DrinkEvents'
+
+		elseif MartinRand <= 4 and MartinTalkDay = 0 and MartinTalkVar < 2:
+			MartinTalkDay = 1
+			MartinRel += 1
+			!Replace MartinRel with npc_rel[] format?
+			gt 'qwBarPolet', 'MartinTalk'
+
+		else:
+			'"Sure, <<pcs_firstname>>, coming right up", Martin says, draws a beer for you and hands it to you.'
+			'"Thanks, Martin", you say and give him a friendly smile before he returns to what he was doing.'
+			'You spend the next 15 minutes drinking your beer in peace as you reflect the events of the day, think about your life and the people in it... until you finish your beverage with one last gulp.'
+			act 'Finish your beer': gt 'qwBarPolet'
+			!act '"Bring me another!" (5 <b>₽</b>)':
+			![RANDOM EVENTS (Friendly strangers or friends/acquaintances inviting Sveta to have beer or something else with them)?]
+	
+		end
+		
+	elseif fakepassport = 1 or age >= 18:
+		knowMartin = 1
+		money -= 5
+		minut += 15
+		alko += 2
+		'The bartender comes over and musters you. "Sure. If you are old enough."'
+		'You are surprised that someone in a bar like this seems interested in that, and it must have shown in your face, because he adds: "I have enough things to worry about as is. I don''t need somebody spreading the word that I''m selling alcohol to kids."'
+		'Nodding, you take out your ID and show it to him. He eyes it suspiciously and gives you a stern look... but then nods, hands it back to you and draws a cold beer which he places in front of you.'
+		'"What''s your name, girl?", he asks.'
+		'"<<pcs_firstname>>", you reply truthfully, taking a small sip from your beverage.'
+		'"Okay, <<pcs_firstname>>. My name is Martin. This is my bar, and I don''t want any trouble here." You notice a faint accent you cannot quite place - maybe Spanish? "I know most people who come here by name, and most of them are good men, but we are a rowdy bunch and we tend to act more stupid than usual when women are around."'
+		'"So... you don''t want me to come here again?", you ask carefully.'
+		'"No, it means that, if you want to spend time here, I don''t want you doing anything stupid so I don''t have to step in." His words and look almost make you feel like a daughter being scolded by her father, but his voice softens a little as he continues: "But if any of the guys gives you trouble, you just let me know. Got it?"'
+		'You nod, and he gives you a hint of smile - it amazes you how that gruff face lights up as he does - before Martin returns to the regulars he had been talking to.'
+		'You spend the next 15 minutes pondering his words and the impression he has left on you, absentmindedly nursing on your beer until you notice that your glass is empty.'
+		act 'Finish your beer': gt 'qwBarPolet'
+	
+	else:
+		'The bartender comes over and musters you. "Sure. If you are old enough."'
+		'You are surprised that someone in a bar like this seems interested in that, and it must have shown in your face, because he adds: "I have enough things to worry about as is. I don''t need somebody spreading the word that I sell alcohol to kids."'
+		'"Um...", you try to maintain eye contact with him but eventually look down, "I, uh, must have forgotten my ID at home. Couldn''t you-"'
+		'"No, I can''t", he cuts you off. "No ID, no alcohol."'
+		act 'Nod and give up': gt 'qwBarPolet'
+		![RANDOM EVENTS (Strangers inviting her to have beer or something else with them, but overall friendly/consensual tone)?]
+	end
+end
+		
+act 'Order a shot of vodka (5 <b>₽</b>)':
+	'You go to the counter, sit down on one of the stools and, when the bartender notices you, ask: "Can I have a shot of vodka?"'
+	if knowMartin = 1:
+		money -= 5
+		minut += 5
+		alko += 2
+		MartinRand = RAND(1,7)
+		
+		!if alko >= 7:
+		!
+		![if alko >= 7, Martin will not give you another drink (unless somebody else is ordering it?)]
+
+		if MartinRand <= 2:
+			![RANDOM EVENTS (Strangers inviting her to have beer or something else with them - RAPEY - drunk sex, groping)?]
+			gt 'qwBarPolet', 'DrinkEvents'
+
+		elseif MartinRand <= 4 and MartinTalkDay = 0 and MartinTalkVar < 2:
+			MartinTalkDay = 1
+			MartinRel += 1
+			!Replace MartinRel with npc_rel[] format?
+			gt 'qwBarPolet', 'MartinTalk'
+			!EVENTS EXPLICITLY MENTION BEER, NOT SHOTS - SOLUTION???
+
+		else:
+			'"Sure, <<pcs_firstname>>, coming right up", Martin says, pours a shot and hands it to you.'
+			'"Thanks, Martin", you say and give him a friendly smile before he returns to what he was doing.'
+			'You slam back the vodka, enjoying the burning sensation it leaves in your throat, and spend a few minutes looking around the bar and letting your mind drift aimlessly as the alcohol takes effect.'
+			act 'Finish up': gt 'qwBarPolet'
+			!act '"Bring me another!" (5 <b>₽</b>)':
+		
+			
+		end
+		
+	elseif fakepassport = 1 or age >= 18:
+		knowMartin = 1:
+		money -= 5
+		minut += 5
+		alko += 2
+		'The bartender comes over and musters you. "Sure. If you are old enough."'
+		'You are surprised that someone in a bar like this seems interested in that, and it must have shown in your face, because he adds: "I have enough things to worry about as is. I don''t need somebody spreading the word that I''m selling alcohol to kids."'
+		'Nodding, you take out your ID and show it to him. He eyes it suspiciously and gives you a stern look... but then nods, hands it back to you, takes an ice-cold bottle of vodka out of the fridge and pours you a shot.'
+		'"What''s your name, girl?", he asks.'
+		'"<<pcs_firstname>>", you reply truthfully, taking the small glass into your hand.'
+		'"Okay, <<pcs_firstname>>. My name is Martin. This is my bar, and I don''t want any trouble here." You notice a faint accent you cannot quite place - maybe Spanish? "I know most people who come here by name, and most of them are good men, but we are a rowdy bunch and we tend to act more stupid than usual when women are around."'
+		'"So... you don''t want me to come here again?", you ask carefully.'
+		'"No, it means that, if you want to spend time here, I don''t want you doing anything stupid so I don''t have to step in." His words and look almost make you feel like a daughter being scolded by her father, but his voice softens a little as he continues: "But if any of the guys gives you trouble, you just let me know. Got it?"'
+		'You nod, and he gives you a hint of smile - it amazes you how that gruff face lights up as he does - before Martin returns to the regulars he had been talking to.'
+		'You spend the next 5 minutes pondering his words and the impression he has left on you - you are so caught up in your thoughts that you almost forgot the alcohol in your glass, so you slam it back in one gulp, feeling the cold liquid run down your throat, leaving only a burning sensation in your throat.'
+		act 'Finish up': gt 'qwBarPolet'
+	
+	else:
+		'The bartender comes over and musters you. "Sure. If you are old enough."'
+		'You are surprised that someone in a bar like this seems interested in that, and it must have shown in your face, because he adds: "I have enough things to worry about as is. I don''t need somebody spreading the word that I sell alcohol to kids."'
+		'"Um...", you try to maintain eye contact with him but eventually look down, "I, uh, must have forgotten my ID at home. Couldn''t you-"'
+		'"No, I can''t", he cuts you off. "No ID, no alcohol."'
+		act 'Nod and give up': gt 'qwBarPolet'
+		![Events where Sveta interacts with random guys, resulting in drunk sex, groping etc. when drinking vodka?]
+	end
+end
+
+!'Look around the bar' action to find people to interact with/who will invite her to a drink?
+
+!Extra act and events for post office personnel? 
+				
+!Replace MartinRel with npc_rel[] format?		
+!if MartinRel > threshold (10? 20? 30?)
+![Relationship stat for Martin - advances as Sveta converses with him and he saves her from people who want to rape her; once it reaches a threshold (10? 20?), sexual events with him become available]
+
+act 'Go to the toilet': gt 'qwBarPoletToilet'
+		
 act 'Leave':gt 'nord'
 
---- qwBarPolet ---------------------------------
 
+if $ARGS[0] = 'DrinkEvents':
+	
+	!DrinkingRand ALWAYS NEEDS TO BE ADJUSTED FOR NEW EVENTS!!!
+	DrinkingRand = RAND(1,2)
+	
+	if DrinkingRand = 1:
+		'Martin nods and prepares your beverage. While he does, you hear voices swell behind you and turn to find their source. It would seem that two other patrons - workmates, if their identical, dusty work overalls are any indication - have had a little too much too drink and are now arguing loudly over who has been bumming more cigarettes off whom.'
+		'They get on their feet, apparently looking to settle the matter their alcohol-addled brains brought up once and for all, just as Martin puts the glass with your beverage down in front of you.'
+		'He seems completely unfazed by this disruption of the bar''s peace as he steps out from behind the counter, his burly, muscular build more impressive out in the open room, and you don''t seem to be alone with that assessment: The few whose attention hadn''t been captured by the loud voices now cease whatever they are doing, the room eerily silent except for Martin''s voice: "Artur, Grisha," he calls the two.'
+		'They slowly turn their heads toward him and it seems to dawn on them who is speaking to them. It''s astonishing, really: One moment, they are pumped up and ready to go at each other, and the next, they seem to physically deflate.'
+		'Martin doesn''t utter another word at them - he doesn''t have to. The two slowly sit back down, careful to avoid the bartender''s gaze as much as each other''s.'
+		'Satisfied with this outcome, Martin nods. "No more drinks for the two of you tonight," he declares before turning around to resume his post.'
+		'Within seconds, the bar''s volume is back to its normal level, laughter and smutty jokes filling the air.'
+		'While you enjoy your drink, you briefly wonder why Martin didn''t just throw them out, but then you notice that the Artur and Grigori are talking to each other again and then burst into laughter. Looks like the bartender knows his regulars.'
+		act 'Finish your drink': gt 'qwBarPolet'
+	
+	elseif DrinkingRand = 2:
+		'Martin nods and prepares your beverage, then places it in front of you.'
+		'"Thank you," you smile at him and earn a half-smile in return before he leaves you to yourself.'
+		'With nobody to talk to, your eyes drift around the bar until they come to rest on a nearby table where the patrons are playing poker. More specifically, you are looking right into the hand of one of the players, and he seems to have four jacks.'
+		'Curious as to how this turns out (or maybe just for lack of better entertainment), you watch as one of the other players folds while the remaining three raise each other until their pot contains some 50 rubles.'
+		'The other two look confident. One reveals three queens... and curses loudly when the second puts down a full house, a smug grin on his face. You don''t know what expression ''your'' guy had when he placed his four jacks on the table, but seeing the grin wiped off the second player''s face almost makes it feel like you sat at the table with them.'
+		'Feeling victorious (and a little lonely), you focus your attention on your beverage again while the card players sets up their next round.'
+		act 'Finish your drink': gt 'qwBarPolet'
+	
+	!Ideas for other random events:
+	!-Some women giving some guy a blowjob off in a corner, while Martin is distracted (Actually happened in some bar in Russia)
+	!-A couple disappearing in the bathroom and coming out disheveled
+	!-Martin talking to somebody (and comforting them)
+	!-A group talking about work
+	!-Talk about prominent npcs 
+	!-Talk about ingame locations
+	!-Discussing ingame politics (law that you can only have one car, for example) - "I can''t even afford ONE!"
+	
+	end
+end
+
+
+if $ARGS[0] = 'MartinTalk':
+	
+	!!! ALWAYS ADJUST MartinTalkVar THRESHOLD THROUGHOUT LOCATION SO CONVERSATIONS CAN SHOW UP !!!
+		
+	if MartinTalkVar = 0:
+		MartinTalkVar = 1
+		'"Sure, <<pcs_firstname>>, coming right up", Martin says and pours you your drink.'
+		'"Thanks, Martin", you say and give him a friendly smile. "Do you mind if I ask you a question?"'
+		'He raises an eyebrow but shrugs. "Shoot."'
+		'"You''re not originally from Russia, are you?"'
+		'A grin cracks the rough surface of his face and lights it up in a way you would have thought impossible. "What gave me away? My skin color? My accent?"'
+		'You shake your head apologetically. "Sorry, it was a dumb question."'
+		'"Maybe", he agrees, "but you could always try making it less dumb."'
+		'"Okay, uh... Where are you from?"'
+		'"Ever heard of a place called ''Colombia''?"'
+		'"Um... Maybe?" Your face gives away that you have no idea.'
+		'"Well, let''s just say that it''s not a very nice country to live in, unless you are willing to sell your soul."'
+		'"Did you?"'
+		'"Did I what?"'
+		'"Did you sell your soul?"'
+		'Martin is taken aback by your question at first, making you cringe in fear that you might have gone too far... but then he bursts into laughter. "That, mi amor, is a story for another day. Enjoy your beer before it gets warm."'
+		'With that, he directs his attention at another visitor of the bar. You notice that you''ve been holding your breath and release it now, glad you didn''t piss him off. Watching Martin from afar, you take nurse on your beverage until you find it empty.'
+		act 'Finish your drink': gt 'qwBarPolet'
+	
+	elseif MartinTalkVar = 1:
+		MartinTalkVar = 2
+		'"Of course, <<pcs_firstname>>," Martin says and hands you your poison of choice.'
+		'"Thanks, Martin", you say with a smile. You hesitate for just a moment, then say what''s on your mind, "can I ask you something?"'
+		'"You wanna know why I''m here in Russia, don''t you?"'
+		'You blush slightly. "Is it that obvious?"'
+		'"Yes, it is, but I''m in no mood to tell a girl who practically just walked into my bar about my entire life." Martin''s words and tone may be harsh, but his eyes don''t quite match that. You decide to drop the subject for now, though, in the hopes of satisfying your curiosity at a later date.'
+		'"Okay, uh... What do you think about Russia?"'
+		'"Your politicians are corrupt, your booze is cheap, your girls as pretty as they are easy...", he gives you a sleezy grin, "so, it feels just like home."'
+		'"I''m not easy", you protest quietly, more to yourself than to Martin.'
+		'"Why are you in a rowdy bar like this?", he counters.'
+		'"Maybe I like the atmosphere?"'
+		'"Girl, I have built this place from nothing with my own two hands, and I know some of my regulars better than my brothers, love them like brothers too - but nobody comes here for the ''atmosphere''. Not even me."'
+		'"They come here to relax after a hard day."'
+		'"Yeah."'
+		'"To enjoy a drink and maybe to talk a bit."'
+		'"I guess."'
+		'"Well, maybe you are part of the atmosphere and don''t give yourself enough credit."'
+		'Martin opens his mouth to reply but then musters you quietly for a while. You hold eye contact until you have to blink. A soft smile plays around the edges of his mouth.'
+		'"You''re a sly one, aren''t you?"'
+		'"I thought I was ''easy''?"'
+		'He bursts into laughter. "Maybe you are, maybe you aren''t; but you are alright either way, corazón."'
+		'With that, he leaves you to your drink. Minutes pass as you enjoy your beverage, only stopping when you find your glass empty.'
+		act 'Finish your drink': gt 'qwBarPolet'
+		
+	!elseif MartinTalkVar = 2:
+	!	MartinTalkVar = 3
+	!	'???'
+	!	act 'Finish your beer': gt 'qwBarPolet'
+		
+		
+		!Other conversation topics:
+		!-Martin mentions the BBQ and its owner
+		!-Sveta's hobbies
+		!-Sveta's job
+		!-Something about Colombian culture
+		!-Martin's hobbies
+		!-Sex?
+		!-The Reason why Martin lives in Russia (on the run from a Cartel?)
+	end
+end
+
+--- qwBarPolet ---------------------------------
