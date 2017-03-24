@@ -241,7 +241,9 @@ if $ARGS[0] = 'chat':
 			!!act 'Be my bitch.': gt 'IgorEv', 'Be my bitch'
 	end
 !!this only shows up if Sveta knows Igor cross dresses.
-	act 'Lets go for walk': gt 'IgorEv', 'Lets take another walk'
+	if igorcross = 1:
+		act 'Lets go for walk': gt 'IgorEv', 'Lets take another walk'
+	end
 !!This one only shows up if Igor went on a date with Dimka.
 	if igor_DimaNos = 2 or igor_DimaNos = 3:
 		act 'How was your date?': gt 'IgorEv', 'Ask about Dianas date'
@@ -277,7 +279,7 @@ if $ARGS[0] = 'sisterroom':
 	act 'Talk':
 		*clr & cla
 		'<center><img src="images/locations/pavlovsk/resident/igorhome/sister.jpg"></center>'
-		!!if alone
+		if Igor_with = 0:
 			'"Oh, hi! I didn''t think anyone would be here." not expecting anyone being there.'
 			'"Hello." she answers back. Without wasting any time she immediately fires away, "And who might you be? I don''t think I''ve seen you here before." she snarkly remarks.'
 			'"I''m really sorry... Usually there isn''t anyone around." you say ashamed.'
@@ -327,7 +329,7 @@ if $ARGS[0] = 'sisterroom':
 				end
 			end
 	
-		!!else with Igor
+		elseif Igor_with = 1:
 			'"G-Galina, may I enter your room?" Igor quietly asks.'
 			'She sighs as she wants to say no to him, but as she looks up she smiles as she sees Igor with a girl.'
 			'"Sure, little brother. Come in, come in. Who''s your female friend? Don''t tell me that you''ve got yourself a girlfriend?"'
@@ -430,252 +432,281 @@ if $ARGS[0] = 'livingroom':
 	'<center><img src="images/locations/pavlovsk/resident/Igorhome/livingroom.jpg"></center>'
 	'The room is very clean and neat. Everything is perfectly in place, the furniture is all very nice. There is several very large windows giving a great view at the lawn. In the corner is a very nice flat screen tv.'
 	!!this is a elseif, if it is 18:00 to 23:00 Igor''s father is here during the week. On weekends he is here from 09:00 to 23:00
-	if (hour >= 18 and hour <= 22 and week => 1 and week <= 5) or (hour >= 9 and hour <= 22 and week => 6 and week <= 7):
+	if met_IgorDad = 0 and ((hour >= 18 and hour <= 22 and week => 1 and week <= 5) or (hour >= 9 and hour <= 22 and week => 6 and week <= 7)):
 		'You see Igor''s father Gemorgen is in the living room watching tv. He is well dressed and not bad looking, you don''t think he has noticed you yet.'
-		!!if Sveta is alone and attractive
-			act 'Talk':
-				*clr & cla
-				'<center><img src="images/locations/pavlovsk/resident/Igorhome/father.jpg"></center>'
-				'As you walk into the living room Igor''s father throws a glance at you, as he doesn''t recognizes you, he immediately turns down the sound on the tv and turns his attention towards you.'
-				'"Hi, I''m Gemorgen and who might you be? Are you Galina''s university friend?"'
-				'"Hi, my name is <<$pcs_nickname>> <<$pcs_lastname>>. And I''m actually Igor''s friend from school."'
-				'The father looks at you in amazement, baffled that his son has befriended a girl...'	
-				act 'Further':
-					*clr & cla
-					'"I didn''t know my son is friends with such a beautiful girl." Gemorgen compliments you.'
-					'You thank him for his compliment, feeling yourself blush a bit as he continues on.'
-					'"No but honestly, my daughter has had over some her attractive friends but I''ve yet to see a beauty like yourself..."'
-					'As he utters those words you immediately feel crept out and immediately begin steering the conversation in an other direction as the whole thing is making you uncomfortable.'
-					act 'What do you do for work':
-						*clr & cla
-						'His eyes gleam as you ask the question. He proudly tells you some boring accountant stories...'
-						'Not wanting to be rude you keep listening, sometimes catching yourself having drifted away to a faraway place.'
-						'As he finishes talking he refocuses on you again, "I''m probably boring you out with my stories. So tell me instead, how come a beauty like you is friends with my son?"'
-						act 'Answer him':
-							*clr & cla
-							'"Well, we''re having an assignment in history and I knew that that Igor is a history buff so it was only natural asking him."'
-							'He looks at you smiling saying, "A beautiful girl like you doesn''t need to succeed in school. You''ll manage fine in life with your good looks."'
-							'"I just wish Igor was a bit manlier, he''s not an ugly kid and he''s doing quite well in school so I don''t really understand why he''s bad with girls. I remember when I was younger, I was with girls all the time. Don''t get me wrong but if I was your age I would be trying to get in your pants..."'
-							'Feeling a bit bad about Igor, you attempt to defend him, "Everyone is different, Igor is considerate, funny and attractive so I''m sure he''ll meet someone."'
-							'"I don''t want to put you on the spot and you''ll probably answer no but does my son have any chance with you?"' 
-							act 'Well...':
-								*clr & cla
-								'"You never know, anything can happen, I kind of like that Igor isn''t that manly, those guys are usually the biggest jerks..." you say not wanting to hurt his feelings.'
-								'"It''s all in Igor''s hands then..." he looks at you resigned.' 
-								'"If you excuse me I should probably head back to Igor, he''s probably wondering where I am."'
-								act 'Leave the living room': gt 'Igorhome', 'kor'
-							end
-							act 'There is a shot, but...':
-								*clr & cla
-								'"I want Igor to take the first step as I expect him to swoosh me off the ground..."'
-								'"I wouldn''t get my hopes up... It might be for the best if you took the first step, you know, just to loosen him up and make him more confident in himself."'
-								'"But don''t worry I''ll have a talk with him and push him on. Maybe he will actually listen to my advice for once..."'
-								'Feeling happy about what you''ve just heard, you tell him that you need to return to Igor and you can''t wait for them to have the talk.'
-								act 'Leave the living room': gt 'Igorhome', 'kor'
-							end
-							if IgorLoverQW > 0:
-								act 'Actually...':
-									*clr & cla
-									'"Well, we meant to keep this a secret and reveal it together but I''ll let you in on something..." you tease Gemorgen.'
-									'Gemorgen looks at you confused, not saying anything as he waits for you to continue.'
-									'"I and Igor are a couple. We''ve been together for a while now."'
-									'Gemorgen lightens up as you finish. He is widely grinning. "He finally got himself a real girlfriend. That''s really attractive I might add. I''m so proud of him, I hope you teach him a thing or two..."'
-									if npc_sex['A4'] > 0:
-										'"We''re getting there. He''s really inexperienced so I''m doing my best. Hopefully you''ll notice a change in Igor soon..."'
-										'"Well, I hope he''ll get out of his shell and I''m sure the two of you will have a great relationship..."'
-										'You finish by saying if Igor has any questions you''ll make sure to send him Gemorgen''s way...'
-										act 'Leave the living room': gt 'Igorhome', 'kor'
-									elseif pcs_vag > 0:
-										'"I hope something will happen soon as he''s been avoiding the best part of our relationship..." you say a bit discouraged.'
-										'"Don''t worry I''ll have a talk with him. He''s innocent like a little lamb. He probably doesn''t know how to make a move..."'
-										'You begin thanking him but he stops you and says he should be thanking you as he never thought Igor would end up with an attractive girl as you.'
-										act 'Leave the living room': gt 'Igorhome', 'kor'
-									else
-										'"No, just because I look a certain way doesn''t mean I''ve had sex yet. I''m still a virgin and I''m not ready for sex yet, maybe some day but not right now."'
-										'Gemorgen says he respects your decision and he won''t pressure any of you. But he secretly hopes you would reconsider...'
-										act 'Leave the living room': gt 'Igorhome', 'kor'
-									end
-								end
-							end
-						end
-					end
-				end
+		if Igor_with = 0:
+			if hotcat > 5:
+				gt 'igorhome', 'livingroom1'
+			else
+				gt 'igorhome', 'livingroom2'
 			end
-		!! else Sveta alone and regular/ugly looks
-			act 'Talk':
-				*clr & cla
-				'<center><img src="images/locations/pavlovsk/resident/Igorhome/father.jpg"></center>'
-				'As you walk into the living room Igor''s father throws a glance at you, as he doesn''t recognizes you, he immediately turns down the sound on the tv and turns his attention towards you.'
-				'"Hi, I''m Gemorgen and who might you be? Are you Galina''s university friend?"'
-				'"Hi, my name is <<$pcs_nickname>> <<$pcs_lastname>>. And I''m actually Igor''s friend from school."'
-				'The father looks at you in amazement, baffled that his son has befriended a girl...'
-				act 'Further':
-					*clr & cla
-					'"I''m really glad seeing my son having a girl as a friend. It''s not often I get to say that..." Gemorgen says jokingly.'
-					'"I don''t believe you..." you answer in disbelief. "An attractive boy like Igor must have lots of girls over..."'
-					'"I wish that was the truth..." he says. "I really hope that Igor will step out of his shell when it comes to the fair sex..."'
-					act 'Change subject':
-						*clr & cla
-						'"I don''t mean to be prying but I have to say that I love your home, you must be really well-off."' 
-						'Gemorgen looks at you a bit bothered by your brashness but still answers that he''s really proud of his job as an accountant and that both of the adults are working, so he can''t really complain.'
-						'You sincerely listen to him. As he finishes you tell him that you''re sure Igor will follow in his footsteps...'
-						act 'Further':
-							*clr & cla
-							'With a troubled facial expression Gemorgen replies, "I''m not so sure about that. The business world is rough and you have to be confident when dealing with money. You''ve got to be upfront with your clients so they respect you. Igor is unfortunately missing this treat..."'
-							'Trying to cheer him up you say "Igor doesn''t need all those traits, he''s really kind and got a big heart."'
-							'Gemorgen dismisses you saying "Igor must become manlier, look at the other boys in his age. They''re far more calculating."'
-							act 'Like Dimka?':
-								*clr & cla
-								'"Yes exactly like Dimka. I don''t think he''s a good influence on my son. But that''s just because Igor''s a pushover. If he had more confidence I''m sure that Dimka would have been long gone."'
-								'"I don''t really know about that. I''ve seen them at school and they''re really close." you fuel him on.'
-								'Gemorgen clearly annoyed replies, "Like I said before I think Igor would be better off without Dimka. I don''t trust that boy."'
-								act 'Time to head back':
-									*clr & cla
-									'As you don''t want to anger Gemorgen further, you finish the conversation by saying you need to head back to Igor.'
-									'As you''re about to leave Gemorgen looks you in the eyes and tells you that he wouldn''t mind if you and Igor became a couple, "If only you could touch-up your looks a bit, then I wouldn''t mind the two of you together. I really want Igor hooking up with a hot girl..."'
-									'You take great offence hearing that, and begin cussing him for being so insensitive, especially as his son is no better...' 
-									'"I''m sorry, I didn''t mean it to come out that way... I guess I''m just too excited that a girl was hanging out with my son. And to be frank, it doesn''t hurt anyone to do a little touch-up, even the prettiest girls do it."'
-									'You turn around and leave the room, clearly upset, just wanting to get away from him...'
-									act 'Leave the livingroom': gt 'Igorhome', 'kor'
-								end
-							end
-						end
-						if IgorLoverQW > 0:
-							act 'Well...':
-								*clr & cla	
-								'"I know Igor wanted to tell you about this himself. But I might as well tell you, we''re dating." you say shyly.'
-								'"That''s great news! I think you will be good for Igor, a perfect first girlfriend that he can practice on."'
-								'You''re offended by his words but decide not to say anything not wanting to end up agruing with your boyfriends parent...'
-								act 'Leave the living room': gt 'Igorhome', 'kor'
-							end
-						end
-					end
-				end
+		else
+			if hotcat > 5:
+				gt 'igorhome', 'livingroom3'
+			else
+				gt 'igorhome', 'livingroom4'
 			end
-	!!Sveta with Igor only friends
-		!!if attractive
-			act 'Talk':
+		end
+	else
+		act 'Leave the living room': gt 'Igorhome', 'kor'
+	end
+end
+
+
+if $ARGS[0] = 'livingroom1':
+!!if Sveta is alone and attractive
+	act 'Talk':
+		*clr & cla
+		met_IgorDad = 1
+		'<center><img src="images/locations/pavlovsk/resident/Igorhome/father.jpg"></center>'
+		'As you walk into the living room Igor''s father throws a glance at you, as he doesn''t recognizes you, he immediately turns down the sound on the tv and turns his attention towards you.'
+		'"Hi, I''m Gemorgen and who might you be? Are you Galina''s university friend?"'
+		'"Hi, my name is <<$pcs_nickname>> <<$pcs_lastname>>. And I''m actually Igor''s friend from school."'
+		'The father looks at you in amazement, baffled that his son has befriended a girl...'	
+		act 'Further':
+			*clr & cla
+			'"I didn''t know my son is friends with such a beautiful girl." Gemorgen compliments you.'
+			'You thank him for his compliment, feeling yourself blush a bit as he continues on.'
+			'"No but honestly, my daughter has had over some her attractive friends but I''ve yet to see a beauty like yourself..."'
+			'As he utters those words you immediately feel crept out and immediately begin steering the conversation in an other direction as the whole thing is making you uncomfortable.'
+			act 'What do you do for work':
 				*clr & cla
-				'As the two of you walk into the living room, the father turns his attention from the tv towards the two of you.'
-				'"My, my my, who do we have here? Come on son, introduce me to your beautiful friend."'
-				'Igor mumbles something to his father, Gemorgen.'
-				'Instead you take charge, "Hello, My name is <<$pcs_nickname>> <<$pcs_lastname>>."'
-				'"Such a true beauty, a real gem. Have you had the pleasure meeting my wife? I wonder how she reacted when she saw you?" Gemorgen says laughing. "She can be quite over-bearing when it comes to Igor."'
-				if met_IgorMother = 1 
-					act 'Yes, I''ve met her':
-						*clr & cla
-						'"It was really interesting, I could probably get along with her, but she needs to stop with the disapproving attitude."'
-						'"I''m truly sorry you had to experience that side of my wife. She likes to keep up an illusion as if she''s mother Theresa or something, back in the days me and her used to all get in all sorts of trouble."'
-					end 
-				else
-					act 'Unfortunately, I haven''t had the pleasure yet':
-						*clr & cla
-						'Gemorgen looks at you laughing, "Maybe it''s for the best. She can be quite a handful when it comes to a certain kind of girls..."'
-						'The two of you laugh as Gemorgen hints that his wife feels threatend when someone more beautiful comes visits them.'
-					end
-				end
-				act 'You hear a sigh':
+				'His eyes gleam as you ask the question. He proudly tells you some boring accountant stories...'
+				'Not wanting to be rude you keep listening, sometimes catching yourself having drifted away to a faraway place.'
+				'As he finishes talking he refocuses on you again, "I''m probably boring you out with my stories. So tell me instead, how come a beauty like you is friends with my son?"'
+				act 'Answer him':
 					*clr & cla
-					'Igor is clearly dissatisfied how his father is acting, telling him that he shouldn''t be talking about his wife the way he does in front of strangers.'
-					'Gemorgen quickly responds by saying that he''s only joking. And out of nowhere asks Igor if the two of you are dating.'
-					'Igor, visibly blushing answers no and that you''re just friends.' 
-					'"You need to be upfront, son. Look at her, you might never get another shot at a girl like this. Don''t let this one off the hook."'
-					act 'Defend Igor':
+					'"Well, we''re having an assignment in history and I knew that that Igor is a history buff so it was only natural asking him."'
+					'He looks at you smiling saying, "A beautiful girl like you doesn''t need to succeed in school. You''ll manage fine in life with your good looks."'
+					'"I just wish Igor was a bit manlier, he''s not an ugly kid and he''s doing quite well in school so I don''t really understand why he''s bad with girls. I remember when I was younger, I was with girls all the time. Don''t get me wrong but if I was your age I would be trying to get in your pants..."'
+					'Feeling a bit bad about Igor, you attempt to defend him, "Everyone is different, Igor is considerate, funny and attractive so I''m sure he''ll meet someone."'
+					'"I don''t want to put you on the spot and you''ll probably answer no but does my son have any chance with you?"' 
+					act 'Well...':
 						*clr & cla
-						'As you notice that Igor is shook by his father’s comments, you step in and say, "We don''t need to rush anything. If it''s meant to be it''s meant to be, otherwise I''m just glad being Igor''s friend."'
-						'"You see son, you''ve just been friend-zoned. It''s no wonder, you''re too much of a wimp and now you''ve chased away <<$pcs_nickname>>."'
-						'Gemorgen looking troubled turns towards you, "You have to forgive my gawky son."'
-						'You take pity on Igor as he''s about to cry. "You shouldn''t be so hard on your son... He''s got feelings too."'
-						!!relationship with Igor goes up
-						act 'Changing the subject':
-							*clr & cla
-							'"I mean there is plenty to be proud of when it comes to Igor, he''s got really good grades and he''s really kind to everyone."'
-							'Gemorgen doesn''t seem to pay much attention to what you''re saying and instead begins lewdly commenting your looks.'
-							'Not wanting to be rude, you thank him for his kind words, but add fiercely that you have no interest in older men...'
-							'He starts laughing loudly, telling Igor that this one is a keeper, that you have plenty of spunk and he likes it.'
-							'Igor begins tearing up, yells at his father, and shortly thereafter runs away from the room. As you try to catch up with Igor you give the father a stern look...'
-							'You can hear Gemorgen yelling that him running away won''t help with anything...'
-							act 'Leave the living room': gt 'Igorhome', 'kor'
-						end
+						'"You never know, anything can happen, I kind of like that Igor isn''t that manly, those guys are usually the biggest jerks..." you say not wanting to hurt his feelings.'
+						'"It''s all in Igor''s hands then..." he looks at you resigned.' 
+						'"If you excuse me I should probably head back to Igor, he''s probably wondering where I am."'
+						act 'Leave the living room': gt 'Igorhome', 'kor'
+					end
+					act 'There is a shot, but...':
+						*clr & cla
+						'"I want Igor to take the first step as I expect him to swoosh me off the ground..."'
+						'"I wouldn''t get my hopes up... It might be for the best if you took the first step, you know, just to loosen him up and make him more confident in himself."'
+						'"But don''t worry I''ll have a talk with him and push him on. Maybe he will actually listen to my advice for once..."'
+						'Feeling happy about what you''ve just heard, you tell him that you need to return to Igor and you can''t wait for them to have the talk.'
+						act 'Leave the living room': gt 'Igorhome', 'kor'
 					end
 					if IgorLoverQW > 0:
-						act 'Should we tell him':
+						act 'Actually...':
 							*clr & cla
-							'You and Igor look at each other, you nodding at Igor he should speak up. Igor takes a deep breath and tells his father that the two of you are dating.'
-							'"That''s the best news I''ve heard this week! You''ve really picked an attractive girl. I knew you had it in you. So tell me have you had the chance to bang your pretty girlfriend yet?"'
-							'Igor looks stunned not knowing what to answer. He looks at you, asking to help him out...'
+							'"Well, we meant to keep this a secret and reveal it together but I''ll let you in on something..." you tease Gemorgen.'
+							'Gemorgen looks at you confused, not saying anything as he waits for you to continue.'
+							'"I and Igor are a couple. We''ve been together for a while now."'
+							'Gemorgen lightens up as you finish. He is widely grinning. "He finally got himself a real girlfriend. That''s really attractive I might add. I''m so proud of him, I hope you teach him a thing or two..."'
 							if npc_sex['A4'] > 0:
-								'"Well, you can say that the two of us have had quite some good moments." you look at Igor smiling. "But, since Igor is inexperienced we''re taking it slow. I''m positive he''ll improve..."'
-								'"Well, I''m sure you''re quite the teacher... I''m just glad Igor has found someone to look after him..."'
-								'You wink at the father as not to worry. You grab Igor by the arm, and the two of you leave the living room feeling relieved that you''ve told Gemorgen.'
+								'"We''re getting there. He''s really inexperienced so I''m doing my best. Hopefully you''ll notice a change in Igor soon..."'
+								'"Well, I hope he''ll get out of his shell and I''m sure the two of you will have a great relationship..."'
+								'You finish by saying if Igor has any questions you''ll make sure to send him Gemorgen''s way...'
 								act 'Leave the living room': gt 'Igorhome', 'kor'
-							elseif pcs_vag ! 0:
-								'"I hope something will happen soon he''s been avoiding that part of our relationship..." you say a bit disappointed.'
-								'"Don''t worry I''ll have a talk man to man. He''s innocent like a little lamb. He probably doesn''t know what to do..."'
-								'Igor blushes while you thank the father for wanting to help out. The two of you leave the living room.'
+							elseif pcs_vag > 0:
+								'"I hope something will happen soon as he''s been avoiding the best part of our relationship..." you say a bit discouraged.'
+								'"Don''t worry I''ll have a talk with him. He''s innocent like a little lamb. He probably doesn''t know how to make a move..."'
+								'You begin thanking him but he stops you and says he should be thanking you as he never thought Igor would end up with an attractive girl as you.'
 								act 'Leave the living room': gt 'Igorhome', 'kor'
-							elseif pcs_vag = 0:
-								'"No, I''m still a virgin and I''m not ready yet to lose it yet and Igor is really understanding. One day maybe but not right now..."'
-								'Gemorgen looks a bit disappointed at Igor but doesn''t say anything since his son as he doesn''t want to jeopardize the relationship....'
+							else
+								'"No, just because I look a certain way doesn''t mean I''ve had sex yet. I''m still a virgin and I''m not ready for sex yet, maybe some day but not right now."'
+								'Gemorgen says he respects your decision and he won''t pressure any of you. But he secretly hopes you would reconsider...'
 								act 'Leave the living room': gt 'Igorhome', 'kor'
 							end
 						end
 					end
 				end
 			end
-		!!else regular/ugly Sveta
-			act 'Talk':
+		end
+	end
+end
+
+if $ARGS[0] = 'livingroom2':
+!! else Sveta alone and regular/ugly looks
+	act 'Talk':
+		*clr & cla
+		met_IgorDad = 1
+		'<center><img src="images/locations/pavlovsk/resident/Igorhome/father.jpg"></center>'
+		'As you walk into the living room Igor''s father throws a glance at you, as he doesn''t recognizes you, he immediately turns down the sound on the tv and turns his attention towards you.'
+		'"Hi, I''m Gemorgen and who might you be? Are you Galina''s university friend?"'
+		'"Hi, my name is <<$pcs_nickname>> <<$pcs_lastname>>. And I''m actually Igor''s friend from school."'
+		'The father looks at you in amazement, baffled that his son has befriended a girl...'
+		act 'Further':
+			*clr & cla
+			'"I''m really glad seeing my son having a girl as a friend. It''s not often I get to say that..." Gemorgen says jokingly.'
+			'"I don''t believe you..." you answer in disbelief. "An attractive boy like Igor must have lots of girls over..."'
+			'"I wish that was the truth..." he says. "I really hope that Igor will step out of his shell when it comes to the fair sex..."'
+			act 'Change subject':
 				*clr & cla
-				'You greet each other telling the father that you''re here because Igor has promised to help you out with a school assignment.'
-				'"Well, at least it''s something..." Gemorgen sighs. "Usually he doesn''t bring	anyone over to our home, especially when it comes to girls. I''ve only seen Dimka running around here."'
-				'Igor feeling ashamed tries making his father to stop.'
-				'But Gemorgen is not leaving him alone. "I just want the best for you... I want you to become manlier and more confident..."'
-				act 'Defend Igor':
+				'"I don''t mean to be prying but I have to say that I love your home, you must be really well-off."' 
+				'Gemorgen looks at you a bit bothered by your brashness but still answers that he''s really proud of his job as an accountant and that both of the adults are working, so he can''t really complain.'
+				'You sincerely listen to him. As he finishes you tell him that you''re sure Igor will follow in his footsteps...'
+				act 'Further':
 					*clr & cla
-				!!relationship with Igor goes up
-					'You notice Igor getting upset and you try defending him... You tell the father that it''s not fair on Igor, he''s kind and good at school.'
-					'Gemorgen doesn''t care what you say instead telling Igor, "Look at you, you''re pathetic, you have a girl defending you. Do you really think a girl will ever date you?"'
-					'Gemorgen keeps on rambling about him only wanting to motivate Igor. He wants him to lose his virginity so he can loosen up and follow in his footsteps...'
-					'Igor is not having it anymore, he grabs hold of you and pushes you away from Gemorgen. As you''re walking away from the room Igor thanks you for defending him...'
-					'"It was nice meeting you. I hope you can be the one helping my son with his virginity..." you hear Gemorgen yell from the living room.'
-					act 'Leave the living room': gt 'Igorhome', 'kor'
-				end
-				act 'Change the subject':
-					*clr & cla
-					'As you notice Igor upset, you try changing the subject and ask about Galina instead.'
-					'Gemorgen answers that he''s proud of his daughter, she''s doing great at university and he''s not worried about her, the future is bright...'
-					'You compliment Igor by telling Gemorgen that he''s doing well in school and that his father should be proud of him.'
-					'"I am proud of Igor. And I''m sure he''ll amount to something in life. I just want him to get a girlfriend and enjoy life while he''s young because he might regret it later on in life."'
-					'"Well, if Igor wants I can probably introduce him to some girls from our school. It might help him become more confident."'
-					'"Thank you for being so kind. I''m glad you want to help out my son..."'
-					'As everyone calmed down and are happy, you and Igor leave the living room.'
-					act 'Leave the living room': gt 'Igorhome', 'kor'
-				end
-				act 'Tease Igor':
-					*clr & cla
-				!!relationship with Igor goes down
-					'"You''re absolutely right." you agree with Gemorgen. "He really needs to man up a bit."'
-					'"I''m glad you understand my predicament, <<$pcs_nickname>>. I see so much potential in him..." says Gemorgen.'
-					'"Well, he''s never going to get a girl behaving like this."'
-					'Igor disappointingly says, "You know I stand right here, right? I don''t understand how you can say something like this? I agreed to help you out and you treat me like this."'
-					'You look at him smiling, "Don''t be like that, I was only teasing you a little..."'
-					'Igor walks away from you as he''s clearly upset. You look at Gemorgen as he can''t understand why Igor reacted the way did. You quickly say goodbye and try to catch up with Igor...'
-					act 'Leave the living room': gt 'Igorhome', 'kor'
+					'With a troubled facial expression Gemorgen replies, "I''m not so sure about that. The business world is rough and you have to be confident when dealing with money. You''ve got to be upfront with your clients so they respect you. Igor is unfortunately missing this treat..."'
+					'Trying to cheer him up you say "Igor doesn''t need all those traits, he''s really kind and got a big heart."'
+					'Gemorgen dismisses you saying "Igor must become manlier, look at the other boys in his age. They''re far more calculating."'
+					act 'Like Dimka?':
+						*clr & cla
+						'"Yes exactly like Dimka. I don''t think he''s a good influence on my son. But that''s just because Igor''s a pushover. If he had more confidence I''m sure that Dimka would have been long gone."'
+						'"I don''t really know about that. I''ve seen them at school and they''re really close." you fuel him on.'
+						'Gemorgen clearly annoyed replies, "Like I said before I think Igor would be better off without Dimka. I don''t trust that boy."'
+						act 'Time to head back':
+							*clr & cla
+							'As you don''t want to anger Gemorgen further, you finish the conversation by saying you need to head back to Igor.'
+							'As you''re about to leave Gemorgen looks you in the eyes and tells you that he wouldn''t mind if you and Igor became a couple, "If only you could touch-up your looks a bit, then I wouldn''t mind the two of you together. I really want Igor hooking up with a hot girl..."'
+							'You take great offence hearing that, and begin cussing him for being so insensitive, especially as his son is no better...' 
+							'"I''m sorry, I didn''t mean it to come out that way... I guess I''m just too excited that a girl was hanging out with my son. And to be frank, it doesn''t hurt anyone to do a little touch-up, even the prettiest girls do it."'
+							'You turn around and leave the room, clearly upset, just wanting to get away from him...'
+							act 'Leave the livingroom': gt 'Igorhome', 'kor'
+						end
+					end
 				end
 				if IgorLoverQW > 0:
-					act 'Reveal that you''re dating':
-						*clr & cla
-						'You and Igor look shyly at each other. Igor takes a deep breath and tells Gemorgen that the two of you are dating.'
-						'"Not bad son. I''m glad for you. <<$pcs_nickname>> is a good pick for a first girlfriend, you can practice on each other."'
-						'You feel upset by Gemorgen''s words and look angrily at Igor, but he''s too afraid to say anything to the father.'
-						'The conversation ends quickly as you and Igor leave the living room. The father can hear you scold Igor because he didn''t defend you...'
+					act 'Well...':
+						*clr & cla	
+						'"I know Igor wanted to tell you about this himself. But I might as well tell you, we''re dating." you say shyly.'
+						'"That''s great news! I think you will be good for Igor, a perfect first girlfriend that he can practice on."'
+						'You''re offended by his words but decide not to say anything not wanting to end up agruing with your boyfriends parent...'
 						act 'Leave the living room': gt 'Igorhome', 'kor'
 					end
 				end
 			end
 		end
-	else
-		act 'Leave the living room': gt 'Igorhome', 'kor'
+	end
+end
+
+if $ARGS[0] = 'livingroom3':
+!!Sveta with Igor only friends
+!!if attractive
+	act 'Talk':
+		*clr & cla
+		met_IgorDad = 1
+		'As the two of you walk into the living room, the father turns his attention from the tv towards the two of you.'
+		'"My, my my, who do we have here? Come on son, introduce me to your beautiful friend."'
+		'Igor mumbles something to his father, Gemorgen.'
+		'Instead you take charge, "Hello, My name is <<$pcs_nickname>> <<$pcs_lastname>>."'
+		'"Such a true beauty, a real gem. Have you had the pleasure meeting my wife? I wonder how she reacted when she saw you?" Gemorgen says laughing. "She can be quite over-bearing when it comes to Igor."'
+		if met_IgorMother = 1 
+			act 'Yes, I''ve met her':
+				*clr & cla
+				'"It was really interesting, I could probably get along with her, but she needs to stop with the disapproving attitude."'
+				'"I''m truly sorry you had to experience that side of my wife. She likes to keep up an illusion as if she''s mother Theresa or something, back in the days me and her used to all get in all sorts of trouble."'
+			end 
+		else
+			act 'Unfortunately, I haven''t had the pleasure yet':
+				*clr & cla
+				'Gemorgen looks at you laughing, "Maybe it''s for the best. She can be quite a handful when it comes to a certain kind of girls..."'
+				'The two of you laugh as Gemorgen hints that his wife feels threatend when someone more beautiful comes visits them.'
+			end
+		end
+		act 'You hear a sigh':
+			*clr & cla
+			'Igor is clearly dissatisfied how his father is acting, telling him that he shouldn''t be talking about his wife the way he does in front of strangers.'
+			'Gemorgen quickly responds by saying that he''s only joking. And out of nowhere asks Igor if the two of you are dating.'
+			'Igor, visibly blushing answers no and that you''re just friends.' 
+			'"You need to be upfront, son. Look at her, you might never get another shot at a girl like this. Don''t let this one off the hook."'
+			act 'Defend Igor':
+				*clr & cla
+				'As you notice that Igor is shook by his father’s comments, you step in and say, "We don''t need to rush anything. If it''s meant to be it''s meant to be, otherwise I''m just glad being Igor''s friend."'
+				'"You see son, you''ve just been friend-zoned. It''s no wonder, you''re too much of a wimp and now you''ve chased away <<$pcs_nickname>>."'
+				'Gemorgen looking troubled turns towards you, "You have to forgive my gawky son."'
+				'You take pity on Igor as he''s about to cry. "You shouldn''t be so hard on your son... He''s got feelings too."'
+				!!relationship with Igor goes up
+				act 'Changing the subject':
+					*clr & cla
+					'"I mean there is plenty to be proud of when it comes to Igor, he''s got really good grades and he''s really kind to everyone."'
+					'Gemorgen doesn''t seem to pay much attention to what you''re saying and instead begins lewdly commenting your looks.'
+					'Not wanting to be rude, you thank him for his kind words, but add fiercely that you have no interest in older men...'
+					'He starts laughing loudly, telling Igor that this one is a keeper, that you have plenty of spunk and he likes it.'
+					'Igor begins tearing up, yells at his father, and shortly thereafter runs away from the room. As you try to catch up with Igor you give the father a stern look...'
+					'You can hear Gemorgen yelling that him running away won''t help with anything...'
+					act 'Leave the living room': gt 'Igorhome', 'kor'
+				end
+			end
+			if IgorLoverQW > 0:
+				act 'Should we tell him':
+					*clr & cla
+					'You and Igor look at each other, you nodding at Igor he should speak up. Igor takes a deep breath and tells his father that the two of you are dating.'
+					'"That''s the best news I''ve heard this week! You''ve really picked an attractive girl. I knew you had it in you. So tell me have you had the chance to bang your pretty girlfriend yet?"'
+					'Igor looks stunned not knowing what to answer. He looks at you, asking to help him out...'
+					if npc_sex['A4'] > 0:
+						'"Well, you can say that the two of us have had quite some good moments." you look at Igor smiling. "But, since Igor is inexperienced we''re taking it slow. I''m positive he''ll improve..."'
+						'"Well, I''m sure you''re quite the teacher... I''m just glad Igor has found someone to look after him..."'
+						'You wink at the father as not to worry. You grab Igor by the arm, and the two of you leave the living room feeling relieved that you''ve told Gemorgen.'
+						act 'Leave the living room': gt 'Igorhome', 'kor'
+					elseif pcs_vag ! 0:
+						'"I hope something will happen soon he''s been avoiding that part of our relationship..." you say a bit disappointed.'
+						'"Don''t worry I''ll have a talk man to man. He''s innocent like a little lamb. He probably doesn''t know what to do..."'
+						'Igor blushes while you thank the father for wanting to help out. The two of you leave the living room.'
+						act 'Leave the living room': gt 'Igorhome', 'kor'
+					elseif pcs_vag = 0:
+						'"No, I''m still a virgin and I''m not ready yet to lose it yet and Igor is really understanding. One day maybe but not right now..."'
+						'Gemorgen looks a bit disappointed at Igor but doesn''t say anything since his son as he doesn''t want to jeopardize the relationship....'
+						act 'Leave the living room': gt 'Igorhome', 'kor'
+					end
+				end
+			end
+		end
+	end
+end
+
+if $ARGS[0] = 'livingroom4':
+!!else regular/ugly Sveta
+	act 'Talk':
+		*clr & cla
+		met_IgorDad = 1
+		'You greet each other telling the father that you''re here because Igor has promised to help you out with a school assignment.'
+		'"Well, at least it''s something..." Gemorgen sighs. "Usually he doesn''t bring	anyone over to our home, especially when it comes to girls. I''ve only seen Dimka running around here."'
+		'Igor feeling ashamed tries making his father to stop.'
+		'But Gemorgen is not leaving him alone. "I just want the best for you... I want you to become manlier and more confident..."'
+		act 'Defend Igor':
+			*clr & cla
+		!!relationship with Igor goes up
+			'You notice Igor getting upset and you try defending him... You tell the father that it''s not fair on Igor, he''s kind and good at school.'
+			'Gemorgen doesn''t care what you say instead telling Igor, "Look at you, you''re pathetic, you have a girl defending you. Do you really think a girl will ever date you?"'
+			'Gemorgen keeps on rambling about him only wanting to motivate Igor. He wants him to lose his virginity so he can loosen up and follow in his footsteps...'
+			'Igor is not having it anymore, he grabs hold of you and pushes you away from Gemorgen. As you''re walking away from the room Igor thanks you for defending him...'
+			'"It was nice meeting you. I hope you can be the one helping my son with his virginity..." you hear Gemorgen yell from the living room.'
+			act 'Leave the living room': gt 'Igorhome', 'kor'
+		end
+		act 'Change the subject':
+			*clr & cla
+			'As you notice Igor upset, you try changing the subject and ask about Galina instead.'
+			'Gemorgen answers that he''s proud of his daughter, she''s doing great at university and he''s not worried about her, the future is bright...'
+			'You compliment Igor by telling Gemorgen that he''s doing well in school and that his father should be proud of him.'
+			'"I am proud of Igor. And I''m sure he''ll amount to something in life. I just want him to get a girlfriend and enjoy life while he''s young because he might regret it later on in life."'
+			'"Well, if Igor wants I can probably introduce him to some girls from our school. It might help him become more confident."'
+			'"Thank you for being so kind. I''m glad you want to help out my son..."'
+			'As everyone calmed down and are happy, you and Igor leave the living room.'
+			act 'Leave the living room': gt 'Igorhome', 'kor'
+		end
+		act 'Tease Igor':
+			*clr & cla
+		!!relationship with Igor goes down
+			'"You''re absolutely right." you agree with Gemorgen. "He really needs to man up a bit."'
+			'"I''m glad you understand my predicament, <<$pcs_nickname>>. I see so much potential in him..." says Gemorgen.'
+			'"Well, he''s never going to get a girl behaving like this."'
+			'Igor disappointingly says, "You know I stand right here, right? I don''t understand how you can say something like this? I agreed to help you out and you treat me like this."'
+			'You look at him smiling, "Don''t be like that, I was only teasing you a little..."'
+			'Igor walks away from you as he''s clearly upset. You look at Gemorgen as he can''t understand why Igor reacted the way did. You quickly say goodbye and try to catch up with Igor...'
+			act 'Leave the living room': gt 'Igorhome', 'kor'
+		end
+		if IgorLoverQW > 0:
+			act 'Reveal that you''re dating':
+				*clr & cla
+				'You and Igor look shyly at each other. Igor takes a deep breath and tells Gemorgen that the two of you are dating.'
+				'"Not bad son. I''m glad for you. <<$pcs_nickname>> is a good pick for a first girlfriend, you can practice on each other."'
+				'You feel upset by Gemorgen''s words and look angrily at Igor, but he''s too afraid to say anything to the father.'
+				'The conversation ends quickly as you and Igor leave the living room. The father can hear you scold Igor because he didn''t defend you...'
+				act 'Leave the living room': gt 'Igorhome', 'kor'
+			end
+		end
 	end
 end
 
@@ -687,322 +718,349 @@ if $ARGS[0] = 'kitchen':
     '<center><img src="images/locations/pavlovsk/resident/Igorhome/kitchen.jpg"></center>'
     'The room is very clean and neat. Everything is perfectly in place, the counters are polished to a near mirror like quality. The wood floor is also highly polished.'
 !!this is a elseif, if it is 06:00 to 07:00 igors mother is here, or if it is 18:00 to 23:00 she is here during the week. On weekends she is here from 08:00 to 23:00
-    'You see Igor''s mother Inga is in the kitchen drinking tea. She is very neatly dressed, you don''t think she has noticed you yet.'
-	act 'Talk':
+	if met_IgorMother = 0 and (week >=5 and (hour = 6 or (hour <= 18 and hour < 23))) or (week > 5 and hour >= 8 and hour < 23):
+		'You see Igor''s mother Inga is in the kitchen drinking tea. She is very neatly dressed, you don''t think she has noticed you yet.'
+		act 'Talk':
+			*clr & cla
+			'<center><img src="images/locations/pavlovsk/resident/Igorhome/mother.jpg"></center>'
+			!!if igor_with = 1:
+		end
+	else
+		act 'Leave the kitchen': gt 'Igorhome', 'kor'
+	end
+end	
+
+if $ARGS[0] = 'kitchen1':
+!!if Sveta is friends with Igor and they''re together in the kitchen + Sveta is wearing Bimbo/slutty outfit
+	'As the two of you walk into the kitchen, you notice a woman in her mid-forties sitting by the table drinking tea. Igor whispers that that''s his mother.'
+	'She looks up eyeing you from head to toe, turning to Igor saying...'
+	'"Igor, dear, what have I told you about inviting strangers into our home without letting me know?"'
+	'He nervously tries avoiding her judging eyes, only being able to answer in an inaudible murmur.'
+	act 'Introduce yourself':
 		*clr & cla
-		'<center><img src="images/locations/pavlovsk/resident/Igorhome/mother.jpg"></center>'
-		!!if Sveta is friends with Igor and they''re together in the kitchen + Sveta is wearing Bimbo/slutty outfit
-			'As the two of you walk into the kitchen, you notice a woman in her mid-forties sitting by the table drinking tea. Igor whispers that that''s his mother.'
-			'She looks up eyeing you from head to toe, turning to Igor saying...'
-			'"Igor, dear, what have I told you about inviting strangers into our home without letting me know?"'
-			'He nervously tries avoiding her judging eyes, only being able to answer in an inaudible murmur.'
-			act 'Introduce yourself':
+		'You look confidently at her judging eyes, excusing yourself that it wasn''t you intention to intrude...'
+		'"Don''t be silly, girl. All of Igor''s friends are welcome here, no matter who or what they are..." the mother answers in the most demeaning way possibly.'
+		'"Hi! I''m <<$pcs_nickname>> <<$pcs_lastname>>, pleasure meeting you. I love what you''ve done with your home..." you confidently say and begin walking towards her as you want to hug her.'
+		'She stops you in your tracks with a hand movement and asks you, "<<$pcs_nickname>> <<$pcs_lastname>> you say? Are you somehow related to Natasha <<$pcs_lastname>>?" she asks grinning.'
+		act 'Yes that''s my mother. Are you two familiar with each other?':
+			*clr & cla
+			'"We used to be old classmates. Tell me <<$pcs_nickname>>, is your mother still a loose cannon like in the good old days?"'
+			'You look a bit dumbfounded at her as you don''t really understand what she means. You smile and nod not knowing how to respond otherwise.'
+			'"I see that the apple doesn''t fall far away from the tree." she smirkly comments.'
+			'"Did my mother do something wrong", you ask her?'
+			'"No no, not at all, it''s just that I can see a lot of her in you..." she adds.'
+			act 'Igor told me a lot about your family':
 				*clr & cla
-				'You look confidently at her judging eyes, excusing yourself that it wasn''t you intention to intrude...'
-				'"Don''t be silly, girl. All of Igor''s friends are welcome here, no matter who or what they are..." the mother answers in the most demeaning way possibly.'
-				'"Hi! I''m <<$pcs_nickname>> <<$pcs_lastname>>, pleasure meeting you. I love what you''ve done with your home..." you confidently say and begin walking towards her as you want to hug her.'
-				'She stops you in your tracks with a hand movement and asks you, "<<$pcs_nickname>> <<$pcs_lastname>> you say? Are you somehow related to Natasha <<$pcs_lastname>>?" she asks grinning.'
-				act 'Yes that''s my mother. Are you two familiar with each other?':
+				'You stand there in silence for a minute awkwardly looking at each other when suddenly a question pops in your head. What about the family?' 
+				'She shines up as you mention the family, "Only good things I hope. My pride and joy is studying at the university in the city. She''s at the top of her class, not that I ever doubted, she''s a real go getter."'
+				'"I''m so proud of her, at first I was worried how she would handle herself in the big city. I talked to my little baby every day, just to make sure she was okay..."'
+				'Igor''s sister must really be curled you think to yourself, a spoiled brat thats always gotten everything served on a silver platter.'
+				'As Inga is in a better mood, she continues about her husband...'
+				'"I met my husband in my twenties, he was so good looking. Right away I knew we would be the perfect couple. The first years were rough but as soon my husband was done with the studies, he''s an accountant by the way, we got married and I got pregnant with my pride and joy."'
+				'"Two years later I had Igor and went back to my work as a secretary at a law firm."'
+				'"So for a more important question, how did you and my sweet little Igor meet?"'
+				act 'We met through a mutual schoolmate, Dimka':
 					*clr & cla
-					'"We used to be old classmates. Tell me <<$pcs_nickname>>, is your mother still a loose cannon like in the good old days?"'
-					'You look a bit dumbfounded at her as you don''t really understand what she means. You smile and nod not knowing how to respond otherwise.'
-					'"I see that the apple doesn''t fall far away from the tree." she smirkly comments.'
-					'"Did my mother do something wrong", you ask her?'
-					'"No no, not at all, it''s just that I can see a lot of her in you..." she adds.'
-					act 'Igor told me a lot about your family':
-						*clr & cla
-						'You stand there in silence for a minute awkwardly looking at each other when suddenly a question pops in your head. What about the family?' 
-						'She shines up as you mention the family, "Only good things I hope. My pride and joy is studying at the university in the city. She''s at the top of her class, not that I ever doubted, she''s a real go getter."'
-						'"I''m so proud of her, at first I was worried how she would handle herself in the big city. I talked to my little baby every day, just to make sure she was okay..."'
-						'Igor''s sister must really be curled you think to yourself, a spoiled brat thats always gotten everything served on a silver platter.'
-						'As Inga is in a better mood, she continues about her husband...'
-						'"I met my husband in my twenties, he was so good looking. Right away I knew we would be the perfect couple. The first years were rough but as soon my husband was done with the studies, he''s an accountant by the way, we got married and I got pregnant with my pride and joy."'
-						'"Two years later I had Igor and went back to my work as a secretary at a law firm."'
-						'"So for a more important question, how did you and my sweet little Igor meet?"'
-						act 'We met through a mutual schoolmate, Dimka':
-							*clr & cla
-							'"Well, we are classmates, but it was through Dimka we started hanging out with each other. He thought we would get along really well."'
-							'"Oh, Dimka, that sweet sweet boy. He''s been Igor''s friend as long as I can remember. How''s Dimka doing, it''s been a while since I''ve seen him?"'
-							'Igor still looking down, mumbles that Dimka is fine and that he''s been very busy at school.'
-							'"You have to invite him over instead of inviting girls that could mean trouble. But since it was Dimka that introduced you each other I''m willing to give you a benefit of the doubt. Run along now and Igor I know you''re a good boy so no funny stuff."'
-							'Igor nods while you say your goodbye, thinking this woman could become troublesome and that you need to isolate Igor from her as much as you can...'
-							met_IgorMother = 1 
-							act 'Leave the Kitchen': gt 'Igorhome', 'kor'
-						end
-						act 'We''re classmates':
-							*clr & cla
-							'"Well, we are classmates, and I thought that Igor is a cutie so I wanted to get to know him better."'
-							'"Igor, we''re going to have a talk about who you''re befriending at school..."'
-							'You don''t want to get involved in their family business so you keep quiet as they''re arguing.'
-							'Igor finishes talking and tells you to come with him as you move away from the kitchen you feel a bit turned on as he defended you. While walking behind him you grab him by the butt, pinching it...'
-							met_IgorMother = 1 
-							act 'Leave the Kitchen': gt 'Igorhome', 'kor'
-						end
-						act 'Igor is tutoring me':
-							*clr & cla
-							'"I''m a bit of an airhead and Igor offered to help me out with some school work." you look at Igor smiling.'
-							'"I expected that much of my little boy. He''s always been quite sharp and with his heart of gold he always helps out the less fortunate..."'
-							'"Well, I guess that''s okay as long as you''re only helping her with her homework. Understood?" Both of you nods, and quickly leave the kitchen before Inga changes her mind.'
-							met_IgorMother = 1 
-							act 'Leave the Kitchen': gt 'Igorhome', 'kor'
-						end
-						if IgorLoverQW > 0:
-							act 'Confess that you two are dating':
-								*clr & cla
-								'Both of you look at each other nervously like small children when hiding something.'
-								'"Well out with it. I know you''re hiding something... Don''t tell me she pregnant and you''re the father?!"'
-								'Igor shakes his head telling his mother to calm down that it''s nothing like that but confirms that the two of you are seeing each other.'
-								'You quickly add, "Me and your son have really had fun with each other, he''s such a cutie..." smiling as you look at him.'
-								'Inga sighs and disapointingly says "Who though my son would fall for someone like this... Well, I''m not too keen on this relationship you''ve developed but if it makes my son happy, I''ll have to deal with it. Just remember to always use protection I don''t want you to become a father at this early age cause I assume you''ve already lost your virginity?"'
-								'Igor blushes and angerly answers that it''s non of her business while you think that it''s a shame if he listens to his mother it''s much more fun having sex without protection.'
-								'"I''m sure you have better things to do besides standing here talking with me." says Inga before returning to her tea.'
-								met_IgorMother = 1 
-								act 'Leave the Kitchen': gt 'Igorhome', 'kor'
-							end
-						end
-					end
+					'"Well, we are classmates, but it was through Dimka we started hanging out with each other. He thought we would get along really well."'
+					'"Oh, Dimka, that sweet sweet boy. He''s been Igor''s friend as long as I can remember. How''s Dimka doing, it''s been a while since I''ve seen him?"'
+					'Igor still looking down, mumbles that Dimka is fine and that he''s been very busy at school.'
+					'"You have to invite him over instead of inviting girls that could mean trouble. But since it was Dimka that introduced you each other I''m willing to give you a benefit of the doubt. Run along now and Igor I know you''re a good boy so no funny stuff."'
+					'Igor nods while you say your goodbye, thinking this woman could become troublesome and that you need to isolate Igor from her as much as you can...'
+					met_IgorMother = 1 
+					act 'Leave the Kitchen': gt 'Igorhome', 'kor'
 				end
-			end
-		!!elseif Walking alone in the house + Bimbo/slutty outfit
-			'You hear someone clearing their throat as you walk by the kitchen. You stop seeing a woman in her forties sitting by the table enjoying her tea.'
-			'Looking up the woman asks you "And who might you be? What is this god awful outfit you''re wearing? You should tell your mother to buy you some proper clothes. I can''t believe that my sweet little Igor is hanging out with the likes of someone like you..."'
-			act 'Try to be friendly':
-				*clr & cla
-				'You feel a bit ashamed as Igor''s mother aggressively keeps ranting about you and your outfit.'
-				'"Who are you anyway? How do you know my son?"'
-				'"My name is <<$pcs_nickname>> <<$pcs_lastname>>, and I''m Igor''s schoolmate..."'
-				'"<<$pcs_lastname>>? Are you Natasha''s daughter?"'
-				act 'Nod your head':
+				act 'We''re classmates':
 					*clr & cla
-					'"Yes, I am." you answer anxiously.'
-					'"Yeah I remember her, she was always a handful when we were young. Is your mother still like that?"'
-					'"No, actually she''s really responsible now. She has three children now so she takes real good care of us."'
-					'Inga snarky answers "Well, I wouldn''t really say she takes good take of you, look at you. You would like to think that a responsible adult would let her daughter dress like this?"'
-					act 'Try to change the subject':
-						*clr & cla
-						'Feeling a bit ashamed by her harsh words, you try pulling down your clothes as you try to cover yourself.'
-						'To ease up the tension you ask her about the family.'
-						'Inga shines up and begins talking about her daughter. "I''m so proud of her, she''s doing really well at the university. My husband has a well-paid job so I can''t really complain about my life situation."'
-						act 'Further':
-						*clr & cla
-							'You listen to her for a while not daring to disturb her as she keeps talking about her family. As soon as she stops you tell her that Igor is probably waiting for you and that you need to head back to Igor.'
-							'"I really hope that you reconsider how you''re presenting yourself. I think there is a beautiful girl somewhere underneath all those trashy clothes. Just a friendly warning, don''t you dare doing anything to Igor, he''s a sweet boy, and he doesn''t know much about women..."'
-							'You thank her for the advice, thinking she''s an old woman that doesn''t understand anything about youths today and you love the attention you''re receiving because of the clothes. Still it seems that she didn''t stop you from seeing him so you happily return to Igor''s room.'
-							met_IgorMother = 1 
-							act 'Leave the Kitchen': gt 'Igorhome', 'kor'
-						end
-					end
+					'"Well, we are classmates, and I thought that Igor is a cutie so I wanted to get to know him better."'
+					'"Igor, we''re going to have a talk about who you''re befriending at school..."'
+					'You don''t want to get involved in their family business so you keep quiet as they''re arguing.'
+					'Igor finishes talking and tells you to come with him as you move away from the kitchen you feel a bit turned on as he defended you. While walking behind him you grab him by the butt, pinching it...'
+					met_IgorMother = 1 
+					act 'Leave the Kitchen': gt 'Igorhome', 'kor'
 				end
-			end
-!!Must have confidence even if Sveta is a slut/bimbo, maybe even being a dom
-			act 'You''ve had enough':
-				*clr & cla
-				'Tired of her yapping you angirly answer, "A grown woman shouldn''t act this way. What does it matter how I dress? Are you really that judgmental of someone you''ve just met?"'
-				'"Where are your manners young girl? Hasn''t your mother taught you how to behave? You should be lucky I haven''t thrown you out. I''m a patient woman and don''t want to cause a scene with one of Igor''s friends."'
-				'"I am well mannered, I won''t accept anyone bad mouthing me."'
-				'"Well, you should think about how you present yourself. It feels like I should have a talk with your mother, who is she by the way?"'
-				'You think about if you should tell her. "Well, who is it?" Inga asks again. Without any hesitation you say your mothers name seeing Inga''s reaction...'
-				act 'Keep on arguing':
+				act 'Igor is tutoring me':
 					*clr & cla
-					'"No wonder that you act this way now that I know who raised you. I should''ve expected that her children would behave like this."'
-					'"What do you mean by that? My mother did a great job raising me. I bet she''s a better mother than you''ve ever been."'
-					'"Well, I know your mother very well and I can tell you this, you''re behaving just like she did when she was younger. I won''t go into details but I can tell you this..."'
-					'Before she utters another word you annoyingly say "I don''t want to hear it no more, I think it''s better for me to return to Igor."'
-					'"We''ll see how long this relationship will last." is the last thing you hear from her.'
-					act 'Storm out':
+					'"I''m a bit of an airhead and Igor offered to help me out with some school work." you look at Igor smiling.'
+					'"I expected that much of my little boy. He''s always been quite sharp and with his heart of gold he always helps out the less fortunate..."'
+					'"Well, I guess that''s okay as long as you''re only helping her with her homework. Understood?" Both of you nods, and quickly leave the kitchen before Inga changes her mind.'
+					met_IgorMother = 1 
+					act 'Leave the Kitchen': gt 'Igorhome', 'kor'
+				end
+				if IgorLoverQW > 0:
+					act 'Confess that you two are dating':
 						*clr & cla
-						'You storm out the kitchen, noticeably irritated as the mother has clearly gotten under your skin.'
+						'Both of you look at each other nervously like small children when hiding something.'
+						'"Well out with it. I know you''re hiding something... Don''t tell me she pregnant and you''re the father?!"'
+						'Igor shakes his head telling his mother to calm down that it''s nothing like that but confirms that the two of you are seeing each other.'
+						'You quickly add, "Me and your son have really had fun with each other, he''s such a cutie..." smiling as you look at him.'
+						'Inga sighs and disapointingly says "Who though my son would fall for someone like this... Well, I''m not too keen on this relationship you''ve developed but if it makes my son happy, I''ll have to deal with it. Just remember to always use protection I don''t want you to become a father at this early age cause I assume you''ve already lost your virginity?"'
+						'Igor blushes and angerly answers that it''s non of her business while you think that it''s a shame if he listens to his mother it''s much more fun having sex without protection.'
+						'"I''m sure you have better things to do besides standing here talking with me." says Inga before returning to her tea.'
 						met_IgorMother = 1 
-						!!pcs_mood -= 20?
 						act 'Leave the Kitchen': gt 'Igorhome', 'kor'
 					end
 				end
 			end
-		!!elseif Good girl + friends with Igor
-			'As the two of you walk into the kitchen, you notice a woman in her mid-forties sitting by the table drinking tea. Igor walks up to this woman and hugs her.'
-			'"Igor, dear, who''s this lovely girl you brought home with you?"'
-			'"It''s a friend from school." Igor proudly proclaims.'
-			act 'Introduce yourself':
-				*clr & cla
-				'You shyly look at the mother, not really knowing what to say...'
-				'"Don''t be shy, little cutie... I don''t bite, especially such a cute girl as yourself."'
-				'"I''m <<$pcs_nickname>> <<$pcs_lastname>>, I''m glad I''m finally able to meet you. You have a lovely home." you say without stopping to take a breath.'
-				'"<<$pcs_nickname>> <<$pcs_lastname>> you say? How fun, are you somehow related to Natasha?"'
-				act 'Yes she is':
-					*clr & cla
-					'You nod your head and Inga shines up.'
-					'"I know your mother from the time me and she were in your age. We were friends but I was always a bit jealous by her beauty. I see that beauty runs in the family. Are you just as good as her in school?"'
-					'"I try my best... I hope Igor might help me out with some things." you say smiling looking at him.'
-					'"Well, I truly hope he''ll be able to, he''s quite good at school." she says proudly'
-					act 'Further':
-						*clr & cla
-						'"Well, I hope he can follow in his sisters footsteps. She is currently studying at the university in the city and she''s at the top of her class, so Igor has a lot to live up to."'
-						'"You don''t think that''s putting too much pressure on Igor?"'
-						'"Not really, no. I''m very proud of our family, my husband is an accountant and I work as a secretary at a law firm so I have big plans for my children."'
-						'Turning to Igor she asks him how the two of you met?'
-						act 'We got introduced through a mutual schoolmate, Dimka.':
-							*clr & cla
-							'Feeling a bit encouraged you answer instead, "We are classmates, but it was Dimka that formally introduced us to each other. He though we would get along with each other."'
-							'"Oh, Dimka, that sweet sweet boy. He''s been Igor''s friend as long as I can remember. How''s Dimka now a days, it''s been a while since I''ve seen him. He''s quite the looker that Dimka."'
-							'Igor looking down, mumbles that Dimka is fine and that he''s been very busy at school...'
-							'"You should call him over so all the three of you can hang out. And since it was Dimka that introduced you to each other I''m sure the two of you will get along. Run along now and Igor I know you''re a good boy so don''t try doing anything funny to <<$pcs_nickname>>. Especially since you''re still a virgin."'
-							'Igor immediately turns red and tells his mother that she should keep quiet... You let out a smile looking at his mother and reassure her that nothing will happen since you''re more interested in transforming Igor...'
-							met_IgorMother = 1 
-							act 'Leave the Kitchen': gt 'Igorhome', 'kor'
-						end
-						act 'We''re classmates':
-							*clr & cla
-							'Feeling a bit encouraged you answer instead, "Well, we had an assignment together and ever since then we have become friends."'
-							'"I am not surprised that my little Igor managed to impress a girl by doing a school assignment."'
-							'You look at Igor and give him a hug, thanking him for his hard work all while his mother looks on smiling.'
-							'As the two of you start moving away you think to yourself that you''ve got the mother eating out of your hand and that you will have no trouble with her...'
-							met_IgorMother = 1 
-							act 'Leave the Kitchen': gt 'Igorhome', 'kor'
-						end
-						act 'I need someone to tutor me':
-							*clr & cla
-							'"I''ve fallen a bit behind in school and Igor offered to help me out with some of the school work."'
-							'"Don''t worry <<$pcs_nickname>>. I''m sure Igor will take good care of you. I''m not saying it because he''s my son but he''s very smart and got good grades."'
-							'"I guess I''m in safe hands then." you look over at Igor giving him a little smile.'
-							'"Run along now. I''m sure you have a lot of school work to go through."'
-							met_IgorMother = 1 
-							act 'Leave the Kitchen': gt 'Igorhome', 'kor'
-						end
-						if IgorLoverQW > 0:
-							act 'Confess that you two are dating':
-								*clr & cla
-								'Both of you look at each other nervously like small children when hiding something.'
-								'"Well out with it. I know you''re hiding something..."'
-								'Igor starts off by telling her that the two of you have been classmates for quite some time and when you got assigned to do a school project together, we hit it off.'
-								'You quickly add, "I really like your son and enjoy his company." smiling as you look at him.'
-								'"Well who am I to deny this sweet puppy love." Inga says smiling. "I want you to take extra good care of <<$pcs_nickname>>, she''s a delicate girl. And remember always use protection I don''t want you to become a father at this early age."'
-								'The both of you nod and promise her that you''ll be safe if it ever comes to that. Igor hugs his mother and whispers something to her. She nods approvingly.'
-								'"I''m sure you have better things to do besides standing here talking with me." says Inga before returning to her tea.'
-								met_IgorMother = 1 
-								act 'Leave the Kitchen': gt 'Igorhome', 'kor'
-							end
-						end
-					end
-				end
-			end
-		!!elseif Good girl + walking around alone
-			'As you walk around the house you hear someone calling you over from the kitchen.'
-			'"Who are you? My god I didn''t know that my little boy was friends with such a lovely girl."'
-			'You blush and thank her for the compliment.'
-			act 'Introduce yourself':
-				'"My name is <<$pcs_nickname>> <<$pcs_lastname>>, I''m glad I''m finally able to meet you."'
-				'"<<$pcs_lastname>>? Could it be that Natasha is your mother? I was friends with her when we were younger."'
-				'You shine up and nod approvingly, "Yes, that''s my mother. I didn''t know the two of you knew each other."'
-				'"Yeah, a long time ago. Before I had my daughter. She''s in the university now and doing really good, so I''m pretty proud of her. But don''t worry about that now and answer me this instead, how did you and my little boy meet?"'
-				act 'Through Dimka':
-					'"We met through a mutual friend, Dimka. He formally introduced us to each other. He though we would get along with each other."'
-					'"Oh, Dimka, that sweet sweet boy. He''s been Igor''s friend as long as I can remember. He''s always looking out for my little Igor."'
-					'"Yes, he''s really nice that Dimka and really good looking..." the two of you start laughing.'
-					'"I know you''re just kidding but please be careful with my son, he''s a delicate flower that doesn''t have much experience with women."'
-					'"Don''t worry, I''ll take good care him." you say still smiling. "I think it''s time for me to go back to Igor, he''s probably wondering where I am."'
-					met_IgorMother = 1 
-					act 'Leave the Kitchen': gt 'Igorhome', 'kor'
-				end
-				act 'Through school':
-					'"Well, we had an assignment together and ever since then we have become friends."'
-					'"I am not surprised that my little Igor managed to impress a girl by showing off how smart he is, I''m so proud of him."'
-					'"To be honest, I''m a bit turned on by how smart Igor is" you say blushing.'
-					'"Nothing to be ashamed of, <<$pcs_nickname>>. It runs in the family." as she''s clearly referencing to Igor''s father. "But please be careful with Igor, he hasn''t had lots of experience with women."'
-					'"I''ll take good care of him. I''ll make sure he don''t stray off to much..." you confidently say. "I should head back Igor is probably wondering where I am."'
-					'"We''ll talk about it later and don''t hesitate if you''re ever wondering anything." Inga replies as you''re moving away from the kitchen.'
-					met_IgorMother = 1 
-					act 'Leave the Kitchen': gt 'Igorhome', 'kor'
-				end 
-				act 'I need some tutoring':
-					*clr & cla
-					'"I''ve fallen a bit behind in school and Igor offered to help me out with some of the school work."'
-					'"Don''t worry <<$pcs_nickname>>. I''m sure Igor will take good care of you. I''m not saying it because he''s my son but he''s very smart and got good grades."'
-					'"I really hope so, cause I really need to get my grades up in this subject." you look at her a bit discouraged.'
-					'"I''m sure Igor won''t let you fail. You should go back to him so you can plan the work you need to put in." she says smiling.'
-					'You nod and turn around leaving the kitchen.'
-					met_IgorMother = 1 
-					act 'Leave the Kitchen': gt 'Igorhome', 'kor'
-				end
-			end		
-		!!elseif Gopnik, friends with Igor		
-			'As soon as Igor''s mother notices you her face turns red, turning towards Igor she starts screaming...'
-			'"What is this Igor? Explain yourself! When have you started hanging out with a hoodlum? I taught you better than this, just look at her, you should know better."'
-			'Igor tries to explain that you''re only friends but she''s not having it...'
-			'"Igor, tell your "friend" to leave this house right away, I don''t want her near our household and I forbid you to be friends with this girl."'
-			act 'Speak up':
-				*clr & cla
-				'You try to speak up but she instantly tells you to shut up...'
-				'"I don''t want to hear it! Get out! Now!"'
-				'Igor looks lamblike at you, taking you by the hand and leading you away from the kitchen, begging for forgiveness about how his mother is behaving and telling you he''ll have a talk with her and fix everything.'
-				'"And Igor, as soon as you''ve shown her out come back here we have some things to discuss." you hear his mother loudly say as Igor is pushing you away from the kitchen.'
-				'As you stand in the hallway Igor tells you to wait here, slamming the kitchen door behind him as he returns to the kitchen...'
-				met_IgorMother = 1 
-				act 'Leave the kitchen': gt 'Igorhome', 'kor'
-			end
-		!!elseif You''re Igor''s girlfriend and a Gopnik, Igor is keeping it a secret, it ends with him telling his mother that he''s helping you out studying
-			'As soon as Igor''s mother notices you her face turns red, turning towards Igor she starts screaming...'
-			'"What is this Igor? Explain yourself! When have you started hanging out with a hoodlum? I taught you better than this, just look at her, you should know better."'
-			'Igor tries to explain that you''re only friends but she''s not having it...'
-			'"Igor, tell your "friend" to leave this house right away, I don''t want her near our household and I forbid you to be friends with this girl."'
-			act 'Further':
+		end
+	end
+end
+
+if $ARGS[0] = 'kitchen2':
+!!elseif Walking alone in the house + Bimbo/slutty outfit
+	'You hear someone clearing their throat as you walk by the kitchen. You stop seeing a woman in her forties sitting by the table enjoying her tea.'
+	'Looking up the woman asks you "And who might you be? What is this god awful outfit you''re wearing? You should tell your mother to buy you some proper clothes. I can''t believe that my sweet little Igor is hanging out with the likes of someone like you..."'
+	act 'Try to be friendly':
+		*clr & cla
+		'You feel a bit ashamed as Igor''s mother aggressively keeps ranting about you and your outfit.'
+		'"Who are you anyway? How do you know my son?"'
+		'"My name is <<$pcs_nickname>> <<$pcs_lastname>>, and I''m Igor''s schoolmate..."'
+		'"<<$pcs_lastname>>? Are you Natasha''s daughter?"'
+		act 'Nod your head':
 			*clr & cla
-				'You try to speak up but she instantly tells you to shut up...'
-				'"I don''t want to hear it! Get out! Now!"'
-				'Igor looks lamblike at you, taking you by the hand and leading you away from the kitchen, begging for forgiveness about how his mother is behaving and telling you he''ll have a talk with her and fix everything.'
-				'"And Igor, as soon as you''ve shown her out come back here we have some things to discuss." you hear his mother loudly say as Igor is pushing you away from the kitchen.'
-				'As you stand in the hallway Igor tells you to wait here, slamming the kitchen door behind him as he returns to the kitchen.'
-				act 'Eavesdrop':
-					'You eavesdrop to them arguing, his mother telling him that you''ll corrupt him and destroy everything he''s built up.'
-					'Igor reassures her that it was the teachers idea for the better students to help out the students that are way behind their school work.'
-					'His mother asks if that''s all that is to it and he answers that she should calm down and not jump to conclusions.'
-					act 'Return to the kitchen':
-						'Igor calls you back to the kitchen. You see his mother sitting at the table still looking upset.'
-						'"So just so we''re clear, Igor is only going to help you out with your homework. Don''t get any funny ideas I''m going to keep my eye on you." keeping her composure stern.'
-						'You nonchalantly answer, "Yeah, whatever. Maybe you should relax a bit nothing will happen to your precious little son."'
-						'Before the situation escalates again, Igor tells you that you need to begin planning the schoolwork and you should go to his room...'
-						met_IgorMother = 1 
-						act 'Leave the kitchen': gt 'Igorhome', 'kor'
-					end
-				end
-			end
-		!!elseif Gopnik + Walking around the house without Igor
-			'As you''re walking into the kitchen you suddenly hear Igor''s mother...'
-			'"Who are you? Why are you dressed like that? Are you one of those hoodlums I''ve heard of?"'
-			act 'Answer her':
-			*clr & cla
-				'Clearly noticing that she loathes you, answer, "My name is <<$pcs_nickname>> <<$pcs_lastname>>. I''m a friend of Igor''s, what''s it to you?."'
-				'"Well I''m Igor''s mother and I don''t like your kind. Unlike his sister, he''s easily influenced and his future will get ruined because of you."'
-				'You stand there with your mouth wide open shocked by what you just heard. You decide to have some fun with her instead and say, "Don''t you worry about your son he''s in safe hands. I might even be able to teach him a thing or two."'
-				'"That decides it, I want you to leave my son alone. Understand? He''s an innocent boy and I refuse to let him get taken advantage of. To make it easy on everyone you should just leave and go home to that mother of yours..."'
-				act 'Refuse':
+			'"Yes, I am." you answer anxiously.'
+			'"Yeah I remember her, she was always a handful when we were young. Is your mother still like that?"'
+			'"No, actually she''s really responsible now. She has three children now so she takes real good care of us."'
+			'Inga snarky answers "Well, I wouldn''t really say she takes good take of you, look at you. You would like to think that a responsible adult would let her daughter dress like this?"'
+			act 'Try to change the subject':
 				*clr & cla
-					'You look her straight in the eye saying "Make me, do you dare to kick me out?"'
-					'Inga taken aback by your answer, looks at you frustrated, starts yelling at you that you need to leave right away.'
-					'Laughing you turn around and head back to Igor''s room, thinking about how she only bluffed and can''t do anything about your and Igor''s relationship.'
-					met_IgorMother = 1 
-					act 'Leave the kitchen': gt 'Igorhome', 'kor'
-				end
-				act 'Lie':
+				'Feeling a bit ashamed by her harsh words, you try pulling down your clothes as you try to cover yourself.'
+				'To ease up the tension you ask her about the family.'
+				'Inga shines up and begins talking about her daughter. "I''m so proud of her, she''s doing really well at the university. My husband has a well-paid job so I can''t really complain about my life situation."'
+				act 'Further':
 				*clr & cla
-					'"Fine, I''ll leave your precious little boy alone. If I knew it would be this much trouble I would never have befriended Igor." you lie straight to her face.'
-					'Inga calms down a bit, "Good I''m glad you''ve come to your senses. Now leave I don''t want to see you in my house ever again."'
-					'As you walk away you''re even more determined that you and Igor are right for each other and that you need to sneak around instead...'
+					'You listen to her for a while not daring to disturb her as she keeps talking about her family. As soon as she stops you tell her that Igor is probably waiting for you and that you need to head back to Igor.'
+					'"I really hope that you reconsider how you''re presenting yourself. I think there is a beautiful girl somewhere underneath all those trashy clothes. Just a friendly warning, don''t you dare doing anything to Igor, he''s a sweet boy, and he doesn''t know much about women..."'
+					'You thank her for the advice, thinking she''s an old woman that doesn''t understand anything about youths today and you love the attention you''re receiving because of the clothes. Still it seems that she didn''t stop you from seeing him so you happily return to Igor''s room.'
 					met_IgorMother = 1 
-					act 'Leave the kitchen': gt 'Igorhome', 'kor'
-				end
-				act 'Don''t respond':
-				*clr & cla
-					'Before you manage to respond, she jumps up from her chair and chases you down, gets up in your face and says...'
-					'"Listen to me, you little good for nothing, get out, now! Neither my son nor I want to waste my precious time on you."'
-					'She grabs you by the arm and shoves you outside the kitchen. "Don''t ever come back here or talk to my son ever again!"'
-					'As she turns back to sit down, you still remain in the hall contemplating your next move.'
-					met_IgorMother = 1 
-					act 'Leave the kitchen': gt 'Igorhome', 'kor'
+					act 'Leave the Kitchen': gt 'Igorhome', 'kor'
 				end
 			end
 		end
 	end
-	act 'Leave the kitchen': gt 'Igorhome', 'kor'
+
+!!Must have confidence even if Sveta is a slut/bimbo, maybe even being a dom
+	act 'You''ve had enough':
+		*clr & cla
+		'Tired of her yapping you angirly answer, "A grown woman shouldn''t act this way. What does it matter how I dress? Are you really that judgmental of someone you''ve just met?"'
+		'"Where are your manners young girl? Hasn''t your mother taught you how to behave? You should be lucky I haven''t thrown you out. I''m a patient woman and don''t want to cause a scene with one of Igor''s friends."'
+		'"I am well mannered, I won''t accept anyone bad mouthing me."'
+		'"Well, you should think about how you present yourself. It feels like I should have a talk with your mother, who is she by the way?"'
+		'You think about if you should tell her. "Well, who is it?" Inga asks again. Without any hesitation you say your mothers name seeing Inga''s reaction...'
+		act 'Keep on arguing':
+			*clr & cla
+			'"No wonder that you act this way now that I know who raised you. I should''ve expected that her children would behave like this."'
+			'"What do you mean by that? My mother did a great job raising me. I bet she''s a better mother than you''ve ever been."'
+			'"Well, I know your mother very well and I can tell you this, you''re behaving just like she did when she was younger. I won''t go into details but I can tell you this..."'
+			'Before she utters another word you annoyingly say "I don''t want to hear it no more, I think it''s better for me to return to Igor."'
+			'"We''ll see how long this relationship will last." is the last thing you hear from her.'
+			act 'Storm out':
+				*clr & cla
+				'You storm out the kitchen, noticeably irritated as the mother has clearly gotten under your skin.'
+				met_IgorMother = 1 
+				!!pcs_mood -= 20?
+				act 'Leave the Kitchen': gt 'Igorhome', 'kor'
+			end
+		end
+	end
+end
+
+
+if $ARGS[0] = 'kitchen3':
+!!elseif Good girl + friends with Igor
+	'As the two of you walk into the kitchen, you notice a woman in her mid-forties sitting by the table drinking tea. Igor walks up to this woman and hugs her.'
+	'"Igor, dear, who''s this lovely girl you brought home with you?"'
+	'"It''s a friend from school." Igor proudly proclaims.'
+	act 'Introduce yourself':
+		*clr & cla
+		'You shyly look at the mother, not really knowing what to say...'
+		'"Don''t be shy, little cutie... I don''t bite, especially such a cute girl as yourself."'
+		'"I''m <<$pcs_nickname>> <<$pcs_lastname>>, I''m glad I''m finally able to meet you. You have a lovely home." you say without stopping to take a breath.'
+		'"<<$pcs_nickname>> <<$pcs_lastname>> you say? How fun, are you somehow related to Natasha?"'
+		act 'Yes she is':
+			*clr & cla
+			'You nod your head and Inga shines up.'
+			'"I know your mother from the time me and she were in your age. We were friends but I was always a bit jealous by her beauty. I see that beauty runs in the family. Are you just as good as her in school?"'
+			'"I try my best... I hope Igor might help me out with some things." you say smiling looking at him.'
+			'"Well, I truly hope he''ll be able to, he''s quite good at school." she says proudly'
+			act 'Further':
+				*clr & cla
+				'"Well, I hope he can follow in his sisters footsteps. She is currently studying at the university in the city and she''s at the top of her class, so Igor has a lot to live up to."'
+				'"You don''t think that''s putting too much pressure on Igor?"'
+				'"Not really, no. I''m very proud of our family, my husband is an accountant and I work as a secretary at a law firm so I have big plans for my children."'
+				'Turning to Igor she asks him how the two of you met?'
+				act 'We got introduced through a mutual schoolmate, Dimka.':
+					*clr & cla
+					'Feeling a bit encouraged you answer instead, "We are classmates, but it was Dimka that formally introduced us to each other. He though we would get along with each other."'
+					'"Oh, Dimka, that sweet sweet boy. He''s been Igor''s friend as long as I can remember. How''s Dimka now a days, it''s been a while since I''ve seen him. He''s quite the looker that Dimka."'
+					'Igor looking down, mumbles that Dimka is fine and that he''s been very busy at school...'
+					'"You should call him over so all the three of you can hang out. And since it was Dimka that introduced you to each other I''m sure the two of you will get along. Run along now and Igor I know you''re a good boy so don''t try doing anything funny to <<$pcs_nickname>>. Especially since you''re still a virgin."'
+					'Igor immediately turns red and tells his mother that she should keep quiet... You let out a smile looking at his mother and reassure her that nothing will happen since you''re more interested in transforming Igor...'
+					met_IgorMother = 1 
+					act 'Leave the Kitchen': gt 'Igorhome', 'kor'
+				end
+				act 'We''re classmates':
+					*clr & cla
+					'Feeling a bit encouraged you answer instead, "Well, we had an assignment together and ever since then we have become friends."'
+					'"I am not surprised that my little Igor managed to impress a girl by doing a school assignment."'
+					'You look at Igor and give him a hug, thanking him for his hard work all while his mother looks on smiling.'
+					'As the two of you start moving away you think to yourself that you''ve got the mother eating out of your hand and that you will have no trouble with her...'
+					met_IgorMother = 1 
+					act 'Leave the Kitchen': gt 'Igorhome', 'kor'
+				end
+				act 'I need someone to tutor me':
+					*clr & cla
+					'"I''ve fallen a bit behind in school and Igor offered to help me out with some of the school work."'
+					'"Don''t worry <<$pcs_nickname>>. I''m sure Igor will take good care of you. I''m not saying it because he''s my son but he''s very smart and got good grades."'
+					'"I guess I''m in safe hands then." you look over at Igor giving him a little smile.'
+					'"Run along now. I''m sure you have a lot of school work to go through."'
+					met_IgorMother = 1 
+					act 'Leave the Kitchen': gt 'Igorhome', 'kor'
+				end
+				if IgorLoverQW > 0:
+					act 'Confess that you two are dating':
+						*clr & cla
+						'Both of you look at each other nervously like small children when hiding something.'
+						'"Well out with it. I know you''re hiding something..."'
+						'Igor starts off by telling her that the two of you have been classmates for quite some time and when you got assigned to do a school project together, we hit it off.'
+						'You quickly add, "I really like your son and enjoy his company." smiling as you look at him.'
+						'"Well who am I to deny this sweet puppy love." Inga says smiling. "I want you to take extra good care of <<$pcs_nickname>>, she''s a delicate girl. And remember always use protection I don''t want you to become a father at this early age."'
+						'The both of you nod and promise her that you''ll be safe if it ever comes to that. Igor hugs his mother and whispers something to her. She nods approvingly.'
+						'"I''m sure you have better things to do besides standing here talking with me." says Inga before returning to her tea.'
+						met_IgorMother = 1 
+						act 'Leave the Kitchen': gt 'Igorhome', 'kor'
+					end
+				end
+			end
+		end
+	end
+end
+
+if $ARGS[0] = 'kitchen4':
+!!elseif Good girl + walking around alone
+	'As you walk around the house you hear someone calling you over from the kitchen.'
+	'"Who are you? My god I didn''t know that my little boy was friends with such a lovely girl."'
+	'You blush and thank her for the compliment.'
+	act 'Introduce yourself':
+		'"My name is <<$pcs_nickname>> <<$pcs_lastname>>, I''m glad I''m finally able to meet you."'
+		'"<<$pcs_lastname>>? Could it be that Natasha is your mother? I was friends with her when we were younger."'
+		'You shine up and nod approvingly, "Yes, that''s my mother. I didn''t know the two of you knew each other."'
+		'"Yeah, a long time ago. Before I had my daughter. She''s in the university now and doing really good, so I''m pretty proud of her. But don''t worry about that now and answer me this instead, how did you and my little boy meet?"'
+		act 'Through Dimka':
+			'"We met through a mutual friend, Dimka. He formally introduced us to each other. He though we would get along with each other."'
+			'"Oh, Dimka, that sweet sweet boy. He''s been Igor''s friend as long as I can remember. He''s always looking out for my little Igor."'
+			'"Yes, he''s really nice that Dimka and really good looking..." the two of you start laughing.'
+			'"I know you''re just kidding but please be careful with my son, he''s a delicate flower that doesn''t have much experience with women."'
+			'"Don''t worry, I''ll take good care him." you say still smiling. "I think it''s time for me to go back to Igor, he''s probably wondering where I am."'
+			met_IgorMother = 1 
+			act 'Leave the Kitchen': gt 'Igorhome', 'kor'
+		end
+		act 'Through school':
+			'"Well, we had an assignment together and ever since then we have become friends."'
+			'"I am not surprised that my little Igor managed to impress a girl by showing off how smart he is, I''m so proud of him."'
+			'"To be honest, I''m a bit turned on by how smart Igor is" you say blushing.'
+			'"Nothing to be ashamed of, <<$pcs_nickname>>. It runs in the family." as she''s clearly referencing to Igor''s father. "But please be careful with Igor, he hasn''t had lots of experience with women."'
+			'"I''ll take good care of him. I''ll make sure he don''t stray off to much..." you confidently say. "I should head back Igor is probably wondering where I am."'
+			'"We''ll talk about it later and don''t hesitate if you''re ever wondering anything." Inga replies as you''re moving away from the kitchen.'
+			met_IgorMother = 1 
+			act 'Leave the Kitchen': gt 'Igorhome', 'kor'
+		end 
+		act 'I need some tutoring':
+			*clr & cla
+			'"I''ve fallen a bit behind in school and Igor offered to help me out with some of the school work."'
+			'"Don''t worry <<$pcs_nickname>>. I''m sure Igor will take good care of you. I''m not saying it because he''s my son but he''s very smart and got good grades."'
+			'"I really hope so, cause I really need to get my grades up in this subject." you look at her a bit discouraged.'
+			'"I''m sure Igor won''t let you fail. You should go back to him so you can plan the work you need to put in." she says smiling.'
+			'You nod and turn around leaving the kitchen.'
+			met_IgorMother = 1 
+			act 'Leave the Kitchen': gt 'Igorhome', 'kor'
+		end
+	end
+end
+
+
+if $ARGS[0] = 'kitchen5':
+!!elseif Gopnik, friends with Igor		
+	'As soon as Igor''s mother notices you her face turns red, turning towards Igor she starts screaming...'
+	'"What is this Igor? Explain yourself! When have you started hanging out with a hoodlum? I taught you better than this, just look at her, you should know better."'
+	'Igor tries to explain that you''re only friends but she''s not having it...'
+	'"Igor, tell your "friend" to leave this house right away, I don''t want her near our household and I forbid you to be friends with this girl."'
+	act 'Speak up':
+		*clr & cla
+		'You try to speak up but she instantly tells you to shut up...'
+		'"I don''t want to hear it! Get out! Now!"'
+		'Igor looks lamblike at you, taking you by the hand and leading you away from the kitchen, begging for forgiveness about how his mother is behaving and telling you he''ll have a talk with her and fix everything.'
+		'"And Igor, as soon as you''ve shown her out come back here we have some things to discuss." you hear his mother loudly say as Igor is pushing you away from the kitchen.'
+		'As you stand in the hallway Igor tells you to wait here, slamming the kitchen door behind him as he returns to the kitchen...'
+		met_IgorMother = 1 
+		act 'Leave the kitchen': gt 'Igorhome', 'kor'
+	end
+end
+
+if $ARGS[0] = 'kitchen6':
+!!elseif You''re Igor''s girlfriend and a Gopnik, Igor is keeping it a secret, it ends with him telling his mother that he''s helping you out studying
+	'As soon as Igor''s mother notices you her face turns red, turning towards Igor she starts screaming...'
+	'"What is this Igor? Explain yourself! When have you started hanging out with a hoodlum? I taught you better than this, just look at her, you should know better."'
+	'Igor tries to explain that you''re only friends but she''s not having it...'
+	'"Igor, tell your "friend" to leave this house right away, I don''t want her near our household and I forbid you to be friends with this girl."'
+	act 'Further':
+	*clr & cla
+		'You try to speak up but she instantly tells you to shut up...'
+		'"I don''t want to hear it! Get out! Now!"'
+		'Igor looks lamblike at you, taking you by the hand and leading you away from the kitchen, begging for forgiveness about how his mother is behaving and telling you he''ll have a talk with her and fix everything.'
+		'"And Igor, as soon as you''ve shown her out come back here we have some things to discuss." you hear his mother loudly say as Igor is pushing you away from the kitchen.'
+		'As you stand in the hallway Igor tells you to wait here, slamming the kitchen door behind him as he returns to the kitchen.'
+		act 'Eavesdrop':
+			'You eavesdrop to them arguing, his mother telling him that you''ll corrupt him and destroy everything he''s built up.'
+			'Igor reassures her that it was the teachers idea for the better students to help out the students that are way behind their school work.'
+			'His mother asks if that''s all that is to it and he answers that she should calm down and not jump to conclusions.'
+			act 'Return to the kitchen':
+				'Igor calls you back to the kitchen. You see his mother sitting at the table still looking upset.'
+				'"So just so we''re clear, Igor is only going to help you out with your homework. Don''t get any funny ideas I''m going to keep my eye on you." keeping her composure stern.'
+				'You nonchalantly answer, "Yeah, whatever. Maybe you should relax a bit nothing will happen to your precious little son."'
+				'Before the situation escalates again, Igor tells you that you need to begin planning the schoolwork and you should go to his room...'
+				met_IgorMother = 1 
+				act 'Leave the kitchen': gt 'Igorhome', 'kor'
+			end
+		end
+	end
+end
+
+if $ARGS[0] = 'kitchen7':
+!!elseif Gopnik + Walking around the house without Igor
+	'As you''re walking into the kitchen you suddenly hear Igor''s mother...'
+	'"Who are you? Why are you dressed like that? Are you one of those hoodlums I''ve heard of?"'
+	act 'Answer her':
+	*clr & cla
+		'Clearly noticing that she loathes you, answer, "My name is <<$pcs_nickname>> <<$pcs_lastname>>. I''m a friend of Igor''s, what''s it to you?."'
+		'"Well I''m Igor''s mother and I don''t like your kind. Unlike his sister, he''s easily influenced and his future will get ruined because of you."'
+		'You stand there with your mouth wide open shocked by what you just heard. You decide to have some fun with her instead and say, "Don''t you worry about your son he''s in safe hands. I might even be able to teach him a thing or two."'
+		'"That decides it, I want you to leave my son alone. Understand? He''s an innocent boy and I refuse to let him get taken advantage of. To make it easy on everyone you should just leave and go home to that mother of yours..."'
+		act 'Refuse':
+		*clr & cla
+			'You look her straight in the eye saying "Make me, do you dare to kick me out?"'
+			'Inga taken aback by your answer, looks at you frustrated, starts yelling at you that you need to leave right away.'
+			'Laughing you turn around and head back to Igor''s room, thinking about how she only bluffed and can''t do anything about your and Igor''s relationship.'
+			met_IgorMother = 1 
+			act 'Leave the kitchen': gt 'Igorhome', 'kor'
+		end
+		act 'Lie':
+		*clr & cla
+			'"Fine, I''ll leave your precious little boy alone. If I knew it would be this much trouble I would never have befriended Igor." you lie straight to her face.'
+			'Inga calms down a bit, "Good I''m glad you''ve come to your senses. Now leave I don''t want to see you in my house ever again."'
+			'As you walk away you''re even more determined that you and Igor are right for each other and that you need to sneak around instead...'
+			met_IgorMother = 1 
+			act 'Leave the kitchen': gt 'Igorhome', 'kor'
+		end
+		act 'Don''t respond':
+		*clr & cla
+			'Before you manage to respond, she jumps up from her chair and chases you down, gets up in your face and says...'
+			'"Listen to me, you little good for nothing, get out, now! Neither my son nor I want to waste my precious time on you."'
+			'She grabs you by the arm and shoves you outside the kitchen. "Don''t ever come back here or talk to my son ever again!"'
+			'As she turns back to sit down, you still remain in the hall contemplating your next move.'
+			met_IgorMother = 1 
+			act 'Leave the kitchen': gt 'Igorhome', 'kor'
+		end
+	end
 end
 
 if $ARGS[0] = 'igorparents':
@@ -1022,7 +1080,6 @@ if $ARGS[0] = 'igorparents':
 	end
 
 	act 'Leave':gt 'Igorhome','kor'
-
 end
 
 !!new scene for going to Igors house with out following him from school.
