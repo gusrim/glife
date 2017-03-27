@@ -710,28 +710,33 @@ end
 if $ARGS[0] = 'vball5':
 	cla
 	*clr
-	if poverkomand = 0:poverkomand = 600
-	volltime = 0
-	sorevday = daystart
-	if hour < 19: hour = 19
 	timemult = 8
-	loopcount = 1
-	:vballtimeloop5
-	gs 'exercise', 'tier2', 0, 'vball_exp', 'run_exp', 'agil_exp', 'stren_exp', 'vital_exp'
-	if loopcount < timemult: loopcount += 1 & jump 'vballtimeloop5'
-	loopcount = 0
-	timemult = 0
-	pcs_dom += 1
-	npc_rel['A69'] += 2
-	minut += 120 & !total time should be 4 hours, 2 hours for the game and 2 hours travel
+!	loopcount = 1
+!	:vballtimeloop5
+!	gs 'exercise', 'tier2', 0, 'vball_exp', 'run_exp', 'agil_exp', 'stren_exp', 'vital_exp'
+!	if loopcount < timemult: loopcount += 1 & jump 'vballtimeloop5'
+!	loopcount = 0
 	gs 'stat'
 	'<center><img src="images/locations/pavlovsk/community/gym/volley/gdksport.jpg"></center>'
-	'You gathered your things together with the rest of the team and got on a bus that took you to the out of town match.'
-	act 'Play':gt 'gdksport', 'volley'
+	'The tournament starts at 20:00. Your bus departs at 19:00. You gathered your things together with the rest of the team and got on a bus that took you to the out of town match.'
+	act 'Get on bus and go to play':
+		if poverkomand = 0:poverkomand = 600
+		volltime = 0
+		sorevday = daystart
+		if hour < 19: hour = 19 & minut = 0
+		timemult = 0
+		pcs_dom += 1
+		npc_rel['A69'] += 2
+		minut += 60 & !total time should be 4 hours, 2 hours for the game and 2 hours travel
+		gt 'gdksport', 'volley'
+	end
+	act 'Leave':gt 'gdksport', 'start'
 end
 
 if $ARGS[0] = 'volley':
-	minut += 30
+	gs 'exercise', 'tier2', 0, 'vball_exp', 'run_exp', 'agil_exp', 'stren_exp', 'vital_exp'
+	gs 'exercise', 'tier2', 0, 'vball_exp', 'run_exp', 'agil_exp', 'stren_exp', 'vital_exp'
+!	minut += 30
 	gs 'stat'
 
 	if volltime = 0:
@@ -882,7 +887,7 @@ if $ARGS[0] = 'volley':
 				'The match was very close, but in the end your team losses.'
 			end
 		end
-
+		minut += 60 & !total time should be 4 hours, 2 hours for the game and 2 hours travel
 		act 'Leave':gt 'gdksport', 'start'
 		act 'Go to coaching':gt 'Voltrener', 'start'
 	end
