@@ -43,10 +43,12 @@ if $ARGS[0] = 'start':
 		'You see <a href="exec:minut += 3 & gt ''IvanEv''">Ivan Prokhorov</a> with a large sports bag entering the sports club.'
 	end
 	
-	! WD: Uninitialised ~ 'UNSTARTER' allways false
-!	if npc_rel['A5'] >= 80 and fedorKozlovQW = 0 and pav_slut < 25 and UNSTARTER = 1: gt 'gdksport', 'fedor_date'
-	!!event does not start as it is incomplete, needs home location and cinema location!!
-	
+	if npc_rel['A5'] >= 80 and fedorKozlovQW = 0 and pcs_apprnc >= 20 and fedorkozbreak < 2 and GorSlut < 2: gt 'gdksport', 'Fedor First Date'
+
+	if week <= 5 and hour >= 16 and hour < 18 and fedorKozlovQW >= 20:
+		'You can see <a href="exec:gt ''FedorMisc'', ''Fedor Workout''">Fedor</a> on his phone next to some punching bags.'
+	end
+
 	act 'Go outside':
 		if $clothingworntype = 'nude':
 			msg'<b><font color = red>You need to get dressed before leaving.</font></b>'
@@ -1138,78 +1140,85 @@ if $ARGS[0] = 'Ivan_bored':
 
 end
 
-if $ARGS[0] = 'fedor_date':
+	
+if $ARGS[0] = 'Fedor First Date':
 	cls
-	fedorKozlovQW = 1
 	numnpc = 5
-	$static_num = 'A5'
 	gs 'stat'
-	'<center><b><font color="maroon"><<$npc_firstname[$static_num]>> <<$npc_lastname[$static_num]>></font></b></center>'
-	'<center><img src="images/characters/pavlovsk/school/head/<<numnpc>>.jpg"></center>'
-	'You unexpectedly met Fedor Kozlov from your class as you entered the sports club. He smiled affably at you.' 
-	'"Hello <<$pcs_nickname>>. Hmm ... Here is the deal ... I have an extra ticket to the movies. Would you like to go together?"'
-
-	act 'Refuse':
-		cls
-		npc_rel[$static_num] = 40
-		gs 'stat'
-		'<center><b><font color="maroon"><<$npc_firstname[$static_num]>> <<$npc_lastname[$static_num]>></font></b></center>'
-        '<center><img src="images/characters/pavlovsk/school/head/<<numnpc>>.jpg"></center>'
-		'You told Fedor that you have too much to do and don''t have the time. Fedor frowned. "Okay. Maybe some other time."'
-
-		act 'Leave':gt 'gdksport', 'start'
+	'<center><b><h4><font color="blue"><<"Fyodor [Fedor] Kozlov">></font></h4></b></center>'
+	'<center><img src="images/characters/pavlovsk/school/head/5.jpg"></center>'
+	if fedorkozbreak = 1:
+		'You enter the sports club and see Fyodor Kozlov, standing by the front door. He looks as though he is waiting for someone and as soon as he sees you, he flashes you a smile and he approaches with an affable smile on his face. "Hello <<$pcs_firstname>>." he says with a warm smile. He pauses for a moment then reaches into his pockets and pulls out 2 tickets and says, "Here is the deal ... I know that we had a bit of a bumpy relationship before but I would like to try again if you will. So what do you say? Wanna go on another date with me?' 		
+	else
+		'You enter the sports club and see Fyodor Kozlov, standing by the front door. He looks as though he is waiting for someone and as soon as he sees you, his eyes light up and he approaches you with an affable smile on his face. "Hello <<$pcs_firstname>>." he says with a warm smile. He pauses for a moment then reaches into his pockets and pulls out 2 tickets and says, "Here is the deal ... I have an extra ticket to the movies and I would you like know if you would be up for a good comedy?"'
 	end
 
 	act 'Agree':
 		cls
-		fedorKozlovQW = 10
-		npc_rel[$static_num] = 100
 		minut += 15
 		gs 'stat'
-		'<center><b><font color="maroon"><<$npc_firstname[$static_num]>> <<$npc_lastname[$static_num]>></font></b></center>'
-        '<center><img src="images/characters/pavlovsk/school/head/<<numnpc>>.jpg"></center>'
-		'You agreed and Fedor was delighted. He takes you to the movie theater located in the park.'
+		'<center><b><h4><font color="blue"><<"Fyodor [Fedor] Kozlov">></font></h4></b></center>'
+		'<center><img src="images/characters/pavlovsk/school/boy/fedor/fedorev/park/walk.jpg"></center>'
+		'"I would like that." you said with a smile and Fedor respondes "Good, I hear that this movie will have us in stiches." with a delighted look on his face as he wraps his arm around yours then walks you to the movie theater.'
 
 		act 'Watch a movie':
 			cls
-			minut += 100
-			pcs_mood += 50
+			minut += 90
+			pcs_mood += 90
 			gs 'stat'
-			'<center><b><font color="maroon"><<$npc_firstname[$static_num]>> <<$npc_lastname[$static_num]>></font></b></center>'
-            '<center><img src="images/characters/pavlovsk/school/head/<<numnpc>>.jpg"></center>'
-			'Fedor presented the tickets at the entrance and together you went into the theater. Soon the lights went out and the movie started. Fedor sat motionless and only occasionally glancing at you. The movie was quite interesting and you watched it with pleasure. When the movie ended, the lights were turned on and Fedor walked you out. "<<$pcs_nickname>>. I like you. Maybe we could go out together?"'
-
-			act 'Refuse':
-				cls
-				npc_rel[$static_num] = 40
-				fedorKozlovQW = 2
-				minut += 15
-				gs 'stat'
-				'<center><b><font color="maroon"><<$npc_firstname[$static_num]>> <<$npc_lastname[$static_num]>></font></b></center>'
-                '<center><img src="images/characters/pavlovsk/school/head/<<numnpc>>.jpg"></center>'
-				'You refused to go out with him and said you wanted to just stay friends. Fedor was visibly upset and silently walked you home.'
-
-				act 'Leave':gt 'pavResidential'
-			end
+			'<center><b><h4><font color="blue"><<"Fyodor [Fedor] Kozlov">></font></h4></b></center>'
+			'<center><img src="images/characters/pavlovsk/school/boy/fedor/fedorev/movies/Seat2.jpg"></center>'
+			'Fedor presentes the tickets at the entrance and together you walked into the theater. You look around and notice that the seats were mostly empty so Fedor leads you to the front row and both got seated. The lights dim then the movie starts. Fedor sits motionless and only occasionally glancing at you. The movie was quite interesting and you couldn''t help but laugh occasionally at the wackiness of the movie. When the movie ends, the lights turn on and Fedor walks you out. "<<$pcs_firstname>>. You seem like a cool girl. Maybe we could go out together. What do you say?"'
 
 			act 'Agree':
 				cls
+				npc_rel['A5'] += 20
+				fedorKozlovQW = 10				
 				minut += 15
 				gs 'stat'
-				'<center><b><font color="maroon"><<$npc_firstname[$static_num]>> <<$npc_lastname[$static_num]>></font></b></center>'
-                '<center><img src="images/characters/pavlovsk/school/head/<<numnpc>>.jpg"></center>'
-				'You agree to go out with Fedor again. Fedor was visibly delighted and escorted you back home, on the way the two of you had fun discussing movies.'
+				'<center><b><h4><font color="blue"><<"Fyodor [Fedor] Kozlov">></font></h4></b></center>'
+				'<center><img src="images/characters/pavlovsk/school/boy/fedor/fedorev/park/walk.jpg"></center>'
+				'"Sure, I would love to go out with you." you replied. Fedor was visibly delighted "Alright I look forward to hanging out with you again. Whenever you are up for another date then meet me in the school yard, after school." Fedor says as he walks you back home. The two of you have fun discussing your favorite movies as you continue your way home.'
 
 				act 'Leave':gt 'pavResidential'
 			end
+			act 'Refuse':
+				cls
+				if fedorkozbreak = 0:fedorKozlovQW = 0
+				if fedorkozbreak = 1:fedorKozlovQW = -1		
+				npc_rel['A5'] = 75
+				minut += 15
+				gs 'stat'
+				'<center><b><h4><font color="blue"><<"Fyodor [Fedor] Kozlov">></font></h4></b></center>'
+				'<center><img src="images/characters/pavlovsk/school/boy/fedor/fedorev/fedorsad.jpg"></center>'
+				if fedorkozbreak = 1:
+					'You say to Fedor "Sorry Fedor but I don''t think that this is really working out. I''m sorry." Fedor looks visibly upset as he replies, "I guess it was never meant to be, I''m sorry for wasting your time.." Fedor then, silently walks you home.'
+				else
+					'You say to Fedor "You seem like a cool guy but I''m just not ready for a relationship right now." Fedor was visibly upset as he replies, "I guess it wasn''t a good time, if you ever change your mind then pay me a visit at school." he says with a forced smile as he silently walks you home.'
+				end
+				
+				act 'Leave':gt 'pavResidential'
+			end			
 		end
 	end
-end
+	act 'Refuse':
+		cls
+		npc_rel['A5'] = 70
+		gs 'stat'
+		'<center><b><h4><font color="blue"><<"Fyodor ">><<"[Fedor]">><<" Kozlov">></font></h4></b></center>'
+		'<center><img src="images/characters/pavlovsk/school/boy/fedor/fedorev/fedorsad.jpg"></center>'
+		'You said to Fedor "I have too much that I need to do right now... maybe some other time." Fedor then lowered his head with a frown. "Okay. Maybe some other time."'
+
+		act 'Leave':gt 'pavResidential'
+	end	
+end	
+
 if $ARGS[0] = 'Starletsreact':
 	cla
 	'As you approach the Starlets, Albina looks at you in disgust. Loudly enough for the whole team to hear, she says "<<$pcs_nickname>>, no one wants to see some pregnant whore dance. Leave. You''re done." Tears welling in your eyes, you leave, the sound of laughter and taunting following your departure.'
 	act 'Continue':pregtalkStarlets = 1 & gt 'gdk'	
 end
+
 if $ARGS[0] = 'vballreact':
 	cla
 	'As you approach the team, your coach notices you and calls you aside. "<<$pcs_firstname>>, are you pregnant? I can''t let you play like that. Also, a pregnant teenager would definitely reflect poorly on me and the rest of the team. Sorry, but off the team." Tears welling in your eyes, you leave.'
