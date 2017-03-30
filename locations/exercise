@@ -17,7 +17,7 @@ $ARGS[2] and on are the stats to be affected by the workout NOTE: use the _exp v
 if $ARGS[0] = 'start':
 	if $loc = 'Meadow':
 		if sunWeather = 1:
-			if pcs_stam >=30:
+			if pcs_stam >=15 or pcs_stam >= 10 and bookYog + obruch > 0:
 				if $clothingworntype ! 'exercise' and pcs_exhibition < 35:
 					'<center>You could do some exercises here if you were wearing workout clothes.</center>'
 				elseif $clothingworntype ! 'exercise' and pcs_exhibition >= 35 and Miraloc ! 2 and temper >= 10:
@@ -29,7 +29,7 @@ if $ARGS[0] = 'start':
 				'<center>Your meadow is a perfect place to do some exercises, but you don''t have the energy right now.</center>'
 			end
 		end
-	elseif pcs_stam >=30 and $loc ! 'Meadow': 
+	elseif (pcs_stam >=15 or pcs_stam >= 10 and bookYog + obruch > 0) and $loc ! 'Meadow': 
 		'<center>There is enough space in the room to <a href="exec: gt ''exercise'', ''workout''">exercise</a>.</center>'
 	else
 		'<center>There is enough space in the room for a variety of exercises, but you don''t have the energy to work out now.</center>'
@@ -139,12 +139,14 @@ end
 
 if $ARGS[0] = 'manual':
 	cla
-	if pcs_stam >= 30:
+	if pcs_stam >= 15:
 		Act 'Do pushups for 15 minutes': timemult = 1 & gs 'exercise', 'timestring' & gt 'exercise', 'push', 'manual'
 		Act 'Do crunches for 15 minutes': timemult = 1 & gs 'exercise', 'timestring' & gt 'exercise', 'press', 'manual'
 		if skak > 0 and $loc ! 'meadow':
 			Act 'Jump rope for 15 minutes': timemult = 1 & gs 'exercise', 'timestring' & gt 'exercise', 'rope', 'manual'
 		end
+	end
+	if pcs_stam >= 10:
 		if bookYog > 0:
 			Act 'Do yoga for 15 minutes': timemult = 1 & gs 'exercise', 'timestring' & gt 'exercise', 'yoga', 'manual'
 		end
@@ -152,12 +154,14 @@ if $ARGS[0] = 'manual':
 			Act 'Use your hula hoop for 15 minutes': timemult = 1 & gs 'exercise', 'timestring' & gt 'exercise', 'hula', 'manual'
 		end
 	end
-	if pcs_stam >= 40:
+	if pcs_stam >= 30:
 		Act 'Do pushups for 30 minutes': timemult = 2 & gs 'exercise', 'timestring' & gt  'exercise', 'push', 'manual'
 		Act 'Do crunches for 30 minutes': timemult = 2 & gs 'exercise', 'timestring' & gt  'exercise', 'press', 'manual'
 		if skak > 0 and $loc ! 'meadow':
 			Act 'Jump rope for 30 minutes': timemult = 2 & gs 'exercise', 'timestring' & gt  'exercise', 'rope', 'manual'
 		end
+	end
+	if pcs_stam >= 20:
 		if bookYog > 0:
 			Act 'Do yoga for 30 minutes': timemult = 2 & gs 'exercise', 'timestring' & gt  'exercise', 'yoga', 'manual'
 		end
@@ -165,12 +169,14 @@ if $ARGS[0] = 'manual':
 			Act 'Use your hula hoop for 30 minutes': timemult = 2 & gs 'exercise', 'timestring' & gt  'exercise', 'hula', 'manual'
 		end
 	end
-	if pcs_stam >= 50:
+	if pcs_stam >= 45:
 		Act 'Do pushups for 45 minutes': timemult = 3 & gs 'exercise', 'timestring' & gt  'exercise', 'push', 'manual'
 		Act 'Do crunches for 45 minutes': timemult = 3 & gs 'exercise', 'timestring' & gt  'exercise', 'press', 'manual'
 		if skak > 0 and $loc ! 'meadow':
 			Act 'Jump rope for 45 minutes': timemult = 3 & gs 'exercise', 'timestring' & gt  'exercise', 'rope', 'manual'
 		end
+	end
+	if pcs_stam >= 30:
 		if bookYog > 0:
 			Act 'Do yoga for 45 minutes': timemult = 3 & gs 'exercise', 'timestring' & gt  'exercise', 'yoga', 'manual'
 		end
@@ -184,6 +190,8 @@ if $ARGS[0] = 'manual':
 		if skak > 0 and $loc ! 'meadow':
 			Act 'Jump rope for 60 minutes': timemult = 4 & gs 'exercise', 'timestring' & gt  'exercise', 'rope', 'manual'
 		end
+	end
+	if pcs_stam >= 40:
 		if bookYog > 0:
 			Act 'Do yoga for 60 minutes': timemult = 4 & gs 'exercise', 'timestring' & gt  'exercise', 'yoga', 'manual'
 		end
@@ -191,7 +199,7 @@ if $ARGS[0] = 'manual':
 			Act 'Use your hula hoop for 60 minutes': timemult = 4 & gs 'exercise', 'timestring' & gt  'exercise', 'hula', 'manual'
 		end
 	end
-	if pcs_stam < 30:
+	if pcs_stam < 10 or pcs_stam < 15 and bookYog + obruch = 0:
 		'You don''t have the energy to work out anymore now.'
 	end
 	if clothesAtLocation = 1 and $clothingworntype = 'nude':
@@ -262,28 +270,44 @@ if $ARGS[0] = 'matrixdata':
 	end
 
 	if dyneval('RESULT = exer_rout<<ARGS[1]>>[<<i>>]') = 1:
-		dynamic 'exer_stam<<ARGS[1]>>[<<i>>] = 30'
+		if ARGS[1] >= 3:
+			dynamic 'exer_stam<<ARGS[1]>>[<<i>>] = 10'
+		else
+			dynamic 'exer_stam<<ARGS[1]>>[<<i>>] = 15'
+		end
 		*p '<TD>Selected</TD>'
 	else
 		*p '<TD><a href="exec:dynamic ''exer_rout<<ARGS[1]>>[i] = 1'' & gt ''exercise'', ''matrix''">Select</a></TD>'
 	end
 
 	if dyneval('RESULT = exer_rout<<ARGS[1]>>[<<i>>]') = 2:
-		dynamic 'exer_stam<<ARGS[1]>>[<<i>>] = 40'
+		if ARGS[1] >= 3:
+			dynamic 'exer_stam<<ARGS[1]>>[<<i>>] = 20'
+		else
+			dynamic 'exer_stam<<ARGS[1]>>[<<i>>] = 30'
+		end
 		*p '<TD>Selected</TD>'
 	else
 		*p '<TD><a href="exec:dynamic ''exer_rout<<ARGS[1]>>[i] = 2'' & gt ''exercise'', ''matrix''">Select</a></TD>'
 	end
 
 	if dyneval('RESULT = exer_rout<<ARGS[1]>>[<<i>>]') = 3:
-		dynamic 'exer_stam<<ARGS[1]>>[<<i>>] = 50'
+		if ARGS[1] >= 3:
+			dynamic 'exer_stam<<ARGS[1]>>[<<i>>] = 30'
+		else
+			dynamic 'exer_stam<<ARGS[1]>>[<<i>>] = 45'
+		end
 		*p '<TD>Selected</TD>'
 	else
 		*p '<TD><a href="exec:dynamic ''exer_rout<<ARGS[1]>>[i] = 3'' & gt ''exercise'', ''matrix''">Select</a></TD>'
 	end
 
 	if dyneval('RESULT = exer_rout<<ARGS[1]>>[<<i>>]') = 4:
-		dynamic 'exer_stam<<ARGS[1]>>[<<i>>] = 60'
+		if ARGS[1] >= 3:
+			dynamic 'exer_stam<<ARGS[1]>>[<<i>>] = 40'
+		else
+			dynamic 'exer_stam<<ARGS[1]>>[<<i>>] = 60'
+		end
 		*p '<TD>Selected</TD>'
 	else
 		*p '<TD><a href="exec:dynamic ''exer_rout<<ARGS[1]>>[i] = 4'' & gt ''exercise'', ''matrix''">Select</a></TD>'
