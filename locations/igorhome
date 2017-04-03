@@ -725,16 +725,40 @@ if $ARGS[0] = 'kitchen':
     '<center><img src="images/locations/pavlovsk/resident/Igorhome/kitchen.jpg"></center>'
     'The room is very clean and neat. Everything is perfectly in place, the counters are polished to a near mirror like quality. The wood floor is also highly polished.'
 !!this is a elseif, if it is 06:00 to 07:00 igors mother is here, or if it is 18:00 to 23:00 she is here during the week. On weekends she is here from 08:00 to 23:00
-	if met_IgorMother = 0 and (week >=5 and (hour = 6 or (hour <= 18 and hour < 23))) or (week > 5 and hour >= 8 and hour < 23):
+	if (week >=5 and (hour = 6 or (hour <= 18 and hour < 23))) or (week > 5 and hour >= 8 and hour < 23):
 		'You see Igor''s mother Inga is in the kitchen drinking tea. She is very neatly dressed, you don''t think she has noticed you yet.'
-		act 'Talk':
-			*clr & cla
-			'<center><img src="images/locations/pavlovsk/resident/Igorhome/mother.jpg"></center>'
-			!!if igor_with = 1:
+		if met_IgorMother = 0:
+			act 'Talk':
+				*clr & cla
+				'<center><img src="images/locations/pavlovsk/resident/Igorhome/mother.jpg"></center>'
+				met_IgorMother = 1
+				if igor_with = 1:
+					if PCloBimbo = 1:
+						gt 'igorhome','kitchen1'
+					elseif gruptipe = 4:
+						if IgorLoverQW > 0:
+							gt 'igorhome','kitchen6'
+						else
+							gt 'igorhome','kitchen5'
+						end
+					else
+						gt 'igorhome','kitchen3'
+					end
+				else
+					if PCloBimbo = 1:
+						gt 'igorhome','kitchen2'
+					elseif gruptipe = 4:
+						gt 'igorhome','kitchen7'
+					else
+						gt 'igorhome','kitchen4'
+					end
+				end
+			end
+		else
+			act 'Leave the kitchen': gt 'igorhome','hallway'
 		end
-	else
-		act 'Leave the kitchen': gt 'igorhome','hallway'
 	end
+	act 'Leave the kitchen': gt 'igorhome','hallway'
 end	
 
 if $ARGS[0] = 'kitchen1':
