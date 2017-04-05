@@ -133,7 +133,9 @@ if $ARGS[0] = 'dressing room':
 		end
 	elseif $clothingworntype = 'exercise' and pcs_stam >= 40:
 		act 'Go to team practice':gt 'beg', 'start'
-		if week = 6 and pcs_run >= 20:act '<b>Enter competition race</b>':gt 'beg1', 'start'
+		if week = 6 and pcs_run >= 20 and run_comp_day ! daystart:
+			act '<b>Enter competition race</b>':run_comp_day = daystart & gt 'beg1', 'start'
+		end
 	end
 
 	act 'Exit the locker room':
@@ -618,10 +620,11 @@ if $ARGS[0] = 'kickboxing':
 		end
 	end
 
-	if week >= 5:
+	if week >= 5 and amateur_fight_day ! daystart:
 		'You can take part in an amateur fight.'
 
 		act 'Amateur fight':
+			amateur_fight_day = daystart
 			pcs_mood += 2
 			timemult = 2
 			loopcount = 1
