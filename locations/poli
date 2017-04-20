@@ -95,6 +95,7 @@ if $ARGS[0] = 'start':
 			cla
 			vidage += 1
 			abort += 1
+			abortionbirthdate = daystart
 			money -= 20000
 			pregtime = 0
 			pregtalk = 0
@@ -102,6 +103,7 @@ if $ARGS[0] = 'start':
 			thinkpreg = 0
 			knowpreg = 0
 			cycle = 4
+			RecovH = rand(7,70)
 			RecovH += pregchem
 			knowpregloss = 2
 			abortrand = rand(0, 10)
@@ -152,6 +154,7 @@ if $ARGS[0] = 'start':
 		act 'Give birth':
 			*clr
 			cla
+			cnt = 0
 			if kid > 0:minut += rand(300,660) else minut += rand(120,480)
 			'<center><img <<$set_imgh>> src="images/locations/shared/clinic/Birthing.jpg"></center>'
 			'You lay on the bed and your feet are put in stirups.'
@@ -161,6 +164,7 @@ if $ARGS[0] = 'start':
 				sterilewb += 1
 				nextbaby = arrpos('$kidname', 'unborn')
 				kid += 1
+				cnt += 1
 				BabyEmbryo -= 1
 				daykid[nextbaby] = day
 				monthkid[nextbaby] = month
@@ -177,12 +181,15 @@ if $ARGS[0] = 'start':
 				end
 			if BabyEmbryo > 0:'You do not have much time to stare at your <<$polreb[nextbaby]>>, because you are having an another contraction. Your next baby is coming!' & jump 'multikidloop'
 			preg = 0
+			RecovH = rand(7*cnt,70)
+			abortionbirthdate = daystart
 			thinkpreg = 0
 			knowpreg = 0
 			knowpregrecover = 1
 			vidage += 1
 			pregtalk = 0
 			cycle = 4
+			killvar 'cnt'
 			gs 'cum_cleanup', 'reset'
 			dynamic $d_cycreport_choice
 			gs 'stat'
