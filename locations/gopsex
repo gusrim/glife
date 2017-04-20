@@ -231,13 +231,14 @@ end
 !sex selection!
 if $ARGS[0] = 'shgopsex':
 	cla
-	'"So <<$boydesc>>, do you want to have fun with me?" You lick your lips sensually and ask him: "What can I do for you?"'
-	if mesec > 0:
-		'<font color = red><b>You warn him that you''re on your period and so your pussy is off limits!</b></font>'
-	elseif mesec <=0 and pcs_vag <=0:
-		'<font color = red><b>You tell him, that you want to save you virginity, so your pussy is available only for eating.</b></font>'
+	if $ARGS[1] ! 'cont':
+		'"So <<$boydesc>>, do you want to have fun with me?" You lick your lips sensually and ask him: "What can I do for you?"'
+		if mesec > 0:
+			'<font color = red><b>You warn him that you''re on your period and so your pussy is off limits!</b></font>'
+		elseif mesec <=0 and pcs_vag <=0:
+			'<font color = red><b>You tell him, that you want to save you virginity, so your pussy is available only for eating.</b></font>'
+		end
 	end
-
 	act 'Hand job': gt 'gopsex', 'shgopsex_hj'
 	act 'Blow job': gt 'gopsex', 'shgopsex_bj'
 	if pcs_throat >= 20:
@@ -261,16 +262,16 @@ if $ARGS[0] = 'shgopsex_end':
 	cla
 	gs'stat'
 	if sh_bjandhj_cum >=1:
-		act 'In your mouth': dynamic $shgopsex_swallow
-		act 'On your face': dynamic $shgopsex_cumface
-		act 'On your body': dynamic $shgopsex_cumbelly
+		act 'In your mouth': gt 'shgopsex_swallow'
+		act 'On your face': gt 'shgopsex_cumface'
+		act 'On your body': gt 'shgopsex_cumbelly'
 	!we finish anywhere
 	elseif sh_bjandhj_cum <=0:
-		act 'In your mouth': dynamic $shgopsex_swallow
-		act 'On your face': dynamic $shgopsex_cumface
-		act 'On your body': dynamic $shgopsex_cumbelly
-		act 'In your pussy': dynamic $shgopsex_cumvag
-		act 'In your bowels': dynamic $shgopsex_cumanal
+		act 'In your mouth': gt 'shgopsex_swallow'
+		act 'On your face': gt 'shgopsex_cumface'
+		act 'On your body': gt 'shgopsex_cumbelly'
+		act 'On your pussy': gt 'shgopsex_cumvag'
+		act 'On your butt': gt 'shgopsex_cumanal'
 	end
 end
 
@@ -312,7 +313,7 @@ if $ARGS[0] = 'shgopsex_lick':
 	'"And what''s wrong with that? Are you ashamed to do me nicely?"'
 	'"Yes, it''s unpleasant for me to lick cunt of a slut, God knows how many cocks you have got there today ... So come on! Don''t fuck with me ... Expose your whorish holes! I''m going to fuck you."'
 	end
-	act 'Sex selection': gt 'gopsex', 'shgopsex'
+	act 'Sex selection': gs 'gopsex', 'shgopsex','cont'
 end
 !mutual affection, posture 69
 if $ARGS[0] = 'shgopsex_69':
@@ -322,7 +323,7 @@ if $ARGS[0] = 'shgopsex_69':
 	if $gopsex_n_npc >= 1:
 		if pav_slut >= 100:
 			'<<$pcs_nickname>> you are a <<$gnikname>>, it''s unpleasant for me to lick cunt such girl, God knows how many cocks you have got there today. So go ahead, show me better your whorish holes!'
-			act 'Sex selection': gs 'gopsex', 'shgopsex'
+			act 'Sex selection': gs 'gopsex', 'shgopsex','cont'
 		elseif pav_slut < 100:
 			pcs_horny += 10
 			minut += ''+rand(3,7)+''
@@ -334,48 +335,17 @@ if $ARGS[0] = 'shgopsex_69':
 			gs 'gopsex', 'gg_sex_orgasm'
 			gs 'npc_orgasm'
 			if shgopsex_count > 0:
-				act 'Sex selection': gt 'gopsex', 'shgopsex'
+				act 'Sex selection': gs 'gopsex', 'shgopsex','cont'
 			elseif shgopsex_count = 0:
-				gs 'gopsex', 'shgopsex_end'
+				gs 'gopsex', 'shgopsex_end'	&	! 'gs preserves the main window - picture'
 			end
 		end		
 	elseif $gopsex_n_npc = 0:
 		'- "No, <<$pcs_nickname>>, I won''t lick your pussy!"'
-		act 'Sex selection': gs 'gopsex', 'shgopsex'
+		act 'Sex selection': gs 'gopsex', 'shgopsex','cont'
 	end
 end
 !===============================================================!
-!sucking boobs
-$shgopsex_eattits = {
-	cls
-	pcs_horny += 5
-	minut += ''+rand(1,3)+''
-	gs'stat'
-	gs 'ind_stamina_npc'
-	'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/bigroom/gopsex/tits/eat'+rand(1,2)+'.jpg"></center>'
-	'<<$boydesc>> is nibbling on your nipples.'
-	act 'Do a tit job or a titty fuck': dynamic $shgopsex_fucktits
-	act 'Sex selection': gs 'gopsex', 'shgopsex'
-}
-!drive between the breasts
-$shgopsex_fucktits = {
-	cls
-	pcs_horny += 10
-	minut += ''+rand(2,7)+''
-	shgopsex_count -= 1
-	sh_bjandhj_cum = 1
-	gs'stat'
-	gs 'ind_stamina_npc'
-	'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/bigroom/gopsex/tits/tj'+rand(1,9)+'.jpg"></center>'
-	'<<$boydesc>> wants to tittyfuck you, and you don''t mind.'
-	if shgopsex_count > 0:
-		act 'Sex selection': gs 'gopsex', 'shgopsex'
-		!act 'Finish': gs 'gopsex', 'shgopsex_end'
-	end
-	if shgopsex_count = 0:
-		gs 'gopsex', 'shgopsex_end'
-	end
-}
 !play with breasts
 if $ARGS[0] = 'shgopsex_tits':
 	cls
@@ -384,11 +354,11 @@ if $ARGS[0] = 'shgopsex_tits':
 	gs'stat'
 	gs 'ind_stamina_npc'
 	'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/bigroom/gopsex/tits/tits'+rand(1,6)+'.jpg"></center>'
-	'- "Well <<$boydesc>>, do you like my boobies '+func('gop_text3')+'?"'
-	'- "Yes <<$pcs_nickname>>, you''ve got fucking tits!"'
-	act 'Suck boobs': dynamic $shgopsex_eattits
-	act 'Titty fuck': dynamic $shgopsex_fucktits
-	act 'Sex selection': gs 'gopsex', 'shgopsex'
+	'"Well <<$boydesc>>, do you like my boobies '+func('gop_text3')+'?"'
+	'"Yes <<$pcs_nickname>>, you''ve got fucking tits!"'
+	act 'Suck boobs': gt 'shgopsex_eattits'
+	act 'Titty fuck': gt 'shgopsex_fucktits'
+	act 'Sex selection': gs 'gopsex', 'shgopsex','cont'
 end
 !===============================================================!
 !work with your hands
@@ -404,10 +374,10 @@ if $ARGS[0] = 'shgopsex_hj':
 	gs 'text_sex_hj'
 	gs 'npc_orgasm'
 	if shgopsex_count > 0:
-		act 'Sex selection': gt 'gopsex', 'shgopsex'
+		act 'Sex selection': gs 'gopsex', 'shgopsex','cont'
 	end	
 	if shgopsex_count = 0:
-		gs 'gopsex', 'shgopsex_end'
+		gs 'gopsex', 'shgopsex_end'	&	! 'gs preserves the main window - picture'
 	end
 end
 !===============================================================!
@@ -426,10 +396,10 @@ if $ARGS[0] = 'shgopsex_bj':
 	gs 'text_sex_bj'
 	gs 'npc_orgasm'
 	if shgopsex_count > 0:
-		act 'Sex selection': gs 'gopsex', 'shgopsex'
+		act 'Sex selection': gs 'gopsex', 'shgopsex','cont'
 	end	
 	if shgopsex_count = 0:
-		gs 'gopsex', 'shgopsex_end'
+		gs 'gopsex', 'shgopsex_end'	&	! 'gs preserves the main window - picture'
 	end
 end
 
@@ -447,10 +417,10 @@ if $ARGS[0] = 'shgopsex_throat':
 	gs 'text_sex_bjt'
 	gs 'npc_orgasm'
 	if shgopsex_count > 0:
-		act 'Sex selection': gs 'gopsex', 'shgopsex'
+		act 'Sex selection': gs 'gopsex', 'shgopsex','cont'
 	end	
 	if shgopsex_count = 0:
-		gs 'gopsex', 'shgopsex_end'
+		gs 'gopsex', 'shgopsex_end'	&	! 'gs preserves the main window - picture'
 	end
 end
 
@@ -472,78 +442,15 @@ if $ARGS[0] = 'shgopsex_vag':
 	gs 'gopsex', 'gg_sex_orgasm'
 	gs 'npc_orgasm'
 	if shgopsex_count > 0:
-		act 'Change position: missionary': dynamic $shgopsex_vag1
-		act 'Change position: cowgirl': dynamic $shgopsex_vag2
-		act 'Change position: screw sex': dynamic $shgopsex_vag3
-		act 'Sex selection': gs 'gopsex', 'shgopsex'
+		act 'Change position: missionary': gt 'shgopsex_vag1'
+		act 'Change position: cowgirl': gt 'shgopsex_vag2'
+		act 'Change position: screw sex': gt 'shgopsex_vag3'
+		act 'Sex selection': gs 'gopsex', 'shgopsex','cont'
 	end	
 	if shgopsex_count = 0:
-		gs 'gopsex', 'shgopsex_end'
+		gs 'gopsex', 'shgopsex_end'	&	! 'gs preserves the main window - picture'
 	end
 end
-$shgopsex_vag1 = {
-	cls
-	pcs_horny += 10
-	minut += ''+rand(3,7)+''
-	shgopsex_count -= 1
-	gs'stat'
-	gs 'ind_stamina_npc'
-	'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/bigroom/gopsex/sex/pussy/miss'+rand(1,20)+'.jpg"></center>'
-	gs 'text_sex_miss'
-	gs 'gopsex', 'gg_sex_orgasm'
-	gs 'npc_orgasm'
-	if shgopsex_count > 0:
-		act 'Change position: doggie': gt 'gopsex', 'shgopsex_vag'
-		act 'Change position: cowgirl': dynamic $shgopsex_vag2
-		act 'Change position: screw sex': dynamic $shgopsex_vag3
-		act 'Sex selection': gs 'gopsex', 'shgopsex'
-	end	
-	if shgopsex_count = 0:
-		gs 'gopsex', 'shgopsex_end'
-	end
-}
-$shgopsex_vag2 = {
-	cls
-	pcs_horny += 10
-	minut += ''+rand(3,7)+''
-	shgopsex_count -= 1
-	gs'stat'
-	gs 'ind_stamina_npc'
-	'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/bigroom/gopsex/sex/pussy/cow'+rand(1,20)+'.jpg"></center>'
-	gs 'text_sex_cow'
-	gs 'gopsex', 'gg_sex_orgasm'
-	gs 'npc_orgasm'
-	if shgopsex_count > 0:
-		act 'Change position: doggie': gt 'gopsex', 'shgopsex_vag'
-		act 'Change position: missionary': dynamic $shgopsex_vag1
-		act 'Change position: screw sex': dynamic $shgopsex_vag3
-		act 'Sex selection': gs 'gopsex', 'shgopsex'
-	end	
-	if shgopsex_count = 0:
-		gs 'gopsex', 'shgopsex_end'
-	end
-}
-$shgopsex_vag3 = {
-	cls
-	pcs_horny += 10
-	minut += ''+rand(3,7)+''
-	shgopsex_count -= 1
-	gs'stat'
-	gs 'ind_stamina_npc'
-	'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/bigroom/gopsex/sex/pussy/bok'+rand(1,3)+'.jpg"></center>'
-	'screw sex'
-	gs 'gopsex', 'gg_sex_orgasm'
-	gs 'npc_orgasm'
-	if shgopsex_count > 0:
-		act 'Change position: doggie': gt 'gopsex', 'shgopsex_vag'
-		act 'Change position: missionary': dynamic $shgopsex_vag1
-		act 'Change position: cowgirl': dynamic $shgopsex_vag2
-		act 'Sex selection': gs 'gopsex', 'shgopsex'
-	end	
-	if shgopsex_count = 0:
-		gs 'gopsex', 'shgopsex_end'
-	end
-}
 !anal!
 !===============================================================!
 !anal!
@@ -566,166 +473,15 @@ if $ARGS[0] = 'shgopsex_anal':
 	gs 'gopsex', 'gg_sex_orgasm'
 	gs 'npc_orgasm'
 	if shgopsex_count > 0:
-		act 'Change position: missionary': dynamic $shgopsex_anal1
-		act 'Change position: cowgirl': dynamic $shgopsex_anal2
-		act 'Change position: screw sex': dynamic $shgopsex_anal3
-		act 'Sex selection': gs 'gopsex', 'shgopsex'
+		act 'Change position: missionary': gt 'shgopsex_anal1'
+		act 'Change position: cowgirl': gt 'shgopsex_anal2'
+		act 'Change position: screw sex': gt 'shgopsex_anal3'
+		act 'Sex selection': gs 'gopsex', 'shgopsex','cont'
 	end	
 	if shgopsex_count = 0:
-		gs 'gopsex', 'shgopsex_end'
+		gs 'gopsex', 'shgopsex_end'	&	! 'gs preserves the main window - picture'
 	end
 end
-$shgopsex_anal1 = {
-	cls
-	pcs_horny += 5
-	minut += ''+rand(3,7)+''
-	shgopsex_count -= 1
-	gs'stat'
-	gs 'ind_stamina_npc'
-	'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/bigroom/gopsex/sex/anal/miss'+rand(1,20)+'.jpg"></center>'
-
-	gs 'gop_sex_analplugin'
-	gs 'gop_sex_lubri'
-
-	gs 'text_sex_miss_anal'
-
-	gs 'gopsex', 'gg_sex_orgasm'
-	gs 'npc_orgasm'
-	if shgopsex_count > 0:
-		act 'Change position: doggie': gt 'gopsex', 'shgopsex_anal'
-		act 'Change position: cowgirl': dynamic $shgopsex_anal2
-		act 'Change position: screw sex': dynamic $shgopsex_anal3
-		act 'Sex selection': gs 'gopsex', 'shgopsex'
-	end	
-	if shgopsex_count = 0:
-		gs 'gopsex', 'shgopsex_end'
-	end
-}
-$shgopsex_anal2 = {
-	cls
-	pcs_horny += 5
-	minut += ''+rand(3,7)+''
-	shgopsex_count -= 1
-	gs'stat'
-	gs 'ind_stamina_npc'
-	'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/bigroom/gopsex/sex/anal/cow'+rand(1,20)+'.jpg"></center>'
-
-	gs 'gop_sex_analplugin'
-	gs 'gop_sex_lubri'
-	gs 'text_sex_cow_anal'
-	gs 'gopsex', 'gg_sex_orgasm'
-	gs 'npc_orgasm'
-
-	if shgopsex_count > 0:
-		act 'Change position: doggie': gt 'gopsex', 'shgopsex_anal'
-		act 'Change position: missionary': dynamic $shgopsex_anal1
-		act 'Change position: screw sex': dynamic $shgopsex_anal3
-		act 'Sex selection': gs 'gopsex', 'shgopsex'
-	end	
-	if shgopsex_count = 0:
-		gs 'gopsex', 'shgopsex_end'
-	end
-}
-$shgopsex_anal3 = {
-	cls
-	pcs_horny += 5
-	minut += ''+rand(3,7)+''
-	shgopsex_count -= 1
-	gs'stat'
-	gs 'ind_stamina_npc'
-	'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/bigroom/gopsex/sex/anal/bok'+rand(1,9)+'.jpg"></center>'
-
-	gs 'gop_sex_analplugin'
-	gs 'gop_sex_lubri'
-
-	'On the side'
-
-	gs 'gopsex', 'gg_sex_orgasm'
-	gs 'npc_orgasm'
-	if shgopsex_count > 0:
-		act 'Change position: doggie': gt 'gopsex', 'shgopsex_anal'
-		act 'Change position: missionary': dynamic $shgopsex_anal1
-		act 'Change position: cowgirl': dynamic $shgopsex_anal2
-		act 'Sex selection': gs 'gopsex', 'shgopsex'
-	end	
-	if shgopsex_count = 0:
-		gs 'gopsex', 'shgopsex_end'
-	end
-}
-
-!ending!
-!===============================================================!
-!Cum in mouth
-$shgopsex_swallow = {
-	cls
-	minut += ''+rand(1,3)+''
-	swallow += 1
-	gs'stat'
-	gs 'boyStat', $npclastcalled
-	sexpartkno = 1
-	spafinloc = 12
-	gs 'cum_manage'
-	'<center><img <<$set_imgh>> src="images/pc/body/cum/swallow/swallow'+rand(1,19)+'.jpg"></center>'
-	gs 'text_sex_cumm'
-	act 'Leave': gt 'shulga_room', 'start'
-}
-
-!Cum on face
-$shgopsex_cumface = {
-	cls
-	minut += ''+rand(1,3)+''
-	gs 'boyStat', $npclastcalled
-	sexpartkno = 1
-	spafinloc = 11
-	gs 'cum_manage'
-	facial +=1
-	gs'stat'
-	if pcs_haircol < 4: '<center><img <<$set_imgh>> src="images/pc/body/cum/cumface/<<$pcs_haircol>>/'+rand(1,19)+'.jpg"></center>'
-	if pcs_haircol > 3: '<center><img <<$set_imgh>> src="images/pc/body/cum/cumface/custom/'+rand(1,19)+'.jpg"></center>'
-	
-	gs 'text_sex_cumface'
-	act 'Leave': gt 'shulga_room', 'start'
-}
-!Cum on body
-$shgopsex_cumbelly = {
-	cls
-	minut += ''+rand(1,3)+''
-	spafinloc = 14
-	gs 'cum_manage'
-	gs'stat'
-	gs 'boyStat', $npclastcalled
-	sexpartkno = 1
-	'<center><img <<$set_imgh>> src="images/pc/body/cum/cumbelly/cumbelly'+rand(1,13)+'.jpg"></center>'
-	gs 'text_sex_cumbody'
-	act 'Leave': gt 'shulga_room', 'start'
-}
-
-!Cum in pussy
-$shgopsex_cumvag = {
-	cls
-	minut += ''+rand(1,3)+''
-	gs 'cum_manage'
-	gs'stat'
-	gs 'boyStat', $npclastcalled
-	sexpartkno = 1
-	'<center><img <<$set_imgh>> src="images/pc/body/cum/cumpussy/cumpus'+rand(1,5)+'.jpg"></center>'
-	gs 'text_sex_cumvag'
-	act 'Leave': gt 'shulga_room', 'start'
-}
-
-!ending in the ass
-$shgopsex_cumanal = {
-	cls
-	minut += ''+rand(1,3)+''
-	gs 'boyStat', $npclastcalled
-	sexpartkno = 1
-	spafinloc = 4
-	gs 'cum_manage'
-	gs'stat'
-	'<center><img <<$set_imgh>> src="images/pc/body/cum/cumass/cumass'+rand(1,20)+'.jpg"></center>'
-	gs 'text_sex_cumass'
-	act 'Leave': gt 'shulga_room', 'start'
-}
 
 
 !END============END==============END==============END=================END!
@@ -1224,6 +980,230 @@ $shgopsex_group_cumanal = {
 	end
 --- gop_groupsex_lubri ---
 
+#shgopsex_vag1
+	cls
+	pcs_horny += 10
+	minut += ''+rand(3,7)+''
+	shgopsex_count -= 1
+	gs 'stat'
+	gs 'ind_stamina_npc'
+	'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/bigroom/gopsex/sex/pussy/miss'+rand(1,20)+'.jpg"></center>'
+	gs 'text_sex_miss'
+	gs 'gopsex', 'gg_sex_orgasm'
+	gs 'npc_orgasm'
+	if shgopsex_count > 0:
+		act 'Change position: doggie': gt 'gopsex', 'shgopsex_vag'
+		act 'Change position: cowgirl': gt 'shgopsex_vag2'
+		act 'Change position: screw sex': gt 'shgopsex_vag3'
+		act 'Sex selection': gs 'gopsex', 'shgopsex','cont'
+	end	
+	if shgopsex_count = 0:
+		gs 'gopsex', 'shgopsex_end'	&	! 'gs preserves the main window - picture'
+	end
+--- shgopsex_vag1 ---
+
+#shgopsex_vag2
+	cls
+	pcs_horny += 10
+	minut += ''+rand(3,7)+''
+	shgopsex_count -= 1
+	gs 'stat'
+	gs 'ind_stamina_npc'
+	'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/bigroom/gopsex/sex/pussy/cow'+rand(1,20)+'.jpg"></center>'
+	gs 'text_sex_cow'
+	gs 'gopsex', 'gg_sex_orgasm'
+	gs 'npc_orgasm'
+	if shgopsex_count > 0:
+		act 'Change position: doggie': gt 'gopsex', 'shgopsex_vag'
+		act 'Change position: missionary': gt 'shgopsex_vag1'
+		act 'Change position: screw sex': gt 'shgopsex_vag3'
+		act 'Sex selection': gs 'gopsex', 'shgopsex','cont'
+	end	
+	if shgopsex_count = 0:
+		gs 'gopsex', 'shgopsex_end'	&	! 'gs preserves the main window - picture'
+	end
+--- shgopsex_vag2 ---
+
+#shgopsex_vag3
+	cls
+	pcs_horny += 10
+	minut += ''+rand(3,7)+''
+	shgopsex_count -= 1
+	gs'stat'
+	gs 'ind_stamina_npc'
+	'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/bigroom/gopsex/sex/pussy/bok'+rand(1,3)+'.jpg"></center>'
+	'screw sex'
+	gs 'gopsex', 'gg_sex_orgasm'
+	gs 'npc_orgasm'
+	if shgopsex_count > 0:
+		act 'Change position: doggie': gt 'gopsex', 'shgopsex_vag'
+		act 'Change position: missionary': gt 'shgopsex_vag1'
+		act 'Change position: cowgirl': gt 'shgopsex_vag2'
+		act 'Sex selection': gs 'gopsex', 'shgopsex','cont'
+	end	
+	if shgopsex_count = 0:
+		gs 'gopsex', 'shgopsex_end'	&	! 'gs preserves the main window - picture'
+	end
+--- shgopsex_vag3 ---
+
+#shgopsex_anal1
+	cls
+	pcs_horny += 5
+	minut += ''+rand(3,7)+''
+	shgopsex_count -= 1
+	gs'stat'
+	gs 'ind_stamina_npc'
+	'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/bigroom/gopsex/sex/anal/miss'+rand(1,20)+'.jpg"></center>'
+
+	gs 'gop_sex_analplugin'
+	gs 'gop_sex_lubri'
+	gs 'text_sex_miss_anal'
+	gs 'gopsex', 'gg_sex_orgasm'
+	gs 'npc_orgasm'
+	if shgopsex_count > 0:
+		act 'Change position: doggie': gt 'gopsex', 'shgopsex_anal'
+		act 'Change position: cowgirl': gt 'shgopsex_anal2'
+		act 'Change position: screw sex': gt 'shgopsex_anal3'
+		act 'Sex selection': gs 'gopsex', 'shgopsex','cont'
+	end	
+	if shgopsex_count = 0:
+		gs 'gopsex', 'shgopsex_end'	&	! 'gs preserves the main window - picture'
+	end
+--- shgopsex_anal1 ---
+
+#shgopsex_anal2
+	cls
+	pcs_horny += 5
+	minut += ''+rand(3,7)+''
+	shgopsex_count -= 1
+	gs'stat'
+	gs 'ind_stamina_npc'
+	'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/bigroom/gopsex/sex/anal/cow'+rand(1,20)+'.jpg"></center>'
+
+	gs 'gop_sex_analplugin'
+	gs 'gop_sex_lubri'
+	gs 'text_sex_cow_anal'
+	gs 'gopsex', 'gg_sex_orgasm'
+	gs 'npc_orgasm'
+	if shgopsex_count > 0:
+		act 'Change position: doggie': gt 'gopsex', 'shgopsex_anal'
+		act 'Change position: missionary': gt 'shgopsex_anal1'
+		act 'Change position: screw sex': gt 'shgopsex_anal3'
+		act 'Sex selection': gs 'gopsex', 'shgopsex','cont'
+	end	
+	if shgopsex_count = 0:
+		gs 'gopsex', 'shgopsex_end'	&	! 'gs preserves the main window - picture'
+	end
+--- shgopsex_anal2 ---
+
+#shgopsex_anal3
+	cls
+	pcs_horny += 5
+	minut += ''+rand(3,7)+''
+	shgopsex_count -= 1
+	gs'stat'
+	gs 'ind_stamina_npc'
+	'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/bigroom/gopsex/sex/anal/bok'+rand(1,9)+'.jpg"></center>'
+
+	gs 'gop_sex_analplugin'
+	gs 'gop_sex_lubri'
+	'On the side'
+	gs 'gopsex', 'gg_sex_orgasm'
+	gs 'npc_orgasm'
+	if shgopsex_count > 0:
+		act 'Change position: doggie': gt 'gopsex', 'shgopsex_anal'
+		act 'Change position: missionary': gt 'shgopsex_anal1'
+		act 'Change position: cowgirl': gt 'shgopsex_anal2'
+		act 'Sex selection': gs 'gopsex', 'shgopsex','cont'
+	end	
+	if shgopsex_count = 0:
+		gs 'gopsex', 'shgopsex_end'	&	! 'gs preserves the main window - picture'
+	end
+--- shgopsex_anal3 ---
+!sucking boobs
+#shgopsex_eattits
+	cls
+	pcs_horny += 5
+	minut += ''+rand(1,3)+''
+	gs'stat'
+	gs 'ind_stamina_npc'
+	'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/bigroom/gopsex/tits/eat'+rand(1,2)+'.jpg"></center>'
+	'<<$boydesc>> is nibbling on your nipples.'
+	act 'Do a tit job or a titty fuck': gt 'shgopsex_fucktits'
+	act 'Sex selection': gs 'gopsex', 'shgopsex','cont'
+--- shgopsex_eattits ---
+!drive between the breasts
+#shgopsex_fucktits
+	cls
+	pcs_horny += 10
+	minut += ''+rand(2,7)+''
+	shgopsex_count -= 1
+	sh_bjandhj_cum = 1
+	gs'stat'
+	gs 'ind_stamina_npc'
+	'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/bigroom/gopsex/tits/tj'+rand(1,9)+'.jpg"></center>'
+	'<<$boydesc>> wants to tittyfuck you, and you don''t mind.'
+	if shgopsex_count > 0:
+		act 'Sex selection': gs 'gopsex', 'shgopsex','cont'
+		!act 'Finish': gs 'gopsex', 'shgopsex_end'
+	end
+	if shgopsex_count = 0:
+		gs 'gopsex', 'shgopsex_end'	&	! 'gs preserves the main window - picture'
+	end
+--- shgopsex_fucktits ---
+!ending!
+!===============================================================!
+!Cum in mouth
+#shgopsex_swallow
+	cls
+	minut += ''+rand(1,3)+''
+	gs 'cum_call','mouth',$boy,1
+	'<center><img <<$set_imgh>> src="images/pc/body/cum/swallow/swallow'+rand(1,19)+'.jpg"></center>'
+	gs 'text_sex_cumm'
+	gs'stat'
+	act 'Leave': gt 'shulga_room', 'start'
+--- shgopsex_swallow ---
+!Cum on face
+#shgopsex_cumface
+	cls
+	minut += ''+rand(1,3)+''
+	gs 'cum_call','face',$boy,1
+	if pcs_haircol < 4: '<center><img <<$set_imgh>> src="images/pc/body/cum/cumface/<<$pcs_haircol>>/'+rand(1,19)+'.jpg"></center>'
+	if pcs_haircol > 3: '<center><img <<$set_imgh>> src="images/pc/body/cum/cumface/custom/'+rand(1,19)+'.jpg"></center>'
+	gs 'text_sex_cumface'
+	gs'stat'
+	act 'Leave': gt 'shulga_room', 'start'
+--- shgopsex_cumface ---
+!Cum on body
+#shgopsex_cumbelly
+	cls
+	minut += ''+rand(1,3)+''
+	gs 'cum_call','stomach',$boy,1
+	'<center><img <<$set_imgh>> src="images/pc/body/cum/cumbelly/cumbelly'+rand(1,13)+'.jpg"></center>'
+	gs 'text_sex_cumbody'
+	gs'stat'
+	act 'Leave': gt 'shulga_room', 'start'
+--- shgopsex_cumbelly ---
+!Cum in pussy
+#shgopsex_cumvag
+	cls
+	minut += ''+rand(1,3)+''
+	gs 'cum_call','labia',$boy,1
+	'<center><img <<$set_imgh>> src="images/pc/body/cum/cumpussy/cumpus'+rand(1,5)+'.jpg"></center>'
+	gs 'text_sex_cumvag'
+	gs'stat'
+	act 'Leave': gt 'shulga_room', 'start'
+--- shgopsex_cumvag ---
+!ending in the ass
+#shgopsex_cumanal
+	cls
+	minut += ''+rand(1,3)+''
+	gs 'cum_call','butt',$boy,1
+	'<center><img <<$set_imgh>> src="images/pc/body/cum/cumass/cumass'+rand(1,20)+'.jpg"></center>'
+	gs 'text_sex_cumass'
+	gs'stat'
+	act 'Leave': gt 'shulga_room', 'start'
+--- shgopsex_cumanal ---
 
 !familiar accidentally caught in the doorway years when her favor
 #accview_ggsex
