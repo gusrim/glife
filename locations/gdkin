@@ -50,19 +50,9 @@ if $ARGS[0] = '':
 			exit
 		end
 
-		act 'Dance one':
+		act 'Dance (0:15)':
 			cls
 			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/community/disco/club_dance.jpg"></center>'
-			minut += 5
-			!!fat -= 1
-
-			if pcs_danc < 50 and pcs_agil >= pcs_danc:danc_exp += 1
-
-			pcs_mood += 10
-			pcs_willpwr += 10
-			frost = 0
-			gs 'stat'
-
 			if spdirtyc > 0 or spdirtyv > 0:
 				pav_sex += 15
 
@@ -70,55 +60,65 @@ if $ARGS[0] = '':
 				'As you head out on the dance floor, A guy walks up to you and sees the cum still splattered on you. The guy points to you "Check out the cock-sucker! Hey guys, this chick has cum smeared all over her face." The ones standing near him come closer. "Did you forget to swallow, slut?" Your cheeks blush with shame and you quickly head for the exit.'
 
 				act 'Leave':gt 'gdk'
-
-				exit
-			end
-			if rand(0,7)=1 and katja_disco_end=1 and (alko > 1 or pcs_horny => 80) and KatjaHorny > 60:
-				*CLR
-				'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/girl/katja/katja_dance.jpg"></center>'
-				'While you are dancing you notice Katya out on the dance floor as well.'
-				Act 'Dance with Katya':gt 'gdkin', 'Katja_dance'
-			end
-
-			if alko >= 4:
-				'You''re too drunk to try and dance, you are barely able to stay on your feet and mostly just drunkenly bump into other people as you try and dance.'
-				if rand (0,1) = 0:gt 'gdkin', 'too_drunk_dance'
-			elseif alko > 0:
-				if tanga = 0 and PCloSkirt > 2:
-					*clr
-					'<center><img <<$set_imgh>> src="images/locations/pavlovsk/community/disco/club_dance2.gif"></center>'
-					'You''re drunk and you forget you don''t have any panties on. As you dance around moving your body, your skirt rides up, exposing your pussy to the observant people on the dance floor with you.'
-				else
-					*clr
-					'<center><img <<$set_imgh>> src="images/locations/pavlovsk/community/disco/club_dance7.jpg"></center>'
-					'You''re drunk, but you''re having a lot of fun out on the dance floor anyways, you''re not even paying attention to others or even the music.'
-				end
 			else
-				'The music is quite old, but catchy. You have fun dancing, not paying attention to anyone.'
-			end
+				minut += 15
+				pcs_stam -= 5
+				pcs_sweat += 3
+				fat -= 1
+				danc_exp += 1
 
-			if alko < 4:
-				verprigrand = rand(0, 100)
+				pcs_mood += 10
+				pcs_willpwr += 10
+				frost = 0
+				gs 'stat'
 
-				if verprigrand <= pcs_danc:
-					gs 'gdkin', 'dance_partner'
-					gs 'stat'
-					'<<$din_disc_dance2>>'
-
-					act 'Dance with a guy':gt 'gdkin', 'dance_vrp'
-
-					act 'Move away':
-						cls
-						gt 'gdkin'
-					end
-
-					exit
+				if rand(0,7)=1 and katja_disco_end=1 and (alko > 1 or pcs_horny => 80) and KatjaHorny > 60:
+					*CLR
+					'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/girl/katja/katja_dance.jpg"></center>'
+					'While you are dancing you notice Katya out on the dance floor as well.'
+					Act 'Dance with Katya':gt 'gdkin', 'Katja_dance'
 				end
+
+				if alko >= 4:
+					'You''re too drunk to try and dance, you are barely able to stay on your feet and mostly just drunkenly bump into other people as you try and dance.'
+					if rand (0,1) = 0:gt 'gdkin', 'too_drunk_dance'
+				elseif alko > 0:
+					if tanga = 0 and PCloSkirt > 2:
+						*clr
+						'<center><img <<$set_imgh>> src="images/locations/pavlovsk/community/disco/club_dance2.gif"></center>'
+						'You''re drunk and you forget you don''t have any panties on. As you dance around moving your body, your skirt rides up, exposing your pussy to the observant people on the dance floor with you.'
+					else
+						*clr
+						'<center><img <<$set_imgh>> src="images/locations/pavlovsk/community/disco/club_dance7.jpg"></center>'
+						'You''re drunk, but you''re having a lot of fun out on the dance floor anyways, you''re not even paying attention to others or even the music.'
+					end
+				else
+					'The music is quite old, but catchy. You have fun dancing, not paying attention to anyone.'
+				end
+
+				if alko < 4:
+					verprigrand = rand(0, 100)
+
+					if verprigrand <= pcs_danc:
+						gs 'gdkin', 'dance_partner'
+						gs 'stat'
+						'<<$din_disc_dance2>>'
+
+						act 'Dance with a guy':gt 'gdkin', 'dance_vrp'
+
+						act 'Move away':
+							cls
+							gt 'gdkin'
+						end
+
+						exit
+					end
+				end
+
+				gs 'stat'
+
+				act 'Further':gt 'gdkin'
 			end
-
-			gs 'stat'
-
-			act 'Further':gt 'gdkin'
 		end
 
 		act 'Stand at the wall':
