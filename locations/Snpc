@@ -4,7 +4,7 @@ gs 'dinnpc'
 gs 'stat'
 $static_num = $static_num[numnpc]
 '<center><b><font color="maroon"><<$npc_firstname[$static_num]>> <<$npc_lastname[$static_num]>></font></b></center>'
-'<center><img src="images/characters/pavlovsk/school/head/<<numnpc>>.jpg"></center>'
+'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/head/<<numnpc>>.jpg"></center>'
 '<<$npc_notes[$static_num]>>'
 
 if grupTipe[numnpc] = 5:'<<$npc_firstname[$static_num]>> is an outcast in school, and doesn''t have anyone to sit with during lunch.'
@@ -36,6 +36,26 @@ gs 'izdevat'
 gs 'krutishi'
 
 if numnpc = 9:gs 'kotovtalker'
+	
+!!!!!!!!!!!!!!!!!!
+!!!Niko Volkov!!!!
+!!!!!!!!!!!!!!!!!!
+
+	if numnpc = 61 and $loc ! 'gdkin' and NikoBreakup = 1:
+		gt 'NikoEv', 'Lunch Breakup'
+	elseif numnpc = 61 and $loc = 'gdkin' and NikoBreakup = 1:
+		gt 'NikoEv', 'Disco Breakup'
+	elseif numnpc = 61 and $loc = 'gdkin' and NikoBreakupDay = daystart:
+		gt 'NikoEv', 'Disco Breakup 2'
+	elseif numnpc = 61 and $loc ! 'gdkin' and NikoIntro = 0:
+		gt 'NikoEv', 'Lunch Intro'
+	elseif numnpc = 61 and $loc ! 'gdkin' and NikoIntro = 1:	
+		gt 'NikoEv', 'Lunch Chat'		
+	elseif numnpc = 61 and $loc = 'gdkin' and NikoIntro = 0:
+		gt 'NikoEv', 'Disco Intro'	
+	elseif numnpc = 61 and $loc = 'gdkin' and NikoIntro = 1:	
+		gt 'NikoEv', 'Disco Chat'
+	end	
 
 !!!!!!!!!!!!!
 !!!gopniks!!!
@@ -81,20 +101,20 @@ if grupTipe[numnpc] = 4:
 end
 
 if numnpc = 45:
-	if $loc ! 'gdkin' and npc_rel[45] > 50 and (grupTipe = 4 or Anush_sex > 0 or hotcat >= 7):
+	if $loc ! 'gdkin' and npc_rel[$static_num] > 50 and (grupTipe = 4 or Anush_sex > 0 or hotcat >= 7):
 		act 'Your looking flushed':
 			*clr
 			cla
 			if Anush_lunch = 0:
 				pcs_horny += 10
-				'<center><img src="images/characters/pavlovsk/school/head/45.jpg"></center>'
+				'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/head/45.jpg"></center>'
 				'"Hey Anush you feeling ok? You kinda look flush, is something wrong? Would you like to talk about it?"'
 				'She leans in close and tries to kiss you, while one hand reaches down and squeezes your butt. You turn your head and pull away. "What are you doing? I was only seeing if you was ok."'
 				'She crowds you a bit and leans in close. "You talk to much, I can think of better things you can do with that tongue of yours."'
 				act 'Um that''s not what I meant':
 					*clr
 					cla
-					'<center><img src="images/characters/pavlovsk/school/girl/anushka/nomake.jpg"></center>'
+					'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/girl/anushka/nomake.jpg"></center>'
 					'You place your hand on her shoulders and gentle push her away. "No I don''t want to."'
 					'She rolls her eyes. "Fine what ever, if you don''t want to have a little fun, I will find someone that does." With that she turns and walks off, leaving you unsure what just happened.'
 
@@ -105,14 +125,14 @@ if numnpc = 45:
 					Anush_lunch = 1
 					pcs_horny += 10
 					gs 'stat'
-					'<center><img src="images/characters/pavlovsk/school/girl/anushka/makeout.gif"></center>'
+					'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/girl/anushka/makeout.gif"></center>'
 					'You breath heavily feeling yourself turned on. "Ok, where?"'
 					'You barely even have time to get the words out when she is leaning in and kissing you, you kiss her back. Your hands are roaming each others bodies, several of the other gopniks are checking the two of you out, especially the guys. After a couple of minutes she grabs you by the hands and pulls you along with her.'
 
 					act 'Go somewhere private':  gt 'gschool_sex', 'Anush_private'
 				end
 			else
-				'<center><img src="images/characters/pavlovsk/school/girl/anushka/makeout.gif"></center>'
+				'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/girl/anushka/makeout.gif"></center>'
 				'"You are looking pretty flush again today, would you like me to help you out with that?"'
 				'You barely even have time to get the words out when she is leaning in and kissing you, you kiss her back. Your hands are roaming each others bodies, several of the other gopniks are checking the two of you out, especially the guys. After a couple of minutes she grabs you by the hands and pulls you along with her.'
 
@@ -169,7 +189,7 @@ act 'Chat':
 
 	gs 'stat'
 	'<center><b><font color="maroon"><<$npc_firstname[$static_num]>> <<$npc_lastname[$static_num]>></font></b></center>'
-	'<center><img src="images/characters/pavlovsk/school/head/<<numnpc>>.jpg"></center>'
+	'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/head/<<numnpc>>.jpg"></center>'
 
 	if numnpc = 1 and npc_rel[$static_num] = 0:
 		cla
@@ -245,7 +265,7 @@ end
 !!!Artem CHEBOTAREV!!!
 !!!!!!!!!!!!!!!!!!!!!!
 if numnpc = 2:
-	if pcs_dom > 0 and artemLernQW = 0:
+	if (pcs_dom > 0 or grupTipe = 3) and artemLernQW = 0:
 		act '"Could you help me out a bit in school?"':
 			cls
 
@@ -258,7 +278,7 @@ if numnpc = 2:
 
 			gs 'stat'
 			'<center><b><font color="maroon"><<$npc_firstname[$static_num]>> <<$npc_lastname[$static_num]>></font></b></center>'
-            '<center><img src="images/characters/pavlovsk/school/head/<<numnpc>>.jpg"></center>'
+            '<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/head/<<numnpc>>.jpg"></center>'
 
 			if pav_slut < 75:'You approach Artem and explain how you''re struggling in school and could really use his help studying. Artem is a bit surprised: "What... you want my help? Well, okay I guess. Come meet me at my place if you want to do homework together."'
 			if pav_slut >= 75:'You approach Artem and explain how you''re struggling in school and could really use his help studying. Artem is outraged: "Bah... the school whore needs my help? I don''t think so."'
@@ -273,10 +293,32 @@ if numnpc = 2:
 end
 
 !!!!!!!!!!!!!!!!!!
+!!Ivan Prokhorov!!
+!!!!!!!!!!!!!!!!!!
+
+	if numnpc = 3:gt 'IvanEv', 'School Chat'
+	
+!!!!!!!!!!!!!!!
+!!Vitek Kotov!!
+!!!!!!!!!!!!!!!
+
+	if numnpc = 9 and kotovloveqw > 0 and $loc ! 'gdkin' and NikoPayback = 2:act 'Tell him about Niko':gt 'NikoPayback', 'Vitek Help'
+
+!!!!!!!!!!!!!!!!!!
+!!!Fedor Kozlov!!!
+!!!!!!!!!!!!!!!!!!
+
+if numnpc = 5 and $loc ! 'gdkin' and FedorLove < 0:	
+	gt 'FedorMisc', 'Fedor Hate'
+elseif numnpc = 5 and $loc ! 'gdkin': 
+	gt 'FedorMisc', 'Fedor Chat'
+end	
+
+!!!!!!!!!!!!!!!!!!
 !!!JULIA milova!!!
 !!!!!!!!!!!!!!!!!!
 if numnpc = 12:
-	if pcs_dom > 0 and JuliaMilLernQW = 0 and npc_rel[$static_num] >= 80:
+	if (pcs_dom > 0 or grupTipe = 3) and JuliaMilLernQW = 0 and npc_rel[$static_num] >= 80:
 		act '"Could you help me out a bit in school?"':
 			cls
 
@@ -287,7 +329,7 @@ if numnpc = 12:
 			JuliaMilLernQW = 1
 			gs 'stat'
 			'<center><b><font color="maroon"><<$npc_firstname[$static_num]>> <<$npc_lastname[$static_num]>></font></b></center>'
-			'<center><img src="images/characters/pavlovsk/school/head/<<numnpc>>.jpg"></center>'
+			'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/head/<<numnpc>>.jpg"></center>'
 
 			if pav_slut < 25:'You approach Julia and explain how you''re struggling in school and could really use his help studying. She thinks it over for a second, but happily agrees: "Sure <<$pcs_nickname>>, that could be fun!"'
 			if pav_slut >= 25:'You approach Julia and explain how you''re struggling in school and could really use his help studying. She makes some comments about your lousy reputation in school, but at the same time doesn''t seem to care too much about it and agrees to help you anyway. As long as you don''t tell anyone.'
@@ -315,7 +357,7 @@ if numnpc = 14:
 			meynoldQW = 2
 			gs 'stat'
 			'<center><b><font color="maroon"><<$npc_firstname[$static_num]>> <<$npc_lastname[$static_num]>></font></b></center>'
-            '<center><img src="images/characters/pavlovsk/school/head/<<numnpc>>.jpg"></center>'
+            '<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/head/<<numnpc>>.jpg"></center>'
 			'You approach Katja and thank her for taking you home from the disco when you were drunk, the other night. Katja gives you a knowing smile and says: "Don''t mention it, <<$pcs_nickname>>! You really shouldn''t get that drunk at the disco though, that could end badly. Some of the guys there are real pigs..."'
 
 			if $loc ! 'gdkin':
@@ -331,11 +373,11 @@ if numnpc = 14:
 		if $loc = 'gdkin':
 			minut += 1
 			gs'stat'
-			'<center><img src="images/characters/pavlovsk/school/girl/katja/tanga_kiss1.jpg"></center>'
+			'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/girl/katja/tanga_kiss1.jpg"></center>'
 		elseif $loc ! 'gdkin':
 			minut += 1
 			gs'stat'
-			'<center><img src="images/characters/pavlovsk/school/girl/katja/tanga_kiss.jpg"></center>'
+			'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/girl/katja/tanga_kiss.jpg"></center>'
 		end
 
 		'Katja slowly leans in towards you, almost closing her eyes and slowly opening her mouth. Unable to resist, you lean in and meet her with a kiss.'	
@@ -351,7 +393,7 @@ if numnpc = 14:
 
 			gs 'stat'
 			'<center><b><font color="maroon"><<$npc_firstname[$static_num]>> <<$npc_lastname[$static_num]>></font></b></center>'
-			'<center><img src="images/characters/pavlovsk/school/head/<<numnpc>>.jpg"></center>'
+			'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/head/<<numnpc>>.jpg"></center>'
 			'Katja happily grins as she quickly straightens your hair: "What do you want? A light touch-up, some normal make-up or shall I just shovel it on?"'
 
 			act 'Light touch-up':
@@ -402,11 +444,11 @@ if numnpc = 14:
 			if $loc = 'gdkin':
 				minut += 1
 				gs'stat'
-				'<center><img src="images/characters/pavlovsk/school/girl/katja/tanga_kiss1.jpg"></center>'
+				'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/girl/katja/tanga_kiss1.jpg"></center>'
 			elseif $loc ! 'gdkin':
 				minut += 1
 				gs'stat'
-				'<center><img src="images/characters/pavlovsk/school/girl/katja/tanga_kiss.jpg"></center>'
+				'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/girl/katja/tanga_kiss.jpg"></center>'
 			end
 			'You lean in to kiss Katja'
 			if Katjahorny < 30:
@@ -420,7 +462,7 @@ if numnpc = 14:
 				cls
 				gs 'stat'
 				'<center><b><font color="maroon"><<$npc_firstname[$static_num]>> <<$npc_lastname[$static_num]>></font></b></center>'
-				'<center><img src="images/characters/pavlovsk/school/head/<<numnpc>>.jpg"></center>'
+				'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/head/<<numnpc>>.jpg"></center>'
 				'You slowly lean in towards Katja to kiss her. Unable to resist, Katja almost closing her eyes, slowly opening her mouth, leans in and meets your kiss.'
 				gs 'katjaEv', 'kiss_events'
 			end
@@ -435,7 +477,7 @@ if numnpc = 14:
 			gs 'stat'
 
 			'<center><b><font color = maroon><<$npc_firstname[$static_num]>> <<$npc_lastname[$static_num]>></font></b></center>'
-			'<center><img src="images/characters/pavlovsk/school/head/<<numnpc>>.jpg"></center>'
+			'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/head/<<numnpc>>.jpg"></center>'
 			'You make sure no one else is paying attention, and tell Katja about what Artem and Peter are doing to you on Mondays. At first she doesn''t believe you. After a while, all of the nasty details you''re sharing convince her that there is no way you''re making this up. Katja is shocked!'
 			'You tell her that the only way you have thought of to get rid of their blackmailing, is to get blackmailing material of your own. Katja nods and says: "That makes sense, actually... if you could somehow make it look violent, I bet it would work even better! I don''t know where you would be able to find a tiny camera though... maybe Albina can help you?"'
 
@@ -477,7 +519,7 @@ if numnpc = 16:
 			NatBelLernQW = 1
 			gs 'stat'
 			'<center><b><font color="maroon"><<$npc_firstname[$static_num]>> <<$npc_lastname[$static_num]>></font></b></center>'
-			'<center><img src="images/characters/pavlovsk/school/head/<<numnpc>>.jpg"></center>'
+			'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/head/<<numnpc>>.jpg"></center>'
 
 			if pav_slut < 25:'You approach Natasha and explain how you''re struggling in school and could really use his help studying. She thinks it over for a second, but happily agrees: "Sure <<$pcs_nickname>>, that could be fun!"'
 			if pav_slut >= 25:'You approach Natasha and explain how you''re struggling in school and could really use his help studying. She makes some comments about your lousy reputation in school, but at the same time doesn''t seem to care too much about it and agrees to help you anyway. As long as you don''t tell anyone.'
@@ -497,7 +539,7 @@ if numnpc = 16:
 			pcs_dom += 1
 			gs 'stat'
 			'<center><b><font color="maroon">Girls Bathroom</font></b></center>'
-			'<center><img src="images/locations/pavlovsk/school/bathroom/girlsbathroom.jpg"></center>'
+			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/bathroom/girlsbathroom.jpg"></center>'
 			'You grab Natasha by the hand and pull her along with you as you tell her. "Come to the bathroom with me."'
 			'She looks at you questioningly but doesn''t protest, as you pull her into the bathroom, past a few girls using the mirrors. You take her into a stall with you. You sit down on the toilet and pull down your panties, then spread you legs and tell her. "Down on your knees, time to pay off a little debt."'
 			'She looks a little shocked at first but then gets down on her knees and lowers her face to your crotch.'
@@ -511,7 +553,7 @@ if numnpc = 16:
 				orgasm += 1
 				natlesb += 1
 				gs 'stat'
-				'<center><img src="images/characters/pavlovsk/school/girl/natasha/sex/school/Natschoolowe.jpg"></center>'
+				'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/girl/natasha/sex/school/Natschoolowe.jpg"></center>'
 				'Her tongue starts to lick your clit, you bite your lip to try and keep from moaning to loudly. You lean back and relax, as you let Natasha pleasure you with her tongue. She is getting a lot better at this and if your not mistaken she is starting to like it a lot.'
 				'She starts using her fingers on you as well and is really getting into it, you start to pant and moan. Clamping a hand over your own mouth to keep yourself from crying out, it doesn''t her long to bring you to a climax.'
 				'Your whole body shudders as the orgasm rocks your body, you grind your pussy against her face as it does. Once the sensation has passed you look down and see Natasha smiling up at you, obviously pleased with herself. You lean down and give her a long slow passionate kiss, tasting your own pussy juices. A few moments later the bell rings and you both hurry to class.'
@@ -533,7 +575,7 @@ if numnpc = 31:
 		cls
 		minut += 5
 		gs 'stat'
-		'<center><img src="images/characters/pavlovsk/school/head/31.jpg"></center>'
+		'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/head/31.jpg"></center>'
 		'"So Lizaveta hear any good gossip of late?"'
 		'As you ask that her face lights up and she leans in close like she has the best secret in the world to share with you. "Oh my god yes! I was... well it doesn''t matter what I was doing but I overheard some others talking and they said..."'
 		if rand(0,2) = 0:

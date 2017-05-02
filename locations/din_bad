@@ -956,18 +956,25 @@ $d_cycreport_actor = {
 			if cumtime[tempcurr] > 1:$cum = 'cumshots' else $cum = 'cumshot'
 			if cumtime[tempcurr] > 0:pl '<<$npc_usedname[$cumfthname[tempcurr]]>> (<<$cumfthname[tempcurr]>>) - <<cumtime[tempcurr]>> <<$cum>>' & sumcum += cumtime[tempcurr]
 		if tempcurr < tempmax:tempcurr += 1 & jump 'potfathloop'
-		if sumcum > 1:$cum = 'cumshots' else $cum = 'cumshot'
-		pl 'You think you have had <<sumcum>> load of <<$cum>> in your womb alltogether that could have gotten you pregnant.'
-		pl 'You think the father is currently: <<$wombthfath>>'
+		if sumcum > 1:$cum = 's' else $cum = ''
+		pl '<br>You think you have had <<sumcum>> load<<$cum>> of cumshot<<$cum>> in your womb alltogether that could have gotten you pregnant.'
+		pl 'You currently think the father is: <<$wombthfath>><br>'
 		*nl
+		tempcurr = 0
 		:pickfathloop
-			if cumtime[tempcurr] > 0:pl ' <a href="exec: $wombthfath = ''<<$npc_usedname[$cumfthname[tempcurr]]>>'' & $wombthfathID = ''<<$cumfthname[tempcurr]>>'' & dynamic $d_cycreport_actor, 7"><<$npc_usedname[$cumfthname[tempcurr]]>> (<<$cumfthname[tempcurr]>>)</a>'
+			if cumtime[tempcurr] > 0:
+				if $npc_usedname[$cumfthname[tempcurr]] <> '':
+					pl ' <a href="exec: $wombthfath = ''<<$npc_usedname[$cumfthname[tempcurr]]>>'' & $wombthfathID = ''<<$cumfthname[tempcurr]>>'' & dynamic $d_cycreport_actor, 7"><<$npc_usedname[$cumfthname[tempcurr]]>> (<<$cumfthname[tempcurr]>>)</a>'
+				else
+					pl ' <a href="exec: $wombthfath = ''<<$npc_usedname[$cumfthname[tempcurr]]>>'' & $wombthfathID = ''<<$cumfthname[tempcurr]>>'' & dynamic $d_cycreport_actor, 7">Unknown (-)</a>'
+				end
+			end
 		if tempcurr < tempmax:tempcurr += 1 & jump 'pickfathloop'
 		killvar 'sumcum'
 		killvar 'cum'
 		killvar 'tempmax'
 		killvar 'tempcurr'
-		pl '<a href="exec:dynamic $d_cycreport_choice">Accept</a>'
+		pl '<br>  <a href="exec:dynamic $d_cycreport_choice">Accept</a>'
 	elseif ARGS[0] = 10:
 		temp = arrsize('Babyptype')
 		temp -= 1
@@ -993,14 +1000,14 @@ $d_cycreport_update = {
 			elseif menoage <= age and cycle = 6:
 				$cycreport_txt = 'You have gone through menopause.'
 			else
-				temp[1] = daystart-daylastperiod
+				temp[1] = daystart-lastmens
 				if tabletkishot > 0:
 					$cycreport_txt = 'It has been <<temp[1]>> days since you last had a period. <font color=green>You are currently protected by a birth control shot.</font>'
-				elseif pillcon > 30000:
+				elseif pillcon2 > 30000:
 					$cycreport_txt = 'It has been <<temp[1]>> days since you last had a period. <font color=green>You are currently on the pill.</font>'
-				elseif pillcon > 8000 and (FocH > 70 or ovulate > 0):
+				elseif pillcon2 > 8000 and (FocH > 70 or ovulate > 0):
 					$cycreport_txt = 'It has been <<temp[1]>> days since you last had a period. You are currently on the pill but it is not yet effective. <font color=red>It is currently a dangerous day.</font>'
-				elseif pillcon > 8000:
+				elseif pillcon2 > 8000:
 					$cycreport_txt = 'It has been <<temp[1]>> days since you last had a period. You are currently on the pill but it is not yet effective.'
 				elseif daystart = tabletkiday:
 					$cycreport_txt = 'It has been <<temp[1]>> days since you last had a period. You have taken the pill but it will be several weeks before it is fully effective.'
@@ -1035,7 +1042,7 @@ $d_cycreport_update = {
 				thinkpreg = 0
 				$cycreport_txt = 'Surely if you were pregnant, you''d have had the baby by now, so you can''t possibly be pregnant.'
 			else
-				temp = daystart-daylastperiod
+				temp = daystart-lastmens
 				$cycreport_txt = 'It has been <<temp>> days since you last remember having a period.'
 			end
 		elseif cyccustom = 0:
@@ -1048,7 +1055,7 @@ $d_cycreport_update = {
 						$cycreport_txt = 'You<<$temp>> are pregnant with <<$wombthfath>>''s baby. Based on your last remembered period, your due date is probably around <<$pregduedate>>.'
 					end
 				elseif $cycreport_txt ! 'You do not believe you have periods any more.':
-					temp = daystart-daylastperiod
+					temp = daystart-lastmens
 					$cycreport_txt = 'It has been <<temp>> days since you last remember having a period.'
 				end
 				killvar 'temp'
@@ -1277,6 +1284,10 @@ if $ARGS[0] = 'takepill':
 		killvar 'tabletkirand'
 	end
 
+	!!pillcon2 is the ideal state, PC cosiders this the believed pillcon value
+	pillcon2 += ((pillcon2+15000)/40)+1000
+	if pillcon2 > 40000:pillcon2 = 40000
+	
 	if ptype = 0:
 		pillsleft[ptype] -= 1
 		pcs_skin += 1

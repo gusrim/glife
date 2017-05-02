@@ -97,7 +97,7 @@ if bimbolevel = 1: supnatvnesh = 2 & bimbostupidity = (pcs_intel / 6)
 if bimbolevel = 2: supnatvnesh = 4 & bimbostupidity = (pcs_intel / 4)
 if bimbolevel = 3: supnatvnesh = 8 & bimbostupidity = (pcs_intel / 3)
 
-if bimbocl = 1 and succubusflag = 0:
+if bimbocl = 1 and succubusflag = 0 and $cheatBimbo ! '<b>ON</b>':
 	bimbocl = 0
 	bimbo += 2
 else
@@ -111,7 +111,7 @@ if succubusflag = 1:
 	dynamic $cheatmenu['std_cure']
 
 !!	A Succubus cannot be a Bimbo
-	if bimbolevel > 0 and bimbo <= 0: bimbowithdrawal = 40
+	if bimbolevel > 0 and bimbo > 0: bimbowithdrawal = 40
 
 !!	Hunger handling
 	if sucxpsnapshot >= succubxp: succhungry += 1
@@ -254,8 +254,9 @@ if prezikmsg = 2: prezikmsg = 3
 !!	pillcon			: The number for the current birth control chemical level.
 !!	pilldays		: The number of consecutive days (you believe) you have taken your pill
 
-if tabletkishot <= 0: pillcon -= 1000
+if tabletkishot <= 0: pillcon -= 1000 & pillcon2 -= 1000
 if pillcon < 0:	pillcon = 0
+if pillcon2 < 0: pillcon2 = 0
 
 if tabletkicheck = 2:
 	if tabletkishot ! 0:
@@ -270,6 +271,7 @@ if tabletkicheck = 2:
 	end
 	if tabletkishot <= 0:
 		pillcon -= 29000
+		pillcon2 -= 29000
 		if tabletkishot < 0: tabletkishot = 0
 	end
 	if shotdays = -8:
@@ -449,7 +451,8 @@ if pcs_vag > 10 and vshrink > 0:
 	if vaginaK >= vshrinkdays:vaginaK = 0 & pcs_vag -= vshrink
 end
 
-lipkoef -= 1
+lipkoef -= rand(0,1)
+if lipkoef <= 0: lipkoef = 0
 
 if Enable_autotampon = 0 and isprok = 1:isprok = 0 & 'You threw away your used tampon.'
 if Enable_autotampon = 0 and isprokp = 1:isprokp = 0 & 'You threw away your used sanitary pad.'
@@ -555,29 +558,49 @@ if pcs_horny < 0:pcs_horny = 0
 !!Exhibitionism
 
 if exhibition_outdoors > 0:
+	if pcs_exhibition > 90:
+		exhibition_outdoors = exhibition_outdoors * 3
+	elseif pcs_exhibition > 75:
+		exhibition_outdoors = exhibition_outdoors * 5 / 2
+	elseif pcs_exhibition > 60:
+		exhibition_outdoors = exhibition_outdoors * 2
+	elseif pcs_exhibition > 30:
+		exhibition_outdoors = exhibition_outdoors * 3 / 2
+	end
+
 	if exhibition_outdoors <= 5:
-		exhibition_exp += rand(2,5)
-	elseif exhibition_outdoors <= 10:
 		exhibition_exp += rand(3,6)
+	elseif exhibition_outdoors <= 10:
+		exhibition_exp += rand(5,9)
 	elseif exhibition_outdoors <= 15:
-		exhibition_exp += rand(4,8)
-	elseif exhibition_outdoors <= 20:
-		exhibition_exp += rand(5,10)
-	elseif exhibition_outdoors <= 25:
 		exhibition_exp += rand(7,12)
+	elseif exhibition_outdoors <= 20:
+		exhibition_exp += rand(9,15)
+	elseif exhibition_outdoors <= 25:
+		exhibition_exp += rand(12,20)
 	elseif exhibition_outdoors <= 30:
-		exhibition_exp += rand(8,15)
+		exhibition_exp += rand(16,25)
+	elseif exhibition_outdoors <= 35:
+		exhibition_exp += rand(20,30)
+	elseif exhibition_outdoors <= 40:
+		exhibition_exp += rand(25,40)
+	elseif exhibition_outdoors <= 50:
+		exhibition_exp += rand(35,50)
+	elseif exhibition_outdoors <= 65:
+		exhibition_exp += rand(50,75)
 	else
-		exhibition_exp += rand(10,16)
+		exhibition_exp += rand(70,100)
 	end
 end
 
 exhibition_outdoors = 0
 
 if pcs_exhibition = 0:
-	if exhibition_exp >= 10: pcs_exhibition = 1 & exhibition_exp -= 10
+	if exhibition_exp >= 5: pcs_exhibition = 1 & exhibition_exp -= 5
 else
-	if exhibition_exp >= 10 * pcs_exhibition: exhibition_exp -= 10 * pcs_exhibition & pcs_exhibition += 1
+!!Intentional double to add up to 2 points
+	if exhibition_exp >= 5 * pcs_exhibition / 2: exhibition_exp -= 5 * pcs_exhibition / 2 & pcs_exhibition += 1
+	if exhibition_exp >= 5 * pcs_exhibition / 2: exhibition_exp -= 5 * pcs_exhibition / 2 & pcs_exhibition += 1
 end	
 if pcs_exhibition > 50 and exhibitionQW < 3: pcs_exhibition = 50
 
@@ -597,7 +620,7 @@ gs 'fame', 'deg'
 !!------------------------------------------------------------------------------------------------------------
 !!! Max. Hair length 600mm, or 60cm, which should be somewhere in the lower back area.
 !!! Hair grows 1mm each day, it takes 20 months (1 month = 30 days) to regrow the hair from 0.
-if pcs_hairlng < 601:pcs_hairlng += 1
+if pcs_hairlng < 1001:pcs_hairlng += 1
 
 if pcs_haircol ! nathcol: 
 	dyefade -=1
@@ -663,6 +686,7 @@ if pain['ribs'] > 0:pain['ribs'] -= rand(1,3)
 if pain['tummy'] > 0:pain['tummy'] -= rand(1,3)
 if pain['pubic'] > 0:pain['pubic'] -= rand(1,3)
 if pain['vaginal'] > 0:pain['vaginal'] -= rand(1,3)
+if pain['labia'] > 0:pain['labia'] -= rand(1,3)
 if pain['clitoris'] > 0:pain['clitoris'] -= rand(1,3)
 if pain['urethra'] > 0:pain['urethra'] -= rand(1,3)
 if pain['cervix'] > 0:pain['cervix'] -= rand(1,3)
@@ -808,7 +832,7 @@ if bankAccount = 1:
 		intrate = 30
 	else
 		!! yearly overdraft interest of 20% recalculated into daily interest = 0.055% daily		
-		intrate = -550
+		intrate = 550
 	end
 	:intloop
 	if kartacount > 0:
@@ -974,8 +998,6 @@ if week > 7:
 
 	if week > 7:jump 'loopweek'
 end
-
-gs 'outdoors', 'weather'
 
 killvar 'holyday'
 killvar 'kanikuli'
