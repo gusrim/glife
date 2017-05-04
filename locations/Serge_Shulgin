@@ -23,127 +23,93 @@ if $ARGS[0] = 'rep':
 	if npc_rel['A112']>=80:'You have an excellent relationship with Sergey, and you''re always welcome in his home.'
 	''
 end
-
-$serg_bazar_rep = {
-	if npc_rel['A112']<30:'You sit down on a chair in his bedroom.'
-	if npc_rel['A112']>=30:'You signal for Sergey to scooch over, and lie down on the bed next to him.'
-	''
-}
-
 !-------------------------------------------------------------------------------------------------------------------!
+
 !Sergey is lying in bed, watching TV. You can chat with him (<30), join him watching TV (>30), sleep in his bed (>50) and seduce him----------!
 !===================================================================================================================! 
-
 if $ARGS[0] = 'tv':
-	cls
-	cla
+	gs 'boyStat', 112
 	minut += 1
-	gs'stat'
-
+	gs 'stat'
 	if sergebazar_day ! daystart: sergebazar_count = 10
 	'<center><img <<$set_imgh>> src="images/characters/pavlovsk/resident/serge/serge2.jpg"></center>'
 	'Sergey Borisovich, born in 1967. His hair is gray by now, and he has a small beer belly, but in your eyes he still looks good for his age. His then-wife divorced him a long time ago and he has been single ever since, raising Vasily by himself.'
 	gs 'Serge_Shulgin', 'rep'
 
-	act 'Leave him alone': gt 'shulgabed'			
+	act 'Leave him alone': gt 'shulgabed'
 	act 'Chat with Sergey':
-		cls
+		*clr & cla
 		minut += 15
 		sergebazar_day = daystart
 		sergebazar_count -= 1
 		if sergebazar_count > 0: npc_rel['A112'] +=1
 		gs'stat'
-	serge_textb = RAND(0,6)
-		if serge_textb = 0:$serge_textb = 'When you ask about Vasily''s mother, Sergey shrugs: "It''s a short story, really. I met Vasily''s mother at my graduation party. We all got drunk and she and I had some fun. When she turned out to be pregnant, we got married. We didn''t have much of a say in the matter, that''s just how it worked back then. Shulga was born a few months after that. We tried to make it work, but she got bored and left me a year later when she got offered a job abroad, leaving Shulga with me. I haven''t heard from her since. It''s fine, though... me and him managed just fine, without her."'
-		if serge_textb = 1:$serge_textb = 'You spend fifteen minutes talking to Sergey about everyday things.'
-		if serge_textb = 2:$serge_textb = 'When you ask Sergey what he does for a living, he smiles and says: "I work in a factory where we produce bricks. I work the day shift, from 09:00 to 15:00, five days a week. I''m a foreman there, managing the laborers and keeping an eye on the machinery. Of course I pitch in as well, when the men need help. It''s dusty, hard work, and it doesn''t pay well, but it''s work worth doing!"'
-		if serge_textb = 3:$serge_textb = 'When you ask about his relationship with his son, Sergey shrugs and says in a tired voice: "Eh. We do okay, given the circumstances. He''s... changed, though. He''s rather difficult to handle nowadays. For the last year or so, he has shown no interest in school and he stays out until late every day, doing God knows what. I''m just not sure how to get through to him any more."'
-		if serge_textb = 4:$serge_textb = 'Sergey tells you a funny story.'
-		if serge_textb = 5:$serge_textb = 'Sergey is actually a pretty smart guy, and you listen to him for fifteen minutes while he tells you anecdotes about his past.'
-		if serge_textb = 6:$serge_textb = 'You try to talk to Sergey about clothes, but he''s not all that interested. The only thing he can contribute is that there is a tailor at the garment factory, who adjusted some ill-fitting jeans for him a while ago.'
-	serge_textb2 = RAND(0,5)
-		if serge_textb2 = 0:$serge_textb2 = 'Sergey tells you a dirty joke.'		
-		if serge_textb2 = 1:$serge_textb2 = 'Sergey tells you a dirty story.'
-		if serge_textb2 = 2:$serge_textb2 = 'Sergey tells you a funny story. It''s loaded with sexual innuendos and double entendres.'
-		if serge_textb2 = 3:$serge_textb2 = 'Sergey tells you a dirty joke: A businessman needs to do a large investment, buying a new fax machine for the office. He calls in his secretary and says: "Maria, I have 10000 rubles, minus taxes... what do you think I can get for that?"
-The secretary blushes as she begins to unbutton her shirt, and replies: "For 10000 rubles? Everything but my earrings!"'
-		if serge_textb2 = 4:$serge_textb2 = 'You''re lying on Sergey''s bed relaxing, while he tells you another vulgar anecdote.'
-		if serge_textb2 = 5:$serge_textb2 = 'You have a nice chat with Sergey for fifteen minutes.'
-
 		'<center><img <<$set_imgh>> src="images/characters/pavlovsk/resident/serge/serge1.jpg"></center>'
 		'Sergey is relaxing on his bed, watching some TV.' 
-		dynamic $serg_bazar_rep
-		if sergebazar_count <= 0:'Sergey seems a tad annoyed when he says: "Not now, <<$pcs_nickname>>! Sorry, but this important match just started and I really want to watch it."'
-		if npc_rel['A112'] < 30 and sergebazar_count > 0:'<<$serge_textb>>'
-		if npc_rel['A112'] > 50 and sergebazar_count > 0:'<<$serge_textb2>>'
+		if npc_rel['A112']<30: 'You sit down on a chair in his bedroom.' else 'You signal for Sergey to scooch over, and lie down on the bed next to him.'
+		*pl
+		if sergebazar_count <= 0: 
+			'Sergey seems a tad annoyed when he says: "Not now, <<$pcs_nickname>>! Sorry, but this important match just started and I really want to watch it."'
+		else
+			if npc_rel['A112'] <= 50:gs 'Serge_Shulgin','hide','serge_textb'
+			if npc_rel['A112'] >  50:gs 'Serge_Shulgin','hide','serge_textb2'
+		end
 		act 'Continue': gt 'Serge_Shulgin','tv'
 	end
 
 	if npc_rel['A112'] > 30: 
-		act 'Lie down next to him and watch TV together': dynamic $serge_tv
+		act 'Lie down next to him and watch TV together': gt 'Serge_Shulgin','hide','serge_tv'
 	end
 end
 
 if $ARGS[0] = 'sleep':
-	clr
-	gs'stat'
-		'<center><img <<$set_imgh>> src="images/characters/pavlovsk/resident/serge/sleep.jpg"></center>'
-		'Sergey is sound asleep.'
-	act 'Get out of bed': gt 'shulgabed'	
+	gs 'boyStat', 112
+	gs 'stat'
+	'<center><img <<$set_imgh>> src="images/characters/pavlovsk/resident/serge/sleep.jpg"></center>'
+	'Sergey is sound asleep.'
+	act 'Get out of bed': gt 'shulgabed'
 	act 'Wake him up': 
-		if npc_rel['A112'] < 50: dynamic $sleep_serge_otkaz
-		if npc_rel['A112'] >= 50: dynamic $sleep_serge_soglasie
+		'Sergey rubs his eyes, a bit irritated that you woke him up: "What do you want, <<$pcs_nickname>>? You really shouldn''t be waking me up, I need my sleep!"'
+		'You bite your lip, feeling bad for waking him up. You ask him: "Sorry, uncle Sergey. Would you mind if I take a nap with you?"'
+		if npc_rel['A112'] < 50: 
+			!--------------------!
+			!He does not allow you to sleep next to him!
+			!--------------------!
+			cla
+			minut += 2
+			npc_rel['A112'] -=1
+			gs 'stat'
+			'He snorts: "Do I look like an idiot, <<$pcs_nickname>>? I''d never hear the end of it! Just go home!"'
+			act 'Leave him alone': gt 'shulgabed'
+		else
+			!---------------------!
+			!He allows you to sleep next to him!
+			!---------------------!
+			cla
+			minut += 2
+			gs 'stat'
+			'He sighs and wordlessly moves over to one side of the bed, offering you the other half while he clutches his pillow.'
+			act 'Take a nap': 
+				!---------------------------------------!
+				!Sleep next to Sergey!
+				!---------------------------------------!
+				cla
+				'You get comfortable in Sergey''s bed, and snooze for a few hours.'
+				npc_rel['A112'] += 1
+				minut += 180
+				if pcs_sleep < 75: pcs_sleep += 25 else pcs_sleep = 100
+				gs 'stat'
+				act 'Get out of bed': gt 'shulgabed'
+			end
+			if mesec <= 0: act 'Try to arouse him': dynamic $sleep_prstsex
+		end
 	end
 end
-!--------------------!
-!He does not allow you to sleep next to him!
-!--------------------!
-$sleep_serge_otkaz = {
-	cla
-	minut += 2
-	npc_rel['A112'] -=1
-	gs'stat'
-	'Sergey rubs his eyes, a bit irritated that you woke him up: "What do you want, <<$pcs_nickname>>? You really shouldn''t be waking me up, I need my sleep!"'
-	'You bite your lip, feeling bad for waking him up. You ask him: "Sorry, uncle Sergey. Would you mind if I take a nap with you?"'
-	'He snorts: "Do I look like an idiot, <<$pcs_nickname>>? I''d never hear the end of it! Just go home!"'
-	act 'Leave him alone': gt 'shulgabed'
-}
-!---------------------!
-!He allows you to sleep next to him!
-!---------------------!
-$sleep_serge_soglasie = {
-	cla
-	minut += 2
-	gs'stat'
-	'Sergey rubs his eyes, a bit irritated that you woke him up: "What do you want, <<$pcs_nickname>>? You really shouldn''t be waking me up, I need my sleep!"'
-	'You bite your lip, feeling bad for waking him up. You ask him: "Sorry, uncle Sergey. Would you mind if I take a nap with you?"'
-	'He sighs and wordlessly moves over to one side of the bed, offering you the other half while he clutches his pillow.'
-	act 'Take a nap': dynamic $sleep_serge_bed
-	
-	if npc_rel['A112'] >= 50 and mesec <= 0: act 'Try to arouse him': dynamic $sleep_prstsex
-}
-!---------------------------------------!
-!Sleep next to Sergey!
-!---------------------------------------!
-$sleep_serge_bed = {
-	cla
-	npc_rel['A112'] += 1
-	if pcs_sleep < 75:
-		pcs_sleep += 25
-	else
-		pcs_sleep = 100
-	end
-	minut += 180
-	gs'stat'
-	'You get comfortable in Sergey''s bed, and snooze for a few hours.'
-	act 'Get out of bed': gt 'shulgabed'
-}
 !---------------------------------------------------------------!
 !Seduce Sergey into having sex with you, instead of sleeping----!
 !---------------------------------------------------------------!
 $sleep_prstsex = { 
-	cls
-	gs'stat'
+	*clr & cla
 	'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/smroom/event/vert/dr'+rand(1,6)+'.gif"></center>'
 	'You idly rub your hands over your body, occasionally touching his groin or chest to make sure you have his attention. When you let out a soft moan, you can feel him stirring next to you in the bed; he''s definitely paying attention to you now! You secretly smile to yourself: he''s such a typical guy... all you have to do is rub your tits and ass a little, and there''s no way he can resist your charms!'
 	gs 'arousal', 'foreplay', 5
@@ -151,9 +117,9 @@ $sleep_prstsex = {
 randnamek=rand(1,100)
 	if serge_sleep_sex_count > 0 and npc_rel['A112'] >= 70 and randnamek < 80: dynamic $sleep_nameksex_oral
 	if serge_sleep_sex_count > 0 and npc_rel['A112'] >= 70 and randnamek >= 80 and randnamek <= 90: dynamic $sleep_nameksex_rought
-	if serge_sleep_sex_count > 0 and npc_rel['A112'] >= 70 and randnamek > 90: dynamic $sleep_nameksex_lick	
+	if serge_sleep_sex_count > 0 and npc_rel['A112'] >= 70 and randnamek > 90: dynamic $sleep_nameksex_lick
 	if serge_sleep_sex_count <= 0 and npc_rel['A112'] >= 70: dynamic $serge_sleep_sex_perebor
-	if npc_rel['A112'] >=50 and npc_rel['A112'] <70: dynamic $sleep_nameksex_otkaz	
+	if npc_rel['A112'] >=50 and npc_rel['A112'] <70: dynamic $sleep_nameksex_otkaz
 }
 !-------------------------------------------------------------------------!
 !if relation<70, Sergey refuses to have sex with you!
@@ -165,7 +131,7 @@ $sleep_nameksex_otkaz = {
 		gs'stat'
 		'Sergey lets out a frustrated sigh, and scolds you: "<<$pcs_nickname>>, I have important things to do tomorrow morning! Don''t bother me, I need my sleep! Leave me alone!'
 		act 'Get out of bed': gt 'shulgabed'
-	end	
+	end
 }
 !----------------------------------------------------------------!
 !If you have had sex with him twice already on one day, Sergey refuses to have sex with you!
@@ -177,14 +143,14 @@ $serge_sleep_sex_perebor = {
 		gs'stat'
 		'Sergey laughs when he feels your hand on his groin again: "<<$pcs_nickname>>, I''m no young guy any more! My stamina isn''t what it used to be... if I were still young I would''ve been all over you, but you''ve completely drained me for today! I just want to sleep... maybe some other time?"'
 		act 'Get out of bed': gt 'shulgabed'
-	end	
+	end
 }
 !--------------------!
 !Leads to oral sex events!
 !--------------------!
 $sleep_nameksex_oral = {
 	act 'Suggest you could make him feel good': 
-		cls
+		*clr & cla
 		serge_sleep_sex_day = daystart
 		serge_sleep_sex_count -= 1
 		minut += 2
@@ -193,16 +159,16 @@ $sleep_nameksex_oral = {
 		'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/smroom/event/vert/pr1.gif"></center>'
 		'"I bet I could make you feel good, uncle Sergey... would you like that?" you whisper in his ear, with a devious smile on your face.'
 		'He doesn''t reply, but the burning desire in his eyes betrays him: he wants you badly. To drive your point home you press your tongue against your cheek hinting what you could do for him, if only he would let you...'
-	sleep_sex_oral_event = RAND(0,2)
+		sleep_sex_oral_event = RAND(0,2)
 		if sleep_sex_oral_event = 0:$sleep_sex_oral_event = $sleep_sex_oral_event1
 		if sleep_sex_oral_event = 1:$sleep_sex_oral_event = $sleep_sex_oral_event2
-		if sleep_sex_oral_event = 2:$sleep_sex_oral_event = $sleep_sex_oral_event3		
+		if sleep_sex_oral_event = 2:$sleep_sex_oral_event = $sleep_sex_oral_event3
 			act 'Continue': dynamic $sleep_sex_oral_event
-	end	
+	end
 }
 $sleep_nameksex_rought = {
 	act 'Suggest you could make him feel good': 
-		cls
+		*clr & cla
 		serge_sleep_sex_day = daystart
 		serge_sleep_sex_count -= 1	
 		minut += 2
@@ -212,10 +178,10 @@ $sleep_nameksex_rought = {
 		'"I bet I could make you feel good, uncle Sergey... would you like that?" you whisper in his ear, with a devious smile on your face.'
 		'He doesn''t reply, but the burning desire in his eyes betrays him: he wants you badly. To drive your point home you press your tongue against your cheek hinting what you could do for him, if only he would let you...'
 	sleep_sex_rought_event = RAND(0,1)
-		if sleep_sex_rought_event = 0:$sleep_sex_rought_event = $sleep_sex_rought_event1	
-		if sleep_sex_rought_event = 1:$sleep_sex_rought_event = $sleep_sex_rought_event2		
+		if sleep_sex_rought_event = 0:$sleep_sex_rought_event = $sleep_sex_rought_event1
+		if sleep_sex_rought_event = 1:$sleep_sex_rought_event = $sleep_sex_rought_event2
 		act 'Continue': dynamic $sleep_sex_rought_event
-	end	
+	end
 }
 
 !--------------------!
@@ -223,9 +189,9 @@ $sleep_nameksex_rought = {
 !--------------------!
 $sleep_nameksex_lick = {
 	act 'Beg him to make you feel good': 
-		cls
+		*clr & cla
 		serge_sleep_sex_day = daystart
-		serge_sleep_sex_count -= 1	
+		serge_sleep_sex_count -= 1
 		minut += 2
 		serge_countsex += 1
 		gs'stat'
@@ -233,18 +199,17 @@ $sleep_nameksex_lick = {
 		'"I bet you could make me feel good, uncle Sergey... I''m so horny! Could you help me out, pretty please?" you whisper in his ear, with a devious smile on your face.'
 		'He doesn''t reply, but the burning desire in his eyes betrays him: he wants you badly.'
 	!sleep_sex_lick_event = RAND(0,2)
-	!	if sleep_sex_lick_event = 0:$sleep_sex_lick_event = '$sleep_sex_lick_event1'	
-	!	if sleep_sex_lick_event = 1:$sleep_sex_lick_event = '$sleep_sex_lick_event2'	
-	!	if sleep_sex_lick_event = 2:$sleep_sex_lick_event = '$sleep_sex_lick_event3'	
-		act 'Continue': dynamic $sleep_sex_lick_event1	
+	!	if sleep_sex_lick_event = 0:$sleep_sex_lick_event = '$sleep_sex_lick_event1'
+	!	if sleep_sex_lick_event = 1:$sleep_sex_lick_event = '$sleep_sex_lick_event2'
+	!	if sleep_sex_lick_event = 2:$sleep_sex_lick_event = '$sleep_sex_lick_event3'
+		act 'Continue': dynamic $sleep_sex_lick_event1
 	end
 }
 !-----------------------------!
 !Oral events!
 !-----------------------------!
 $sleep_sex_oral_event1 = {
-	cls
-	gs'stat'
+	*clr & cla
 	'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/smroom/event/oral'+rand(6,10)+'.gif"></center>'
 	'You giggle when Sergey reaches for his pants, with a slightly defeated look on his face. He really wanted to resist your charms, but he failed. You lick your <<$lip1>> lips when he pulls his dick out, and looks at you expectantly.'
 	'"Thank you, uncle Sergey", you whisper to him. You tentatively reach for his cock, lightly rubbing and squeezing it with your delicate fingers. Wow, he really does have a magnificent cock...'
@@ -255,8 +220,7 @@ $sleep_sex_oral_event1 = {
 	gs 'arousal', 'bj', 5, 'sub'
 	gs 'stat'
 	act 'Continue':
-		cls
-		gs'stat'
+		*clr & cla
 		'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/smroom/event/dog'+rand(1,11)+'.gif"></center>'
 		'After you suck him off for a few minutes, you decide you want more. You pull away from him and get on your hands and knees, wagging your ass at him teasingly. Sergey is a bit taken aback at first, not expecting that from you. He quickly recovers though, and grins: "So... you want to get fucked, girl?"'
 		'"Yes, uncle Sergey", you reply in a sweet voice. "I want to get fucked... by you."'
@@ -266,8 +230,7 @@ $sleep_sex_oral_event1 = {
 		gs 'arousal', 'vaginal', 5, 'sub', 'rough'
 		gs 'stat'
 		act 'Continue':
-			cls
-			gs'stat'
+			*clr & cla
 			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/smroom/event/cow8.gif"></center>'
 			'Sergey grabs you in his arms and turns you over, holding you over his chest in his strong arms. "You''re going to get the fucking of a lifetime, <<$pcs_nickname>>! I hope you''re ready", he grins.'
 			'You meekly nod and help him by guiding his erection back inside you, and he begins to fuck your pussy furiously. You can feel his hot breath on your back... he sounds so manly!'
@@ -278,13 +241,9 @@ $sleep_sex_oral_event1 = {
 			gs 'arousal', 'anal', 5, 'sub', 'rough'
 			gs 'stat'
 			act 'Continue':
-				cls
+				*clr & cla
 				minut += 5
-				spafinloc = 11
-				gs 'boyStat', 112
-				gs 'cum_manage'
-				facial += 1
-				gs'stat'
+				gs 'cum_call','face',$boy,1
 				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/smroom/event/cum'+rand(1,6)+'.gif"></center>'
 				'Suddenly Sergey pulls out of you, and pushes you off him to the side.'
 				'"I don''t want to get anyone pregnant, so the only way I cum after having sex is on a woman''s face. Better safe than sorry", he grins.'
@@ -293,15 +252,14 @@ $sleep_sex_oral_event1 = {
 				'You wince when you get up. Wow... he really wasn''t kidding when he said he wasn''t going to be nice!'
 				gs 'arousal', 'end'
 				gs 'stat'
-				act 'Finish': gt 'shulgabed'	
+				act 'Finish': gt 'shulgabed'
 			end
 		end
-	end		
+	end
 }
 
 $sleep_sex_oral_event2 = {
-	cls
-	gs'stat'
+	*clr & cla
 	'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/smroom/event/oral'+rand(1,10)+'.gif"></center>'
 	'Sergey smirks at you confidently and says: "Feeling slutty today, aren''t we? Very well, you may. Go ahead, undress me first."'
 	'Even though this was your idea, you''re a bit taken aback by how fast he turned the tables on you. You were supposed to be teasing him, he wasn''t supposed to be telling you what to do! Still, it''s too late to back down now.'
@@ -311,8 +269,7 @@ $sleep_sex_oral_event2 = {
 	gs 'arousal', 'bj', 5, 'sub'
 	gs 'stat'
 	act 'Lie down on the bed':
-		cls
-		gs'stat'
+		*clr & cla
 		'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/smroom/event/miss'+rand(1,2)+'.gif"></center>'	
 		'Sergey has you spread your legs wide, and rams nearly the full length of his dick inside you in one fluent motion. Instinctively you wrap your legs around his hips, which he sees as an encouragement to get even deeper inside you.'
 		'You wrap your arms around his strong torso as well, and let him hammer away at your pussy. Then you squeal: he''s biting your ear lobe!'
@@ -321,8 +278,7 @@ $sleep_sex_oral_event2 = {
 		gs 'arousal', 'vaginal', 5, 'sub', 'rough'
 		gs 'stat'
 		act 'Continue':
-			cls
-			gs'stat'
+			*clr & cla
 			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/smroom/event/dog'+rand(1,11)+'.gif"></center>'
 			'Then Sergey pulls out of you and deftly flips you over, making you sit on your hands and knees on the bed. He immediately slides his cock back inside your by now very wet slit, and has a satisfied grin on his face when he notices how readily your pussy accepts him.'
 			'"You like this, don''t you <<$pcs_nickname>>? You like it when a real man treats you like a slut, that''s why you kept teasing me", he growls in your ear while he begins to fuck you again, just as intensely as before.'
@@ -332,26 +288,21 @@ $sleep_sex_oral_event2 = {
 			act 'Continue':
 				cls
 				minut += 5
-				spafinloc = 11
-				gs 'boyStat', 112
-				gs 'cum_manage'
-				facial += 1
-				gs'stat'
+				gs 'cum_call','face',$boy,1
 				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/smroom/event/cum'+rand(1,6)+'.gif"></center>'
 				'When he''s about to cum, you quickly drop to your knees before him and take the full length of his cock down your throat, trying to please Sergey to the best of your abilities.'
 				'Sergey laughs and strokes your <<$pcs_haircol>> hair gently, amazed by how eager you suddenly are. After he lets you suck him for a little while, he suddenly pulls out and his dick erupts over your face, shooting hot ropes of semen all over you.'
 				'Then he suddenly looks exhausted, and he lets himself fall back down onto his bed. When you want to join him, he smiles at you and points at his chin, saying: "You''re a bit dirty here, <<$pcs_nickname>>. Maybe you should go wash up before you come back to bed." With a grin he adds: "I''ll save some room for you. You''re a sweet girl, I like you having you near me..."'
 				gs 'arousal', 'end'
 				gs 'stat'
-				act 'Finish': gt 'shulgabed'		
+				act 'Finish': gt 'shulgabed'
 			end
 		end
-	end		
+	end
 }
 
 $sleep_sex_oral_event3 = {
-	cls
-	gs'stat'
+	*clr & cla
 	'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/smroom/event/69-'+rand(1,2)+'.gif"></center>'
 	'Without saying a word, you turn around and hover your bare pussy over his face, before you lower your hips confidently. You feel his tongue greedily licking you almost immediately... it''s working, he wants you!'
 	'You weren''t lying when you said you wanted to suck his dick, though. You immediately get to work, planting kisses all the way down his shaft. When you reach his balls, you begin to suck on them; first the right, then the left... at one point, you even had both of them in your mouth at once!'
@@ -361,8 +312,7 @@ $sleep_sex_oral_event3 = {
 	gs 'arousal', 'bj', 5, 'sub'
 	gs 'stat'
 	act 'Continue':
-		cls
-		gs'stat'
+		*clr & cla
 		'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/smroom/event/dog'+rand(10,12)+'.gif"></center>'
 		'Then Sergey stops, and just relaxes on the bed. What is he doing!?'
 		'He notices your nervous fidgeting, and smirks: "What''s wrong, slut? Do you need me to fuck you?"'
@@ -376,23 +326,21 @@ $sleep_sex_oral_event3 = {
 		'You can tell that he got quite worked up over making you beg, and he immediately begins to pound your ass enthusiastically. You shout and cry, but at this point he no longer cares about your feelings. He did his part in preparing you, now he''s reaping his rewards.'
 		gs 'arousal', 'vaginal', 5, 'sub', 'rough'
 		gs 'arousal', 'anal', 5, 'sub', 'rough'
-		minut -= 5	
+		minut -= 5
 		gs 'stat'
 		act 'Continue':
-			cls
-			gs'stat'
+			*clr & cla
 			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/smroom/event/miss'+rand(1,2)+'.gif"></center>'
 			'Then suddenly he pulls out of you, and lifts you up and puts you down on your back. He immediately leans over your body and begins to kiss you everywhere. He''s kissing your breasts, your hands, your stomach, your hips... you moan softly, thoroughly confused by the sudden change of course. One minute he was fucking your ass like he owned it, and now... he''s pampering you?'
 			'You begin to come to your senses again, just as Sergey kisses you full on your mouth while he leads his cock to your wet pussy lips. He gently presses his cock against them, guiding himself inside of you. You have to fight back the urge to start bucking your hips against him, understanding that he''s trying to please you as well as himself.'
 			gs 'arousal', 'vaginal', 5, 'sub', 'rough'
 			gs 'arousal', 'kiss', 5, 'sub'
-			minut -= 5	
+			minut -= 5
 			gs 'stat'
 			act 'Continue':
-				cls
+				*clr & cla
 				pcs_mood = 100
 				pcs_willpwr +=20
-				gs'stat'
 				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/smroom/event/cow'+rand(4,6)+'.gif"></center>'
 				'After fucking you caringly for a few minutes, he rolls off you and lies on his back next to you. He gives you a peck on your cheek and whispers: "If you want to fuck me on your terms, now is your chance... it''s all yours."'
 				'You eagerly nod and mount him, quickly guiding his cock back to the entrance of your pussy. It feels quite slick from your juices already. Slowly grinding your hips against his pelvis, you begin to ride Sergey. Slowly and gently... you''re going to savour this moment, you tell yourself.'
@@ -403,10 +351,9 @@ $sleep_sex_oral_event3 = {
 				gs 'arousal', 'vaginal', 5, 'sub', 'rough'
 				gs 'stat'
 				act 'Continue':
-					cls
+					*clr & cla
 					minut += 5
-					facial += 1
-					gs'stat'
+					gs 'cum_call','face',$boy,1
 					'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/smroom/event/cum'+rand(1,6)+'.gif"></center>'
 					'Wow, that felt so good! You had no idea Sergey could be such a gentleman.'
 					'When Sergey is also close to orgasming, you quickly get off him and lick his cock slowly, tasting yourself on his dick. Mmmm, delicious as always...' 
@@ -417,15 +364,14 @@ $sleep_sex_oral_event3 = {
 				end
 			end
 		end
-	end			
+	end
 }
 
 !--------------------------------!
 !Cunnilingus event!
 !--------------------------------!
 $sleep_sex_lick_event1 = {
-	cls
-	gs'stat'
+	*clr & cla
 	'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/smroom/event/lick'+rand(1,2)+'.gif"></center>'
 	'Sergey spreads your legs and immediately buries his face between them, licking your wet cunt with long, firm strokes. He pays extra attention to your clitoris, lashing it with his tongue over and over.'
 	'The sensation is too much! You try to squirm away from him, but Sergey firmly holds your hips in place and keeps teasing your sensitive mound with an amused smirk.'
@@ -434,8 +380,7 @@ $sleep_sex_lick_event1 = {
 	gs 'arousal', 'cuni', 5, 'dom'
 	gs 'stat'
 	act 'Continue':
-		cls
-		gs'stat'
+		*clr & cla
 		'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/smroom/event/oral'+rand(1,10)+'.gif"></center>'
 		'His erect cock was already dangling out of his pants, and you gently close your fingers around it when he brings it closer to you. It''s so rigid and firm... so masculine... you can''t wait to close your lips around it!'
 		'You feel it throb between your fingers as you caress it all over, also running your fingers over his balls and pulling his foreskin back to expose the head.'
@@ -449,7 +394,6 @@ $sleep_sex_lick_event1 = {
 			cls
 			pcs_mood = 100
 			pcs_willpwr +=20
-			gs'stat'
 			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/smroom/event/dog'+rand(1,11)+'.gif"></center>'
 			'You don''t want him to finish already! You quickly get onto the bed on your hands and knees and wiggle your ass at him seductively.'
 			'Sergey positions the head of his dick against your wet folds and immediately drives his whole length inside you.'
@@ -460,7 +404,7 @@ $sleep_sex_lick_event1 = {
 			gs 'arousal', 'vaginal', 5, 'sub', 'rough'
 			gs 'stat'
 			act 'Continue':
-				cls
+				*clr & cla
 				gs'stat'
 				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/smroom/event/miss'+rand(1,2)+'.gif"></center>'
 				'Then Sergey pulls away for you and tells you to roll over and lie on your back. You quickly do as he says and part your labia with your fingertips, inviting him to thrust his dick back in you.'
@@ -468,8 +412,7 @@ $sleep_sex_lick_event1 = {
 				gs 'arousal', 'vaginal', 5, 'sub'
 				gs 'stat'
 				act 'Continue':
-					cls
-					gs'stat'
+					*clr & cla
 					'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/smroom/event/cow'+rand(1,7)+'.gif"></center>'
 					'Sergey then wearily flops down onto the bed and gasps: "Damn... you''re wearing me out, <<$pcs_nickname>>! How about you ride me for a while?"'
 					'You eagerly mount Sergey and guide his cock back into your pussy, giving him a sweet wink and a kiss on his cheek as you do.'
@@ -478,12 +421,9 @@ $sleep_sex_lick_event1 = {
 					gs 'arousal', 'vaginal', 5, 'sub'
 					gs 'stat'
 					act 'Continue':
-						cls
+						*clr & cla
 						minut += 5
-						spafinloc = 11
-						gs 'boyStat', 112
-						gs 'cum_manage'
-						gs'stat'
+						gs 'cum_call','face',$boy,1
 						'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/smroom/event/cum'+rand(1,7)+'.gif"></center>'
 						'You quickly stand up and kneel down next to the bed, aiming his cock at your face. Mere seconds later he erupts, shooting several ropes of his hot sperm all over your face. You smile happily at Sergey and try to catch it inside your mouth, licking some of the remnants off the head of his dick when he''s finally done.'
 						gs 'arousal', 'end'
@@ -491,16 +431,15 @@ $sleep_sex_lick_event1 = {
 						act 'Finish': gt 'shulgabed'
 					end
 				end
-			end	
+			end
 		end
-	end					
+	end
 }
 !----------------------!
 !Rough sex / borderline rape events!
 !----------------------!
 $sleep_sex_rought_event1 = {
-	cls
-	gs'stat'
+	*clr & cla
 	'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/smroom/event/rought/oral'+rand(1,10)+'.gif"></center>'
 	'Suddenly Sergey firmly grabs a fistful of your <<$pcs_haircol>> hair and brings your face close to his. He says in a menacing voice: "So, you want to be a slut? I''ll treat you like a slut!"'
 	'You squeak in surprise as he directs your head towards his groin, pulling you roughly by the hair until you give in and follow his lead more readily. You close your lips around his erection in a reflex, and struggle to take it all in when he forces most of his cock down your throat already in the very first thrust. A few thrusts later, the head of his dick is firmly lodged down your throat while your lower lip rubs against his shaved balls.'
@@ -508,9 +447,8 @@ $sleep_sex_rought_event1 = {
 	gs 'arousal', 'bj', 5, 'sub', 'rough', 'deepthroat'
 	gs 'stat'
 	act 'Continue':
-		cls
+		*clr & cla
 		if pcs_makeup >= 2: pcs_makeup = 0
-		gs'stat'
 		'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/smroom/event/rought/dog'+rand(1,12)+'.gif"></center>'
 		'"Get down on the bed with your back to me and spread your legs. I''m going to fuck you now", Sergey says matter-of-factly. He looks at your face amusedly, while you gasp for breath and wipe the worst of the saliva off your chin. He''s way too rough with you! Nevertheless, if this is how he treats you when you comply, you don''t want to know what he''s like when you don''t!'
 		'You meekly get down on your hands and knees and look back at him, just a tad scared of him.'
@@ -522,8 +460,7 @@ $sleep_sex_rought_event1 = {
 		gs 'arousal', 'vaginal', 5, 'sub', 'rough'
 		gs 'stat'
 		act 'Continue':
-			cls
-			gs'stat'
+			*clr & cla
 			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/smroom/event/rought/miss'+rand(1,4)+'.gif"></center>'
 			'Sergey suddenly pulls out of you and orders: "Turn around."'
 			'You catch your breath again and take your time doing as he says, trembling at the thought of what happens next.'
@@ -534,13 +471,9 @@ $sleep_sex_rought_event1 = {
 			gs 'arousal', 'vaginal', 5, 'sub', 'rough'
 			gs 'stat'
 			act 'Continue':
-				cls
+				*clr & cla
 				minut += 5
-				spafinloc = 11
-				gs 'boyStat', 112
-				gs 'cum_manage'
-				facial += 1
-				gs'stat'
+				gs 'cum_call','face',$boy,1
 				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/smroom/event/cum'+rand(1,6)+'.gif"></center>'
 				'"Uncle Sergey... please... more..." you moan weakly, unable to help yourself.'
 				'Sergey laughs and shakes his head: "Some other day, slut. I''m too close to last longer now, come here!"'
@@ -551,11 +484,10 @@ $sleep_sex_rought_event1 = {
 				act 'Finish': gt 'shulgabed'
 			end	
 		end
-	end					
+	end
 }
 $sleep_sex_rought_event2 = {
-	cls
-	gs'stat'
+	*clr & cla
 	'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/smroom/event/rought/oral'+rand(1,10)+'.gif"></center>'
 	'Without any preliminaries, he undresses and thrusts his erect penis towards your face. With a serious face he says: "You want to make me feel good? Go ahead, slut. Suck."'
 	'You give him a sweet smile and open your mouth, but suddenly feel his hand behind your neck. With nowhere to go, you can''t resist as he shoves the whole length of his cock into your mouth.'
@@ -564,8 +496,7 @@ $sleep_sex_rought_event2 = {
 	gs 'arousal', 'bj', 5, 'sub', 'rough', 'deepthroat'
 	gs 'stat'
 	act 'Continue':
-		cls
-		gs'stat'
+		*clr & cla
 		'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/smroom/event/rought/miss'+rand(1,4)+'.gif"></center>'
 		'You want more than that! You stand up and defiantly look Sergey in the eyes while you take off your clothes one piece at a time, offering him a sweet smile when you''re completely naked. Your impressive breasts with protruding nipples have his full attention, and gently move up and down with your breathing.'
 		'"You''re such a horny little minx, <<$pcs_nickname>>! Do you think this is normal, teasing older men with your naked body like that?" Sergey asks intently, quickly closing the distance between you and him.'
@@ -577,7 +508,6 @@ $sleep_sex_rought_event2 = {
 		gs 'stat'
 		act 'Continue':
 			cls
-			gs'stat'
 			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/smroom/event/rought/dog'+rand(1,12)+'.gif"></center>'
 			'While you''re lying on his bad, panting and mewling underneath him, Sergey suddenly gets up and flips you over with one fell swoop. He puts his arms underneath your body, making you sit on your hands and knees.'
 			'He immediately brings his cock back to your welcoming pussy and slams it all the way back in, and begins to fuck you from behind. Every once in a while he lands a hard slap on your buttocks, making you yelp with pain.'
@@ -589,12 +519,7 @@ $sleep_sex_rought_event2 = {
 			act 'Continue':
 				cls
 				minut += 5
-				gs 'boyStat', 112
-				sexpartkno = 1
-				spafinloc = 11
-				gs 'cum_manage'
-				facial += 1
-				gs'stat'
+				gs 'cum_call','face',$boy,1
 				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/smroom/event/cum'+rand(1,7)+'.gif"></center>'
 				'After a few more minutes of rough sex, Sergey stands up and grabs a fistful of your <<$pcs_haircol>> hair, guiding you to the ground before him. Despite still being slightly out of breath, you automatically close your lips around his cock and suck him off enthusiastically, like any good little slut would.'
 				'"Look at me", Sergey orders. When you do, he smirks and lets go of your hair, and lets you bob your head up and down. That defeated look in your eyes, the way you obediently closed your lips around his cock without him even having to tell you to... he has you exactly where he wants you. It''s not easy to keep looking him in the eye and suck him off at the same time, but you do your best.'
@@ -609,17 +534,35 @@ $sleep_sex_rought_event2 = {
 	end
 }
 
-$serge_tv = {
-	if hour >=1 and hour < 7:
-		cls
-		gs'stat'
-		'It''s too late, you would awaken Sergey if you turn the TV on!'
-		act 'Get out of bed': gt 'shulgabed'
-	elseif hour >= 7 and hour <= 23:
-		cls
-		minut +=30
-		gs'stat'
-serge_tv_rand = RAND(0,11)
+if $ARGS[0] = 'hide':
+	if $ARGS[1] = 'serge_textb':
+		serge_textb = RAND(0,6)
+		if serge_textb = 0:$serge_textb = 'When you ask about Vasily''s mother, Sergey shrugs: "It''s a short story, really. I met Vasily''s mother at my graduation party. We all got drunk and she and I had some fun. When she turned out to be pregnant, we got married. We didn''t have much of a say in the matter, that''s just how it worked back then. Shulga was born a few months after that. We tried to make it work, but she got bored and left me a year later when she got offered a job abroad, leaving Shulga with me. I haven''t heard from her since. It''s fine, though... me and him managed just fine, without her."'
+		if serge_textb = 1:$serge_textb = 'You spend fifteen minutes talking to Sergey about everyday things.'
+		if serge_textb = 2:$serge_textb = 'When you ask Sergey what he does for a living, he smiles and says: "I work in a factory where we produce bricks. I work the day shift, from 09:00 to 15:00, five days a week. I''m a foreman there, managing the laborers and keeping an eye on the machinery. Of course I pitch in as well, when the men need help. It''s dusty, hard work, and it doesn''t pay well, but it''s work worth doing!"'
+		if serge_textb = 3:$serge_textb = 'When you ask about his relationship with his son, Sergey shrugs and says in a tired voice: "Eh. We do okay, given the circumstances. He''s... changed, though. He''s rather difficult to handle nowadays. For the last year or so, he has shown no interest in school and he stays out until late every day, doing God knows what. I''m just not sure how to get through to him any more."'
+		if serge_textb = 4:$serge_textb = 'Sergey tells you a funny story.'
+		if serge_textb = 5:$serge_textb = 'Sergey is actually a pretty smart guy, and you listen to him for fifteen minutes while he tells you anecdotes about his past.'
+		if serge_textb = 6:$serge_textb = 'You try to talk to Sergey about clothes, but he''s not all that interested. The only thing he can contribute is that there is a tailor at the garment factory, who adjusted some ill-fitting jeans for him a while ago.'
+		'<<$serge_textb>>'
+		killvar '$serge_textb'
+	end &!--- serge_textb ---
+
+	if $ARGS[1] = 'serge_textb2':
+		serge_textb2 = RAND(0,5)
+		if serge_textb2 = 0:$serge_textb2 = 'Sergey tells you a dirty joke.'
+		if serge_textb2 = 1:$serge_textb2 = 'Sergey tells you a dirty story.'
+		if serge_textb2 = 2:$serge_textb2 = 'Sergey tells you a funny story. It''s loaded with sexual innuendos and double entendres.'
+		if serge_textb2 = 3:$serge_textb2 = 'Sergey tells you a dirty joke: A businessman needs to do a large investment, buying a new fax machine for the office. He calls in his secretary and says: "Maria, I have 10000 rubles, minus taxes... what do you think I can get for that?"
+The secretary blushes as she begins to unbutton her shirt, and replies: "For 10000 rubles? Everything but my earrings!"'
+		if serge_textb2 = 4:$serge_textb2 = 'You''re lying on Sergey''s bed relaxing, while he tells you another vulgar anecdote.'
+		if serge_textb2 = 5:$serge_textb2 = 'You have a nice chat with Sergey for fifteen minutes.'
+		'<<$serge_textb2>>'
+		killvar '$serge_textb2'
+	end &!--- serge_textb2 ---
+
+	if $ARGS[1] = 'serge_tv_rand':
+		serge_tv_rand = RAND(0,11)
 		if serge_tv_rand = 0:$serge_tv_rand = '<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/tv/tvdance.gif" width="748" height="540"></center>The TV currently shows a new music video, where mostly undressed girls shake their butts lewdly.'
 		if serge_tv_rand = 1:$serge_tv_rand = '<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/tv/tvgeo1.gif" width="750" height="540"></center>The TV currently shows a documentary about animals.'
 		if serge_tv_rand = 2:$serge_tv_rand = '<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/tv/tvgeo2.gif" width="746" height="540"></center>The TV currently shows a documentary about the world.'
@@ -632,31 +575,45 @@ serge_tv_rand = RAND(0,11)
 		if serge_tv_rand = 9:$serge_tv_rand = '<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/tv/tvmult2.gif" width="746" height="540"></center>The TV currently shows an old cartoon.'
 		if serge_tv_rand = 10:$serge_tv_rand = '<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/tv/tvsport1.gif" width="748" height="540"></center>The TV currently shows reruns of the latest UFC fight. How barbaric...'
 		if serge_tv_rand = 11:$serge_tv_rand = '<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/tv/tvsport2.gif" width="746" height="540"></center>The TV currently shows a football match. You''re fairly sure it''s not live.'
-rndtv=rand(1,100)
-		if rndtv > 10:'<<$serge_tv_rand>>' 
-		if rndtv <= 10:'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/tv/tvrekl'+rand(1,4)+'.gif" width="748" height="540"></center> Ugh, commercials...'
-		act 'Get out of bed': gt 'shulgabed'
-		act 'Change the channel': dynamic $serge_tv
-		if npc_rel['A112'] > 50:
-			act 'Switch to the porn channel': 
-				cls
-				gs'stat'
-				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/tv/tvporn'+rand(1,5)+'.gif" width="748" height="540"></center>' 
-				'You switch to the porn channel and put the remote away. Sergey is a bit surprised you would want to watch this, but says nothing.'
-				if pcs_horny > 30: 
-					'You feel Sergey''s body shifting a lot during a particularly rough part of the porn scene, and he''s awkwardly covering his groin with his hands. The large bulge in his pants gives away his obvious erection anyway.'
-				end
-				gs 'arousal', 'voyeur', 10
-				gs 'arousal', 'end'
-				gs 'stat'				
-				act 'Get out of bed': gt 'shulgabed'	
-				if npc_rel['A112'] > 70 and pcs_horny > 30 and mesec <= 0: 
-					act 'Molest Sergey': dynamic $sleep_prstsex
+		'<<$serge_tv_rand>>'
+		killvar '$serge_tv_rand'
+	end &!--- serge_tv_rand ---
+
+	if $ARGS[1] = 'serge_tv':
+		if hour < 7 or hour >= 23:
+			gs'stat'
+			'It''s too late, you would awaken Sergey if you turn the TV on!'
+			act 'Get out of bed': gt 'shulgabed'
+		else
+			minut +=30
+			gs'stat'
+			if rand(1,100) > 10: 
+				gs 'Serge_Shulgin','hide','serge_tv_rand'
+			else
+				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/tv/tvrekl'+rand(1,4)+'.gif" width="748" height="540"></center> Ugh, commercials...'
+			end
+			act 'Get out of bed': gt 'shulgabed'
+			act 'Change the channel': gt 'Serge_Shulgin','hide','serge_tv'
+			if npc_rel['A112'] > 50:
+				act 'Switch to the porn channel': 
+					*clr & cla
+					'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/tv/tvporn'+rand(1,5)+'.gif" width="748" height="540"></center>' 
+					'You switch to the porn channel and put the remote away. Sergey is a bit surprised you would want to watch this, but says nothing.'
+					if pcs_horny > 30: 'You feel Sergey''s body shifting a lot during a particularly rough part of the porn scene, and he''s awkwardly covering his groin with his hands. The large bulge in his pants gives away his obvious erection anyway.'
+					gs 'arousal', 'voyeur', 10
+					gs 'arousal', 'end'
+					act 'Get out of bed': gt 'shulgabed'
+					if npc_rel['A112'] > 70 and pcs_horny > 30 and mesec <= 0: 
+						act 'Molest Sergey': dynamic $sleep_prstsex
+					end
+					gs 'stat'
 				end
 			end
 		end
 	end
-}
+
+	
+end
 
 --- Serge_Shulgin ---------------------------------
 
