@@ -53,6 +53,8 @@ if $ARGS[0] = 'start':
 
 	act 'View clothes':gt 'butik', 'clothes'
 
+	act 'View shoes':gt 'butik', 'shoes'
+
 	if money >= 50000:
 		if coat[9] < 1:
 			if coat[9] = 0:dynamic 'act ''Look at designer coat 9'':gt ''clothing'', ''view_clothing_item'', ''shop'', ''coat'', 9, 50000'
@@ -103,6 +105,42 @@ if $ARGS[0] = 'formal':
 	end
 
 	gt 'clothing', 'view_clothing_item', 'shop', 'formal',i, 25000
+
+end
+
+if $ARGS[0] = 'shoes':
+	$metka = $ARGS[0]
+	$loc = $CURLOC
+	cls
+	gs'stat'
+
+	act 'Return':
+		cla
+		minut += 5
+		gt 'butik', 'start'
+	end
+
+	if Clothingstock > 11:
+		i = 1
+	else
+		i = 2
+	end
+
+	:loopboutique_shoes
+		if sboutique[i] = 0:*p '<a href="exec: i = <<i>> & gt ''butik'', ''boutique_shoes''"><img src="images/pc/shoes/boutique/<<i>>.jpg" height="250" /></a>'
+		i += 2
+	if i <= 33:jump 'loopboutique_shoes'
+end
+
+if $ARGS[0] = 'boutique_shoes':
+	cla
+	
+	if sboutique[i] ! 0:
+		msg 'You already own these shoes.'
+		gt 'butik', 'shoes'
+	end
+
+	gt 'clothing', 'view_clothing_item', 'shop', 'sboutique',i, 25000
 
 end
 
