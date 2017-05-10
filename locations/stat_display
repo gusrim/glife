@@ -99,6 +99,11 @@ if ETOmenu = 1:
 	$stat_msg += '<BR><b><<$pcs_energy>></b>'
 	$stat_msg += '<BR><b><<$water>></b>'
 	$stat_msg += '<BR><b><<$pcs_sleep>></b>'
+elseif Enable_scalepic = 2:
+$st_temp='rgb(<<(16777216 + fcolor) mod 256>>,<<(16777216 + fcolor)/256 mod 256>>,<<(16777216 + fcolor)/65536>>)'
+$stat_msg += '<p><font color="<<$st_temp>>"><TABLE width="300" cellpadding="1" cellspacing="0"><TR><TD width="85%">'+FUNC('indiktab', '2', pcs_horny, pcs_horny)+'</TD><TD> Arousal</TD></TR><TR><TD width="85%">'+FUNC('indiktab', '2', pain['total'], pain['total'])+'</TD><TD> Pain</TD></TR><TR><TD width="85%">'+FUNC('indiktab', '1', pcs_health * 100 / healthmax, pcs_health)+'</TD><TD> Health</TD></TR>'
+if MagikDostup = 0: $stat_msg += '<TR><TD width="85%">'+FUNC('indiktab', '1', pcs_manna * 100 / mannamax, pcs_manna)+'</TD><TD> Manna</TD></TR>'
+$stat_msg += '<TR><TD width="85%">'+FUNC('indiktab', '1', pcs_willpwr * 100 / willpowermax, pcs_willpwr)+'</TD><TD> Willpower</TD></TR><TR><TD width="85%">'+FUNC('indiktab', '1', pcs_stam * 100 / stammax, pcs_stam)+'</TD><TD> Stamina</TD></TR><TR><TD width="85%">'+FUNC('indiktab', '1', pcs_mood, pcs_mood)+'</TD><TD> Mood</TD></TR><TR><TD width="85%">'+FUNC('indiktab', '1', pcs_energy, pcs_energy)+'</TD><TD> Hunger</TD></TR><TR><TD width="85%">'+FUNC('indiktab', '1', pcs_sleep, pcs_sleep)+'</TD><TD> Sleep</TD></TR></TABLE></font></p>'
 else
 	gs 'indik', '2', pcs_horny, pcs_horny
 	$stat_msg += '<BR><<$ind>> Arousal'
@@ -132,56 +137,74 @@ end
 $stat_msg += '<BR>'
 
 if Enable_showattr = 0:
-	$stat_msg += '<BR> <a href="exec:Enable_showattr = 1 & gs ''$menu_obnovit''">Attributes</a>'
+	$stat_msg += '<BR> <a href="exec:Enable_showattr = 1 & gs ''$menu_obnovit''">Attributes</a><BR>'
 end
 if Enable_showattr = 1:
 	$stat_msg += '<BR> <a href="exec:Enable_showattr = 0 & gs ''$menu_obnovit''">Attributes:</a>'
-	gs 'indik','3', 50+(pcs_dom-sub)/2, 50+(pcs_dom-sub)/2
-	$stat_msg += '<BR><<$ind>> Dominance'
-	if pcs_dom > 10:
-		$stat_msg += ' (dominant)'
-	elseif sub > 10:
-		$stat_msg += ' (submissive)'
+	if Enable_scalepic = 2:
+		if pcs_dom > 10:
+			$dom_stat_msg = 'dominant'
+		elseif sub > 10:
+			$dom_stat_msg = 'submissive'
+		else
+			$dom_stat_msg = 'neutral'
+		end
+
+		$stat_msg += '<font color="<<$st_temp>>"><TABLE cellpadding="1" cellspacing="0" width="300"><TR><TD width="85%">'+FUNC('indiktab', '3', 100+pcs_dom-sub, 100+pcs_dom-sub,$dom_stat_msg)+'</TD><TD> Dominance</TD></TR>  <TR><TD width="85%">'+FUNC('indiktab', '1', pcs_stren, pcs_stren)+'</TD><TD> Strength</TD></TR><TR><TD width="85%">'+FUNC('indiktab', '1', pcs_agil, pcs_agil)+'</TD><TD> Agility</TD></TR><TR><TD width="85%">'+FUNC('indiktab', '1', pcs_vital, pcs_vital)+'</TD><TD> Endurance</TD></TR><TR><TD width="85%">'+FUNC('indiktab', '1', pcs_intel, pcs_intel)+'</TD><TD> Intelligence</TD></TR><TR><TD width="85%">'+FUNC('indiktab', '1', pcs_sprt, pcs_sprt)+'</TD><TD> Spirit</TD></TR><TR><TD width="85%">'+FUNC('indiktab', '1', pcs_react, pcs_react)+'</TD><TD nowrap> Mental Agility</TD></TR><TR><TD width="85%">'+FUNC('indiktab', '1', pcs_chrsm, pcs_chrsm)+'</TD><TD> Charisma</TD></TR><TR><TD width="85%">'+FUNC('indiktab', '1', pcs_prcptn, pcs_prcptn)+'</TD><TD> Perception</TD></TR>'
+		if MagikDostup = 0: $stat_msg += '<TR><TD width="85%">'+FUNC('indiktab', '1', pcs_magik, pcs_magik)+'</TD><TD> Magic</TD></TR>'
+		$stat_msg += '<TR><TD width="85%">'+FUNC('indiktab', '1', pcs_apprnc / 2, pcs_apprnc)+'</TD><TD> Attractiveness</TD></TR>'
+		if SchoolAtestat = 0 and StoryLine > 0:$stat_msg += '<TR><TD width="85%">'+FUNC('indiktab', '1', pcs_grades, pcs_grades)+'</TD><TD nowrap> School Grades</TD></TR>'
+		if pcs_exhibition > 0:$stat_msg += '<TR><TD width="85%">'+FUNC('indiktab', '1', pcs_exhibition, pcs_exhibition)+'</TD><TD> Exhibitionism</TD></TR></TABLE></font>'
+		killvar '$dom_stat_msg'
 	else
-		$stat_msg += ' (natural)'
-	end
-	$stat_msg += '<BR>'
-	gs 'indik', '1', pcs_stren, pcs_stren
-	$stat_msg += '<BR><<$ind>> Strength'
-	gs 'indik', '1', pcs_agil, pcs_agil
-	$stat_msg += '<BR><<$ind>> Agility'
-	gs 'indik', '1', pcs_vital, pcs_vital
-	$stat_msg += '<BR><<$ind>> Endurance'
-	gs 'indik', '1', pcs_intel, pcs_intel
-	$stat_msg += '<BR><<$ind>> Intelligence'
-	gs 'indik', '1', pcs_sprt, pcs_sprt
-	$stat_msg += '<BR><<$ind>> Spirit'
-	gs 'indik', '1', pcs_react, pcs_react
-	$stat_msg += '<BR><<$ind>> Mental Agility'
-	gs 'indik', '1', pcs_chrsm, pcs_chrsm
-	$stat_msg += '<BR><<$ind>> Charisma'
-	gs 'indik', '1', pcs_prcptn, pcs_prcptn
-	$stat_msg += '<BR><<$ind>> Perception'
-	if MagikDostup = 0:
-		gs 'indik', '1', pcs_magik, pcs_magik
-		$stat_msg += '<BR><<$ind>> Magic'
-	end
-	gs 'indik', '1', pcs_apprnc / 2, pcs_apprnc
-	$stat_msg += '<BR><<$ind>> Attractiveness'
+		gs 'indik','3', 50+(pcs_dom-sub)/2, 50+(pcs_dom-sub)/2
+		$stat_msg += '<BR><<$ind>> Dominance'
+		if pcs_dom > 10:
+			$stat_msg += ' (dominant)'
+		elseif sub > 10:
+			$stat_msg += ' (submissive)'
+		else
+			$stat_msg += ' (natural)'
+		end
+!		$stat_msg += '<BR>'
+		gs 'indik', '1', pcs_stren, pcs_stren
+		$stat_msg += '<BR><<$ind>> Strength'
+		gs 'indik', '1', pcs_agil, pcs_agil
+		$stat_msg += '<BR><<$ind>> Agility'
+		gs 'indik', '1', pcs_vital, pcs_vital
+		$stat_msg += '<BR><<$ind>> Endurance'
+		gs 'indik', '1', pcs_intel, pcs_intel
+		$stat_msg += '<BR><<$ind>> Intelligence'
+		gs 'indik', '1', pcs_sprt, pcs_sprt
+		$stat_msg += '<BR><<$ind>> Spirit'
+		gs 'indik', '1', pcs_react, pcs_react
+		$stat_msg += '<BR><<$ind>> Mental Agility'
+		gs 'indik', '1', pcs_chrsm, pcs_chrsm
+		$stat_msg += '<BR><<$ind>> Charisma'
+		gs 'indik', '1', pcs_prcptn, pcs_prcptn
+		$stat_msg += '<BR><<$ind>> Perception'
+		if MagikDostup = 0:
+			gs 'indik', '1', pcs_magik, pcs_magik
+			$stat_msg += '<BR><<$ind>> Magic'
+		end
+		gs 'indik', '1', pcs_apprnc / 2, pcs_apprnc
+		$stat_msg += '<BR><<$ind>> Attractiveness'
 	
-	if SchoolAtestat = 0 and StoryLine > 0:
-		gs 'indik', '1', pcs_grades, pcs_grades
-		$stat_msg += '<BR><<$ind>> School Grades'
-	end
-	if pcs_exhibition > 0:
-		gs 'indik', '1', pcs_exhibition, pcs_exhibition
-		$stat_msg += '<BR><<$ind>> exhibitionism'
+		if SchoolAtestat = 0 and StoryLine > 0:
+			gs 'indik', '1', pcs_grades, pcs_grades
+			$stat_msg += '<BR><<$ind>> School Grades'
+		end
+		if pcs_exhibition > 0:
+			gs 'indik', '1', pcs_exhibition, pcs_exhibition
+			$stat_msg += '<BR><<$ind>> exhibitionism'
+		end
+		$stat_msg += '<BR>' 
 	end
 end
-
+killvar '$st_temp'
 !!----------------Mental skills--------------------------
 if Enable_show_mental_skill = 0:
-	$stat_msg += '<BR> <a href="exec:Enable_show_mental_skill = 1 & gs ''$menu_obnovit''">Mental Skills</a>'
+	$stat_msg += ' <a href="exec:Enable_show_mental_skill = 1 & gs ''$menu_obnovit''">Mental Skills</a>'
 end
 if Enable_show_mental_skill = 1:
 	st_count=0
@@ -190,7 +213,7 @@ if Enable_show_mental_skill = 1:
 	if pcs_humint > 0: gs 'show_table', '<<pcs_humint>> People skills', '2'
 	if pcs_persuas > 0: gs 'show_table', '<<pcs_persuas>> Persuasion', '2'
 	if pcs_observ > 0: gs 'show_table', '<<pcs_observ>> Observation', '2'
-	if st_count > 0 :$stat_msg += '<BR> <a href="exec:Enable_show_mental_skill = 0 & gs ''$menu_obnovit''">Mental Skills:</a> <TABLE BORDER=1><<$show_table>></TR></TABLE>'
+	if st_count > 0 :$stat_msg += ' <a href="exec:Enable_show_mental_skill = 0 & gs ''$menu_obnovit''">Mental Skills:</a> <TABLE BORDER=1><<$show_table>></TR></TABLE>'
 end
 
 !!-----------------Sport skills--------------------------
