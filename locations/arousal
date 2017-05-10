@@ -8,6 +8,7 @@ also when giving any of the following:
 'vaginal_finger_give' 'vaginal_fist_give' 'vaginal_dildo_give' 'vaginal_strap_give' 'vaginal_vibe_give' 'hj' 'bj' 'footjob'
 All acts are from Sveta''s perspective and in cases of both giving and receiving, receiving should be used.
 ARGS[1] for time taken in minutes
+$ARGS[2] can be used for passing the name of boys dick variable .. 'dick' is default, which belong to $boy, else can be passed 'dick1' .. 'dick4' or 'dick[i]' along the boys parameters activation 
 $ARGS[2] - [8] Are optional but can be upto 7 fetishes involved in the act and can be any of the following:
 'maso' 'bound' 'beast' 'exhibitionism' 'rough' 'prostitution' 'dom' 'sub' 'incest' 'feet' 'lesbian' 'group' 'gangbang' 'humiliation' 'deepthroat' 'unknown'
 Format to use: gs 'arousal', 'act', 'duration', 'fetish', 'fetish', 'fetish', 'fetish', 'fetish', 'fetish', 'fetish'
@@ -24,44 +25,24 @@ temp_anal = 0
 
 if $ARGS[0] ! 'end' and $ARGS[0] ! 'checks' and $ARGS[0] ! 'counter' and $ARGS[0] ! 'counter2':
 
-!!	This is to allow a Succubus with the right skill level to handle any size then go back to original size
+	if mid($ARGS[2],1,4) = 'dick': temp_dick = dyneval('result='+$ARGS[2]) else temp_dick = dick
+
+	!!	This is to allow a Succubus with the right skill level to handle any size then go back to original size
 	if succubusflag = 1 and sucskill >= 4:
-		if dick ! pcs_vag:
-			if dick < pcs_vag - 5 or dick > pcs_vag + 5: pcs_mood -= 10
+		if temp_dick ! pcs_vag:
+			if temp_dick < pcs_vag - 5 or temp_dick > pcs_vag + 5: pcs_mood -= 10
 			if sucvagorg = 0: sucvagorg = pcs_vag
-			pcs_vag = dick
+			pcs_vag = temp_dick
 		end
-		if dick ! pcs_ass:
-			if dick < pcs_ass - 5 or dick > pcs_ass + 5: pcs_mood -= 10
+		if temp_dick ! pcs_ass:
+			if temp_dick < pcs_ass - 5 or temp_dick > pcs_ass + 5: pcs_mood -= 10
 			if sucanusorg = 0: sucanusorg = pcs_ass
-			pcs_ass = dick
+			pcs_ass = temp_dick
 		end
 	end
 
 !!set a magnitude as a random
-	stim['mag'] = rand(1,100)
-
-	if stim['mag'] < 3:
-		stim['mag'] = 0
-	elseif stim['mag'] < 13:
-		stim['mag'] = 1
-	elseif stim['mag'] < 24:
-		stim['mag'] = 2
-	elseif stim['mag'] < 40:
-		stim['mag'] = 3
-	elseif stim['mag'] < 50:
-		stim['mag'] = 4
-	elseif stim['mag'] < 60:
-		stim['mag'] = 5
-	elseif stim['mag'] < 70:
-		stim['mag'] = 6
-	elseif stim['mag'] < 85:
-		stim['mag'] = 7
-	elseif stim['mag'] < 95:
-		stim['mag'] = 8
-	else
-		stim['mag'] = 9
-	end
+	stim['mag'] = rand(0,3) + rand(0,3) + rand(0,3) 
 
 !!add counter and effects due to action
 	if $ARGS[0] = 'masturbate':
@@ -97,16 +78,16 @@ if $ARGS[0] ! 'end' and $ARGS[0] ! 'checks' and $ARGS[0] ! 'counter' and $ARGS[0
 	elseif $ARGS[0] = 'anal':
 		temp_anal = 1
 		counter['anal'] = 1
-		if dick > pcs_ass: pcs_ass += 1
-		if ((pcs_ass + lubonus + 2) * 2) <= dick:
+		if temp_dick > pcs_ass: pcs_ass += 1
+		if ((pcs_ass + lubonus + 2) * 2) <= temp_dick:
 			!!Painfully too big for PC
 			stim['act'] = 20
 			if agape < 3:agape = 3
-		elseif (pcs_ass + lubonus + 2) < dick:
+		elseif (pcs_ass + lubonus + 2) < temp_dick:
 			!!Big, but more bearable
 			stim['act'] = 65
 			if agape < 1:agape = 1
-		elseif pcs_ass + lubonus + 2 >= dick:
+		elseif pcs_ass + lubonus + 2 >= temp_dick:
 			!!Perfect size
 			stim['act'] = 80
 		end
@@ -125,32 +106,32 @@ if $ARGS[0] ! 'end' and $ARGS[0] ! 'checks' and $ARGS[0] ! 'counter' and $ARGS[0
 	elseif $ARGS[0] = 'anal_dildo':
 		temp_anal = 1
 		counter['anal_dildo'] = 1
-		if dick > pcs_ass: pcs_ass += 1
-		if ((pcs_ass + lubonus + 2) * 2) <= dick:
+		if temp_dick > pcs_ass: pcs_ass += 1
+		if ((pcs_ass + lubonus + 2) * 2) <= temp_dick:
 			!!Painfully too big for PC
 			stim['act'] = 20
 			if agape < 3:agape = 3
-		elseif (pcs_ass + lubonus + 2) < dick:
+		elseif (pcs_ass + lubonus + 2) < temp_dick:
 			!!Big, but more bearable
 			stim['act'] = 65
 			if agape < 1:agape = 1
-		elseif pcs_ass + lubonus + 2 >= dick:
+		elseif pcs_ass + lubonus + 2 >= temp_dick:
 			!!Perfect size
 			stim['act'] = 80
 		end
 	elseif $ARGS[0] = 'anal_strap':
 		temp_anal = 1
 		counter['anal_strap'] = 1
-		if dick > pcs_ass: pcs_ass += 1
-		if ((pcs_ass + lubonus + 2) * 2) <= dick:
+		if temp_dick > pcs_ass: pcs_ass += 1
+		if ((pcs_ass + lubonus + 2) * 2) <= temp_dick:
 			!!Painfully too big for PC
 			stim['act'] = 20
 			if agape < 3:agape = 3
-		elseif (pcs_ass + lubonus + 2) < dick:
+		elseif (pcs_ass + lubonus + 2) < temp_dick:
 			!!Big, but more bearable
 			stim['act'] = 65
 			if agape < 1:agape = 1
-		elseif pcs_ass + lubonus + 2 >= dick:
+		elseif pcs_ass + lubonus + 2 >= temp_dick:
 			!!Perfect size
 			stim['act'] = 80
 		end
@@ -162,20 +143,20 @@ if $ARGS[0] ! 'end' and $ARGS[0] ! 'checks' and $ARGS[0] ! 'counter' and $ARGS[0
 	elseif $ARGS[0] = 'vaginal':
 		counter['vaginal'] = 1
 		stim['mag'] += 3
-		if dick > pcs_vag: pcs_vag += 1
+		if temp_dick > pcs_vag: pcs_vag += 1
 		prinat = pcs_vag + (pcs_horny / 10)
-		if dick >= prinat * 2:
+		if temp_dick >= prinat * 2:
 			!!Painfully too big for PC
 			stim['act'] = 40
 			if vgape < 3:vgape = 3
-		elseif dick > prinat:
+		elseif temp_dick > prinat:
 			!!Big, but more bearable
 			stim['act'] = 75
 			if vgape < 1:vgape = 1
-		elseif dick <= prinat and dick >= pcs_vag:
+		elseif temp_dick <= prinat and temp_dick >= pcs_vag:
 			!!Perfect size
 			stim['act'] = 90
-		elseif dick < pcs_vag:
+		elseif temp_dick < pcs_vag:
 			!!On the small side
 			stim['act'] = 80
 		end
@@ -193,40 +174,40 @@ if $ARGS[0] ! 'end' and $ARGS[0] ! 'checks' and $ARGS[0] ! 'counter' and $ARGS[0
 	elseif $ARGS[0] = 'vaginal_dildo':
 		counter['vaginal_dildo'] = 1
 		stim['mag'] += 1
-		if dick > pcs_vag: pcs_vag += 1
+		if temp_dick > pcs_vag: pcs_vag += 1
 		prinat = pcs_vag + (pcs_horny / 10)
-		if dick >= prinat * 2:
+		if temp_dick >= prinat * 2:
 			!!Painfully too big for PC
 			stim['act'] = 20
 			if vgape < 3:vgape = 3
-		elseif dick > prinat:
+		elseif temp_dick > prinat:
 			!!Big, but more bearable
 			stim['act'] = 65
 			if vgape < 1:vgape = 1
-		elseif dick <= prinat and dick >= pcs_vag:
+		elseif temp_dick <= prinat and temp_dick >= pcs_vag:
 			!!Perfect size
 			stim['act'] = 80
-		elseif dick < pcs_vag:
+		elseif temp_dick < pcs_vag:
 			!!On the small side
 			stim['act'] = 70
 		end
 	elseif $ARGS[0] = 'vaginal_strap':
 		counter['vaginal_strap'] = 1
 		stim['mag'] += 1
-		if dick > pcs_vag: pcs_vag += 1
+		if temp_dick > pcs_vag: pcs_vag += 1
 		prinat = pcs_vag + (pcs_horny / 10)
-		if dick >= prinat * 2:
+		if temp_dick >= prinat * 2:
 			!!Painfully too big for PC
 			stim['act'] = 20
 			if vgape < 3:vgape = 3
-		elseif dick > prinat:
+		elseif temp_dick > prinat:
 			!!Big, but more bearable
 			stim['act'] = 65
 			if vgape < 1:vgape = 1
-		elseif dick <= prinat and dick >= pcs_vag:
+		elseif temp_dick <= prinat and temp_dick >= pcs_vag:
 			!!Perfect size
 			stim['act'] = 80
-		elseif dick < pcs_vag:
+		elseif temp_dick < pcs_vag:
 			!!On the small side
 			stim['act'] = 70
 		end
@@ -299,7 +280,7 @@ if $ARGS[0] ! 'end' and $ARGS[0] ! 'checks' and $ARGS[0] ! 'counter' and $ARGS[0
 	elseif $ARGS[0] = 'bj':
 		counter['bj'] = 1
 		stim['act'] = 45
-		if dick > pcs_throat: pcs_throat += 1
+		if temp_dick > pcs_throat: pcs_throat += 1
 		stim_foot = 1
 	elseif $ARGS[0] = 'footjob':
 		counter['footjob'] = 1
@@ -489,6 +470,7 @@ if $ARGS[0] ! 'end' and $ARGS[0] ! 'checks' and $ARGS[0] ! 'counter' and $ARGS[0
 			gs 'orgasm', $ARGS[0]
 		end
 	end
+	killvar 'temp_dick'
 end
 
 !!-----------------------------------------------
@@ -583,6 +565,5 @@ if $ARGS[0] = 'checks':
 		dynamic '<<$ARGS[1]>>[''exp''] += 1'
 	end
 end
-
 --- arousal ---------------------------------
 
