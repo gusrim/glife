@@ -25,13 +25,20 @@ if $ARGS[0] = 'start':
 end
 
 if $ARGS[0] = 'buy':
-	if BuyHous < 1:'There is an apartment in the city residential area available for 2 million <b>₽</b>.'
-	if dachaest = 0:'There is a holiday cottage with an adjacent allotment in the village, for 75 thousand <b>₽</b>.'
-	if placeMansion = 0:'There is a plot in the suburbs with planning permission for a mansion for 1.5 million <b>₽</b>.'
+	if BuyHous < 1:
+		'There is an apartment in the city residential area available for 2 million <b>₽</b>.'
+		if karta + bankDebtLimit >= 2000000:act 'Buy the city residential apartment': gt 'agentned', 'buy_cityres'
+	end
 
-	if karta + bankDebtLimit >= 2000000:act 'Buy the city residential apartment' :gt 'agentned', 'buy_cityres'
-	if karta + bankDebtLimit >= 75000:act 'Buy the cottage in the village' :gt 'agentned','buy_dacha'
-	if karta + bankDebtLimit >= 1500000:act 'Buy the plot in the suburbs' gt 'agentned','buy_Mansion'
+	if dachaest = 0:
+		'There is a holiday cottage with an adjacent allotment in the village, for 75 thousand <b>₽</b>.'
+		if karta + bankDebtLimit >= 75000:act 'Buy the cottage in the village': gt 'agentned','buy_dacha'
+	end
+
+	if placeMansion = 0:
+		'There is a plot in the suburbs with planning permission for a mansion for 1.5 million <b>₽</b>.'
+		if karta + bankDebtLimit >= 1500000:act 'Buy the plot in the suburbs': gt 'agentned','buy_Mansion'
+	end
 
 	act 'Return':gt'agentned', 'start'
 end
@@ -58,8 +65,9 @@ if $ARGS[0] = 'rent':
 		if BuyHous ! 1: 'There is an apartment in the residential area available'
 		'There is an apartment in the old town available'
 
-	if BuyHous ! 1 and money >= 6000: act 'View the city residential apartment details': gt 'agentned', 'rent_cityres'
-	if money >= 6000: act 'View the apartment in the Old Town details': gt 'agentned', 'rent_pushkin'
+		if BuyHous ! 1 and money >= 6000: act 'View the city residential apartment details': gt 'agentned', 'rent_cityres'
+		if money >= 6000: act 'View the apartment in the Old Town details': gt 'agentned', 'rent_pushkin'
+	end
 
 	act 'Return':gt'agentned', 'start'
 end
@@ -133,10 +141,6 @@ if $ARGS[0] = 'rent_pushkin':
 
 		act 'Return':gt'agentned', 'start'
 	end
-end
-	'You spend half an hour filling in the paperwork for the rental of an apartment in the old town. You have paid for <<ArendHouseSL>> rental days.'
-
-	act 'Return':gt'agentned', 'start'
 end
 
 if $ARGS[0] = 'buy_cityres':
