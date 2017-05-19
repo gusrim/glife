@@ -1,35 +1,58 @@
 # sell_young_clothes
-$metka = $ARGS[0]
-$loc = $CURLOC
-cls
-gs'stat'
 
-act 'Return':
-	cla
-	minut += 5
-	gt 'young_shop'
-end
+if $ARGS[0] = 'start':
+	$metka = 'start'
+	$loc = 'sell_young_clothes'
+	cls
+	gs'stat'
 
-	i = Clothingstock + 1
-
-	if Clothingstock - 12 >= 0:i -= 12
-
-:loopaverage
-if average[i] = 0:*p '<a href="exec: i = <<i>> & dynamic $yshopclo"><img <<$set_imgh>> src="images/pc/clothing/2average/<<i>>.jpg" 	height="250" /></a>'
-i += 12
-if i <= 132:jump 'loopaverage'
-
-
-$yshopclo = {
-	cla
-	
-	if average[i] ! 0:
-		msg 'You already own these clothes.'
-		gt 'sell_young_clothes'
+	act 'Return':
+		cla
+		minut += 5
+		gt 'young_shop'
 	end
 
+		i = Clothingstock + 1
+
+		if Clothingstock - 12 >= 0:i -= 12
+
+	:loopaverage
+	if average[i] = 0:*p '<a href="exec: i = <<i>> & gt ''sell_young_clothes'', ''yshopclo''"><img <<$set_imgh>> src="images/pc/clothing/2average/<<i>>.jpg" 	height="250" /></a>'
+	i += 12
+	if i <= 132:jump 'loopaverage'
+end
+
+if $ARGS[0] = 'yshopclo':
+	cla
+
 	gt 'clothing', 'view_clothing_item', 'shop', 'average',i, 7500
-}
+end
+
+if $ARGS[0] = 'shoes':
+	$metka = 'shoes'
+	$loc = 'sell_young_clothes'
+	cls
+	gs'stat'
+
+	act 'Return':
+		cla
+		minut += 5
+		gt 'young_shop'
+	end
+
+	if Clothingstock > 11:
+		i = 1
+	else
+		i = 2
+	end
+
+	:loopcats_shoes
+		if spussy[i] = 0:*p '<a href="exec: i = <<i>> & gt ''sell_young_clothes'', ''young_shoes''"><img src="images/pc/shoes/Cats/<<i>>.jpg" height="250" /></a>'
+		i += 2
+	if i <= 38:jump 'loopcats_shoes'
+end
+
+if $ARGS[0] = 'young_shoes': gt 'clothing', 'view_clothing_item', 'shop', 'spussy',i, 2500
 
 --- sell_young_clothes ---------------------------------
 
