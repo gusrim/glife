@@ -20,9 +20,8 @@ $shoe_list_line = {
 	$RESULT +='<TD><a href="exec:gt ''shoes'', ''view_shoe_item'', ''<<$ARGS[0]>>'', ''<<$ARGS[1]>>'', <<ARGS[2]>>"><img src="<<FUNC(''$shoe_image'', $ARGS[1], ARGS[2])>>" width="<<shoe_temp>>"></a></TD>'
 	killvar 'shoe_temp'
 	gs 'shoe_attributes', $ARGS[1], ARGS[2]
-	$RESULT += '<TD>' + dyneval '$RESULT += <<$ARGS[1]>>H[<<ARGS[2]>>]' + '</TD>'
 
-	$RESULT += '<TD>' + FUNC('$shoe_name', $ARGS[1], ARGS[2]) + '</TD>'
+	$RESULT += '<TD>' + FUNC('$shoe_description', $ARGS[1], ARGS[2]) + '</TD>'
 
 	if ShoStyle = 2:
 		$RESULT += '<TD>Yes</TD>'
@@ -36,7 +35,7 @@ $shoe_list_line = {
 		$RESULT += '<TD>No</TD>'
 	end
 
-	$RESULT += '<TD><a href="exec:gt ''shoes'', ''view_shoe_item'', ''<<$ARGS[0]>>'', ''<<$ARGS[1]>>'', <<ARGS[2]>>">View</a>'
+	$RESULT += '<TD><a href="exec:gt ''shoes'', ''view_shoe_item'', ''<<$ARGS[0]>>'', ''<<$ARGS[1]>>'', <<ARGS[2]>>">View</a></TD>'
 
 	if $ARGS[0] ! 'sell' and $ARGS[0] ! 'resize':
 		$RESULT += ' <a href="exec:gs ''shoes'', ''wear'', ''<<$ARGS[1]>>'', <<ARGS[2]>> & gt ''shoes'', ''view_shoe_list'', ''wardrobe''">Wear</a></TD>'
@@ -129,31 +128,31 @@ if $ARGS[0] = 'view_shoe_list':
 	if sloc = 1:
 		i = 1
 		:loopsboutique
-			if sboutique[i] = 1 and sboutiqueS[i] = cloc and ($shoeworntype ! 'boutique' or shoewornnumber ! i):*P dyneval($shoe_list_line, $ARGS[1], 'boutique', i)
+			if sboutique[i] = 1 and sboutiqueS[i] = cloc:*P dyneval($shoe_list_line, $ARGS[1], 'boutique', i)
 			i += 1
 		if i <= 37:jump 'loopsboutique'
 
 		i = 1
 		:loopspussy
-			if spussy[i] = 1 and spussyS[i] = cloc and ($shoeworntype ! 'pussy' or shoewornnumber ! i):*P dyneval($shoe_list_line, $ARGS[1], 'pussy', i)
+			if spussy[i] = 1 and spussyS[i] = cloc:*P dyneval($shoe_list_line, $ARGS[1], 'pussy', i)
 			i += 1
 		if i <= 38:jump 'loopspussy'
 
 		i = 1
 		:loopsdolls
-			if sdolls[i] = 1 and sdollsS[i] = cloc and ($shoeworntype ! 'dolls' or shoewornnumber ! i):*P dyneval($shoe_list_line, $ARGS[1], 'dolls', i)
+			if sdolls[i] = 1 and sdollsS[i] = cloc:*P dyneval($shoe_list_line, $ARGS[1], 'dolls', i)
 			i += 1
 		if i <= 27:jump 'loopsdolls'
 
 		i = 1
 		:loopsfetish
-			if sfetish[i] = 1 and sfetishS[i] = cloc and ($shoeworntype ! 'fetish' or shoewornnumber ! i):*P dyneval($shoe_list_line, $ARGS[1], 'fetish', i)
+			if sfetish[i] = 1 and sfetishS[i] = cloc:*P dyneval($shoe_list_line, $ARGS[1], 'fetish', i)
 			i += 1
 		if i <= 27:jump 'loopsfetish'
 
 		i = 1
 		:loopsgandm
-			if sgandm[i] = 1 and sgandmS[i] = cloc and ($shoeworntype ! 'gandm' or shoewornnumber ! i):*P dyneval($shoe_list_line, $ARGS[1], 'gandm', i)
+			if sgandm[i] = 1 and sgandmS[i] = cloc:*P dyneval($shoe_list_line, $ARGS[1], 'gandm', i)
 			i += 1
 		if i <= 51:jump 'loopsgandm'
 	end
@@ -161,9 +160,8 @@ if $ARGS[0] = 'view_shoe_list':
 	if sloc = 2:
 		i = 1
 		:loopstrainers
-			if strainers[i] = 1 and strainersS[i] = cloc and ($shoeworntype ! 'trainers' or shoewornnumber ! i):*P dyneval($shoe_list_line, $ARGS[1], 'trainers', i)
+			if strainers[i] = 1 and strainersS[i] = cloc:*P dyneval($shoe_list_line, $ARGS[1], 'trainers', i)
 			i += 1
-			if i = 6: i = 7
 		if i <= 29:jump 'loopstrainers'
 	end
 
@@ -178,18 +176,11 @@ if $ARGS[0] = 'view_shoe_item':
 	!! ARGS 4 - price for shop
 
 	cla
-	'<center><img src="<<FUNC(''$shoe_image'',  $ARGS[2], ARGS[3])>>"></center>'
+	'<center><img src="<<FUNC(''$shoe_image'', $ARGS[2], ARGS[3])>>"></center>'
 	gs 'shoe_attributes', $ARGS[2], ARGS[3]
-	$RESULT += '<<ARGS[3]>>'
-	'<<$RESULT>>'
-	gs 'shoes_description2'
-
-	if $ARGS[1] ! 'shop':
-		$RESULT = '(strength '
-		dynamic '$RESULT += <<$ARGS[2]>>H[<<ARGS[3]>>]'
-		$RESULT += ')'
-		'<<$RESULT>>'
-	end
+	FUNC('$shoe_description', $ARGS[1], ARGS[2]) + '<<ARGS[3]>>'
+	*nl
+	gs 'shoe_description2'
 
 	if $ARGS[1] = 'shop':
 		if dyneval('RESULT = <<$ARGS[2]>>[<<ARGS[3]>>]') = 1:
