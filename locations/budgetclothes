@@ -18,28 +18,44 @@ if $ARGS[0] = 'start':
 		lcolor = rgb(106, 90, 205)
 	end
 
-	act 'View cheap clothing':
+	act 'Visit clothing department':
 		cla
-		minut += 5
-		gt 'budgetclothes', 'clothes'
-	end
-	
-	act 'View office wear':
-		cla
-		minut += 5
-		gt 'budgetclothes', 'office'
+		act 'View cheap clothing':
+			minut += 5
+			gt 'budgetclothes', 'clothes'
+		end
+		
+		act 'View office wear':
+			minut += 5
+			gt 'budgetclothes', 'office'
+		end
+
+		act 'View uniforms':
+			minut += 5
+			gt 'budgetclothes', 'uniform'
+		end
+
+		act 'View school uniforms':
+			minut += 5
+			gt 'budgetclothes', 'school'
+		end
+
+		act 'Return':gt 'budgetclothes', 'start'
 	end
 
-	act 'View uniforms':
+	act 'Visit shoe department':
 		cla
-		minut += 5
-		gt 'budgetclothes', 'uniform'
-	end
+		act 'Look at regular shoes:
+			minut += 5
+			gt 'budgetclothes', 'shoes'
+		end
 
-	act 'View school uniforms':
-		cla
-		minut += 5
-		gt 'budgetclothes', 'school'
+		act 'Look at exercise shoes:
+			minut += 5
+			gt 'budgetclothes', 'trainers'
+		end
+
+		act 'Return':gt 'budgetclothes', 'start'
 	end
 
 	act 'View coats':
@@ -210,6 +226,62 @@ if $ARGS[0] = 'schoolclo':
 
 	gt 'clothing', 'view_clothing_item', 'shop', 'school',i, 3000
 end
+
+if $ARGS[0] = 'shoes':
+	$metka = 'shoes'
+	$loc = 'budgetclothes'
+	cls
+	gs'stat'
+
+	act 'Return':
+		cla
+		minut += 5
+		gt 'budgetclothes', 'start'
+	end
+
+	if Clothingstock > 15:
+		i = 1
+	elseif Clothingstock > 7:
+		i = 2
+	else
+		i = 3
+	end
+
+	:loopgandm_shoes
+		if sgandm[i] = 0:*p '<a href="exec: i = <<i>> & gt ''budgetclothes'', ''budget_shoes''"><img src="images/pc/shoes/G&M/<<i>>.jpg" height="250" /></a>'
+		i += 3
+		if i = 6:i = 9
+	if i <= 51:jump 'loopgandm_shoes'
+end
+
+if $ARGS[0] = 'budget_shoes': gt 'clothing', 'view_clothing_item', 'shop', 'sgandm',i, 1500
+
+if $ARGS[0] = 'trainers':
+	$metka = 'trainers'
+	$loc = 'budgetclothes'
+	cls
+	gs'stat'
+
+	act 'Return':
+		cla
+		minut += 5
+		gt 'budgetclothes', 'start'
+	end
+
+	if Clothingstock > 11:
+		i = 1
+	else
+		i = 2
+	end
+
+	:looptrainers_shoes
+		if strainers[i] = 0:*p '<a href="exec: i = <<i>> & gt ''budgetclothes'', ''training_shoes''"><img src="images/pc/shoes/trainers/<<i>>.jpg" height="250" /></a>'
+		i += 2
+		if i = 21:i = 23
+	if i <= 29:jump 'looptrainers_shoes'
+end
+
+if $ARGS[0] = 'training_shoes': gt 'clothing', 'view_clothing_item', 'shop', 'strainers',i, 2500
 
 if $ARGS[0] = 'coats':
 	$metka = $ARGS[0]
