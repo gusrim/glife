@@ -563,8 +563,7 @@ if $ARGS[0] = 'fingering':
 
 			gs 'arousal', 'masturbate', 2
 			gs 'stat'
-
-			act 'Fuck your fingers': gt 'selfplay', 'fingering2'
+			gs 'selfplay', 'fingering2'
 		elseif pcs_vag > 0:
 			'You slide one finger into your vagina, and then another.'
 			if pcs_vag < 5:
@@ -582,7 +581,7 @@ if $ARGS[0] = 'fingering':
 			gs 'arousal', 'masturbate', 2
 			gs 'stat'
 
-			act 'Fuck your fingers': gt 'selfplay', 'fingering2'
+			gs 'selfplay', 'fingering2'
 		elseif mesec > 0:
 			pcs_mood -= 5
 			'Your vagina has some dried up blood from your period on it. You attempt to shove your finger in, but then are kind of grossed out by the idea and reconsider.'
@@ -594,31 +593,33 @@ end
 
 if $ARGS[0] = 'fingering2':
 
-	cls
-	selfplaytime += 5
+	act 'Fuck your fingers':
+		cls
+		selfplaytime += 5
 
-	'<center><img <<$set_imgh>> src="images/shared/sex/mast/finger.jpg"></center>'
-	if args[1] = 1:
-		'You continue fucking yourself with your fingers, massaging and squeezing your breasts.'
-	else
-		'You start moving your fingers in and out, softly pinching your nipples as you play with yourself.'
+		'<center><img <<$set_imgh>> src="images/shared/sex/mast/finger.jpg"></center>'
+		if args[1] = 1:
+			'You continue fucking yourself with your fingers, massaging and squeezing your breasts.'
+		else
+			'You start moving your fingers in and out, softly pinching your nipples as you play with yourself.'
+		end
+
+		*nl
+
+		if pcs_vag <= 12:'Your pussy walls are stretched nicely from the finger fucking, and you feel a pleasant warmth spread in your lower body.'
+		if pcs_vag > 12:'Your pussy is quite loose, and you have to work hard to get much enjoyment out of it.'
+
+		gs 'arousal', 'masturbate', 5
+		gs 'stat'
+
+		if pcs_vag < 12:vaginaTemp += 1
+
+		gs 'selfplay', 'fingering2', 1
+
+		if pcs_horny > 0 and pcs_vag > 0:gs 'selfplay', 'fingering3'
+			
+		act 'Stop touching yourself':gt $curloc
 	end
-
-	*nl
-
-	if pcs_vag <= 12:'Your pussy walls are stretched nicely from the finger fucking, and you feel a pleasant warmth spread in your lower body.'
-	if pcs_vag > 12:'Your pussy is quite loose, and you have to work hard to get much enjoyment out of it.'
-
-	gs 'arousal', 'masturbate', 5
-	gs 'stat'
-
-	if pcs_vag < 12:vaginaTemp += 1
-
-	act 'Continue fucking your fingers': gt 'selfplay', 'fingering2', 1
-
-	if pcs_horny > 0 and pcs_vag > 0:gs 'selfplay', 'fingering3'
-		
-	act 'Stop touching yourself':gt $curloc
 end
 
 if $ARGS[0] = 'fingering3':
