@@ -1081,9 +1081,9 @@ $housemates = {
 	gs 'stat'
 	 '<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/stairs/housemates.jpg"></center>'
 	'Floor 1 - Apartment number 2: Artem Chebotarev'
-	'Floor 2 - Apartment number 5: your parents								Apartment number 7: Uncle Misha'
-	'Floor 3 - Apartment number 11: Sergey and Vasily Shulgin	 	Apartment number 12: Julia Milova'
-	'Floor 4 - Apartment number 14: Natasha Belova						Apartment number 16: Aunt Luda'
+	'Floor 2 - Apartment number 7: your parents								Apartment number 9: Uncle Misha'
+	'Floor 3 - Apartment number 13: Sergey and Vasily Shulgin	 	Apartment number 14: Julia Milova'
+	'Floor 4 - Apartment number 19: Natasha Belova						Apartment number 21: Aunt Luda'
 	'Floor 5'
 	act 'Leave': gt 'pod_ezd', 'etaj_1'
 }
@@ -1106,10 +1106,10 @@ if $ARGS[0] = 'etaj_1':
 		if hour < 4 and motherWorry = 0 and age < 18:
 			'<font color=red>Are you sure? Your mother will worry if you go out at this time.</font>'
 			cla
-			act '<font color=red>Yes, go outside</font>':gt 'pavResidential'
+			act '<font color=red>Yes, go outside</font>':gt 'pavcomplex'
 			act 'No, stay inside': gt 'pod_ezd','etaj_1'
 		else
-			gt 'pavResidential'
+			gt 'pavcomplex'
 		end
 	end
 	if ArtemBeInHome > 0 and artemblok = 0: 
@@ -1255,13 +1255,36 @@ if $ARGS[0] = 'etaj_5':
 	gs 'stat'
 	'<center>Floor #5</center>'
 	'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/stairs/etaj5.jpg"></center>'
-	'<center>The second floor stairwell is clean and well maintained. It was renovated not long ago, and the inhabitants do their best to keep it clean.</center>'
+	'<center>The fifth floor stairwell looks much like most of the other floors, though it has a final set of stairs at the other end of the hall that go up to the roof.</center>'
 	*nl
 	if etaj5_cherdak_rnd <= 4: 'You hear some voices above you. You remember that the local teens often use this place as a hook-up spot. You can go look: <<$etaj5_cherdak_rnd>>'
 	if etaj5_cherdak_rnd > 4: '<<$etaj5_cherdak_rnd>>'
 
 	act 'Go down to the fourth floor': gt 'pod_ezd','etaj_4'
 	act 'Take the elevator': gt 'pod_ezd','lift','etaj_5'
+	act 'Go to the roof': gt 'pod_ezd', 'roof'
+end
+
+!!roof
+if $ARGS[0] = 'roof':
+	minut +=1
+	gs 'stat'
+	'<center>Roof</center>'
+	if month >= 11 or month <= 3:
+		!!if hour >= 8 and hour <= 21:
+			!!'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/roof/roofw.jpg"></center>'
+		!!else
+			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/roof/roofw.jpg"></center>'
+		!!end
+	else
+		if hour >= 8 and hour <= 21:
+			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/roof/roof.jpg"></center>'
+		else
+			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/roof/roofn.jpg"></center>'
+		end
+	end
+	'<center>The roof is fairly flat, with the roof access door in a raised part in the middle of the roof. Along one of the walls is another door to some type of storage or maintenances access. There is several ventilation stacks on the roof as well.</center>'
+	act 'Go down to the fifth floor': gt 'apartment2','etaj_5'
 end
 
 !================================================================================================!
