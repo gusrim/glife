@@ -94,15 +94,15 @@ if $ARGS[0] = 'card_game_durak_play':
 		playcardgame_day = daystart
 		playcardgame_count -= 1
 		if $cgd_clothes['A11'] = '': 
-			gs 'boyStat', 11
+			gs 'boyStat', 'A11'
 			$loss_npc_img = '<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/boy/vasya/vasya.jpg"></center>'
 		end
 		if $cgd_clothes['A10'] = '': 
-			gs 'boyStat', 10
+			gs 'boyStat', 'A10'
 			$loss_npc_img = '<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/boy/dan/dan.jpg"></center>'
 		end
 		if $cgd_clothes['A9'] = '':
-			gs 'boyStat', 9
+			gs 'boyStat', 'A9'
 			$loss_npc_img = '<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/boy/vitek/vitek.jpg"></center>'
 		end
 		$loss_npc_name = $boydesc
@@ -234,9 +234,10 @@ end
 if $ARGS[0] = 'card_game_gsex':
 	minut +=2
 	pcs_horny += 10
-	if npcSex[10] = 0:npcSex[10] = 1 & guy += 1
-	if npcSex[11] = 0:npcSex[11] = 1 & guy += 1
-	if npcSex[9] = 0:npcSex[9] = 1 & guy += 1
+	npc_sex['A9'] += 1
+	npc_sex['A10'] += 1
+	npc_sex['A11'] += 1
+	gang += 1
 	gs 'stat'
 	'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/bigroom/card/sex/gsex/ev1_1.jpg"></center>'
 	'"Now that you''ve lost... how about we all get naked, and then see what we will do with you?" <<$boydesc>> says with a grin, as he takes the remainder of his clothes off. The other guys nod eagerly, and begin to undress as well.'
@@ -325,7 +326,7 @@ end
 if $ARGS[0] = 'card_game_rough_sex':
 	gs 'arousal','bj',5,'deepthroat','sub'
 	gs 'stat'
-	if npcSex[$boy] = 0:npcSex[$boy] = 1 & guy += 1
+	npc_sex[$boy] += 1
 	'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/bigroom/card/sexrough/bj'+rand(1,10)+'.gif"></center>'
 	'<<$boydesc>> unceremoniously moves up to you, and thrusts his erect dick into your mouth without saying a word.'
 	'"This is for you, slut", he hisses as he grabs your hair in his hands, and begins to thrust his hips against your face, fucking your throat roughly.'
@@ -356,14 +357,14 @@ if $ARGS[0] = 'card_game_rough_sex':
 			*clr & cla
 			gang +=1
 			gs 'boyStat',$boy,'c'
-			if $boy = 'A9': gs 'boyStat', 10,'a' else gs 'boyStat', 9,'a'
+			if $boy = 'A9': gs 'boyStat', 'A10','a' else gs 'boyStat', 'A9','a'
 			gs 'arousal','anal',8,'dick1','gangbang'
 			gs 'cum_call','anus',$boy1,1
-			if npcSex[$boy1] = 0:npcSex[$boy1] = 1 & guy += 1
-			if $boy = 'A11': gs 'boyStat', 10,'b' else gs 'boyStat', 11,'b'
+			npc_sex[$boy1] += 1
+			if $boy = 'A11': gs 'boyStat', 'A10','b' else gs 'boyStat', 'A11','b'
 			gs 'arousal','anal',8,'dick2','gangbang'
 			gs 'cum_call','anus',$boy2,1
-			if npcSex[$boy2] = 0:npcSex[$boy2] = 1 & guy += 1
+			npc_sex[$boy2] += 1
 			gs 'arousal','anal',5,'dick3','gangbang'
 			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/bigroom/card/sexrough/sex2_'+rand(1,10)+'.gif"></center>'
 			'You were about to get up once <<$boydesc3>> finished in you, but his friends stop you. "Everyone gets to have a go, slut. I won your ass, so I decide when you''re done. Stay down", he orders you.'
@@ -409,6 +410,7 @@ if $ARGS[0] = 'card_game_casual_sex':
 		$orgasm_or = 'no'
 		gs 'npcgeneratec', 0, 'stranger', rand(18,40)
 		gs 'boyStat', $npclastgenerated
+		npc_sex[$npclastgenerated] += 1
 		gs 'arousal','bj',10,'sub'
 		gs 'stat'
 		'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/bigroom/card/street_event/sexbj1.gif" width="642" height="490"></center>'
@@ -509,6 +511,7 @@ if $ARGS[0] = 'card_game_ggwin_clothercum':
 		*clr & cla
 		gs 'arousal','bj',10
 		gs 'stat'
+		npc_sex[$boy] += 1
 		'After a few minutes, you find someone. "Alright, <<$loss_npc_name>>, come here", you whisper to him as you drag him out of view.'
 		'You quickly drop to your knees and take his cock in your mouth, giving him a skilful blowjob. The other guys are actually a bit jealous when they see you on your knees before your friend, and pull out their phones to record you:'
 		'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/bigroom/card/street_event/bj'+rand(1,2)+'.gif"></center>'
@@ -529,6 +532,7 @@ end
 !When the years won, make a wish (turnip pav_slut >= 75), lick
 if $ARGS[0] = 'card_game_gg_lick':
 	minut +=1
+	npc_sex[$boy] += 1
 	if $boy = 'A11':
 		'<<$loss_npc_img>>'
 		'You grin: "I''m actually feeling rather horny. Be a dear and lick my pussy for me, would you?"'
@@ -565,6 +569,7 @@ end
 !When the years won, make a wish (turnip pav_slut >= 75), sex
 if $ARGS[0] = 'card_game_gg_sex':
 	minut +=1
+	npc_sex[$boy] += 1
 	if $boy = 'A11':
 		'<<$loss_npc_img>>'
 		'You smile at Vasily and say: "Vasily, dear... it''s been a while since a real man fucked my ass. Perhaps you could help me with that?"'
