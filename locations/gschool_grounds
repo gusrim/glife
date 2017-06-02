@@ -17,7 +17,7 @@ if $ARGS[0] = 'main':
 	end
 	'Pavlovsk''s only school, all the local children go here for their education. Next to the school is the athletic field, a parking lot for the teachers, just beyond the parking lot is a grove of trees, and past that is the old school building. After the new school was built the old one was supposed to get renovated and used for advance classes but budget cuts meant the project was canceled and now the old school building stands empty. Though many of the kids use it to skip class or as a place to sneak off to drink or have sex.'
 
-	if hour >= 9 and hour < 18 and StoryLine > 0 and SchoolAtestat = 0 and kanikuli = 0:
+	if ((hour = 7 and minut >= 30) or (hour >= 8 and hour < 18)) and StoryLine > 0 and SchoolAtestat = 0 and kanikuli = 0:
 		'With the school open you can go to the <a href="exec:gt ''gschool_grounds'',''change_room''">changing rooms</a> by the gym and change your outfit.'
 	end
 
@@ -27,26 +27,63 @@ if $ARGS[0] = 'main':
 
 !!	act 'Go to the Principals Office': gt
 
-	if week < 6 and StoryLine > 0 and SchoolAtestat = 0 and kanikuli = 0:
-		if hour < 7 :
-			'It''s too early for school now.'
-		elseif hour < 10 :
-			if NikoEv = 10 and $clothingworntype = 'school' or NikoEv = 10 and Enable_sforma = 1:
-				act '<font color = green><b>Go to school</b></font>':
-					cla
-					gt 'NikoDates', 'Walk Of Shame'
-				end			
-			elseif $clothingworntype = 'school' or Enable_sforma = 1:
-				act '<font color = green><b>Go to school</b></font>':
-					cla
-					gs 'gschool_grounds', 'bulding'
-!!					gs 'gschool_lessons', 'morning'   !This skips all the teacher morning interactions.
+	if week < 6 and hour < 6 and StoryLine > 0 and SchoolAtestat = 0 and kanikuli = 0:
+		if $clothingworntype = 'school' or Enable_sforma = 1:
+			if hour = 7:
+				if minut < 30:
+					'It''s too early for school now.'
+				else
+					if NikoEv = 10:gt 'NikoDates', 'Walk Of Shame'
+					act 'Wait for class':
+						cla
+						gs 'gschool_grounds', 'bulding'
+					end
+	!!				if minut <= 55:
+	!!					act 'Chat to a friend':
+	!!				end
 				end
-			else
-				'You''re not allowed to attend any classes at school if you''re not wearing your school uniform.'
+			elseif hour = 8:
+				if minut <= 15:
+					if NikoEv = 10:gt 'NikoDates', 'Walk Of Shame'
+					act 'Go to class':
+						cla
+						gs 'gschool_grounds', 'bulding'
+					end
+				else
+					'You are late for school, you could rush to class or just skip until the second period.'
+					act 'Skip class':
+						cla
+						*clr
+						'<center><b><font color="maroon">School Hallway</font></b></center>'
+						'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/building/gschool_hall0<<Rand(0,2)>>.jpg"></center>'
+						'You don''t feel like attending all of your classes this morning. Surely no one will miss you if you skip one of your three morning classes.'
+						act 'Go to girl''s bathroom': gt 'gschool_girls_bathroom', 'start'
+						act 'Go to boy''s bathroom': gt 'gschool_boys_bathroom', 'start'
+					end
+					act 'Rush to class':
+						demerit += 5
+	!!					if rand(0,4) = 0:
+	!!						gt 'gschool_leesons', 'late punishment'
+	!!					else
+							cla
+							gs 'gschool_grounds', 'bulding'
+	!!					end
+					end
+				end						
+			elseif hour = 9:
+				'You missed your whole first class, hopefully no one noticed.'
+					act 'Rush to class':
+						demerit += 10
+						cla
+						gs 'gschool_grounds', 'bulding'
+	!!					gs 'gschool_lessons', 'morning'   !This skips all the teacher morning interactions.
+					end
+				end
+			elseif hour < 14:
+				'It''s too late for school now. You have been marked as absent today.'
 			end
-		elseif hour < 14 :
-			'It''s too late for school now. You absent from school today'
+		else
+			'You''re not allowed to attend any classes at school if you''re not wearing your school uniform.'
 		end
 	end
 
