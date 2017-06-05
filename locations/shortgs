@@ -53,32 +53,49 @@ if $ARGS[0] = 'milk_me':
 	end
 	act 'Finish':gt $locM, $metkaM
 end &! --- milk_me ---
-! following function counts the number of guys which PC slept with. It could be used aarraynumber instead 250, but I am not sure whether it is properly set for everybody.
-! use func('shortgs','guy')
+! following function counts the number of guys which PC slept with. 
+! use func('shortgs','guy') or func('shortgs','guy',X) for subset (X can be 'A','B','C','AB','AC','BC')
 if $ARGS[0] = 'guy':
-	s_sht=0 & r_sht=0
-	:loop_shy
-	if s_sht<=250:
+	r_sht=0
+	if $ARGS[1] = '': $temptask = 'ABC' else $temptask = $ARGS[1]
+	:loop_shtty
+	$temptaskchar = mid($temptask,1,1) 
+	$temptask = mid($temptask,2,len($temptask)-1)
+	s_sht=0
+	:loop_shya
+	if s_sht<=dyneval("result = <<$temptaskchar>>arraynumber"):
 		s_sht += 1
-		if npc_sex['A<<s_sht>>'] > 0: r_sht = r_sht + iif(npc_gender['A<<s_sht>>'] = 0,1,0)
-		jump 'loop_shy'
+		if npc_sex['<<$temptaskchar>><<s_sht>>'] > 0: r_sht = r_sht + iif(npc_gender['<<$temptaskchar>><<s_sht>>'] = 0,1,0)
+		jump 'loop_shya'
+	end
+	if len($temptask) > 0:jump 'loop_shtty'
 	end
 	result = r_sht
 	killvar 'r_sht'
+	killvar '$temptask'
+	killvar '$temptaskchar'
 	killvar 's_sht'
 end &! --- guy ---
-! following function counts the number of girl which PC slept with. It could be used aarraynumber instead 250, but I am not sure whether it is properly set for everybody.
-! use func('shortgs','girl')
+! following function counts the number of girls which PC slept with.
+! use func('shortgs','girl') or func('shortgs','girl',X) for subset (X can be 'A','B','C','AB','AC','BC')
 if $ARGS[0] = 'girl':
-	s_sht=0 & r_sht=0
+	r_sht=0
+	if $ARGS[1] = '': $temptask = 'ABC' else $temptask = $ARGS[1]
+	:loop_shttl
+	$temptaskchar = mid($temptask,1,1) 
+	$temptask = mid($temptask,2,len($temptask)-1)
+	s_sht=0
 	:loop_shl
-	if s_sht<=250:
+	if s_sht<=dyneval("result = <<$temptaskchar>>arraynumber"):
 		s_sht += 1
-		if npc_sex['A<<s_sht>>'] > 0: r_sht = r_sht + iif(npc_gender['A<<s_sht>>'] = 1,1,0)
+		if npc_sex['<<$temptaskchar>><<s_sht>>'] > 0: r_sht = r_sht + iif(npc_gender['<<$temptaskchar>><<s_sht>>'] = 1,1,0)
 		jump 'loop_shl'
 	end
+	if len($temptask) > 0: jump 'loop_shttl'
 	result = r_sht
 	killvar 'r_sht'
+	killvar '$temptask'
+	killvar '$temptaskchar'
 	killvar 's_sht'
 end &! --- girl ---
 
