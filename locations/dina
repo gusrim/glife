@@ -122,11 +122,9 @@ $rexpot = {
 	gs 'boyStat', 'A166'
 }
 
-!! therapist values/dynamics:
-timeTresh = 300
-
 $hypnoDaychange = {	
-	!Therapist - missed visitation effect
+	timeTresh = 76 - 4*hypnoType
+	!!Withdrawal effect begings if too strong influence and no visitation
 	if daystart-hypnoDay > 7: 
 		if hypnoAddict = 1:
 			hypnoWithdrawal = 1
@@ -134,7 +132,7 @@ $hypnoDaychange = {
 			hypnoWithdrawal = 2
 		end
 	end
-	!daily weaning of therapist influence
+	!!daily weaning of therapist influence
 	if hypnoStrength > 0: hypnoStrength -= 1
 	if hypnoTime > 0 and hypnoStrength = 0:
 		if hypnoAddict = 0:
@@ -157,34 +155,43 @@ $hypnoDaychange = {
 }
 
 $hypnoAddiction = {
-	if spdirtyi = 1:
-		if hypnoAddict = 1:
-			pcs_mood += 2
+	if hypnoAddict > 0:
+		if cumloc[0] = 1 or cumloc[3] = 1:
+			killvar 'missCum'
+			if hypnoAddict = 1:
+				pcs_mood += 5
+			else
+				pcs_mood += 10
+			end
 		else
-			pcs_mood += 5
+			missCum += 1
 		end
-	else
-		missCum += hypnoTime
-	end
-	
-	if missCum >= timeTresh:
-		if hypnoAddict = 1:
-			pcs_mood -= 5
-			pcs_horny += 5
-		else
-			pcs_mood -= 10
-			pcs_horny += 10
+		
+		if missCum > timeTresh:
+			if hypnoAddict = 1:
+				pcs_mood -= 5
+				pcs_horny += 10
+			else
+				pcs_mood -= 10
+				pcs_horny += 20
+			end
 		end
-	end
-	
-	if hypnoWithdrawal > 0 and missCum >= timeTresh and pcs_sprt > 0:
-		if hypnoWithdrawal = 1:
-			sprt_deg -= 1
-		else
-			sprt_deg -= 2
+		
+		if hypnoWithdrawal > 0:
+			if hypnoWithdrawal = 1:
+				if missCum >= timeTresh:
+					sprt_deg -= 2*hypnoAddict
+					pcs_mood -= 10
+				else
+					if rand(0,1) = 0:sprt_deg -= hypnoAddict
+					pcs_mood -= 5
+				end
+			end
 		end
 	end
 }
+
+!!---------------
 
 $prezik = {
 	if prezik > 0:
