@@ -123,9 +123,7 @@ if $ARGS[0] = '':
 				![RANDOM EVENTS (Strangers inviting her to have beer or something else with them, but overall friendly/consensual tone)?]
 			end
 		end
-	end
 
-	if hour >= 16:	
 		act 'Order a shot of vodka (5 <b>₽</b>)':
 			'You go to the counter, sit down on one of the stools and, when the bartender notices you, ask: "Can I have a shot of vodka?"'
 			if knowMartin = 1:
@@ -192,6 +190,8 @@ if $ARGS[0] = '':
 				![Events where Sveta interacts with random guys, resulting in drunk sex, groping etc. when drinking vodka?]
 			end
 		end
+
+		act 'Go to the toilet': gt 'qwBarPoletToilet'
 	end
 !! 'Look around the bar' action to find people to interact with/who will invite her to a drink?
 
@@ -204,10 +204,6 @@ if $ARGS[0] = '':
 	![Relationship stat for Martin - advances as Sveta converses with him and he saves her from people who want to rape her; once it reaches a threshold (10? 20?), sexual events with him become available]
 	if hour < 16 and MartinRel > 7:
 		'With the bar closed, Martin is cleaning up, taking stock and doing whatever else he has to do to keep the place running smoothly. Since you are more or less alone with him, now might be the perfect time to talk to him in private...'
-	end
-
-	if hour >= 16:
-		act 'Go to the toilet': gt 'qwBarPoletToilet'
 	end
 		
 	act 'Leave':gt 'nord'
@@ -535,6 +531,8 @@ if $ARGS[0] = 'SoberEncounters':
 	Sober_Enc_Rand = RAND(1,1)
 	
 	if Sober_Enc_Rand = 1 and Jaska_Ev = 0:
+		*clr
+		cla
 		'<center><img <<$set_imgh>> src="images/locations/city/industrial/bar/Billiard 1.jpg"></center>'
 		minut += 5
 		'While you''re sitting idly at the counter, drink in hand, you take a look around the room. After a moment, your attention is pulled to three guys playing pool. Two of them look to be in their mid to late 30s, while the third looks to be in his early 20s. They’re all dressed casually albeit a bit rough looking.'
@@ -548,6 +546,8 @@ if $ARGS[0] = 'SoberEncounters':
 		end
 
 		act 'Ask them if you can play’':
+			*clr
+			cla
 			'<center><img <<$set_imgh>> src="images/locations/city/industrial/bar/Jaska.jpg"></center>'
 			'You make your way over to the three of them just as they’re setting up for another round. "Are you guys playing for money?" you ask.'
 			'"Not anymore." One of the older guys laughs, flaunting the wad of cash. "We’re done with this dumbass."'
@@ -560,8 +560,11 @@ if $ARGS[0] = 'SoberEncounters':
 			'"Right. Well, I’m Jaska, if you didn’t already know." He laughs ruefully, "So, you ever play pool?" You shake your head and Jaska’s face lights up a bit. "Then how about I teach you," he suggests, not really asking as much as telling you.'
 
 			if pcs_billiard < 10:
-				act '"Sounds fun"'
+				act '"Sounds fun"':
+					cla
+					*nl
 					minut += 60
+					gs 'stat'
 					Jaska_Ev = 1
 					'Jaska smiles and hands you his pool cue. You watch him gather the balls into the triangle and set them up in the middle before grabbing another pool cue off the wall. "Alright, since it’s your first time, I won’t bore you with the technical shit, and keep it simple." He says as he moves behind you, his hand on the small of your back as he gently pushes you closer to the table.'
 					'"Like this?" You ask, following his lead. You lean down low to the table and allow yourself to be moved this way and that way by Jaska. Before you know it, an hour has passed and he tells you that you’ve got the basics down, even going as far as to say you could probably beat some of the regulars.'
@@ -571,9 +574,12 @@ if $ARGS[0] = 'SoberEncounters':
 					act 'Return to the bar': gt 'qwBarPolet'
 				end
 			else
-				act 'I already know how to play'
-					minut += 60
+				act 'I already know how to play':
+					cla
+					*nl
 					Jaska_Ev = 1
+					minut += 60
+					gs 'stat'
 					'"I already know to how play," you say with a smile.'
 					'Jaska looks a bit surprised, "Oh yeah? Then what are we waiting for, lets play." He says, handing you a pool cue. The two of you spend an hour playing together, and you find that you really enjoy his company, even though he’s absolutely terrible at pool.'
 					*nl
@@ -590,9 +596,13 @@ if $ARGS[0] = 'SoberEncounters':
 	!elseif Sober_Enc_Rand = 1:
 	
 	else
+		cla
+		*nl
 		minut += 5
 		'While you are sitting at the bar and having your drink, a guy who''s slightly older than you - in his mid- or maybe late twenties - sits down next to you and orders himself a drink. After a few minutes of silently nursing on your respective drinks, he starts chatting you up and offers to buy you a drink.'
 		act 'Decline':
+			cla
+			*nl
 			'You shake your head no and decline the offered drink, letting him know you can buy your own. "But thanks anyways."' 
 			'He doesn''t seem too disappointed, though. He remains polite and chats with you for a few more minutes before getting up and leaving you to yourself.'
 			
@@ -600,10 +610,14 @@ if $ARGS[0] = 'SoberEncounters':
 		end
 			
 		act 'Accept':
+			cla
+			*nl
 			alko += 2
 			minut += 5
 			'You smile at him and accept his offer. He buys you another drink and as you drink it, the two of you chat some more about everything and nothing. Eventually he asks you if you would like to go play pool with him.'
 			act 'Decline':
+				cla
+				*nl
 				minut += 30
 				'You decline the offer with a laugh.' 
 				'"After the drinks I''ve had, you''d have it too easy", you joke, to which he responds with a broad laughter.' 
@@ -614,8 +628,10 @@ if $ARGS[0] = 'SoberEncounters':
 			end
 				
 			act 'Challange accepted':
+				cls
 				'<center><img <<$set_imgh>> src="images/locations/city/industrial/bar/sex/pool/pool1.jpg"></center>'
 				minut += 30
+				gs 'stat'
 				pcs_billiard += rand(1,3)
 				'You agree to go play pool with him and he leads you to the side area where the lone pool table sits, deserted and in sore need of use.' 
 				'Your new acquaintance racks them up and lets you go first. It is a very close game: You both start off slow; he takes the lead for most of the game, seemingly effortlessly pocketing one ball after the other, but then towards the end he seems to be having trouble even hitting the ones he was aiming for and more than once accidentally sets up easy shots for you. You catch up, take the lead and, with a final good shot, you beat him.' 
@@ -626,6 +642,8 @@ if $ARGS[0] = 'SoberEncounters':
 				'"I don''t know... 5,000 rubels?"'
 				
 				act 'Decline':
+					cla
+					*nl
 					'You shake you head no.'
 					'"That''s a lot of money for a friendly match, so I think I''m gonna pass. I should get going soon anyway."'
 					'He seems slightly disappointed but quickly recovers: "Well, it was fun while it lasted."'
@@ -637,6 +655,8 @@ if $ARGS[0] = 'SoberEncounters':
 				
 				if money > 5000:
 					act 'Accept':
+						cla
+						*nl
 						'<center><img <<$set_imgh>> src="images/locations/city/industrial/bar/sex/pool/pool2.jpg"></center>'
 						billard_ev_var = 1
 						'"Alright, let''s play."'
@@ -647,12 +667,16 @@ if $ARGS[0] = 'SoberEncounters':
 				
 				if money < 5000 or pcs_int >= 60 or pcs_persuas >=60:
 					act 'Tell him you don''t have that kind of money':
+						cla
+						*nl
 						'You shrug slightly and tell him you don''t have that much money on you. He nods in understanding, then looks around a bit before leaning in close. "We can play for something else, you know..."'
 						'You look at him suspiciously. "Like what?"'
 						'He gives you a relaxed, friendly smile. "If you win, you get the money. And if I win, you give me a blow job. Sound fair?"'
 					
 						if city_slut < 75 and (pcs_dom >= 20 or (pcs_exhibition < 20 and alko < 5) or pcs_horny < 30):
 							act 'Not that kind of girl':
+								cla
+								*nl
 								pcs_dom += 1
 								'You shake your head and glare at him.'
 								'"Do I look like some sort of cheap whore to you?"'
@@ -663,6 +687,8 @@ if $ARGS[0] = 'SoberEncounters':
 						end
 					
 						act 'I don''t think so':
+							cla
+							*nl
 							'The thought of making a wager that might end up with you sucking some random guy''s cock doesn''t really bother you in and of itself, but you are not really interest in it either.' 
 							'Deciding against it, you tell him: "I think I''ll pass today. Thank you for the drink, though."' 
 							'He seems to notice that you don''t seem angry or even put off, so he smiles and simply says, "See you around," before you leave.'
@@ -671,6 +697,8 @@ if $ARGS[0] = 'SoberEncounters':
 						end
 						
 						act 'You''re on':
+							cla
+							*nl
 							'<center><img <<$set_imgh>> src="images/locations/city/industrial/bar/sex/pool/pool2.jpg"></center>'
 							billard_ev_var = 2
 							'<i>I can take him</i>, you think to yourself, <i>and even if I can''t, it''s just a blow job.</i>' 
@@ -691,7 +719,8 @@ if $ARGS[0] = 'DrunkEncounters':
 	Drunk_Enc_Rand = RAND(1,1)
 	
 	if Drunk_Enc_Rand = 1:
-		
+		cls
+		gs 'stat'
 		gs 'npcgeneratec', 0, 'stranger', rand(18,35)
 		gs 'boyStat', $npclastgenerated
 		
@@ -702,6 +731,8 @@ if $ARGS[0] = 'DrunkEncounters':
 		'Truth is, you''re drinking more than you can really handle and at this point, you are starting to feel pretty drunk. As you lean against the bar, you feel someone grinding their crotch against your ass; you barely notice that at first, but when he grabs you by the hip with one hand to pull you back against him, it becomes pretty hard to ignore, and just then, he grabs you by your hair and tilts you forward a bit more.'
 	
 		act 'Tell him to get lost':
+			cla
+			*nl
 			MartinRel += 1
 			'At first you just try to pull away, then, when that fails, you try to shove him off, but the guy hangs onto you, his grip tight and insistent. Just as you are about to say something, Martin comes over.' 
 			'"Is there a problem here?"' 
@@ -716,6 +747,8 @@ if $ARGS[0] = 'DrunkEncounters':
 		
 		if pcs_horny >= 50 or sub >= 20:
 			act 'Grind back against him.':
+				cla
+				*clr
 				'<center><img <<$set_imgh>> src="images/locations/city/industrial/bar/sex/bar/bargrind2.gif"></center>'
 				gs 'boyStat', $npclastgenerated
 				'You grind your butt back against him and that is all the incentive he needs: After a little more grinding, he reaches around and worms his fingers into your bottoms. You are shocked and want to say something but just when you open your mouth, he finds your clit and your protest turns into a soft moan. You can feel his erection growing against your butt and the whole situation is getting you really excited.'
@@ -723,6 +756,8 @@ if $ARGS[0] = 'DrunkEncounters':
 				gs 'stat'
 				
 				act 'Let him guide you':
+					cla
+					*clr
 					'<center><img <<$set_imgh>> src="images/locations/city/industrial/bar/sex/bar/bargrinds1.gif"></center>'
 					gs 'boyStat', $npclastgenerated
 					'He works your clit with his fingers for a bit, clearly knowing what he''s doing and getting you hot and bothered before he pulls his hand free. He turns you around so your back is against the bar and then pushes down on your shoulders until you are squatted down in front of him and hidden from most views.' 
@@ -735,6 +770,8 @@ if $ARGS[0] = 'DrunkEncounters':
 					$orgasm_txt = 'Your fingers on your needy cunt and the sensation of blowing a stranger in the middle of a bar prove too much to you, and you cum, shaking all over, your moans muffled by his <<$dick_girth>> cock.'
 					
 					act 'Finish him':
+						cla
+						*clr
 						'<center><img <<$set_imgh>> src="images/locations/city/industrial/bar/sex/bar/bargrinds2.jpg"></center>'
 						gs 'boyStat', $npclastgenerated
 						'You are not quite sure for how long you are squatting there while he fucks your mouth, but at some point, he picks up the pace and starts to groan, then suddenly pulls his cock out of your mouth and the first hot jet of sperm hits your face, then another shoots into your mouth. Several more follow and cover your lips, chin and tongue with cum.' 
@@ -753,6 +790,8 @@ if $ARGS[0] = 'DrunkEncounters':
 					
 				if pcs_dom > 20:
 					act 'Take charge':
+						cla
+						*clr
 						'<center><img <<$set_imgh>> src="images/locations/city/industrial/bar/sex/bar/bargrindd1.jpg"></center>'
 						gs 'boyStat', $npclastgenerated
 						'Once you are good and wet, you pull his hands away, sit down on a bar stool, move your clothes out of the way enough to reveal your pussy and spread your legs as you pull him close. You gently push down on his shoulders and he gets the idea, smiles and goes down to his knees to lick your pussy.' 
@@ -764,6 +803,8 @@ if $ARGS[0] = 'DrunkEncounters':
 						gs 'stat'
 
 						act 'Got to leave':
+							cla
+							*nl
 							pcs_dom += 2
 							'You put your hands on his and stop him from undoing his pants further. You lean in to kiss his cheek, then whisper. "Thank you for this... but I gotta go. Have a nice evening."' 
 							'Then, before he has even had time to process what you just said, you pull away and walk off. You can hear him calling you a "bitch" among other things, but you don''t care - you got yours, and that puts a spring in your step as you leave the bar.'
@@ -772,6 +813,8 @@ if $ARGS[0] = 'DrunkEncounters':
 						end
 													
 						act 'Return the favor':
+							cla
+							*clr
 							'<center><img <<$set_imgh>> src="images/locations/city/industrial/bar/sex/bar/bargrinds1.gif"></center>'
 							gs 'boyStat', $npclastgenerated
 							'Seeing as he got down on you right then and there, it seems only fair for you to do the same for him, so you get down on your knees, squatted down in front of him with your back against the counter, hidden from most views.'
@@ -784,6 +827,8 @@ if $ARGS[0] = 'DrunkEncounters':
 							$orgasm_txt = 'Your fingers on your needy cunt and the sensation of blowing a stranger in the middle of a bar prove too much to you, and you cum, shaking all over, your moans muffled by his <<$dick_girth>> cock.'
 					
 							act 'Finish him':
+								cla
+								*clr
 								'<center><img <<$set_imgh>> src="images/locations/city/industrial/bar/sex/bar/bargrinds2.jpg"></center>'
 								gs 'boyStat', $npclastgenerated
 								'You are not quite sure for how long you are squatting there while he fucks your mouth, but at some point, he picks up the pace and starts to groan, then suddenly pulls his cock out of your mouth and the first hot jet of sperm hits your face, then another shoots into your mouth. Several more follow and cover your lips, chin and tongue with cum.' 
@@ -830,11 +875,13 @@ if $ARGS[0] = 'billiard':
 
 	if billwin > 16 and billard_ev_var = 1:
 		act 'Win':
+			cls
 			'<center><img <<$set_imgh>> src="images/locations/city/industrial/bar/sex/pool/poolw.jpg"></center>'
 			pcs_billiard += rand(1,3)
 			money += 5000
 			billard_ev_var = 0
 			minut += 30
+			gs 'stat'
 			'He comes out strong and it is a hard game, but you still manage to win by a hair.' 
 			'He seems completely surprised by the fact that you beat him but still congratulates you.' 
 			'"How about a rematch?" You tease, to which he laughs and shakes his head: "Nah, I think I''ve lost enough money for one day."'
@@ -845,16 +892,21 @@ if $ARGS[0] = 'billiard':
 
 	elseif billard_ev_var = 1:
 		act 'Lose':
+			cla
+			*nl
 			pcs_billiard += rand(1,3)
 			money -= 5000
 			billard_ev_var = 0
 			minut += 30
+			gs 'stat'
 			'He had a strong start, but you caught back up to him, matching him ball for a ball for a while. Towards the end, however, he ran the table with precise shots, not only pocketing his balls but also setting them up in ways that blocked yours. You lost, utterly and completely.'
 			'He laughs and says you almost had him, pointing out how lucky he got there at the end to beat you, though you''re not quite sure it was as close as he makes it sound.' 
 			'Still, he offers to play you again for the same amount, so you get a chance to "win your money back."'
 			
 			if money > 5000:
-				act 'Play again'
+				act 'Play again':
+					cla
+					*nl
 					'"Alright, let''s play."'
 					'You open your purse and pull out enough money to lay it down on the table. He grins, racks up the balls and lets you break again as he lays his money down on top of yours.'
 					gt 'qwBarPolet', 'billiard'
@@ -862,12 +914,16 @@ if $ARGS[0] = 'billiard':
 			end
 			
 			act 'Tell him you don''t have that kind of money':
+				cla
+				*nl
 				'You shrug slightly and tell him you don''t have that much money on you. He nods in understanding, then looks around a bit before leaning in close. "We can play for something else, you know..."'
 				'You look at him suspiciously. "Like what?"'
 				'He gives you a relaxed, friendly smile. "If you win, you get the money. And if I win, you give me a blow job. Sound fair?"'
 				
 				if city_slut < 75 and (pcs_dom >= 20 or (pcs_exhibition < 20 and alko < 5) or pcs_horny < 30):
 					act 'Not that kind of girl':
+						cla
+						*nl
 						pcs_dom += 1
 						'You shake your head and glare at him.'
 						'"Do I look like some sort of cheap whore to you?"'
@@ -877,6 +933,8 @@ if $ARGS[0] = 'billiard':
 				end
 
 				act 'I don''t think so':
+					cla
+					*nl
 					'The thought of making a wager that might end up with you sucking some random guy''s cock doesn''t really bother you in and of itself, but you are not really interest in it either.' 
 					'Deciding against it, you tell him: "I think I''ll pass today. Thank you for the drink, though."' 
 					'He seems to notice that you don''t seem angry or even put off, so he smiles and simply says, "See you around," before you leave.'
@@ -885,6 +943,8 @@ if $ARGS[0] = 'billiard':
 				end
 					
 				act 'You''re on':
+					cla
+					*nl
 					'<center><img <<$set_imgh>> src="images/locations/city/industrial/bar/sex/pool/pool2.jpg"></center>'
 					billard_ev_var = 2
 					'<i>I can take him</i>, you think to yourself, <i>and even if I can''t, it''s just a blow job.</i>' 
@@ -894,6 +954,8 @@ if $ARGS[0] = 'billiard':
 			end
 					
 			act 'You''ve played enough': 
+				cla
+				*nl
 				'You shake your head no.'
 				'"I think I''ve lost enough money, and I should probably get going anyway."'
 				'"Sounds reasonable," he concurs, "but remember, luck is fickle: My luck can run out any moment."'
@@ -907,11 +969,13 @@ if $ARGS[0] = 'billiard':
 			
 	elseif billwin > 16 and billard_ev_var = 2:
 		act 'Win':
-			'<center><img <<$set_imgh>> src="images/locations/city/industrial/bar/sex/pool/poolw.jpg"></center>'
+			cls
 			pcs_billiard += rand(1,3)
 			money += 5000
 			billard_ev_var = 0
 			minut += 30
+			gs 'stat'
+			'<center><img <<$set_imgh>> src="images/locations/city/industrial/bar/sex/pool/poolw.jpg"></center>'
 			'He comes out strong and it is a hard game, but you still manage to win by a hair.' 
 			'He seems completely surprised by the fact that you beat him but still congratulates you.' 
 			'"How about a rematch?" You tease, to which he laughs and shakes his head: "Nah, I think I''ve lost enough money for one day."'
@@ -922,16 +986,20 @@ if $ARGS[0] = 'billiard':
 		
 	elseif billard_ev_var = 2:
 		act 'Lose':
-			'<center><img <<$set_imgh>> src="images/locations/city/industrial/bar/sex/pool/pool2.jpg"></center>'
+			cls
 			pcs_billiard += rand(1,3)
 			money -= 5000
 			billard_ev_var = 0
 			minut += 30
+			gs 'stat'
+			'<center><img <<$set_imgh>> src="images/locations/city/industrial/bar/sex/pool/pool2.jpg"></center>'
 			'He is good - really good. In fact, you think he has been holding back a bit until now: He rarely misses a shot, sets up obstacles for you, and before long, he has won the game.' 
 			'"Guess I''m getting that blowjob," he says with a smug smile.'
 			'You made that bet willingly, but you are getting the distinct feeling that he hustled you...'
 			
 			act 'Refuse':
+				cla
+				*nl
 				'You shake your head. "I''m not sucking your dick. You scammed me."'
 				'You turn to walk off, but his eyes flash with anger and he grabs your arm. "You''re not going anywhere. You made a bet, sweetheart, and you lost, so pay up."' 
 				'"Let me go!" You try and jerk free but you can''t, he is much stronger than he looks. Things get a little heated and you both get louder, but before things can escalate, Martin, with his uncanny ability to appear wherever he''s needed, walks in.'
@@ -945,6 +1013,8 @@ if $ARGS[0] = 'billiard':
 				'"Alright." Martin pauses for a second. "Leave."'
 				
 				if MartinRel < 5:
+					cla
+					*nl
 					MartinRel -= 1
 					'You look up and see Martin''s eyes rest on you. "Leave, now."'
 					'"But-"'
@@ -955,6 +1025,8 @@ if $ARGS[0] = 'billiard':
 					act 'Leave the bar': gt 'nord'
 				
 				else
+					cla
+					*nl
 					MartinRel += 1
 					'You look up and expect to see Martin''s face, but instead all you see is his shoulder - his eyes are resting on your pool partner who looks back and forth between the two of you incredulously.'
 					'"You''ve gotta be kidding me."'
@@ -978,6 +1050,8 @@ if $ARGS[0] = 'billiard':
 			end
 				
 			act 'Pay up':
+				cla
+				*clr
 				'<center><img <<$set_imgh>> src="images/locations/city/industrial/bar/sex/pool/poold1.jpg"></center>'
 				gs 'npcgeneratec', 0, 'stranger', rand(18,35)
 				gs 'boyStat', $npclastgenerated
@@ -987,11 +1061,11 @@ if $ARGS[0] = 'billiard':
 				gs 'stat'
 				
 				act 'Payoff':
+					cls
 					'<center><img <<$set_imgh>> src="images/locations/city/industrial/bar/sex/pool/poold2.jpg"></center>'
-					gs 'boyStat', $npclastgenerated
 					'It feels like you''ve only just started when you hear him give a suppressed grunt. You barely manage to open your mouth and pull away as he shoots his load of cum all over your face and into your mouth. He looks down at you as he tucks his dick away.' 
 					'"Pleasure doing business with you sweetheart, maybe we can do it again sometime. And I hope you enjoy your... consolation price." With a fat grin on his face, he walks off, whistling and very pleased with himself, leaving you to clean yourself up.'
-					'Maybe billiard just isn''t for you.'
+					'Maybe billiards just isn''t for you.'
 					gs 'arousal', 'end'
 					spafinloc = 11
 					gs 'cum_manage'
@@ -1006,14 +1080,14 @@ if $ARGS[0] = 'billiard':
 		end
 		
 	
-	!elseif billwin > 10:
+!!	elseif billwin > 10:
 		
-	!	pcs_billiard += rand(1,3)
+!!		pcs_billiard += rand(1,3)
 		
 			
-	!else
+!!	else
 		
-	!	pcs_billiard += rand(1,3)
+!!		pcs_billiard += rand(1,3)
 		
 	end
 end
