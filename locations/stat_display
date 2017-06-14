@@ -155,8 +155,7 @@ if Enable_showattr = 1:
 		$stat_msg += '<TR><TD width="85%">'+FUNC('indiktab', '1', pcs_apprnc / 2, pcs_apprnc)+'</TD><TD> Attractiveness</TD></TR>'
 		if SchoolAtestat = 0 and StoryLine > 0:$stat_msg += '<TR><TD width="85%">'+FUNC('indiktab', '1', pcs_grades, pcs_grades)+'</TD><TD nowrap> School Grades</TD></TR>'
 		if pcs_exhibition > 0:$stat_msg += '<TR><TD width="85%">'+FUNC('indiktab', '1', pcs_exhibition, pcs_exhibition)+'</TD><TD> Exhibitionism</TD></TR>'
-		if pcs_heels > 0:$stat_msg += '<TR><TD width="85%">'+FUNC('indiktab', '1', pcs_heels, pcs_heels)+'</TD><TD> Heels skill</TD></TR>'
-		$stat_msg += '</TABLE></font>'
+		if pcs_heels > 0:$stat_msg += '<TR><TD width="85%">'+FUNC('indiktab', '1', pcs_heels, pcs_heels)+'</TD><TD> Heels skill</TD></TR></TABLE></font>'
 		killvar '$dom_stat_msg'
 	else
 		gs 'indik','3', 50+(pcs_dom-sub)/2, 50+(pcs_dom-sub)/2
@@ -315,7 +314,9 @@ if Enable_showrelation = 1:
 	if hantersAndreiQw > 0:gs'show_table','Hunter Andrew: <<hantersAndreiQw>>','2'
 	if hantersSergeiQw > 0:gs'show_table','Hunter Sergei: <<hantersSergeiQw>>','2'
 	if hantersIgorQw > 0:gs'show_table','Hunter Igor: <<hantersIgorQw>>','2'
-	if bfA > 0:gs'show_table', 'BF <<$boydescA>>: <<bfA>>','2'
+	if pcs_lovers[1] = 1:gs'show_table', 'BF <<$boydesc[1]>>: <<bfA>>','2'
+	if pcs_lovers[2] = 1:gs'show_table', 'BF <<$boydesc[2]>>: <<bfB>>','2'
+	if pcs_lovers[3] = 1:gs'show_table', 'BF <<$boydesc[3]>>: <<bfC>>','2'
 	if StoryLine > 0:
 		if npc_rel['A29'] > 0:gs'show_table','Mother: <<npc_rel[''A29'']>>','2'
 		if npc_rel['A28'] > 0:gs'show_table','Father: <<npc_rel[''A28'']>>','2'
@@ -992,14 +993,24 @@ elseif tanwork = 1:
 	$streetev_home = 'Tanya''s apartment'
 elseif student > 0:
 	$streetev_home = 'your dorm'
+!elseif ParHomeBlock = 0 and storyline = 1:
+!	$streetev_home = 'outside your apartment block'
 else
 	$streetev_home = 'the train station'
 end
 
-if hour < meethour and svidanieA = 1:$stat_msg += '<BR><<$boydescA>> will be waiting for you near <<$streetev_home>> at <<meethour>>:00.'
-if hour = meethour and svidanieA = 1:$stat_msg += '<BR><b><font color="red"><<$boydescA>> is waiting for you by <<$streetev_home>>.</font></b>'
+if hour < meethourA and svidanieA = 1:$stat_msg += '<BR><<$boydesc[1]>> will be waiting for you near <<$streetev_home>> at <<meethourA>>:00.'
+if hour = meethourA and svidanieA = 1:$stat_msg += '<BR><b><font color="red"><<$boydesc[1]>> is waiting for you by <<$streetev_home>>.</font></b>'
+if meetdayA < daystart and svidanieA = 1:bfA -= 10 & svidanieA = 0
 
-if meetday < daystart and svidanieA = 1:bfA -= 10 & svidanieA = 0
+if hour < meethourB and svidanieB = 1:$stat_msg += '<BR><<$boydesc[2]>> will be waiting for you near <<$streetev_home>> at <<meethourB>>:00.'
+if hour = meethourB and svidanieB = 1:$stat_msg += '<BR><b><font color="red"><<$boydesc[2]>> is waiting for you by <<$streetev_home>>.</font></b>'
+if meetdayB < daystart and svidanieB = 1:bfB -= 10 & svidanieB = 0
+
+if hour < meethourC and svidanieC = 1:$stat_msg += '<BR><<$boydesc[3]>> will be waiting for you near <<$streetev_home>> at <<meethourC>>:00.'
+if hour = meethourC and svidanieC = 1:$stat_msg += '<BR><b><font color="red"><<$boydesc[3]>> is waiting for you by <<$streetev_home>>.</font></b>'
+if meetdayC < daystart and svidanieC = 1:bfC -= 10 & svidanieC = 0
+
 if StrongNarkota > 20:$stat_msg += '<BR><b><font color="red">You are stoned.</font></b>'
 
 if alko > 0:
