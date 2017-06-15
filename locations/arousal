@@ -26,6 +26,10 @@ temp_anal = 0
 if $ARGS[0] ! 'end' and $ARGS[0] ! 'checks' and $ARGS[0] ! 'count' and $ARGS[0] ! 'count2':
 
 	if mid($ARGS[2],1,4) = 'dick': temp_dick = dyneval('result='+$ARGS[2]) else temp_dick = dick
+	if mid($ARGS[2],1,4) = 'dick': temp_silavag = dyneval('result=silavag'+mid($ARGS[2],5,len($ARGS[2])-4)) else temp_silavag = silavag
+	if mid($ARGS[2],1,4) = 'dick': $temp_dick_girth = dyneval('$result=$dick_girth'+mid($ARGS[2],5,len($ARGS[2])-4)) else $temp_dick_girth = $dick_girth
+	if strpos($ARGS[2]+$ARGS[3]+$ARGS[4]+$ARGS[5]+$ARGS[6]+ $ARGS[7]+ $ARGS[8],'rough')+strpos($ARGS[2]+$ARGS[3]+$ARGS[4]+$ARGS[5]+$ARGS[6]+ $ARGS[7]+ $ARGS[8],'beast') > 0: temp_silavag = 0
+	grange = dyneval('result=strpos(''skinny   slimx     well pr   thicker   thickx    massive   monstrous'',$ARGS[0])',mid($temp_dick_girth+'x',1,6))/2
 
 	!!	This is to allow a Succubus with the right skill level to handle any size then go back to original size
 	if succubusflag = 1 and sucskill >= 4:
@@ -78,19 +82,29 @@ if $ARGS[0] ! 'end' and $ARGS[0] ! 'checks' and $ARGS[0] ! 'count' and $ARGS[0] 
 	elseif $ARGS[0] = 'anal':
 		temp_anal = 1
 		count['anal'] = 1
-		if temp_dick > pcs_ass: pcs_ass += 1
-		if ((pcs_ass + lubonus + 2) * 2) <= temp_dick:
-			!!Painfully too big for PC
-			stim['act'] = 20
-			if agape < 3:agape = 3
-		elseif (pcs_ass + lubonus + 2) < temp_dick:
-			!!Big, but more bearable
-			stim['act'] = 65
-			if agape < 1:agape = 1
-		elseif pcs_ass + lubonus + 2 >= temp_dick:
-			!!Perfect size
-			stim['act'] = 80
-		end
+		! length and girth abilities of anus are not also separated , but I suppose that they are related although it is not propable
+		! we can estimate difference in girth and lenght anal_girth_difference and anal_lenght_difference - names are shortened
+		altdif = temp_dick - pcs_ass
+		agrdif = grange - pcs_ass
+		! negative influence of the difference can be reduced by sex skill and also by lubricant
+		! I made it as simply as posible so you do not complain about reality, feel free to modify the algorithm
+		!  when the boy is skilled, he can compensate the difference partly
+		altdif = altdif / (temp_silavag+1)
+		agrdif = agrdif *(5/4 - 1/(4 - temp_silavag))
+		! when the boy is skilled, he does not harm PC with his long dick
+		if (temp_silavag = 2) and (altdif > 0): altdif = 0
+		! lube can compensate the difference a bit
+		if  agrdif > lubonus: agrdif = agrdif - lubonus else if agrdif > 0: agrdif = 0
+		if -agrdif > lubonus: agrdif = agrdif + lubonus else if agrdif < 0: agrdif = 0
+
+		stim['act'] = 80 - (iif(altdif>0,altdif,-altdif) + iif(agrdif >0,agrdif,-agrdif)) + temp_silavag*8
+		! if the dick is smaller, it cannot harm PC
+		if agrdif < 0: agrdif = 0
+		if altdif < 0: altdif = 0
+		! calculate the harm
+		agape = iif((agrdif + altdif) > 10*agape,(agrdif + altdif)/10,agape)
+		! the pain lover the pleasure
+		stim['act'] = stim['act'] - (agrdif + altdif)
 	elseif $ARGS[0] = 'anal_finger':
 		temp_anal = 1
 		count['anal_finger'] = 1
@@ -106,35 +120,35 @@ if $ARGS[0] ! 'end' and $ARGS[0] ! 'checks' and $ARGS[0] ! 'count' and $ARGS[0] 
 	elseif $ARGS[0] = 'anal_dildo':
 		temp_anal = 1
 		count['anal_dildo'] = 1
-		if temp_dick > pcs_ass: pcs_ass += 1
-		if ((pcs_ass + lubonus + 2) * 2) <= temp_dick:
-			!!Painfully too big for PC
-			stim['act'] = 20
-			if agape < 3:agape = 3
-		elseif (pcs_ass + lubonus + 2) < temp_dick:
-			!!Big, but more bearable
-			stim['act'] = 65
-			if agape < 1:agape = 1
-		elseif pcs_ass + lubonus + 2 >= temp_dick:
-			!!Perfect size
-			stim['act'] = 80
-		end
+		! the same as for 'anal'
+		altdif = temp_dick - pcs_ass
+		agrdif = grange - pcs_ass
+		altdif = altdif / (temp_silavag+1)
+		agrdif = agrdif *(5/4 - 1/(4 - temp_silavag))
+		if (temp_silavag = 2) and (altdif > 0): altdif = 0
+		if  agrdif > lubonus: agrdif = agrdif - lubonus else if agrdif > 0: agrdif = 0
+		if -agrdif > lubonus: agrdif = agrdif + lubonus else if agrdif < 0: agrdif = 0
+		stim['act'] = 80 - (iif(altdif>0,altdif,-altdif) + iif(agrdif >0,agrdif,-agrdif)) + temp_silavag*8
+		if agrdif < 0: agrdif = 0
+		if altdif < 0: altdif = 0
+		agape = iif((agrdif + altdif) > 10*agape,(agrdif + altdif)/10,agape)
+		stim['act'] = stim['act'] - (agrdif + altdif)
 	elseif $ARGS[0] = 'anal_strap':
 		temp_anal = 1
 		count['anal_strap'] = 1
-		if temp_dick > pcs_ass: pcs_ass += 1
-		if ((pcs_ass + lubonus + 2) * 2) <= temp_dick:
-			!!Painfully too big for PC
-			stim['act'] = 20
-			if agape < 3:agape = 3
-		elseif (pcs_ass + lubonus + 2) < temp_dick:
-			!!Big, but more bearable
-			stim['act'] = 65
-			if agape < 1:agape = 1
-		elseif pcs_ass + lubonus + 2 >= temp_dick:
-			!!Perfect size
-			stim['act'] = 80
-		end
+		! the same as for 'anal'
+		altdif = temp_dick - pcs_ass
+		agrdif = grange - pcs_ass
+		altdif = altdif / (temp_silavag+1)
+		agrdif = agrdif *(5/4 - 1/(4 - temp_silavag))
+		if (temp_silavag = 2) and (altdif > 0): altdif = 0
+		if  agrdif > lubonus: agrdif = agrdif - lubonus else if agrdif > 0: agrdif = 0
+		if -agrdif > lubonus: agrdif = agrdif + lubonus else if agrdif < 0: agrdif = 0
+		stim['act'] = 80 - (iif(altdif>0,altdif,-altdif) + iif(agrdif >0,agrdif,-agrdif)) + temp_silavag*8
+		if agrdif < 0: agrdif = 0
+		if altdif < 0: altdif = 0
+		agape = iif((agrdif + altdif) > 10*agape,(agrdif + altdif)/10,agape)
+		stim['act'] = stim['act'] - (agrdif + altdif)
 	elseif $ARGS[0] = 'anal_vibe':
 		temp_anal = 1
 		count['anal_vibe'] = 1
@@ -147,23 +161,29 @@ if $ARGS[0] ! 'end' and $ARGS[0] ! 'checks' and $ARGS[0] ! 'count' and $ARGS[0] 
 
 		count['vaginal'] = 1
 		stim['mag'] += 3
-		if temp_dick > pcs_vag: pcs_vag += 1
-		prinat = pcs_vag + (pcs_horny / 10)
-		if temp_dick >= prinat * 2:
-			!!Painfully too big for PC
-			stim['act'] = 40
-			if vgape < 3:vgape = 3
-		elseif temp_dick > prinat:
-			!!Big, but more bearable
-			stim['act'] = 75
-			if vgape < 1:vgape = 1
-		elseif temp_dick <= prinat and temp_dick >= pcs_vag:
-			!!Perfect size
-			stim['act'] = 90
-		elseif temp_dick < pcs_vag:
-			!!On the small side
-			stim['act'] = 80
-		end
+		! length and girth abilities of vagina are not separated , but I suppose that they are related
+		! we can estimate difference in girth and lenght vaginal_girth_difference and vaginal_lenght_difference - names are shortened
+		vgrdif = grange - pcs_vag
+		vltdif = temp_dick - pcs_vag
+		! negative influence of the difference can be reduced by sex skill and also by PCs horniness, using of a lubricant is not established yet
+		! I made it as simply as posible so you do not complain about reality, feel free to modify the algorithm
+		!  when the boy is skilled, he can compensate the difference partly
+		vltdif = vltdif / (temp_silavag+1)
+		vgrdif = vgrdif *(5/4 - 1/(4 - temp_silavag))
+		! when the boy is skilled, he does not harm PC with his long dick
+		if (temp_silavag = 2) and (vltdif > 0): vltdif = 0
+		! even PC horniness can compensate the difference 
+		if    vgrdif > (pcs_horny / 10): vgrdif = vgrdif - (pcs_horny / 10) else if (vgrdif > 0): vgrdif = 0
+		if -1*vgrdif > (pcs_horny / 10): vgrdif = vgrdif + (pcs_horny / 10) else if (vgrdif < 0): vgrdif = 0
+
+		stim['act'] = 80 - (iif(vltdif>0,vltdif,-vltdif) + iif(vgrdif >0,vgrdif,-vgrdif)) + temp_silavag*8
+		! if the dick is smaller, it cannot harm PC
+		if vgrdif < 0: vgrdif = 0
+		if vltdif < 0: vltdif = 0
+		! calculate the harm
+		vgape = iif((vgrdif + vltdif) > 10*vgape,(vgrdif + vltdif)/10,vgape)
+		! the pain lover the pleasure
+		stim['act'] = stim['act'] - (vgrdif + vltdif)
 	elseif $ARGS[0] = 'vaginal_finger':
 		count['vaginal_finger'] = 1
 		stim['mag'] += 1
@@ -178,43 +198,35 @@ if $ARGS[0] ! 'end' and $ARGS[0] ! 'checks' and $ARGS[0] ! 'count' and $ARGS[0] 
 	elseif $ARGS[0] = 'vaginal_dildo':
 		count['vaginal_dildo'] = 1
 		stim['mag'] += 1
-		if temp_dick > pcs_vag: pcs_vag += 1
-		prinat = pcs_vag + (pcs_horny / 10)
-		if temp_dick >= prinat * 2:
-			!!Painfully too big for PC
-			stim['act'] = 20
-			if vgape < 3:vgape = 3
-		elseif temp_dick > prinat:
-			!!Big, but more bearable
-			stim['act'] = 65
-			if vgape < 1:vgape = 1
-		elseif temp_dick <= prinat and temp_dick >= pcs_vag:
-			!!Perfect size
-			stim['act'] = 80
-		elseif temp_dick < pcs_vag:
-			!!On the small side
-			stim['act'] = 70
-		end
+		! the same as for 'vaginal'
+		vgrdif = grange - pcs_vag
+		vltdif = temp_dick - pcs_vag
+		vltdif = vltdif / (temp_silavag+1)
+		vgrdif = vgrdif *(5/4 - 1/(4 - temp_silavag))
+		if (temp_silavag = 2) and (vltdif > 0): vltdif = 0
+		if    vgrdif > (pcs_horny / 10): vgrdif = vgrdif - (pcs_horny / 10) else if (vgrdif > 0): vgrdif = 0
+		if -1*vgrdif > (pcs_horny / 10): vgrdif = vgrdif + (pcs_horny / 10) else if (vgrdif < 0): vgrdif = 0
+		stim['act'] = 80 - (iif(vltdif>0,vltdif,-vltdif) + iif(vgrdif >0,vgrdif,-vgrdif)) + temp_silavag*8
+		if vgrdif < 0: vgrdif = 0
+		if vltdif < 0: vltdif = 0
+		vgape = iif((vgrdif + vltdif) > 10*vgape,(vgrdif + vltdif)/10,vgape)
+		stim['act'] = stim['act'] - (vgrdif + vltdif)
 	elseif $ARGS[0] = 'vaginal_strap':
 		count['vaginal_strap'] = 1
 		stim['mag'] += 1
-		if temp_dick > pcs_vag: pcs_vag += 1
-		prinat = pcs_vag + (pcs_horny / 10)
-		if temp_dick >= prinat * 2:
-			!!Painfully too big for PC
-			stim['act'] = 20
-			if vgape < 3:vgape = 3
-		elseif temp_dick > prinat:
-			!!Big, but more bearable
-			stim['act'] = 65
-			if vgape < 1:vgape = 1
-		elseif temp_dick <= prinat and temp_dick >= pcs_vag:
-			!!Perfect size
-			stim['act'] = 80
-		elseif temp_dick < pcs_vag:
-			!!On the small side
-			stim['act'] = 70
-		end
+		! the same as for 'vaginal'
+		vgrdif = grange - pcs_vag
+		vltdif = temp_dick - pcs_vag
+		vltdif = vltdif / (temp_silavag+1)
+		vgrdif = vgrdif *(5/4 - 1/(4 - temp_silavag))
+		if (temp_silavag = 2) and (vltdif > 0): vltdif = 0
+		if    vgrdif > (pcs_horny / 10): vgrdif = vgrdif - (pcs_horny / 10) else if (vgrdif > 0): vgrdif = 0
+		if -1*vgrdif > (pcs_horny / 10): vgrdif = vgrdif + (pcs_horny / 10) else if (vgrdif < 0): vgrdif = 0
+		stim['act'] = 80 - (iif(vltdif>0,vltdif,-vltdif) + iif(vgrdif >0,vgrdif,-vgrdif)) + temp_silavag*8
+		if vgrdif < 0: vgrdif = 0
+		if vltdif < 0: vltdif = 0
+		vgape = iif((vgrdif + vltdif) > 10*vgape,(vgrdif + vltdif)/10,vgape)
+		stim['act'] = stim['act'] - (vgrdif + vltdif)
 	elseif $ARGS[0] = 'vaginal_vibe':
 		count['vaginal_vibe'] = 1
 		stim['mag'] += 2
