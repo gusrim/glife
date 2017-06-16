@@ -215,24 +215,31 @@ end
 if $ARGS[0] = 'rand_gopnic':
 !!I am splitting this up into gopnik and not gopnik, make sure the code is right please.
 	if grupTipe[r] = 4:
+		*clr
+		cla
 		'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/head/<<r>>.jpg"></center>'
 		'You step away from him, pulling out of reach as you turn around. You point your finger at him. "Don''t make me hurt you, you know I will."'
 		'He laughs a bit and steps up closer again, crowding you a bit but keeps his hands to himself. "Come on <<$pcs_nickname>> you know you want to have some fun, stop acting like you are not all hot and bothered by this. We can help you with that itch."'
 		act 'Back off':
+			*clr
+			cla
 			grupvalue[4] += 5
 			pcs_exhibition += 5
 			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/lunch/buttflash.gif"></center>'
 			'You snort at him and then look at his friend before looking back at him, as you wiggle your middle finger at him. Flipping him off while pretending you are wiggling your finger for another reason. "If I needed something that small to satisfy my itch, I could just use this." His friends howl with laughter, while he fumes a little. Then you turn and walk away with a laugh, flashing them your butt as you do. Teasing them a bit on what they are missing out on.'
 		end
 		act 'Sure why not':
-			cls
+			*clr
+			cla
 			if grupvalue[4] > 50:
 				grupvalue[4] -= 5
 				if grupvalue[4] < 50:grupvalue[4] = 50
 			end			
 			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/bathroom/boysbathroom.jpg"></center>'
 			'You are in the mood anyways so why not, hopefully it isn''t to quick. They lead you to the men''s room, one of the guys drives everyone else out; it''s just you and the Gopniks in there now. One of them leans against the door to block anyone else from coming in. While the rest all start unzipping their pants and pulling out their dicks.'
-			'The walls of the restroom are covered in crude texts, quite a few of them involving you in some way. On the wall of the restroom, you see written in particularly large letters, "<b><<$pcs_nickname>> <<$pcs_lastname>> = <<$gnikname>>"</b>.'
+			'The walls of the restroom are covered in crude texts, quite a few of them involving you in some way.'
+			*nl
+			if pav_slut > 25: 'On one wall you see written in particularly large letters, "<b><<$pcs_nickname>> <<$pcs_lastname>> = <<$gnikname>>"</b>.'
 			act 'Start sucking':
 				cls
 				if r = 9:
@@ -353,7 +360,6 @@ end
 
 if $ARGS[0] = 'rand_scoolboy':
 	scoolboy = rand(1,5)
-	gs 'gschool_events', 'rand_boy_arg', 1, 1, 1, 1, 1, 0
 	*clr & cla
 	if scoolboy = 1:
 		if DimaRudeBlock = 0 and rand(0,2) = 0:
@@ -372,6 +378,7 @@ if $ARGS[0] = 'rand_scoolboy':
 			r = 36
 		end
 	elseif scoolboy = 4:
+		if pav_sex >= 50 and kotovLoveQW <= 0: gt 'gschool_events', 'rand_gopnic'
 		if rand(0,1) = 0:
 			r = 9
 		else
@@ -391,15 +398,11 @@ if $ARGS[0] = 'rand_scoolboy':
 !!This one is fine if it is random but Fedor should be blocked if they are dating.
 			'You can tell from his disappointed expression that <<$rand_boy>> was the one groping your ass. Perhaps he was expecting something firmer, after hanging out with the athletic girls so much? Maybe you should work out more...'
 		elseif scoolboy = 1:
-!!instead of random have it be Dimka(though he is blocked if you erased the video tape he can get), Igor, Andrey, or Mefodiy(Not sure on him, I don't know if he is openly gay or not, if he is not he might do it to hide being gay. You wanted to do a story with him so your call if he is included here.)
+!!instead of random have it be Dimka(though he is blocked if you erased the video tape he can get), Igor, Andrey, or Mefodiy(Not sure on him, I don''t know if he is openly gay or not, if he is not he might do it to hide being gay. You wanted to do a story with him so your call if he is included here.)
 			'Even though he tries to hide it as best he can, the proud grin the face of <<$rand_boy>> tells you that he was the one groping your ass.'
 		elseif scoolboy = 4:
 !!instead of random lets make it Vitek, Dan, or Vasily which uses group 1 in this pav_sex act. Or Roman, Lavrenti, Radomir or Arkadi then it is group two for the pav_sex act
 			'The brazen look on his face betrays <<$rand_boy>>, it must have been him touching your ass. Knowing him, he probably would''ve gone further if there weren''t so many people here.'
-			if pav_sex >= 50 and kotovLoveQW <= 0: 
-				gt 'gschool_events', 'rand_gopnic'
-			exit
-			end
 		elseif scoolboy = 5:
 !!Random is fine since we only have two of them currently and Fedor if he becomes a outcast but again block Fedor if Sveta is still seeing him.
 			'<<$rand_boy>> is trembling slightly, his eyes shifting back and forth as he awkwardly tries to not be noticed by you. It must''ve been him.'
@@ -413,7 +416,7 @@ if $ARGS[0] = 'rand_scoolboy':
 			'Wait a minute... you don''t recognize any of these people! You must be in the wrong classroom!'
 		end		
 		if npc_rel[$static_num] <= 50 and scoolboy ! 3:
-!!this option doesn't show up if it is a outcast since the text above says you believe him.
+!!this option doesn''t show up if it is a outcast since the text above says you believe him.
 			act 'Slap him across the face as hard as you can':
 				*clr & cla
 				npc_rel[$static_num] -= 5
@@ -570,69 +573,48 @@ if $ARGS[0] = 'phone':
 	act 'Put your phone away':
 		*clr
 		cla
-		*nl
+		grupvalue[3] += 5
 		'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/bored.jpg"></center>'
 		'You decide not to aggravate the situation and put your phone away. <<$teacher>> looks at you gratefully as he continues his classes.'
 		act 'Wait for the end of the lesson':gt 'gschool_lunch', 'lesson_end'
-	
 	end
-	
-	if sub < 30:
-		
-		act 'Keep using your phone':
+	act 'Keep using your phone':
+		*clr
+		cla
+		demerit += 5
+		'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/phone.jpg"></center>'
+		'Even though <<$teacher>> saw you use your phone, he didn''t do anything. You figure you can get away with it, and just keep browsing the internet. Realizing you still won''t put the phone away, <<$teacher>> walks over to your desk.'
+		act 'Take photos under your skirt':
 			*clr
 			cla
-			*nl
-			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/phone.jpg"></center>'
-			'Even though <<$teacher>> saw you use your phone, he didn''t do anything. You figure you can get away with it, and just keep browsing the internet. Realizing you still won''t put the phone away, <<$teacher>> walks over to your desk.'
-			
-			if pcs_dom > 70:
-				
-				act 'Take photos under your skirt':
-					*clr
-					cla
-					pcs_horny += 10
-					*nl
-					'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/upskirtselfie.jpg"></center>'
-					'You decide to have some fun with your teacher, and quickly move the phone between your legs and snap some photos under your skirt as you see <<$teacher>> walk towards your desk.'
-					'When the teacher arrives at your desk, he sneers, "And what could you be doing on your phone that''s more important than paying attention in class, Mrs. <<$pcs_lastname>>? Hand it over."'
-					'"Wouldn''t you like to know!" you tease him. You hand over your phone, the screen still on, with the folder containing the photos you just shot opened.'
-					'<<$teacher>> looks at what''s on the screen and his face colors bright red as he turns the screen off and returns to the front of the class.'
-					'As he gets ready to continue his lessons he says, "I''m holding onto your phone for now, Mrs. <<$pcs_lastname>>. You can have it back after class." Later when the class is working on their homework assignments, you can see him browsing your phone when he thinks no one is looking.'
-					
-					act 'Wait for the end of the lesson':gt 'gschool_lunch', 'lesson_end' 
-				
-				end
-			
-			end
-			
-			if pcs_dom > 30:
-				
-				act 'Put the phone between your boobs':
-					*clr
-					cla
-					*nl
-					'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/nophone.jpg"></center>'
-					'You deftly shove the phone in your bra, and smile fiendishly as you see the indecisiveness on your teacher''s face.'
-					'You pretend it''s a perfectly normal place to store your phone, and use your cute voice as you tell him, "Is there a problem, <<$teacher>>? Go ahead, take my phone if you don''t think I should have it." You thrust your chest forward as you encourage him, giving him a nice view of your ample cleavage - the outline of your phone very visible through the fabric.'
-					'Your teacher is completely flabbergasted by your move, and admits defeat. Deciding it''s not worth the effort to take your phone away from you without causing all sorts of awkward situations, he simply returns to the front of the class and continues his lessons. You don''t catch much of them though, you''re too busy browsing the internet after you pull your phone back out of your bra.'
-					
-					act 'Wait for the end of the lesson':gt 'gschool_lunch', 'lesson_end' 
-				
-				end
-			
-			end
-			
-			act 'Hand over the phone':
-				*clr
-				cla
-				*nl
-				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/bored.jpg"></center>'
-				'Wow, he called your bluff. You decide it''s not worth the conflict, and silently hand your phone to <<$teacher>>.'
-				'As he walks back to the front of the class, he says, "I''m holding onto your phone for now, Mrs. <<$pcs_lastname>>. You can have it back after class."' 
-				
-				act 'Wait for the end of the lesson':gt 'gschool_lunch', 'lesson_end' 
-			end
+			pcs_horny += 10
+			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/upskirtselfie.jpg"></center>'
+			'You decide to have some fun with your teacher, and quickly move the phone between your legs and snap some photos under your skirt as you see <<$teacher>> walk towards your desk.'
+			'When the teacher arrives at your desk, he sneers, "And what could you be doing on your phone that''s more important than paying attention in class, Mrs. <<$pcs_lastname>>? Hand it over."'
+			'"Wouldn''t you like to know!" you tease him. You hand over your phone, the screen still on, with the folder containing the photos you just shot opened.'
+			'<<$teacher>> looks at what''s on the screen and his face colors bright red as he turns the screen off and returns to the front of the class.'
+			'As he gets ready to continue his lessons he says, "I''m holding onto your phone for now, Mrs. <<$pcs_lastname>>. You can have it back after class." Later when the class is working on their homework assignments, you can see him browsing your phone when he thinks no one is looking.'
+			act 'Wait for the end of the lesson':gt 'gschool_lunch', 'lesson_end' 
+		end	
+		act 'Put the phone between your boobs':
+			*clr
+			cla
+			demerit += 5
+			grupvalue[4] += 5
+			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/nophone.jpg"></center>'
+			'You deftly shove the phone in your bra, and smile fiendishly as you see the indecisiveness on your teacher''s face.'
+			'You pretend it''s a perfectly normal place to store your phone, and use your cute voice as you tell him, "Is there a problem, <<$teacher>>? Go ahead, take my phone if you don''t think I should have it." You thrust your chest forward as you encourage him, giving him a nice view of your ample cleavage - the outline of your phone very visible through the fabric.'
+			'Your teacher is completely flabbergasted by your move, and admits defeat. Deciding it''s not worth the effort to take your phone away from you without causing all sorts of awkward situations, he simply returns to the front of the class and continues his lessons. You don''t catch much of them though, you''re too busy browsing the internet after you pull your phone back out of your bra.'
+			act 'Wait for the end of the lesson':gt 'gschool_lunch', 'lesson_end' 
+		end
+		act 'Hand over the phone':
+			*clr
+			cla
+			grupvalue[3] += 5
+			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/bored.jpg"></center>'
+			'Wow, he called your bluff. You decide it''s not worth the conflict, and silently hand your phone to <<$teacher>>.'
+			'As he walks back to the front of the class, he says, "I''m holding onto your phone for now, Mrs. <<$pcs_lastname>>. You can have it back after class."' 
+			act 'Wait for the end of the lesson':gt 'gschool_lunch', 'lesson_end' 
 		end
 	end
 end
@@ -640,71 +622,54 @@ end
 if $ARGS[0] = 'help':
 	'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/teacherhelp.jpg"></center>'
 	'<<$teacher>> notices that you appear to be stuck on one of the assignments and kneels down next to you. He patiently explains to you what you are doing wrong, and slowly but surely you begin to understand.'
-
 	act 'Wait for the end of the lesson':gt 'gschool_lunch', 'lesson_end'
-	
 	act 'Gently touch his hand':
 		*clr
 		cla
 		npc_rel['A26'] += 1
-		*nl
 		'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/touchhands.gif"></center>'
 		'You lightly run your fingers across the palm of his hand as you listen to his explanation. After he quickly checks to make sure no one is paying attention to you, he reciprocates and takes your hand in his left hand. Seconds later you feel his right hand on the small of your back, gently rubbing it as he continues to explain a difficult to understand part of today''s lesson.'
 		*nl
 		'You move your hips a bit closer to his, and lean closer to him as you try to understand what he''s explaining. When he''s done with his explanation, you whisper in his ear, "You''re so smart and strong, <<$teacher>>. I wish you would teach classes in University, so I could go to your classes for several years more when I finish here. There''s still so much you can teach me."'
 		'You notice a small shiver roll down his spine as he walks back to his desk.'
-		
 		act 'Wait for the end of the lesson':gt 'gschool_lunch', 'lesson_end'
 	
 	end
-	
-	if pcs_dom > 30:
-		
-		act 'Coerce him':
-			*clr
-			cla
-			npc_rel['A26'] += 1
-			pcs_horny += 20
-			pcs_dom += 1
-			*nl
-			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/flashteach.gif"></center>'
-			'Edging closer and closer to <<$teacher>> while he''s helping you with today''s lesson, you step back and pull open your shirt, exposing your pert young breasts. He wasn''t sure what to do about it, but from the look on his face he clearly knows this is wrong.'
-			*nl
-			'Your voice turns into a menacing whisper, "You don''t want to do that, <<$teacher>>. If you touch my tits, I will report you for molestation. Why don''t you put those fingers to work on my pussy instead? I think we would both enjoy that much more." You give him a mischievous smile, and you can tell he is thoroughly confused now. You know he''s definitely on board with the idea, but at the same time has his doubts. You decide to help him decide, and pull your skirt up slightly so he has easier access. Making sure he knows you''re still in charge, you whisper seductively, "Go ahead, <<$teacher>>. I''m soaking wet right now don''t you want to feel it?"'
-			*nl
-			'Even though he''s clearly uncomfortable doing this, you feel his fingers rubbing over your wet pussy lips now. You encourage him some more, "That feels so good, <<$teacher>> can''t you feel how wet I am?" Making sure no one else sees what he''s doing, his actions grow more and more bold as he begins to rub your pussy stronger. Then he plunges in two fingers and begins to fuck you with them. Even though it feels nice, that''s not what you had in mind. "That''s enough. Now pull them out and lick them!" you order him. He obeys without hesitation and puts his fingers in his mouth, licking your pussy juices off them. Indicating you''re done with him now, you tell him to go help someone else. <<$teacher>> will definitely not forget today''s lesson for a long time.'
-			
-			act 'Wait for the end of the lesson':gt 'gschool_lunch', 'lesson_end'
-		
-		end
-	
+	act 'Coerce him':
+		*clr
+		cla
+		npc_rel['A26'] += 1
+		pcs_horny += 20
+		pcs_dom += 1
+		'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/flashteach.gif"></center>'
+		'Edging closer and closer to <<$teacher>> while he''s helping you with today''s lesson, you step back and pull open your shirt, exposing your pert young breasts. He wasn''t sure what to do about it, but from the look on his face he clearly knows this is wrong.'
+		*nl
+		'Your voice turns into a menacing whisper, "You don''t want to do that, <<$teacher>>. If you touch my tits, I will report you for molestation. Why don''t you put those fingers to work on my pussy instead? I think we would both enjoy that much more." You give him a mischievous smile, and you can tell he is thoroughly confused now. You know he''s definitely on board with the idea, but at the same time has his doubts. You decide to help him decide, and pull your skirt up slightly so he has easier access. Making sure he knows you''re still in charge, you whisper seductively, "Go ahead, <<$teacher>>. I''m soaking wet right now don''t you want to feel it?"'
+		*nl
+		'Even though he''s clearly uncomfortable doing this, you feel his fingers rubbing over your wet pussy lips now. You encourage him some more, "That feels so good, <<$teacher>> can''t you feel how wet I am?" Making sure no one else sees what he''s doing, his actions grow more and more bold as he begins to rub your pussy stronger. Then he plunges in two fingers and begins to fuck you with them. Even though it feels nice, that''s not what you had in mind. "That''s enough. Now pull them out and lick them!" you order him. He obeys without hesitation and puts his fingers in his mouth, licking your pussy juices off them. Indicating you''re done with him now, you tell him to go help someone else. <<$teacher>> will definitely not forget today''s lesson for a long time.'
+		act 'Wait for the end of the lesson':gt 'gschool_lunch', 'lesson_end'
 	end
-	
 	act 'Move the discussion to personal topics':
 		*clr
 		cla
 		npc_rel['A26'] += 1
-		*nl
+		'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/teacherhelp.jpg"></center>'
 		'As he is explaining a part of today''s lesson to you, you ask him, "Where do you live?"'
 		'"I live near the factory, in one of the standalone houses there. Anyway, about the lesson." he replies.'
 		'You ignore his attempt to get back to teaching and nod. "I see how about Valeria? Do you and her get along?"'
 		'His face saddens, "We don''t talk much. By the time I come home from work, she''s never there. Her mother also has a job, so no one keeps an eye on her. Unfortunately I can only really talk to her on weekends on weekdays she always comes home late, and too drunk to carry a conversation."'
-		
-		if pcs_dom > 30:
-			pcs_dom += 1
-			*nl
+		act 'Seduce':
+			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/teacherhelp.jpg"></center>'
 			'You smile at him empathetically, and as you put your hand on his shoulder for a brief moment you ask him in a stern voice, "Would you like me to have a talk with her? My father left when I was still a baby your daughter doesn''t know what she''s missing, I would kill to have a good relationship with a father as great as you. I bet I could help her realize that."'
 			'<<$teacher>> is grateful for the offer, but declines, "Thank you <<$pcs_nickname>>, but I should really be solving this myself. It''s kind of you to offer though, you''re a good person."'
 			'You give him en encouraging pat on the shoulder before you pull your hand back, and nod, "I suppose you''re right, <<$teacher>>. Don''t worry, everything will be fine."'
 			'He tries to focus on teaching you for the remainder of the class, but you can tell his mind is elsewhere. He must be mulling over what you said.'
-		
-		else
-			*nl
+		end
+		act 'Be helpful':
+			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/teacherhelp.jpg"></center>'
 			'You suggest, "Maybe you love her so much that you''re afraid to do something that would make her dislike you? If you were more strict, I bet you could get her to listen. You''re a teacher, you educate youngsters for a living! You just have to teach your daughter about the ways of life, like you''re doing here in class every day."'
 			'You have a point, and <<$teacher>> knows it. He simply nods and replies, "I''ll... I''ll try", before returning to his desk at the front of the class.'
-		
 		end
-		
 		act 'Wait for the end of the lesson':gt 'gschool_lunch', 'lesson_end'
 	end
 end
@@ -746,22 +711,14 @@ if $ARGS[0] = 'legs':
 		*clr
 		cla
 		npc_rel['A26'] += 1
-		if sub < 30:
-!!there is two images below one for panties and one for no panties, not sure how you want to code it, as it should appear above the text just below here as well.
-			*nl
-			'You spread your legs slowly, giving <<$teacher>> an even better look of what''s between there. He''s stunned, blankly staring at you for a moment while avoiding your look. Realizing what you''re up to, he grows bolder and takes a good look. After that he pretends to read the magazine he is holding.'
+		if tanga = 1:
+			pcs_horny += 30
+			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/spread.jpg"></center>'
+			'The thoughts of him checking you out so sneakily turns you on a great deal, and the fact that you know you should know better makes it even hotter. Throughout the class you keep spreading your legs whenever he looks your way, and you can tell the looks of your panties are causing him a great deal of arousal as well. Unable to control yourself you occasionally give yourself a quick rub over your pussy lips through your underwear, preferably when he looks at you. Towards the end of the class your panties have a large damp spot on them; large enough for him to see from across the room. The outline of your pussy is clearly visible in the wet fabric.'
 		else
-			if tanga = 1:
-				pcs_horny += 30
-				*nl
-				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/spread.jpg"></center>'
-				'The thoughts of him checking you out so sneakily turns you on a great deal, and the fact that you know you should know better makes it even hotter. Throughout the class you keep spreading your legs whenever he looks your way, and you can tell the looks of your panties are causing him a great deal of arousal as well. Unable to control yourself you occasionally give yourself a quick rub over your pussy lips through your underwear, preferably when he looks at you. Towards the end of the class your panties have a large damp spot on them; large enough for him to see from across the room. The outline of your pussy is clearly visible in the wet fabric.'
-			else
-				pcs_horny +=40
-				*nl
-				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/spreadb.jpg"></center>'
-				'The thoughts of him checking you out so sneakily turn you on a great deal, and the fact that you know you should know better make it even hotter. Throughout the class you keep spreading your legs whenever he looks your way, and you can tell the looks of your bare pussy are causing him a great deal of arousal as well. Unable to control yourself you occasionally give yourself a quick rub over your exposed pussy lips, preferably when he looks at you. Towards the end of the class your pussy lips are soaked in your juices, and you absent-mindedly put your finger in your mouth for a taste. '
-			end
+			pcs_horny +=40
+			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/spreadb.jpg"></center>'
+			'The thoughts of him checking you out so sneakily turns you on a great deal, and the fact that you know you should know better make it even hotter. Throughout the class you keep spreading your legs whenever he looks your way, and you can tell the looks of your bare pussy are causing him a great deal of arousal as well. Unable to control yourself you occasionally give yourself a quick rub over your exposed pussy lips, preferably when he looks at you. Towards the end of the class your pussy lips are soaked in your juices, and you absent-mindedly put your finger in your mouth for a taste. '
 		end
 		
 		act 'Wait for the end of the lesson':gt 'gschool_lunch', 'lesson_end'
