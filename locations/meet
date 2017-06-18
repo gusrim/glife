@@ -15,7 +15,7 @@ if $ARGS[0] = 'start':
 		bcolor = rgb(255, 255, 255)
 		lcolor = rgb(106, 90, 205)
 	end
-	gs 'boyStat', $boyA
+	gs 'boyStat', $Boy[i]
 	!!$boybody = 1 - tall, 2 - average, 3 - short
 	$boybody = $boybody[i]
 	!!$boybod = 1 - thin, 2 - athletic, 3 - chunky, 4 - fat
@@ -276,7 +276,7 @@ if $ARGS[0] = 'start':
 	figureDay = 15
 	
 	
-	if love = 3:
+	if pcs_lovers_love[i] = 3:
 		'<<$boydesc[i]>> has hired a wedding limousine and it''s outside waiting for you. This is it, you are getting married today.'
 
 		act 'Sit in the limousine':
@@ -286,15 +286,16 @@ if $ARGS[0] = 'start':
 			act 'Marry husband':
 				cla
 				minut += 60
-				love = 0
-				bfA = 0
+				pcs_lovers_love[i] = 0
+				pcs_lovers_rel[i] = 0
+				pcs_lover -= 1
 				husband = 100
 				husbanday = 0
-				$husName = $boyA
+				$husName = $boy[i]
 				$husHair = $boyface[i]
 				$husBody = $boybody[i]
 				$husFat = $boybod[i]
-				husDick = dick[i]
+				husDick = pcs_lovers_dick[i]
 				harakHusb = harakBoy[i]
 				izvratH = izvrat[i]
 				silavagH = silaVag[i]
@@ -307,13 +308,14 @@ if $ARGS[0] = 'start':
 		end
 
 		exit
-	elseif love = 2:
+	elseif pcs_lovers_love[i] = 2:
 		'<<$boydesc[i]>> looks very excited and suddenly pulls a ring out of a box.'
 		'<<$boydesc[i]>> says "<<$pcs_nickname>>. I offer you my hand and heart. Would you marry me?"'
 
 		act 'No (turn him down)':
 			minut += 60
-			bfA = 0
+			pcs_lovers_rel[i] = 0
+			pcs_lover -= 1
 			pregtalk = 0
 			dynamic $go_home
 			
@@ -327,7 +329,7 @@ if $ARGS[0] = 'start':
 			act 'Go looking for the dress':
 				cla
 				minut += 60
-				love = 3
+				pcs_lovers_love[i] = 3
 				'You get into a taxi with your soon to be husband and go to the store to choose a dress. You choose an expensive and luxurious dress. <<$boydesc[i]>> pays for the purchase.'
 				'After a long day you feel tired and ask <<$boydesc[i]>> to drive you home, warning him that the next time you''ll meet you will get married.'
 				dynamic $go_home
@@ -337,13 +339,13 @@ if $ARGS[0] = 'start':
 		exit
 	end
 
-	if pcs_makeup > 1 and ($clothingworntype = 'expensive' or $clothingworntype = 'formal') and curly > 0 and love = 1 and harakBoy[i] = 0:
+	if pcs_makeup > 1 and ($clothingworntype = 'expensive' or $clothingworntype = 'formal') and curly > 0 and pcs_lovers_love[i] = 1 and harakBoy[i] = 0:
 		'<<$boydesc[i]>> looks very excited. He decides that you are now ready to meet his mother.'
 
 		act 'Meet the parents':gt 'love', 'mother'
 
 		exit
-	elseif pcs_makeup > 1 and ($clothingworntype = 'expensive' or $clothingworntype = 'formal') and curly > 0 and love = 1 and harakBoy[i] = 1 and tanga = 1:
+	elseif pcs_makeup > 1 and ($clothingworntype = 'expensive' or $clothingworntype = 'formal') and curly > 0 and pcs_lovers_love[i] = 1 and harakBoy[i] = 1 and tanga = 1:
 		'<<$boydesc[i]>> examins you and decides that you are ready to meet his friends.'
 
 		act 'Meet his friends':gt 'love', 'frends'
@@ -521,20 +523,20 @@ if $ARGS[0] = 'start':
 	
 
 	if pcs_hairbsh = 1 and curly > 0:
-		bfA += 2 &
+		pcs_lovers_rel[i] += 2 &
 		$meetHair = 'Your hair looks very beautiful.'
 	end
 	if pcs_hairbsh = 1 and curly = 0:
-		bfA += 1 
+		pcs_lovers_rel[i] += 1 
 		$meetHair = 'You have pretty hair today.'
 	end
 	if pcs_hairbsh = 0:
-		bfA -= 1 
+		pcs_lovers_rel[i] -= 1 
 		$meetHair = 'You look like you were in a hurry.'
 	end
 	
 	!!This are generic things your boyfriend will call you based on how much he likes you.
-	if bfA > 80:
+	if pcs_lovers_rel[i] > 80:
 		randchan = rand(0,2)
 		if randchan = 0 and harakBoy[i] ! 0:
 			$giveNick = 'angel'
@@ -543,7 +545,7 @@ if $ARGS[0] = 'start':
 		elseif randchan = 2:
 			$giveNick = 'love'
 		end
-	elseif bfA > 20:
+	elseif pcs_lovers_rel[i] > 20:
 		randchan = rand(0,1)
 		if randchan = 0:
 			$giveNick = 'babe'
@@ -559,7 +561,7 @@ if $ARGS[0] = 'start':
 	!!character 0 - soft, 1 -norm 2 - aggressor
 
 	if harakBoy[i] = 0:
-		if bfA > 70:
+		if pcs_lovers_rel[i] > 70:
 			randchan = rand(0, 1)
 			if randchan = 0:
 				$greet = 'says with love in his eyes, "Hey <<$pcs_nickname>>."'
@@ -568,7 +570,7 @@ if $ARGS[0] = 'start':
 			else
 				$greet = 'says quietly while looking into your eyes, "Hello love." '
 			end
-		elseif bfA > 20:
+		elseif pcs_lovers_rel[i] > 20:
 			randchan = rand(0, 1)
 			if randchan = 0:
 				$greet = 'says with a faint smile,"Hey <<$pcs_nickname>>."'
@@ -581,7 +583,7 @@ if $ARGS[0] = 'start':
 	end
 
 	if harakBoy[i] = 1:
-		if bfA > 70:
+		if pcs_lovers_rel[i] > 70:
 			randchan = rand(0, 1)
 			if randchan = 0:
 				$greet = 'says, "Hey love. I am so happy to see you."'
@@ -590,7 +592,7 @@ if $ARGS[0] = 'start':
 			else
 				$greet = 'says while admiring you, "Hello <<$pcs_nickname>> beautiful."'
 			end
-		elseif bfA > 20:
+		elseif pcs_lovers_rel[i] > 20:
 			randchan = rand(0, 1)
 			if randchan = 0:
 				$greet = 'says with a smile, "Hey <<$pcs_nickname>>, glad to see you."'
@@ -603,7 +605,7 @@ if $ARGS[0] = 'start':
 	end
 
 	if harakBoy[i] = 2:
-		if bfA > 70:
+		if pcs_lovers_rel[i] > 70:
 			randchan = rand(0, 1)
 			if randchan = 0:
 				$greet = 'says with a loving voice, "Theres my sexy gal."'
@@ -612,7 +614,7 @@ if $ARGS[0] = 'start':
 			else
 				$greet = 'says with a rather loud enduring voice, "Hey babe!"'
 			end
-		elseif bfA > 20:
+		elseif pcs_lovers_rel[i] > 20:
 			randchan = rand(0, 1)
 			if randchan = 0:
 				$greet = 'says with a grin, "Hey <<$pcs_nickname>>."'
@@ -633,15 +635,15 @@ if $ARGS[0] = 'start':
 	
 	!!How beautiful you are
 	if pcs_skin < 20:
-		bfa -= 2 & $meetskin = 'looking at his feet'
+		pcs_lovers_rel[i] -= 2 & $meetskin = 'looking at his feet'
 	elseif pcs_skin < 40:
-		bfa -= 1 & $meetskin = 'giving you a quick glance'
+		pcs_lovers_rel[i] -= 1 & $meetskin = 'giving you a quick glance'
 	elseif pcs_skin < 60:
 		$meetskin = 'looking at you'
 	elseif pcs_skin < 80:
-		bfa += 1 & $meetskin = 'smiling at you'
+		pcs_lovers_rel[i] += 1 & $meetskin = 'smiling at you'
 	else
-		bfa += 2 & $meetskin = 'smiling at you'
+		pcs_lovers_rel[i] += 2 & $meetskin = 'smiling at you'
 	end
 	
 	!! Your lip size
@@ -684,8 +686,8 @@ if $ARGS[0] = 'start':
 	!! This is the greeting kissy kissy part
 
 	if harakBoy[i] >= 0:
-		if bfa > -20:
-			bfa += 0
+		if pcs_lovers_rel[i] > -20:
+			pcs_lovers_rel[i] += 0
 			'<<$boydesc[i]>> gets close to you, and you can tell by his body movements he wants to kiss you.'
 			act 'Kiss with tongue':
 				*clr 
@@ -695,7 +697,8 @@ if $ARGS[0] = 'start':
 				pcs_mood += 10
 				gs 'stat'
 				if venera > 4:
-					bfa = 0
+					pcs_lovers_rel[i] = 0
+					pcs_lover -= 1
 					'<<$boydesc[i]>> takes a closer look at you and says, "What is wrong with your lips? They are very sore. Is that genital herpes? I better go, I do not want to get infected. I''m sorry, goodbye."'
 					pcs_mood -= 20
 					dynamic $go_home
@@ -703,14 +706,14 @@ if $ARGS[0] = 'start':
 				elseif venera < 4 and cumloc[11] = 0 and (cumloc[6] = 0 and cumloc[7] = 0):
 
 					if harakBoy[i] = 0:
-						bfa += 2
+						pcs_lovers_rel[i] += 2
 						'Normally this would have made him feel uncomfortable, but as you pull away he smiles and sighs contently.'
 					elseif harakBoy[i] = 1:
-						bfa += 1
+						pcs_lovers_rel[i] += 1
 						'He goes with it a blink and in moments your tongues are intertwined.'
 					elseif harakBoy[i] = 2:
 						'It seems as <<$boydesc[i]>> had the same idea, as he pushes his tongue into your mouth as much as you push into his.'
-						bfa += 2
+						pcs_lovers_rel[i] += 2
 					else
 						'This should not fire off at all: TongueKiss'
 					end
@@ -718,12 +721,12 @@ if $ARGS[0] = 'start':
 					if cumloc[11] = 1:
 
 						if harakBoy[i] = 0:
-							bfa += 2
+							pcs_lovers_rel[i] += 2
 							pcs_horny += 5
 							'He can see sperm on your face, but underneath his shy demener you know that it only turns him on.'
 
 						elseif harakBoy[i] = 1:
-							bfa += 2
+							pcs_lovers_rel[i] += 2
 							pcs_horny += 5
 							'He can see sperm on your face, but you know that it only turns him on more.'
 
@@ -733,31 +736,32 @@ if $ARGS[0] = 'start':
 					elseif (cumloc[6] = 1 or cumloc[7] = 1):
 
 						if harakBoy[i] = 0:
-							bfa += 2
+							pcs_lovers_rel[i] += 2
 							pcs_horny += 5
 							'He can see sperm on your ass, but underneath his shy demener you know that it only turns him on.'
 
 						elseif harakBoy[i] = 1:
-							bfa += 2
+							pcs_lovers_rel[i] += 2
 							pcs_horny += 5
 							'He can see sperm on your ass, but you know that it only turns him on more.'
 
 						elseif harakBoy[i] = 2:
-							bfa += 3
+							pcs_lovers_rel[i] += 3
 							pcs_horny += 5
 							'He can see sperm on your ass, but by the bulge in his pants you know it only turns him on.'
 						end
 					end
 				elseif cumloc[11] = 1 or (cumloc[6] = 1 or cumloc[7] = 1) and pervConstant ! 1:
 					if cumloc[11] = 1:
-						bfa = 0
+						pcs_lovers_rel[i] = 0
+						pcs_lover -= 1
 						'He notices the sperm on your face, "H-Hey- <<$pcs_firstname>>! What the...?! You dirty whore!", he then pushes you out of his face. "We are through, I don''t want to see your face again!'
 						pcs_mood -= 20
 
 						dynamic $go_home
 						exit
 					elseif (cumloc[6] = 1 or cumloc[7] = 1):
-						bfa += 2
+						pcs_lovers_rel[i] += 2
 						'He notices the sperm on your ass, "<<$pcs_firstname>>! What the...?! You dirty whore!", he then pushes you away. "We are through, I don''t want to see your face again!'
 						pcs_mood -= 20
 						dynamic $go_home
@@ -778,17 +782,17 @@ if $ARGS[0] = 'start':
 				if cumloc[11] = 0 and (cumloc[6] = 0 and cumloc[7] = 0):
 
 					if harakBoy[i] = 0:
-						bfa += 2
+						pcs_lovers_rel[i] += 2
 						'He wraps arms around you, you both stay like this for at least a couple of seconds and as you pull away he looks into your eyes and smiles.'
 						gs 'arousal', 'kiss', 5
 						gs 'stat'
 					elseif harakBoy[i] = 1:
-						bfa += 2
+						pcs_lovers_rel[i] += 2
 						'He kisses you back with such skill it turns you on.'
 						gs 'arousal', 'kiss', 5
 						gs 'stat'
 					elseif harakBoy[i] = 2:
-						bfa += 2
+						pcs_lovers_rel[i] += 2
 						'He kisses you back with such passion you feel a tingle within you.'
 						gs 'arousal', 'kiss', 5
 						gs 'stat'
@@ -797,65 +801,67 @@ if $ARGS[0] = 'start':
 					if cumloc[11] = 1:
 
 						if harakBoy[i] = 0:
-							bfa += 2
+							pcs_lovers_rel[i] += 2
 							pcs_horny += 5
 							'He can see sperm on your face, but underneath his shy demener you know that it only turns him on.'
 
 						elseif harakBoy[i] = 1:
-							bfa += 2
+							pcs_lovers_rel[i] += 2
 							pcs_horny += 5
 							'He can see sperm on your face, but you know that it only turns him on more.'
 
 						elseif harakBoy[i] = 2:
-							bfa += 3
+							pcs_lovers_rel[i] += 3
 							pcs_horny += 5
 							'He can see sperm on your face, but by the bulge in his pants you know it only turns him on.'
 						end
 					elseif (cumloc[6] = 1 or cumloc[7] = 1):
 
 						if harakBoy[i] = 0:
-							bfa += 2
+							pcs_lovers_rel[i] += 2
 							pcs_horny += 5
 							'He can see sperm on your ass, but underneath his shy demener you know that it only turns him on.'
 
 						elseif harakBoy[i] = 1:
-							bfa += 2
+							pcs_lovers_rel[i] += 2
 							pcs_horny += 5
 							'He can see sperm on your ass, but you know that it only turns him on more.'
 
 						elseif harakBoy[i] = 2:
-							bfa += 3
+							pcs_lovers_rel[i] += 3
 							pcs_horny += 5
 							'He can see sperm on your ass, but by the bulge in his pants you know it only turns him on.'
 						end
 					elseif cumloc[12] = 1:
 
 						if harakBoy[i] = 0:
-							bfa += 2
+							pcs_lovers_rel[i] += 2
 							pcs_horny += 5
 							'He can smell the scent of sperm on you, but underneath his shy demener you know that it only turns him on.'
 
 						elseif harakBoy[i] = 1:
-							bfa += 2
+							pcs_lovers_rel[i] += 2
 							pcs_horny += 5
 							'He can smell the scent of sperm on you, but you know that it only turns him on more.'
 
 						elseif harakBoy[i] = 2:
-							bfa += 3
+							pcs_lovers_rel[i] += 3
 							pcs_horny += 5
 							'He can smell the scent of sperm on you, but you know by the bulge in his pants it only turns him on more.'
 						end
 					end
 				else if cumloc[11] = 1 or (cumloc[6] = 1 or cumloc[7] = 1) and pervConstant ! 1:
 					if cumloc[11] = 1:
-						bfa = 0
+						pcs_lovers_rel[i] = 0
+						pcs_lover -= 1
 						'He notices the sperm on your face, "<<$pcs_firstname>>! What the...?! You dirty whore!", he then pushes you out of his face. "We are through, I don''t want to see your face again!'
 						pcs_mood -= 20
 
 						dynamic $go_home
 						exit
 					elseif (cumloc[6] = 1 or cumloc[7] = 1):
-						bfa = 0
+						pcs_lovers_rel[i] = 0
+						pcs_lover -= 1
 						'He notices the sperm on your ass, "<<$pcs_firstname>>! What the...?! You dirty whore!", he then pushes you away. "We are through, I don''t want to see your face again!'
 						pcs_mood -= 20
 
@@ -877,17 +883,17 @@ if $ARGS[0] = 'start':
 				if cumloc[11] = 0 and (cumloc[6] = 0 and cumloc[7] = 0):
 
 					if harakBoy[i] = 0:
-						bfa += 2
+						pcs_lovers_rel[i] += 2
 						'He gives you a soft kiss on the cheek, and you can tell he finds this act very cute.'
 						gs 'arousal', 'kiss', 5
 						gs 'stat'
 					elseif harakBoy[i] = 1:
-						bfa += 1
+						pcs_lovers_rel[i] += 1
 						'He kisses you on the cheek and before he pulls away you feel a quick kiss on the forhead.'
 						gs 'arousal', 'kiss', 5
 						gs 'stat'
 					elseif harakBoy[i] = 2:
-						bfa += 0
+						pcs_lovers_rel[i] += 0
 						'Though you can tell he is a bit disappointed, he gives you a kiss on the cheek. As he pulls away he gives your ass a quick squeeze.'
 						gs 'arousal', 'kiss', 5
 						gs 'stat'
@@ -896,53 +902,56 @@ if $ARGS[0] = 'start':
 					if cumloc[11] = 1:
 
 						if harakBoy[i] = 0:
-							bfa += 2
+							pcs_lovers_rel[i] += 2
 							pcs_horny += 5
 							'He can see sperm on your face, but underneath his shy demener you know that it only turns him on.'
 
 						elseif harakBoy[i] = 1:
-							bfa += 2
+							pcs_lovers_rel[i] += 2
 							pcs_horny += 5
 							'He can see sperm on your face, but you know that it only turns him on more.'
 
 						elseif harakBoy[i] = 2:
-							bfa += 3
+							pcs_lovers_rel[i] += 3
 							pcs_horny += 5
 							'He can see sperm on your face, but by the bulge in his pants you know it only turns him on.'
 						end
 					elseif (cumloc[6] = 1 or cumloc[7] = 1):
 
 						if harakBoy[i] = 0:
-							bfa += 1
+							pcs_lovers_rel[i] += 1
 							pcs_horny += 5
 							'He can see sperm on your ass, but underneath his shy demener you know that it only turns him on.'
 
 						elseif harakBoy[i] = 1:
-							bfa += 1
+							pcs_lovers_rel[i] += 1
 							pcs_horny += 5
 							'He can see sperm on your ass, but you know that it only turns him on more.'
 
 						elseif harakBoy[i] = 2:
-							bfa += 1
+							pcs_lovers_rel[i] += 1
 							pcs_horny += 5
 							'He can see sperm on your ass, but by the bulge in his pants you know it only turns him on.'
 						end
 					end
 				elseif cumloc[11] = 1 or (cumloc[6] = 1 or cumloc[7] = 1) and pervConstant ! 1:
 					if cumloc[11] = 1:
-						bfa = 0
+						pcs_lovers_rel[i] = 0
+						pcs_lover -= 1
 						'He notices the sperm on your face, "H-Hey- <<$pcs_firstname>>! What the...?! You dirty whore!", he then pushes you out of his face. "We are through, I don''t want to see your face again!'
 						pcs_mood -= 20
 						dynamic $go_home
 						exit
 					elseif (cumloc[6] = 1 or cumloc[7] = 1):
-						bfa = 0
+						pcs_lovers_rel[i] = 0
+						pcs_lover -= 1
 						'He notices the sperm on your ass, "H-Hey- <<$pcs_firstname>>! What the...?! You dirty whore!", he then pushes you away. "We are through, I don''t want to see your face again!'
 						pcs_mood -= 20
 						dynamic $go_home
 						exit
 					elseif (cumloc[6] = 1 or cumloc[7] = 1):	
-						bfa = 0
+						pcs_lovers_rel[i] = 0
+						pcs_lover -= 1
 						'He realizes your mouth smells like sperm, "H-Hey- <<$pcs_firstname>>! What the...?! You dirty whore!", he then pushes you away. "We are through, I don''t want to see your face again!'
 						pcs_mood -= 20
 						dynamic $go_home
@@ -962,13 +971,13 @@ if $ARGS[0] = 'start':
 				'Maybe you had a bad day, maybe you don''t want a kiss, you rudely push his face away, and by the looks of it, hurting his feelings in the process.'
 
 				if harakBoy[i] = 0:
-					bfa -= 7
+					pcs_lovers_rel[i] -= 7
 					'He stands there slightly embarrassed, and you can tell this hurt your relationship a good amount.'
 				elseif harakBoy[i] = 1:
-					bfa -= 5
+					pcs_lovers_rel[i] -= 5
 					'He looks at you slightly concerned, but backs off and gives you your space.'
 				elseif harakBoy[i] = 2:
-					bfa -= 10
+					pcs_lovers_rel[i] -= 10
 					'He begins to get angry, he takes a deep breath and gives you space.'
 				end
 				cla 
@@ -1018,13 +1027,13 @@ if $ARGS[0] = 'actions':
 		'You tell him you would rather him decide what we do today.'
 
 		if harakBoy[i] = 0:
-			bfa += 0
+			pcs_lovers_rel[i] += 0
 			'Not used to being given the opportunity to choose, he thinks what to do...'
 		elseif harakBoy[i] = 1:
-			bfa += 0
+			pcs_lovers_rel[i] += 0
 			'He thinks about what to do today.'
 		elseif harakBoy[i] = 2:
-			bfa += 1
+			pcs_lovers_rel[i] += 1
 			'You can tell he is happy you gave him the ability to choose what to do today.'
 		end
 		!!This is the choice maker!
@@ -1096,11 +1105,11 @@ if $ARGS[0] = 'actions':
 				if pcs_haircol ! hairPref:
 					'<<$boydesc[i]>> looks at your hair and says, "can we get your hair dyed?"'
 					!!act 'I''d rather not...':
-					if sub < 20 and bfa < 60 and pcs_lovers_compliance[i] < 6:
+					if sub < 20 and pcs_lovers_rel[i] < 60 and pcs_lovers_compliance[i] < 6:
 						act 'I like my hair just the way it is.':
 							cla
 							cls
-							bfa -= 3
+							pcs_lovers_rel[i] -= 3
 							'<<$boydesc[i]>> tries to push you to change it, but you are not that submissive to be pressured by him, nor do your emotions make you make a choice you may regret.'
 							dynamic $go_home
 						end
@@ -1108,11 +1117,11 @@ if $ARGS[0] = 'actions':
 							gt 'boy_likes', 'changeHair'
 						end
 						exit
-					elseif bfa <= 60 and pcs_lovers_compliance[i] < 6:
+					elseif pcs_lovers_rel[i] <= 60 and pcs_lovers_compliance[i] < 6:
 						act 'You think to yourself, its not like I like him THAT much...':
 							cla
 							pcs_dom += 1
-							bfa -=3
+							pcs_lovers_rel[i] -=3
 							'<<$boydesc[i]>> he realizes you adoration for him isn''t enough to pressure you to do that. He tells you he has something to do and heads off'
 							dynamic $go_home
 						end
@@ -1121,7 +1130,7 @@ if $ARGS[0] = 'actions':
 							act 'Your personality is not something that can be dominated that easily, and you brush him off, telling him you are who you are.':
 								cla
 								pcs_dom += 1
-								bfa -=3
+								pcs_lovers_rel[i] -=3
 								'<<$boydesc[i]>> realizes you will not give in this situation, and walks away mumbling to himself.'
 								dynamic $go_home
 							end
@@ -1129,7 +1138,7 @@ if $ARGS[0] = 'actions':
 					elseif sub > 20 or pcs_lovers_compliance[i] >= 6:
 						act 'You mumble "I would rather not..."':
 							cla
-							bfa -= 2
+							pcs_lovers_rel[i] -= 2
 							wantRand = rand(0, 100)
 							wantRand -= 4*pcs_lovers_compliance[i]
 							if wantRand > sub:
@@ -1142,7 +1151,7 @@ if $ARGS[0] = 'actions':
 								cla
 								'<<$boydesc[i]>> keeps up the pressure, and because of your demeaner, and you give in. He smiles happily and takes you to the salon.'
 								sub += 2
-								bfa += 5
+								pcs_lovers_rel[i] += 5
 								act 'Go to Salon':		
 									gt 'boy_likes', 'changeHair'
 								end
@@ -1153,11 +1162,11 @@ if $ARGS[0] = 'actions':
 				elseif makeupSetting ! makePref and makePref ! 0:
 					'<<$boydesc[i]>> thinks about it and says "Can you wear <<$makePref>> from now on?"'
 					!!act 'I''d rather not...':
-					if sub < 20 and bfa < 60 and pcs_lovers_compliance[i] < 6:
+					if sub < 20 and pcs_lovers_rel[i] < 60 and pcs_lovers_compliance[i] < 6:
 						act 'I like my makeup just the way it is.':
 							cla
 							cls
-							bfa -= 3
+							pcs_lovers_rel[i] -= 3
 							'<<$boydesc[i]>> tries to push you to change it, but you are not that submissive to be pressured by him, nor do your emotions make you make a choice you may regret.'
 							
 							dynamic $go_home
@@ -1166,11 +1175,11 @@ if $ARGS[0] = 'actions':
 							gt 'boy_likes', 'changeMake'
 						end
 						exit
-					elseif bfa <= 60 and pcs_lovers_compliance[i] < 6:
+					elseif pcs_lovers_rel[i] <= 60 and pcs_lovers_compliance[i] < 6:
 						act 'You think to yourself, its not like I like him THAT much...':
 							cla
 							pcs_dom += 1
-							bfa -=3
+							pcs_lovers_rel[i] -=3
 							'<<$boydesc[i]>> he realizes you adoration for him isn''t enough to pressure you to do that. You can tell that he is bummed when he tells you he has something to do and heads off.'
 							dynamic $go_home
 						end
@@ -1179,7 +1188,7 @@ if $ARGS[0] = 'actions':
 							act 'Your personality is not something that can be dominated that easily, and you brush him off, telling him you like the makeup you usually wear.':
 								cla
 								pcs_dom += 1
-								bfa -=3
+								pcs_lovers_rel[i] -=3
 								'<<$boydesc[i]>> realizes you will not give in this situation, and walks away mumbling to himself.'
 								dynamic $go_home
 							end
@@ -1187,7 +1196,7 @@ if $ARGS[0] = 'actions':
 					elseif sub > 20 or pcs_lovers_compliance[i] >= 6:
 						act 'You mumble "What''s wrong with my makeup...?"':
 							cla
-							bfa -= 2
+							pcs_lovers_rel[i] -= 2
 							wantRand = rand(0, 100)
 							wantRand -= 4*pcs_lovers_compliance[i]
 							if wantRand > sub:
@@ -1200,7 +1209,7 @@ if $ARGS[0] = 'actions':
 								cla
 								'<<$boydesc[i]>> keeps up the pressure, and because of your demeaner, and you give in. You tell him from now on you will wear <<$makePref>>.'
 								sub += 2
-								bfa += 5
+								pcs_lovers_rel[i] += 5
 								act 'Continue':		
 									gt 'boy_likes', 'changeMake'
 								end
@@ -1215,11 +1224,11 @@ if $ARGS[0] = 'actions':
 					else
 						'He tells you that you should have less piercings.'
 					end
-					if sub < 20 and bfa < 60 and pcs_lovers_compliance[i] < 6:
+					if sub < 20 and pcs_lovers_rel[i] < 60 and pcs_lovers_compliance[i] < 6:
 						act 'I am not going to change my piercings!':
 							cla
 							cls
-							bfa -= 3
+							pcs_lovers_rel[i] -= 3
 							'<<$boydesc[i]>> tries to push you to change it, but you are not that submissive to be pressured by him, nor do your emotions make you make a choice you may regret.'
 							
 							dynamic $go_home
@@ -1228,11 +1237,11 @@ if $ARGS[0] = 'actions':
 							gt 'boy_likes', 'changePier'
 						end
 						exit
-					elseif bfa <= 60 and pcs_lovers_compliance[i] < 6:
+					elseif pcs_lovers_rel[i] <= 60 and pcs_lovers_compliance[i] < 6:
 						act 'You think to yourself, its not like I like him THAT much...':
 							cla
 							pcs_dom += 1
-							bfa -=3
+							pcs_lovers_rel[i] -=3
 							'<<$boydesc[i]>> he realizes you adoration for him isn''t enough to pressure you to do that. He tells you he has something to do and heads off'
 							dynamic $go_home
 						end
@@ -1241,7 +1250,7 @@ if $ARGS[0] = 'actions':
 							act 'Your personality is not something that can be dominated that easily, and you brush him off, telling him you are who you are.':
 								cla
 								pcs_dom += 1
-								bfa -=3
+								pcs_lovers_rel[i] -=3
 								'<<$boydesc[i]>> realizes you will not give in this situation, and walks away mumbling to himself.'
 								dynamic $go_home
 							end
@@ -1249,7 +1258,7 @@ if $ARGS[0] = 'actions':
 					elseif sub > 20 or pcs_lovers_compliance[i] >= 6:
 						act 'You mumble "I would rather not..."':
 							cla
-							bfa -= 2
+							pcs_lovers_rel[i] -= 2
 							wantRand = rand(0, 100)
 							wantRand -= 4*pcs_lovers_compliance[i]
 							if wantRand > sub:
@@ -1262,7 +1271,7 @@ if $ARGS[0] = 'actions':
 								cla
 								'<<$boydesc[i]>> keeps up the pressure, and because of your demeaner, and you give in. He smiles happily and then gets down to how to get the right amount of piercings.'
 								sub += 2
-								bfa += 5
+								pcs_lovers_rel[i] += 5
 								act 'Continue':		
 									gt 'boy_likes', 'changePier'
 								end
@@ -1277,11 +1286,11 @@ if $ARGS[0] = 'actions':
 					else
 						'He tells you that you should have less tattoos.'
 					end
-					if sub < 20 and bfa < 60 and pcs_lovers_compliance[i] < 6:
+					if sub < 20 and pcs_lovers_rel[i] < 60 and pcs_lovers_compliance[i] < 6:
 						act 'I am not going to change my tattoos!':
 							cla
 							cls
-							bfa -= 3
+							pcs_lovers_rel[i] -= 3
 							'<<$boydesc[i]>> tries to push you to change it, but you are not that submissive to be pressured by him, nor do your emotions make you make a choice you may regret.'
 							
 							dynamic $go_home
@@ -1290,11 +1299,11 @@ if $ARGS[0] = 'actions':
 							gt 'boy_likes', 'changeTatt'
 						end
 						exit
-					elseif bfa <= 60 and pcs_lovers_compliance[i] < 6:
+					elseif pcs_lovers_rel[i] <= 60 and pcs_lovers_compliance[i] < 6:
 						act 'You think to yourself, its not like I like him THAT much...':
 							cla
 							pcs_dom += 1
-							bfa -=3
+							pcs_lovers_rel[i] -=3
 							'<<$boydesc[i]>> he realizes you adoration for him isn''t enough to pressure you to do that. He tells you he has something to do and heads off'
 							dynamic $go_home
 						end
@@ -1303,7 +1312,7 @@ if $ARGS[0] = 'actions':
 						act 'Your personality is not something that can be dominated that easily, and you brush him off, telling him you are who you are.':
 							cla
 							pcs_dom += 1
-							bfa -=3
+							pcs_lovers_rel[i] -=3
 							'<<$boydesc[i]>> realizes you will not give in this situation, and walks away mumbling to himself.'
 							dynamic $go_home
 						end
@@ -1311,7 +1320,7 @@ if $ARGS[0] = 'actions':
 					elseif sub > 20 or pcs_lovers_compliance[i] >= 6:
 						act 'You mumble "I would rather not..."':
 							cla
-							bfa -= 2
+							pcs_lovers_rel[i] -= 2
 							wantRand = rand(0, 100)
 							wantRand -= 4*pcs_lovers_compliance[i]
 							if wantRand > sub:
@@ -1324,7 +1333,7 @@ if $ARGS[0] = 'actions':
 								cla
 								'<<$boydesc[i]>> keeps up the pressure, and because of your demeaner, and you give in. He smiles happily then starts to take you to the tattoo parlor to get the right amount of tattoos.'
 								sub += 2
-								bfa += 5
+								pcs_lovers_rel[i] += 5
 								act 'Go to tattoo parlor':		
 									gt 'boy_likes', 'changeTatt'
 								end
@@ -1345,7 +1354,7 @@ if $ARGS[0] = 'actions':
 				act 'Sorry, but I need to go':
 					cla
 
-					bfa -= (harakBoy[i] + 1)
+					pcs_lovers_rel[i] -= (harakBoy[i] + 1)
 					dynamic $go_home
 					
 				end
@@ -1360,7 +1369,7 @@ if $ARGS[0] = 'actions':
 				act 'Sorry, but I need to go':
 					cla
 
-					bfa -= (harakBoy[i] + 1)
+					pcs_lovers_rel[i] -= (harakBoy[i] + 1)
 					dynamic $go_home
 					
 				end
@@ -1440,11 +1449,11 @@ if $ARGS[0] = 'actions':
 				if pcs_haircol ! hairPref:
 					'<<$boydesc[i]>> looks at your hair and says, "can we get your hair dyed?"'
 					!!act 'I''d rather not...':
-					if sub < 20 and bfa < 60 and compliance < 6:
+					if sub < 20 and pcs_lovers_rel[i] < 60 and compliance < 6:
 						act 'I like my hair just the way it is.':
 							cla
 							cls
-							bfa -= 3
+							pcs_lovers_rel[i] -= 3
 							'<<$boydesc[i]>> tries to push you to change it, but you are not that submissive to be pressured by him, nor do your emotions make you make a choice you may regret.'
 							
 							dynamic $go_home
@@ -1453,11 +1462,11 @@ if $ARGS[0] = 'actions':
 							gt 'boy_likes', 'changeHair'
 						end
 						exit
-					elseif bfa <= 60 and pcs_lovers_compliance[i] < 6:
+					elseif pcs_lovers_rel[i] <= 60 and pcs_lovers_compliance[i] < 6:
 						act 'You think to yourself, its not like I like him THAT much...':
 							cla
 							pcs_dom += 1
-							bfa -=3
+							pcs_lovers_rel[i] -=3
 							'<<$boydesc[i]>> he realizes you adoration for him isn''t enough to pressure you to do that. He tells you he has something to do and heads off'
 							dynamic $go_home
 						end
@@ -1466,7 +1475,7 @@ if $ARGS[0] = 'actions':
 							act 'Your personality is not something that can be dominated that easily, and you brush him off, telling him you are who you are.':
 								cla
 								pcs_dom += 1
-								bfa -=3
+								pcs_lovers_rel[i] -=3
 								'<<$boydesc[i]>> realizes you will not give in this situation, and walks away mumbling to himself.'
 								dynamic $go_home
 							end
@@ -1474,7 +1483,7 @@ if $ARGS[0] = 'actions':
 					elseif sub > 20 or pcs_lovers_compliance[i] >= 6:
 						act 'You mumble "I would rather not..."':
 							cla
-							bfa -= 2
+							pcs_lovers_rel[i] -= 2
 							wantRand = rand(0, 100)
 							wantRand -= 4*pcs_lovers_compliance[i]
 							if wantRand > sub:
@@ -1487,7 +1496,7 @@ if $ARGS[0] = 'actions':
 								cla
 								'<<$boydesc[i]>> keeps up the pressure, and because of your demeaner, and you give in. He smiles happily and takes you to the salon.'
 								sub += 2
-								bfa += 5
+								pcs_lovers_rel[i] += 5
 								act 'Go to Salon':		
 									gt 'boy_likes', 'changeHair'
 								end
@@ -1498,11 +1507,11 @@ if $ARGS[0] = 'actions':
 				elseif makeupSetting ! makePref and makePref ! 0:
 					'<<$boydesc[i]>> thinks about it and says "Can you wear <<$makePref>> from now on?"'
 					!!act 'I''d rather not...':
-					if sub < 20 and bfa < 60 and pcs_lovers_compliance[i] < 6:
+					if sub < 20 and pcs_lovers_rel[i] < 60 and pcs_lovers_compliance[i] < 6:
 						act 'I like my makeup just the way it is.':
 							cla
 							cls
-							bfa -= 3
+							pcs_lovers_rel[i] -= 3
 							'<<$boydesc[i]>> tries to push you to change it, but you are not that submissive to be pressured by him, nor do your emotions make you make a choice you may regret.'
 							
 							dynamic $go_home
@@ -1511,11 +1520,11 @@ if $ARGS[0] = 'actions':
 							gt 'boy_likes', 'changeMake'
 						end
 						exit
-					elseif bfa <= 60 and pcs_lovers_compliance[i] < 6:
+					elseif pcs_lovers_rel[i] <= 60 and pcs_lovers_compliance[i] < 6:
 						act 'You think to yourself, its not like I like him THAT much...':
 							cla
 							pcs_dom += 1
-							bfa -=3
+							pcs_lovers_rel[i] -=3
 							'<<$boydesc[i]>> he realizes you adoration for him isn''t enough to pressure you to do that. You can tell that he is bummed when he tells you he has something to do and heads off.'
 							dynamic $go_home
 						end
@@ -1524,7 +1533,7 @@ if $ARGS[0] = 'actions':
 							act 'Your personality is not something that can be dominated that easily, and you brush him off, telling him you like the makeup you usually wear.':
 								cla
 								pcs_dom += 1
-								bfa -=3
+								pcs_lovers_rel[i] -=3
 								'<<$boydesc[i]>> realizes you will not give in this situation, and walks away mumbling to himself.'
 								dynamic $go_home
 							end
@@ -1532,7 +1541,7 @@ if $ARGS[0] = 'actions':
 					elseif sub > 20 or pcs_lovers_compliance[i] >= 6:
 						act 'You mumble "What''s wrong with my makeup...?"':
 							cla
-							bfa -= 2
+							pcs_lovers_rel[i] -= 2
 							wantRand = rand(0, 100)
 							wantRand -= 4*pcs_lovers_compliance[i]
 							if wantRand > sub:
@@ -1545,7 +1554,7 @@ if $ARGS[0] = 'actions':
 								cla
 								'<<$boydesc[i]>> keeps up the pressure, and because of your demeaner, and you give in. You tell him from now on you will wear <<$makePref>>.'
 								sub += 2
-								bfa += 5
+								pcs_lovers_rel[i] += 5
 								act 'Continue':		
 									gt 'boy_likes', 'changeMake'
 								end
@@ -1560,11 +1569,11 @@ if $ARGS[0] = 'actions':
 					else
 						'He tells you that you should have less piercings.'
 					end
-					if sub < 20 and bfa < 60 and pcs_lovers_compliance[i] < 6:
+					if sub < 20 and pcs_lovers_rel[i] < 60 and pcs_lovers_compliance[i] < 6:
 						act 'I am not going to change my piercings!':
 							cla
 							cls
-							bfa -= 3
+							pcs_lovers_rel[i] -= 3
 							'<<$boydesc[i]>> tries to push you to change it, but you are not that submissive to be pressured by him, nor do your emotions make you make a choice you may regret.'
 							dynamic $go_home
 						end
@@ -1572,11 +1581,11 @@ if $ARGS[0] = 'actions':
 							gt 'boy_likes', 'changePier'
 						end
 						exit
-					elseif bfa <= 60 and pcs_lovers_compliance[i] < 6:
+					elseif pcs_lovers_rel[i] <= 60 and pcs_lovers_compliance[i] < 6:
 						act 'You think to yourself, its not like I like him THAT much...':
 							cla
 							pcs_dom += 1
-							bfa -=3
+							pcs_lovers_rel[i] -=3
 							'<<$boydesc[i]>> he realizes you adoration for him isn''t enough to pressure you to do that. He tells you he has something to do and heads off'
 							dynamic $go_home
 						end
@@ -1585,7 +1594,7 @@ if $ARGS[0] = 'actions':
 							act 'Your personality is not something that can be dominated that easily, and you brush him off, telling him you are who you are.':
 								cla
 								pcs_dom += 1
-								bfa -=3
+								pcs_lovers_rel[i] -=3
 								'<<$boydesc[i]>> realizes you will not give in this situation, and walks away mumbling to himself.'
 								dynamic $go_home
 							end
@@ -1593,7 +1602,7 @@ if $ARGS[0] = 'actions':
 					elseif sub > 20 or pcs_lovers_compliance[i] >= 6:
 						act 'You mumble "I would rather not..."':
 							cla
-							bfa -= 2
+							pcs_lovers_rel[i] -= 2
 							wantRand = rand(0, 100)
 							wantRand -= 4*pcs_lovers_compliance[i]
 							if wantRand > sub:
@@ -1606,7 +1615,7 @@ if $ARGS[0] = 'actions':
 								cla
 								'<<$boydesc[i]>> keeps up the pressure, and because of your demeaner, and you give in. He smiles happily and then gets down to how to get the right amount of piercings.'
 								sub += 2
-								bfa += 5
+								pcs_lovers_rel[i] += 5
 								act 'Continue':		
 									gt 'boy_likes', 'changePier'
 								end
@@ -1621,11 +1630,11 @@ if $ARGS[0] = 'actions':
 					else
 						'He tells you that you should have less tattoos.'
 					end
-					if sub < 20 and bfa < 60 and pcs_lovers_compliance[i] < 6:
+					if sub < 20 and pcs_lovers_rel[i] < 60 and pcs_lovers_compliance[i] < 6:
 						act 'I am not going to change my tattoos!':
 							cla
 							cls
-							bfa -= 3
+							pcs_lovers_rel[i] -= 3
 							'<<$boydesc[i]>> tries to push you to change it, but you are not that submissive to be pressured by him, nor do your emotions make you make a choice you may regret.'
 							dynamic $go_home
 						end
@@ -1633,11 +1642,11 @@ if $ARGS[0] = 'actions':
 							gt 'boy_likes', 'changeTatt'
 						end
 						exit
-					elseif bfa <= 60 and pcs_lovers_compliance[i] < 6:
+					elseif pcs_lovers_rel[i] <= 60 and pcs_lovers_compliance[i] < 6:
 						act 'You think to yourself, its not like I like him THAT much...':
 							cla
 							pcs_dom += 1
-							bfa -=3
+							pcs_lovers_rel[i] -=3
 							'<<$boydesc[i]>> he realizes you adoration for him isn''t enough to pressure you to do that. He tells you he has something to do and heads off'
 							dynamic $go_home
 						end
@@ -1646,7 +1655,7 @@ if $ARGS[0] = 'actions':
 						act 'Your personality is not something that can be dominated that easily, and you brush him off, telling him you are who you are.':
 							cla
 							pcs_dom += 1
-							bfa -=3
+							pcs_lovers_rel[i] -=3
 							'<<$boydesc[i]>> realizes you will not give in this situation, and walks away mumbling to himself.'
 							dynamic $go_home
 						end
@@ -1654,7 +1663,7 @@ if $ARGS[0] = 'actions':
 					elseif sub > 20 or pcs_lovers_compliance[i] >= 6:
 						act 'You mumble "I would rather not..."':
 							cla
-							bfa -= 2
+							pcs_lovers_rel[i] -= 2
 							wantRand = rand(0, 100)
 							wantRand -= 4*pcs_lovers_compliance[i]
 							if wantRand > sub:
@@ -1667,7 +1676,7 @@ if $ARGS[0] = 'actions':
 								cla
 								'<<$boydesc[i]>> keeps up the pressure, and because of your demeaner, and you give in. He smiles happily then starts to take you to the tattoo parlor to get the right amount of tattoos.'
 								sub += 2
-								bfa += 5
+								pcs_lovers_rel[i] += 5
 								act 'Go to tattoo parlor':		
 									gt 'boy_likes', 'changeTatt'
 								end
@@ -1683,11 +1692,11 @@ if $ARGS[0] = 'actions':
 					else
 						'He tells you that you should have lip reduction.'
 					end
-					if sub < 20 and bfa < 60 and pcs_lovers_compliance[i] < 6:
+					if sub < 20 and pcs_lovers_rel[i] < 60 and pcs_lovers_compliance[i] < 6:
 						act '"My lips are fine the way they are!", you say slightly offended.':
 							cla
 							cls
-							bfa -= 3
+							pcs_lovers_rel[i] -= 3
 							'<<$boydesc[i]>> tries to push you to change your lip size, but you are not that submissive to be pressured by him, nor do your emotions make you make a choice you may regret.'
 							
 							dynamic $go_home
@@ -1696,11 +1705,11 @@ if $ARGS[0] = 'actions':
 							gt 'boy_likes', 'changeLips'
 						end
 						exit
-					elseif bfa <= 60 and pcs_lovers_compliance[i] < 6:
+					elseif pcs_lovers_rel[i] <= 60 and pcs_lovers_compliance[i] < 6:
 						act 'You think to yourself, its not like I like him THAT much to get work done on my lips.':
 							cla
 							pcs_dom += 1
-							bfa -=3
+							pcs_lovers_rel[i] -=3
 							'<<$boydesc[i]>> he realizes you adoration for him isn''t enough to pressure you to get work done on your lips. He tells you he has something to do and heads off.'
 							dynamic $go_home
 						end
@@ -1709,7 +1718,7 @@ if $ARGS[0] = 'actions':
 							act 'Your personality is not something that can be dominated that easily, and you brush him off, telling him that you decide what size lips you look good with.':
 								cla
 								pcs_dom += 1
-								bfa -=3
+								pcs_lovers_rel[i] -=3
 								'<<$boydesc[i]>> realizes you will not give in this situation, and walks away mumbling to himself.'
 								dynamic $go_home
 							end
@@ -1717,7 +1726,7 @@ if $ARGS[0] = 'actions':
 					elseif sub > 20 or pcs_lovers_compliance[i] >= 6:
 						act 'You squeek, "But I like the size of my lips..."':
 							cla
-							bfa -= 2
+							pcs_lovers_rel[i] -= 2
 							wantRand = rand(0, 100)
 							wantRand -= 4*pcs_lovers_compliance[i]
 							if wantRand > sub:
@@ -1730,7 +1739,7 @@ if $ARGS[0] = 'actions':
 								cla
 								'<<$boydesc[i]>> keeps up the pressure, and because of your demeaner, and you give in. He grins widely and takes you to the clinic.'
 								sub += 4
-								bfa += 5
+								pcs_lovers_rel[i] += 5
 								act 'Go to the clinic':		
 									gt 'boy_likes', 'changeLips'
 								end
@@ -1746,11 +1755,11 @@ if $ARGS[0] = 'actions':
 					else
 						'He tells you that you should have a breast reduction.'
 					end
-					if sub < 20 and bfa < 60 and pcs_lovers_compliance[i] < 6:
+					if sub < 20 and pcs_lovers_rel[i] < 60 and pcs_lovers_compliance[i] < 6:
 						act '"My breasts are fine the way they are!", you say slightly offended.':
 							cla
 							cls
-							bfa -= 3
+							pcs_lovers_rel[i] -= 3
 							'<<$boydesc[i]>> tries to push you to change your breast size, but you are not that submissive to be pressured by him, nor do your emotions make you make a choice you may regret.'
 							
 							dynamic $go_home
@@ -1759,11 +1768,11 @@ if $ARGS[0] = 'actions':
 							gt 'boy_likes', 'changeTits'
 						end
 						exit
-					elseif bfa <= 60 and pcs_lovers_compliance[i] < 6:
+					elseif pcs_lovers_rel[i] <= 60 and pcs_lovers_compliance[i] < 6:
 						act 'You think to yourself, its not like I like him THAT much to get work done on my breasts.':
 							cla
 							pcs_dom += 1
-							bfa -=3
+							pcs_lovers_rel[i] -=3
 							'<<$boydesc[i]>> he realizes you adoration for him isn''t enough to pressure you to get work done on your breasts. He tells you he has something to do and heads off.'
 							dynamic $go_home
 						end
@@ -1772,7 +1781,7 @@ if $ARGS[0] = 'actions':
 							act 'Your personality is not something that can be dominated that easily, and you brush him off, telling him that you decide what size breasts you look good with.':
 								cla
 								pcs_dom += 1
-								bfa -=3
+								pcs_lovers_rel[i] -=3
 								'<<$boydesc[i]>> realizes you will not give in this situation, and walks away mumbling to himself.'
 								dynamic $go_home
 							end
@@ -1780,7 +1789,7 @@ if $ARGS[0] = 'actions':
 					elseif sub > 20 or pcs_lovers_compliance[i] >= 6:
 						act 'You squeek, "But I like the size of my breasts..."':
 							cla
-							bfa -= 2
+							pcs_lovers_rel[i] -= 2
 							wantRand = rand(0, 100)
 							wantRand -= 4*pcs_lovers_compliance[i]
 							if wantRand > sub:
@@ -1793,7 +1802,7 @@ if $ARGS[0] = 'actions':
 								cla
 								'<<$boydesc[i]>> keeps up the pressure, and because of your demeaner, and you give in. He grins widely and takes you to the clinic.'
 								sub += 4
-								bfa += 5
+								pcs_lovers_rel[i] += 5
 								act 'Go to the clinic':		
 									gt 'boy_likes', 'changeTits'
 								end
@@ -1815,7 +1824,7 @@ if $ARGS[0] = 'actions':
 				act 'Sorry, but I need to go.':
 					cla
 
-					bfa -= (harakBoy[i] + 1)
+					pcs_lovers_rel[i] -= (harakBoy[i] + 1)
 					dynamic $go_home
 					
 				end
@@ -1829,7 +1838,7 @@ if $ARGS[0] = 'actions':
 				act 'Sorry, but I need to go.':
 					cla
 
-					bfa -= (harakBoy[i] + 1)
+					pcs_lovers_rel[i] -= (harakBoy[i] + 1)
 					dynamic $go_home	
 					
 				end
@@ -1843,7 +1852,7 @@ if $ARGS[0] = 'actions':
 				act 'Sorry, but I need to go.':
 					cla
 
-					bfa -= (harakBoy[i] + 1)
+					pcs_lovers_rel[i] -= (harakBoy[i] + 1)
 					dynamic $go_home	
 				end
 				act 'Go with him':gt 'kafeM', 'start'
@@ -1933,11 +1942,11 @@ if $ARGS[0] = 'actions':
 				if pcs_haircol ! hairPref:
 					'<<$boydesc[i]>> looks at your hair and says, "can we get your hair dyed?"'
 					!!act 'I''d rather not...':
-					if sub < 20 and bfa < 60 and pcs_lovers_compliance[i] < 6:
+					if sub < 20 and pcs_lovers_rel[i] < 60 and pcs_lovers_compliance[i] < 6:
 						act 'I like my hair just the way it is.':
 							cla
 							cls
-							bfa -= 3
+							pcs_lovers_rel[i] -= 3
 							'<<$boydesc[i]>> tries to push you to change it, but you are not that submissive to be pressured by him, nor do your emotions make you make a choice you may regret.'
 							dynamic $go_home
 						end
@@ -1945,11 +1954,11 @@ if $ARGS[0] = 'actions':
 							gt 'boy_likes', 'changeHair'
 						end
 						exit
-					elseif bfa <= 60 and pcs_lovers_compliance[i] < 6:
+					elseif pcs_lovers_rel[i] <= 60 and pcs_lovers_compliance[i] < 6:
 						act 'You think to yourself, its not like I like him THAT much...':
 							cla
 							pcs_dom += 1
-							bfa -=3
+							pcs_lovers_rel[i] -=3
 							'<<$boydesc[i]>> he realizes you adoration for him isn''t enough to pressure you to do that. He tells you he has something to do and heads off'
 							dynamic $go_home
 						end
@@ -1958,7 +1967,7 @@ if $ARGS[0] = 'actions':
 							act 'Your personality is not something that can be dominated that easily, and you brush him off, telling him you are who you are.':
 								cla
 								pcs_dom += 1
-								bfa -=3
+								pcs_lovers_rel[i] -=3
 								'<<$boydesc[i]>> realizes you will not give in this situation, and walks away mumbling to himself.'
 								dynamic $go_home
 							end
@@ -1966,7 +1975,7 @@ if $ARGS[0] = 'actions':
 					elseif sub > 20 or pcs_lovers_compliance[i] >= 6:
 						act 'You mumble "I would rather not..."':
 							cla
-							bfa -= 2
+							pcs_lovers_rel[i] -= 2
 							wantRand = rand(0, 100)
 							wantRand -= 4*pcs_lovers_compliance[i]
 							if wantRand > sub:
@@ -1979,7 +1988,7 @@ if $ARGS[0] = 'actions':
 								cla
 								'<<$boydesc[i]>> keeps up the pressure, and because of your demeaner, and you give in. He smiles happily and takes you to the salon.'
 								sub += 2
-								bfa += 5
+								pcs_lovers_rel[i] += 5
 								act 'Go to Salon':		
 									gt 'boy_likes', 'changeHair'
 								end
@@ -1990,11 +1999,11 @@ if $ARGS[0] = 'actions':
 				elseif makeupSetting ! makePref and makePref ! 0:
 					'<<$boydesc[i]>> thinks about it and says "Can you wear <<$makePref>> from now on?"'
 					!!act 'I''d rather not...':
-					if sub < 20 and bfa < 60 and pcs_lovers_compliance[i] < 6:
+					if sub < 20 and pcs_lovers_rel[i] < 60 and pcs_lovers_compliance[i] < 6:
 						act 'I like my makeup just the way it is.':
 							cla
 							cls
-							bfa -= 3
+							pcs_lovers_rel[i] -= 3
 							'<<$boydesc[i]>> tries to push you to change it, but you are not that submissive to be pressured by him, nor do your emotions make you make a choice you may regret.'
 							dynamic $go_home
 						end
@@ -2002,11 +2011,11 @@ if $ARGS[0] = 'actions':
 							gt 'boy_likes', 'changeMake'
 						end
 						exit
-					elseif bfa <= 60 and pcs_lovers_compliance[i] < 6:
+					elseif pcs_lovers_rel[i] <= 60 and pcs_lovers_compliance[i] < 6:
 						act 'You think to yourself, its not like I like him THAT much...':
 							cla
 							pcs_dom += 1
-							bfa -=3
+							pcs_lovers_rel[i] -=3
 							'<<$boydesc[i]>> he realizes you adoration for him isn''t enough to pressure you to do that. You can tell that he is bummed when he tells you he has something to do and heads off.'
 							dynamic $go_home
 						end
@@ -2015,7 +2024,7 @@ if $ARGS[0] = 'actions':
 							act 'Your personality is not something that can be dominated that easily, and you brush him off, telling him you like the makeup you usually wear.':
 								cla
 								pcs_dom += 1
-								bfa -=3
+								pcs_lovers_rel[i] -=3
 								'<<$boydesc[i]>> realizes you will not give in this situation, and walks away mumbling to himself.'
 								dynamic $go_home
 							end
@@ -2023,7 +2032,7 @@ if $ARGS[0] = 'actions':
 					elseif sub > 20 or pcs_lovers_compliance[i] >= 6:
 						act 'You mumble "What''s wrong with my makeup...?"':
 							cla
-							bfa -= 2
+							pcs_lovers_rel[i] -= 2
 							wantRand = rand(0, 100)
 							wantRand -= 4*pcs_lovers_compliance[i]
 							if wantRand > sub:
@@ -2036,7 +2045,7 @@ if $ARGS[0] = 'actions':
 								cla
 								'<<$boydesc[i]>> keeps up the pressure, and because of your demeaner, and you give in. You tell him from now on you will wear <<$makePref>>.'
 								sub += 2
-								bfa += 5
+								pcs_lovers_rel[i] += 5
 								act 'Continue':		
 									gt 'boy_likes', 'changeMake'
 								end
@@ -2051,11 +2060,11 @@ if $ARGS[0] = 'actions':
 					else
 						'He tells you that you should have less piercings.'
 					end
-					if sub < 20 and bfa < 60 and pcs_lovers_compliance[i] < 6:
+					if sub < 20 and pcs_lovers_rel[i] < 60 and pcs_lovers_compliance[i] < 6:
 						act 'I am not going to change my piercings!':
 							cla
 							cls
-							bfa -= 3
+							pcs_lovers_rel[i] -= 3
 							'<<$boydesc[i]>> tries to push you to change it, but you are not that submissive to be pressured by him, nor do your emotions make you make a choice you may regret.'
 							dynamic $go_home
 						end
@@ -2063,11 +2072,11 @@ if $ARGS[0] = 'actions':
 							gt 'boy_likes', 'changePier'
 						end
 						exit
-					elseif bfa <= 60 and pcs_lovers_compliance[i] < 6:
+					elseif pcs_lovers_rel[i] <= 60 and pcs_lovers_compliance[i] < 6:
 						act 'You think to yourself, its not like I like him THAT much...':
 							cla
 							pcs_dom += 1
-							bfa -=3
+							pcs_lovers_rel[i] -=3
 							'<<$boydesc[i]>> he realizes you adoration for him isn''t enough to pressure you to do that. He tells you he has something to do and heads off'
 							dynamic $go_home
 						end
@@ -2076,7 +2085,7 @@ if $ARGS[0] = 'actions':
 							act 'Your personality is not something that can be dominated that easily, and you brush him off, telling him you are who you are.':
 								cla
 								pcs_dom += 1
-								bfa -=3
+								pcs_lovers_rel[i] -=3
 								'<<$boydesc[i]>> realizes you will not give in this situation, and walks away mumbling to himself.'
 								dynamic $go_home
 							end
@@ -2084,7 +2093,7 @@ if $ARGS[0] = 'actions':
 					elseif sub > 20 or pcs_lovers_compliance[i] >= 6:
 						act 'You mumble "I would rather not..."':
 							cla
-							bfa -= 2
+							pcs_lovers_rel[i] -= 2
 							wantRand = rand(0, 100)
 							wantRand -= 4*pcs_lovers_compliance[i]
 							if wantRand > sub:
@@ -2097,7 +2106,7 @@ if $ARGS[0] = 'actions':
 								cla
 								'<<$boydesc[i]>> keeps up the pressure, and because of your demeaner, and you give in. He smiles happily and then gets down to how to get the right amount of piercings.'
 								sub += 2
-								bfa += 5
+								pcs_lovers_rel[i] += 5
 								act 'Continue':		
 									gt 'boy_likes', 'changePier'
 								end
@@ -2112,11 +2121,11 @@ if $ARGS[0] = 'actions':
 					else
 						'He tells you that you should have less tattoos.'
 					end
-					if sub < 20 and bfa < 60 and pcs_lovers_compliance[i] < 6:
+					if sub < 20 and pcs_lovers_rel[i] < 60 and pcs_lovers_compliance[i] < 6:
 						act 'I am not going to change my tattoos!':
 							cla
 							cls
-							bfa -= 3
+							pcs_lovers_rel[i] -= 3
 							'<<$boydesc[i]>> tries to push you to change it, but you are not that submissive to be pressured by him, nor do your emotions make you make a choice you may regret.'
 							dynamic $go_home
 						end
@@ -2124,11 +2133,11 @@ if $ARGS[0] = 'actions':
 							gt 'boy_likes', 'changeTatt'
 						end
 						exit
-					elseif bfa <= 60 and pcs_lovers_compliance[i] < 6:
+					elseif pcs_lovers_rel[i] <= 60 and pcs_lovers_compliance[i] < 6:
 						act 'You think to yourself, its not like I like him THAT much...':
 							cla
 							pcs_dom += 1
-							bfa -=3
+							pcs_lovers_rel[i] -=3
 							'<<$boydesc[i]>> he realizes you adoration for him isn''t enough to pressure you to do that. He tells you he has something to do and heads off'
 							dynamic $go_home
 						end
@@ -2137,7 +2146,7 @@ if $ARGS[0] = 'actions':
 						act 'Your personality is not something that can be dominated that easily, and you brush him off, telling him you are who you are.':
 							cla
 							pcs_dom += 1
-							bfa -=3
+							pcs_lovers_rel[i] -=3
 							'<<$boydesc[i]>> realizes you will not give in this situation, and walks away mumbling to himself.'
 							dynamic $go_home
 						end
@@ -2145,7 +2154,7 @@ if $ARGS[0] = 'actions':
 					elseif sub > 20 or pcs_lovers_compliance[i] >= 6:
 						act 'You mumble "I would rather not..."':
 							cla
-							bfa -= 2
+							pcs_lovers_rel[i] -= 2
 							wantRand = rand(0, 100)
 							wantRand -= 4*pcs_lovers_compliance[i]
 							if wantRand > sub:
@@ -2158,7 +2167,7 @@ if $ARGS[0] = 'actions':
 								cla
 								'<<$boydesc[i]>> keeps up the pressure, and because of your demeaner, and you give in. He smiles happily then starts to take you to the tattoo parlor to get the right amount of tattoos.'
 								sub += 2
-								bfa += 5
+								pcs_lovers_rel[i] += 5
 								act 'Go to tattoo parlor':		
 									gt 'boy_likes', 'changeTatt'
 								end
@@ -2174,11 +2183,11 @@ if $ARGS[0] = 'actions':
 					else
 						'He tells you that you should have lip reduction.'
 					end
-					if sub < 20 and bfa < 60 and pcs_lovers_compliance[i] < 6:
+					if sub < 20 and pcs_lovers_rel[i] < 60 and pcs_lovers_compliance[i] < 6:
 						act '"My lips are fine the way they are!", you say slightly offended.':
 							cla
 							cls
-							bfa -= 3
+							pcs_lovers_rel[i] -= 3
 							'<<$boydesc[i]>> tries to push you to change your lip size, but you are not that submissive to be pressured by him, nor do your emotions make you make a choice you may regret.'
 							dynamic $go_home
 								
@@ -2187,11 +2196,11 @@ if $ARGS[0] = 'actions':
 							gt 'boy_likes', 'changeLips'
 						end
 						exit
-					elseif bfa <= 60 and pcs_lovers_compliance[i] < 6:
+					elseif pcs_lovers_rel[i] <= 60 and pcs_lovers_compliance[i] < 6:
 						act 'You think to yourself, its not like I like him THAT much to get work done on my lips.':
 							cla
 							pcs_dom += 1
-							bfa -=3
+							pcs_lovers_rel[i] -=3
 							'<<$boydesc[i]>> he realizes you adoration for him isn''t enough to pressure you to get work done on your lips. He tells you he has something to do and heads off.'
 							dynamic $go_home
 								
@@ -2201,7 +2210,7 @@ if $ARGS[0] = 'actions':
 							act 'Your personality is not something that can be dominated that easily, and you brush him off, telling him that you decide what size lips you look good with.':
 								cla
 								pcs_dom += 1
-								bfa -=3
+								pcs_lovers_rel[i] -=3
 								'<<$boydesc[i]>> realizes you will not give in this situation, and walks away mumbling to himself.'
 								dynamic $go_home
 
@@ -2210,7 +2219,7 @@ if $ARGS[0] = 'actions':
 					elseif sub > 20 or pcs_lovers_compliance[i] >= 6:
 						act 'You squeek, "But I like the size of my lips..."':
 							cla
-							bfa -= 2
+							pcs_lovers_rel[i] -= 2
 							wantRand = rand(0, 100)
 							wantRand -= 4*pcs_lovers_compliance[i]
 							if wantRand > sub:
@@ -2224,7 +2233,7 @@ if $ARGS[0] = 'actions':
 								cla
 								'<<$boydesc[i]>> keeps up the pressure, and because of your demeaner, and you give in. He grins widely and takes you to the clinic.'
 								sub += 4
-								bfa += 5
+								pcs_lovers_rel[i] += 5
 								act 'Go to the clinic':		
 									gt 'boy_likes', 'changeLips'
 								end
@@ -2240,11 +2249,11 @@ if $ARGS[0] = 'actions':
 					else
 						'He tells you that you should have a breast reduction.'
 					end
-					if sub < 20 and bfa < 60 and pcs_lovers_compliance[i] < 6:
+					if sub < 20 and pcs_lovers_rel[i] < 60 and pcs_lovers_compliance[i] < 6:
 						act '"My breasts are fine the way they are!", you say slightly offended.':
 							cla
 							cls
-							bfa -= 3
+							pcs_lovers_rel[i] -= 3
 							'<<$boydesc[i]>> tries to push you to change your breast size, but you are not that submissive to be pressured by him, nor do your emotions make you make a choice you may regret.'
 
 							dynamic $go_home
@@ -2253,11 +2262,11 @@ if $ARGS[0] = 'actions':
 							gt 'boy_likes', 'changeTits'
 						end
 						exit
-					elseif bfa <= 60 and pcs_lovers_compliance[i] < 6:
+					elseif pcs_lovers_rel[i] <= 60 and pcs_lovers_compliance[i] < 6:
 						act 'You think to yourself, its not like I like him THAT much to get work done on my breasts.':
 							cla
 							pcs_dom += 1
-							bfa -=3
+							pcs_lovers_rel[i] -=3
 							'<<$boydesc[i]>> he realizes you adoration for him isn''t enough to pressure you to get work done on your breasts. He tells you he has something to do and heads off.'
 							dynamic $go_home
 						end
@@ -2266,7 +2275,7 @@ if $ARGS[0] = 'actions':
 							act 'Your personality is not something that can be dominated that easily, and you brush him off, telling him that you decide what size breasts you look good with.':
 								cla
 								pcs_dom += 1
-								bfa -=3
+								pcs_lovers_rel[i] -=3
 								'<<$boydesc[i]>> realizes you will not give in this situation, and walks away mumbling to himself.'
 								dynamic $go_home
 							end
@@ -2274,7 +2283,7 @@ if $ARGS[0] = 'actions':
 					elseif sub > 20 or pcs_lovers_compliance[i] >= 6:
 						act 'You squeek, "But I like the size of my breasts..."':
 							cla
-							bfa -= 2
+							pcs_lovers_rel[i] -= 2
 							wantRand = rand(0, 100)
 							wantRand -= 4*pcs_lovers_compliance[i]
 							if wantRand > sub:
@@ -2287,7 +2296,7 @@ if $ARGS[0] = 'actions':
 								cla
 								'<<$boydesc[i]>> keeps up the pressure, and because of your demeaner, and you give in. He grins widely and takes you to the clinic.'
 								sub += 4
-								bfa += 5
+								pcs_lovers_rel[i] += 5
 								act 'Go to the clinic':		
 									gt 'boy_likes', 'changeTits'
 								end
@@ -2298,11 +2307,11 @@ if $ARGS[0] = 'actions':
 				elseif salocatnow > figurePrefMax and figureDay <= dayA:
 					'<<$boydesc[i]>> tells you your body is just too thick.'
 					'He offers to pay for you to get lyposuction.'
-					if sub < 20 and bfa < 60 and pcs_lovers_compliance[i] < 6:
+					if sub < 20 and pcs_lovers_rel[i] < 60 and pcs_lovers_compliance[i] < 6:
 						act '"My body weight is fine the way it is!", you say slightly offended.':
 							cla
 							cls
-							bfa -= 3
+							pcs_lovers_rel[i] -= 3
 							'<<$boydesc[i]>> tries to push you to change your body weight, but you are not that submissive to be pressured by him, nor do your emotions make you make a choice you may regret.'
 							
 							dynamic $go_home
@@ -2311,11 +2320,11 @@ if $ARGS[0] = 'actions':
 							gt 'boy_likes', 'changeFigure'
 						end
 						exit
-					elseif bfa <= 60 and pcs_lovers_compliance[i] < 6:
+					elseif pcs_lovers_rel[i] <= 60 and pcs_lovers_compliance[i] < 6:
 						act 'You think to yourself, its not like I like him THAT much to get lyposuction.':
 							cla
 							pcs_dom += 1
-							bfa -=3
+							pcs_lovers_rel[i] -=3
 							'<<$boydesc[i]>> he realizes you adoration for him isn''t enough to pressure you to get work done on your weight. He tells you he has something to do and heads off.'
 							dynamic $go_home
 						end
@@ -2324,7 +2333,7 @@ if $ARGS[0] = 'actions':
 						act 'Your personality is not something that can be dominated that easily, and you brush him off, telling him that you decide what size your body looks good at.':
 							cla
 							pcs_dom += 1
-							bfa -=3
+							pcs_lovers_rel[i] -=3
 							'<<$boydesc[i]>> realizes you will not give in this situation, and walks away mumbling to himself.'
 							dynamic $go_home
 						end
@@ -2332,7 +2341,7 @@ if $ARGS[0] = 'actions':
 					elseif sub > 20 or pcs_lovers_compliance[i] >= 6:
 						act 'You squeek, "But I like being this weight..."':
 							cla
-							bfa -= 2
+							pcs_lovers_rel[i] -= 2
 							wantRand = rand(0, 100)
 							wantRand -= 4*pcs_lovers_compliance[i]
 							if wantRand > sub:
@@ -2345,7 +2354,7 @@ if $ARGS[0] = 'actions':
 								cla
 								'<<$boydesc[i]>> keeps up the pressure, and because of your demeaner, and you give in. He grins widely and takes you to the clinic.'
 								sub += 4
-								bfa += 5
+								pcs_lovers_rel[i] += 5
 								act 'Go to the clinic':		
 									gt 'boy_likes', 'changeFigure'
 								end
@@ -2367,7 +2376,7 @@ if $ARGS[0] = 'actions':
 				act 'Sorry, but I need to leave':
 					cla
 
-					bfa -= (harakBoy[i] + 1)
+					pcs_lovers_rel[i] -= (harakBoy[i] + 1)
 					dynamic $go_home
 					
 				end
@@ -2381,7 +2390,7 @@ if $ARGS[0] = 'actions':
 				act 'Sorry, but I need to leave':
 					cla
 
-					bfa -= (harakBoy[i] + 1)
+					pcs_lovers_rel[i] -= (harakBoy[i] + 1)
 					dynamic $go_home
 					
 				end
@@ -2395,7 +2404,7 @@ if $ARGS[0] = 'actions':
 				act 'Sorry, but I need to go.':
 					cla
 
-					bfa -= (harakBoy[i] + 1)
+					pcs_lovers_rel[i] -= (harakBoy[i] + 1)
 					dynamic $go_home
 					
 				end
@@ -2436,7 +2445,8 @@ if $ARGS[0] = 'actions':
 	act 'I think we should break up...':
 		cla 
 		'He looks hurt, but you insist it is for the best. You both say goodbye and part ways.'
-		bfA = 0
+		pcs_lovers_rel[i] = 0
+		pcs_lover -= 1
 		act 'Continue':
 			dynamic $go_home
 			
