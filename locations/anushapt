@@ -5,41 +5,7 @@
 !Younger brother - Timofey
 !Mother - Valeria
 
-music_loop = 0
-CLOSE ALL
-if sound = 0:PLAY 'sound/korr.mp3',30
 
-$metkaM = $ARGS[0]
-$locM = $CURLOC
-$metka = $ARGS[0]
-$loc = $CURLOC
-$location_type = 'private'
-clr
-popolaini = 0
-saunaYouRoom = 0
-boycherdaksex = 0
-minut += 1
-bonusZ = 0
-gs 'stat'
-if night_mode = 1:
-	fcolor = rgb(255, 255, 255)
-	bcolor = rgb(0, 0, 0)
-	lcolor = rgb(106, 90, 205)
-else
-	fcolor = rgb(0, 0, 0)
-	bcolor = rgb(255, 255, 255)
-	lcolor = rgb(106, 90, 205)
-end
-
-if AnushkaHomeDay ! daystart:
-	AnushkaHomeDay = daystart
-	AnushkaLoc = 0
-end
-
-CLOSE ALL
-
-cla
-*clr
 
 !AnushkaLoc tells us where Anushka is located
 !----------------------------------------------
@@ -55,6 +21,39 @@ cla
 
 !!this is the text and chances anyone is at Anushka''s apartment.
 if $ARGS[0] = 'home':
+	music_loop = 0
+	CLOSE ALL
+	if sound = 0:PLAY 'sound/korr.mp3',30
+
+	$metkaM = $ARGS[0]
+	$locM = $CURLOC
+	$metka = $ARGS[0]
+	$loc = $CURLOC
+	$location_type = 'private'
+	clr
+	popolaini = 0
+	saunaYouRoom = 0
+	boycherdaksex = 0
+	minut += 1
+	bonusZ = 0
+	gs 'stat'
+	if night_mode = 1:
+		fcolor = rgb(255, 255, 255)
+		bcolor = rgb(0, 0, 0)
+		lcolor = rgb(106, 90, 205)
+	else
+		fcolor = rgb(0, 0, 0)
+		bcolor = rgb(255, 255, 255)
+		lcolor = rgb(106, 90, 205)
+	end
+
+	if AnushkaHomeDay ! daystart:
+		AnushkaHomeDay = daystart
+		AnushkaLoc = 0
+	end
+
+	cla
+	*clr
 	'<center><img src="images/locations/pavlovsk/resident/apartment/aptdoor.jpg"></center>'
 	'You walk up to the front door and knock.'
 	if hour >= 22:
@@ -98,8 +97,11 @@ if $ARGS[0] = 'home':
 end
 
 if $ARGS[0] = 'hallway':
+	CLOSE ALL
+	if sound = 0:PLAY 'sound/korr.mp3',30
 	$location_type = 'indoors'
-	cls
+	cla
+	*clr
 	minut += 1
 	gs 'stat'
 	'<center><h4><font color="maroon">Entrance hall</font></h4></center>'
@@ -127,17 +129,19 @@ if $ARGS[0] = 'hallway':
 		act 'Living Room': gt 'anushapt','livingroom'
 		act 'Kitchen': gt 'anushapt','kitchen'
 		act 'Parents Room': gt 'anushapt','anushparents'
-		act 'Leave Anushka''s apartment': gt 'pavComplexb2', 'etaj_3'
+		act 'Leave Anushka''s apartment': gt 'pavComplexb2', 'etaj_4'
 	else
 		'Anushka is standing next to, looking at you expectantly. "What''s up, <<$pcs_nickname>>?"'
 		act 'Let''s go to your room':AnushkaLoc=2&gt'anushapt','anushroom'
 		act 'Let''s check on your brother':AnushkaLoc=3&gt'anushapt','brotherroom'
-		act 'Leave Anushka''s apartment': gt 'pavComplexb2', 'etaj_3'
+		act 'Leave Anushka''s apartment': gt 'pavComplexb2', 'etaj_4'
 	end
 end
 
 if $ARGS[0] = 'bathroom':
-	cls
+	CLOSE ALL
+	cla
+	*clr
 	minut += 1
 	$metka = 'bathroom'
 	$loc = 'anushapt'
@@ -154,7 +158,8 @@ if $ARGS[0] = 'bathroom':
     
 !!LillianL-Reordered shower events from uneventful->brother->father to father->brother->uneventuful to make it easier to write the if/else statement. I ignored the comment that the brother event would happen in place of a normal shower since the dialogue suggests that a normal shower does in fact take place. Should these events be possible to trigger more than once per day?
 	act 'Take a shower':
-		cls
+		*clr
+		cla
 		minut += 10
 		dynamic $showerdin
 		gs 'stat'
@@ -165,6 +170,7 @@ if $ARGS[0] = 'bathroom':
 			exhibition_exp += 1
 			'Despite the clattering noise of water, you hear the bathroom door open, you look past the shower curtain and see Eduard walking up to the toilet, unzipping his pants.'
 			act 'Um excuse me?':
+				*clr & cla
 				'<center><img src="images/locations/pavlovsk/resident/apartment/anushapt/showergetout.jpg"></center>'
 				'You pull the shower curtain tight against your body to make sure there is nothing for him to see other than your head, and you look at him a bit confused.'
 				'He looks up at you when you say something and it takes him a moment to realize who you are. He quickly zips up his pants. "Shit sorry, I thought you was my wife." He turns away and hurries for the door. "I''ll just be going, sorry again." He says as he pulls the door closed. Not sure what to think you finish your shower.'
@@ -173,6 +179,7 @@ if $ARGS[0] = 'bathroom':
 			if pcs_exhibition >= 30:
 !!if exhibition is 30+ then this option shows up.
 				act 'Give him a show':
+				*clr & cla
 					exhibition_exp += 3
 					'<center><img src="images/locations/pavlovsk/resident/apartment/anushapt/showershow.jpg"></center>'
 					'You see him and he hasn''t looked over and seen you yet. Then you pull the curtain wide open, giving him a nice view of your soapy naked body. "Is this what you were looking for?" You ask him.'
@@ -186,6 +193,8 @@ if $ARGS[0] = 'bathroom':
 			exhibition_exp += 1
 			'Despite the clattering noise of water, you hear the bathroom door creaking open slightly, you look past the shower curtain and see the bathroom door cracked open. Through the small crack in the doorway, you notice Anushka''s brother Maksim watching you.'
 			act 'Yell at him':
+				*clr
+				cla
 				'<center><img src="images/locations/pavlovsk/resident/apartment/anushapt/showergetout.jpg"></center>'
 				'You pull the shower curtain tight against your body to make sure there is nothing for him to see other than your head. "Get out of here you little pervert!"'
 				'He laughs and then ducks away. You hear Anushka yelling at him, wanting to know what he was doing. During the rest of the shower you hear some more yelling and even a crash before silence.'
@@ -194,6 +203,8 @@ if $ARGS[0] = 'bathroom':
 			if pcs_exhibition >= 30:
 !!if exhibition is 30+ then this option shows up.
 				act 'Give him a show':
+					*clr
+					cla
 					exhibition_exp += 3
 					'<center><img src="images/locations/pavlovsk/resident/apartment/anushapt/showershow.jpg"></center>'
 					'You see him and you smile at him, then you pull the curtain wide open, giving him a nice view of your soapy naked body. His eyes get huge and he creeps into the bathroom and pulls the door closed behind him. After a few minutes you notice him pulling out his phone to take a picture. You shake your head at him. "No pictures or I will tell your sister that you snuck in here and started taking pictures of me." He doesn''t say anything but gives you a look of mixed disgust, annoyance and fear at mention of his sister.'
@@ -218,7 +229,9 @@ if $ARGS[0] = 'bathroom':
 end
 
 if $ARGS[0] = 'anushroom':
-	cls
+	CLOSE ALL
+	cla
+	*clr
 	minut += 1
 	gs 'stat'
 	'<center><h4><font color="maroon">Anushka''s Room</font></h4></center>'
@@ -245,7 +258,8 @@ if $ARGS[0] = 'computer':
 		'You blush a little at the idea of watching porn with someone else, but there is some appeal to it, but she also mentioned earning money modeling.'
 		act 'Find something else to look at':gt 'anushapt','anushroom'
 		act 'Ask about modeling':
-			cls
+			*clr
+			cla
 			'<center><h4><font color="maroon">Anushka''s Room</font></h4></center>'
 			'<center><img src="images/characters/pavlovsk/school/girl/anushka/bedroom/bedroomtalk.jpg"></center>'
 			'You perk up at the mention of modeling earning enough to buy a nice laptop like that. "Does modeling really pay that well?"'
@@ -255,6 +269,8 @@ if $ARGS[0] = 'computer':
 			!!LillianL-The above needs to be linked to the photographer somehow.
 			act 'Thanks':gt 'anushapt','anushroom'
 			act 'Underaged?':
+				*clr
+				cla
 				'<center><h4><font color="maroon">Anushka''s Room</font></h4></center>'
 				'<center><img src="images/characters/pavlovsk/school/girl/anushka/bedroom/bedroomtalk.jpg"></center>'
 				'Then a thought occurs to you, you''re underaged to do nude modeling but then so is Anushka. "Wait how did you get past the age check?"'
@@ -264,7 +280,8 @@ if $ARGS[0] = 'computer':
 			end
 		end
 		act 'Agree to watch porn':
-			cls
+			*clr
+			cla
 			'<center><h4><font color="maroon">Anushka''s Room</font></h4></center>'
 			'<center><img src="images/locations/pavlovsk/resident/apartment/anushapt/anushroom/watchporn.jpg"></center>'
 			'She grins and then connects the TV to the laptop and starts some lesbian porno. You can''t help but notice the porno is about two teenager girls having a sleep over in one of their bedrooms. They talk for a bit which quickly leads to them having sex.'
@@ -273,7 +290,8 @@ if $ARGS[0] = 'computer':
 			gs 'stat'
 			act 'Leave Anushka''s room': gt 'anushapt','hallway'
 			act 'Just watch':
-				cls
+				*clr
+				cla
 				'<center><h4><font color="maroon">Anushka''s Room</font></h4></center>'
 				'<center><img src="images/locations/pavlovsk/resident/apartment/anushapt/anushroom/watchporn.jpg"></center>'
 				'You do your best to ignore the fact that Anushka is right next to you on the bed masturbating as you watch the porno. Long before it is over Anushka starts moaning, louder and louder until she finally has a orgasm. A few moments later she gets up and pulls her pants back up, then turns the porno off. Then she turns to look at you. "I don''t know about you but I could use a snack. Come on lets go raid the kitchen." She heads out of her room waving you to follow. Not sure what else to do, you get up and follow.'
@@ -283,7 +301,8 @@ if $ARGS[0] = 'computer':
 				act 'Follow her': gt 'anushapt','snack'
 			end
 			act 'Masturbate as well':
-				cls
+				*clr
+				cla
 				exhibition_exp += 3
 				'<center><h4><font color="maroon">Anushka''s Room</font></h4></center>'
 				'<center><img src="images/locations/pavlovsk/resident/apartment/anushapt/anushroom/dualmast.gif"></center>'
@@ -301,25 +320,29 @@ if $ARGS[0] = 'computer':
 	elseif AnushkaCompUse > 0 and AnushkaLoc = 2:
 		'You look at the computer, then at Anushka, and you can''t help but think about the porn she is watching on it. You bite your lower lip as your mind conjures up images to go with that thought, and at that exact moment, Anushka meets your look... and breaks into a smile. "You''re thinking about watching porn, aren''t you, <<$pcs_nickname>>?"'
 		act 'Deny it':
-			cls
+			*clr
+			cla
 			'You shake your head, both to disperse the images that threatened to overwhelm you and as a response to Anushka''s lewd question. "No, I... uh, I just remembered something I had to look up on the internet."'
 			'Anushka chuckles. "Sure you did, <<$pcs_nickname>>." But she doesn''t press you further.'
 			act 'Find something else to do':gt 'anushapt','anushroom'
 		end
 		act 'Admit it':
-			cls
+			*clr
+			cla
 			npc_rel['A144'] += 1
 			'She hit the nail on the head, and given how open she is about everything, you really don''t feel like lying to her; so you nod. "Yeah, I guess I did."'
 			'Anushka''s smile broadens and lust flares up in her eyes. "We could watch some together, if you want..."'
 			act 'You don''t want to':
-				cls
+				*clr
+				cla
 				'As appealing as watching porn sounds right now, you''re not in the mood to watch it with her, at least not right now.'
 				'"Nah, I''d really rather do something else right now," you say.'
 				'Anushka shrugs. "Alright, that''s cool." She seems to be rubbing her legs together, though - maybe even the idea of watching porn with you got her a little worked up.'
 				act 'Find something else to do':gt 'anushapt','anushroom'
 			end
 			act 'Agree to watch porn':
-				cls
+				*clr
+				cla
 				'<center><h4><font color="maroon">Anushka''s Room</font></h4></center>'
 				'<center><img src="images/locations/pavlovsk/resident/apartment/anushapt/anushroom/watchporn.jpg"></center>'
 				'She grins and then connects the TV to the laptop and starts some lesbian porno. You can''t help but notice the porno is about two teenager girls having a sleep over in one of their bedrooms. They talk for a bit which quickly leads to them having sex.'
@@ -328,7 +351,8 @@ if $ARGS[0] = 'computer':
 				gs 'stat'
 				act 'Leave Anushka''s room': gt 'anushapt','hallway'
 				act 'Just watch':
-					cls
+					*clr
+					cla
 					'<center><h4><font color="maroon">Anushka''s Room</font></h4></center>'
 					'<center><img src="images/locations/pavlovsk/resident/apartment/anushapt/anushroom/watchporn.jpg"></center>'
 					'You do your best to ignore the fact that Anushka is right next to you on the bed masturbating as you watch the porno. Long before it is over Anushka starts moaning, louder and louder until she finally has a orgasm. A few moments later she gets up and pulls her pants back up, then turns the porno off. Then she turns to look at you. "I don''t know about you but I could use a snack. Come on lets go raid the kitchen." She heads out of her room waving you to follow. Not sure what else to do, you get up and follow.'
@@ -339,7 +363,8 @@ if $ARGS[0] = 'computer':
 					!!this goes to the snack act below but the second part.
 				end
 				act 'Masturbate as well':
-					cls
+					*clr
+					cla
 					exhibition_exp += 3
 					'<center><h4><font color="maroon">Anushka''s Room</font></h4></center>'
 					'<center><img src="images/locations/pavlovsk/resident/apartment/anushapt/anushroom/dualmast.gif"></center>'
@@ -362,6 +387,8 @@ if $ARGS[0] = 'computer':
 		'You decided to use Anushka''s computer, you''re sure she wouldn''t mind.'
 	!!add in all the normal options you get from using Vasily''s computer. Except porn, which is below.
 		act 'Check out her porn':
+			*clr
+			cla
 			'<center><h4><font color="maroon">Anushka''s Room</font></h4></center>'
 			'<center><img src="images/locations/pavlovsk/resident/apartment/anushapt/anushroom/usecomp.jpg"></center>'
 			'You sit in front of the computer. "Maybe I should take a look at what kind of porn Anushka is watching, she won''t mind right?" You think to yourself.'
@@ -372,7 +399,8 @@ if $ARGS[0] = 'computer':
 	!!add a option to do the other stuff with the computer like at Vasily''s here.
 	!!This next one only shows up as a option if Anushka is not home.
 			act 'Masturbate':
-				cls
+				*clr
+				cla
 				'<center><h4><font color="maroon">Anushka''s Room</font></h4></center>'
 				'<center><img src="images/locations/pavlovsk/resident/apartment/anushapt/anushroom/nushcmast.gif"></center>'
 				'You find one of her porno''s that you like and lean back in the chair and start to masturbate, before long you completely forget that you are in someone else bedroom masturbating to their porn on their laptop.'
@@ -396,38 +424,45 @@ if $ARGS[0] = 'computer':
 						'You give her a dirty look, which only makes her laugh harder. "You almost scared me to death, that wasn''t funny." Though there is very little real heat in your voice as you are so emberressed, having been caught masturbating. "Sorry about—" You start to say but she waves you to stop.'
 						'"It''s fine, I don''t care if you masturbate in my room while you wait for me, but if you are that horny. I could always help you out with that." She says while licking her upper lip.'
 						act 'No thanks':
+							cla
+							*nl
 							'You shake your head. "Thanks but you scared the mood right out of me, um how about we just change the subject?" She laughs a bit but doesn''t seem to mind you turning her down, as she flops down on her bed.'
 							act 'Find something else to do':gt 'anushapt','anushroom'
 						end
 						act 'Sure':
-							cls
+							cla
+							*clr
 							'<center><h4><font color="maroon">Anushka''s Room</font></h4></center>'
 							'<center><img src="images/characters/pavlovsk/school/girl/anushka/bedroom/sex/caughtmast/les1.jpg"></center>'
 							'You smile at her as you get up and once you are standing you move close and give her a long passionate kiss, while you are kissing the two of you stumble over to her bed, crawling onto it, as you are caressing each others bodies.'
 							gs 'arousal', 'foreplay', 10, 'lesbian'
 							act 'Undress her':
-								cls
+								cla
+								*clr
 								npc_rel['A144'] += 3
 								'<center><h4><font color="maroon">Anushka''s Room</font></h4></center>'
 								'<center><img src="images/characters/pavlovsk/school/girl/anushka/bedroom/sex/caughtmast/les2.jpg"></center>'
 								'Once in bed you waste no time pulling her clothes off, she returns the favor and starts removing your clothes as well. It would go a lot faster if the two of you were''t also passionately kissing and caressing each others bodies. Regardless before long, both of you are naked.'
 								gs 'arousal', 'foreplay', 10, 'lesbian'
 								act 'Get pleasured':
-									cls
+									cla
+									*clr
 									'<center><h4><font color="maroon">Anushka''s Room</font></h4></center>'
 									'<center><img src="images/characters/pavlovsk/school/girl/anushka/bedroom/sex/caughtmast/les3.jpg"></center>'
 									'After a bit of passionate kissing and fondling once your both naked, you lay back on the bed and spread your legs. You place your hand on top of her head and gently guide her face to your pussy. She really doesn''t need any encouragement, she dives straight in. Her tongue flicking your clit at first, then sucking on your clit, before she plunges her tongue up your wet pussy, as she eats you out.'
 									gs 'arousal', 'cuni', 10, 'lesbian'
 									gs 'stat'
 									act 'Get eaten out':
-										cls
+										cla
+										*clr
 										'<center><h4><font color="maroon">Anushka''s Room</font></h4></center>'
 										'<center><img src="images/characters/pavlovsk/school/girl/anushka/bedroom/sex/caughtmast/les4.jpg"></center>'
 										'You lose track of time as she eats you out, she either has a lot of natural talent or she eats out girls a lot because she is amazing at it. You feel yourself starting to get close and apparently she notices as well, because she stops. You are only disappointed for a moment, as she knee walks her way over to you and straddles your face. You can''t blame her for wanting her own pleasure for you. With her pussy right over your face you can see she is already sopping wet. You kiss, her pussy at first and gently licking it a few times teasing her with light touches.'
 										'It seems to be to much for her as she lowers herself and starts to grind her twat against your face, you give up your teasing and plunge your tongue into her pussy, pleasuring her, like she just pleasured you.'
 										gs 'arousal', 'cuni_give', 10, 'lesbian'
 										act '69':
-											cls
+											cla
+											*clr
 											'<center><h4><font color="maroon">Anushka''s Room</font></h4></center>'
 											'<center><img src="images/characters/pavlovsk/school/girl/anushka/bedroom/sex/caughtmast/les5.jpg"></center>'
 											'You can hear her starting to breathe heavier and moan louder, you are about to suggest switching again, but apparently she had the same idea. She briefly stops straddling your face before turning around and then straddling your face again, while going down on her hands and knees so she can 69 you.'
@@ -438,7 +473,8 @@ if $ARGS[0] = 'computer':
 											gs 'arousal', 'cuni', 10, 'lesbian'
 											gs 'stat'
 											act 'Afterglow':
-												cls
+												cla
+												*clr
 												'<center><h4><font color="maroon">Anushka''s Room</font></h4></center>'
 												'<center><img src="images/characters/pavlovsk/school/girl/anushka/bedroom/sex/caughtmast/les6.jpg"></center>'
 												'With you both spent she rolls off you and the two of you lay side by side for several minutes while you catch your breath. Then you suggest "Maybe we should get dressed before someone walks in, like your brothers."'
@@ -474,46 +510,55 @@ if $ARGS[0] = 'guitar':
 	if AnushkaLoc = 2:
 	!!if with Anushka
 		*clr & cla
+		minut += 10
 		npc_rel['A144'] += 2
+		gs 'stat'
 		'Noticing you looking at her guitars she says; "They are my pride and joy. I can''t even count how many hours I''ve spent learning to play these damn things."'
 		'"I''ve heard you''re pretty good, would you mind playing something?" you ask. Anushka''s eyes brighten up as you ask her. She quickly grabs the acoustic guitar and starts playing and even sings a as she plays.'
 		'You''re impressed, she is a good singer but a better guitar player. As she ends her song you clap your hands; "Wow, I''ve heard you''re good but not this good."'
 		'Anushka blushes a little as you compliment her. "Thanks, I work hard at it, it is nice to be appreciated for it." she replies.'
-		minut += 10
+
 		act 'Put the guitar back':gt 'anushapt','anushroom'
 	else
 	!!else without Anushka
 		*clr & cla
 		'You decide to live out one of your fantasies. You''ve always wanted to play the guitar.'
 		act 'Pretend to play':
-			'Grabbing hold of the guitar, you begin pretending playing putting on a show just like a rock star. After a while you need to catch your breath this was harder than you thought.'
 			minut += 10
 			pcs_mood += 10
+			gs 'stat'
+			'Grabbing hold of the guitar, you begin pretending playing putting on a show just like a rock star. After a while you need to catch your breath this was harder than you thought.'
+
 			act 'Put the guitar back':gt 'anushapt','anushroom'
 		end
 		act 'Try to play it':
+			cla
+			*clr
 			instrmusic_lvl += rand(0,2)
 			pcs_mood += 5
+			minut += 20
+			gs 'pain', 1, 'fingers', 'ache'
+			gs 'stat'
 			'You gently brush your fingers over the strings. The feeling of the metal against them is exhilarating. You come up with a song you want to try and play and start to work your magic...'
 			'Unfortunately, playing the guitar is a lot harder than it looks. It takes you several minutes to hit the right notes, and several more to play even the tiny first fraction of the song without making a mistake. The metal strings cut into your tender, uncalloused fingertips and after about 20 minutes, you decide to stop for now.'
 			'Learning how to play the guitar can be a frustrating, painful and long-winded experience, you realize... and yet you cannot help but gently stroke the guitar once more before putting it back in its stand, looking forward to trying again.'
-			'pain', 1, 'fingers', 'ache'
-			minut += 20
+
 			act 'Put the guitar back':gt 'anushapt','anushroom'
 		end
 	end
 end
 	
 if $ARGS[0] = 'bed':
+	cla
+	*clr
 	if AnushkaLoc = 2:
 	!! Will lead to random interactions with Anushka see Anushka interactions
-		*clr & cla
 		'Anushka sits on her bed and waves you over to sit next to her. You quickly jump up on the bed next to her.'
 		act 'Chat': gt 'anushapt', 'chat'
 	else
 	!!without Anushka
 		'You lay down on her bed and roll over, the pillow smells like her. There is not much to do on the bed without Anushka. You start feeling a bit bored and wish Anushka was here.'
-		act 'Get out of the bed': gt 'anushapt','anushroom':
+		act 'Get out of the bed': gt 'anushapt','anushroom'
 		!!JulienJaden: Could put a random event here if Sveta is very tired - falls asleep and Anushka wakes her up / plays with her when she comes home
 	end
 end
@@ -527,24 +572,38 @@ if $ARGS[0] = 'chat':
 	'<center><img src="images/characters/pavlovsk/school/girl/anushka/bedroom/bedroomtalk.jpg"></center>'
 	'The two of you lay on her bed and talk about a variety of topics.'
 	act 'Make small talk':
-		cls
+		cla
+		*clr
 		npc_rel['A144'] += 2
 		'<center><h4><font color="maroon">Anushka''s Room</font></h4></center>'
 		'<center><img src="images/characters/pavlovsk/school/girl/anushka/bedroom/bedroomtalk.jpg"></center>'
 		'The two of you chat about a variety of things, mostly school, music, clothes, and what has been going on in Pavlovsk lately.'
+		act 'Keep talking': gt 'anushapt', 'chat'
+		act 'Stop talking': gt 'anushapt', 'anushroom'
 	end
-	act 'Ask where she buys her clothes':
-		cls
-		'<center><h4><font color="maroon">Anushka''s Room</font></h4></center>'
-		'<center><img src="images/characters/pavlovsk/school/girl/anushka/bedroom/bedroomtalk.jpg"></center>'
-		'Seeing her clothes in the room, some hanging up, others draped over chairs a few laying on the floor. They all are of a similar style. After a bit you get curious where she gets her clothes, it is obviously she doesn''t get them locally. None of the local stores carry clothes like she wears and you rarely see them much in the city. "Hey Nush where do you buy your clothes? Online?"'
-		'"Dolls, well Patchwork Dolls to be exact near the University in the city." She proceeds to tell you how to find the place.'
-!!this part only shows up if Sveta has never been to the store.
-		'"If you stop by, tell Savva or Viola I said they still owe me a round from last time." You nod that you will, though you have no idea who they are, but if you go to the store you will find out you suppose.'
-	!!Lillian-A flag probably needs to be set here to link together with Savva/Viola at the shop
+	if Anush_dolls < 2:
+		act 'Ask where she buys her clothes':
+			cla
+			*clr
+			'<center><h4><font color="maroon">Anushka''s Room</font></h4></center>'
+			'<center><img src="images/characters/pavlovsk/school/girl/anushka/bedroom/bedroomtalk.jpg"></center>'
+			'Seeing her clothes in the room, some hanging up, others draped over chairs a few laying on the floor. They all are of a similar style. After a bit you get curious where she gets her clothes, it is obviously she doesn''t get them locally. None of the local stores carry clothes like she wears and you rarely see them much in the city. "Hey Nush where do you buy your clothes? Online?"'
+			'"Dolls, well Patchwork Dolls to be exact near the University in the city." She proceeds to tell you how to find the place.'
+			if Anush_dolls = 0:
+				Anush_dolls = 2
+				'"If you stop by, tell Savva or Viola I said they still owe me a round from last time." You nod that you will, though you have no idea who they are, but if you go to the store you will find out you suppose.'
+			else
+				Anush_dolls = 2
+				'You tell her you''ve been there before and she says, "Next time you''re there tell them they owe me a round."'
+			end
+		!!Lillian-A flag probably needs to be set here to link together with Savva/Viola at the shop
+			act 'Keep talking': gt 'anushapt', 'chat'
+			act 'Stop talking': gt 'anushapt', 'anushroom'
+		end
 	end
 	act 'Ask about the band':
-		cls
+		cla
+		*clr
 		'<center><h4><font color="maroon">Anushka''s Room</font></h4></center>'
 		'<center><img src="images/characters/pavlovsk/school/girl/anushka/bedroom/bedroomtalk.jpg"></center>'
 		'The two of you sit near to each other; "I''ve heard a lot about your band. Most people tell me you''re really good."'
@@ -556,7 +615,8 @@ if $ARGS[0] = 'chat':
 		act 'Stop talking': gt 'anushapt', 'anushroom'
 	end
 	act 'Ask about the boys in the band':
-		cls
+		cla
+		*clr
 		'<center><h4><font color="maroon">Anushka''s Room</font></h4></center>'
 		'<center><img src="images/characters/pavlovsk/school/girl/anushka/bedroom/bedroomtalk.jpg"></center>'
 		'You lay next to Anushka eager to ask about her the band members; "Tell me about the others in the band? I really want to know more about them."'
@@ -568,7 +628,8 @@ if $ARGS[0] = 'chat':
 		act 'Stop talking': gt 'anushapt', 'anushroom'
 	end
 	act 'Ask about her getting naked':
-		cls
+		cla
+		*clr
 		'<center><h4><font color="maroon">Anushka''s Room</font></h4></center>'
 		'<center><img src="images/characters/pavlovsk/school/girl/anushka/bedroom/bedroomtalk.jpg"></center>'
 		'"How did you get so free-spirited?" you ask as Anushka is laying on her bed.'
@@ -583,7 +644,8 @@ if $ARGS[0] = 'chat':
 		act 'Stop talking': gt 'anushapt', 'anushroom'
 	end
 	act 'Ask about Alyona':
-		cls
+		cla
+		*clr
 		'<center><h4><font color="maroon">Anushka''s Room</font></h4></center>'
 		'<center><img src="images/characters/pavlovsk/school/girl/anushka/bedroom/bedroomtalk.jpg"></center>'
 		'"I see you often hanging out with Alyona, aren''t you scared of her?" you curiously ask Anushka.'
@@ -592,7 +654,8 @@ if $ARGS[0] = 'chat':
 		act 'Stop talking': gt 'anushapt', 'anushroom'
 	end
 	act 'Ask about her brothers':
-		cls
+		cla
+		*clr
 		'<center><h4><font color="maroon">Anushka''s Room</font></h4></center>'
 		'<center><img src="images/characters/pavlovsk/school/girl/anushka/bedroom/bedroomtalk.jpg"></center>'
 		'"I don''t mean to pry, but you and your bothers seem to have a rocky relationship."'
@@ -601,13 +664,16 @@ if $ARGS[0] = 'chat':
 		act 'Stop talking': gt 'anushapt', 'anushroom'
 	end
 	act 'Ask about the future':
-		cls
+		cla
+		*clr
 		'<center><h4><font color="maroon">Anushka''s Room</font></h4></center>'
 		'<center><img src="images/characters/pavlovsk/school/girl/anushka/bedroom/bedroomtalk.jpg"></center>'
 		'"What will you do if the music path doesn''t work out? Don''t get me wrong... I mean you''re talented and all but you might never catch your big break..." you say with a hesitation, afraid about how Anushka will react.'
 		'She looks at you smiling; "I''m not too worried about that, I''m certain we''ll make it. Either way it might not seem like it but I''ll let you in on a little secret even though you might not see me at school that often I''ve got pretty good grades and I know exactly how far I can push the boundaries before getting into too much trouble. I am planning to attend the University in the city after school regardless how the band goes. I know my father wants me to study more and focus on being a good girl, but if he would just cut me some fucking slack I might surprise him."'
 		'Before you can say something she asks you. "What about you? What are your plans for the future?"'
 		act 'I don''t know':
+			cla
+			*clr
 			'<center><h4><font color="maroon">Anushka''s Room</font></h4></center>'
 			'<center><img src="images/characters/pavlovsk/school/girl/anushka/bedroom/bedroomtalk.jpg"></center>'
 			'"I''m not sure, I have a few options I guess." You tell her.'
@@ -617,6 +683,8 @@ if $ARGS[0] = 'chat':
 			act 'Stop talking': gt 'anushapt', 'anushroom'
 		end
 		act 'Go to the University':
+			cla
+			*clr
 			'<center><h4><font color="maroon">Anushka''s Room</font></h4></center>'
 			'<center><img src="images/characters/pavlovsk/school/girl/anushka/bedroom/bedroomtalk.jpg"></center>'
 			'You get a bit excited. "I am planning to attend the University too. Now I will for sure know someone there."'
@@ -625,6 +693,8 @@ if $ARGS[0] = 'chat':
 			act 'Stop talking': gt 'anushapt', 'anushroom'
 		end
 		act 'Get married':
+			cla
+			*clr
 			'<center><h4><font color="maroon">Anushka''s Room</font></h4></center>'
 			'<center><img src="images/characters/pavlovsk/school/girl/anushka/bedroom/bedroomtalk.jpg"></center>'
 !!can you make the <<boyfriend>> be the name of who ever Sveta is dating? Niko, Fedor, Artem, etc? I have no clue how hard that would be to code but eventually we will need a code like that, for the expanded chats with NPC''s at school, home and the disco.
@@ -636,13 +706,16 @@ if $ARGS[0] = 'chat':
 		end
 	end
 	act 'Ask if she has a boyfriend':
-		cls
+		cla
+		*clr
 		'<center><h4><font color="maroon">Anushka''s Room</font></h4></center>'
 		'<center><img src="images/characters/pavlovsk/school/girl/anushka/bedroom/bedroomtalk.jpg"></center>'
 		'You know she is seeing some guys, it is not really a secret and some girls. Not sure if you should even ask but you are curious. "So do you have a boyfriend? Or girlfriend?"'
 		'Shaking her head no. "Nope, not really looking. I am young and carefree. I plan to as they say sow my wild oats while I can. I am not against the idea mind you, if that right person came along and just blew me away, then I would likely consider it anyways." She pauses a moment and then gives you a wicked grin. "Why do you ask? You wanting to fill that [i]slot?[/i]"'
 		'The way she says it, makes you blush a little. She leaves no doubt what slot she means and she makes it sound so dirty and exciting at the same time. But did you mean that?'
 		act 'Maybe':
+			cla
+			*clr
 			npc_rel['A144'] += 3
 			'<center><h4><font color="maroon">Anushka''s Room</font></h4></center>'
 			'<center><img src="images/characters/pavlovsk/school/girl/anushka/bedroom/brtkiss.jpg"></center>'
@@ -654,6 +727,8 @@ if $ARGS[0] = 'chat':
 			act 'Stop talking': gt 'anushapt', 'anushroom'
 		end
 		act 'No':
+			cla
+			*clr
 			'<center><h4><font color="maroon">Anushka''s Room</font></h4></center>'
 			'<center><img src="images/characters/pavlovsk/school/girl/anushka/bedroom/bedroomtalk.jpg"></center>'
 			'You shake your head, this conversation really went off the rails and not at all what you meant. "No. I mean I like you, but not like that, not that..." She reaches up and places a finger over your lips to stop you from going on and seems amused by your response.'
@@ -662,6 +737,8 @@ if $ARGS[0] = 'chat':
 			act 'Stop talking': gt 'anushapt', 'anushroom'
 		end
 		act 'I have a boyfriend':
+			cla
+			*clr
 			'<center><h4><font color="maroon">Anushka''s Room</font></h4></center>'
 			'<center><img src="images/characters/pavlovsk/school/girl/anushka/bedroom/bedroomtalk.jpg"></center>'
 !!can you make the <<boyfriend>> be the name of who ever Sveta is dating? Niko, Fedor, Artem, etc? I have no clue how hard that would be to code but eventually we will need a code like that, for the expanded chats with NPC''s at school, home and the disco.
@@ -676,12 +753,16 @@ if $ARGS[0] = 'chat':
 			'Anushka looks at you a long moment like she is internally debating something. "Hey if you like him great, but... just be careful around him ok. He isn''t always what he seems."'
 			'Then she smiles and before you can ask what she meant by that she asks. "Hmm think he would be up for a threesome?" She says as she makes a kissy face at you.'
 			act 'No':
+				cla
+				*clr
 				'<center><h4><font color="maroon">Anushka''s Room</font></h4></center>'
 				'<center><img src="images/characters/pavlovsk/school/girl/anushka/bedroom/bedroomtalk.jpg"></center>'
 				'Shaking your head no. "Sorry but he is all mine." You tell her with a grin.'
 				'She makes a tsking sound. "To bad. Oh well if you change your mind let me know." Not sure what else to say to that you change the subject.'
 			end
 			act 'Maybe':
+				cla
+				*clr
 				npc_rel['A144'] += 2
 				'<center><h4><font color="maroon">Anushka''s Room</font></h4></center>'
 				'<center><img src="images/characters/pavlovsk/school/girl/anushka/bedroom/bedroomtalk.jpg"></center>'
@@ -695,7 +776,8 @@ if $ARGS[0] = 'chat':
 !!asking about her mother can only show up once Sveta has had a conversation with the other, Either the snack conversation or one of the ones in the parents badroom.
 	if valeriaIntroduced = 1:
 		act 'Ask about her mother':
-			cls
+			cla
+			*clr
 			'<center><h4><font color="maroon">Anushka''s Room</font></h4></center>'
 			'<center><img src="images/characters/pavlovsk/school/girl/anushka/bedroom/bedroomtalk.jpg"></center>'
 			'Unsure how to ask this, but you are curious what''s wrong with her mother. "I don''t mean to pry, but what''s wrong with your mother?"'
@@ -707,52 +789,61 @@ if $ARGS[0] = 'chat':
 		end
 	end
 	act 'Kiss her':
-		cls
+		cla
+		*clr
 		'<center><h4><font color="maroon">Anushka''s Room</font></h4></center>'
 		'<center><img src="images/characters/pavlovsk/school/girl/anushka/bedroom/brtkiss.jpg"></center>'
 		'As you lay side by side you look at her for a moment, maybe too long, or maybe she just senses it. She turns her head to look at you, her face not far from yours and you can''t help it, you just think she is so damn pretty. You lean over and kiss her. She returns your kiss fully.'
 		gs 'arousal', 'foreplay', 10, 'lesbian'
 		act 'Stop kissing and talk more': gt 'anushapt', 'Chat'
 		act 'Make out':
-			cls
+			cla
+			*clr
 			'<center><h4><font color="maroon">Anushka''s Room</font></h4></center>'
 			'<center><img src="images/characters/pavlovsk/school/girl/anushka/bedroom/brtmakeout.jpg"></center>'
 			'She wraps her arms around you neck and pulls you close and soon the two of you are passionately kissing. The kisses are full of eager lust and urgent need. You feel yourself getting more and more aroused.'
 			gs 'arousal', 'foreplay', 10, 'lesbian'
 			act 'Stop making out': 
+				cla
+				*nl
 				npc_rel['A144'] -= 3
 				'You pull away before things go to far and catch your breath. You see her slightly confused look and you feel a bit bad. "Sorry, I got carried away. Can we just go back to talking?" She frown a little. "Yeah whatever." You know you annoyed her a little and you don''t blame her, you did just tease her more or less.'
 				act 'Talk about something else': gt 'anushapt', 'Chat'
 			end
 			act 'Peeking':
-				cls
+				cla
+				*clr
 				'<center><h4><font color="maroon">Anushka''s Room</font></h4></center>'
 				'<center><img src="images/characters/pavlovsk/school/girl/anushka/bedroom/sex/caughtmast/les1.jpg"></center>'
 				'As the two of you keep kissing she breaks the kiss and uses one of her hands to pull down your top and expose your breasts, she takes a long hard look at your breasts. "Nice tits" You can''t help it, just the way she says it in the moment makes you giggle, but your giggle is short lived as she starts kissing you again.'
 				gs 'arousal', 'foreplay', 10, 'lesbian'
 				act 'Undress her':
-					cls
+					cla
+					*clr
 					npc_rel['A144'] += 3
 					'<center><h4><font color="maroon">Anushka''s Room</font></h4></center>'
 					'<center><img src="images/characters/pavlovsk/school/girl/anushka/bedroom/sex/caughtmast/les2.jpg"></center>'
 					'Once in bed you waste no time pulling her clothes off, she returns the favor and starts removing your clothes as well. It would go a lot faster if the two of you wasn''t also passionately kissing and caressing each others bodies. Regardless before long, both of you are naked.'
 					gs 'arousal', 'foreplay', 10, 'lesbian'
 					act 'Get pleasured':
-						cls
+						cla
+						*clr
 						'<center><h4><font color="maroon">Anushka''s Room</font></h4></center>'
 						'<center><img src="images/characters/pavlovsk/school/girl/anushka/bedroom/sex/caughtmast/les3.jpg"></center>'
 						'After a bit of passionate kissing and fondling once your both naked, you lay back on the bed and spread your legs. You place your hand on top of her head and gentle guide her face to your pussy. She really doesn''t need any encouragement, she dives straight in. Her tongue flicking your clit at first, then sucking on your clit, before she plunges her tongue up your wet pussy, as she eats you out.'
 						gs 'arousal', 'cuni', 10, 'lesbian'
 						gs 'stat'
 						act 'Get eaten out':
-							cls
+							cla
+							*clr
 							'<center><h4><font color="maroon">Anushka''s Room</font></h4></center>'
 							'<center><img src="images/characters/pavlovsk/school/girl/anushka/bedroom/sex/caughtmast/les4.jpg"></center>'
 							'You lose track of time as she eats you out, she either has a lot of natural talent or she eats out girls a lot because she is amazing at it. You feel yourself starting to get close and apparently she notices as well, because she stops. You are only disappointed for a moment, as she knee walks her way over to you and straddles your face. You can''t blame her for wanting her own pleasure for you. With her pussy right over your face you can see she is already sopping wet. You kiss, her pussy at first and gently licking it a few times teasing her with light touches.'
 							'It seems to be to much for her as she lowers herself and starts to grind her twat against your face, you give up your teasing and plunge your tongue into her pussy, pleasuring her, like she just pleasured you.'
 							gs 'arousal', 'cuni_give', 10, 'lesbian'
 							act '69':
-								cls
+								cla
+								*clr
 								'<center><h4><font color="maroon">Anushka''s Room</font></h4></center>'
 								'<center><img src="images/characters/pavlovsk/school/girl/anushka/bedroom/sex/caughtmast/les5.jpg"></center>'
 								'You can hear her starting to breath heavier and moan louder, you are about to suggest switching again, but apparently she had the same idea. She briefly stops straddling your face before turning around and then straddling your face again, while going down on her hands and knees so she can 69 you.'
@@ -763,7 +854,8 @@ if $ARGS[0] = 'chat':
 								minut -= 10
 								gs 'stat'
 								act 'Afterglow':
-									cls
+									cla
+									*clr
 									'<center><h4><font color="maroon">Anushka''s Room</font></h4></center>'
 									'<center><img src="images/characters/pavlovsk/school/girl/anushka/bedroom/sex/caughtmast/les6.jpg"></center>'
 									'With you both spent she rolls off you and the two of you lay side by side for several minutes while you catch your breath. Then you suggest "Maybe we should get dressed before someone walks in, like your brothers."'
@@ -783,6 +875,8 @@ if $ARGS[0] = 'chat':
 		end
 	end
 	act 'Snacks':
+		cla
+		*clr
 		'<center><h4><font color="maroon">Anushka''s Room</font></h4></center>'
 		'<center><img src="images/characters/pavlovsk/school/girl/anushka/bedroom/bedroomtalk.jpg"></center>'
 		'You bite your lip a moment and unsure if you should ask, it might seem rude but you could use a snack and drink. "Hey Nush you got anything to snack on or drink?"'
@@ -793,6 +887,8 @@ if $ARGS[0] = 'chat':
 end
 
 if $ARGS[0] = 'snack':
+	cla
+	*nl
 	'She gets up and heads out of her room and to the kitchen, the two of you are talking and laughing as you enter the kitchen.'
 	temp = rand(0,9)
 	!!LillianL-Randomise which kitchen event happens.
@@ -815,11 +911,19 @@ if $ARGS[0] = 'snack':
 			'"At least I''ll finish school unlike you." Anushka answers.'
 			'Her mother ignores her comment and speaks to you. "So whats your name?"'
 			act 'Tell her':
+				cla
+				*clr
+				'<center><b><font color = maroon>Kitchen</font></b></center>'
+				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/anushapt/kitchen.jpg"></center>'
 				'You know this woman is just wanting to pick a fight but what else can you do. "My name is <<$pcs_firstname>> <<$pcs_lastname>>."'
 				'She looks surprised a moment. "You''re Natasha''s youngest daughter, from the south building?"'
 				'When you nod yes, she bursts out laughing and then shakes her head looking at her daughter. "You would become friends with the daughter of the towns biggest slut. I bet she is just like her mother, the two of you must have so much in common."'
 				'Anushka steps up to her mother and gets right in her face. "Shut the fuck up you old cunt!" Anushka looks visibly pissed off. "You say another fucking word like that to my friend and I will knock you on your fucking ass."'
 				act 'Look nervously around':
+					cla
+					*clr
+					'<center><b><font color = maroon>Kitchen</font></b></center>'
+					'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/anushapt/kitchen.jpg"></center>'
 					'The tension in the room is tremendous. The time stands still and you just want to run out of the kitchen so you can breathe normally again.'
 					'After what feels like an eternity Valeria speaks up, "You know what, you''re lucky that you have your friend with you and that I just don''t want to deal with you today. So leave now before I change my mind."'
 					'Anushka walks over to the fridge and grabs two drinks and a bag of chips, grabbing you by the arm and leading you out of the kitchen. As you walk out, she glances back at her mother. "Bitch!"'
@@ -848,6 +952,7 @@ if $ARGS[0] = 'snack':
 end
 
 if $ARGS[0] = 'brotherroom':
+	CLOSE ALL
 	*clr & cla
 	minut += 1
 	gs 'stat'
@@ -996,6 +1101,7 @@ if $ARGS[0] = 'brotherroom':
 end 
 	
 if $ARGS[0] = 'livingroom':
+	CLOSE ALL
 	*clr & cla
 	minut += 1
 	gs 'stat'
@@ -1042,73 +1148,82 @@ if $ARGS[0] = 'livingroom':
 		end
 	elseif AnushkaLoc = 0 and ((week < 6 and hour >= 20 and hour < 23) or (week >= 6 and hour >= 8 and hour < 16) or (week >= 6 and hour >= 18 and hour < 23)):
 !!If Anushka is not home and it is between 20:00 and 23:00, then Sveta finds Eduard in the living room, or on the weekends between 08:00 to 16:00 and again from 18:00 and 23:00
-		'You smile to Eduard. "Hello Mr Konstantinov, is Anushka around?"'
-		'He turns and looks at you and gives you a friendly smile. "Call me Ed and I have no idea where that girl is, you can check her room if you want. If she''s not there, then there is no telling where she is." He says sounding somewhat sad and worried.'
-		act 'Is everything ok?':
-			*clr & cla
-			'"What? Oh I just worry about her. She is too much like me, she is a wild child if there ever was one. She does what she wants, when she wants, how she wants. I know she can take care of herself." Then he pauses a moment with a deep frown and you give him a moment. "It''s just... well she''s a girl and I know what guys are like at her age I was one, except she won''t be getting some girl knocked up, she will be the one to end up knocked up or worse."'
-			act 'Try cheering him up':
+		'Anushka''s dad Eduard is here.'
+		act 'Talk to Eduard':
+			'You smile to Eduard. "Hello Mr Konstantinov, is Anushka around?"'
+			'He turns and looks at you and gives you a friendly smile. "Call me Ed and I have no idea where that girl is, you can check her room if you want. If she''s not there, then there is no telling where she is." He says sounding somewhat sad and worried.'
+			act 'Is everything ok?':
 				*clr & cla
-				'"She''s the toughest girl I know, she can take care of herself and she is smarter than she acts sometimes." You tell him.'
-				'He sighs. "Yeah... but I just worry, but I guess that is what all fathers do, least any of them worth a damn. I just hope she doesn''t make any big mistakes before she has a chance to make a life for herself, but not much I can do about it anymore."'
-				'"Don''t give up on her, I''m sure she''ll come around sooner or later."'
-				*nl
-				'He laughs a bit. "Absolutley not, she reminds me of myself in my younger days when I used to cause havoc. Hard headed and stubborn. I had my chance to set her straight when she was younger but I missed out. To busy you see with what I thought was more important things." He sighs deeply and looks like a man that is carrying around more than a few regrets. You don''t know what to say so you let him finish his thoughts.'
-				'Then he shakes his head. "Enough of my depressing talk, feel free to wait for her in her room if you want, but no telling when she might be home, or I can tell her you stopped by when I next see her."'
-				act 'Tell her I stopped by':
-					'You nod and know how he feels, no point waiting for her. She could be gone for hours. "Thanks, let her know I stopped by. Bye."'
-					act 'Leave Anushka''s apartment': gt 'pavComplexb2', 'etaj_3'
-				end
-				act 'Thanks I''ll wait':
+				'"What? Oh I just worry about her. She is too much like me, she is a wild child if there ever was one. She does what she wants, when she wants, how she wants. I know she can take care of herself." Then he pauses a moment with a deep frown and you give him a moment. "It''s just... well she''s a girl and I know what guys are like at her age I was one, except she won''t be getting some girl knocked up, she will be the one to end up knocked up or worse."'
+				act 'Try cheering him up':
 					*clr & cla
-					'"Make yourself at home." He says with a small smile. "Just a bit of advice, if you can avoid that...that..." Ed hesitates, his teeth grinding as he struggles to find the right words. "That woman, to put it nicely. She is always looking for a reason to pick a fight and argue with someone. Honestly, if it weren''t for the kids..." He trails off before falling silent for a few moments. You think he may have forgotten who he was talking to, or that you''re even in the room, but eventually his expression softens.'
-					'"Just do your best to stay out of her way, alright? I''d hate to see her drive you off another of Nush''s friends, you seem nice and like you will be a good influence on her."'
-					act 'Leave':gt 'anushapt', 'livingroom'
+					'"She''s the toughest girl I know, she can take care of herself and she is smarter than she acts sometimes." You tell him.'
+					'He sighs. "Yeah... but I just worry, but I guess that is what all fathers do, least any of them worth a damn. I just hope she doesn''t make any big mistakes before she has a chance to make a life for herself, but not much I can do about it anymore."'
+					'"Don''t give up on her, I''m sure she''ll come around sooner or later."'
+					*nl
+					'He laughs a bit. "Absolutley not, she reminds me of myself in my younger days when I used to cause havoc. Hard headed and stubborn. I had my chance to set her straight when she was younger but I missed out. To busy you see with what I thought was more important things." He sighs deeply and looks like a man that is carrying around more than a few regrets. You don''t know what to say so you let him finish his thoughts.'
+					'Then he shakes his head. "Enough of my depressing talk, feel free to wait for her in her room if you want, but no telling when she might be home, or I can tell her you stopped by when I next see her."'
+					act 'Tell her I stopped by':
+						'You nod and know how he feels, no point waiting for her. She could be gone for hours. "Thanks, let her know I stopped by. Bye."'
+						act 'Leave Anushka''s apartment': gt 'pavComplexb2', 'etaj_3'
+					end
+					act 'Thanks I''ll wait':
+						*clr & cla
+						'"Make yourself at home." He says with a small smile. "Just a bit of advice, if you can avoid that...that..." Ed hesitates, his teeth grinding as he struggles to find the right words. "That woman, to put it nicely. She is always looking for a reason to pick a fight and argue with someone. Honestly, if it weren''t for the kids..." He trails off before falling silent for a few moments. You think he may have forgotten who he was talking to, or that you''re even in the room, but eventually his expression softens.'
+						'"Just do your best to stay out of her way, alright? I''d hate to see her drive you off another of Nush''s friends, you seem nice and like you will be a good influence on her."'
+						act 'Leave':gt 'anushapt', 'livingroom'
+					end
 				end
 			end
 		end
 	elseif (AnushkaLoc > 0 and AnushkaLoc ! 5) and ((week < 6 and hour >= 20 and hour < 23) or (week >= 6 and hour >= 8 and hour < 15) or (week >= 6 and hour >= 18 and hour < 23)):
 !!if Anushka is home and it is between 20:00 and 23:00, then Sveta finds Eduard in the living room, or on the weekends between 08:00 to 15:00 and again from 18:00 and 23:00
-		'You smile to Eduard. "Hello Mr Konstantinov."'
-		'He turns and looks at you and gives you a friendly smile. "Call me Ed." Then he frowns. "Is everything ok?"'
-		'You quickly nod. "Yes, Nush is just listening to some music and I got a little bored is all."'
-		'He nods a bit. "Okay then, yeah she can be a bit obsessive about her music at times, but better that then running around at all hours, doing god knows what." He sounds a bit sad and worried.'
-		act 'She''s a tough girl':
-			*clr & cla
-			'He smiles a little. "Oh I know that, when she was a little girl and the boys would try and push her around, she would beat their asses." He says with a smile as if it is a fond memory of his. Then the smile fades a bit. "But things are a big different now, men are just bigger and stronger than you girls, just a fact of life. I know she can take care of herself, but I am afraid one of these days she is going to get into more trouble than she can handle. Get drunk or stoned and make the wrong call and end up pregnant. A young mother or worse is not the life I want for her."'
-			'You smile and do you best to reassure him as he seems to be honestly worried about her. "She has a good head on her shoulders, I am sure she knows just how far she can push things."'
-			*nl
-			'He shakes his head slightly. "If it was only that easy, but you girls still don''t know just how dangerous the world is and it only takes one mistake or even just being in the wrong place or meeting the wrong person that can change you life for ever and not in a good way."'
-			act 'At least she has the band with her most times':
+		'Anushka''s dad Eduard is here.'
+		act 'Talk to Eduard':
+			'You smile to Eduard. "Hello Mr Konstantinov."'
+			'He turns and looks at you and gives you a friendly smile. "Call me Ed." Then he frowns. "Is everything ok?"'
+			'You quickly nod. "Yes, Nush is just listening to some music and I got a little bored is all."'
+			'He nods a bit. "Okay then, yeah she can be a bit obsessive about her music at times, but better that then running around at all hours, doing god knows what." He sounds a bit sad and worried.'
+			act 'She''s a tough girl':
 				*clr & cla
-				'He barks a laugh. "Yeah, they are a big part of my worry. Val is decent enough guy that I don''t have to worry about him to much. Arkady is apt to drag them all into more trouble than they can handle and don''t get me started on Radomir. That boy thinks girls are only there for him to have a place to stick his pecker in. Too many girls your age are blinded by the whole musician thing to see what kind of guy he really is."'
-				'You ask him. "You don''t like that Nush is in the band?"'
+				'He smiles a little. "Oh I know that, when she was a little girl and the boys would try and push her around, she would beat their asses." He says with a smile as if it is a fond memory of his. Then the smile fades a bit. "But things are a big different now, men are just bigger and stronger than you girls, just a fact of life. I know she can take care of herself, but I am afraid one of these days she is going to get into more trouble than she can handle. Get drunk or stoned and make the wrong call and end up pregnant. A young mother or worse is not the life I want for her."'
+				'You smile and do you best to reassure him as he seems to be honestly worried about her. "She has a good head on her shoulders, I am sure she knows just how far she can push things."'
 				*nl
-				'He shakes his head. "No it''s not that, it is just those boys are trouble." Then he sighs. "Shit but who am I to talk, I was just like them at that age. I had no respect for girls either, back then. Just the way of the world I guess."'
-				'"The band needs her, she writes a lot of their songs, plays guitar and sings some. I don''t think they would risk losing her." You tell him but even you are not completely convinced by your own words, you know all too well how boys are.'
-				*nl
-				'"Maybe you''re right, but if they ever hurt my little girl, they best run far and fast, because if I get my hands on them, they will learn what pain really means." He says in a menacing tone with a hard glint in his eyes. It reminds you that most of the adults seem to be afraid of him and talk about how dangerous of a guy he used to be. You almost feel sorry for any boy that incur his wrath, almost, but if they do, they will likely deserve it.'
-				act 'Time to leave':
-					'"Well it was nice talking to you, but I should likely get back to Anushka." You tell him.'
-					'He smiles a little. "Yeah wouldn''t want her wonder where you got off to, you girls have fun." Then he turns back to the TV.'
-					act 'Leave':gt 'anushapt', 'livingroom'
+				'He shakes his head slightly. "If it was only that easy, but you girls still don''t know just how dangerous the world is and it only takes one mistake or even just being in the wrong place or meeting the wrong person that can change you life for ever and not in a good way."'
+				act 'At least she has the band with her most times':
+					*clr & cla
+					'He barks a laugh. "Yeah, they are a big part of my worry. Val is decent enough guy that I don''t have to worry about him to much. Arkady is apt to drag them all into more trouble than they can handle and don''t get me started on Radomir. That boy thinks girls are only there for him to have a place to stick his pecker in. Too many girls your age are blinded by the whole musician thing to see what kind of guy he really is."'
+					'You ask him. "You don''t like that Nush is in the band?"'
+					*nl
+					'He shakes his head. "No it''s not that, it is just those boys are trouble." Then he sighs. "Shit but who am I to talk, I was just like them at that age. I had no respect for girls either, back then. Just the way of the world I guess."'
+					'"The band needs her, she writes a lot of their songs, plays guitar and sings some. I don''t think they would risk losing her." You tell him but even you are not completely convinced by your own words, you know all too well how boys are.'
+					*nl
+					'"Maybe you''re right, but if they ever hurt my little girl, they best run far and fast, because if I get my hands on them, they will learn what pain really means." He says in a menacing tone with a hard glint in his eyes. It reminds you that most of the adults seem to be afraid of him and talk about how dangerous of a guy he used to be. You almost feel sorry for any boy that incur his wrath, almost, but if they do, they will likely deserve it.'
+					act 'Time to leave':
+						*clr
+						cla
+						'"Well it was nice talking to you, but I should likely get back to Anushka." You tell him.'
+						'He smiles a little. "Yeah wouldn''t want her wonder where you got off to, you girls have fun." Then he turns back to the TV.'
+						act 'Leave':gt 'anushapt', 'livingroom'
+					end
 				end
 			end
 		end
 	else
 		'Nobody''s here right now.'
-		act 'Leave the room':gt 'anushapt', 'hallway'
 	end
+	act 'Leave the room':gt 'anushapt', 'hallway'
 end
 
 
 if $ARGS[0] = 'kitchen':
+	CLOSE ALL
     *clr & cla
     minut += 1
     gs 'stat'
     '<center><b><font color = maroon>Kitchen</font></b></center>'
     '<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/anushapt/kitchen.jpg"></center>'
-    'The room is fairly clean. Just like the rest of the house it''s filled with older wares. The wood floor is not polished and only covers the areas being used. You''re surprised by the lack of a dinner table.'
+    'The room is not clean and there are dishes on most of the surfaces. The wood floor is not polished and only covers the areas being used. You''re surprised by the lack of a dinner table.'
 	
 	act 'Look in the fridge': gt 'anushapt', 'holodilnik'
 	!!add code if possible to grab a beer/alcohol and a snack like you can do in Vasily''s apartment.
@@ -1118,36 +1233,41 @@ end
 if $ARGS[0] = 'holodilnik':
 	*clr & cla
 	minut += 1
+	if anushfood_day ! daystart:
+		anushbeer_count = 2
+		anushvodka_count = 3
+		anushsup_count = 1
+	end
 	gs 'stat'
-	if beer_count = 2:
-		$r_beer = ' 2 beers,'
-	elseif beer_count = 1:
-		$r_beer = ' 1 beer,'
+	if anushbeer_count = 2:
+		$anush_beer = ' 2 beers,'
+	elseif anushbeer_count = 1:
+		$anush_beer = ' 1 beer,'
 	else
-		$r_beer = ''
+		$anush_beer = ''
 	end
 
-	if vodka_count = 3:
-		$r_vodka = ' a full bottle of vodka,'
-	elseif vodka_count = 2:
-		$r_vodka = ' a half-empty bottle of vodka,'
-	elseif vodka_count = 1:
-		$r_vodka = ' a nearly empty bottle of vodka,'
+	if anushvodka_count = 3:
+		$anush_vodka = ' a full bottle of vodka,'
+	elseif anushvodka_count = 2:
+		$anush_vodka = ' a half-empty bottle of vodka,'
+	elseif anushvodka_count = 1:
+		$anush_vodka = ' a nearly empty bottle of vodka,'
 	else
-		$r_vodka = ''
+		$anush_vodka = ''
 	end
 
-	if sup_count >= 1:
-		$r_sup = ' a large pot of soup'
+	if anushsup_count >= 1:
+		$anush_sup = ' a large pot of soup'
 	else
-		$r_sup = ''
+		$anush_sup = ''
 	end
 
-	if beer_count = 0 and vodka_count = 0 and sup_count = 0:$r_pusto = '<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/kuh/holodpusto.jpg"></center><br><font color = red>empty shelves.</font>'
-	if beer_count > 0 and vodka_count > 0 and sup_count > 0:$r_pusto = '<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/kuh/holod'+rand(1,3)+'.jpg"></center>'
-		'You open the fridge and see:<<$r_vodka>><<$r_beer>><<$r_sup>><<$r_pusto>>'
+	if anushbeer_count = 0 and anushvodka_count = 0 and anushsup_count = 0:$r_pusto = '<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/kuh/holodpusto.jpg"></center><br><font color = red>empty shelves.</font>'
+	if anushbeer_count > 0 and anushvodka_count > 0 and anushsup_count > 0:$r_pusto = '<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/kuh/holod'+rand(1,3)+'.jpg"></center>'
+		'You open the fridge and see:<<$anush_vodka>><<$anush_beer>><<$anush_sup>><<$r_pusto>>'
 	!drink beer
-	if beer_count > 0: 
+	if anushbeer_count > 0: 
 		act 'Have a beer':
 			*clr & cla
 			minut += 5
@@ -1155,8 +1275,8 @@ if $ARGS[0] = 'holodilnik':
 			cumspclnt = 2
 			gs 'cum_cleanup'
 			pcs_breath = 0
-			beer_day = daystart
-			beer_count -= 1
+			anushfood_day = daystart
+			anushbeer_count -= 1
 			gs 'stat'
 			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/kuh/beer'+rand(1,3)+'.jpg"></center>'
 			'You take a bottle of beer from the fridge and drink it, quenching your thirst.'
@@ -1165,7 +1285,7 @@ if $ARGS[0] = 'holodilnik':
 		end
 	end
 	!drink vodka
-	if vodka_count > 0: 
+	if anushvodka_count > 0: 
 		act 'Drink some vodka':
 			*clr & cla
 			minut += 1
@@ -1173,23 +1293,22 @@ if $ARGS[0] = 'holodilnik':
 			cumspclnt = 2
 			gs 'cum_cleanup'
 			pcs_breath = 0
-			vodka_day = daystart
-			vodka_count -= 1
+			anushfood_day = daystart
+			anushvodka_count -= 1
 			gs 'stat'
 			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/kuh/vodka'+rand(1,2)+'.jpg"></center>'
 			'You pour some vodka in a glass and drink it. You shiver as you feel the warm, burning sensation slowly slide down your gullet.'
 			act 'Put the bottle back in the fridge': gt 'anushapt', 'holodilnik'
 
 			act 'Drink more vodka': 
-				if vodka_count = 0: '<font color = red>There''s no vodka left, you drank it all!</font><center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/kuh/vodka0.jpg"></center>'
-				if vodka_count > 0:
+				if anushvodka_count = 0: '<font color = red>There''s no vodka left, you drank it all!</font><center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/kuh/vodka0.jpg"></center>'
+				if anushvodka_count > 0:
 					minut += 1
 					alko +=2
 					cumspclnt = 2
 					gs 'cum_cleanup'
 					pcs_breath = 0
-					vodka_day = daystart
-					vodka_count -= 1
+					anushvodka_count -= 1
 					gs 'stat'
 					'You pour yourself another glass and drain it in one gulp. Wow, that stuff is strong!'
 				end
@@ -1197,12 +1316,12 @@ if $ARGS[0] = 'holodilnik':
 		end
 	end
 	!Chava soup
-	if sup_count > 0:
+	if anushsup_count > 0:
 		act 'Eat a bowl of soup': 
 			*clr & cla
 			minut += 5
-			sup_day = daystart
-			sup_count -= 1
+			anushfood_day = daystart
+			anushsup_count -= 1
 			gs 'stat'
 			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/shulginhome/kuh/sup.jpg"></center>'
 			pcs_health += 10
@@ -1213,7 +1332,7 @@ if $ARGS[0] = 'holodilnik':
 			cumspclnt = 2
 			gs 'cum_cleanup'
 			pcs_breath = 0
-			'You happily eat a bowl of soup. It''s good soup,<<$serg_obr>> Sergey sure knows how to cook!'
+			'You happily eat a bowl of soup. It''s soup from a packet, you wonder if anybody here knows how to cook.'
 			act 'Further': gt 'anushapt', 'holodilnik'
 		end
 	end
@@ -1222,6 +1341,7 @@ end
 	
 	
 if $ARGS[0] = 'anushparents':
+	CLOSE ALL
 	*clr & cla
 	minut += 1
 	temp = rand(0,1)
