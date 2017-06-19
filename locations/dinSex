@@ -1244,39 +1244,56 @@ $analsexrude = {
 }
 ! "deal_with_condom" procedure should be replacement of "sexstart" dynamic procedure
 if $ARGS[0] = 'boy_puts_condom':
-	protect = 0
+	protect = iif(prezik > 0,1,0)
 	vidageday -= 1 &! the people guess that you are a bit more older than you are in fact
 	! do you have condoms?
 	if prezik > 0:
-		dynamic $prezik
-		protect = 1
-		if preziktype = 2:
+		if rand(1,prezik) <= badprezik: 
+			badprezik -= 1
+			noprotect = 1
 			sexcontra = 7
-			'<<$boydesc>> takes your sabotaged condom and puts it on <<$xem>> <<dick>> centimeter member.'
+			*p '<<ucase(mid($boydesc,1,1))>><<mid($boydesc,2,len($boydesc)-1)>> takes your '+iif(preziktype = 2,'sabotaged ','')+ 'condom and puts it on <<$xem>> <<dick>> centimeter member.'
 		else
 			sexcontra = 3
-			'<<$boydesc>> takes your condom and puts it on <<$xem>> <<dick>> centimeter member.'
+			*p '<<ucase(mid($boydesc,1,1))>><<mid($boydesc,2,len($boydesc)-1)>> takes your condom and puts it on <<$xem>> <<dick>> centimeter member.'
+			end
+			noprotect = 0
 		end
+		prezik -= 1
+		sexcontra = iif(preziktype = 2,7,sexcontra) 
 	else
 		sexcontra = 0
+		!! the hormonal contraception is still taken in account
 	end
 end &! --- boy_puts_condom ---
+
+if $ARGS[0] = 'boy_puts_his_condom':
+	protect = 1
+	sexcontra = 3
+	*p '<<ucase(mid($boydesc,1,1))>><<mid($boydesc,2,len($boydesc)-1)>> takes his condom and puts it on <<$xem>> <<dick>> centimeter member.'
+	!! the hormonal contraception is still taken in account
+end &! --- boy_puts_his_condom ---
+
 if $ARGS[0] = 'pc_puts_condom':
-	protect = 0
+	protect = iif(prezik > 0,1,0)
 	vidageday -= 1 &! the people guess that you are a bit more older than you are in fact
 	! do you have condoms?
 	if prezik > 0:
-		dynamic $prezik
-		protect = 1
-		if preziktype = 2:
+		if rand(1,prezik) <= badprezik: 
+			badprezik -= 1
+			noprotect = 1
 			sexcontra = 7
-			'You take your sabotaged condom and put it on <<$xem>> <<dick>> centimeter member.'
+			*p 'You take your '+iif(preziktype = 2,'sabotaged ','')+ 'condom and put it on <<$xem>> <<dick>> centimeter member.'
 		else
 			sexcontra = 3
-			'You take your condom and put it on <<$xem>> <<dick>> centimeter member.'
+			*p 'You take your condom and put it on <<$xem>> <<dick>> centimeter member.'
+			noprotect = 0
 		end
+		prezik -= 1
+		sexcontra = iif(preziktype = 2,7,sexcontra) 
 	else
 		sexcontra = 0
+		!! the hormonal contraception is still taken in account
 	end
 end &! --- pc_puts_condom ---
 
@@ -1284,7 +1301,7 @@ if $ARGS[0] = 'boy_wants_anal':
 	$bwa_boy = iif($ARGS[1] = '',$boydesc,$ARGS[1])
 	if analplugin = 1:
 		'<<$bwa_boy>> pulls the plug out of your narrow and tight ass.'
-		analpluginout = 1
+		analplugout = 1
 	end
 	if $ARGS[2] = 'lubri':
 		lubri +=1
@@ -1307,7 +1324,7 @@ if $ARGS[0] = 'girl_wants_anal':
 	if analplugin = 1:
 		'<<$bwa_girl> pulls the plug out of your narrow and tight ass.'
 		analplugin = 0
-		analpluginout = 1
+		analplugout = 1
 	end
 	if $ARGS[2] = 'lubri':
 		lubri +=1
@@ -1326,7 +1343,7 @@ if $ARGS[0] = 'girl_wants_anal':
 end &! --- girl_wants_anal ---
 
 if $ARGS[0] = 'after_anal':
-	if analpluginout = 1:
+	if analplugout = 1:
 		if $ARGS[1] = 'boy':
 			analplugin = 1
 			'<<$ARGS[2]>> takes your butt plug and he puts it back into your anus. He grins: "Go on in the training' 
@@ -1337,13 +1354,13 @@ if $ARGS[0] = 'after_anal':
 		end
 		if $ARGS[1] = 'pc':
 			analplugin = 1
-			'You take your butt plug and put it back into your anus. You grin: "I have to keep it trained' 
+			'You take your butt plug and put it back into your anus. You grin: "I have to keep my butt trained' 
 		end
 		if $ARGS[1] = 'no_plug':
-			analplugin = 1
+			analplugin = 0
 			'You take your butt plug and put it into your purse. Your anus have to rest for a while now.' 
 		end
-		killvar 'analpluginout'
+		killvar 'analplugout'
 	end
 end &! --- after_anal ---
 --- dinSex ---------------------------------
