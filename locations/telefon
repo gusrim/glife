@@ -965,7 +965,7 @@ if $ARGS[0] = 'boyA':
 	clr
 	ring = 0
 	ringA = 0
-	boydayA = daystart
+	boyday[1] = daystart
 	gs 'stat'
 	dynamic $phone_call_receive
 	svetrand = rand(0, 5)
@@ -977,26 +977,26 @@ if $ARGS[0] = 'boyA':
 	if svetrand = 4:$sveta = 'hot stuff'
 	if svetrand = 5:$sveta = '<<$pcs_nickname>>'
 
-	'Hey <<$sveta>>, it''s me, <<$boydescA>>. How''s it going?'
+	'Hey <<$sveta>>, it''s me, <<$boydesc[1]>>. How''s it going?'
 
 	act 'Normally':
 		cla
 		'"Pretty good, you?"'
-		'<<$boydescA>>, "Great, but I kind of miss you, can we meet today?"'
+		'<<$boydesc[1]>>, "Great, but I kind of miss you, can we meet today?"'
 
-		if pregtime <= dayA and knowpreg = 1 and pregtalk = 0:
+		if pregtime <= boyday[1] and knowpreg = 1 and pregtalk = 0:
 			act 'Tell him he''s going to be a dad':
 				cla
 				pregtalk = 1
 				'"Honey, I''m pregnant with your child."'
 
-				if harakBoyA = 0:
-					if bfA >= 90:
-						love = 1
-						'<<$boydescA>>, "This is wonderful! We have to celebrate!"'
-						'You start talking about living together. <<$boydescA>> tells you that he is not against it in principle, but first he wants you to meet his parents.'
-						'He warns you that his mother is very demanding and rigorous. <<$boydescA>> says that he loves his mother and does not want to upset her. Therefore, you must look gorgeous, wear a dress from a boutique, have well-groomed and curled hair and makeup in moderation.'
-						'When you are totally ready <<$boydescA>> will take you to their parents.'
+				if harakBoy[1] = 0:
+					if pcs_lovers_rel[1] >= 90:
+						pcs_lovers_love[1] = 1
+						'<<$boydesc[1]>>, "This is wonderful! We have to celebrate!"'
+						'You start talking about living together. <<$boydesc[1]>> tells you that he is not against it in principle, but first he wants you to meet his parents.'
+						'He warns you that his mother is very demanding and rigorous. <<$boydesc[1]>> says that he loves his mother and does not want to upset her. Therefore, you must look gorgeous, wear a dress from a boutique, have well-groomed and curled hair and makeup in moderation.'
+						'When you are totally ready <<$boydesc[1]>> will take you to their parents.'
 
 						act 'Hang up':gt 'telefon', 'fin'
 
@@ -1004,46 +1004,48 @@ if $ARGS[0] = 'boyA':
 							cla
 							svidanieA = 1
 							'"How about this evening?"'
-							'<<$boydescA>>, "Sounds great! When can I come to pick you up?"'
+							'<<$boydesc[1]>>, "Sounds great! When can I come to pick you up?"'
 
 							act 'Pick a time':
 								cla
-								meetday = daystart
-								meethour = input ("When do you want to be picked up? It is now <<hour>> c''clock.")
+								meetdayA = daystart
+								meethourA = input ("When do you want to be picked up? It is now <<hour>> c''clock.")
 
-								if meethour <= hour or meethour > 23:meethour = 20
+								if meethourA <= hour or meethourA > 23:meethourA = 20
 
-								'"How about <<meethour>> o''clock?"'
-								'<<$boydescA>>, "Okay <<$sveta>>, see you at <<meethour>> o''clock."'
+								'"How about <<meethourA>> o''clock?"'
+								'<<$boydesc[1]>>, "Okay <<$sveta>>, see you at <<meethourA>> o''clock."'
 
 								act 'Hang up':gt 'telefon', 'fin'
 							end
 						end
-					elseif bfA < 90:
+					elseif pcs_lovers_rel[1] < 90:
 						money += 20000
-						'<<$boydescA>> "I''m not yet ready to become a dad. I''ll give you the money for an abortion. Get rid of the child.'
+						'<<$boydesc[1]>> "I''m not yet ready to become a dad. I''ll give you the money for an abortion. Get rid of the child.'
 
 						act 'Hang up':gt 'telefon', 'fin'
 					end
-				elseif harakBoyA = 1:
+				elseif harakBoy[1] = 1:
 					money += 20000
-					'<<$boydescA>> "I''m not yet ready to become a dad. I''ll give you the money get an abortion.'
+					'<<$boydesc[1]>> "I''m not yet ready to become a dad. I''ll give you the money get an abortion.'
 
 					act 'Hang up':gt 'telefon', 'fin'
-				elseif harakBoyA = 2:
-					bfA = 0
+				elseif harakBoy[1] = 2:
+					pcs_lovers_rel[1] = 0
+					pcs_lover -= 1
 					pregtalk = 0
-					'<<$boydescA>>, "What? You whore! Someone fucked your pussy and now you drop it on me. You''re dumped.'
+					'<<$boydesc[1]>>, "What? You whore! Someone fucked your pussy and now you drop it on me. You''re dumped.'
 
 					act 'Hang up':gt 'telefon', 'fin'
 				end
 			end
-		elseif pregtime > dayA and knowpreg = 1 and pregtalk = 0:
+		elseif pregtime > boyday[1] and knowpreg = 1 and pregtalk = 0:
 			act 'Honey, you will soon become a dad':
 				cla
-				bfA = 0
+				pcs_lovers_rel[1] = 0
+				pcs_lover -= 1
 				'"Honey, I''m pregnant with your child."'
-				'<<$boydescA>>, "How the fuck did I manage that? Unless I own a time-machine and went back to before we met and fucked you, it''s someone elses, go and tell him. I don''t want to see you again, goodbye."'
+				'<<$boydesc[1]>>, "How the fuck did I manage that? Unless I own a time-machine and went back to before we met and fucked you, it''s someone elses, go and tell him. I don''t want to see you again, goodbye."'
 
 				act 'Hang up.':gt 'telefon', 'fin'
 			end
@@ -1051,7 +1053,7 @@ if $ARGS[0] = 'boyA':
 			act 'Sorry, I''m working today':
 				cla
 				'"Sorry, I''m working today."'
-				'<<$boydescA>>, "Okay, I''ll call tomorrow."'
+				'<<$boydesc[1]>>, "Okay, I''ll call tomorrow."'
 
 				act 'Hang up':gt 'telefon', 'fin'
 			end
@@ -1059,20 +1061,20 @@ if $ARGS[0] = 'boyA':
 
 		act 'Tonight':
 			cla
-			bfA += 1
+			pcs_lovers_rel[1] += 1
 			svidanieA = 1
 			meetday = daystart
 			'"How about this evening?"'
-			'<<$boydescA>>, "Sounds great! When can I come to pick you up?"'
+			'<<$boydesc[1]>>, "Sounds great! When can I come to pick you up?"'
 
 			act 'Pick a time':
 				cla
-				meethour = input ("When do you want to be picked up. It is now <<hour>> c''clock.")
+				meethourA = input ("When do you want to be picked up. It is now <<hour>> c''clock.")
 
-				if meethour <= hour or meethour > 23:meethour = 20
+				if meethourA <= hour or meethourA > 23:meethourA = 20
 
-				'"How about <<meethour>> o''clock?."'
-				'<<$boydescA>>, "Okay <<$sveta>>, see you at <<meethour>> o''clock."'
+				'"How about <<meethourA>> o''clock?."'
+				'<<$boydesc[1]>>, "Okay <<$sveta>>, see you at <<meethourA>> o''clock."'
 
 				act 'Hang up':gt 'telefon', 'fin'
 			end
@@ -1080,11 +1082,11 @@ if $ARGS[0] = 'boyA':
 
 		act 'Maybe tomorrow':
 			cla
-			bfA -= 1
+			pcs_lovers_rel[1] -= 1
 			'"I''m busy today. Call tomorrow."'
 
-			if bfa <= 0:bfa = 0 & '<<$boydescA>>, Are you fucking me, you know what. Suck my dick.'
-			if bfa > 0:'(<<$boydescA>>) -  Okay, I''ll call tomorrow.'
+			if pcs_lovers_rel[1] <= 0:pcs_lover -= 1 & '<<$boydesc[1]>>, Are you fucking me, you know what. Suck my dick.'
+			if pcs_lovers_rel[1] > 0:'(<<$boydesc[1]>>) -  Okay, I''ll call tomorrow.'
 
 			act 'Hang up':gt 'telefon', 'fin'
 		end
@@ -1092,7 +1094,8 @@ if $ARGS[0] = 'boyA':
 
 	act 'Leave':
 		cla
-		bfA = 0
+		pcs_lovers_rel[1] = 0
+		pcs_lover -= 1
 		gt 'telefon', 'fin'
 	end
 end
@@ -1102,38 +1105,138 @@ if $ARGS[0] = 'boyB':
 	clr
 	ring = 0
 	ringB = 0
-	boydayB = daystart
+	boyday[2] = daystart
 	gs 'stat'
-	'<<$boydescB>> wants to go for a walk.'
+	dynamic $phone_call_receive
+	svetrand = rand(0, 5)
 
-	act 'Leave':
+	if svetrand = 0:$sveta = 'cutie'
+	if svetrand = 1:$sveta = 'honey'
+	if svetrand = 2:$sveta = 'sweetie'
+	if svetrand = 3:$sveta = 'baby'
+	if svetrand = 4:$sveta = 'hot stuff'
+	if svetrand = 5:$sveta = '<<$pcs_nickname>>'
+
+	'Hey <<$sveta>>, it''s me, <<$boydesc[2]>>. How''s it going?'
+
+	act 'Normally':
 		cla
-		bfB = 0
-		gt 'telefon', 'fin'
-	end
+		'"Pretty good, you?"'
+		'<<$boydesc[2]>>, "Great, but I kind of miss you, can we meet today?"'
 
-	act 'Call tomorrow':
-		cla
-		bfB -= 1
+		if pregtime <= boyday[2] and knowpreg = 1 and pregtalk = 0:
+			act 'Tell him he''s going to be a dad':
+				cla
+				pregtalk = 1
+				'"Honey, I''m pregnant with your child."'
 
-		if bfB <= 0:bfB = 0 & '<<$boydescB>> dumps you.'
-		if bfB > 0:'<<$boydescB>> is angry and hangs up.'
+				if harakBoy[2] = 0:
+					if pcs_lovers_rel[2] >= 90:
+						pcs_lovers_love[2] = 1
+						'<<$boydesc[2]>>, "This is wonderful! We have to celebrate!"'
+						'You start talking about living together. <<$boydesc[2]>> tells you that he is not against it in principle, but first he wants you to meet his parents.'
+						'He warns you that his mother is very demanding and rigorous. <<$boydesc[2]>> says that he loves his mother and does not want to upset her. Therefore, you must look gorgeous, wear a dress from a boutique, have well-groomed and curled hair and makeup in moderation.'
+						'When you are totally ready <<$boydesc[2]>> will take you to their parents.'
 
-		gt 'telefon', 'fin'
-	end
+						act 'Hang up':gt 'telefon', 'fin'
 
-	act 'Tonight':
-		cla
-		bfB += 1
-		svidanieB = 1
-		'<<$boydescB>> asks when he should come to your house.'
+						act 'Meet tonight':
+							cla
+							svidanieB = 1
+							'"How about this evening?"'
+							'<<$boydesc[2]>>, "Sounds great! When can I come to pick you up?"'
 
-		act 'How about 20 hours':
+							act 'Pick a time':
+								cla
+								meetdayB = daystart
+								meethourB = input ("When do you want to be picked up? It is now <<hour>> c''clock.")
+
+								if meethourB <= hour or meethourB > 23:meethourB = 20
+
+								'"How about <<meethourB>> o''clock?"'
+								'<<$boydesc[2]>>, "Okay <<$sveta>>, see you at <<meethourB>> o''clock."'
+
+								act 'Hang up':gt 'telefon', 'fin'
+							end
+						end
+					elseif pcs_lovers_rel[2] < 90:
+						money += 20000
+						'<<$boydesc[2]>> "I''m not yet ready to become a dad. I''ll give you the money for an abortion. Get rid of the child.'
+
+						act 'Hang up':gt 'telefon', 'fin'
+					end
+				elseif harakBoy[2] = 1:
+					money += 20000
+					'<<$boydesc[2]>> "I''m not yet ready to become a dad. I''ll give you the money get an abortion.'
+
+					act 'Hang up':gt 'telefon', 'fin'
+				elseif harakBoy[2] = 2:
+					pcs_lovers_rel[2] = 0
+					pcs_lover -= 1
+					pregtalk = 0
+					'<<$boydesc[2]>>, "What? You whore! Someone fucked your pussy and now you drop it on me. You''re dumped.'
+
+					act 'Hang up':gt 'telefon', 'fin'
+				end
+			end
+		elseif pregtime > boyday[2] and knowpreg = 1 and pregtalk = 0:
+			act 'Honey, you will soon become a dad':
+				cla
+				pcs_lovers_rel[2] = 0
+				pcs_lover -= 1
+				'"Honey, I''m pregnant with your child."'
+				'<<$boydesc[2]>>, "How the fuck did I manage that? Unless I own a time-machine and went back to before we met and fucked you, it''s someone elses, go and tell him. I don''t want to see you again, goodbye."'
+
+				act 'Hang up.':gt 'telefon', 'fin'
+			end
+		elseif week > 1 and week < 5 and workKafe = 1:
+			act 'Sorry, I''m working today':
+				cla
+				'"Sorry, I''m working today."'
+				'<<$boydesc[2]>>, "Okay, I''ll call tomorrow."'
+
+				act 'Hang up':gt 'telefon', 'fin'
+			end
+		end
+
+		act 'Tonight':
 			cla
-			'You say goodbye warmly and end the conversation.'
+			pcs_lovers_rel[2] += 1
+			svidanieB = 1
+			meetday = daystart
+			'"How about this evening?"'
+			'<<$boydesc[2]>>, "Sounds great! When can I come to pick you up?"'
+
+			act 'Pick a time':
+				cla
+				meethourB = input ("When do you want to be picked up. It is now <<hour>> c''clock.")
+
+				if meethourB <= hour or meethourB > 23:meethourB = 20
+
+				'"How about <<meethourB>> o''clock?."'
+				'<<$boydesc[2]>>, "Okay <<$sveta>>, see you at <<meethourB>> o''clock."'
+
+				act 'Hang up':gt 'telefon', 'fin'
+			end
+		end
+
+		act 'Maybe tomorrow':
+			cla
+			pcs_lovers_rel[2] -= 1
+			'"I''m busy today. Call tomorrow."'
+
+			if pcs_lovers_rel[2] <= 0:pcs_lover -= 1 & '<<$boydesc[2]>>, Are you fucking me, you know what. Suck my dick.'
+			if pcs_lovers_rel[2] > 0:'(<<$boydesc[2]>>) -  Okay, I''ll call tomorrow.'
 
 			act 'Hang up':gt 'telefon', 'fin'
 		end
+	end
+
+	act 'Leave':
+		cla
+		pcs_lovers_rel[2] = 0
+		pcs_lover -= 1
+		gt 'telefon', 'fin'
 	end
 end
 
@@ -1142,38 +1245,138 @@ if $ARGS[0] = 'boyC':
 	clr
 	ring = 0
 	ringC = 0
-	boydayC = daystart
+	boyday[3] = daystart
 	gs 'stat'
-	'<<$boydescC>> wants to go for a walk.'
+	dynamic $phone_call_receive
+	svetrand = rand(0, 5)
+
+	if svetrand = 0:$sveta = 'cutie'
+	if svetrand = 1:$sveta = 'honey'
+	if svetrand = 2:$sveta = 'sweetie'
+	if svetrand = 3:$sveta = 'baby'
+	if svetrand = 4:$sveta = 'hot stuff'
+	if svetrand = 5:$sveta = '<<$pcs_nickname>>'
+
+	'Hey <<$sveta>>, it''s me, <<$boydesc[3]>>. How''s it going?'
+
+	act 'Normally':
+		cla
+		'"Pretty good, you?"'
+		'<<$boydesc[3]>>, "Great, but I kind of miss you, can we meet today?"'
+
+		if pregtime <= boyday[3] and knowpreg = 1 and pregtalk = 0:
+			act 'Tell him he''s going to be a dad':
+				cla
+				pregtalk = 1
+				'"Honey, I''m pregnant with your child."'
+
+				if harakBoy[3] = 0:
+					if pcs_lovers_rel[3] >= 90:
+						pcs_lovers_love[3] = 1
+						'<<$boydesc[3]>>, "This is wonderful! We have to celebrate!"'
+						'You start talking about living together. <<$boydesc[3]>> tells you that he is not against it in principle, but first he wants you to meet his parents.'
+						'He warns you that his mother is very demanding and rigorous. <<$boydesc[3]>> says that he loves his mother and does not want to upset her. Therefore, you must look gorgeous, wear a dress from a boutique, have well-groomed and curled hair and makeup in moderation.'
+						'When you are totally ready <<$boydesc[3]>> will take you to their parents.'
+
+						act 'Hang up':gt 'telefon', 'fin'
+
+						act 'Meet tonight':
+							cla
+							svidanieC = 1
+							'"How about this evening?"'
+							'<<$boydesc[3]>>, "Sounds great! When can I come to pick you up?"'
+
+							act 'Pick a time':
+								cla
+								meetdayC = daystart
+								meethourC = input ("When do you want to be picked up? It is now <<hour>> c''clock.")
+
+								if meethourC <= hour or meethourC > 23:meethourC = 20
+
+								'"How about <<meethourC>> o''clock?"'
+								'<<$boydesc[3]>>, "Okay <<$sveta>>, see you at <<meethourC>> o''clock."'
+
+								act 'Hang up':gt 'telefon', 'fin'
+							end
+						end
+					elseif pcs_lovers_rel[3] < 90:
+						money += 20000
+						'<<$boydesc[3]>> "I''m not yet ready to become a dad. I''ll give you the money for an abortion. Get rid of the child.'
+
+						act 'Hang up':gt 'telefon', 'fin'
+					end
+				elseif harakBoy[3] = 1:
+					money += 20000
+					'<<$boydesc[3]>> "I''m not yet ready to become a dad. I''ll give you the money get an abortion.'
+
+					act 'Hang up':gt 'telefon', 'fin'
+				elseif harakBoy[3] = 2:
+					pcs_lovers_rel[3] = 0
+					pcs_lover -= 1
+					pregtalk = 0
+					'<<$boydesc[3]>>, "What? You whore! Someone fucked your pussy and now you drop it on me. You''re dumped.'
+
+					act 'Hang up':gt 'telefon', 'fin'
+				end
+			end
+		elseif pregtime > boyday[3] and knowpreg = 1 and pregtalk = 0:
+			act 'Honey, you will soon become a dad':
+				cla
+				pcs_lovers_rel[3] = 0
+				pcs_lover -= 1
+				'"Honey, I''m pregnant with your child."'
+				'<<$boydesc[3]>>, "How the fuck did I manage that? Unless I own a time-machine and went back to before we met and fucked you, it''s someone elses, go and tell him. I don''t want to see you again, goodbye."'
+
+				act 'Hang up.':gt 'telefon', 'fin'
+			end
+		elseif week > 1 and week < 5 and workKafe = 1:
+			act 'Sorry, I''m working today':
+				cla
+				'"Sorry, I''m working today."'
+				'<<$boydesc[3]>>, "Okay, I''ll call tomorrow."'
+
+				act 'Hang up':gt 'telefon', 'fin'
+			end
+		end
+
+		act 'Tonight':
+			cla
+			pcs_lovers_rel[3] += 1
+			svidanieC = 1
+			meetday = daystart
+			'"How about this evening?"'
+			'<<$boydesc[3]>>, "Sounds great! When can I come to pick you up?"'
+
+			act 'Pick a time':
+				cla
+				meethourC = input ("When do you want to be picked up. It is now <<hour>> c''clock.")
+
+				if meethourC <= hour or meethourC > 23:meethourC = 20
+
+				'"How about <<meethourC>> o''clock?."'
+				'<<$boydesc[3]>>, "Okay <<$sveta>>, see you at <<meethourC>> o''clock."'
+
+				act 'Hang up':gt 'telefon', 'fin'
+			end
+		end
+
+		act 'Maybe tomorrow':
+			cla
+			pcs_lovers_rel[3] -= 1
+			'"I''m busy today. Call tomorrow."'
+
+			if pcs_lovers_rel[3] <= 0:pcs_lover -= 1 & '<<$boydesc[3]>>, Are you fucking me, you know what. Suck my dick.'
+			if pcs_lovers_rel[3] > 0:'(<<$boydesc[3]>>) -  Okay, I''ll call tomorrow.'
+
+			act 'Hang up':gt 'telefon', 'fin'
+		end
+	end
 
 	act 'Leave':
 		cla
-		bfC = 0
+		pcs_lovers_rel[3] = 0
+		pcs_lover -= 1
 		gt 'telefon', 'fin'
-	end
-
-	act 'Call tomorrow':
-		cla
-		bfC -= 1
-
-		if bfC <= 0:bfC = 0 & '<<$boydescC>> dumps you.'
-		if bfC > 0:'<<$boydescC>> is angry and hangs up.'
-
-		gt 'telefon', 'fin'
-	end
-
-	act 'Tonight':
-		cla
-		bfC += 1
-		svidanieC = 1
-		'<<$boydescC>> asks when he should come to your house.'
-
-		act 'How about 20 hours':
-			cla
-			'You say goodbye warmly and end the conversation.'
-
-			act 'Hang up.':gt 'telefon', 'fin'
-		end
 	end
 end
 
