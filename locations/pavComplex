@@ -1,119 +1,123 @@
 # pavComplex
 
-music_loop = 0
-CLOSE ALL
-$metka = ''
-$loc = 'pavcomplex'
-$metkaM = ''
-$locM = 'pavcomplex'
-$metkaStreet = ''
-$locStreet = 'pavcomplex'
-$location_type = 'public_outdoors'
+if $ARGS[0] = 'start':
+	music_loop = 0
+	CLOSE ALL
+	$metka = 'start'
+	$loc = 'pavcomplex'
+	$metkaM = 'start'
+	$locM = 'pavcomplex'
+	$metkaStreet = 'start'
+	$locStreet = 'pavcomplex'
+	$location_type = 'public_outdoors'
 
-if sound = 0:
-	if month >=11 and month <= 12 or month >=1 and month <=3:
-		if hour >= 8 and hour <= 23: PLAY 'sound/street2.mp3',30 & PLAY 'sound/zima.mp3',30
-		if hour >= 0 and hour <= 7: PLAY 'sound/street_night.mp3',30 & PLAY 'sound/zima.mp3',30
-	else
-		if hour >= 8 and hour <= 23: PLAY 'sound/street2.mp3',30 & PLAY 'sound/street_leto.mp3',30
-		if hour >= 0 and hour <= 7:PLAY 'sound/street_night.mp3',30
-	end
-end
-
-cls
-litltown = 1
-alkoblock = 0
-boynumBlock = 0
-gs 'stat'
-'<center><h2>Apartment Complex</h2></center>'
-if Enable_towntable = 1 : $_str = '<center><table><tr><td>' else $_str = ''
-if month >= 11 or month <= 3:
-	if hour >= 8 and hour <= 21:
-		'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/complexw.jpg"></center>'
-	else
-		'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/complexwn.jpg"></center>'
-	end
-else
-	if hour >= 8 and hour <= 21:
-		'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/complex.jpg"></center>'
-	else
-		'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/complexn.jpg"></center>'
-	end
-end
-
-if StoryLine = 1 and ParHomeBlock = 0:
-	'In the old part of Pavlovsk, there''s a block of three apartment buildings. The southern building sits along the main street of the Pavlosk residential area, front and center among the other two apartment complexes that are located behind it, one on each side and named the eastern and western buildings respectively. Your family''s apartment is on the second floor of the southern building.'
-	*nl
-	'The three buildings surround a meager courtyard, which has changed over the years to now include a kid''s playground that occupies most of the small outdoor space. A few benches and tables surround it, and there''s a handful of small utility sheds tucked away in the corner for tenants to use if they''re willing to pay for the extra space.'
-	*nl
-	'Behind the apartments is a row of garages and storage space for tenants. Your <a href="exec:minut += 5 & GT ''korrPar''">families home</a> is on the second floor there. <<$gcartext>>'
-elseif StoryLine = 1:
-	'In the old part of Pavlovsk, there''s a block of three apartment buildings. The southern building sits along the main street of the Pavlosk residential area, front and center among the other two apartment complexes that are located behind it, one on each side and named the eastern and western buildings respectively. Your family''s apartment is on the second floor of the southern building.'
-	*nl
-	'The three buildings surround a meager courtyard, which has changed over the years to now include a kid''s playground that occupies most of the small outdoor space. A few benches and tables surround it, and there''s a handful of small utility sheds tucked away in the corner for tenants to use if they''re willing to pay for the extra space.'
-	*nl
-	'Behind the apartments is a row of garages and storage space for tenants. Your parents live here, but you are no longer welcome in their home. <<$gcartext>>'
-else
-	'<<$gcartext>>'
-end
-
-if Enable_tablemap = 0:
-	if storyline = 1:'<a href="exec:minut += 15 & gt ''shulgahome''">The Shulgin family</a> live in the apartment above your parents.'
-	if ArtemBeInHome > 0 and artemblok = 0:'<a href="exec:minut += 15 & gt ''artemhome''">Artem Chebotarev</a>, one of your classmates, lives in the same apartment building as your parents, on the first floor.'
-	if BeInJulMilHome = 1:
-		if hour >= 18 and hour <= 20 and week < 6 or hour >= 8 and hour <= 20 and week >= 6:
-			'<a href="exec:minut += 15 & gt ''JuliaMilVhod''">Julia Milova</a>, one of your classmates, lives in the same apartment building as your parents, on the third floor.'
+	if sound = 0:
+		if month >=11 and month <= 12 or month >=1 and month <=3:
+			if hour >= 8 and hour <= 23: PLAY 'sound/street2.mp3',30 & PLAY 'sound/zima.mp3',30
+			if hour >= 0 and hour <= 7: PLAY 'sound/street_night.mp3',30 & PLAY 'sound/zima.mp3',30
 		else
-			'Julia Milova, one of your classmates, lives in the same apartment building as your parents, on the third floor.'
+			if hour >= 8 and hour <= 23: PLAY 'sound/street2.mp3',30 & PLAY 'sound/street_leto.mp3',30
+			if hour >= 0 and hour <= 7:PLAY 'sound/street_night.mp3',30
 		end
 	end
-	if BeInNatBelHome = 1:
-		if hour >= 18 and hour <= 20 and week < 6 or hour >= 8 and hour <= 20 and week >= 6:
-			'<a href="exec:minut += 15 & gt ''NatBelHome''">Natasha Belova</a>, one of your classmates, lives in the same apartment building as your parents, on the fourth floor.'
-		else
-			'Natasha Belova, one of your classmates, lives in the same apartment building as your parents, on the fourth floor.'
-		end
-	end
-else
-	st_count=0 & $show_table=''
-	if (npc_rel['A112'] >=70) or (npc_rel['A112'] >=30 and week < 6 and hour >= 14 and hour <= 23) or (week >= 6 and hour >= 10 and hour < 14) or (week < 6 and hour >= 14 and hour <= 23) or (hour >= 0 and hour < 2):
-		gs'show_table','Apartment of Uncle <a href="exec:minut += 15 & GT ''shulgahome''" >Shulgin</a>.','3'
-	else
-		gs'show_table','Apartment of Uncle Shulgin. Not now.','3'
-	end
-	if ArtemBeInHome > 0 and artemblok = 0:gs'show_table','Apartment of <a href="exec:minut += 15 & gt ''artemhome''">Artem Chebotarev</a>.','3'
-	if BeInJulMilHome = 1:
-		if hour >= 18 and hour <= 20 and week < 6 or hour >= 8 and hour <= 20 and week >= 6:
-			gs'show_table','apartment of <a href="exec:minut += 15 & gt ''JuliaMilHome''">Julia Milova</a>.','3'
-		else
-			gs'show_table','apartment of Julia Milova. Not now.','3'
-		end
-	end
-	if BeInNatBelHome = 1:
-		if hour >= 18 and hour <= 20 and week < 6 or hour >= 8 and hour <= 20 and week >= 6:
-			gs'show_table','apartment of <a href="exec:minut += 15 & gt ''NatBelHome''">Natasha Belova</a>.','3'
-		else
-			gs'show_table','apartment of Natasha Belova. Not now.','3'
-		end
-	end
-end
 
-act 'Go to the street':minut += 1 & gt 'pavResidential'
-act 'Go to the garages':minut += 3 & gt 'pavComplex', 'garages'
-act 'Go to the courtyard':minut += 3 & gt 'pavComplex', 'courtyard'
-act 'Go to your apartment building':minut += 3 & gt 'pod_ezd', 'etaj_1'
-act 'Go to the apartment building two':
-	minut += 3
-	if anushkaFirstvisit = 0 and npc_rel['A144'] > 50:
-		gt 'pavComplexb2', 'anushkaFirst'
+	cls
+	litltown = 1
+	alkoblock = 0
+	boynumBlock = 0
+	gs 'stat'
+	'<center><h2>Apartment Complex</h2></center>'
+	if Enable_towntable = 1 : $_str = '<center><table><tr><td>' else $_str = ''
+	if month >= 11 or month <= 3:
+		if hour >= 8 and hour <= 21:
+			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/complexw.jpg"></center>'
+		else
+			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/complexwn.jpg"></center>'
+		end
 	else
-		gt 'pavComplexb2', 'etaj_1'
+		if hour >= 8 and hour <= 21:
+			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/complex.jpg"></center>'
+		else
+			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/complexn.jpg"></center>'
+		end
 	end
+
+	if StoryLine = 1 and ParHomeBlock = 0:
+		'In the old part of Pavlovsk, there''s a block of three apartment buildings. The southern building sits along the main street of the Pavlosk residential area, front and center among the other two apartment complexes that are located behind it, one on each side and named the eastern and western buildings respectively. Your family''s apartment is on the second floor of the southern building.'
+		*nl
+		'The three buildings surround a meager courtyard, which has changed over the years to now include a kid''s playground that occupies most of the small outdoor space. A few benches and tables surround it, and there''s a handful of small utility sheds tucked away in the corner for tenants to use if they''re willing to pay for the extra space.'
+		*nl
+		'Behind the apartments is a row of garages and storage space for tenants. Your family home is on the second floor there. <<$gcartext>>'
+	elseif StoryLine = 1:
+		'In the old part of Pavlovsk, there''s a block of three apartment buildings. The southern building sits along the main street of the Pavlosk residential area, front and center among the other two apartment complexes that are located behind it, one on each side and named the eastern and western buildings respectively. Your family''s apartment is on the second floor of the southern building.'
+		*nl
+		'The three buildings surround a meager courtyard, which has changed over the years to now include a kid''s playground that occupies most of the small outdoor space. A few benches and tables surround it, and there''s a handful of small utility sheds tucked away in the corner for tenants to use if they''re willing to pay for the extra space.'
+		*nl
+		'Behind the apartments is a row of garages and storage space for tenants. Your parents live here, but you are no longer welcome in their home. <<$gcartext>>'
+	else
+		'<<$gcartext>>'
+	end
+
+	if Enable_tablemap = 0:
+		if storyline = 1:'<a href="exec:minut += 15 & gt ''shulgahome''">The Shulgin family</a> live in the apartment above your parents.'
+		if ArtemBeInHome > 0 and artemblok = 0:'<a href="exec:minut += 15 & gt ''artemhome''">Artem Chebotarev</a>, one of your classmates, lives in the same apartment building as your parents, on the first floor.'
+		if BeInJulMilHome = 1:
+			if hour >= 18 and hour <= 20 and week < 6 or hour >= 8 and hour <= 20 and week >= 6:
+				'<a href="exec:minut += 15 & gt ''JuliaMilVhod''">Julia Milova</a>, one of your classmates, lives in the same apartment building as your parents, on the third floor.'
+			else
+				'Julia Milova, one of your classmates, lives in the same apartment building as your parents, on the third floor.'
+			end
+		end
+		if BeInNatBelHome = 1:
+			if hour >= 18 and hour <= 20 and week < 6 or hour >= 8 and hour <= 20 and week >= 6:
+				'<a href="exec:minut += 15 & gt ''NatBelHome''">Natasha Belova</a>, one of your classmates, lives in the same apartment building as your parents, on the fourth floor.'
+			else
+				'Natasha Belova, one of your classmates, lives in the same apartment building as your parents, on the fourth floor.'
+			end
+		end
+	else
+		st_count=0 & $show_table=''
+		if (npc_rel['A112'] >=70) or (npc_rel['A112'] >=30 and week < 6 and hour >= 14 and hour <= 23) or (week >= 6 and hour >= 10 and hour < 14) or (week < 6 and hour >= 14 and hour <= 23) or (hour >= 0 and hour < 2):
+			gs'show_table','Apartment of Uncle <a href="exec:minut += 15 & GT ''shulgahome''" >Shulgin</a>.','3'
+		else
+			gs'show_table','Apartment of Uncle Shulgin. Not now.','3'
+		end
+		if ArtemBeInHome > 0 and artemblok = 0:gs'show_table','Apartment of <a href="exec:minut += 15 & gt ''artemhome''">Artem Chebotarev</a>.','3'
+		if BeInJulMilHome = 1:
+			if hour >= 18 and hour <= 20 and week < 6 or hour >= 8 and hour <= 20 and week >= 6:
+				gs'show_table','apartment of <a href="exec:minut += 15 & gt ''JuliaMilHome''">Julia Milova</a>.','3'
+			else
+				gs'show_table','apartment of Julia Milova. Not now.','3'
+			end
+		end
+		if BeInNatBelHome = 1:
+			if hour >= 18 and hour <= 20 and week < 6 or hour >= 8 and hour <= 20 and week >= 6:
+				gs'show_table','apartment of <a href="exec:minut += 15 & gt ''NatBelHome''">Natasha Belova</a>.','3'
+			else
+				gs'show_table','apartment of Natasha Belova. Not now.','3'
+			end
+		end
+	end
+
+	if StoryLine = 1 and ParHomeBlock = 0: act '<b>GO HOME</b> (Parents'' Apartment)': minut += 5 & GT 'korrPar'
+	act 'Return to the residential street':minut += 1 & gt 'pavResidential'
+	act 'Enter your apartment building':minut += 3 & gt 'pod_ezd', 'etaj_1'
+	act 'Go to the Eastern apartment building':
+		minut += 3
+		if anushkaFirstvisit = 0 and npc_rel['A144'] > 50:
+			gt 'pavComplexb2', 'anushkaFirst'
+		else
+			gt 'pavComplexb2', 'etaj_1'
+		end
+	end
+	act 'Go to the Western apartment building':minut += 3 & gt 'pavComplexb3', 'etaj_1'
+	act 'Go to the courtyard':minut += 3 & gt 'pavComplex', 'courtyard'
+	act 'Go to the garages':minut += 3 & gt 'pavComplex', 'garages'
 end
-act 'Go to the apartment building three':minut += 3 & gt 'pavComplexb3', 'etaj_1'
-if StoryLine = 1 and ParHomeBlock = 0: act '<b>GO HOME</b> (Parents'' Apartment)': minut += 5 & GT 'korrPar'
 
 if $ARGS[0] = 'courtyard':
+	*clr
+	cla
 	gs 'stat'
 	'<center>Courtyard</center>'
 	if month >= 11 or month <= 3:
@@ -130,10 +134,11 @@ if $ARGS[0] = 'courtyard':
 		end
 	end
 	'The courtyard is between the three apartment buildings and the communal buildings, storage buildings, and garages along the back alley. The courtyard looks more like a small unkept park than anything, there is a few benches and tables scattered about for the residents of the complex to use and a small children''s playground, near the edge of the courtyard, closest to the communal and storage buildings near the garages.'
-	act 'Go to the street':minut += 3 & gt 'pavResidential'
-	act 'Go to the garages':minut += 1 & gt 'garages'
+
+	if StoryLine = 1 and ParHomeBlock = 0: act '<b>GO HOME</b> (Parents'' Apartment)': minut += 5 & GT 'korrPar'
+	act 'Return to the residential street':minut += 1 & gt 'pavResidential'
 	act 'Go to your apartment building':minut += 3 & gt 'pod_ezd', 'etaj_1'
-	act 'Go to the apartment building two':
+	act 'Go to the Eastern apartment building':
 		minut += 3
 		if anushkaFirstvisit = 0 and npc_rel['A144'] > 50:
 			gt 'pavComplexb2', 'anushkaFirst'
@@ -141,19 +146,22 @@ if $ARGS[0] = 'courtyard':
 			gt 'pavComplexb2', 'etaj_1'
 		end
 	end
-	act 'Go to the apartment building three':minut += 3 & gt 'pavComplexb3', 'etaj_1'
-	if StoryLine = 1 and ParHomeBlock = 0: act '<b>GO HOME</b> (Parents'' Apartment)': minut += 5 & GT 'korrPar'
+	act 'Go to the Western apartment building':minut += 3 & gt 'pavComplexb3', 'etaj_1'
+	act 'Go to the garages':minut += 1 & gt 'garages'
 end
 
 if $ARGS[0] = 'garages':
+	*clr
+	cla
 	gs 'stat'
 	'<center>Courtyard</center>'
 	'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/apartment/garages.jpg"></center>'
 	'Along the back street is a row of garages for rent to the residents of the apartments. Between the garages and the courtyard is a series of smaller storage buildings that can be rented as well as the complex maintenance building and laundry. The buildings layout leaves of a bit of a maze of walkways between them, which is a popular place for the kids to play or for teenagers to hang out.'
-	act 'Go to the street':minut += 1 & gt 'pavResidential'
-	act 'Go to the courtyard':minut += 1 & gt 'courtyard'
+
+	if StoryLine = 1 and ParHomeBlock = 0: act '<b>GO HOME</b> (Parents'' Apartment)': minut += 5 & GT 'korrPar'
+	act 'Return to the residential street':minut += 1 & gt 'pavResidential'
 	act 'Go to your apartment building':minut += 3 & gt 'pod_ezd', 'etaj_1'
-	act 'Go to the apartment building two':
+	act 'Go to the Eastern apartment building':
 		minut += 3
 		if anushkaFirstvisit = 0 and npc_rel['A144'] > 50:
 			gt 'pavComplexb2', 'anushkaFirst'
@@ -161,7 +169,8 @@ if $ARGS[0] = 'garages':
 			gt 'pavComplexb2', 'etaj_1'
 		end
 	end
-	act 'Go to the apartment building three':minut += 3 & gt 'pavComplexb3', 'etaj_1'
+	act 'Go to the Western apartment building':minut += 3 & gt 'pavComplexb3', 'etaj_1'
+	act 'Go to the courtyard':minut += 1 & gt 'courtyard'
 end
 
 --- pavComplex ---------------------------------

@@ -1,22 +1,23 @@
 # restoranM
+
 $location_type = 'public_indoors'
 
 if $ARGS[0] = 'start':
 	minut += 30
-	'You arrive at the restaurant and sit at a table. <<$boydescA>> orders a meal and good wine. You have to wait a little until the food arrives.'
-	'<<$boydescA>> tells you an anecdote:<br>'
+	'You arrive at the restaurant and sit at a table. <<$boydesc[i]>> orders a meal and good wine. You have to wait a little until the food arrives.'
+	'<<$boydesc[i]>> tells you an anecdote:<br>'
 	gs 'anekdot'
 *nl
-	if dayA > 15 and harakBoyA = 2:gs 'boylove', 'tits'
-	if dayA > 20 and harakBoyA = 1:gs 'boylove', 'tits'
-	if dayA > 25 and harakBoyA = 0:gs 'boylove', 'tits'
-	if dayA > 20 and harakBoyA = 2:gs 'boylove', 'figure'
-	if dayA > 25 and harakBoyA = 1:gs 'boylove', 'figure'
-	if dayA > 30 and harakBoyA = 0:gs 'boylove', 'figure'
+	if pcs_lovers_days[i] > 15 and harakBoy[i] = 2:gs 'boylove', 'tits'
+	if pcs_lovers_days[i] > 20 and harakBoy[i] = 1:gs 'boylove', 'tits'
+	if pcs_lovers_days[i] > 25 and harakBoy[i] = 0:gs 'boylove', 'tits'
+	if pcs_lovers_days[i] > 20 and harakBoy[i] = 2:gs 'boylove', 'figure'
+	if pcs_lovers_days[i] > 25 and harakBoy[i] = 1:gs 'boylove', 'figure'
+	if pcs_lovers_days[i] > 30 and harakBoy[i] = 0:gs 'boylove', 'figure'
 	
 	act 'Laugh':
 		cla
-		bfa += 1
+		pcs_lovers_rel[i] += 1
 		xgt 'restoranM', 'a'
 	end
 
@@ -27,7 +28,7 @@ if $ARGS[0] = 'start':
 
 	act 'Its not funny':
 		cla
-		bfa -= 1
+		pcs_lovers_rel[i] -= 1
 		xgt 'restoranM', 'a'
 	end
 end
@@ -35,7 +36,7 @@ end
 if $ARGS[0] = 'a':
 	minut += 30
 	alko += 1
-	'When your food arrives, <<$boydescA>> pours you a glass of wine and proposes a toast to love.'
+	'When your food arrives, <<$boydesc[i]>> pours you a glass of wine and proposes a toast to love.'
 
 	act 'Eat':
 		cla
@@ -51,7 +52,7 @@ if $ARGS[0] = 'b':
 	gs 'food', 'm_meal'
 	alko += 2
 	gs 'stat'
-	'After you finish your meal and empty the wine, <<$boydescA>> offers to take you to his home.'
+	'After you finish your meal and empty the wine, <<$boydesc[i]>> offers to take you to his home.'
 
 	act 'Go Home':gt 'sexm', 'start'
 end
