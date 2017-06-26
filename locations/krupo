@@ -19,35 +19,37 @@ end
 '<center><b><font color = maroon>Sewing circle</font></b></center>'
 '<center><img <<$set_imgh>> src="images/locations/pavlovsk/community/krupo.jpg"></center>'
 if tkan >= 0:'Your cloth will suffice for <<tkan>> more lessons.'
-if pcs_sewng < 50:
+if pcs_sewng < 40:
 	sewng_exp += rand(pcs_intel/20, pcs_intel/10)
 	minut += 60
 	'You spend an hour learning different sewing techniques.'
-	if pcs_sewng > 40:'The teacher tells you that you will need to bring in fabric for further studies, you can buy some in the hardware department at the supermarket.'
 end
 
-if pcs_sewng >= 50 and tkan <= 0:
-	'The teacher reminds you, that in order to further improve your skills, you need to buy some fabric to work with.'
+if pcs_sewng >= 40:
 	if tkanfirst = 0:
+		'The teacher tells you that you will need to bring in fabric for further studies, you can buy some in the hardware department at the supermarket.'
 		tkanfirst = 1
-		tkan = 1
-		'She has some spare fabric and give it to you as it''s the first time you have forgotten, but she reminds you to bring some next time.'
+	elseif tkan <= 0:
+		'The teacher reminds you, that in order to further improve your skills, you need to buy some fabric to work with.'
+		if tkanfirst = 1:
+			tkanfirst = 2
+			tkan = 1
+			'She has some spare fabric and gives it to you as it''s the first time you have forgotten, but she reminds you to bring some next time.'
+		end
+	else
+		minut += 60
+		tkan -= 1
+		sewng_exp += rand(pcs_intel/20, pcs_intel/10)
+		'For an hour you learn more advanced techniques and practice cutting and sewing the fabric you purchased.'
 	end
 end
 
-if tkan > 0 and pcs_sewng >= 50:
-	minut += 60
-	tkan -= 1
-	sewng_exp += rand(pcs_intel/20, pcs_intel/10)
-	'For an hour you learn more advanced techniques and practice cutting and sewing the fabric you purchased.'
-end
-
-if pcs_sewng >= 100 and poTalk = 0:
+if pcs_sewng >= 60 and poTalk = 0:
 	poTalk=1
 	'With a satisfied smile your teacher tells you, "Well done, now you can precisely alter clothes to fit your size. However, this does not mean that further studies are useless. With further lessons I feel that I can teach you how to embroider splendid tapestries, which would be highly desirable, although very laborious to make."'
 end
 
-if pcs_sewng >= 200 and poTalk = 1:
+if pcs_sewng >= 80 and poTalk = 1:
 	'The teacher quitely nods and tells you, "You have mastered simple tapestries, not without flaws, but good enough to be able to sell them and the quality will improve with your growing skills."'
 end
 *nl
