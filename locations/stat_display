@@ -72,19 +72,9 @@ if pcs_sleep > 100: pcs_sleep = 100
 
 if Enable_statfsize>0:$stat_msg = '<font size=<<Enable_statfsize>>><<$stat_msg>>'
 
-if hour < 10:
-	if minut > 9 :
-		$stat_android = '<b> 0<<hour>>:<<minut>></b>'
-	else
-		$stat_android = '<b> 0<<hour>>:0<<minut>></b>'
-	end
-else
-	if minut > 9 :
-		$stat_android = '<b> <<hour>>:<<minut>></b>'
-	else
-		$stat_android = '<b> <<hour>>:0<<minut>></b>'
-	end
-end
+$stat_android = '<b><<$mid(100+hour,2,2)>>:<<$mid(100+minut,2,2)>></b>'
+
+$stat_msg += '<<$weather>><BR>'
 $stat_msg += '<BR><<$stat_android>> <<$week[week]>> <<day>> <<$month>> <<year>>'
 $stat_android += '<<$week[week]>> <<day>>/<<month>>, <<money>> ₽, <a href="exec:clr & pl $stat_android">Status</a>'
 ! $stat_android for short desc in android mode, $stat_msg for status bar.
@@ -109,6 +99,11 @@ if ETOmenu = 1:
 	$stat_msg += '<BR><b><<$pcs_energy>></b>'
 	$stat_msg += '<BR><b><<$water>></b>'
 	$stat_msg += '<BR><b><<$pcs_sleep>></b>'
+elseif Enable_scalepic = 2:
+$st_temp='rgb(<<(16777216 + fcolor) mod 256>>,<<(16777216 + fcolor)/256 mod 256>>,<<(16777216 + fcolor)/65536>>)'
+$stat_msg += '<p><font color="<<$st_temp>>"><TABLE width="300" cellpadding="1" cellspacing="0"><TR><TD width="85%">'+FUNC('indiktab', '2', pcs_horny, pcs_horny)+'</TD><TD> Arousal</TD></TR><TR><TD width="85%">'+FUNC('indiktab', '2', pain['total'], pain['total'])+'</TD><TD> Pain</TD></TR><TR><TD width="85%">'+FUNC('indiktab', '1', pcs_health * 100 / healthmax, pcs_health)+'</TD><TD> Health</TD></TR>'
+if MagikDostup = 0: $stat_msg += '<TR><TD width="85%">'+FUNC('indiktab', '1', pcs_manna * 100 / mannamax, pcs_manna)+'</TD><TD> Manna</TD></TR>'
+$stat_msg += '<TR><TD width="85%">'+FUNC('indiktab', '1', pcs_willpwr * 100 / willpowermax, pcs_willpwr)+'</TD><TD> Willpower</TD></TR><TR><TD width="85%">'+FUNC('indiktab', '1', pcs_stam * 100 / stammax, pcs_stam)+'</TD><TD> Stamina</TD></TR><TR><TD width="85%">'+FUNC('indiktab', '1', pcs_mood, pcs_mood)+'</TD><TD> Mood</TD></TR><TR><TD width="85%">'+FUNC('indiktab', '1', pcs_energy, pcs_energy)+'</TD><TD> Hunger</TD></TR><TR><TD width="85%">'+FUNC('indiktab', '1', pcs_sleep, pcs_sleep)+'</TD><TD> Sleep</TD></TR></TABLE></font></p>'
 else
 	gs 'indik', '2', pcs_horny, pcs_horny
 	$stat_msg += '<BR><<$ind>> Arousal'
@@ -142,56 +137,80 @@ end
 $stat_msg += '<BR>'
 
 if Enable_showattr = 0:
-	$stat_msg += '<BR> <a href="exec:Enable_showattr = 1 & gs ''$menu_obnovit''">Attributes</a>'
+	$stat_msg += '<BR> <a href="exec:Enable_showattr = 1 & gs ''$menu_obnovit''">Attributes</a><BR>'
 end
 if Enable_showattr = 1:
 	$stat_msg += '<BR> <a href="exec:Enable_showattr = 0 & gs ''$menu_obnovit''">Attributes:</a>'
-	gs 'indik','3', 50+(pcs_dom-sub)/2, 50+(pcs_dom-sub)/2
-	$stat_msg += '<BR><<$ind>> Dominance'
-	if pcs_dom > 10:
-		$stat_msg += ' (dominant)'
-	elseif sub > 10:
-		$stat_msg += ' (submissive)'
+	if Enable_scalepic = 2:
+		if pcs_dom > 10:
+			$dom_stat_msg = 'dominant'
+		elseif sub > 10:
+			$dom_stat_msg = 'submissive'
+		else
+			$dom_stat_msg = 'neutral'
+		end
+
+		$stat_msg += '<font color="<<$st_temp>>"><TABLE cellpadding="1" cellspacing="0" width="300"><TR><TD width="85%">'+FUNC('indiktab', '3', 100+pcs_dom-sub, 100+pcs_dom-sub,$dom_stat_msg)+'</TD><TD> Dominance</TD></TR>  <TR><TD width="85%">'+FUNC('indiktab', '1', pcs_stren, pcs_stren)+'</TD><TD> Strength</TD></TR><TR><TD width="85%">'+FUNC('indiktab', '1', pcs_agil, pcs_agil)+'</TD><TD> Agility</TD></TR><TR><TD width="85%">'+FUNC('indiktab', '1', pcs_vital, pcs_vital)+'</TD><TD> Endurance</TD></TR><TR><TD width="85%">'+FUNC('indiktab', '1', pcs_intel, pcs_intel)+'</TD><TD> Intelligence</TD></TR><TR><TD width="85%">'+FUNC('indiktab', '1', pcs_sprt, pcs_sprt)+'</TD><TD> Spirit</TD></TR><TR><TD width="85%">'+FUNC('indiktab', '1', pcs_react, pcs_react)+'</TD><TD nowrap> Mental Agility</TD></TR><TR><TD width="85%">'+FUNC('indiktab', '1', pcs_chrsm, pcs_chrsm)+'</TD><TD> Charisma</TD></TR><TR><TD width="85%">'+FUNC('indiktab', '1', pcs_prcptn, pcs_prcptn)+'</TD><TD> Perception</TD></TR>'
+		if MagikDostup = 0: $stat_msg += '<TR><TD width="85%">'+FUNC('indiktab', '1', pcs_magik, pcs_magik)+'</TD><TD> Magic</TD></TR>'
+		$stat_msg += '<TR><TD width="85%">'+FUNC('indiktab', '1', pcs_apprnc / 2, pcs_apprnc)+'</TD><TD> Attractiveness</TD></TR>'
+		if SchoolAtestat = 0 and StoryLine > 0:$stat_msg += '<TR><TD width="85%">'+FUNC('indiktab', '1', pcs_grades, pcs_grades)+'</TD><TD nowrap> School Grades</TD></TR>'
+		if pcs_exhibition > 0:$stat_msg += '<TR><TD width="85%">'+FUNC('indiktab', '1', pcs_exhibition, pcs_exhibition)+'</TD><TD> Exhibitionism</TD></TR>'
+		if pcs_heels > 0:$stat_msg += '<TR><TD width="85%">'+FUNC('indiktab', '1', pcs_heels, pcs_heels)+'</TD><TD> Heels skill</TD></TR>'
+		$stat_msg += '</TABLE></font>'
+		killvar '$dom_stat_msg'
 	else
-		$stat_msg += ' (natural)'
-	end
-	$stat_msg += '<BR>'
-	gs 'indik', '1', pcs_stren, pcs_stren
-	$stat_msg += '<BR><<$ind>> Strength'
-	gs 'indik', '1', pcs_agil, pcs_agil
-	$stat_msg += '<BR><<$ind>> Agility'
-	gs 'indik', '1', pcs_vital, pcs_vital
-	$stat_msg += '<BR><<$ind>> Endurance'
-	gs 'indik', '1', pcs_intel, pcs_intel
-	$stat_msg += '<BR><<$ind>> Intelligence'
-	gs 'indik', '1', pcs_sprt, pcs_sprt
-	$stat_msg += '<BR><<$ind>> Spirit'
-	gs 'indik', '1', pcs_react, pcs_react
-	$stat_msg += '<BR><<$ind>> Mental Agility'
-	gs 'indik', '1', pcs_chrsm, pcs_chrsm
-	$stat_msg += '<BR><<$ind>> Charisma'
-	gs 'indik', '1', pcs_prcptn, pcs_prcptn
-	$stat_msg += '<BR><<$ind>> Perception'
-	if MagikDostup = 0:
-		gs 'indik', '1', pcs_magik, pcs_magik
-		$stat_msg += '<BR><<$ind>> Magic'
-	end
-	gs 'indik', '1', pcs_apprnc / 2, pcs_apprnc
-	$stat_msg += '<BR><<$ind>> Attractiveness'
+		gs 'indik','3', 50+(pcs_dom-sub)/2, 50+(pcs_dom-sub)/2
+		$stat_msg += '<BR><<$ind>> Dominance'
+		if pcs_dom > 10:
+			$stat_msg += ' (dominant)'
+		elseif sub > 10:
+			$stat_msg += ' (submissive)'
+		else
+			$stat_msg += ' (natural)'
+		end
+!		$stat_msg += '<BR>'
+		gs 'indik', '1', pcs_stren, pcs_stren
+		$stat_msg += '<BR><<$ind>> Strength'
+		gs 'indik', '1', pcs_agil, pcs_agil
+		$stat_msg += '<BR><<$ind>> Agility'
+		gs 'indik', '1', pcs_vital, pcs_vital
+		$stat_msg += '<BR><<$ind>> Endurance'
+		gs 'indik', '1', pcs_intel, pcs_intel
+		$stat_msg += '<BR><<$ind>> Intelligence'
+		gs 'indik', '1', pcs_sprt, pcs_sprt
+		$stat_msg += '<BR><<$ind>> Spirit'
+		gs 'indik', '1', pcs_react, pcs_react
+		$stat_msg += '<BR><<$ind>> Mental Agility'
+		gs 'indik', '1', pcs_chrsm, pcs_chrsm
+		$stat_msg += '<BR><<$ind>> Charisma'
+		gs 'indik', '1', pcs_prcptn, pcs_prcptn
+		$stat_msg += '<BR><<$ind>> Perception'
+		if MagikDostup = 0:
+			gs 'indik', '1', pcs_magik, pcs_magik
+			$stat_msg += '<BR><<$ind>> Magic'
+		end
+		gs 'indik', '1', pcs_apprnc / 2, pcs_apprnc
+		$stat_msg += '<BR><<$ind>> Attractiveness'
 	
-	if SchoolAtestat = 0 and StoryLine > 0:
-		gs 'indik', '1', pcs_grades, pcs_grades
-		$stat_msg += '<BR><<$ind>> School Grades'
-	end
-	if pcs_exhibition > 0:
-		gs 'indik', '1', pcs_exhibition, pcs_exhibition
-		$stat_msg += '<BR><<$ind>> exhibitionism'
+		if SchoolAtestat = 0 and StoryLine > 0:
+			gs 'indik', '1', pcs_grades, pcs_grades
+			$stat_msg += '<BR><<$ind>> School Grades'
+		end
+		if pcs_exhibition > 0:
+			gs 'indik', '1', pcs_exhibition, pcs_exhibition
+			$stat_msg += '<BR><<$ind>> exhibitionism'
+		end
+		if pcs_heels > 0:
+			gs 'indik', '1', pcs_heels, pcs_heels
+			$stat_msg += '<BR><<$ind>> Heels skill'
+		end
+		$stat_msg += '<BR>' 
 	end
 end
-
+killvar '$st_temp'
 !!----------------Mental skills--------------------------
 if Enable_show_mental_skill = 0:
-	$stat_msg += '<BR> <a href="exec:Enable_show_mental_skill = 1 & gs ''$menu_obnovit''">Mental Skills</a>'
+	$stat_msg += ' <a href="exec:Enable_show_mental_skill = 1 & gs ''$menu_obnovit''">Mental Skills</a>'
 end
 if Enable_show_mental_skill = 1:
 	st_count=0
@@ -200,7 +219,7 @@ if Enable_show_mental_skill = 1:
 	if pcs_humint > 0: gs 'show_table', '<<pcs_humint>> People skills', '2'
 	if pcs_persuas > 0: gs 'show_table', '<<pcs_persuas>> Persuasion', '2'
 	if pcs_observ > 0: gs 'show_table', '<<pcs_observ>> Observation', '2'
-	if st_count > 0 :$stat_msg += '<BR> <a href="exec:Enable_show_mental_skill = 0 & gs ''$menu_obnovit''">Mental Skills:</a> <TABLE BORDER=1><<$show_table>></TR></TABLE>'
+	if st_count > 0 :$stat_msg += ' <a href="exec:Enable_show_mental_skill = 0 & gs ''$menu_obnovit''">Mental Skills:</a> <TABLE BORDER=1><<$show_table>></TR></TABLE>'
 end
 
 !!-----------------Sport skills--------------------------
@@ -277,30 +296,33 @@ end
 if Enable_showrelation = 1:
 	st_count=0
 	$show_table=''
-	if npc_QW['A192'] > 0:gs'show_table','<<npc_QW[''A192'']>> Nastja','2'
-	if tanya > 0:gs'show_table','<<tanya>> Tanya','2'
-	if kat > 0:gs'show_table','<<kat>> Kate','2'
-	if vika > 0:gs'show_table','<<vika>> Vika','2'
-	if Irina > 0:gs'show_table','<<Irina>> Irina','2'
-	if Tamara > 0:gs'show_table','<<Tamara>> Tamara','2'
-	if alla > 0:gs'show_table','<<alla>> Alla','2'
-	if masha > 0:gs'show_table','<<masha>> Masha','2'
-	if Givi > 0:gs'show_table','<<Givi>> Givi Karapetovich','2'
-	if Ashot > 0:gs'show_table','<<Ashot>> Ashot','2'
-	if Dmitry > 0:gs'show_table','<<Dmitry>> Dima','2'
-	if afra > 0:gs'show_table','<<afra>> Blacks','2'
-	if npc_rel['A69'] > 0:gs'show_table','<<npc_rel[''A69'']>> Mikhail Nikolaevich','2'
+	if npc_QW['A192'] > 0:gs'show_table','Nastja: <<npc_QW[''A192'']>>','2'
+	if tanya > 0:gs'show_table','Tanya: <<tanya>>','2'
+	if kat > 0:gs'show_table','Kate: <<kat>>','2'
+	if vika > 0:gs'show_table','Vika: <<vika>>','2'
+	if Irina > 0:gs'show_table','Irina: <<Irina>>','2'
+	if Tamara > 0:gs'show_table','Tamara: <<Tamara>>','2'
+	if alla > 0:gs'show_table','Alla: <<alla>>','2'
+	if masha > 0:gs'show_table','Masha: <<masha>>','2'
+	if Givi > 0:gs'show_table','Givi Karapetovich: <<Givi>>','2'
+	if Ashot > 0:gs'show_table','Ashot: <<Ashot>>','2'
+	if Dmitry > 0:gs'show_table','Dima: <<Dmitry>>','2'
+	if afra > 0:gs'show_table','Blacks: <<afra>>','2'
+	if npc_rel['A69'] > 0:gs'show_table','Mikhail Nikolaevich: <<npc_rel[''A69'']>>','2'
 	if npc_rel['A89'] > 0:gs'show_table','Eugene: <<npc_rel[''A89'']>>','2'
 	if npc_rel['A112'] > 0:gs'show_table','Sergei Shulgin: <<npc_rel[''A112'']>>','2'
 	if npc_rel['A11'] > 0:gs'show_table','Vasily Shulgin: <<npc_rel[''A11'']>>','2'
 	if hantersAndreiQw > 0:gs'show_table','Hunter Andrew: <<hantersAndreiQw>>','2'
 	if hantersSergeiQw > 0:gs'show_table','Hunter Sergei: <<hantersSergeiQw>>','2'
 	if hantersIgorQw > 0:gs'show_table','Hunter Igor: <<hantersIgorQw>>','2'
+	if pcs_lovers[1] = 1:gs'show_table', 'BF <<$loverdesc[1]>>: <<loverrelation[1]>>','2'
+	if pcs_lovers[2] = 1:gs'show_table', 'BF <<$loverdesc[2]>>: <<loverrelation[2]>>','2'
+	if pcs_lovers[3] = 1:gs'show_table', 'BF <<$loverdesc[3]>>: <<loverrelation[3]>>','2'
 	if StoryLine > 0:
-		if npc_rel['A29'] > 0:gs'show_table','<<npc_rel[''A29'']>> mother','2'
-		if npc_rel['A28'] > 0:gs'show_table','<<npc_rel[''A28'']>> father','2'
-		if npc_rel['A33'] > 0:gs'show_table','<<npc_rel[''A33'']>> Sister','2'
-		if npc_rel['A34'] > 0:gs'show_table','<<npc_rel[''A34'']>> Brother','2'
+		if npc_rel['A29'] > 0:gs'show_table','Mother: <<npc_rel[''A29'']>>','2'
+		if npc_rel['A28'] > 0:gs'show_table','Father: <<npc_rel[''A28'']>>','2'
+		if npc_rel['A33'] > 0:gs'show_table','Sister: <<npc_rel[''A33'']>>','2'
+		if npc_rel['A34'] > 0:gs'show_table','Brother: <<npc_rel[''A34'']>>','2'
 	end
 	if st_count > 0 :$stat_msg += '<BR> <a href="exec:Enable_showrelation = 0 & gs ''$menu_obnovit''">Relations:</a> <BR><TABLE BORDER=1> <<$show_table>></TR></TABLE>'
 end
@@ -330,8 +352,6 @@ if BuyHous = 2 and ArendHouseSL <= 0:
 		*P ' But you can''t afford to pay the rent.'
 	end
 end
-
-$stat_msg += '<BR><<$weather>>' & $stat_msg += '<BR>'
 
 if opPRE = 0: $stat_msg += '<BR><<$pcs_makeup>> and your hair is <<$pcs_hairbsh>>.' & $stat_msg += '<BR>'
 
@@ -416,23 +436,6 @@ if pcs_horny >= 50:
 	end
 end
 
-
-$smoker = {
-	siga -= 1
-	smoker += 1
-	smokeHour = hour
-	smokeDay = daystart
-	smokeminut = minut + 5
-	smokerNeed = 0
-	cumspclnt = 2
-	gs 'cum_cleanup'
-	pcs_breath = 0
-	pcs_mood += 100
-	wipo += 100
-	if pcs_energy < 80: pcs_energy += 4
-	gs '$menu_obnovit'
-}
-
 if PillToggle = 1 and tabletki > 0:
 	Stabletki += tabletki
 	tabletki = 0
@@ -452,19 +455,19 @@ end
 if smoker >= 20:
 	if smokerNeed > 0:
 		if siga > 0:
-			$stat_msg += '<BR><a href="exec:dynamic $smoker"><font color="red"><b>You want to smoke. You have <<siga>> cigarettes left.</b></font></a><BR>'
+			$stat_msg += '<BR><a href="exec:gs ''shortgs'',''smoker''"><font color="red"><b>You want to smoke. You have <<siga>> cigarettes left.</b></font></a><BR>'
 		else
-			$stat_msg += '<BR><a href="exec:dynamic $smoker"><font color="red"><b>You want to smoke, but you have no cigarettes left.</b></font></a><BR>'
+			$stat_msg += '<BR><a href="exec:gs ''shortgs'',''smoker''"><font color="red"><b>You want to smoke, but you have no cigarettes left.</b></font></a><BR>'
 		end
 	else
 		if siga > 0:
-			$stat_msg += '<BR><a href="exec:dynamic $smoker"><font color="blue"><b>You have <<siga>> cigarettes left.</b></font></a><BR>'
+			$stat_msg += '<BR><a href="exec:gs ''shortgs'',''smoker''"><font color="blue"><b>You have <<siga>> cigarettes left.</b></font></a><BR>'
 		else
 			$stat_msg += '<BR><font color="blue"><b>You feel like you should get some cigarettes.</b></font><BR>'
 		end
 	end
 elseif siga > 0:
-	$stat_msg += '<BR><a href="exec:dynamic $smoker"><font color = blue><b>You have <<siga>> cigarettes.</b></font></a><BR>'
+	$stat_msg += '<BR><a href="exec:gs ''shortgs'',''smoker''"><font color = blue><b>You have <<siga>> cigarettes.</b></font></a><BR>'
 end
 
 if smokeHour = hour and smokeday = day and smokeminut >= minut:$stat_msg += '<BR><font color="green">You are smoking a cigarette.</font><BR>'
@@ -651,7 +654,7 @@ i = 0
 	elseif i = 6: 
 		$txtloc = 'your <a href="exec:view''images/pc/body/cum/cumclothes/'+rand(1,3)+'.jpg''">clothes near your groin</a>'
 	elseif i = 7: 
-		$txtloc = 'your <a href="exec:view''images/pc/body/cum/cumclothes/'+rand(4,18)+'.jpg''">clothes</a>'
+		$txtloc = 'your <a href="exec:view''images/pc/body/cum/cumclothes/cumclothes'+rand(1,21)+'.jpg''">clothes</a>'
 	elseif i = 8: 
 		$txtloc = 'your back'
 	elseif i = 9: 
@@ -764,7 +767,7 @@ i = 0
 			if cumcount['<<i>>:<<j>>'] = 0:
 				$txtiscum = 'some whitish substance '
 			else
-				$txtiscum = 'cum of '
+				$txtiscum = 'cum'
 				if cumcount['<<i>>:<<j>>'] = knownguy['<<i>>:<<j>>']:
 				!! everyone is known (one or more)
 					if knownguy['<<i>>:<<j>>'] = 1:
@@ -810,8 +813,9 @@ i = 0
 					end
 				end
 			end
-			if j <= 4 and swallow >= 10:$txtiscum = '<a href="exec:gs ''cum_manage'', ''cumeater'', <<i>>"><font color="blue">' + $txtiscum + '</font></a>'
-			if j = 4 and vibratorIN = 0 and vibratorIN = 0 and pcs_vag*10 < cumvolume['<<i>>:<<j>>'] and cumvolume['<<i>>:<<j>>'] >= 20:
+			if j <= 4 and swallow >= 10 and $txtiscum = 'cum':$txtiscum = '<a href="exec:gs ''cum_manage'', ''cumeater'', <<i>>"><font color="blue">' + $txtiscum + '</font></a>'
+			$txtiscum += ' from '
+			if i = 0 and j = 4 and vibratorIN = 0 and pcs_vag*10 < cumvolume['<<i>>:<<j>>'] and cumvolume['<<i>>:<<j>>'] >= 20:
 				if tanga = 1:
 					$stat_msg += '<BR><b><font color="red">' + $txtamount + 'amounts of ' + $txtiscum + $txtperson + 'is ' + $txtproxy + $txtloc + ' into your panties.</font></b>'
 				else
@@ -990,14 +994,24 @@ elseif tanwork = 1:
 	$streetev_home = 'Tanya''s apartment'
 elseif student > 0:
 	$streetev_home = 'your dorm'
+elseif ParHomeBlock = 0 and storyline = 1:
+	$streetev_home = 'outside your apartment block'
 else
 	$streetev_home = 'the train station'
 end
 
-if hour < meethour and svidanieA = 1:$stat_msg += '<BR><<$boydescA>> will be waiting for you near <<$streetev_home>> at <<meethour>>:00.'
-if hour = meethour and svidanieA = 1:$stat_msg += '<BR><b><font color="red"><<$boydescA>> is waiting for you by <<$streetev_home>>.</font></b>'
+if hour < meethourA and svidanieA = 1:$stat_msg += '<BR><<$loverdesc[1]>> will be waiting for you near <<$streetev_home>> at <<meethourA>>:00.'
+if hour = meethourA and svidanieA = 1:$stat_msg += '<BR><b><font color="red"><<$loverdesc[1]>> is waiting for you by <<$streetev_home>>.</font></b>'
+if meetdayA < daystart and svidanieA = 1:pcs_lovers_rel[1] -= 10 & svidanieA = 0
 
-if meetday < daystart and svidanieA = 1:bfA -= 10 & svidanieA = 0
+if hour < meethourB and svidanieB = 1:$stat_msg += '<BR><<$loverdesc[2]>> will be waiting for you near <<$streetev_home>> at <<meethourB>>:00.'
+if hour = meethourB and svidanieB = 1:$stat_msg += '<BR><b><font color="red"><<$loverdesc[2]>> is waiting for you by <<$streetev_home>>.</font></b>'
+if meetdayB < daystart and svidanieB = 1:pcs_lovers_rel[2] -= 10 & svidanieB = 0
+
+if hour < meethourC and svidanieC = 1:$stat_msg += '<BR><<$loverdesc[3]>> will be waiting for you near <<$streetev_home>> at <<meethourC>>:00.'
+if hour = meethourC and svidanieC = 1:$stat_msg += '<BR><b><font color="red"><<$loverdesc[3]>> is waiting for you by <<$streetev_home>>.</font></b>'
+if meetdayC < daystart and svidanieC = 1:pcs_lovers_rel[3] -= 10 & svidanieC = 0
+
 if StrongNarkota > 20:$stat_msg += '<BR><b><font color="red">You are stoned.</font></b>'
 
 if alko > 0:
@@ -1012,13 +1026,13 @@ if StoryLine = 1:
 	if sisboyday + 1 = daystart and hour < 19 and (npc_QW['A33'] = 3 or npc_QW['A33'] = 5 or npc_QW['A33'] = 7 or (npc_QW['A33'] = 9 and sisboytrioQW ! 1)):$stat_msg += '<BR>' & $stat_msg += '<BR>You promised your sister not to go into your room at 18:00.'
 	if sisboyday + 1 = daystart and hour < 19 and sisboytrioQW = 1:$stat_msg += '<BR>' & $stat_msg += '<BR>You promised your sister to meet her in your room at 18:00.'
 
-	if week = 6 and hour > 9 and detention_set = 1:$stat_msg += '<BR><b>You have a detention this morning and must be at school between 8 and 9.</b>'
+	if week = 6 and hour < 9 and detention_set = 1:$stat_msg += '<BR><b>You have a detention this morning and must be at school between 8 and 9.</b>'
 end
 
-if model > 0 and modelmon = month:
-	$stat_msg += '<BR><b>You worked as a model this month.</b>'
-elseif model > 0 and modelmon ! month:
-	$stat_msg += '<BR><b>You can work as a model this month.</b>'
+if model > 0 and model_week = (daystart - week) / 7:
+	$stat_msg += '<BR><b>You have worked as a model this week.</b>'
+elseif model > 0 and model_week < (daystart - week) / 7:
+	$stat_msg += '<BR><b>You can do paid modelling this week.</b>'
 end
 if pornstack > 0:
 	aa = 0

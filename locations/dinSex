@@ -1242,5 +1242,153 @@ $analsexrude = {
 	gs 'Cum_Manage'
 	'Through some time <<$boydesc>> groaned and you feel like your ass fills a pleasant warmth.'
 }
+! "deal_with_condom" procedure should be replacement of "sexstart" dynamic procedure
+if $ARGS[0] = 'boy_puts_condom':
+	protect = iif(prezik > 0,1,0)
+	vidageday -= 1 &! the people guess that you are a bit more older than you are in fact
+	! do you have condoms?
+	if prezik > 0:
+		if rand(1,prezik) <= badprezik: 
+			badprezik -= 1
+			noprotect = 1
+			sexcontra = 7
+			*p '<<ucase(mid($boydesc,1,1))>><<mid($boydesc,2,len($boydesc)-1)>> takes your '+iif(preziktype = 2,'sabotaged ','')+ 'condom and puts it on <<$xem>> <<dick>> centimeter member.'
+		else
+			sexcontra = 3
+			*p '<<ucase(mid($boydesc,1,1))>><<mid($boydesc,2,len($boydesc)-1)>> takes your condom and puts it on <<$xem>> <<dick>> centimeter member.'
+			end
+			noprotect = 0
+		end
+		prezik -= 1
+		sexcontra = iif(preziktype = 2,7,sexcontra) 
+	else
+		sexcontra = 0
+		!! the hormonal contraception is still taken in account
+	end
+end &! --- boy_puts_condom ---
+
+if $ARGS[0] = 'boy_puts_his_condom':
+	protect = 1
+	sexcontra = 3
+	*p '<<ucase(mid($boydesc,1,1))>><<mid($boydesc,2,len($boydesc)-1)>> takes his condom and puts it on <<$xem>> <<dick>> centimeter member.'
+	!! the hormonal contraception is still taken in account
+end &! --- boy_puts_his_condom ---
+
+if $ARGS[0] = 'pc_puts_condom':
+	protect = iif(prezik > 0,1,0)
+	vidageday -= 1 &! the people guess that you are a bit more older than you are in fact
+	! do you have condoms?
+	if prezik > 0:
+		if rand(1,prezik) <= badprezik: 
+			badprezik -= 1
+			noprotect = 1
+			sexcontra = 7
+			*p 'You take your '+iif(preziktype = 2,'sabotaged ','')+ 'condom and put it on <<$xem>> <<dick>> centimeter member.'
+		else
+			sexcontra = 3
+			*p 'You take your condom and put it on <<$xem>> <<dick>> centimeter member.'
+			noprotect = 0
+		end
+		prezik -= 1
+		sexcontra = iif(preziktype = 2,7,sexcontra) 
+	else
+		sexcontra = 0
+		!! the hormonal contraception is still taken in account
+	end
+end &! --- pc_puts_condom ---
+
+if $ARGS[0] = 'boy_wants_anal':
+	$bwa_boy = iif($ARGS[1] = '',$boydesc,$ARGS[1])
+	if analplugin = 1:
+		'<<$bwa_boy>> pulls the plug out of your narrow and tight ass.'
+		analplugout = 1
+	end
+	if $ARGS[2] = 'lubri':
+		lubri +=1
+		'<<$bwa_boy>> takes a tube of lubricant, squeezes a little on her palm and rubs your anus.'
+		gs 'arousal', 'anal_finger', 1,'lube' 
+	else
+		if lubri = 0:
+			'You have no lube, <<$bwa_boy>> spits on his fingers and using saliva he massages your anus.'
+			gs 'arousal', 'anal_finger', 1,'lube' 
+		elseif lubri > 0:
+			'You take a tube of lubricant and hand it to <<$bwa_boy>>, he squeezes a little on his palm and rubs your anus.'
+			gs 'arousal', 'anal_finger', 1,'lube' 
+		end
+	end
+	killvar '$bwa_boy'
+end &! --- boy_wants_anal ---
+
+if $ARGS[0] = 'girl_wants_anal':
+	$bwa_girl = iif($ARGS[1] = '',$boydesc,$ARGS[1])
+	if analplugin = 1:
+		'<<$bwa_girl> pulls the plug out of your narrow and tight ass.'
+		analplugin = 0
+		analplugout = 1
+	end
+	if $ARGS[2] = 'lubri':
+		lubri +=1
+		'<<$bwa_girl>> takes a tube of lubricant, squeezes a little on her palm and rubs your anus.'
+		gs 'arousal', 'anal_finger', 1,'lube' 
+	else
+		if lubri = 0:
+			'You have no lube, <<$bwa_girl>> spits on her fingers and using saliva she massages your anus.'
+			gs 'arousal', 'anal_finger', 1,'lube' 
+		elseif lubri > 0:
+			'You take a tube of lubricant and hand it to <<$bwa_girl>>, she squeezes a little on her palm and rubs your anus.'
+			gs 'arousal', 'anal_finger', 1,'lube' 
+		end
+	end
+	killvar '$bwa_girl'
+end &! --- girl_wants_anal ---
+
+if $ARGS[0] = 'after_anal':
+	if analplugout = 1:
+		if $ARGS[1] = 'boy':
+			analplugin = 1
+			'<<$ARGS[2]>> takes your butt plug and he puts it back into your anus. He grins: "Go on in the training"' 
+		end
+		if $ARGS[1] = 'girl':
+			analplugin = 1
+			'<<$ARGS[2]>> takes your butt plug and she puts it back into your anus. She grins: "Go on in the training"' 
+		end
+		if $ARGS[1] = 'pc':
+			analplugin = 1
+			'You take your butt plug and put it back into your anus. You grin: "I have to keep my butt trained"' 
+		end
+		if $ARGS[1] = 'no_plug':
+			analplugin = 0
+			'You take your butt plug and put it into your purse. Your anus have to rest for a while now.' 
+		end
+		killvar 'analplugout'
+	end
+end &! --- after_anal ---
+
+!! sexstart2 replacement - this procedure calls 'arousal','vaginal', but the rest of the parameters, has to be passed in parameter so call like gs 'dinsex','vaginal_sex',',10,''rough'',''sub'''
+if $ARGS[0] = 'vaginal_sex':
+	frost = 0 &! the sex heats
+	if pcs_vag > 0:
+		dyneval( 'gs ''arousal'',''vaginal''<<$ARGS[1]>>')
+		$temp_mens = iif(cycle <= 0,' and menstruation blood leaks from your vagina','')
+		if (vgrdif + vltdif) >= 30: 'You groaned in pain when <<$boydesc>> penetrated, tears flowed from your eyes and it feels like someone drove a red-hot rod in your vagina. You cry and moan while <<$xem>> strong <<dick>> centimeter dick fucks your pussy<<$temp_mens>>.'
+		if (vgrdif + vltdif) >= 20 and (vgrdif + vltdif) < 30: 'You bite your lip in pain when <<$boydesc>> entered, it is very painful. You are frowning and moaning in pain while <<$xem>> strong <<dick>> centimeter dick fucks your pussy<<$temp_mens>>.'
+		$temp_mens = ' even though' + $temp_mens
+		if (vgrdif + vltdif) >= 12 and (vgrdif + vltdif) < 20: 'You winced at the sudden pain when <<$boydesc>> entered, it hurted but it gradually become quite tolerable. You are trying to get aroused while <<$xem>> <<dick>> centimeter dick fucks your pussy<<$temp_mens>>, but you did not succeed.'
+		if (vgrdif + vltdif) >= 7 and (vgrdif + vltdif) < 12: 'You are startled by feeling that your pussy is stretching when <<$boydesc>> entered you. It feels good when <<$xem>> <<dick>> centimeter dick fucks your pussy<<$temp_mens>>.'
+		if (vgrdif + vltdif) >=  2 and (vgrdif + vltdif) < 7: 'You are startled by feeling that your pussy is stretching as <<$boydesc>> entered you. It feels good when <<$xem>> strong <<dick>> centimeter dick fucks your pussy. Gradually a pleasant warmth and pulsations is increasing in the abdomen, then the feeling decreases a little and remained until the end<<$temp_mens>>.'
+		if (vgrdif + vltdif) >= -3 and (vgrdif + vltdif) < 2: 'You flinched from a pleasant feeling when your pussy is stretched by <<$xem>> dick. It feels good when <<$xem>> <<dick>> centimeter dick fucks your pussy<<$temp_mens>>.Gradually a pleasant warmth and pulsations is increasing in the lower abdomen,the feeling then descend and your entire body covered with hot waves of orgasm, you scream with pleasure.'
+		if (vgrdif + vltdif) <  -3: 'You feel as <<$xem>> penis enters your pussy. You feel nice between your legs , but <<$xem>> <<dick>> cm dick is significantly less than your pussy and not enough for you. Gradually a pleasant warmth and pulsations is increasing in the abdomen, then the feeling a decreases a little and remained until the end<<$temp_mens>>.'
+	else
+		dyneval( 'gs ''arousal'',''vaginal'',<<$ARGS[1]>>')
+		$temp_mens = iif(cycle <= 0,' and menstruation blood leaks from your vagina','')
+		pcs_horny = 0
+		pcs_mood -= 15
+		pcs_willpwr -= 15
+		'You have bitten your <<$liptalk>> in pain and tears started to flow from your eyes when <<$boydesc>> entered, breaking your hymen. You moan while crying and <<$xem>> <<dick>> centimeter dick fucks your bloody pussy.'
+	end
+	killvar '$temp_mens'
+end
+
+
 --- dinSex ---------------------------------
 

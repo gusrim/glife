@@ -8,11 +8,14 @@ also when giving any of the following:
 'vaginal_finger_give' 'vaginal_fist_give' 'vaginal_dildo_give' 'vaginal_strap_give' 'vaginal_vibe_give' 'hj' 'bj' 'footjob'
 All acts are from Sveta''s perspective and in cases of both giving and receiving, receiving should be used.
 ARGS[1] for time taken in minutes
+$ARGS[2] can be used for passing the name of boys dick variable .. 'dick' is default, which belong to $boy, else can be passed 'dick1' .. 'dick4' or 'dick[i]' along the boys parameters activation 
 $ARGS[2] - [8] Are optional but can be upto 7 fetishes involved in the act and can be any of the following:
 'maso' 'bound' 'beast' 'exhibitionism' 'rough' 'prostitution' 'dom' 'sub' 'incest' 'feet' 'lesbian' 'group' 'gangbang' 'humiliation' 'deepthroat' 'unknown'
 Format to use: gs 'arousal', 'act', 'duration', 'fetish', 'fetish', 'fetish', 'fetish', 'fetish', 'fetish', 'fetish'
 eg: gs 'arousal', 'trib', 10, 'bound', 'sub'
 In this case lesbianism is automatically added, much as feet would be applied to 'footjob'
+Lubrication - if one of the arguments $ARGS[2] - [8] is set to 'lube', it supposes that it is used some kind of lubricant - preferably from PCs supply of lube.
+The lubrication is binded with anal or vaginal action. I think that the best combo is with 'anal_finger' and 'vaginal_finger'
 Only call one at a time, if more required, use multiple calls
 You can override the orgasm to force or prevent, to do so use:
 $orgasm_or = 'yes' to force orgasm, it will reset in orgasm call so if you want to force it again, you have to enter it again
@@ -22,57 +25,55 @@ $orgasm_or = 'no' to prevent orgasm, it will remain in place until manually chan
 
 temp_anal = 0
 
-if $ARGS[0] ! 'end' and $ARGS[0] ! 'checks':
+if $ARGS[0] ! 'end' and $ARGS[0] ! 'checks' and $ARGS[0] ! 'count' and $ARGS[0] ! 'count2':
 
-!!	This is to allow a Succubus with the right skill level to handle any size then go back to original size
-	if succubusflag = 1 and sucskill >= 4:
-		if dick ! pcs_vag:
-			if dick < pcs_vag - 5 or dick > pcs_vag + 5: pcs_mood -= 10
-			if sucvagorg = 0: sucvagorg = pcs_vag
-			pcs_vag = dick
+	if mid($ARGS[2],1,4) = 'dick': temp_dick = dyneval('result='+$ARGS[2]) else temp_dick = dick
+	if mid($ARGS[2],1,4) = 'dick': temp_silavag = dyneval('result=silavag'+mid($ARGS[2],5,len($ARGS[2])-4)) else temp_silavag = silavag
+	if mid($ARGS[2],1,4) = 'dick': $temp_dick_girth = dyneval('$result=$dick_girth'+mid($ARGS[2],5,len($ARGS[2])-4)) else $temp_dick_girth = $dick_girth
+	if strpos($ARGS[2]+$ARGS[3]+$ARGS[4]+$ARGS[5]+$ARGS[6]+ $ARGS[7]+ $ARGS[8],'rough')+strpos($ARGS[2]+$ARGS[3]+$ARGS[4]+$ARGS[5]+$ARGS[6]+ $ARGS[7]+ $ARGS[8],'beast') > 0: temp_silavag = 0
+	grange = dyneval('result=strpos(''skinny   slimx     well pr   thicker   thickx    massive   monstrous'',$ARGS[0])',mid($temp_dick_girth+'x',1,6))/2
+
+	!! first let us determine how slippery are pc''s holes
+	if vaginal_slip < pcs_horny / 10: vaginal_slip = pcs_horny / 10
+	if strpos($ARGS[2]+$ARGS[3]+$ARGS[4]+$ARGS[5]+$ARGS[6]+ $ARGS[7]+ $ARGS[8],'lube') > 0:
+		if mid($ARGS[0],1,4) = 'anal':
+			anal_slip += iif(lubri = 0,2,8)
+			if anal_slip > 10: anal_slip=10
+			if lubri > 0: lubri -= 1
 		end
-		if dick ! pcs_ass:
-			if dick < pcs_ass - 5 or dick > pcs_ass + 5: pcs_mood -= 10
+		if mid($ARGS[0],1,4) = 'vagi':
+			vaginal_slip += iif(lubri = 0,2,8)
+			if vaginal_slip > 12: vaginal_slip=12
+			if lubri > 0: lubri -= 1
+		end
+	end
+	!!	This is to allow a Succubus with the right skill level to handle any size then go back to original size
+	if succubusflag = 1 and sucskill >= 4:
+		if temp_dick ! pcs_vag:
+			if temp_dick < pcs_vag - 5 or temp_dick > pcs_vag + 5: pcs_mood -= 10
+			if sucvagorg = 0: sucvagorg = pcs_vag
+			pcs_vag = temp_dick
+		end
+		if temp_dick ! pcs_ass:
+			if temp_dick < pcs_ass - 5 or temp_dick > pcs_ass + 5: pcs_mood -= 10
 			if sucanusorg = 0: sucanusorg = pcs_ass
-			pcs_ass = dick
+			pcs_ass = temp_dick
 		end
 	end
 
 !!set a magnitude as a random
-	stim['mag'] = rand(1,100)
+	stim['mag'] = rand(0,3) + rand(0,3) + rand(0,3) 
 
-	if stim['mag'] < 3:
-		stim['mag'] = 0
-	elseif stim['mag'] < 13:
-		stim['mag'] = 1
-	elseif stim['mag'] < 24:
-		stim['mag'] = 2
-	elseif stim['mag'] < 40:
-		stim['mag'] = 3
-	elseif stim['mag'] < 50:
-		stim['mag'] = 4
-	elseif stim['mag'] < 60:
-		stim['mag'] = 5
-	elseif stim['mag'] < 70:
-		stim['mag'] = 6
-	elseif stim['mag'] < 85:
-		stim['mag'] = 7
-	elseif stim['mag'] < 95:
-		stim['mag'] = 8
-	else
-		stim['mag'] = 9
-	end
-
-!!add counter and effects due to action
+!!add count and effects due to action
 	if $ARGS[0] = 'masturbate':
-		counter['mast'] = 1
+		count['mast'] = 1
 		stim['mag'] += 6
 		stim['act'] = 100
 	elseif $ARGS[0] = 'porn':
-		counter['porn'] = 1
+		count['porn'] = 1
 		stim['act'] = 20
 	elseif $ARGS[0] = 'voyeur':
-		counter['voyeur'] = 1
+		count['voyeur'] = 1
 		stim['act'] = 30
 	elseif $ARGS[0] = 'kiss':
 		stim['act'] = 10
@@ -83,40 +84,50 @@ if $ARGS[0] ! 'end' and $ARGS[0] ! 'checks':
 	elseif $ARGS[0] = 'foreplay':
 		stim['act'] = 20
 	elseif $ARGS[0] = 'cuni':
-		counter['cuni'] = 1
+		count['cuni'] = 1
 		stim['mag'] += 4
 		stim['act'] = 80
 	elseif $ARGS[0] = 'rimming':
-		counter['rimming'] = 1
+		count['rimming'] = 1
 		stim['act'] = 30
 	elseif $ARGS[0] = 'trib':
-		counter['trib'] = 1
+		count['trib'] = 1
 		stim['mag'] += 3
 		stim['act'] = 70
 		stim_les = 1
 	elseif $ARGS[0] = 'anal':
 		temp_anal = 1
-		counter['anal'] = 1
-		if dick > pcs_ass: pcs_ass += 1
-		if ((pcs_ass + lubonus + 2) * 2) <= dick:
-			!!Painfully too big for PC
-			stim['act'] = 20
-			if agape < 3:agape = 3
-		elseif (pcs_ass + lubonus + 2) < dick:
-			!!Big, but more bearable
-			stim['act'] = 65
-			if agape < 1:agape = 1
-		elseif pcs_ass + lubonus + 2 >= dick:
-			!!Perfect size
-			stim['act'] = 80
-		end
+		count['anal'] = 1
+		!! length and girth abilities of anus are not also separated , but I suppose that they are related although it is not propable
+		!! we can estimate difference in girth and lenght anal_girth_difference and anal_lenght_difference - names are shortened
+		altdif = temp_dick - pcs_ass
+		agrdif = grange - pcs_ass
+		!! negative influence of the difference can be reduced by sex skill and also by lubricant
+		!! I made it as simply as posible so you do not complain about reality, feel free to modify the algorithm
+		!! when the boy is skilled, he can compensate the difference partly
+		altdif = altdif / (temp_silavag+1)
+		agrdif = agrdif *(5/4 - 1/(4 - temp_silavag))
+		!! when the boy is skilled, he does not harm PC with his long dick
+		if (temp_silavag = 2) and (altdif > 0): altdif = 0
+		!! lube can compensate the difference a bit
+		if  agrdif > anal_slip: agrdif = agrdif - anal_slip else if agrdif > 0: agrdif = 0
+		if -agrdif > anal_slip: agrdif = agrdif + anal_slip else if agrdif < 0: agrdif = 0
+
+		stim['act'] = 80 - (iif(altdif>0,altdif,-altdif) + iif(agrdif >0,agrdif,-agrdif)) + temp_silavag*8
+		!! if the dick is smaller, it cannot harm PC
+		if agrdif < 0: agrdif = 0
+		if altdif < 0: altdif = 0
+		!! calculate the harm
+		agape = iif((agrdif + altdif) > 10*agape,(agrdif + altdif)/10,agape)
+		!! the pain lover the pleasure
+		stim['act'] = stim['act'] - (agrdif + altdif)
 	elseif $ARGS[0] = 'anal_finger':
 		temp_anal = 1
-		counter['anal_finger'] = 1
+		count['anal_finger'] = 1
 		stim['act'] = 40
 	elseif $ARGS[0] = 'anal_fist':
 		temp_anal = 1
-		counter['anal_fist'] = 1
+		count['anal_fist'] = 1
 		stim['act'] = 30
 		if pcs_ass > 30:
 			pcs_ass += 30
@@ -124,124 +135,126 @@ if $ARGS[0] ! 'end' and $ARGS[0] ! 'checks':
 		end
 	elseif $ARGS[0] = 'anal_dildo':
 		temp_anal = 1
-		counter['anal_dildo'] = 1
-		if dick > pcs_ass: pcs_ass += 1
-		if ((pcs_ass + lubonus + 2) * 2) <= dick:
-			!!Painfully too big for PC
-			stim['act'] = 20
-			if agape < 3:agape = 3
-		elseif (pcs_ass + lubonus + 2) < dick:
-			!!Big, but more bearable
-			stim['act'] = 65
-			if agape < 1:agape = 1
-		elseif pcs_ass + lubonus + 2 >= dick:
-			!!Perfect size
-			stim['act'] = 80
-		end
+		count['anal_dildo'] = 1
+		!! the same as for 'anal'
+		altdif = temp_dick - pcs_ass
+		agrdif = grange - pcs_ass
+		altdif = altdif / (temp_silavag+1)
+		agrdif = agrdif *(5/4 - 1/(4 - temp_silavag))
+		if (temp_silavag = 2) and (altdif > 0): altdif = 0
+		if  agrdif > anal_slip: agrdif = agrdif - anal_slip else if agrdif > 0: agrdif = 0
+		if -agrdif > anal_slip: agrdif = agrdif + anal_slip else if agrdif < 0: agrdif = 0
+		stim['act'] = 80 - (iif(altdif>0,altdif,-altdif) + iif(agrdif >0,agrdif,-agrdif)) + temp_silavag*8
+		if agrdif < 0: agrdif = 0
+		if altdif < 0: altdif = 0
+		agape = iif((agrdif + altdif) > 10*agape,(agrdif + altdif)/10,agape)
+		stim['act'] = stim['act'] - (agrdif + altdif)
 	elseif $ARGS[0] = 'anal_strap':
 		temp_anal = 1
-		counter['anal_strap'] = 1
-		if dick > pcs_ass: pcs_ass += 1
-		if ((pcs_ass + lubonus + 2) * 2) <= dick:
-			!!Painfully too big for PC
-			stim['act'] = 20
-			if agape < 3:agape = 3
-		elseif (pcs_ass + lubonus + 2) < dick:
-			!!Big, but more bearable
-			stim['act'] = 65
-			if agape < 1:agape = 1
-		elseif pcs_ass + lubonus + 2 >= dick:
-			!!Perfect size
-			stim['act'] = 80
-		end
+		count['anal_strap'] = 1
+		!! the same as for 'anal'
+		altdif = temp_dick - pcs_ass
+		agrdif = grange - pcs_ass
+		altdif = altdif / (temp_silavag+1)
+		agrdif = agrdif *(5/4 - 1/(4 - temp_silavag))
+		if (temp_silavag = 2) and (altdif > 0): altdif = 0
+		if  agrdif > anal_slip: agrdif = agrdif - anal_slip else if agrdif > 0: agrdif = 0
+		if -agrdif > anal_slip: agrdif = agrdif + anal_slip else if agrdif < 0: agrdif = 0
+		stim['act'] = 80 - (iif(altdif>0,altdif,-altdif) + iif(agrdif >0,agrdif,-agrdif)) + temp_silavag*8
+		if agrdif < 0: agrdif = 0
+		if altdif < 0: altdif = 0
+		agape = iif((agrdif + altdif) > 10*agape,(agrdif + altdif)/10,agape)
+		stim['act'] = stim['act'] - (agrdif + altdif)
 	elseif $ARGS[0] = 'anal_vibe':
 		temp_anal = 1
-		counter['anal_vibe'] = 1
+		count['anal_vibe'] = 1
 		stim['mag'] += 1
 		stim['act'] = 60
 	elseif $ARGS[0] = 'vaginal':
-		counter['vaginal'] = 1
+
+		!! pre-cum check
+		if rand(0,120) < ARGS[1]: cumprecheck = 1 & gs 'cum_manage'
+
+		count['vaginal'] = 1
 		stim['mag'] += 3
-		if dick > pcs_vag: pcs_vag += 1
-		prinat = pcs_vag + (pcs_horny / 10)
-		if dick >= prinat * 2:
-			!!Painfully too big for PC
-			stim['act'] = 40
-			if vgape < 3:vgape = 3
-		elseif dick > prinat:
-			!!Big, but more bearable
-			stim['act'] = 75
-			if vgape < 1:vgape = 1
-		elseif dick <= prinat and dick >= pcs_vag:
-			!!Perfect size
-			stim['act'] = 90
-		elseif dick < pcs_vag:
-			!!On the small side
-			stim['act'] = 80
-		end
+		!! length and girth abilities of vagina are not separated , but I suppose that they are related
+		!! we can estimate difference in girth and lenght vaginal_girth_difference and vaginal_lenght_difference - names are shortened
+		vgrdif = grange - pcs_vag
+		vltdif = temp_dick - pcs_vag
+		!! negative influence of the difference can be reduced by sex skill and also by PCs horniness, using of a lubricant is not established yet
+		!! I made it as simply as posible so you do not complain about reality, feel free to modify the algorithm
+		!! when the boy is skilled, he can compensate the difference partly
+		vltdif = vltdif / (temp_silavag+1)
+		vgrdif = vgrdif *(5/4 - 1/(4 - temp_silavag))
+		!! when the boy is skilled, he does not harm PC with his long dick
+		if (temp_silavag = 2) and (vltdif > 0): vltdif = 0
+		!! even PC horniness can compensate the difference 
+		if    vgrdif > vaginal_slip: vgrdif = vgrdif - vaginal_slip else if (vgrdif > 0): vgrdif = 0
+		if -1*vgrdif > vaginal_slip: vgrdif = vgrdif + vaginal_slip else if (vgrdif < 0): vgrdif = 0
+
+		stim['act'] = 80 - (iif(vltdif>0,vltdif,-vltdif) + iif(vgrdif >0,vgrdif,-vgrdif)) + temp_silavag*8
+		!! if the dick is smaller, it cannot harm PC
+		if vgrdif < 0: vgrdif = 0
+		if vltdif < 0: vltdif = 0
+		!! calculate the harm
+		vgape = iif((vgrdif + vltdif) > 10*vgape,(vgrdif + vltdif)/10,vgape)
+		!! the pain lover the pleasure
+		stim['act'] = stim['act'] - (vgrdif + vltdif)
 	elseif $ARGS[0] = 'vaginal_finger':
-		counter['vaginal_finger'] = 1
+		count['vaginal_finger'] = 1
 		stim['mag'] += 1
 		stim['act'] = 80
 	elseif $ARGS[0] = 'vaginal_fist':
-		counter['vaginal_fist'] = 1
+		count['vaginal_fist'] = 1
 		stim['act'] = 70
-		if pcs_vag + (pcs_horny / 10) < 30:
+		if pcs_vag + vaginal_slip < 30:
 			pcs_vag += 3
 			if vgape < 3:vgape = 3
 		end
 	elseif $ARGS[0] = 'vaginal_dildo':
-		counter['vaginal_dildo'] = 1
+		count['vaginal_dildo'] = 1
 		stim['mag'] += 1
-		if dick > pcs_vag: pcs_vag += 1
-		prinat = pcs_vag + (pcs_horny / 10)
-		if dick >= prinat * 2:
-			!!Painfully too big for PC
-			stim['act'] = 20
-			if vgape < 3:vgape = 3
-		elseif dick > prinat:
-			!!Big, but more bearable
-			stim['act'] = 65
-			if vgape < 1:vgape = 1
-		elseif dick <= prinat and dick >= pcs_vag:
-			!!Perfect size
-			stim['act'] = 80
-		elseif dick < pcs_vag:
-			!!On the small side
-			stim['act'] = 70
-		end
+		!! the same as for 'vaginal'
+		vgrdif = grange - pcs_vag
+		vltdif = temp_dick - pcs_vag
+		vltdif = vltdif / (temp_silavag+1)
+		vgrdif = vgrdif *(5/4 - 1/(4 - temp_silavag))
+		if (temp_silavag = 2) and (vltdif > 0): vltdif = 0
+		if    vgrdif > vaginal_slip: vgrdif = vgrdif - vaginal_slip else if (vgrdif > 0): vgrdif = 0
+		if -1*vgrdif > vaginal_slip: vgrdif = vgrdif + vaginal_slip else if (vgrdif < 0): vgrdif = 0
+		stim['act'] = 80 - (iif(vltdif>0,vltdif,-vltdif) + iif(vgrdif >0,vgrdif,-vgrdif)) + temp_silavag*8
+		if vgrdif < 0: vgrdif = 0
+		if vltdif < 0: vltdif = 0
+		vgape = iif((vgrdif + vltdif) > 10*vgape,(vgrdif + vltdif)/10,vgape)
+		stim['act'] = stim['act'] - (vgrdif + vltdif)
 	elseif $ARGS[0] = 'vaginal_strap':
-		counter['vaginal_strap'] = 1
+		count['vaginal_strap'] = 1
 		stim['mag'] += 1
-		if dick > pcs_vag: pcs_vag += 1
-		prinat = pcs_vag + (pcs_horny / 10)
-		if dick >= prinat * 2:
-			!!Painfully too big for PC
-			stim['act'] = 20
-			if vgape < 3:vgape = 3
-		elseif dick > prinat:
-			!!Big, but more bearable
-			stim['act'] = 65
-			if vgape < 1:vgape = 1
-		elseif dick <= prinat and dick >= pcs_vag:
-			!!Perfect size
-			stim['act'] = 80
-		elseif dick < pcs_vag:
-			!!On the small side
-			stim['act'] = 70
-		end
+		!! the same as for 'vaginal'
+		vgrdif = grange - pcs_vag
+		vltdif = temp_dick - pcs_vag
+		vltdif = vltdif / (temp_silavag+1)
+		vgrdif = vgrdif *(5/4 - 1/(4 - temp_silavag))
+		if (temp_silavag = 2) and (vltdif > 0): vltdif = 0
+		if    vgrdif > vaginal_slip: vgrdif = vgrdif - vaginal_slip else if (vgrdif > 0): vgrdif = 0
+		if -1*vgrdif > vaginal_slip: vgrdif = vgrdif + vaginal_slip else if (vgrdif < 0): vgrdif = 0
+		stim['act'] = 80 - (iif(vltdif>0,vltdif,-vltdif) + iif(vgrdif >0,vgrdif,-vgrdif)) + temp_silavag*8
+		if vgrdif < 0: vgrdif = 0
+		if vltdif < 0: vltdif = 0
+		vgape = iif((vgrdif + vltdif) > 10*vgape,(vgrdif + vltdif)/10,vgape)
+		stim['act'] = stim['act'] - (vgrdif + vltdif)
 	elseif $ARGS[0] = 'vaginal_vibe':
-		counter['vaginal_vibe'] = 1
+		count['vaginal_vibe'] = 1
 		stim['mag'] += 2
 		stim['act'] = 90
 	elseif $ARGS[0] = 'flash_breasts':
-		counter['flash_breasts'] = 1
+		count['flash_breasts'] = 1
 		stim['act'] = 30
 	elseif $ARGS[0] = 'flash_pussy':
-		counter['flash_pussy'] = 1
+		count['flash_pussy'] = 1
 		stim['act'] = 10
 	elseif $ARGS[0] = 'flash_ass':
-		counter['flash_ass'] = 1
+		count['flash_ass'] = 1
 		stim['act'] = 10
 	elseif $ARGS[0] = 'kiss_give':
 		stim['act'] = 20
@@ -252,57 +265,57 @@ if $ARGS[0] ! 'end' and $ARGS[0] ! 'checks':
 	elseif $ARGS[0] = 'foreplay_give':
 		stim['act'] = 20
 	elseif $ARGS[0] = 'cuni_give':
-		counter['cuni_give'] = 1
+		count['cuni_give'] = 1
 		stim['act'] = 30
 		stim_les = 1
 	elseif $ARGS[0] = 'rimming_give':
-		counter['rimming_give'] = 1
+		count['rimming_give'] = 1
 		stim['act'] = 25
 	elseif $ARGS[0] = 'anal_finger_give':
-		counter['anal_finger_give'] = 1
+		count['anal_finger_give'] = 1
 		stim['act'] = 40
 	elseif $ARGS[0] = 'anal_fist_give':
-		counter['anal_fist_give'] = 1
+		count['anal_fist_give'] = 1
 		stim['act'] = 30
 	elseif $ARGS[0] = 'anal_dildo_give':
-		counter['anal_dildo_give'] = 1
+		count['anal_dildo_give'] = 1
 		stim['act'] = 40
 	elseif $ARGS[0] = 'anal_vibe_give':
-		counter['anal_vibe_give'] = 1
+		count['anal_vibe_give'] = 1
 		stim['act'] = 40
 	elseif $ARGS[0] = 'anal_strap_give':
-		counter['anal_strap_give'] = 1
+		count['anal_strap_give'] = 1
 		stim['act'] = 40
 	elseif $ARGS[0] = 'vaginal_finger_give':
-		counter['vaginal_finger_give'] = 1
+		count['vaginal_finger_give'] = 1
 		stim['act'] = 60
 		stim_les = 1
 	elseif $ARGS[0] = 'vaginal_fist_give':
-		counter['vaginal_fist_give'] = 1
+		count['vaginal_fist_give'] = 1
 		stim['act'] = 50
 		stim_les = 1
 	elseif $ARGS[0] = 'vaginal_dildo_give':
-		counter['vaginal_dildo_give'] = 1
+		count['vaginal_dildo_give'] = 1
 		stim['act'] = 60
 		stim_les = 1
 	elseif $ARGS[0] = 'vaginal_strap_give':
-		counter['vaginal_strap_give'] = 1
+		count['vaginal_strap_give'] = 1
 		stim['act'] = 70
 		stim_les = 1
 	elseif $ARGS[0] = 'vaginal_vibe_give':
-		counter['vaginal_vibe_give'] = 1
+		count['vaginal_vibe_give'] = 1
 		stim['act'] = 60
 		stim_les = 1
 	elseif $ARGS[0] = 'hj':
-		counter['hj'] = 1
+		count['hj'] = 1
 		stim['act'] = 25
 	elseif $ARGS[0] = 'bj':
-		counter['bj'] = 1
+		count['bj'] = 1
 		stim['act'] = 45
-		if dick > pcs_throat: pcs_throat += 1
+		if temp_dick > pcs_throat: pcs_throat += 1
 		stim_foot = 1
 	elseif $ARGS[0] = 'footjob':
-		counter['footjob'] = 1
+		count['footjob'] = 1
 		stim['act'] = 25
 	end
 
@@ -470,7 +483,7 @@ if $ARGS[0] ! 'end' and $ARGS[0] ! 'checks':
 	pcs_horny += stim['total']
 
 !!	This is to allow a Succubus with the right skill level to handle any size then go back to original size
-	if sucvagorg ! 0 and sucvagorg ! pcs_vag: pcs_vag = sucvagorg & killvar 'sucvagorg'
+	if sucvagorg  ! 0 and sucvagorg  ! pcs_vag: pcs_vag = sucvagorg  & killvar 'sucvagorg'
 	if sucanusorg ! 0 and sucanusorg ! pcs_ass: pcs_ass = sucanusorg & killvar 'sucanusorg'
 
 !!-------------------Orgasm-------------------
@@ -489,6 +502,7 @@ if $ARGS[0] ! 'end' and $ARGS[0] ! 'checks':
 			gs 'orgasm', $ARGS[0]
 		end
 	end
+	killvar 'temp_dick'
 end
 
 !!-----------------------------------------------
@@ -500,6 +514,8 @@ if $ARGS[0] = 'end':
 	if stim['lesbian'] = 1: lesbian += 1
 	if stim['gang'] = 1 or stim['group'] = 1: gang += 1
 	if $orgasm_or = 'no': $orgasm_or = ''
+	anal_slip = 0
+	vaginal_slip = 0
 
 !!Updating fetish exp for acts carried out and clearing data
 	gs 'arousal', 'checks', 'maso'
@@ -521,58 +537,58 @@ if $ARGS[0] = 'end':
 
 	stim['event'] = 0
 
-!!Adding to counters for character stats
-	gs 'arousal', 'counter', 'mast'
-	gs 'arousal', 'counter', 'porn'
-	gs 'arousal', 'counter', 'cuni'
-	gs 'arousal', 'counter', 'rimming'
-	gs 'arousal', 'counter', 'trib'
-	gs 'arousal', 'counter', 'anal'
-	gs 'arousal', 'counter', 'anal_finger'
-	gs 'arousal', 'counter', 'anal_fist'
-	gs 'arousal', 'counter', 'anal_dildo'
-	gs 'arousal', 'counter', 'anal_strap'
-	gs 'arousal', 'counter', 'anal_vibe'
-	gs 'arousal', 'counter', 'vaginal'
-	gs 'arousal', 'counter', 'vaginal_finger'
-	gs 'arousal', 'counter', 'vaginal_fist'
-	gs 'arousal', 'counter', 'vaginal_dildo'
-	gs 'arousal', 'counter', 'vaginal_strap'
-	gs 'arousal', 'counter', 'vaginal_vibe'
-	gs 'arousal', 'counter', 'cuni_give'
-	gs 'arousal', 'counter', 'rimming_give'
-	gs 'arousal', 'counter', 'anal_finger_give'
-	gs 'arousal', 'counter', 'anal_fist_give'
-	gs 'arousal', 'counter', 'anal_dildo_give'
-	gs 'arousal', 'counter', 'anal_vibe_give'
-	gs 'arousal', 'counter', 'anal_strap_give'
-	gs 'arousal', 'counter', 'vaginal_finger_give'
-	gs 'arousal', 'counter', 'vaginal_fist_give'
-	gs 'arousal', 'counter', 'vaginal_dildo_give'
-	gs 'arousal', 'counter', 'vaginal_strap_give'
-	gs 'arousal', 'counter', 'vaginal_vibe_give'
-	gs 'arousal', 'counter', 'hj'
-	gs 'arousal', 'counter', 'bj'
-	gs 'arousal', 'counter', 'footjob'
-	gs 'arousal', 'counter2', 'flash_breasts'
-	gs 'arousal', 'counter2', 'flash_pussy'
-	gs 'arousal', 'counter2', 'flash_ass'
-	gs 'arousal', 'counter2', 'voyeur'
+!!Adding to counts for character stats
+	gs 'arousal', 'count', 'mast'
+	gs 'arousal', 'count', 'porn'
+	gs 'arousal', 'count', 'cuni'
+	gs 'arousal', 'count', 'rimming'
+	gs 'arousal', 'count', 'trib'
+	gs 'arousal', 'count', 'anal'
+	gs 'arousal', 'count', 'anal_finger'
+	gs 'arousal', 'count', 'anal_fist'
+	gs 'arousal', 'count', 'anal_dildo'
+	gs 'arousal', 'count', 'anal_strap'
+	gs 'arousal', 'count', 'anal_vibe'
+	gs 'arousal', 'count', 'vaginal'
+	gs 'arousal', 'count', 'vaginal_finger'
+	gs 'arousal', 'count', 'vaginal_fist'
+	gs 'arousal', 'count', 'vaginal_dildo'
+	gs 'arousal', 'count', 'vaginal_strap'
+	gs 'arousal', 'count', 'vaginal_vibe'
+	gs 'arousal', 'count', 'cuni_give'
+	gs 'arousal', 'count', 'rimming_give'
+	gs 'arousal', 'count', 'anal_finger_give'
+	gs 'arousal', 'count', 'anal_fist_give'
+	gs 'arousal', 'count', 'anal_dildo_give'
+	gs 'arousal', 'count', 'anal_vibe_give'
+	gs 'arousal', 'count', 'anal_strap_give'
+	gs 'arousal', 'count', 'vaginal_finger_give'
+	gs 'arousal', 'count', 'vaginal_fist_give'
+	gs 'arousal', 'count', 'vaginal_dildo_give'
+	gs 'arousal', 'count', 'vaginal_strap_give'
+	gs 'arousal', 'count', 'vaginal_vibe_give'
+	gs 'arousal', 'count', 'hj'
+	gs 'arousal', 'count', 'bj'
+	gs 'arousal', 'count', 'footjob'
+	gs 'arousal', 'count2', 'flash_breasts'
+	gs 'arousal', 'count2', 'flash_pussy'
+	gs 'arousal', 'count2', 'flash_ass'
+	gs 'arousal', 'count2', 'voyeur'
 end
 
-if $ARGS[0] = 'counter':
-	if dyneval('RESULT = counter[''<<$ARGS[1]>>'']') = 1:
-		dynamic 'counter[''<<$ARGS[1]>>''] = 0'
+if $ARGS[0] = 'count':
+	if dyneval('RESULT = count[''<<$ARGS[1]>>'']') = 1:
+		dynamic 'count[''<<$ARGS[1]>>''] = 0'
 		dynamic 'stat[''<<$ARGS[1]>>''] += 1'
-		counter['flash_breasts'] = 0
-		counter['flash_pussy'] = 0
-		counter['flash_ass'] = 0
+		count['flash_breasts'] = 0
+		count['flash_pussy'] = 0
+		count['flash_ass'] = 0
 	end
 end
 
-if $ARGS[0] = 'counter2':
-	if dyneval('RESULT = counter[''<<$ARGS[1]>>'']') = 1:
-		dynamic 'counter[''<<$ARGS[1]>>''] = 0'
+if $ARGS[0] = 'count2':
+	if dyneval('RESULT = count[''<<$ARGS[1]>>'']') = 1:
+		dynamic 'count[''<<$ARGS[1]>>''] = 0'
 		dynamic 'stat[''<<$ARGS[1]>>''] += 1'
 	end
 end
@@ -583,6 +599,5 @@ if $ARGS[0] = 'checks':
 		dynamic '<<$ARGS[1]>>[''exp''] += 1'
 	end
 end
-
 --- arousal ---------------------------------
 

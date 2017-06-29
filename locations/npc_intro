@@ -14,6 +14,12 @@
 numnpc = args[0]
 $static_num = 'A<<numnpc>>'
 
+if npc_rel[$static_num] < 20: $npc_cur_rel = 'You don''t get along at all with <<$npc_firstname[$static_num]>>.'
+if npc_rel[$static_num] >= 20 and $npc_rel[$static_num] < 40: $npc_cur_rel = 'You don''t get along very well with <<$npc_firstname[$static_num]>>.'
+if npc_rel[$static_num] >= 40 and $npc_rel[$static_num] < 60: $npc_cur_rel = 'You have a normal relationship with <<$npc_firstname[$static_num]>>.'
+if npc_rel[$static_num] >= 60 and $npc_rel[$static_num] < 80: $npc_cur_rel = 'You have a good relationship with <<$npc_firstname[$static_num]>>.'
+if npc_rel[$static_num] >= 80: $npc_cur_rel = 'You have a great relationship with <<$npc_firstname[$static_num]>>.'
+
 if $ARGS[1] = '':
 	$image_path = $npc_pic[$static_num]
 else
@@ -27,7 +33,7 @@ else
 end
 
 if $args[3] = '': 
-	$description = $npc_notes[$static_num] 
+	$description = $npc_notes[$static_num]
 else 
 	$description = $args[3]
 end
@@ -36,14 +42,10 @@ $apendix = $args[4]
 
 '<center><b><font color = <<$titlecolor>>><<$npc_firstname[$static_num]>> <<$npc_lastname[$static_num]>></font></b></center>' & *nl
 if $image_path ! '':'<center><img <<$set_imgh>> src="<<$image_path>>"></center>' & *nl
-if $description ! '' and $description ! ' ': $description
+if $description ! '' and $description ! ' ': $description + $npc_cur_rel
 if $apendix ! '' and $apendix ! ' ':$apendix
-if npc_rel[$static_num] < 20:'You currently don''t get along at all with <<$npc_firstname[$static_num]>>.'
-if npc_rel[$static_num] >= 20 and npc_rel[$static_num] < 40:'You currently don''t get along very well with <<$npc_firstname[$static_num]>>.'
-if npc_rel[$static_num] >= 40 and npc_rel[$static_num] < 60:'You currently have a normal relationship with <<$npc_firstname[$static_num]>>.'
-if npc_rel[$static_num] >= 60 and npc_rel[$static_num] < 80:'You currently have a good relationship with <<$npc_firstname[$static_num]>>.'
-if npc_rel[$static_num] >= 80:'You currently have a great relationship with <<$npc_firstname[$static_num]>>.'
 
+killvar '$npc_cur_rel'
 killvar '$apendix'
 killvar '$description'
 killvar 'numnpc'

@@ -1,51 +1,95 @@
 # lug
-$metka = $ARGS[0]
-$loc = $CURLOC
-$location_type = 'public_outdoors'
-gs'stat'
-'<center><img <<$set_imgh>> src="images/locations/oldtown/park/lug.jpg" ></center>'
-'It''s a small but well maintained meadow with evergreen grass, perfect for laying down to rest, have a picnic or just sunbathe. Mothers with small children regularly visit this place.'
 
-streetrand = RAND(0,100)
-if streetrand >= 10 and bfa < 1:
-	vnerand = RAND(0,300)
-	if vnerand <= pcs_apprnc:
-		gs'boy'
-		'<<$boybody>> <<$boybod>> <<$boyface>> comes up to you. He is wearing <<$boyClo>>'
-		'The guy introduces himself as <<$boydesc>> and asks for your telephone number.'
+if $ARGS[0] = 'start':
+	$metka = 'start'
+	$loc = 'lug'
+	$location_type = 'public_outdoors'
+	gs'stat'
+	'<center><img <<$set_imgh>> src="images/locations/oldtown/park/lug.jpg" ></center>'
+	'It''s a small but well maintained meadow with evergreen grass, perfect for laying down to rest, have a picnic or just sunbathe. Mothers with small children regularly visit this place.'
 
-		act 'Tell him your number':
-			cla
-			gs'boyfrend','start'
-			stopboy = 0
-			'<<$boydescA>> thanks you and leaves.'
-			act 'Complete outing':gt'lug'
+	streetrand = RAND(0,100)
+	if streetrand >= 60 and pcs_lover < 3:
+		vnerand = RAND(0,300)
+		if vnerand <= pcs_apprnc:
+			gs'boy'
+			'<<$boybody>> <<$boybod>> <<$boyface>> comes up to you. He is wearing <<$boyClo>>'
+			'The guy introduces himself as <<$boydesc>> and asks for your telephone number.'
+
+			act 'Tell him your number':
+				cla
+				gs'boyfrend','start'
+				stopboy = 0
+				'<<$loverdesc[lover_number]>> thanks you and leaves.'
+				act 'Complete outing':gt'lug', 'start'
+			end
+		end
+
+	end
+
+
+	if pavserhom = 0 and psiha = 0 and housr = 0:
+		temp = RAND(1,100)
+		if temp >= 90:
+			pcs_horny += 20
+			gs'stat'
+			'On the path stands a <a href="exec:dynamic $pavserjil">man</a> looking like he is waiting for someone.'
 		end
 	end
 
-end
+	gs 'kseniyaQW', 'events'
 
+	if pcs_exhibition >= 35:
+		act 'Flash your tits':
+			if pcs_exhibition >= 50 and exhibitionQW = 0: gt 'kseniyaQW', 'event1'
+			cls
+			minut += 5
+			gs 'arousal', 'flash_breasts', 5, 'exhibition'
+			gs 'arousal', 'end'
+			exhibition_exp += rand(5,8)
+			gs 'stat'
 
-if pavserhom = 0 and psiha = 0 and housr = 0:
-    temp = RAND(1,100)
-    if temp >= 90:
-	   	pcs_horny += 20
-	    gs'stat'
-	    'On the path stands a <a href="exec:dynamic $pavserjil">man</a> looking like he is waiting for someone.'
+			'<center><img <<$set_imgh>> src="images/shared/sex/exhibitionism/flash_tits.jpg"></center>'
+			'You find an area far from where the children play in the park and flash your tits to some passers-by.'
+
+			act 'Continue': gt 'lug', 'start'
+		end
 	end
+
+	if pcs_exhibition >= 40:
+		act 'Flash your pussy':
+			if pcs_exhibition >= 50 and exhibitionQW = 0: gt 'kseniyaQW', 'event1'
+			cls
+			minut += 5
+			gs 'arousal', 'flash_pussy', 5, 'exhibition'
+			gs 'arousal', 'end'
+			exhibition_exp += rand(9,12)
+			gs 'stat'
+
+			if pcs_pubes >= 10:
+				'<center><img <<$set_imgh>> src="images/shared/sex/exhibitionism/flash_hairy.jpg"></center>'
+			else
+				'<center><img <<$set_imgh>> src="images/shared/sex/exhibitionism/flash_nohairy.jpg"></center>'
+			end
+			'You find an area far from where the children play in the park and flash your pussy to some passers-by.'
+
+			act 'Continue': gt 'lug', 'start'
+		end
+	end
+
+	act 'Visit the pond':
+		set minut += 10
+		gt 'lug', 'prut'
+	end
+
+	act 'Go toward the park entrance':
+		set minut += 5
+		gt 'parks', 'start'
+	end
+	
+	gs 'events', 'street_cum'
 end
 
-act 'Go further':
-    set minut += 10
-    gt 'lug', 'prut'
-end
-
-act 'Going back':
-    set minut += 5
-    gt 'parks', 'start'
-end
-
-gs 'events', 'street_cum'
 
 if $ARGS[0] = 'prut':
     cls
@@ -54,16 +98,17 @@ if $ARGS[0] = 'prut':
 
     '<center><B>Park Pond</B></center>'
     '<center><img <<$set_imgh>> src="images/locations/oldtown/park/prut.jpg" ></center>'
+	'A large and pretty pond near the end of the park, it continues off in to a wooded area.'
 
 
-    act 'Go further':
+    act 'Explore the wooded area':
         set minut += 10
         gt 'lug', 'prut2'
     end
 
-    act 'Going back':
+    act 'Return to the small meadow':
         set minut += 10
-        gt'lug'
+        gt'lug', 'start'
     end
 end
 
@@ -72,12 +117,19 @@ if $ARGS[0] = 'prut2':
     gs'stat'
     $location_type = 'public_outdoors'
 
-    '<center><B>Park Pond</B></center>'
+    '<center><B>Woodland Pond</B></center>'
     '<center><img <<$set_imgh>> src="images/locations/oldtown/park/prut2.jpg" ></center>'
+	'The pond is still and beautiful here and the trees offer some privacy, it feels quite magical.'
+	'There is a large field beyond that is hidden from the tourist trail.'
 
-    act 'Go further':
+    act 'Go to the field':
         set minut += 15
         gt 'lug', 'luzhayka'
+    end
+
+    act 'Follow the pond back out of the woods':
+        set minut += 10
+        gt 'lug', 'prut'
     end
 
 	if MagikDostup ! 1 and rand (1, 4) <= pcs_magik and (hour <=6 or hour >=19):
@@ -89,10 +141,62 @@ if $ARGS[0] = 'prut2':
 		end
 	end
 
-    act 'Going back':
-        set minut += 10
-        gt 'lug', 'prut'
-    end
+	if temper >= 15 and month >= 5 and month <= 9:
+		if pcs_exhibition > 30 and pcs_horny >= 80:
+			act 'Strip off and skinny dip (1:00)':
+				cla
+				*clr
+				cumspclnt = 4
+				gs 'cum_cleanup'
+				minut = minut + 60
+				pcs_sweat = 10 + rand(0,4)
+				pcs_mood += 5
+				pcs_willpwr = pcs_willpwr + 5
+				if pcs_stren < 30: stren_exp += 1
+				gs 'clothing', 'strip'
+				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/lake/secluded_beach/self/wetpussypants3.jpg"></center>'
+				'You strip off. A couple of passing men do a double-take and pause a moment to look at your sopping wet panties, probably thinking about what is making you so excited. You don''t care about what they might say or think of you.'
+				'You play around and have fun in the pond, enjoying the feel of the warm water on your naked body. The clean pond water refreshes and invigorates you.'
+				act'Get out and dress':gt 'lug', 'prut2'
+			end
+		elseif pcs_exhibition >= 40:
+			act 'Strip off and skinny dip (1:00)':
+				cla
+				*clr
+				cumspclnt = 4
+				gs 'cum_cleanup'
+				minut = minut + 60
+				pcs_sweat = 10 + rand(0,4)
+				pcs_mood += 5
+				pcs_willpwr = pcs_willpwr + 5
+				if pcs_stren < 30: stren_exp += 1
+				gs 'clothing', 'strip'
+				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/lake/secluded_beach/dress/undressnudebeach.jpg"></center>'
+				'Not caring if anyone is looking at you, you slowly take off your clothes.  You peel off each item like a stripper. You feel so naughty. Soon, you completely naked.'
+				'You play around and have fun in the pond, enjoying the feel of the warm water on your naked body. The clean pond water refreshes and invigorates you.'
+				act'Get out and dress':gt 'lug', 'prut2'
+			end
+		elseif pcs_exhibition > 30:
+			act 'Strip off and skinny dip (1:00)':
+				cla
+				*clr
+				cumspclnt = 4
+				gs 'cum_cleanup'
+				minut = minut + 60
+				pcs_sweat = 10 + rand(0,4)
+				pcs_mood += 5
+				pcs_willpwr = pcs_willpwr + 5
+				if pcs_stren < 30: stren_exp += 1
+				gs 'clothing', 'strip'
+				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/lake/secluded_beach/dress/undressnudebeach.jpg"></center>'
+				'You quickly check to see if anyone is watching, and when you''re satisfied no one is paying you undue attention, you take off your clothes.'
+				'You play around and have fun in the pond, enjoying the feel of the warm water on your naked body. The clean pond water refreshes and invigorates you.'
+				act'Get out and dress':gt 'lug', 'prut2'
+			end
+		else
+			'It would be a good place for skinny dipping but you''re too worry about what people would think to do such a thing.'
+		end
+	end
 end
 
 if $ARGS[0] = 'luzhayka':
@@ -100,15 +204,11 @@ if $ARGS[0] = 'luzhayka':
     gs'stat'
 
     '<center><img <<$set_imgh>> src="images/locations/oldtown/park/luzhayka.jpg" ></center>'
+	'A quiet hidden field that is well maintained but apart from the occasional grounds keeper you feel like it is all yours.'
 
-    act 'Go further':
+    act 'Return to the woodland pond':
         set minut += 15
         gt 'lug', 'prut2'
-    end
-
-    act 'Going back':
-        set minut += 30
-        gt 'parks', 'start'
     end
 end
 

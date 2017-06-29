@@ -1,7 +1,8 @@
 # pavResidential
 
+
+music_loop = 0
 CLOSE ALL
-music_on = 0
 $metka = ''
 $loc = 'pavResidential'
 $metkaM = ''
@@ -24,10 +25,11 @@ cls
 litltown = 1
 alkoblock = 0
 boynumBlock = 0
+curr_home = 1
 gs 'stat'
 
 !call random events from [street_events], and display them before show location.
-if streetevent_hour ! hour:gt'street_event','pavResidential', 'main'
+if streetevent_hour + 2 < hour:gt'street_event','pavResidential', 'main'
 
 '<center><h2>Pavlovsk</h2></center>'
 if Enable_towntable = 1 : $_str = '<center><table><tr><td>' else $_str = ''
@@ -47,7 +49,7 @@ end
 
 if Enable_towntable = 1 : $_str += '</td><td>'
 $_str += '<center>You are in the residential area of a provincial town in a rural area of Russia.  Population: about 15000 inhabitants.</center>'
-$_str += '<center>Apart from the old <a href="exec:view''images/locations/pavlovsk/palace/Pav_Palace.jpg''">Imperial palace</a> with its surrounding gardens and forest, built by Catherine the Great, and the recently rebuilt <a href="exec:view''images/locations/pavlovsk/fortress/BIP_hotel.png''">Bip fortress</a> (which is now a Luxury hotel and restaurant), it looks much like all the other towns in the region.</a></center> '
+$_str += '<center>Apart from the old <a href="exec:view''images/locations/pavlovsk/palace/pav_palace.jpg''">Imperial palace</a> with its surrounding gardens and forest, built by Catherine the Great, and the recently rebuilt <a href="exec:view''images/locations/pavlovsk/fortress/bip_hotel.png''">Bip fortress</a> (which is now a Luxury hotel and restaurant), it looks much like all the other towns in the region.</a></center> '
 $_str += '<center>The tallest building in town is the <a href="exec:gt ''ParChurch'',''start''">church of St Nikolas.</a></center>'
 if Enable_towntable = 1 : $_str += '</td></tr><table></center>'
 *nl $_str
@@ -119,9 +121,9 @@ end
 
 
 if StoryLine = 1 and ParHomeBlock = 0:
-	'You live in one of the apartment blocks in the old part of Pavlovsk, and the door to the <a href="exec:minut += 2 & GT ''pod_ezd'',''etaj_1''">apartment building</a> is right there. Your <a href="exec:minut += 5 & GT ''korrPar''">parents'' home</a> is on the second floor there. <<$gcartext>>'
+	'You live in one of the apartment blocks in the old part of Pavlovsk, and the door to the <a href="exec:minut += 2 & GT ''pavcomplex'',''start''">apartment building</a> is right there. Your <a href="exec:minut += 5 & GT ''korrPar''">parents'' home</a> is on the second floor there. <<$gcartext>>'
 elseif StoryLine = 1:
-	'One of the apartment blocks in the old part of Pavlovsk, and the door to the <a href="exec:minut += 2 & GT ''pod_ezd'',''etaj_1''">apartment building</a> is right there. Your parents live here, but you are no longer welcome in their home. <<$gcartext>>'
+	'One of the apartment blocks in the old part of Pavlovsk, and the door to the <a href="exec:minut += 2 & GT ''pavcomplex'',''start''">apartment building</a> is right there. Your parents live here, but you are no longer welcome in their home. <<$gcartext>>'
 else
 	'<<$gcartext>>'
 end
@@ -155,23 +157,8 @@ end
 'A <a href="exec:minut += 15 & gt ''Gshveyfab'', ''start''">garment factory</a> named Paris Commune is situated in the industrial area on the outskirts of town. Inhabitants of Pavlovsk can store their cars in the <a href="exec:minut += 5 & gt ''garmassiv''">garages</a>.'
 
 ''
+!!made changes here, to remove direct links to the kids in the apartment complex, make sure this will work with the code left.
 if Enable_tablemap = 0:
-	if storyline = 1:'<a href="exec:minut += 15 & gt ''shulgahome''">The Shulgin family</a> live in the apartment above your parents.'
-	if ArtemBeInHome > 0 and artemblok = 0:'<a href="exec:minut += 15 & gt ''artemhome''">Artem Chebotarev</a>, one of your classmates, lives in the same apartment building as your parents, on the first floor.'
-	if BeInJulMilHome = 1:
-		if hour >= 18 and hour <= 20 and week < 6 or hour >= 8 and hour <= 20 and week >= 6:
-			'<a href="exec:minut += 15 & gt ''JuliaMilVhod''">Julia Milova</a>, one of your classmates, lives in the same apartment building as your parents, on the third floor.'
-		else
-			'Julia Milova, one of your classmates, lives in the same apartment building as your parents, on the third floor.'
-		end
-	end
-	if BeInNatBelHome = 1:
-		if hour >= 18 and hour <= 20 and week < 6 or hour >= 8 and hour <= 20 and week >= 6:
-			'<a href="exec:minut += 15 & gt ''NatBelHome''">Natasha Belova</a>, one of your classmates, lives in the same apartment building as your parents, on the fourth floor.'
-		else
-			'Natasha Belova, one of your classmates, lives in the same apartment building as your parents, on the fourth floor.'
-		end
-	end	
 	if DimaBeHomeOnce = 1 and DimaRudeBlock = 0:'<a href="exec:minut += 15 & gt ''dimaGoHome2''">Dimka Nosov</a>, one of your classmates, lives in one of the fancier houses in town.'
 	if IgorLoverQW > 0 and IdorBlock = 0:'<a href="exec:minut += 15 & gt ''IgorHome'', ''home''">Igor Kruglov</a>, one of your classmates, lives in one of the fancier houses in town.'
 	!if katjaFirstKiss >= 1:'<a href="exec:minut += 15 & gt ''KatjaHome''">Katja Meynold</a>, one of your classmates, lives in the richer part of town.'
@@ -180,26 +167,6 @@ if Enable_tablemap = 0:
 	if beinalbinahome > 0:'<a href="exec:minut += 15 & gt ''albinaporog''">Albina Barlovskaya</a>, one of your classmates, lives in one of the few luxurious mansions Pavlovsk has to offer.'
 else
 	st_count=0 & $show_table=''
-	if (npc_rel['A112'] >=70) or (npc_rel['A112'] >=30 and week < 6 and hour >= 14 and hour <= 23) or (week >= 6 and hour >= 10 and hour < 14) or (week < 6 and hour >= 14 and hour <= 23) or (hour >= 0 and hour < 2):
-		gs'show_table','Apartment of Uncle <a href="exec:minut += 15 & GT ''shulgahome''" >Shulgin</a>.','3'
-	else
-		gs'show_table','Apartment of Uncle Shulgin. Not now.','3'
-	end
-	if ArtemBeInHome > 0 and artemblok = 0:gs'show_table','Apartment of <a href="exec:minut += 15 & gt ''artemhome''">Artem Chebotarev</a>.','3'
-	if BeInJulMilHome = 1:
-		if hour >= 18 and hour <= 20 and week < 6 or hour >= 8 and hour <= 20 and week >= 6:
-			gs'show_table','apartment of <a href="exec:minut += 15 & gt ''JuliaMilHome''">Julia Milova</a>.','3'
-		else
-			gs'show_table','apartment of Julia Milova. Not now.','3'
-		end
-	end
-	if BeInNatBelHome = 1:
-		if hour >= 18 and hour <= 20 and week < 6 or hour >= 8 and hour <= 20 and week >= 6:
-			gs'show_table','apartment of <a href="exec:minut += 15 & gt ''NatBelHome''">Natasha Belova</a>.','3'
-		else
-			gs'show_table','apartment of Natasha Belova. Not now.','3'
-		end
-	end
 	if DimaBeHomeOnce = 1 and DimaRudeBlock = 0:gs'show_table','Fancier house of <a href="exec:minut += 15 & gt ''dimaGoHome2''">Dimka Nosov</a>.','3'
 	if IgorLoverQW > 0 and IdorBlock = 0:gs'show_table','Fancier house of <a href="exec:minut += 15 & gt ''IgorHome'', ''home''">Igor Kruglov</a>', '3'
 	!if katjaFirstKiss >= 1:gs'show_table','house of <a href="exec:minut += 15 & gt ''KatjaHome''">Katja Meynold</a>.','3'
@@ -208,6 +175,7 @@ else
 	if beinalbinahome > 0:gs'show_table','Luxurious mansion of <a href="exec:minut += 15 & gt ''albinaporog''">Albina Barlovskaya</a>.','3'
 	if st_count > 0 :'<TABLE BORDER=1><<$show_table>></TR></TABLE>'
 end
+!!end of code changes.
 
 act 'Go to the high street':minut += 5 & gt 'pavCommercial'
 if StoryLine = 1 and ParHomeBlock = 0: act '<b>GO HOME</b> (Parents'' Apartment)': minut += 5 & GT 'korrPar'
@@ -226,7 +194,39 @@ act 'Wait':
 	act 'Check the time':gt $curloc
 end
 
-if StoryLine ! 0 and (hour >= 8 or hour < 23) and spdirtyv = 1 and rand(0, 3) = 0 and sosedday ! daystart:
+if (hour > 20 or hour < 4) and succubusQW = 5 and suchuntday ! daystart:
+	act 'Go hunting near the community center (this can take a lot of time)':
+		scrand = rand(0,4)
+		minut += 60 - (5 * (succublvl + scrand))
+		if rand(0,7) - succublvl < 2:
+			gt 'succubus', 'pavResfeed'
+		else
+			cls
+			gs 'stat'
+			'<center><h2>Pavlovsk</h2></center>'
+			if month >= 11 or month <= 3:
+				if hour >= 8 and hour <= 21:
+					'<center><img <<$set_imgh>> src="images/locations/pavlovsk/pavreswinter.jpg"></center>'
+				else
+					'<center><img <<$set_imgh>> src="images/locations/pavlovsk/pavreswintern.jpg"></center>'
+				end
+			else
+				if hour >= 8 and hour <= 21:
+					'<center><img <<$set_imgh>> src="images/locations/pavlovsk/pavres.jpg"></center>'
+				else
+					'<center><img <<$set_imgh>> src="images/locations/pavlovsk/pavresn.jpg"></center>'
+				end
+			end
+			'The disco is in full swing, which means a lot of adolescents going to and from the community center. You find a spot down the street from the community center to lie in wait for your prey.'
+			'You hide for a few minutes watching groups of students pass you by as you wait for a lone victim to pounce on. You lie in wait for almost thirty minutes, thinking about the meal ahead, your hand finding its way between your legs a few times.'
+			'This time you are unsuccessful and fail to find a suitable meal.'
+
+			act 'Return': gt 'pavResidential'
+		end
+	end
+end
+
+if StoryLine ! 0 and (hour >= 8 or hour < 23) and cumloc[11] = 1 and rand(0, 3) = 0 and sosedday ! daystart:
 	cls
 	sosedday = daystart
 	gs 'stat'
@@ -268,28 +268,32 @@ end
 
 if rand (0,2) ! 0:gs 'din_bad' & dynamic $mobile_check
 
-if npc_QW['A113'] = 1 and hour>=14 and hour<21 and daybelisex!daystart:
+if npc_QW['A113'] = 1 and hour >= 14 and hour < 21 and daybelisex ! daystart:
 	'You see the by now familiar old Mitsubishi Pajero driving through the streets with Vadim Bely and his gang. Your heart skips a beat as you notice one of them pointing at you, and soon they pull over.'
 	'The tinted window slides down and you find yourself staring directly into Vadim''s face. "Slut, get in. It''s time for you to work off your debts."'
 	act'Get into the jeep':
 		cls
-		minut+=5
+		minut += 5
+		daybelisex = daystart
 		gs'stat'
 		'You open the door and take a seat in the back as Vadim drives through the city.'
-		if month>=4 and month<=8:
-			tiperand=rand(0,1)
-			if tiperand=0:
+		if month >= 4 and month <= 8:
+			if rand(0,1) = 0:
+				*nl
 				'As the car leaves the city and goes off-road at some point, one of the more silent criminals feels the need to explain: "We have a little picnic planned for today. We know just the place... nice and quiet. You''ll be able to entertain us there without interruptions."'
 				'The way he says it sends a shiver down your spine.'
 				'Finally, a few minutes after the car has left the main roads, you stop somewhere. You have absolutely no idea where you are. The criminals get out of the car and Vadim does the same, telling you to get out and follow them.'
+
 				act'Get out of the car':gt'belpicknick'
-			end
 			else 
-			act'Look around':
-				cls
+				*clr
+				cla
 				minut+=5
 				gs'stat'
-				'The apartment is actually in decent shape. The minimal amount of furniture and decorations don''t make it look very hospitable though, and you assume this might just be one of the places <<$boydesc>> rented for business or pleasure, not for living in. Noticing you''re spending too much time looking around and aren''t following him swiftly enough, he grabs you by your hair and pulls your face to his, roughly shoving his tongue in your mouth. You can smell the tabacco on his breath, and do your best to ignore the taste as he kisses you.'
+				'A few minutes later you arrive at an apartment block, it isn''t is great shape but Vadim leads you inside and up to a second floor apartment.'
+				'The apartment is actually in decent shape. The minimal amount of furniture and decorations don''t make it look very hospitable though, and you assume this might just be one of the places Vadim rented for business or pleasure, not for living in.'
+				'Noticing you''re spending too much time looking around and aren''t following him swiftly enough, he grabs you by your hair and pulls your face to his, roughly shoving his tongue in your mouth. You can smell the tabacco on his breath, and do your best to ignore the taste as he kisses you.'
+
 				act'Kiss him':gt 'BelSex', 'sex'
 			end
 		else
@@ -298,6 +302,7 @@ if npc_QW['A113'] = 1 and hour>=14 and hour<21 and daybelisex!daystart:
 		end
 	end
 end
+
 
 --- pavResidential ---------------------------------
 

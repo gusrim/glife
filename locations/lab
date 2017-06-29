@@ -18,7 +18,7 @@ if $ARGS[0] = 'start':
 	end
 	'<center><b><font color="maroon">Tatianas'' Laboratory</font></b></center>'
 	'<center><img <<$set_imgh>> src="images/locations/city/citycenter/lab/lab.jpg"></center>'
-
+    
 	if succubusflag = 1 and sucbypass = 0:
 		if sucpcinfo < 2:
 			xgt 'lab', 'suctraining'
@@ -53,7 +53,7 @@ if $ARGS[0] = 'start':
 		act 'Sparring (Gustav, mutant power 600)':
 			cla
 			judosparday = daystart
-			gs 'boyStat', 175
+			gs 'boyStat', 'A175'
 			!!stats
 			strenV = 600
 			speedV = 60
@@ -83,7 +83,7 @@ if $ARGS[0] = 'start':
 		act 'Sparring (Tatiana, magician6)':
 			cla
 			tatianasparday = daystart
-			gs 'boyStat', 176
+			gs 'boyStat', 'A176'
 			!!stats
 			strenV = 60
 			speedV = 100
@@ -107,6 +107,14 @@ if $ARGS[0] = 'start':
 			tatianaFight = 1
 			gt 'fight', 'start'
 		end
+	end
+	
+	!!!Has to be adjusted to match TatianaMissionQW value for latest mission (see 'tatiana_missions')
+	TatianaMissionTotal = 2
+	
+	if tobiQW > 0 and TatianaMissionDay + 30 < daystart and TatianaMissionQW < TatianaMissionTotal:
+		'You have a feeling Tatiana might want to talk to you about something...'
+		act 'Ask Tatiana what she wants':gt 'lab','missions'
 	end
 end
 
@@ -734,7 +742,7 @@ if $ARGS[0] = 'suctrainsex':
 		scpopt = 1
 		$sclocrt = 'lab'
 		$scargrt = 'Tatianasexreject'
-		'You only have moments to decide, do you give in and let <<sucself1>> go or do you reign it in?'
+		'You only have moments to decide, do you give in and let <<$sucself1>> go or do you reign it in?'
 		act 'Continue': gt 'succubus', 'tatianasex'
 	end
 end
@@ -853,16 +861,81 @@ end
 
 if $ARGS[0] = 'missions':
 	cls
+	temp = rand (1,3)
 	gs 'stat'
 	'<center><b><font color="maroon">Tatiana</font></b></center>'
 	'<center><img <<$set_imgh>> src="images/pre/shared/karinpre.jpg"></center>'
-	'"OK <<$pcs_firstname>>, here''s what I''ve got for you". Tatiana places some folders on her bench for you to look at.'
-	'You have a quick look through them and can choose for those you feel you can handle.'
+	if TatianaMissionQW = 0:
+		TatianaMissionQW = 1
+		TatianaMissionDay = daystart
+		minut += 15
+		*clr & cla
+		'Tatiana looks up from the pile of files she always seems to be sifting when she notices you. "<<$pcs_firstname>>, finally! I''ve been waiting for you. We need to talk."'
+		'"What about?"'
+		'"Well, you''ve had some time to acclimate yourself to your new situation and to process everything Reinhold and I told you, so," she smiles, "it''s time we started your actual training."'
+		'You feel a rush of excitement going through you, and images of shooting fireballs from your hands and parting the sea come before your inner eye. "Great!" You exclaim. "I''m so ready for that."'
+		'Tatiana probably guessed what you were thinking, because she chuckles and placates: "That doesn''t mean we''re gonna teach you super-powerful spells. At least not yet." She gives the words a moment to take effect; your enthusiasm for her plans, figuratively throbbing and erect a second ago, shrivels and goes limp by the time she continues. "This part of your training is the most important: You will actually put your skills, senses and knowledge into practice."'
+		'The last bit rouses your interest once more. "Into practice? You mean like doing missions for the council?"'
+		'"Well, the council''s kinda responsible for the big leagues, which is way more than you could handle yet. But long-term, yes." Her tone takes on a mocking quality. "Once Reinhold thinks you''re ready, I''m sure he''ll swoop in, take credit for all the progress you have made thanks to me and swamp you with dangerous adventures. That''d be just like the old bastard." Tatiana sees the uncertainty with which you look at her, grins and shakes her head, confirming that it was all in good humor.'
+		act 'What kind of missions?':
+			*clr & cla
+			'"So," you struggle to imagine what to expect, "what would these missions be like?"'
+			'"Nothing dangerous," Tatiana reassures you, "at least not while you are still learning the basics." She walks over to a pile of folders and holds one up. "It''d be more along the lines of finding out why somebody''s dog has two tails or," she holds up another folder, "investigating strange sounds people hear coming from their cellar."'
+			'You blankly stare at her for a few seconds, expecting Tatiana to chuckle and reveal her explanation as a joke once more, but she doesn''t. "That... sounds like-"'
+			'"Bullshit?" She offers helpfully.'
+			'"Conspiracy crap, ghost stories and all that," is what you choose to say instead.'
+			'Tatiana nods understandingly. "Yeah, it does. But remember, normal people don''t see magic for what it is."'
+			'"Right," you remember, "little green men and poltergeists."' 
+			'Tatiana smiles as you quote her and nods. "And some of those things really turn out to have magical causes: The dog with two tails had been experimented on by one of us, so it was practically bursting with magic. As for the voices..." her smile turns lewd, "those were just some tenants having some extramarital fun away from prying eyes, regularly and loudly."'
+			act 'Why are we doing this?':
+				*clr & cla
+				'You feel your face heating up slightly at the thought. Something about this is bothering you, though: "But... why would we even look into this? I mean, it sounds interesting enough, but is there a reason behind it?"'
+				'Tatiana shrugs. "Well, you <i>could</i> go and get some ancient tomes, lock yourself into an ivory tower and spend half a century or something reading about magic, like most of the old farts on the council do. <b>OR</b>," she spreads her arms to point towards her many files and books on one hand and the exit on the other, "you could just cover the basics and then go out and experience magic first-hand, like I do."'
+				'You stare at the heaps and piles of paper incredulously - they are a multiple of everything you''ve read in your entire life! "Those are the basics?!"'
+				'"Yep," she laughs, "if you wanna really understand how magic works and why it does this at one time and that at another, you gotta get some reading done. Trust me, if there was any way around it, I would have found it. But magic makes the reading easier and quicker, and it''s sooo worth it. The things you can do once you grasp what energies the universe holds are incredible. And I''ve only just scratched the surface."'
+				'"What do you mean by ''energies of the universe''? I thought you said that magic only exists in living things, like plants and animals."'
+				'"Did I?" She looks thoughtful but shrugs again. "Well, it''s a little complicated, but to put it simply: When scientists speak of ''dark matter'' and ''dark energy'', then, in reality, they are trying to explain the magic in this plane of existence and all the others, like demons and the magic that exists in their ''dimension'' or whatever you''d wanna call it. But," she waves her hand as if to shoo away a pesky fly, "you don''t have to concern yourself with that right now. When the time comes, Reinhold can explain it to you in more detail - hell, considering that he''s your mentor, I''ve done an awful lot of explaining already... Now, let''s go!"'
+				'With that, Tatiana turns towards the exit once more and beckons you to follow.'
+				'"Go where?" You ask.'
+				'"To the magic!" She answers cryptically.'
+				act 'Go to the magic (?)':gt 'tatiana_missions','intro'
+			end
+		end
+	elseif temp = 1:
+		!Text could use improvement, maybe mission specific text?
+		*clr & cla
+		'"Hey <<$pcs_firstname>>, are you up for a magical adventure?" Tatiana asks with a grin.'
+		act 'Always': gt 'tatiana_missions','start'
+		act 'Not right now':gt 'lab','start'
+	elseif temp = 2:
+		*clr & cla
+		'"Hello <<$pcs_nickname>>, glad you''re here." Tatiana smiles at you. "What do you say? Feel ready for a mission?"'
+		act 'Sure, let''s do this': gt 'tatiana_missions','start'
+		act 'Not right now':gt 'lab','start'
+	elseif temp = 3:
+		*clr & cla
+		'"Hello <<$pcs_nickname>>." Tatiana looks at you expectantly. "Would you like to do an investigation?"'
+		act 'Gladly': gt 'tatiana_missions','start'
+		act 'Not right now':gt 'lab','start'
+	end
 	
- if tatmissions = 5: gt 'tatiana_missons', 'special'
-	act 'Mission 1': gt 'tatiana_missons', '1'
+! if TatianaMissionQW = 5: gt 'tatiana_missions', 'special'
+!	act 'Mission 1': gt 'tatiana_missions', '1'
 !! etc. Maybe give them names so you know what you''re doing. Selecting them goes to in depth description and refuse/accept
+
+
+!!!Lore for possible consequences of exposing (many) normal people to powerful magic:
+!
+!		'Tatiana lays both folders back where they belong and her expression turns serious. "Remember how I told you that magic has a natural tendency to stay hidden? Well, there''s a limit to that tendency, a threshold beyond which either the magic cannot stay hidden anymore or at which the normal person cannot explain what they''re seeing with some non-magical phenomenon, we''re not sure which - in other words, humans have a breaking point, and when they are pushed beyond that, most of them realize how the world really is... and lose their minds."'
+!		'"Could that have happened to me?" You shiver at the thought.'
+!		'"Honestly, I have no idea," Tatiana admits, "but the power you have absorbed since then is huge, even if you can''t really use it to its full potential, and that may have very well driven most regular mages insane, so we''re moving in unknown territory here."'
+!		'You nod solemnly, suddenly very appreciative of the mental health and stability you always took for granted. "So, you investigate anything that might have magical causes to prevent people from going crazy?"'
+!		'"It''s even bigger than that, <<$pcs_firstname>>. We know that this threshold exists. Every mage witnesses it sooner or later." She stops, momentarily lost in thought, but quickly recovers. "We have a theory that, if too many people are exposed to too much magic at once, it might break the illusion for everybody; you know, like a nuclear bomb goes off when you reach a critical mass."'
+!		'"Which would then drive everybody insane," you conclude.'
+!		'"Maybe not everybody," she corrects, "but many of them. And those that wouldn''t go insane, well, who knows what they''d do? Go on witch hunts? Try to kill all succubi and fae? Attempt to harness the magic of the universe? It would destroy the world as we know it, that''s for sure."'
+!		'You agree with her - with how much had been flung at you when all this began, you were pretty close to hysteria too, if you''re completely honest with yourself.'
 end
+
 
 --- lab ---------------------------------
 

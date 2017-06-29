@@ -106,7 +106,8 @@ if $ARGS[0] = '':
 end
 
 if $ARGS[0] = 'School Chat':
-	cls
+	*clr
+	cla
 	numnpc = 3
 	minut += 5
 	gs'stat'
@@ -120,46 +121,78 @@ if $ARGS[0] = 'School Chat':
 	if npc_rel['A3'] >= 60 and npc_rel['A3'] < 80:'You and Ivan have a good relationship.'
 	if npc_rel['A3'] >= 80:'You and Ivan have a great relationship.'
 
-	if pav_slut <= 50 and IvanShowerQW = 1:
-		act 'Chat':gt 'nogorslut'
-	elseif IvanShowerQW = 11:
-		act 'Chat':
-			cla
-			if rand(0,4) = 0:
-				'You begin chatting with Ivan when he leans toward you then whispers in your ear. "Tell me you''re bored <<$pcs_nickname>>."'
-				act 'Go with him':gt 'gdksport', 'Ivan_bored'
+	act 'Chat':
+		cla
+		if $loc ! 'gdkin':
+			if pav_slut <= 50 and IvanShowerQW = 1:
+				gs 'nogorslut'
+
+				gs 'gschool_lessons', 'afternoon'
+			elseif IvanShowerQW = 11 and IvanShowerYes = 1:
+				if rand(0,4) = 0:
+					'You begin chatting with Ivan when he leans toward you then whispers in your ear. "Tell me you''re bored <<$pcs_nickname>>."'
+					act 'Go with him':gt 'gdksport', 'Ivan_bored'
+				else
+					act 'Tell Ivan you''re bored':gt 'gdksport', 'Ivan_bored'
+				end
+				gs 'gschool_lessons', 'afternoon'
+			elseif IvanShowerYes = 0 and IvanShowerQW = 11 and ShowerIvan < 3:
+				'When you''re about to head for your next class, Ivan suddenly stops you and asks: "<<$pcs_nickname>>, want to meet up with me in the showers after school?"'
+				act 'Agree':
+					IvanShowerYes = 1
+					cla
+					'You give him a cute wink and say: "Sounds like fun, I''ll see you there!"'
+					gs 'gschool_lessons', 'afternoon'
+				end
+				act 'Decline':
+					IvanShowerYes = 2
+					cla
+					'You give it some thought, but have to decline. You shake your head apologetically and say: "Sorry Ivan, I can''t make it today."'
+					gs 'gschool_lessons', 'afternoon'
+				end
+			else
+				gs 'nogorslut'
+				gs 'yesgorslut'
+
 				gs 'gschool_lessons', 'afternoon'
 			else
-				act 'Tell Ivan you''re bored':gt 'gdksport', 'Ivan_bored'
-			end
-		end
-	else
-		act 'Chat':
-			cls
-			npc_rel['A3'] += rand(5,10)
-			gs'stat'
-			if npc_rel['A3'] < 20:
-				'You speak to Ivan about a number of random experiences you had. Ivan listens to you with a moderate amount of interest.'
-			elseif npc_rel['A3'] < 80 and npc_rel['A3'] >= 20:
-				'You chat with Ivan, sharing multiple stories as Ivan happily listens and shares some thoughts on a number of them.'
-			elseif npc_rel['A3'] >= 80:
-				'You chat with Ivan, sharing multiple stories as Ivan happily listens while sharing several new stories of his own.'
-			end
-
-			act 'Go to class':gt 'gschool_lessons', 'class'
-
-			act 'Skip one of your classes':
-				cls
+				npc_rel['A3'] += rand(5,10)
 				gs'stat'
-				'<center><b><font color=#00eaff>School Hallway</font></b></center>'
-				'<center><img src="images/locations/pavlovsk/school/building/gschool_hall0<<Rand(0,2)>>.jpg"></center>'
-				'You don''t feel like attending all of your classes this morning. Surely no one will miss you if you skip one of your three morning classes.'
+				if npc_rel['A3'] < 20:
+					'You speak to Ivan about a number of random experiences you had. Ivan listens to you with a moderate amount of interest.'
+				elseif npc_rel['A3'] < 80 and npc_rel['A3'] >= 20:
+					'You chat with Ivan, sharing multiple stories as Ivan happily listens and shares some thoughts on a number of them.'
+				elseif npc_rel['A3'] >= 80:
+					'You chat with Ivan, sharing multiple stories as Ivan happily listens while sharing several new stories of his own.'
+				end
 
-				act 'Go to girl''s bathroom':gt 'gschool_bathrooms', 'girls bathroom'
+				act 'Go to class':gt 'gschool_lessons', 'class'
 
-				act 'Go to boy''s bathroom':gt 'gschool_bathrooms', 'boys bathroom'
+				act 'Skip one of your classes':
+					*clr
+					cla
+					gs'stat'
+					'<center><b><font color=#00eaff>School Hallway</font></b></center>'
+					'<center><img src="images/locations/pavlovsk/school/building/gschool_hall0<<Rand(0,2)>>.jpg"></center>'
+					'You don''t feel like attending all of your classes this morning. Surely no one will miss you if you skip one of your three morning classes.'
+
+					act 'Go to girl''s bathroom':gt 'gschool_girls_bathroom', 'start'
+
+					act 'Go to boy''s bathroom':gt 'gschool_boys_bathroom', 'start'
+				end
 			end
+		else
+			gs 'nogorslut'
+			gs 'yesgorslut'
+
+			act 'Move away':gt $loc, $metka
 		end
+	end
+
+	if $loc ! 'gdkin':
+		gs 'gschool_lessons', 'afternoon'
+	else
+		act 'Move away': gt $loc, $metka
 	end
 end
 

@@ -1,11 +1,11 @@
 # stat
 
-clr
-
 !!This is error catching to prevent stat from running too early
 if opPRE > 0: exit
 
 if Enable_Android = 0:
+	clr
+	!only clear status and renew object in non-Android mode
 	if oldobjmenu = 0:
 		gs 'obj_din', 'new'
 	else
@@ -80,34 +80,6 @@ if lern >= 10: intel_exp += 1 & lern = 0
 
 if pav_sex >= 25:KatjaKnowBJ = 1
 if pav_sex >= 50 or preg > 0:KatjaKnowSex = 1
-
-if film > 0:
- !pornoaktrissa
-	$kompromatFoto = 'The photo is a screenshot from one of your porn movies.'
-
-elseif fotoyousuck = 1:
-	!!sucked in a couple of guys and was sfotografirovanna
-	$kompromatFoto = 'The picture shows you sucking two cocks at the same time.'
-
-elseif fotoCFNMsex > 0:
-	$kompromatFoto = 'In the photo you see yourself getting fucked from behind by a random guy. This must have been taken in the stripclub.'
-
-elseif fotoCFNMblowjobCum > 0:
-	!!cum on face in the strip club
-	$kompromatFoto = 'In the photo you are sitting infront of a guy, kissing his cock. There seems to be cum on your face. This photo must have been taken in the stripclub.'
-
-elseif fotoCFNMblowjob > 0:
-	!!sucked in front of everyone
-	$kompromatFoto = 'In the photo you are giving a guy a blowjob. You can spot a group of women in the background and it seems like this photo was taken in the stripclub.'
-
-elseif stripdancesum > 0:
-	!!stripper
-	$kompromatFoto = 'In the photo you are dancing on a pole. Obviously someone photographed you, while you were on stage at the stripclub.'
-
-elseif modelfoto > 0:
-	!!photo model
-	$kompromatFoto = 'The photo shows you naked, it is very well taken and must be from a shoot at the modeling agency.'
-end
 
 shameless = guy + stat['bj'] + stat['anal'] + stat['hj'] + ((slutty + gang) * 2)
 moneySUM = money + karta + stolmoney
@@ -190,7 +162,6 @@ end
 
 if pcs_dom > 100: pcs_dom = 100
 if SUB > 100: SUB = 100
-if VAF > 200: VAF = 200
 
 if SUB >= pcs_dom and pcs_dom > 0:SUB = SUB - pcs_dom & pcs_dom = 0
 if pcs_dom >= SUB and SUB > 0:pcs_dom = pcs_dom - SUB & SUB = 0
@@ -228,7 +199,7 @@ if hypnoAddict = 1 and pcs_horny < 30:
 elseif hypnoAddict = 2 and pcs_horny < 50:
 	pcs_horny = 50
 end
-if spdirtyi = 1 or hypnoAddict = 0:missCum = 0
+if cumloc[0] = 1 or hypnoAddict = 0:missCum = 0
 if missCum >= timeTresh:
 	if pcs_horny < 90: pcs_horny = 90
 	if preziktype = 0: prezikcount = prezik
@@ -242,7 +213,7 @@ end
 !!!!!!!!!!!
 
 
-if nminut ! minut:
+if nminut ! minut or nhour ! hour:
 	! Zero totminut will be at New Years Eve of 2015
 
 	! Years since 2015 in days
@@ -271,6 +242,7 @@ if nminut ! minut:
 	totminut = totminut * 60 + minut + sec / 60
 
 	nminut = minut
+	nhour = hour
 end
 
 !!painkiller
@@ -305,6 +277,90 @@ end
 if orgasmic ! 0:
 	if orgasmic < totminut - 30: orgasmic = 0 & pcs_horny = 0
 end
+
+!!!!!!!!!!!!!!! Heels pain and skill gain
+!! This compares the player heels skill to the skill required to wear any heels the player 
+!! currently wears. If the skill needed is greater than the player currently possesses, 
+!! the pain in the feet increases and the player earns heels skill. If the skill required
+!! is lower, the player might still get experience, depending on how much much greater the
+!! player skill is.
+
+!! Variables
+!! pcs_heels is the main heels skill
+!! heels_exp is used when the player gains experience using heels
+!! heels_deg is used when the player neglects their heels
+!! PShoHeels tracks the height of the heels currently worn
+!! heelsminut tracks when the heels skill was last changed
+!! heelsRequiredskill substitutes PShoHeels to allow comparison with pcs_heels
+!! heelsSkilldiff tracks difference between the players current and skill required by heels
+
+!! Required skill for various heel sizes
+!! 1 flats - 0
+!! 2 low heel - 5
+!! 3 Mid heel - 15
+!! 4 High heel - 25
+!! 5 ultra high heel - 40
+!! 6 fetish heel - 60
+!! Only run if at least X minutes have passed since last time
+if totminut >= heelsminut + 120:
+	heelsminut = totminut
+	!! Only check experience and pain gain and if the player wears heels, flats give nothing
+	if PShoHeels > 1:
+		if PShoHeels = 2: 
+			heelsRequiredskill = 5
+		elseif PShoHeels = 3:
+			heelsRequiredskill = 15
+		elseif PShoHeels = 4:
+			heelsRequiredskill = 25
+		elseif PShoHeels = 5:
+			heelsRequiredskill = 40
+		elseif PShoHeels = 6:
+			heelsRequiredskill = 60
+		end
+		!! stat is called a lot, there should be a limit to how much exp and pain you can accumulate...
+		!! If the player skill is below the required skill, give heel_exp and apply ache
+		if pcs_heels < heelsRequiredskill:
+			heelsSkilldiff = heelsRequiredskill - pcs_heels
+			if heelsSkilldiff <= 5:
+				heels_exp += rand(3,6)
+				gs 'pain', rand(0,1), 'feet', 'ache'
+			elseif heelsSkilldiff <= 10:
+				heels_exp += rand(5,9)
+				gs 'pain', rand(0,2), 'feet', 'ache'
+			elseif heelsSkilldiff <= 15:
+				heels_exp += rand(7,12)
+				gs 'pain', rand(1,3), 'feet', 'ache'
+			elseif heelsSkilldiff <= 20:
+				heels_exp += rand(9,15)
+				gs 'pain', rand(2,4), 'feet', 'ache'
+			elseif heelsSkilldiff > 20:
+				heels_exp += rand(12,20)
+				gs 'pain', rand(3,5), 'feet', 'ache'
+			end
+		!! Player skill is equal to or higher than the required skill
+		!! Maybe have excessive skill result in no gain, or even a degrading skill?
+		else
+			heelsSkilldiff = pcs_heels - heelsRequiredskill
+			if heelsSkilldiff <= 5:
+				heels_exp += rand(3,6)
+			elseif heelsSkilldiff <= 10:
+				heels_exp += rand(2,4)
+			elseif heelsSkilldiff <= 15:
+				heels_exp += rand(1,2)
+			elseif heelsSkilldiff <= 20:
+				heels_exp += 0
+			elseif heelsSkilldiff > 20:
+				heels_deg -= rand(0,1)
+			end
+		end
+	!! If not wearing heels, degrade heels skill
+	else
+		heels_deg -= rand(0,1)
+	end
+!!Bimbo shoe check so bonus will be applied
+	if PShoBimbo = 1: bimbosh = 1
+end
+!!!!!!!!!!!!!!! End heels
 
 if sec >= 60:
 	:loopsec
@@ -632,16 +688,15 @@ else
 			! WD: Fixed Piecing arousal to trigger every 15 minutes, instead of once per day
 			if pcs_horny < 70:
 				hornystat = 0
-				if pirsF = 1:hornystat += 1
-				if pirsG = 1:hornystat += 1
-				if pirsGL = 1:hornystat += 1
+				if pirsF > 0 and pirsF < 10000:hornystat += 1
+				if pirsG > 0 and pirsG < 10000:hornystat += 1
 				hornyStat = hornystat * 4
-				if pirsA = 1:hornystat += 1
-				if pirsB = 1:hornystat += 1
-				if pirsC = 1:hornystat += 1
-				if pirsD = 1:hornystat += 1
-				if pirsE = 1:hornystat += 1
-				if pirsN = 1:hornystat += 1
+				if pirsA > 0 and pirsA < 10000:hornystat += 1
+				if pirsB > 0 and pirsB < 10000:hornystat += 1
+				if pirsC > 0 and pirsC < 10000:hornystat += 1
+				if pirsD > 0 and pirsD < 10000:hornystat += 1
+				if pirsE > 0 and pirsE < 10000:hornystat += 1
+				if pirsN > 0 and pirsN < 10000:hornystat += 1
 				set pcs_horny += hornyStat / 4 + rand(1,4) <= hornyStat mod 4 & ! Apply 1/4 of value on average
 			end
 
@@ -690,9 +745,14 @@ else
 						gs 'cum_cleanup', 'cleandeposit', suctemparr
 						cumloc[suctempi] = 0
 						spdirty = 0
-						spdirtyn = 0
-						spdirtyv = 0
-						spdirtyf = 0
+						cumloc[1] = 0
+						cumloc[2] = 0
+						cumloc[4] = 0
+						cumloc[5] = 0
+						cumloc[6] = 0
+						cumloc[7] = 0
+						cumloc[11] = 0
+						cumloc[14] = 0
 						!! debug code $stat_msg += '<BR>Absorb ext <<sexnutrition>>'
 					end
 				end

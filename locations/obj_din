@@ -368,8 +368,8 @@ if $ARGS[0] = 'stats_achievements':
 	if razradbegES > 0:pl '<<razradbegES>> runner up at European Championship'
 	if razradbegEG > 0:pl '<<razradbegEG>> times European champion.'
 	if razradbegIB > 0:pl '<<razradbegIB>> times bronze medalist at World Championship'
-	if razradbegIS > 0:pl '<<razradbegIB>> runner up at World Championship'
-	if razradbegIG > 0:pl '<<razradbegIB>> times World champion'
+	if razradbegIS > 0:pl '<<razradbegIS>> runner up at World Championship'
+	if razradbegIG > 0:pl '<<razradbegIG>> times World champion'
 	if razradbeg > 0:
 		if razradbeg = 1:pl 'You have third sports category for event'
 		if razradbeg = 2:pl 'You 2nd sports category for event'
@@ -452,7 +452,7 @@ if $ARGS[0] = 'stats_sex':
 	if stat['porn'] > 0:pl 'Times you have watched porn: <<stat[''porn'']>>'
 	if stat['flash_breasts'] > 0 or stat['hidden_flash_breasts'] > 0:pl 'Times you have flashed your tits (known/unknown): <<stat[''flash_breasts'']>>/<<stat[''hidden_flash_breasts'']>>'
 	if stat['flash_ass'] > 0 or stat['hidden_flash_ass'] > 0:pl 'Times you have flashed your ass (known/unknown): <<stat[''flash_ass'']>>/<<stat[''hidden_flash_ass'']>>'
-	if stat['flash_pussy'] > 0 or stat['hidden_flash_ass'] > 0:pl 'Times you have flashed your pussy (known/unknown): <<stat[''flash_pussy'']>>/<<stat[''hidden_flash_ass'']>>'
+	if stat['flash_pussy'] > 0 or stat['hidden_flash_pussy'] > 0:pl 'Times you have flashed your pussy (known/unknown): <<stat[''flash_pussy'']>>/<<stat[''hidden_flash_pussy'']>>'
 	if stat['voyeur'] > 0:pl 'Times you have watched other people fuck: <<stat[''voyeur'']>>'
 	if spank > 0:pl 'You have had your ass spanked <<spank>> times'
 	if guy > 0 and hidden_guy = 0:
@@ -531,7 +531,7 @@ if $ARGS[0] = 'stats_sex':
 	if stat['vaginal_vibe'] > 0:pl 'Clitoral / Vaginal vibrator: <<stat[''vaginal_vibe'']>>'
 	if stat['trib'] > 0:pl 'Tribalism: <<stat[''trib'']>>'
 	if stat['anal_finger'] > 0:pl 'Anally fingered: <<stat[''anal_finger'']>>'
-	if stat['anal_finger'] > 0:pl 'Anally fisted: <<stat[''anal_finger'']>>'
+	if stat['anal_fist'] > 0:pl 'Anally fisted: <<stat[''anal_fist'']>>'
 	if stat['rimming'] > 0:pl 'Ass rimmed: <<stat[''rimming'']>>'
 	if stat['anal_dildo'] > 0:pl 'Anal sex with a dildo: <<stat[''anal_dildo'']>>'
 	if stat['anal_strap'] > 0:pl 'Ass fucked with a strap-on: <<stat[''anal_strap'']>>'
@@ -565,12 +565,11 @@ if $ARGS[0] = 'stats_sex':
 	if swallow > 0:pl 'Sperm swallowed <<swallow>> times.'
 	if facial > 0:pl 'You have taken <<facial>> facials.'
 	if frot > 0 or hump > 0:pl 'Your clothes have been come on <<frot + hump>> times.'
-	if VAF > 0:pl 'Orgasmed while sucking cock <<VAF>> times.'
 	if zoo > 0:pl 'Had sex with animals <<zoo>> times.'
 	if pee > 0:pl 'You pissing <<pee>> times.'
 	if swallowpee > 0:pl 'You swallowed urine <<swallowpee>> times.'
 	!!!WD:FORMATING
-	if (slutty + pfilmSTOP + film + orgasm + analorgasm + swallow + facial + frot + VAF + zoo + pee) > 0:nl
+	if (slutty + pfilmSTOP + film + orgasm + analorgasm + swallow + facial + frot + zoo + pee) > 0:nl
 	!!!
 	
 	gs 'obj_din', 'husb_cheat_count'
@@ -874,7 +873,7 @@ if $ARGS[0] = 'magic':
 		pl'You are unable to use magic.'
 	elseif pcs_magik > 0:
 		pl'You have <<pcs_manna>> units of manna available to you.'
-		!' Forces Rikudo available to you <<rikudo>> units'
+		!!' Forces Rikudo available to you <<rikudo>> units'
 		nl
 		pl'<b>Base Spells:</b>'
 		nl
@@ -1319,6 +1318,8 @@ if $ARGS[0] = 'clothes':
 	clr
 	if defaultcoat = 0:
 		pl 'You have no default coat set.'
+
+		pl 'Your health will suffer if you don''t wear a coat in the winter.'
 	else
 		pl 'Your current default coat is Coat<<defaultcoat>>.'
 		!make sure to sync these with [outdoors]~364
@@ -1331,8 +1332,9 @@ if $ARGS[0] = 'clothes':
 		else
 			pl 'Your health will suffer if you don''t wear a coat in the winter.'
 		end
-		pl ''
 	end
+
+	pl ''
 
 	if $clothingworntype = 'nude' and towel = 1 and tanga = 0:
 		view 'images/pc/clothing/towel.jpg'
@@ -1370,6 +1372,18 @@ if $ARGS[0] = 'clothes':
 	end
 end
 
+if $ARGS[0] = 'shoes':
+	clr
+	if $clothingworntype = 'nude' or $shoeworntype = 'none':
+		view 'images/pc/body/feet.jpg'
+	else
+		view FUNC('$shoe_image', $shoeworntype, shoewornnumber)
+
+		pl 'You are wearing ' + FUNC('$shoe_description', $shoeworntype) + '<<shoewornnumber>>.'
+	end
+end
+		
+		
 if $ARGS[0] = 'body':
 !!	This displays the body image; $bodimgsets[x9] is the folder name
 	if salocatnow >= 1 and salocatnow <= 5:
@@ -1491,19 +1505,18 @@ if $ARGS[0] = 'piercing':
 	clr
 	if pirsA = 0 and pirsB = 0 and pirsC = 0 and pirsD = 0 and pirsE = 0 and pirsF = 0 and pirsN = 0 and pirsG = 0 and pirsGL = 0:
 		pl 'You have no piercings.'
-	elseif pirsA ! 1 and pirsB ! 1 and pirsC ! 1 and pirsD ! 1 and pirsE ! 1 and pirsF ! 1 and pirsN ! 1 and pirsG ! 1 and pirsGL ! 1:
+	elseif pirsA = 10000 and pirsB = 10000 and pirsC = 10000 and pirsD = 10000 and pirsE = 10000 and pirsF = 10000 and pirsN = 10000 and pirsG = 10000 and pirsGL = 10000:
 		pl 'You are not wearing any piercings'
+	else
+		if pirsA > 0 and pirsA < 10000:pl 'You are wearing a tongue piercing. <a href="exec:view ''images/pc/body/piercings/a<<pirsA>>.jpg''">See</a>'
+		if pirsB > 0 and pirsB < 10000:pl 'You are wearing a lip piercing. <a href="exec:view ''images/pc/body/piercings/b<<pirsB>>.jpg''">See</a>'
+		if pirsC > 0 and pirsC < 10000:pl 'You are wearing earrings. <a href="exec:view ''images/pc/body/piercings/c<<pirsC>>.jpg''">See</a>'
+		if pirsD > 0 and pirsD < 10000:pl 'You are wearing a nose ring. <a href="exec:view ''images/pc/body/piercings/d<<pirsD>>.jpg''">See</a>'
+		if pirsE > 0 and pirsE < 10000:pl 'You are wearing an eyebrow piercing. <a href="exec:view ''images/pc/body/piercings/e<<pirsE>>.jpg''">See</a>'
+		if pirsF > 0 and pirsF < 10000:pl 'You are wearing nipple piercings. <a href="exec:view ''images/pc/body/piercings/f<<pirsF>>.jpg''">See</a>'
+		if pirsN > 0 and pirsN < 10000:pl 'You are wearing a navel piercing. <a href="exec:view ''images/pc/body/piercings/n<<pirsN>>.jpg''">See</a>'
+		if pirsG > 0 and pirsG < 10000:pl 'You are wearing a pussy piercing. <a href="exec:view ''images/pc/body/piercings/g<<pirsG>>.jpg''">See</a>'
 	end
-	if pirsA = 1:pl 'Your tongue is pierced and inserted in it is a barbell that you constantly feel in the mouth. <a href="exec:view ''images/pc/body/piercings/a.jpg''">See</a>'
-	if pirsB = 1:pl 'Your lower lip is pierced, and ring is inserted. <a href="exec:view ''images/pc/body/piercings/b.jpg''">See</a>'
-	if pirsC = 1:pl 'On your ears hang earrings. <a href="exec:view ''images/pc/body/piercings/c.jpg''">See</a>'
-	if pirsD = 1:pl 'You have a small ring in the nose. <a href="exec:view ''images/pc/body/piercings/d.jpg''">See</a>'
-	if pirsE = 1:pl 'Barbell is inserted into your eyebrow. <a href="exec:view ''images/pc/body/piercings/e.jpg''">See</a>'
-	if pirsF = 1:pl 'You have pierced nipples with barbells inserted. <a href="exec:view ''images/pc/body/piercings/f.jpg''">See</a>'
-	if pirsN = 1:pl 'Your navel is pierced and barbell is inserted. <a href="exec:view ''images/pc/body/piercings/n.jpg''">See</a>'
-	if pirsG = 1 and pirsGL ! 1:pl 'Your labia are pierced and several rings hang from them. <a href="exec:view ''images/pc/body/piercings/g.jpg''">See</a>'
-	if pirsG ! 1 and pirsGL = 1:pl 'Your clitoris is pierced and barbell is inserted through it.<a href="exec:view ''images/pc/body/piercings/cli.jpg''">See</a>'
-	if pirsG = 1 and pirsGL = 1:pl 'Your clitoris and labia are pierced, there is barbell inserted in your clit and rings hanging from your labia.<a href="exec:view ''images/pc/body/piercings/cligub.jpg''">See</a>'
 end
 
 if $ARGS[0] = 'records':
@@ -1561,12 +1574,23 @@ if $ARGS[0] = 'records':
 	nl
 	if $bfsex > 0:pl'<<$bfsex>>'
 	nl
-	if bfA > 1:pl'Your guy <<$boydescA>> <<$boybodyA>> <<$boybodA>> <<$boyfaceA>>.<<$boydescA>> <<$boyCloA>> Relationship <<bfA>>, met <<dayA>> time.'
-	if harakBoyA = 0 and bfA > 1:pl'He''s calm and self-possessed character.'
-	if harakBoyA = 1 and bfA > 1:pl'He has a cheerful and sociable character.'
-	if harakBoyA = 2 and bfA > 1:pl'He''s short-tempered and rigid.'
-	if bfB > 1:pl'Your guy <<$boydescB>> <<$boybodyB>> <<$boybodB>> <<$boyfaceB>>.<<$boydescB>> <<$boyCloB>> Relationship <<bfB>>, met <<dayB>> time.'
-	if bfC > 1:pl'Your guy <<$boydescC>> <<$boybodyC>> <<$boybodC>> <<$boyfaceC>>.<<$boydescC>> <<$boyCloC>> Relationship <<bfC>>, met <<dayC>> time.'
+	if pcs_lovers[1] = 1:pl'Your guy <<$loverdesc[1]>> <<$loverbody[1]>> <<$loverbod[1]>> <<$loverface[1]>>.<<$loverdesc[1]>> <<$loverClo[1]>> Relationship <<loverrelation[1]>>, met <<loversdays[1]>> time.'
+	if haraklover[1] = 0 and loverrelation[1] > 1:pl'He''s calm and self-possessed character.'
+	if haraklover[1] = 1 and loverrelation[1] > 1:pl'He has a cheerful and sociable character.'
+	if haraklover[1] = 2 and loverrelation[1] > 1:pl'He''s short-tempered and rigid.'
+	nl
+	if pcs_lovers[2] = 1:pl'Your guy <<$loverdesc[2]>> <<$loverbody[2]>> <<$loverbod[2]>> <<$loverface[2]>>.<<$loverdesc[2]>> <<$loverClo[2]>> Relationship <<loverrelation[2]>>, met <<loversdays[2]>> time.'
+	if haraklover[2] = 0 and loverrelation[2] > 1:pl'He''s calm and self-possessed character.'
+	if haraklover[2] = 1 and loverrelation[2] > 1:pl'He has a cheerful and sociable character.'
+	if haraklover[2] = 2 and loverrelation[2] > 1:pl'He''s short-tempered and rigid.'
+	nl
+	if pcs_lovers[3] = 1:pl'Your guy <<$loverdesc[3]>> <<$loverbody[3]>> <<$loverbod[3]>> <<$loverface[3]>>.<<$loverdesc[3]>> <<$loverClo[3]>> Relationship <<loverrelation[3]>>, met <<loversdays[3]>> time.'
+
+	if haraklover[3] = 0 and loverrelation[3] > 1:pl'He''s calm and self-possessed character.'
+	if haraklover[3] = 1 and loverrelation[3] > 1:pl'He has a cheerful and sociable character.'
+	if haraklover[3] = 2 and loverrelation[3] > 1:pl'He''s short-tempered and rigid.'
+
+
 	nl
 	gs'Menu.Create','zapisMenu'
 	gs'Menu.Add','zapisMenu','Recording from avtodatoy','','MenuLoc','zapisosn'
@@ -1648,10 +1672,13 @@ if $ARGS[0] = 'old':
 	addobj '<font color = green>Character</font>'
 	addobj 'Skills'
 	addobj 'Statistics'
+	addobj 'Pain'
+	addobj 'Fame'
 	if pcs_magik > 0:addobj 'Magic'
 	addobj 'Face'
 	addobj 'Body'
 	addobj 'Clothing'
+	addobj 'Shoes'
 	addobj 'Tattoos'
 	addobj 'Piercing'
 	addobj 'Phone'
@@ -1688,6 +1715,5 @@ if $ARGS[0] = 'autosave':
 	end
 	gs'stat'
 end
-
 --- obj_din ---------------------------------
 

@@ -6,7 +6,11 @@
 !!$brit = shaving dynamic
 
 $showerdin = {
-	cumspclnt = 1
+	if hypnoAddict = 0:
+		cumspclnt = 1
+	else
+		cumspclnt = 18
+	end
 	gs 'cum_cleanup'
 	pcs_hairbsh = 0
 	pcs_makeup = 1
@@ -227,7 +231,7 @@ $bath = {
 		end
 
 		if pcs_horny >= 50:
-			act 'Masturbate':gt 'selfplay'
+			act 'Masturbate':gt 'selfplay', 'start'
 		end
 
 		dynamic $brit
@@ -239,7 +243,7 @@ $brit = {
 	'Your razor blade looks in good enough shape for <b><<stanok>></b> more shaves.'
 
 
-	if (pcs_leghair > 3 or pcs_pubes > 3) and stanok > 1:
+	if pcs_leghair > 3 and pcs_pubes > 3 and stanok > 1:
 		act 'Shave your legs and pussy (0:15)':
 			cla
 			*clr
@@ -277,10 +281,10 @@ $brit = {
 	
 	
 	if pcs_leghair > 3 and stanok > 0:
-		act 'Shave your legs (0:15)':
+		act 'Shave your legs (0:10)':
 			cla
 			*clr
-			minut += 15
+			minut += 10
 			pcs_leghair = 0
 			pcs_horny += 5
 			stanok -= 1
@@ -301,10 +305,10 @@ $brit = {
 	end
 
 	if pcs_pubes > 3 and stanok > 0:
-		act 'Shave your pussy (0:15)':
+		act 'Shave your pussy (0:10)':
 			cla
 			*clr
-			minut += 15
+			minut += 10
 			pcs_pubes = 0
 			pcs_horny += 5
 			stanok -= 1
@@ -405,7 +409,7 @@ if tanga = 0 and clrbelo > 0:
 end
 }
 
-$basin = {
+$removepan = {
 
 	if tanga = 1:
 		act 'Remove Underwear':
@@ -415,8 +419,13 @@ $basin = {
 			gt $locM, $metkaM
 		end
 	end
+}
 
-	if spdirtyv > 0 or spdirtyb > 0:
+$basin = {
+
+	dynamic $removepan
+
+	if cumloc[11] = 1 or cumloc[12] = 1:
 		act 'Clean the sperm from your face (0:10)':
 			cla
 			*clr
@@ -469,125 +478,151 @@ $basin = {
 	end
 }
 
+$pirTongue = {
+	cla
+	*clr
+
+	i = 1
+	:looptongue_pir
+		if dyneval('RESULT = PirsA<<i>>_owned') = 1:*p '<a href="exec:pirsA = <<i>> & pierWearCount += 1 & dynamic $pirManage"><img src="images/pc/body/piercings/a<<i>>.jpg" 	height="250" ></a>'
+		i += 1
+	if i <= 3:jump 'looptongue_pir'
+}
+
+$pirLip = {
+	cla
+	*clr
+
+	i = 1
+	:looplip_pir
+		if dyneval('RESULT = PirsB<<i>>_owned') = 1:*p '<a href="exec:pirsB = <<i>> & pierWearCount += 1 & dynamic $pirManage"><img src="images/pc/body/piercings/b<<i>>.jpg" 	height="250" ></a>'
+		i += 1
+	if i <= 1:jump 'looplip_pir'
+}
+
+$pirEars = {
+	cla
+	*clr
+
+	i = 1
+	:loopears_pir
+		if dyneval('RESULT = PirsC<<i>>_owned') = 1:*p '<a href="exec:pirsC = <<i>> & pierWearCount += 1 & dynamic $pirManage"><img src="images/pc/body/piercings/c<<i>>.jpg" 	height="250" ></a>'
+		i += 1
+	if i <= 15:jump 'loopears_pir'
+}
+
+$pirNose = {
+	cla
+	*clr
+
+	i = 1
+	:loopnose_pir
+		if dyneval('RESULT = PirsD<<i>>_owned') = 1:*p '<a href="exec:pirsD = <<i>> & pierWearCount += 1 & dynamic $pirManage"><img src="images/pc/body/piercings/d<<i>>.jpg" 	height="250" ></a>'
+		i += 1
+	if i <= 7:jump 'loopnose_pir'
+}
+
+$pirBrow = {
+	cla
+	*clr
+
+	i = 1
+	:loopbrow_pir
+		if dyneval('RESULT = PirsE<<i>>_owned') = 1:*p '<a href="exec:pirsE = <<i>> & pierWearCount += 1 & dynamic $pirManage"><img src="images/pc/body/piercings/e<<i>>.jpg" 	height="250" ></a>'
+		i += 1
+	if i <= 2:jump 'loopbrow_pir'
+}
+
+$pirNips = {
+	cla
+	*clr
+
+	i = 1
+	:loopnipple_pir
+		if dyneval('RESULT = PirsF<<i>>_owned') = 1:*p '<a href="exec:pirsF = <<i>> & pierWearCount += 1 & dynamic $pirManage"><img src="images/pc/body/piercings/f<<i>>.jpg" 	height="250" ></a>'
+		i += 1
+	if i <= 2:jump 'loopnipple_pir'
+}
+
+$pirNavel = {
+	cla
+	*clr
+
+	i = 1
+	:loopnavel_pir
+		if dyneval('RESULT = PirsN<<i>>_owned') = 1:*p '<a href="exec:pirsN = <<i>> & pierWearCount += 1 & dynamic $pirManage"><img src="images/pc/body/piercings/n<<i>>.jpg" 	height="250" ></a>'
+		i += 1
+	if i <= 1:jump 'loopnavel_pir'
+}
+
+$pirPubic = {
+	cla
+	*clr
+
+	i = 1
+	:looppubic_pir
+		if dyneval('RESULT = PirsG<<i>>_owned') = 1:*p '<a href="exec:pirsG = <<i>> & pierWearCount += 1 & dynamic $pirManage"><img src="images/pc/body/piercings/g<<i>>.jpg" 	height="250" ></a>'
+		i += 1
+	if i <= 4:jump 'looppubic_pir'
+}
+
 $pirManage = {
 	cls
-	cla
     *nl
     if pirsA > 0:
-        if pirsA = 1:
-            '<a href="exec:pirsA = 2 & dynamic $pirManage">Remove tongue barbell</a>.'
-			if pirsA = 2:
-				pierWearCount -= 1
-			end
+        if pirsA < 10000:
+            '<a href="exec:pirsA = 10000 & pierWearCount -= 1 & dynamic $pirManage">Remove tongue piercing</a>.'
 		else
-            '<a href="exec:pirsA = 1 & dynamic $pirManage">Insert tongue barbell</a>.'
-			if pirsA = 1:
-				pierWearCount += 1
-			end
+            '<a href="exec:dynamic $pirTongue">Insert tongue piercing</a>.'
         end
     end
     if pirsB > 0:
-        if pirsB = 1:
-            '<a href="exec:pirsB = 2 & dynamic $pirManage">Remove lip ring</a>.'
-			if pirsB = 2:
-				pierWearCount -= 1
-			end
+        if pirsB < 10000:
+            '<a href="exec:pirsB = 10000 & pierWearCount -= 1 & dynamic $pirManage">Remove lip piercing</a>.'
 		else
-            '<a href="exec:pirsB = 1 & dynamic $pirManage">Insert lip ring</a>.'
-			if pirsB = 1:
-				pierWearCount += 1
-			end
+            '<a href="exec:dynamic $pirLip">Insert lip piercing</a>.'
         end
     end
     if pirsC > 0:
-        if pirsC = 1:
-            '<a href="exec:pirsC = 2 & dynamic $pirManage">Remove ear piercings</a>.'
-			if pirsC = 2:
-				pierWearCount -= 1
-			end
+        if pirsC < 10000:
+            '<a href="exec:pirsC = 10000 & pierWearCount -= 1 & dynamic $pirManage">Remove ear piercings</a>.'
 		else
-            '<a href="exec:pirsC = 1 & dynamic $pirManage">Insert ear piercings</a>.'
-			if pirsC = 1:
-				pierWearCount += 1
-			end
+            '<a href="exec:dynamic $pirEars">Insert ear piercings</a>.'
         end
     end
     if pirsD > 0:
-        if pirsD = 1:
-            '<a href="exec:pirsD = 2 & dynamic $pirManage">Remove nose ring</a>.'
-			if pirsD = 2:
-				pierWearCount -= 1
-			end
+        if pirsD < 10000:
+            '<a href="exec:pirsD = 10000 & pierWearCount -= 1 & dynamic $pirManage">Remove nose piercing</a>.'
 		else
-            '<a href="exec:pirsD = 1 & dynamic $pirManage">Insert nose ring</a>.'
-			if pirsD = 1:
-				pierWearCount += 1
-			end
+            '<a href="exec:dynamic $pirNose">Insert nose piercing</a>.'
         end
     end
     if pirsE > 0:
-        if pirsE = 1:
-            '<a href="exec:pirsE = 2 & dynamic $pirManage">Remove eyebrow stud</a>.'
-			if pirsE = 2:
-				pierWearCount -= 1
-			end
+        if pirsE < 10000:
+            '<a href="exec:pirsE = 10000 & pierWearCount -= 1 & dynamic $pirManage">Remove eyebrow piercing</a>.'
 		else
-            '<a href="exec:pirsE = 1 & dynamic $pirManage">Insert eyebrow stud</a>.'
-			if pirsE = 1:
-				pierWearCount += 1
-			end
+            '<a href="exec:dynamic $pirBrow">Insert eyebrow piercing</a>.'
         end
     end
     if pirsF > 0:
-        if pirsF = 1:
-            '<a href="exec:pirsF = 2 & dynamic $pirManage">Remove nipple piercings</a>.'
-			if pirsF = 2:
-				pierWearCount -= 1
-			end
+        if pirsF < 10000:
+            '<a href="exec:pirsF = 10000 & pierWearCount -= 1 & dynamic $pirManage">Remove nipple piercings</a>.'
 		else
-            '<a href="exec:pirsF = 1 & dynamic $pirManage">Insert nipple piercings</a>.'
-			if pirsF = 1:
-				pierWearCount += 1
-			end
+            '<a href="exec:dynamic $pirNips">Insert nipple piercings</a>.'
         end
     end
     if pirsN > 0:
-        if pirsN = 1:
-            '<a href="exec:pirsN = 2 & dynamic $pirManage">Remove navel piercing</a>.'
-			if pirsN = 2:
-				pierWearCount -= 1
-			end
+        if pirsN < 10000:
+            '<a href="exec:pirsN = 10000 & pierWearCount -= 1 & dynamic $pirManage">Remove navel piercing</a>.'
 		else
-            '<a href="exec:pirsN = 1 & dynamic $pirManage">Insert navel piercing</a>.'
-			if pirsN = 1:
-				pierWearCount += 1
-			end
+            '<a href="exec:dynamic $pirNavel">Insert navel piercing</a>.'
         end
     end
     if pirsG > 0:
-        if pirsG = 1:
-            '<a href="exec:pirsG = 2 & dynamic $pirManage">Remove labia piercings</a>.'
-			if pirsG = 2:
-				pierWearCount -= 1
-			end
+        if pirsG < 10000:
+            '<a href="exec:pirsG = 10000 & pierWearCount -= 1 & dynamic $pirManage">Remove pussy piercings</a>.'
 		else
-            '<a href="exec:pirsG = 1 & dynamic $pirManage">Insert labia piercings</a>.'
-			if pirsG = 1:
-				pierWearCount += 1
-			end
-        end
-    end
-    if pirsGL > 0:
-        if pirsGL = 1:
-            '<a href="exec:pirsGL = 2 & dynamic $pirManage">Remove clit piercing</a>.'
-			if pirsGL = 2:
-				pierWearCount -= 1
-			end
-		else
-            '<a href="exec:pirsGL = 1 & dynamic $pirManage">Insert clit piercing</a>.'
-			if pirsGL = 1:
-				pierWearCount += 1
-			end
+            '<a href="exec:dynamic $pirPubic">Insert pussy piercings</a>.'
         end
     end
     
@@ -672,7 +707,7 @@ if $ARGS[0] = 'private':
     if fillimplant = 1 and siliconeBag >= 1:'<a href="exec:cls & siliconeBag -= 1 & silicone += 10 & gt $locM, $metkaM">Inject silicone into breast implants</a>'
     if fillimplant = 1 and silicone >= 20:'<a href="exec:cls & silicone -= 10 & gt $locM, $metkaM">Drain silicone from breast implants</a>'
 
-    if breastpump > 0:'<a href="exec:dynamic $milk_me">Use breast pump</a></center>'
+    if breastpump > 0:'<a href="exec:gt ''shortgs'', ''milk_me''">Use breast pump</a></center>'
 
     dynamic $bteeth
 
@@ -694,7 +729,7 @@ if $ARGS[0] = 'private':
         dirtbelo = 0
     end
 
-    if spdirtyc > 0:
+    if (cumloc[6] = 1 or cumloc[7] = 1):
         act 'Wipe the cum off your clothes (0:10)':
             cla
             *clr
@@ -710,7 +745,7 @@ if $ARGS[0] = 'private':
         end
     end
 
-	if (pcs_leghair > 3 or pcs_pubes > 3) and stanok > 1:
+	if pcs_leghair > 3 and pcs_pubes > 3 and stanok > 1:
 		act 'Shave your legs and pussy (0:15)':
 			cla
 			*clr
@@ -737,10 +772,10 @@ if $ARGS[0] = 'private':
 	end
 
     if pcs_leghair > 3 and stanok > 0:
-        act 'Shave your legs (0:15)':
+        act 'Shave your legs (0:10)':
             cla
             *clr
-            minut += 15
+            minut += 10
             pcs_leghair = 0
             pcs_horny += 5
             stanok -= 1
@@ -753,10 +788,10 @@ if $ARGS[0] = 'private':
     end
 
     if pcs_pubes > 3 and stanok > 0:
-        act 'Shave your pussy (0:15)':
+        act 'Shave your pussy (0:10)':
             cla
             *clr
-            minut += 15
+            minut += 10
             pcs_pubes = 0
             pcs_horny += 5
             stanok -= 1

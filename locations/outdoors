@@ -121,40 +121,40 @@ if $ARGS[0] = 'weather':
 
 		jump 'WTHR_<<month>>'
 		:WTHR_1
-			$weather = '<b>On the street there is snow, the temperature is <<$temperature>> degrees Celsius.<br>  <<$osadki>></b>'
+			$weather = '<<$osadki>> The temperature is <<$temperature>>.<br>There is snow on the street.'
 			jump 'WTHR_x'
 		:WTHR_2
-			$weather = '<b>On the street there is snow, the temperature is <<$temperature>> degrees Celsius.<br>  <<$osadki>></b>'
+			$weather = '<<$osadki>> The temperature is <<$temperature>>.<br>There is snow on the street.'
 			jump 'WTHR_x'
 		:WTHR_3
-			$weather = '<b>On the street there is snow, the temperature is <<$temperature>> degrees Celsius.<br>  <<$osadki>></b>'
+			$weather = '<<$osadki>> The temperature is <<$temperature>>.<br>There is snow on the street.'
 			jump 'WTHR_x'
 		:WTHR_4
-			$weather = '<b>On the street the snow melts, the temperature is <<$temperature>> degrees Celsius.<br>  <<$osadki>></b>'
+			$weather = '<<$osadki>> The temperature is <<$temperature>>.<br>The snow melts on the street.'
 			jump 'WTHR_x'
 		:WTHR_5
-			$weather = '<b>Puddles in the street left by snow, winter has covered everything in dirt and debris, some places where new grass grows are pleasantly green, the temperature is <<$temperature>> degrees Celsius.<br>  <<$osadki>></b>'
+			$weather = '<<$osadki>> The temperature is <<$temperature>>.<br>Puddles in the street left by snow, winter has covered everything in dirt and debris, some places where new grass grows are pleasantly green.'
 			jump 'WTHR_x'
 		:WTHR_6
-			$weather = '<b>Green grass lines the streets, the temperature is <<$temperature>> degrees Celsius.<br>  <<$osadki>></b>'
+			$weather = '<<$osadki>> The temperature is <<$temperature>>.<br>Green grass lines the streets.'
 			jump 'WTHR_x'
 		:WTHR_7
-			$weather = '<b>Green grass lines the streets, the temperature is <<$temperature>> degrees Celsius.<br>  <<$osadki>></b>'
+			$weather = '<<$osadki>> The temperature is <<$temperature>>.<br>Green grass lines the streets.'
 			jump 'WTHR_x'
 		:WTHR_8
-			$weather = '<b>The grass is green, in the trees the leaves are already turning yellow, the temperature is <<$temperature>> degrees Celsius.<br>  <<$osadki>></b>'
+			$weather = '<<$osadki>> The temperature is <<$temperature>>.<br>The grass is green, the leaves in the trees are already turning yellow.'
 			jump 'WTHR_x'
 		:WTHR_9
-			$weather = '<b>Streets lined with green grass, visible yellow leaves, the temperature is <<$temperature>> degrees Celsius.<br>  <<$osadki>></b>'
+			$weather = '<<$osadki>> The temperature is <<$temperature>>.<br>Streets lined with green grass, visible yellow leaves.'
 			jump 'WTHR_x'
 		:WTHR_10
-			$weather = '<b>The grass is fading and patchy, yellow and brown leaves fall from the trees, mud and puddles dot the street, temperature is <<$temperature>> degrees Celsius.<br>  <<$osadki>></b>'
+			$weather = '<<$osadki>> Temperature is <<$temperature>>.<br>The grass is fading and patchy, yellow and brown leaves fall from the trees, mud and puddles dot the street.'
 			jump 'WTHR_x'
 		:WTHR_11
-			$weather = '<b>The street is dirty with a thin snow cover, temperature is <<$temperature>> degrees Celsius.<br>  <<$osadki>></b>'
+			$weather = '<<$osadki>> Temperature is <<$temperature>>.<br>The street is dirty with a thin snow cover.'
 			jump 'WTHR_x'
 		:WTHR_12
-			$weather = '<b>The street is covered in snow, the temperature is <<$temperature>> degrees Celsius.<br>  <<$osadki>></b>'
+			$weather = '<<$osadki>> The temperature is <<$temperature>>.<br>The street is covered in snow.'
 			jump 'WTHR_x'
 		:WTHR_x
 	end	
@@ -162,14 +162,15 @@ end
 
 if $ARGS[0] = 'temp_set':
 	if temper < 0:
-		$temperature = '<font color=blue><<temper>></font>'
+		$temperature = '<font color=blue>'
 	elseif temper < 10:
-		$temperature = '<font color=green><<temper>></font>'
+		$temperature = '<font color=green>'
 	elseif temper < 20:
-		$temperature = '<font color=orange><<temper>></font>'
+		$temperature = '<font color=orange>'
 	else
-		$temperature = '<font color=red><<temper>></font>'
+		$temperature = '<font color=red>'
 	end
+	if TempUnit=0:$temperature +='<<temper>>°C</font>' else $temperature +='<<temper*9/5+32>>°F</font>'
 end
 
 if $ARGS[0] = 'main':
@@ -239,7 +240,7 @@ if $ARGS[0] = 'main':
 
 !	*pl '    DayInYear=<<DayInYear>> DayLength=<<DayLength>>  CurTimeSun=<<CurTimeSun>>  DayStage=<<DayStage>>'
 
-	$weatherImage = '<img src="images/system/weather/WTHR'
+	$weatherImage = '<img src="images/system/weather/wthr'
 	$weatherImage = $weatherImage + '<<DayStage>>'
 	if temper < -10 : 
 		$weatherImage += '1'
@@ -275,11 +276,14 @@ if $ARGS[0] = 'main':
 		bcolor = rgb(0, 0, 0)
 	else
 		if (DayStage = 1) or (DayStage = 6) :
-			bcolor = rgb(BColorBase/2+BColorBase/4, BColorBase/2+BColorBase/4, BColorBase)
+			bcolor = rgb(BColorBase-BColorBase/4, BColorBase-BColorBase/4, BColorBase)
+			lcolor = rgb(206, 90, 205)
 		elseif (DayStage = 3) or (DayStage = 4) :
-			bcolor = rgb(BColorBase, BColorBase/2+BColorBase/4, BColorBase/2+BColorBase/4)
+			bcolor = rgb(BColorBase, BColorBase-BColorBase/4, BColorBase-BColorBase/4)
+			lcolor = rgb(56, 90, 205)
 		else
 			bcolor = rgb(BColorBase, BColorBase, BColorBase)
+			lcolor = rgb(106, 90, 205)
 		end
 		
 		if BColorBase <= 160 :
@@ -287,7 +291,6 @@ if $ARGS[0] = 'main':
 		else
 			fcolor = rgb(0, 0, 0)
 		end
-		lcolor = rgb(106, 90, 205)
 	end
 
 	if $location_type = 'public_outdoors' or $location_type = 'secluded' or $location_type = 'event_outdoors':
@@ -315,11 +318,22 @@ if $ARGS[0] = 'main':
 				! begin Loop
 				:Time15MinuteLoop
 
-				if defaultcoat = 5:bonusZ = -3
-				if defaultcoat = 0:bonusZ = 0
-				if defaultcoat = 3 or defaultcoat = 9 or defaultcoat = 11 or defaultcoat = 12 or defaultcoat = 15 or defaultcoat = 18:bonusZ = 3
+				if defaultcoat = 5:
+					bonusZ = -3
+				elseif defaultcoat = 0:
+					bonusZ = 0
+				else
+					bonusZ = 3
+				end
 
-				if temper < -10 and defaultcoat < 4 and defaultcoat ! 0:
+				if defaultcoat = 0:
+					if temper < 0:frost += 1
+					if temper < -20:frost += 2
+					if temper < -30:frost += 5
+					if pcs_energy < 20:frost += 1
+					if tanga = 0:frost += 1
+					if pcs_sweat > 20:frost += 1
+				elseif temper < -10 and defaultcoat < 4:
 					if temper < -30:
 						frost += 2
 					else
@@ -336,14 +350,7 @@ if $ARGS[0] = 'main':
 					frost += 1
 				end
 
-				if defaultcoat = 0:
-					if temper < -10:frost += 1
-					if temper < -20:frost += 2
-					if temper < -30:frost += 5
-				end
-
-				if frost >= 12:sick += 1
-				if sick > 0 and sickstage = 0:sickstage = 1
+				if frost >= 12:sickstage = 1
 
 				Time15Minute += 15
 

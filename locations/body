@@ -231,46 +231,6 @@ end
 
 !!! Maruda Hair Mod
 
-$milk_me = {
-	cla
-	*clr
-	minut += 15
-        
-	if $location_type ! 'bathroom':
-		'You can''t use it here.'
-	elseif lactatemv > 0 and pain['nipples'] < 60:
-		'<center><img <<$set_imgh>> src="images/pc/body/tits/pump_lactating.jpg"></center>'
-		'You attach the pump to your breast and start rythmically squeezing the bulb until your breasts feel empty.<br>You give it a few more pumps and detach the pump.<br>You filled the bottle with <<lactatemv>>ml of your milk.'
-		breastcounter += 1
-		lactatemv = 0
-		if breastpumped = 1:pain['nipples'] += 10 & 'Your nipples are feeling sore.'
-		breastpumped = 1
-		temp = rand(0,1)
-		if bcream_used = 1:temp += 1
-		pcs_nips += temp
-            
-	elseif lactate = 0 and pain['nipples'] < 60:
-		if rand(1,100) + breastcounter >= rand(100,200):
-			'<center><img <<$set_imgh>> src="images/pc/body/tits/lactate_start.jpg"></center>'
-			'As usual, you attach the pump but after a few pumps white liquid suddenly starts spurting from your nipples.<br>You started lactating!'
-			lactate = 1
-			lactatemv = 0
-			lactatemm = 10
-		else
-			'You attach the pump to your nipples and start squeezing the bulb. The vacuum feels good on your nipples.<br>A few droplets of liquid come out of your nipples but it is not milk.'
-			breastcounter += 1
-			if breastpumped = 1:pain['nipples'] += 10 & 'Your nipples are feeling sore.'
-			breastpumped = 1
-			temp = rand(0,1)
-			if bcream_used = 1:temp += 1
-			pcs_nips += temp
-		end
-	else
-		'Your nipples feel too sore to use the pump right now.'
-	end
-	act 'Finish':gt $locM, $metkaM
-}
-
 !! Appearance factors and calculations
 
 if pcs_lip > 4:pcs_lip = 4
@@ -286,9 +246,9 @@ else
 	$pcs_lipbalm = ''
 end
 
-if pirsA = 1:$pirsA = 'When you are talking to people, they can get a glimpse of your tongue piercing.'
+if pirsA > 0 and pirsA < 10000:$pirsA = 'When you are talking to people, they can get a glimpse of your tongue piercing.'
 if pirsA ! 1:$pirsA = ''
-if pirsB = 1:$pirsB = 'You lower lip is pierced with a ring.'
+if pirsB > 0 and pirsB < 10000:$pirsB = 'You lip is pierced.'
 if pirsB ! 1:$pirsB = ''
 if pcs_lip = 0:$lip = 'You have thin<<$pcs_lipbalm>> lips. <<$pirsB>> <<$pirsA>>' & $liptalk = 'thin lips' & $liptalk2 = 'thin lips' & $liptalk3 = 'thin lips' & $lip1 = 'thin'
 if pcs_lip = 1:$lip = 'You have normal<<$pcs_lipbalm>> lips. <<$pirsB>> <<$pirsA>>' & $liptalk = 'soft lips' & $liptalk2 = 'soft lips' & $liptalk3 = 'soft lips' & $lip1 = 'normal'
@@ -297,11 +257,11 @@ if pcs_lip = 3:$lip = 'You have big, pouting,<<$pcs_lipbalm>> full lips. <<$pirs
 if pcs_lip = 4:$lip = 'You have thick<<$pcs_lipbalm>> lips. <<$pirsB>> <<$pirsA>>' & $liptalk = 'thick lips' & $liptalk2 = 'her thick lips' & $liptalk3 = 'thick lips' & $lip1 = 'large thick'
 if pcs_tan <= 0:$pcs_tan = 'pale'
 if pcs_tan > 0:$pcs_tan = 'tanned'
-if pirsC = 1:$pirsC = 'Your ears are pierced and you are wearing earrings.'
+if pirsC > 0 and pirsC < 10000:$pirsC = 'You are wearing earrings.'
 if pirsC ! 1:$pirsC = ''
-if pirsD = 1:$pirsD = 'You have a nosering inserted in your nose.'
+if pirsD > 0 and pirsD < 10000:$pirsD = 'You have a piercing inserted in your nose.'
 if pirsD ! 1:$pirsD = ''
-if pirsE = 1:$pirsE = 'Your eyebrow is pierced and a rod is sticking through it.'
+if pirsE > 0 and pirsE < 10000:$pirsE = 'Your eyebrow is pierced.'
 if pirsE ! 1:$pirsE = ''
 if pcs_skin > 100: pcs_skin = 100
 if pcs_skin < 0: pcs_skin = 0
@@ -354,9 +314,7 @@ else
 	legkoef = 9 & $pcs_leghair = 'Your legs are hairy.'
 end
 
-if pirsG = 1 and pirsGL ! 1:$pirspiz = 'There are several rings hanging from the lips of your vagina.'
-if pirsG ! 1 and pirsGL = 1:$pirspiz = 'A barbell is inserted into your clitoris.' 
-if pirsG = 1 and pirsGL = 1:$pirspiz = 'You have a piercing through your clit and several rings hanging from your labia.'
+if pirsG  > 0 and pirsG < 10000:$pirspiz = 'You are wearing a pubic piercing.'
 
 if clit_size < 20:$clitsize = 'You consider your <a href="exec:view''images/pc/body/clit/clit1.jpg''">clitoris</a> to be of an average size.'
 if clit_size >= 20 and clit_size < 40:$clitsize = 'You feel your <a href="exec:view''images/pc/body/clit/clit2.jpg''">clitoris</a> is somewhat on the large side.'
@@ -429,8 +387,10 @@ end
 if $clothingworntype = 'nude':
 	CloAdjustedBeauty =  pcs_apprncbase
 else
-	CloAdjustedBeauty = bonusZ + pcs_apprncbase * (PXCloThinness + PXCloTopCut + PXCloSkirtShortness + PXCloPantsShortness) * PCloQuality / 5000
+	CloAdjustedBeauty = bonusZ + pcs_apprncbase * (PXCloThinness + PXCloTopCut + PXCloSkirtShortness + PXCloPantsShortness + (PCloBra*5) + (CloPanties*6)) * PCloQuality / 5000 + PShoQuality
 end
+
+if $wornclothingtype = 'exercise': CloAdjustedBeauty = CloAdjustedBeauty * 2 / 3
 
 !!Appearance factors; hairkoef = very short hair / mopkoef = makeup bonus / legkoef = shaved legs / CloAdjustedBeauty = clothes / pcs_hairbsh = Hair brushed / lipbalmKoef = lip balm / pcs_breath = freash breath / sweatKoef = pcs_sweat / glassvnesh = glasses / dyevmod = hair dye fading
 !!Moved to base calculation in "body_shape"; bimbobeauty = Bimbo bonus; pcs_lip = lip size; skin = skin condition; pcs_lashes = eyelashes; pcs_eyesize = eyes; bodykoef = hips:waist ratio; pcs_teeth = missing teeth; vidagebonus = youth

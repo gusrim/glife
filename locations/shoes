@@ -1,0 +1,356 @@
+# shoes
+
+!!This is the main file for shoes, like clothes but for your feet.
+
+$shoe_list_line = {
+	!! a single line in a shoe list (shoe rack, etc)
+	!! ARGS 0 - action type (shoe rack, sell, resize, store, forsale)
+	!! ARGS 1 - shoe type
+	!! ARGS 2 - shoe index
+
+	$bgcolor = iif($bgcolor='#f3f4ee','#ffffff','#f3f4ee')
+
+	$RESULT = '<TR bgcolor='+$bgcolor+'>'
+
+	if Enable_clothwidth > 0:
+		shoe_temp = Enable_clothwidth - 1
+	else
+		shoe_temp = 75 & !shoe widdefault to 75
+	end
+	$RESULT +='<TD><a href="exec:gt ''shoes'', ''view_shoe_item'', ''<<$ARGS[0]>>'', ''<<$ARGS[1]>>'', <<ARGS[2]>>"><img src="<<FUNC(''$shoe_image'', $ARGS[1], ARGS[2])>>" width="<<shoe_temp>>"></a></TD>'
+	killvar 'shoe_temp'
+	gs 'shoe_attributes', $ARGS[1], ARGS[2]
+
+	gs 'shoe_description2', $ARGS[2]
+	$RESULT += '<TD><<FUNC(''$shoe_description'', $ARGS[1])>> <<ARGS[2]>></TD><TD><<$description>></TD>'
+
+	if ShoStyle = 2:
+		$RESULT += '<TD>Yes</TD>'
+	else
+		$RESULT += '<TD>No</TD>'
+	end
+
+	if ShoStyle = 1:
+		$RESULT += '<TD>Yes</TD>'
+	else
+		$RESULT += '<TD>No</TD>'
+	end
+	
+	$RESULT += '<TD><a href="exec:gt ''shoes'', ''view_shoe_item'', ''<<$ARGS[0]>>'', ''<<$ARGS[1]>>'', <<ARGS[2]>>">View</a></TD>'
+
+}
+
+!!cloc, 0 = wardrobe, 1 = storage, 2 = unwanted
+
+
+if $ARGS[0] = 'dest0':
+	*clr
+	dynamic '<<$ARGS[2]>>S[<<ARGS[3]>>] = 0'
+	gt 'shoes', 'view_shoe_list', $ARGS[1]
+end
+
+if $ARGS[0] = 'dest1':
+	*clr
+	dynamic '<<$ARGS[2]>>S[<<ARGS[3]>>] = 1'
+	gt 'shoes', 'view_shoe_list', $ARGS[1]
+end
+
+if $ARGS[0] = 'dest2':
+	*clr
+	dynamic '<<$ARGS[2]>>S[<<ARGS[3]>>] = 2'
+	gt 'shoes', 'view_shoe_list', $ARGS[1]
+end
+
+if $ARGS[0] = 'select':
+	cla
+	*clr
+	*nl
+	*nl
+	'Click the link for the clothing type of which you would like to change the accompanying shoes.'
+	*nl
+	*nl
+	*nl
+	'<center><table border=1><TH>Clothing type</TH><TH>Shoes worn</TH>'
+	*P '<tr><TD><a href="exec:$cloType = ''cheap'' & gt ''shoes'', ''view_shoe_list'', ''wardrobe''">Cheap</a></TD><TD>' + FUNC('$shoe_description', $cheapshoetype) + ' <<cheapshoenumber>></TD></tr>'
+	*P '<tr><TD><a href="exec:$cloType = ''average'' & gt ''shoes'', ''view_shoe_list'', ''wardrobe''">Average</a></TD><TD>' + FUNC('$shoe_description', $averageshoetype) + ' <<averageshoenumber>></TD></tr>'
+	*P '<tr><TD><a href="exec:$cloType = ''expensive'' & gt ''shoes'', ''view_shoe_list'', ''wardrobe''">Expensive</a></TD><TD>' + FUNC('$shoe_description', $expensiveshoetype) + ' <<expensiveshoenumber>></TD></tr>'
+	*P '<tr><TD><a href="exec:$cloType = ''formal'' & gt ''shoes'', ''view_shoe_list'', ''wardrobe''">Formal</a></TD><TD>' + FUNC('$shoe_description', $formalshoetype) + ' <<formalshoenumber>></TD></tr>'
+	*P '<tr><TD><a href="exec:$cloType = ''office'' & gt ''shoes'', ''view_shoe_list'', ''wardrobe''">Office</a></TD><TD>' + FUNC('$shoe_description', $officeshoetype) + ' <<officeshoenumber>></TD></tr>'
+	*P '<tr><TD><a href="exec:$cloType = ''school'' & gt ''shoes'', ''view_shoe_list'', ''wardrobe''">School</a></TD><TD>' + FUNC('$shoe_description', $schoolshoetype) + ' <<schoolshoenumber>></TD></tr>'
+	*P '<tr><TD><a href="exec:$cloType = ''exercise'' & gt ''shoes'', ''view_shoe_list'', ''wardrobe''">Exercise</a></TD><TD>' + FUNC('$shoe_description', $exerciseshoetype) + ' <<exerciseshoenumber>></TD></tr>'
+	*P '<tr><TD><a href="exec:$cloType = ''fetish'' & gt ''shoes'', ''view_shoe_list'', ''wardrobe''">Fetish</a></TD><TD>' + FUNC('$shoe_description', $fetishshoetype) + ' <<fetishshoenumber>></TD></tr>'
+	*P '<tr><TD><a href="exec:$cloType = ''exhibit'' & gt ''shoes'', ''view_shoe_list'', ''wardrobe''">Exhibitionist</a></TD><TD>' + FUNC('$shoe_description', $exhibitshoetype) + ' <<exhibitshoenumber>></TD></tr>'
+	*P '<tr><TD><a href="exec:$cloType = ''uniform'' & gt ''shoes'', ''view_shoe_list'', ''wardrobe''">Uniform</a></TD><TD>' + FUNC('$shoe_description', $uniformshoetype) + ' <<uniformshoenumber>></TD></tr>'
+	*P '<tr><TD><a href="exec:$cloType = ''burlesque'' & gt ''shoes'', ''view_shoe_list'', ''wardrobe''">Burlesque</a></TD><TD>' + FUNC('$shoe_description', $burlesqueshoetype) + ' <<burlesqueshoenumber>></TD></tr>'
+	*P '<tr><TD><a href="exec:$cloType = ''alternative'' & gt ''shoes'', ''view_shoe_list'', ''wardrobe''">Alternative</a></TD><TD>' + FUNC('$shoe_description', $alternativeshoetype) + ' <<alternativeshoenumber>></TD></center></tr>'
+	'</table>'
+
+	act 'Leave':
+		if $clothingworntype = $cloType:
+			gs 'shoes', 'setup'
+			gs 'shoes', 'wear', $shoeworntype, shoewornnumber
+		end
+		gt $loc, $metka
+	end
+end
+
+if $ARGS[0] = 'view_shoe_list':
+	!! ARGS 0 - view_shoe_list
+	!! ARGS 1 - action type (wardrobe, sell, resize, store, unwanted)
+	!! ARGS 2 - brothel flag (brothel)
+
+
+	act 'Leave':gt 'shoes', 'select'
+
+	if $ARGS[1] ! 'sell' :
+		'<center><b>Selecting shoes to wear with <<$cloType>> outfit</b></center>'
+	end
+
+	$bgcolor='#f3f4ee'
+
+	if $ARGS[1] = 'sell':
+		'<table border=0 cellspacing=0 cellpadding=5><TH></TH><TH>Shoe</TH><TH>Description</TH><TH>Bimbo</TH><TH>Stripper</TH><TH>Actions</TH>'
+	else
+		'<table border=0 cellspacing=0 cellpadding=5><TH></TH><TH>Shoe</TH><TH>Description</TH><TH>Bimbo</TH><TH>Stripper</TH><TH>Actions</TH>'
+	end
+
+	if $cloType ! 'exercise':
+		i = 1
+		:loopsboutique
+			if sboutique[i] = 1 and sboutiqueS[i] = cloc:*P dyneval($shoe_list_line, $ARGS[1], 'boutique', i)
+			i += 1
+		if i <= 37:jump 'loopsboutique'
+
+		i = 1
+		:loopspussy
+			if spussy[i] = 1 and spussyS[i] = cloc:*P dyneval($shoe_list_line, $ARGS[1], 'pussy', i)
+			i += 1
+		if i <= 38:jump 'loopspussy'
+
+		i = 1
+		:loopsdolls
+			if sdolls[i] = 1 and sdollsS[i] = cloc:*P dyneval($shoe_list_line, $ARGS[1], 'dolls', i)
+			i += 1
+		if i <= 27:jump 'loopsdolls'
+
+		i = 1
+		:loopsfetish
+			if sfetish[i] = 1 and sfetishS[i] = cloc:*P dyneval($shoe_list_line, $ARGS[1], 'fetish', i)
+			i += 1
+		if i <= 27:jump 'loopsfetish'
+
+		i = 1
+		:loopsgandm
+			if sgandm[i] = 1 and sgandmS[i] = cloc:*P dyneval($shoe_list_line, $ARGS[1], 'gandm', i)
+			i += 1
+		if i <= 51:jump 'loopsgandm'
+	end
+
+	i = 1
+	:loopstrainers
+		if strainers[i] = 1 and strainersS[i] = cloc:*P dyneval($shoe_list_line, $ARGS[1], 'trainers', i)
+		i += 1
+	if i <= 29:jump 'loopstrainers'
+
+	'</table>' 
+end
+
+if $ARGS[0] = 'view_shoe_item':
+	!! ARGS 0 - view_shoe_item
+	!! ARGS 1 = action type (wardrobe, shop, sell)
+	!! ARGS 2 - shoes type
+	!! ARGS 3 - shoes index
+	!! ARGS 4 - price for shop
+
+	cla
+	'<center><img src="<<FUNC(''$shoe_image'', $ARGS[2], ARGS[3])>>"></center>'
+	gs 'shoe_attributes', $ARGS[2], ARGS[3]
+	FUNC('$shoe_description', $ARGS[2]) + '<<ARGS[3]>>'
+	*nl
+	gs 'shoe_description2', $ARGS[2]
+
+	'<<$description>>'
+	*nl
+	if ShoStyle = 1:'This shoe is considered stripper style and most suitable for stripping or whoring.'
+	if ShoStyle = 2:'This shoe is considered bimbo style and makes your mind drift toward sexual thoughts.'
+	if ShoStyle = 3:'This shoe is considered alternative style and makes you feel more assertive and aggressive.'
+
+	if $ARGS[1] = 'shop':
+		if dyneval('RESULT = <<$ARGS[2]>>[<<ARGS[3]>>]') = 1:
+			'You already own these shoes.'
+			act 'Leave': gt $loc, $metka
+		else
+			price = ('<<ARGS[4]>>' * ((5 * ShoQuality) + 100) / 100) * 1000 / (1250 - Clothingstock[ARGS[3]]) * 3 / 2
+			price = price / 50 * 50
+			'Price: <<price>> <b>₽</b>'
+			act 'Leave': gt $loc, $metka
+			if money >= Price:
+				act 'Buy':
+					h = 0
+					if ShoStyle = 2:h = 10
+					if ShoStyle = 5:h = 20
+					h += (3 * ShoQuality)
+					money -= price
+					dynamic 's<<$ARGS[2]>>[<<ARGS[3]>>] = 1'
+					dynamic $ARGS[2] + 'S[<<ARGS[3]>>] = 0'
+					gt $loc, $metka
+				end
+			else
+				'You cannot afford these shoes.'
+			end
+		end
+	elseif $ARGS[1] = 'wardrobe':
+		act 'Leave in closet':gt 'shoes', 'view_shoe_list', $ARGS[1]
+
+		act 'Set as default for <<$cloType>> outfit':
+			if $cloType = 'cheap':
+				$cheapshoetype = $ARGS[2]
+			elseif $cloType = 'average':
+				$averageshoetype = $ARGS[2]
+			elseif $cloType = 'expensive':
+				$expensiveshoetype = $ARGS[2]
+			elseif $cloType = 'formal':
+				$formalshoetype = $ARGS[2]
+			elseif $cloType = 'office':
+				$officeshoetype = $ARGS[2]
+			elseif $cloType = 'school':
+				$schoolshoetype = $ARGS[2]
+			elseif $cloType = 'exercise':
+				$exerciseshoetype = $ARGS[2]
+			elseif $cloType = 'fetish':
+				$fetishshoetype = $ARGS[2]
+			elseif $cloType = 'exhibit':
+				$exhibitshoetype = $ARGS[2]
+			elseif $cloType = 'uniform':
+				$uniformshoetype = $ARGS[2]
+			elseif $cloType = 'burlesque':
+				$burlesqueshoetype = $ARGS[2]
+			elseif $cloType = 'alternative':
+				$alternativeshoetype = $ARGS[2]
+			end
+			dynamic '<<$cloType>>shoenumber = <<ARGS[3]>>'
+			gt 'shoes', 'view_shoe_list', $ARGS[1]
+		end
+	elseif $ARGS[1] = 'store' or $ARGS[1] = 'unwanted':
+		act 'Return':gt 'shoes', 'view_shoe_list', $ARGS[1]
+
+		act 'Move back to wardrobe':
+			dynamic $ARGS[2] + 'W[<<ARGS[3]>>] = 1'
+			gt 'shoes', 'view_shoe_list', $ARGS[1]
+		end
+
+	elseif $ARGS[1] = 'sell':
+		act 'Keep item':gt 'shoes', 'view_shoe_list', $ARGS[1]
+
+		!! value is based on the strength remaining
+		'You can sell this item for 300 <b>₽</b>.'
+		act 'Sell':
+			dynamic '<<$ARGS[2]>>[<<ARGS[3]>>] = 0'
+			money += 300
+			gt 'shoes', 'view_shoe_list', $ARGS[1]
+		end
+		if RESULT > 0:
+			'You can sell this item for 100 <b>₽</b>.'
+			act 'Sell':
+				dynamic '<<$ARGS[2]>>[<<ARGS[3]>>] = 0'
+				money += 100
+				gt 'shoes', 'view_shoe_list', $ARGS[1]
+			end
+		end
+	end
+end
+
+if $ARGS[0] = 'strip':
+	if $shoesworntype = 'none': exit
+
+	$shoeworntype = 'none'
+	shoewornnumber = 0
+	ShoQuality = 0
+	ShoHeels = 0
+	ShoCut = 0
+	ShoStyle = 0
+	PShoQuality = 0
+	PShoHeels = 0
+	PShoCut = 0
+	PShoStyle = 0
+end
+
+if $ARGS[0] = 'setup':
+	if $cloType = 'cheap':
+		$shoeworntype = $cheapshoetype
+	elseif $cloType = 'average':
+		$shoeworntype = $averageshoetype
+	elseif $cloType = 'expensive':
+		$shoeworntype = $expensiveshoetype
+	elseif $cloType = 'formal':
+		$shoeworntype = $formalshoetype
+	elseif $cloType = 'office':
+		$shoeworntype = $officeshoetype
+	elseif $cloType = 'school':
+		$shoeworntype = $schoolshoetype
+	elseif $cloType = 'exercise':
+		$shoeworntype = $exerciseshoetype
+	elseif $cloType = 'fetish':
+		$shoeworntype = $fetishshoetype
+	elseif $cloType = 'exhibit':
+		$shoeworntype = $exhibitshoetype
+	elseif $cloType = 'uniform':
+		$shoeworntype = $uniformshoetype
+	elseif $cloType = 'burlesque':
+		$shoeworntype = $burlesqueshoetype
+	elseif $cloType = 'alternative':
+		$shoeworntype = $alternativeshoetype
+	else
+		$shoeworntype = 'none'
+	end
+		
+	dynamic 'shoewornnumber = <<$cloType>>shoenumber'
+end
+	
+if $ARGS[0] = 'wear':
+	!! ARGS 0 - action
+	!! ARGS 1 - shoe type name
+	!! ARGS 2 - shoe index
+
+	$shoeworntype = $ARGS[1]
+	shoewornnumber = ARGS[2]
+
+	if $shoeworntype = 'none':
+		PShoQuaility = 0
+		PShoCut = 0
+		PShoHeels = 0
+		PShoStyle = 0
+	exit
+	end
+
+	gs 'shoe_attributes', $ARGS[1], ARGS[2]
+
+	dynamic '<<$ARGS[1]>>S[<<ARGS[2]>>] = 0'
+
+	PShoQuality = ShoQuality
+	PShoHeels = ShoHeels
+	PShoCut = ShoCut
+	PShoStyle = ShoStyle
+
+!Calculations for shoes beauty, multiplied by natural beauty
+	if PShoHeels > 0:
+		if PShoHeels = 1:
+			PXShoHeels = 25
+		elseif PShoHeels = 2:
+			PXShoHeels = 50
+		elseif PShoHeels = 3:
+			PXShoHeels = 100
+		elseif PShoHeels = 4:
+			PXShoHeels = 150
+		elseif PShoHeels = 5:
+			PXShoHeels = 200
+		elseif PShoHeels = 6:
+			PXShoHeels = 300
+		elseif PShoHeels >= 7:
+			PXShoHeels = 400
+		end
+	end
+end
+
+--- shoes ---------------------------------
+

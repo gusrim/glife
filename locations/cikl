@@ -60,7 +60,10 @@ if katjaPreg = 0 and month >= 2:
 	end
 end
 
-!Clothing stock and price randomizers
+!!Street events daily reset
+streetevent_hour = -2
+
+!!Clothing stock and price randomizers
 Clothingstock = rand (0,23)
 i = 1
 :loopprice
@@ -75,6 +78,20 @@ if coatH[defaultcoat] <= 0: defaultcoat = 0
 !!------------------------------------------------------------------------------------------------------------
 !!A Succubus cannot be a Bimbo
 if succubusflag = 1 and bimbo > 0: bimbo -= succublvl * 2
+
+!!Bonus from clothing and shoes
+if succubusflag = 0 and $cheatBimbo ! '<b>ON</b>':
+	if bimbocl = 1:
+		bimbocl = 0
+		bimbo += 2
+	end
+	if bimbosh = 1:
+		bimbosh = 0
+		bimbo += 1
+	end
+else
+	bimbocl = 0
+end
 
 !!Once bimbolevel is set to 1, must use the withdrawal in stat to return to 0
 if bimbo > 0 or bimbolevel > 0:
@@ -97,14 +114,7 @@ if bimbolevel = 1: supnatvnesh = 2 & bimbostupidity = (pcs_intel / 6)
 if bimbolevel = 2: supnatvnesh = 4 & bimbostupidity = (pcs_intel / 4)
 if bimbolevel = 3: supnatvnesh = 8 & bimbostupidity = (pcs_intel / 3)
 
-if bimbocl = 1 and succubusflag = 0 and $cheatBimbo ! '<b>ON</b>':
-	bimbocl = 0
-	bimbo += 2
-else
-	bimbocl = 0
-end
-
-!Succubus Level & hunger calcs 
+!!Succubus Level & hunger calcs 
 if succubusflag = 1:
 
 	cheatHealth = 1
@@ -291,6 +301,7 @@ if tabletkicheck = 2:
 		'Your birth control shot is due for renewal tomorrow.'
 	end
 
+	if shotdays > -100:shotdays -=1
 	if tabletkishot > 0:tabletkishot -= 1
 end
 
@@ -424,7 +435,7 @@ if pcs_breath = 1:pcs_breath = 0
 
 if cheatNoEat = 1 and dounspell = 1:fat += 15
 
-!STD check
+!!STD check
 if SifacOnce = 1:Sifilis += 1
 if GerpesOnce = 1:Gerpes += 1
 if TriperOnce = 1:Triper += 1
@@ -488,6 +499,12 @@ elseif preg = 0:
 	KILLVAR 'pregTalkStarlets'
 	KILLVAR 'pregTalkvball'
 	KILLVAR 'pregTalkTrack'
+	killvar 'pregtalkStarlets'
+	killvar 'pregtalkvball'
+	killvar 'pregtime'
+	killvar 'knowpreg'
+	killvar 'denypreg'
+	killvar '$wombthfath'
 end
 
 !!------------------------------------------------------------------------------------------------------------
@@ -618,8 +635,8 @@ gs 'fame', 'deg'
 !!------------------------------------------------------------------------------------------------------------
 !!	Maruda hair mod
 !!------------------------------------------------------------------------------------------------------------
-!!! Max. Hair length 600mm, or 60cm, which should be somewhere in the lower back area.
-!!! Hair grows 1mm each day, it takes 20 months (1 month = 30 days) to regrow the hair from 0.
+!! Max. Hair length 600mm, or 60cm, which should be somewhere in the lower back area.
+!! Hair grows 1mm each day, it takes 20 months (1 month = 30 days) to regrow the hair from 0.
 if pcs_hairlng < 1001:pcs_hairlng += 1
 
 if pcs_haircol ! nathcol: 
@@ -725,7 +742,7 @@ if KatjaOTN > 0:
 	if KatjaHorny >= 100:KatjaHorny = 0 & KatjaMastr += 1 & KatjaLust += 1
 end
 
-if npc_rel['A69'] > 50:npc_rel['A69'] -= 1
+if npc_rel['A69'] > 60 and rand(0,3) = 0:npc_rel['A69'] -= 1
 
 !!------------------------------------------------------------------------------------------------------------
 !!	Generation
@@ -863,13 +880,12 @@ end
 !!------------------------------------------------------------------------------------------------------------
 
 if day = 25:
-	! -- meynold payment ---!
+	!! meynold payment
 	if mey_vika_qw >= 35 and mey_tamara_help_count >= 10 and mey_tamara_qw_end = 0:
 		money += 10000
 		'<b><font color=green>For your efforts aunt Tamara gave you 10000 rubles</font></b>'
 		mey_tamara_help_count = 0
 	end
-	!--
 
 	if PersSecWork = 1 and PersSecWorkTimes > 0 and paydaybistrosec = 0:
 		Pay = PersSecWorkTimes * 2500
@@ -980,13 +996,13 @@ if day > monthsEnd[month]:
 
 	if month > 12: month = 1 & year += 1
 
-	!MJ: Dont think that one is needed. But it was in the original loop.
+	!!MJ: Dont think that one is needed. But it was in the original loop.
 	if month < 1: month = 1
 
 	$month = $monthName[month]
 end
 
-!MJ: Dont think that one is needed. But it was here already.
+!!MJ: Dont think that one is needed. But it was here already.
 if day <= 0:day = 1
 
 if week > 7:
@@ -1148,7 +1164,7 @@ if breastpumped = 1: breastpumped = 0
 !!Appearance base calculation call
 gs 'body_shape', 'basebeautycalc'
 
-! vovan, from 1.2.5
+!! vovan, from 1.2.5
 hanters_check = 0
 mushroom_pickers = 0
 horse_river = 0

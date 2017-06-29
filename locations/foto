@@ -1,6 +1,22 @@
 # foto
+
 if $ARGS[0] = 'start':
-	cls
+	close all
+	if model = 0:gt'foto','studio'
+	*clr & cla
+	gs 'clothing', 'strip'
+	if tanga = 1:panties = 1
+	if tanga = 1:tanga = 0
+	gs 'stat'
+	'<center><img src="images/locations/city/citycenter/photo/fullstrip.gif"></center>'
+	'You head to the back room to strip down.'
+	'The general consensus among the models here is if you''re already naked, you''re ready for any kind of shoot with minimum hassle.'
+	exhibition_exp += 5
+	act'Go to work':gt'foto','studio'
+end
+
+if $ARGS[0] = 'studio':
+	*clr & cla
 	killvar '$modelopt'
 	minut += 5
 	gs 'stat'
@@ -13,31 +29,55 @@ if $ARGS[0] = 'start':
 		bcolor = rgb(255, 255, 255)
 		lcolor = rgb(106, 90, 205)
 	end
+	
+	anastasia_in = rand(0,1)
+	mari_in = rand(0,1)
+	katherine_in = rand(0,1)
+	jeff_in = rand(0,1)
+	
+	
+	
 	'<center><b><font color="maroon">Photography studio</font></b></center>'
-	'<center><img <<$set_imgh>> src="images/locations/city/citycenter/photo/foto.jpg"></center>'
-	'Your are in a deserted studio, except for the photographer who is sitting in the light of a desk lamp, doing something on the computer.'
-
+	'<center><img src="images/locations/city/citycenter/photo/foto.jpg"></center>'
+	'You are in a photography studio. A photographer is sitting in the light of a desk lamp, doing something on the computer.'
+	'Along the wall, you can see what appear to be <a href="exec:gt ''foto_albums'',''model_portraits''">photo albums.</a>'
+	if model = 1:
+		'In various parts of the studios, you can see some of the other models who work here.'
+		if anastasia_in = 1:'<a href="exec:gt ''foto_models'',''anastasia1''">Anastasia</a>'
+		if katherine >= 2:
+			if katherine_in = 1:'<a href="exec:gt ''foto_models'',''katherine1''">Krystal</a>'
+		else
+			if katherine_in = 1:'<a href="exec:gt ''foto_models'',''katherine1''">Katherine</a>'
+		end
+		if mari_in = 1:'<a href="exec:gt ''foto_models'',''mari_1''">Mari</a>'
+		if jeff_in = 1:'<a href="exec:gt ''foto_models'',''jeff_1''">Jeff</a>'
+		
+	end
+	
+	if mesec > 0 and isprok = 0:'You''ve just realized that you''re walking around naked while on your peroid. Maybe you should consider switching from pads to tampons...'
+	
 	if artemIzdev = 2 or artemIzdev = 3:
 		act 'Ask about the microcamera':
 			minut += 5
 			gs 'stat'
 			if artemIzdev = 3:'"As I said, I can arrange for a deal for this camera, but it is expensive."'
 			if artemIzdev = 2:'"Yes, I can get you this, but it is expensive."' & artemIzdev = 3
+
 			if money < 70000:
 				'You do not the 70,000 rub required.'
 			else
 				'"Oh, looks like you have enough cash."'
 				act 'Buy microcamera':
-					cls
+					*clr & cla
 					minut += 5
 					money -= 70000
 					artemIzdev = 4
 					microcamera = 1
 					gs 'stat'
-					'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/boy/artem/event/microcam_1.jpg"></center>'
+					'<center><img src="images/characters/pavlovsk/school/boy/artem/event/microcam_1.jpg"></center>'
 					'You buy the microcamera from the photographer.'
 
-					act 'Further':gs 'foto','start'
+					act 'Further':gs 'foto','studio'
 				end
 			end
 		end
@@ -47,280 +87,2014 @@ if $ARGS[0] = 'start':
 		'You''re blacklisted, no decent studio will deal with you, goodbye.'
 
 		act 'Leave':gt 'down'
-
-		exit
 	end
-
-	if model > 0 and modelmon = month:
-		'There is no more work available this month.'
-
-		if pornstudio = 0:pornstudio = 2 & 'Here, take this business card. Casting opportunity at the pornostudio.'
+	
+	if model = 1:
+		act 'Leave':
+			*clr & cla
+			if panties = 1:tanga = 1
+			gs 'stat'
+			'<center><img src="images/locations/city/citycenter/photo/dress.gif"></center>'
+			'You go into the back room to put on clothes and get ready to go home.'
+			gs 'clothing', 'wear_last_worn'
+			act 'Leave':
+				panties = 0
+				minut += 5
+				gt 'down'
+			end
+		end
 	end
-
-	act 'Leave':
-		cla
-		minut += 5
-		gt 'down'
+	if model = 0:
+		act 'Leave':
+			minut += 5
+			gt 'down'
+		end
 	end
 
 	if parkblackmail = 2:
 		act 'Look around for the blackmailer':gt 'foto', 'blackm'
-	elseif model = 0 and parkblackmail ! 2:
+	elseif model = 0:
 		act 'Ask about working as a glamor model':
 			cla
 			minut += 5
-
-			if vidage < 20:
+			if vidage < 40:
 				if pcs_skin < 40:
 					'Girl, your face is covered in acne unless you improve your appearance there is no chance of working here.'
+
+					act 'Leave':gt 'down'
 				else
-					'"Girl, I should warn you: our Studio works exclusively in the erotic genre"'
-					'"Exclusively?" You ask, hesitantly.'
-					'"Yes." Says the photographer "Let''s see your papers, are you 18 or older?"'
+					'"You want to work here? How old are you?"'
 					if age >= 18:
-						'"Yes I am." You answer, handing him your passport.'
+						'"<<age>>." '
 						'"Hmm, undress, I''ll take a look at you."'
-						act 'Undress':gt 'foto', 'model'
+						if pcs_exhibition >= 35:
+							act 'Undress':
+								*clr & cla
+								gs 'clothing', 'strip'
+								if tanga = 1:panties = 1
+								if tanga = 1:tanga = 0
+								gs 'stat'
+								'<center><img src="images/locations/city/citycenter/photo/strip1.gif"><img src="images/locations/city/citycenter/photo/strip2.gif"></center>'
+								'You take off your clothes and leave them on the floor while the photographer examines you.'
+								'He circles you slowly, occasionally asking you to adjust your pose slightly, carefully inspecting every aspect of your nude body. Your <<$pcs_eyecol>> eyes framed by your <<$pcs_haircol>> hair, your <<$liptalk3>>, your <<$titsize>> breasts, your <<$skin1>> <<$pcs_tan>> skin, your thighs, even your <<$vaginatipe>> pussy...'									
+								act '...':
+									cla
+									*nl
+									'After several minutes, he stands in front of you and says, "You fit the criteria for the kind of images we want to produce. I just need to see your passport to confirm your age," holding out his hand.'
+									act'Show him your passport':
+									cla
+									*nl
+										'He takes it and studies it for a moment, looking back and forth between you and the document. "Okay, that confirms you''re <<age>>. Here are the terms of employment:'
+										'We work on freelance basis. We can only afford to pay you for coming in once a week, but you can still come in any time if you want to get some practice to work on your modelling skills. Those photos will still be ours to keep and use, but it''ll still help you to build your portfolio.'
+										'So, what do you say? Still want to work here?"'
+										act '"Yes, let''s get started"':gt 'foto', 'model'						
+										act '"No, I was hoping for more regular work."':
+											*clr & cla
+											model = 0
+											gs 'clothing', 'wear_last_worn'
+											if panties = 1:tanga = 1
+											gs 'stat'
+											'Well that''s a shame. Come back if you change your mind.'
+											act 'Leave'gt: 'down'
+										end
+									end
+								end
+							end	
+						else
+							act '"I-I have to undress...?"':
+								cla
+								*nl
+								'"I- I have to undress...?"'
+								'"Yes, I just said, this is studio mostly works with skimpy clothes, lingerie, and nudity. You don''t necessarily need to do shoots with nudity, but you need to have your body inspected to make sure you match the criteria if you want to work here."'
+								act'Reluctantly undress':
+									*clr & cla
+									gs 'clothing', 'strip'
+									if tanga = 1:panties = 1
+									if tanga = 1:tanga = 0
+									gs 'stat'
+									'<center><img src="images/locations/city/citycenter/photo/strip1.gif"><img src="images/locations/city/citycenter/photo/strip2.gif"></center>'
+									'You take a deep breath and begin to take off your clothes. As long as it''s just this one time, you can handle it for now. You leave them on the floor while the photographer examines you.'
+									'He circles you slowly, occasionally asking you to adjust your pose slightly, carefully inspecting every aspect of your nude body. Your <<$pcs_eyecol>> eyes framed by your <<$pcs_haircol>> hair, your <<$liptalk3>>, your <<$titsize>> breasts, your <<$skin1>> <<$pcs_tan>> skin, your thighs, even your <<$vaginatipe>> pussy...'									
+									'He spends several minutes doing this without saying anything. It''s really embarrassing...'
+									act '...':
+										cla
+										*nl
+										'When he''s finished, he stands in front of you and says, "You fit the criteria for the kind of images we want to produce. I just need to see your passport to confirm your age," holding out his hand.'
+										act'Show him your passport':
+										cla
+										*nl
+											'He takes it and studies it for a moment, looking back and forth between you and the document. "Okay, that confirms you''re <<age>>. Here are the terms of employment:'
+											'We work on freelance basis. We can only afford to pay you for coming in once a week, but you can still come in any time if you want to get some practice to work on your modelling skills. Those photos will still be ours to keep and use, but it''ll still help you to build your portfolio.'
+											'So, what do you say? Still want to work here?"'
+											act '"Yes, let''s get started"':gt 'foto', 'model'						
+											act '"No, I was hoping for more regular work."':
+												*clr & cla
+												model = 0
+												gs 'clothing', 'wear_last_worn'
+												if panties = 1:tanga = 1
+												gs 'stat'
+												'Well that''s a shame. Come back if you change your mind.'
+												act 'Leave'gt: 'down'
+											end
+										end
+									end
+								end
+								
+								act'I can''t do it':
+									*clr & cla
+									'<center><img src="images/locations/city/citycenter/photo/foto.jpg"></center>'
+									'Even if it''s just this one time, you can''t do it after all. It''s simply too embarrassing to get naked in front of a total stranger. You blush, apologize, and leave the studio.'
+									act 'Leave':gt 'down'
+								end
+							end
+						end
 					elseif fakepassport = 1:
-						'"Yes I am." You answer, handing him your fake passport.'
-						'You see him frown as he checks your passport with suspicion.'
-						'"Well, I guess everything is in order, undress, I''ll take a look at you."'
-						act 'Undress':gt 'foto', 'model'
+						'"I''m 18."'
+						'"I see. Most of the modelling we do here is with skimpy clothes, lingerie, or completely nude. Do you still want to work here?"'
+						act '"O-oh..." blush and excuse yourself': gt 'down' 
+						act '"I don''t mind."': 
+							cla
+							'"Alright, strip so I can see if your body matches our criteria."'
+							if pcs_exhibition >= 35:
+								act 'Undress':
+									*clr & cla
+									gs 'clothing', 'strip'
+									if tanga = 1:panties = 1 & tanga = 0
+									gs 'stat'
+									'<center><img src="images/locations/city/citycenter/photo/strip1.gif"><img src="images/locations/city/citycenter/photo/strip2.gif"></center>'
+									'You take off your clothes and leave them on the floor while the photographer examines you.'
+									'He circles you slowly, occasionally asking you to adjust your pose slightly, carefully inspecting every aspect of your nude body. Your <<$pcs_eyecol>> eyes framed by your <<$pcs_haircol>> hair, your <<$liptalk3>>, your <<$titsize>> breasts, your <<$skin1>> <<$pcs_tan>> skin, your thighs, even your <<$vaginatipe>> pussy...'									
+									act '...':
+										cla
+										*nl
+										'After several minutes, he stands in front of you and says, "You fit the criteria for the kind of images we want to produce. I just need to see your passport to confirm your age," holding out his hand.'
+										act'Show him your fake passport':
+										cla
+										*nl
+											'He takes it and studies it for a moment, looking back and forth between you and the document. "Heh, so long as I have some deniability. Anyways, here are the terms of employment:'
+											'We work on freelance basis. We can only afford to pay you for coming in once a week, but you can still come in any time if you want to get some practice to work on your modelling skills. Those photos will still be ours to keep and use, but it''ll still help you to build your portfolio.'
+											'So, what do you say? Still want to work here?"'
+											act '"Yes, let''s get started"':gt 'foto', 'model'						
+											act '"No, I was hoping for more regular work."':
+												*clr & cla
+												model = 0
+												gs 'clothing', 'wear_last_worn'
+												if panties = 1:tanga = 1
+												gs 'stat'
+												'Well that''s a shame. Come back if you change your mind.'
+												act 'Leave'gt: 'down'
+											end
+										end
+									end
+								end	
+							else
+								act '"I-I have to undress...?"':
+									cla
+									*nl
+									'"I- I have to undress...?"'
+									'"Yes, I just said, this is studio mostly works with skimpy clothes, lingerie, and nudity. You don''t necessarily need to do shoots with nudity, but you need to have your body inspected to make sure you match the criteria if you want to work here."'
+									act'Reluctantly undress':
+										*clr & cla
+										gs 'clothing', 'strip'
+										if tanga = 1:panties = 1
+										if tanga = 1:tanga = 0
+										gs 'stat'
+										'<center><img src="images/locations/city/citycenter/photo/strip1.gif"><img src="images/locations/city/citycenter/photo/strip2.gif"></center>'
+										'You take a deep breath and begin to take off your clothes. As long as it''s just this one time, you can handle it for now. You leave them on the floor while the photographer examines you.'
+										'He circles you slowly, occasionally asking you to adjust your pose slightly, carefully inspecting every aspect of your nude body. Your <<$pcs_eyecol>> eyes framed by your <<$pcs_haircol>> hair, your <<$liptalk3>>, your <<$titsize>> breasts, your <<$skin1>> <<$pcs_tan>> skin, your thighs, even your <<$vaginatipe>> pussy...'									
+										'He spends several minutes doing this without saying anything. It''s really embarrassing...'
+										act '...':
+											cla
+											*nl
+											'When he''s finished, he stands in front of you and says, "You fit the criteria for the kind of images we want to produce. I just need to see your passport to confirm your age," holding out his hand.'
+											act'Show him your fake passport':
+											cla
+											*nl
+											'He takes it and studies it for a moment, looking back and forth between you and the document. "Heh, so long as I have some deniability. Anyways, here are the terms of employment:'
+											'We work on freelance basis. We can only afford to pay you for coming in once a week, but you can still come in any time if you want to get some practice to work on your modelling skills. Those photos will still be ours to keep and use, but it''ll still help you to build your portfolio.'
+											'So, what do you say? Still want to work here?"'
+												act '"Yes, let''s get started"':gt 'foto', 'model'						
+												act '"No, I was hoping for more regular work."':
+													*clr & cla
+													model = 0
+													gs 'clothing', 'wear_last_worn'
+													if panties = 1:tanga = 1
+													gs 'stat'
+													'Well that''s a shame. Come back if you change your mind.'
+													'You get dressed and leave.'
+													act 'Leave'gt: 'down'
+												end
+											end
+										end
+									end
+									
+									act'I can''t do it':
+										*clr & cla
+										'<center><img src="images/locations/city/citycenter/photo/foto.jpg"></center>'
+										'Even if it''s just this one time, you can''t do it after all. It''s simply too embarrassing to get naked in front of a total stranger. You blush, apologize, and leave the studio.'
+										act 'Leave':gt 'down'
+									end
+								end
+							end
+						end
 					else
-						'"Nearly..." You plead.'
-						'"Right. Then here''s my card, be sure to come back when you are old enough.'
-						fakepassport = 2
+						act 'Tell the truth': 
+							cla
+							'"I''m <<age>>."'
+							'"I see. Most of the modelling we do here is with skimpy clothes, lingerie, or completely nude. Do you still want to work here?"'
+							act '"O-oh..." blush and excuse yourself': gt 'foto','studio' 
+							act 'I don''t mind."': 
+								cla
+								'"Alright, strip so I can see if your body matches our criteria."'
+								if pcs_exhibition >= 35:
+									act 'Undress':
+										gs 'clothing', 'strip'
+										*clr & cla
+										gs 'stat'
+										'<center><img src="images/locations/city/citycenter/photo/strip1.gif"><img src="images/locations/city/citycenter/photo/strip2.gif"></center>'										
+										'It''s a nude modelling agency. It makes sense he''d have to see you naked to get hired so you comply without question. You take off your clothes and leave them on the floor while the photographer examines you.'
+										'He circles you slowly, occasionally asking you to adjust your pose slightly, carefully inspecting every aspect of your nude body. Your <<$pcs_eyecol>> eyes framed by your <<$pcs_haircol>> hair, your <<$liptalk3>>, your <<$titsize>> breasts, your <<$skin1>> <<$pcs_tan>> skin, your thighs, even your <<$vaginatipe>> pussy...'									
+										act '...':
+											cla
+											'After several minutes, he stands in front of you and says, "You fit the criteria for the kind of images we want to produce. However, you need to be 18 to work here. If you come back then, we''ll be happy to have you."'
+											act '"Oh. Okay..."':
+												cla
+												'You put your clothes back on before getting ready to leave. If he knew you were underage, why did he have you strip in the first place?!'
+												gs 'clothing', 'wear_last_worn'
+												if panties = 1:tanga = 1
+												gs 'stat'
+												act 'Leave':gt 'down'
+											end
+
+											act 'Plead':
+												cla & *clr
+												'<center><img src="images/locations/city/citycenter/photo/fotograph.jpg"></center>'
+												fakepassport = 2
+												*nl
+												'"Oh please! Isn''t there any way that you can hire me?" you say as you step forward holding your hands together, momentarily forgetting your nakedness in your desperation.'
+												'"Hmmm..." He rubs his chin thoughtfully while continuing to look at your body before saying, "Alright, listen, I''m not supposed to do this but you really do have an exceptional body so I''m going to make an exception."'
+												'He leans in close and whispers into your ear, "There''s a man who hangs around at the train station in the industrial area. If you can come up with 3000 cash, he can sell you a fake passport that says you''re 18. If you can do that, I can at least have some deniability and you can work here. Sound good?"'
+												'With wide eyes and a smile of relief, you nod furiously and rush to get dressed before running out.'
+												gs 'clothing', 'wear_last_worn'
+												if panties = 1:tanga = 1
+												act 'Leave':gt 'down'
+											end
+											
+											act 'Ask for alternatives':
+												*clr & cla
+												'<center><img src="images/locations/city/citycenter/photo/fotograph.jpg"></center>'
+												fakepassport = 2
+												'You''ve come this far, you can''t turn back now.'
+												'"Okay, so I''m not 18. But I really want to earn some money right now. Isn''t there any way I can still work here?'
+												'He studies you for a moment, still completely naked before him, not a scrap of clothing to hide your naked body. You realize it suddenly, almost as if you had forgotten and you feel your face flush with embarrassment.'											
+												act '...':
+													*clr & cla
+													'<center><img src="images/locations/city/citycenter/photo/fotograph.jpg"></center>'
+													'"Hmmm..." He rubs his chin thoughtfully while continuing to look at your body before saying, "Alright, listen, I''m not supposed to do this but you have an exceptional body so I''m going to make an exception."'
+													'He leans in close and whispers into your ear, "There''s a man who hangs around at the train station in the industrial area. If you can come up with 3000 cash, he can sell you a fake passport that says you''re 18. If you can do that, I can at least have some deniability and you can work here. Sound good?"'
+													'You smile and sigh with relief. "Thanks. I''ll do just that," you say before getting dressed and leaving.'
+													gs 'clothing', 'wear_last_worn'
+													if panties = 1:tanga = 1
+													gs 'stat'
+													act 'Leave':gt 'Down'
+												end
+											end
+
+											act 'Get angry':
+												*clr & cla
+												'<center><img src="images/locations/city/citycenter/photo/fotograph.jpg"></center>'
+												fakepassport = 2
+												'Rage fills your eyes as you stomp towards him, oblivious to your beautifully bouncing breasts, practically shouting, "What do you mean I can''t work here?! You told me to strip knowing how old I am and that I wouldn''t be able to work here! What''s your fucking problem?! Do you expect me to just take this from you?!"'
+												'You stand defiantly in front of him, glaring with your hands on your hips, still completely nude in your burning fury.'
+												*nl
+												'After a few moments, he gives a short laugh. "I have to admit kid, you''ve got spunk and that''s real sexy," he says while reaching out his hand to gently fondle your breast before you slap his hand away.' 
+												'"So I''ll tell you what, there''s a guy who hangs around the train station in the industrial area. If you can scrape together 3000 in cash, he''ll get you a fake passport that says you''re 18 and you can work here. Deal?"'
+												'He holds his hand out for a shake.'
+
+												act 'Shake':
+													cla
+													*nl
+													'You grasp his hand suspiciously and shake when he quickly reaches out and fondles your breast with his free hand.'
+													'You tear your hand away and give him a look before moving back over to your clothes and getting dressed before leaving.'
+													gs 'clothing', 'wear_last_worn'
+													if panties = 1:tanga = 1
+													act 'Leave':gt 'down'
+												end
+
+												act 'Tell him to fuck off':
+													*clr & cla
+													'<center><img src="images/locations/city/citycenter/photo/fotograph.jpg"></center>'
+													*nl
+													'You slap his hand away and give him the middle finger before walking back towards your clothes.'
+													'"I''m not going to work for some pervert who just wants to jerk off to some naive <<age>> year old girl."'
+													*nl
+													'You get dressed and leave, giving him another viewing of the bird as you stomp out the door.'
+													'He continues to stand there and softly chuckles to himself. "She''ll be back. They always come back."'
+													gs 'clothing', 'wear_last_worn'
+													if panties = 1:tanga = 1
+													gs 'stat'
+													act 'Leave':gt 'down'
+												end
+											end
+										end
+									end
+								else
+									act '"I-I have to undress...?"':
+										cla
+										*nl
+										'"I- I have to undress...?"'
+										'"Yes, I just said, this is studio mostly works with skimpy clothes, lingerie, and nudity. You don''t necessarily need to do shoots with nudity, but you need to have your body inspected to make sure you match the criteria if you want to work here."'
+										act'Reluctantly undress':
+											*clr & cla
+											gs 'clothing', 'strip'
+											if tanga = 1:panties = 1 & tanga = 0
+											gs 'stat'
+											'<center><img src="images/locations/city/citycenter/photo/strip1.gif"><img src="images/locations/city/citycenter/photo/strip2.gif"></center>'
+											'You take a deep breath and begin to take off your clothes. As long as it''s just this one time, you can handle it for now. You leave them on the floor while the photographer examines you.'
+											'He circles you slowly, occasionally asking you to adjust your pose slightly, carefully inspecting every aspect of your nude body. Your <<$pcs_eyecol>> eyes framed by your <<$pcs_haircol>> hair, your <<$liptalk3>>, your <<$titsize>> breasts, your <<$skin1>> <<$pcs_tan>> skin, your thighs, even your <<$vaginatipe>> pussy...'									
+											'He spends several minutes doing this without saying anything. It''s really embarrassing...'
+											act '...':
+												cla
+												'When he''s finished, he stands in front of you and says, "You fit the criteria for the kind of images we want to produce. However, you need to be 18 to work here. If you come back then, we''ll be happy to have you."'
+												act '"Oh. Okay..."':
+													cla & *clr
+													'<center><img src="images/locations/city/citycenter/photo/foto.jpg"></center>'
+													'You put your clothes back on before getting ready to leave. If he knew you were underage, why did he have you strip in the first place?!'
+													gs 'clothing', 'wear_last_worn'
+													if panties = 1:tanga = 1
+													gs 'stat'
+													act 'Leave':gt 'down'
+												end
+
+												act 'Plead':
+													cla & *clr
+													'<center><img src="images/locations/city/citycenter/photo/fotograph.jpg"></center>'
+													fakepassport = 2
+													*nl
+													'"Oh please! Isn''t there any way that you can hire me?" you say as you step forward holding your hands together, momentarily forgetting your nakedness in your desperation.'
+													'"Hmmm..." He rubs his chin thoughtfully while continuing to look at your body before saying, "Alright, listen, I''m not supposed to do this but you really do have an exceptional body so I''m going to make an exception."'
+													'He leans in close and whispers into your ear, "There''s a man who hangs around at the train station in the industrial area. If you can come up with 3000 cash, he can sell you a fake passport that says you''re 18. If you can do that, I can at least have some deniability and you can work here. Sound good?"'
+													'With wide eyes and a smile of relief, you nod furiously and rush to get dressed before running out.'
+													gs 'clothing', 'wear_last_worn'
+													if panties = 1:tanga = 1
+													act 'Leave':gt 'down'
+												end
+												
+												act 'Ask for alternatives':
+													*clr & cla
+													fakepassport = 2
+													'<center><img src="images/locations/city/citycenter/photo/fotograph.jpg"></center>'
+													'You''ve come this far, you can''t turn back now.'
+													'"Okay, so I''m not 18. But I really want to earn some money right now. Isn''t there any way I can still work here?'
+													'He studies you for a moment, still completely naked before him, not a scrap of clothing to hide your naked body. You realize it suddenly, almost as if you had forgotten and you feel your face flush with embarrassment.'											
+													act '...':
+														*clr & cla
+														'"Hmmm..." He rubs his chin thoughtfully while continuing to look at your body before saying, "Alright, listen, I''m not supposed to do this but you have an exceptional body so I''m going to make an exception."'
+														'He leans in close and whispers into your ear, "There''s a man who hangs around at the train station in the industrial area. If you can come up with 3000 cash, he can sell you a fake passport that says you''re 18. If you can do that, I can at least have some deniability and you can work here. Sound good?"'
+														'You smile and sigh with relief. "Thanks. I''ll do just that," you say before getting dressed and leaving.'
+														gs 'clothing', 'wear_last_worn'
+														if panties = 1:tanga = 1
+														gs 'stat'
+														act 'Leave':gt 'Down'
+													end
+												end
+
+												act 'Get angry':
+													*clr & cla
+													fakepassport = 2
+													'<center><img src="images/locations/city/citycenter/photo/fotograph.jpg"></center>'
+													'Rage fills your eyes as you stomp towards him, oblivious to your beautifully bouncing breasts, practically shouting, "What the fuck?! You knew I wasn''t eligable for the job and made me get naked even though I didn''t want to?! What the fuck is wrong with you?! How can you do this?!"'
+													'You stand defiantly in front of him, glaring with your hands on your hips, still completely nude in your burning fury.'
+													*nl
+													'He gives a short laugh. "I have to admit kid, you''ve got spunk and that''s real sexy," he says while reaching out his hand to gently fondle your breast before you slap his hand away.' 
+													'"So I''ll tell you what, there''s a guy who hangs around the train station in the industrial area. If you can scrape together 3000 in cash, he''ll get you a fake passport that says you''re 18 and you can work here. Deal?"'
+													'He holds his hand out for a shake.'
+
+													act 'Shake':
+														cla
+														*nl
+														'You grasp his hand suspiciously and shake when he quickly reaches out and fondles your breast with his free hand.'
+														'You tear your hand away and give him a look before moving back over to your clothes and getting dressed before leaving.'
+														gs 'clothing', 'wear_last_worn'
+														if panties = 1:tanga = 1
+														act 'Leave':gt 'down'
+													end
+
+													act 'Tell him to fuck off':
+														*clr & cla
+														'<center><img src="images/locations/city/citycenter/photo/fotograph.jpg"></center>'
+														*nl
+														'You slap his hand away and give him the middle finger before walking back towards your clothes.'
+														'"I''m not going to work for some pervert who forces <<age>> year old girls to get naked and jerk off to them."'
+														*nl
+														'You get dressed and leave, giving him another viewing of the bird as you stomp out the door.'
+														'He continues to stand there and softly chuckles to himself. "She''ll be back. They always come back."'
+														gs 'clothing', 'wear_last_worn'
+														if panties = 1:tanga = 1
+														gs 'stat'
+														act 'Leave':gt 'down'
+													end
+												end
+											end
+										end
+										
+										act'I can''t do it':
+											*clr & cla
+											'<center><img src="images/locations/city/citycenter/photo/foto.jpg"></center>'
+											'Even if it''s just this one time, you can''t do it after all. It''s simply too embarrassing to strip down in front of a total stranger. You blush, apologize, and leave the studio.'
+											act 'Leave':gt 'down'
+										end
+									end
+								end
+							end
+						end	
+					
+						act 'Lie':
+							cla
+							'"I''m 18."'
+							'"I see. Most of the modelling we do here is with skimpy clothes, lingerie, or completely nude. Do you still want to work here?"'
+							act '"O-oh..." blush and excuse yourself': gt 'foto','studio' 
+							act '"I don''t mind."': 
+								cla
+								'"Alright, strip so I can see if your body matches our criteria."'
+								if pcs_exhibition >=35:
+									act 'Undress':
+										*clr & cla
+										gs 'clothing', 'strip'
+										if tanga = 1:panties = 1
+										if tanga = 1:tanga = 0
+										gs 'stat'
+										'It''s a nude modelling agency. It makes sense he''d have to see you naked to get hired so you comply without question. You take off your clothes and leave them on the floor while the photographer examines you.'
+										'He circles you slowly, occasionally asking you to adjust your pose slightly, carefully inspecting every aspect of your nude body. Your <<$pcs_eyecol>> eyes framed by your <<$pcs_haircol>> hair, your <<$liptalk3>>, your <<$titsize>> breasts, your <<$skin1>> <<$pcs_tan>> skin, your thighs, even your <<$vaginatipe>> pussy...'									
+										'<center><img src="images/locations/city/citycenter/photo/strip1.gif"><img src="images/locations/city/citycenter/photo/strip2.gif"></center>'
+										act '...':
+											cla
+											'After several minutes, he stands in front of you and says, "You fit the criteria for the kind of images we want to produce. I just need to see your passport to confirm your age," holding out his hand.'
+											act '"Uhh..."':
+												*clr & cla
+												'<center><img src="images/locations/city/citycenter/photo/fotograph.jpg"></center>'
+												fakepassport = 2
+												'"I... I don''t have it with me..."'
+												'"That''s fine. Just bring it back when you have time," he says casually.'
+												act 'Go along with it':
+													*clr & cla
+													'<center><img src="images/locations/city/citycenter/photo/fotograph.jpg"></center>'
+													'"Umm, yeah! I''ll just have to dig through some boxes and stuff... Uhm, could be a while if I can''t find it!" Awkward laughter escapes your lips and you hope that your smile looks convincing.'
+													'"Alright, well just bring it back with you when you do," he says as he turns back to his computer.'
+													'...'
+													'"Great, I can work here. Now all I have to do is find a passport that says I''m 18 instead of <<age>>..." you mutter dejectedly as you get dressed.'
+													gs 'clothing', 'wear_last_worn'
+													if panties = 1:tanga = 1
+													gs 'stat'
+													act 'Leave':gt 'down'
+												end
+												
+												act 'Tell the truth and tell him how much you need the money':
+													*clr & cla
+													'<center><img src="images/locations/city/citycenter/photo/fotograph.jpg"></center>'
+													fakepassport = 2
+													'You take a deep breath and step closer to him to say, "Okay, the truth is that I''m not really 18. I''m <<age>> okay? But I really need this job! Can''t we work something out?"'
+													'He studies you for a moment, still completely naked before him, not a scrap of clothing to hide your naked body. You realize it suddenly, almost as if you had forgotten and you feel your face flush with embarrassment.'											
+													act '...':
+														*clr & cla
+														'<center><img src="images/locations/city/citycenter/photo/fotograph.jpg"></center>'
+														'"Hmmm..." He rubs his chin thoughtfully while continuing to look at your body before saying, "Alright, listen, I''m not supposed to do this but you really do have an exceptional body so I''m going to make an exception."'
+														'He leans in close and whispers into your ear, "There''s a man who hangs around at the train station in the industrial area. If you can come up with 3000 cash, he can sell you a fake passport that says you''re 18. If you can do that, I can at least have some deniability and you can work here. Sound good?"'
+														'With wide eyes and a smile of relief, you nod furiously and rush to get dressed before running out.'
+														gs 'clothing', 'wear_last_worn'
+														if panties = 1:tanga = 1
+														gs 'stat'
+														act 'Leave':gt 'Down'
+													end
+												end
+												
+												if pcs_exhibition >= 50: 
+													act 'Tell him the truth and tell him how horny this job makes you':
+														*clr & cla
+														'<center><img src="images/locations/city/citycenter/photo/fotograph.jpg"></center>'
+														fakepassport = 2
+														'"Oh please!" you shout abruptly. The truth is, I''m only <<age>>. But it just makes me so fucking horny to know that strange men I''ll never meet are out there looking at pictures of my naked body!"'
+														'You stand there trembling with tight muscles before him. You can feel your juices starting to flow from between your legs with a heightened sense of arousal in anticipation.'
+														*nl
+														'"Hmmm..." He rubs his chin thoughtfully while continuing to look at your body, especially the fluids that have already begun to leak out of your pussy and slip down your thighs, before saying, "Alright, listen, I''m not supposed to do this but you really do have an exceptional body so I''m going to make an exception. There''s a man who hangs around at the train station in the industrial area. If you can come up with 3000 cash, he can sell you a fake passport that says you''re 18. If you can do that, I can at least have some deniability and you can work here. Sound good?"'
+														*nl
+														'With wide eyes and an excited cry of relief, you rush forward and bear hug him in your naked form.'
+														'"Thank you! Thank you! Thank you! Thank you!" you shout while your breasts smush into his chest.'
+														'You get dressed as quickly as you can so you can find your fake passport and get started. You barely even notice the dribble of juices running down your legs as you step outside.'
+														gs 'clothing', 'wear_last_worn'
+														if panties = 1:tanga = 1
+														gs 'stat'
+														act 'Leave':gt 'down'
+													end
+												end
+											end
+										end
+									end
+								else
+									act '"I-I have to undress...?"':
+										cla
+										*nl
+										'"I- I have to undress...?"'
+										'"Yes, I just said, this is studio mostly works with skimpy clothes, lingerie, and nudity. You don''t necessarily need to do shoots with nudity, but you need to have your body inspected to make sure you match the criteria if you want to work here."'
+										act'Reluctantly undress':
+											*clr & cla
+											gs 'clothing', 'strip'
+											if tanga = 1:panties = 1 & tanga = 0
+											gs 'stat'
+											'<center><img src="images/locations/city/citycenter/photo/strip1.gif"><img src="images/locations/city/citycenter/photo/strip2.gif"></center>'
+											'You take a deep breath and begin to take off your clothes. As long as it''s just this one time, you can handle it for now. You leave them on the floor while the photographer examines you.'
+											'He circles you slowly, occasionally asking you to adjust your pose slightly, carefully inspecting every aspect of your nude body. Your <<$pcs_eyecol>> eyes framed by your <<$pcs_haircol>> hair, your <<$liptalk3>>, your <<$titsize>> breasts, your <<$skin1>> <<$pcs_tan>> skin, your thighs, even your <<$vaginatipe>> pussy...'									
+											'He spends several minutes doing this without saying anything. It''s really embarrassing...'
+											act '...':
+												cla
+												'When he''s finished, he stands in front of you and says, "You fit the criteria for the kind of images we want to produce. I just need to see your passport to confirm your age," holding out his hand.'
+												act '"Uhh..."':
+													*clr & cla
+													'<center><img src="images/locations/city/citycenter/photo/fotograph.jpg"></center>'
+													fakepassport = 2
+													'"I... I don''t have it with me..."'
+													'"That''s fine. Just bring it back when you have time," he says casually.'
+													act 'Go along with it':
+														*clr & cla
+														'"Umm, yeah! I''ll just have to dig through some boxes and stuff... Uhm, could be a while if I can''t find it!" Awkward laughter escapes your lips and you hope that your smile looks convincing.'
+														'"Alright, well just bring it back with you when you do," he says as he turns back to his computer.'
+														'...'
+														'"Great, I can work here. Now all I have to do is find a passport that says I''m 18 instead of <<age>>..." you mutter dejectedly as you get dressed.'
+														gs 'clothing', 'wear_last_worn'
+														if panties = 1:tanga = 1
+														gs 'stat'
+														act 'Leave':gt 'down'
+													end
+													act 'Tell the truth and tell him how much you need the money':
+														*clr & cla
+														fakepassport = 2
+														'<center><img src="images/locations/city/citycenter/photo/fotograph.jpg"></center>'
+														'You take a deep breath and step closer to him to say, "Okay, the truth is that I''m not really 18. I''m <<age>> okay? But I really need this job! Can''t we work something out?"'
+														'He studies you for a moment, still completely naked before him, not a scrap of clothing to hide your naked body. You realize it suddenly, almost as if you had forgotten and you feel your face flush with embarrassment.'											
+														act '...':
+															*clr & cla
+															'<center><img src="images/locations/city/citycenter/photo/fotograph.jpg"></center>'
+															'"Hmmm..." He rubs his chin thoughtfully while continuing to look at your body before saying, "Alright, listen, I''m not supposed to do this but you really do have an exceptional body so I''m going to make an exception."'
+															'He leans in close and whispers into your ear, "There''s a man who hangs around at the train station in the industrial area. If you can come up with 3000 cash, he can sell you a fake passport that says you''re 18. If you can do that, I can at least have some deniability and you can work here. Sound good?"'
+															'With wide eyes and a smile of relief, you nod furiously and rush to get dressed before running out.'
+															gs 'clothing', 'wear_last_worn'
+															if panties = 1:tanga = 1
+															gs 'stat'
+															act 'Leave':gt 'Down'
+														end
+													end
+													if pcs_exhibition >= 50: 
+														act 'Tell him the truth and tell him how horny this job makes you':
+															*clr & cla
+															'<center><img src="images/locations/city/citycenter/photo/fotograph.jpg"></center>'
+															fakepassport = 2
+															'"Oh please!" you shout abruptly. The truth is, I''m only <<age>>. But it just makes me so fucking horny to know that strange men I''ll never meet are out there looking at pictures of my naked body!"'
+															'You stand there trembling with tight muscles before him. You can feel your juices starting to flow from between your legs with a heightened sense of arousal in anticipation.'
+															*nl
+															'"Hmmm..." He rubs his chin thoughtfully while continuing to look at your body, especially the fluids that have already begun to leak out of your pussy and slip down your thighs, before saying, "Alright, listen, I''m not supposed to do this but you really do have an exceptional body so I''m going to make an exception. There''s a man who hangs around at the train station in the industrial area. If you can come up with 3000 cash, he can sell you a fake passport that says you''re 18. If you can do that, I can at least have some deniability and you can work here. Sound good?"'
+															*nl
+															'With wide eyes and an excited cry of relief, you rush forward and bear hug him in your naked form.'
+															'"Thank you! Thank you! Thank you! Thank you!" you shout while your breasts smush into his chest.'
+															'You get dressed as quickly as you can so you can find your fake passport and get started. You barely even notice the dribble of juices running down your legs as you step outside.'
+															gs 'clothing', 'wear_last_worn'
+															if panties = 1:tanga = 1
+															gs 'stat'
+															act 'Leave':gt 'down'
+														end
+													end
+												end
+											end
+										end
+										
+										act'I can''t do it':
+											*clr & cla
+											'<center><img src="images/locations/city/citycenter/photo/foto.jpg"></center>'
+											'Even if it''s just this one time, you can''t do it after all. It''s simply too embarrassing to strip down in front of a total stranger. You blush, apologize, and leave the studio.'
+											act 'Leave':gt 'down'
+										end
+									end
+								end
+							end
+						end
 					end
 				end
+			else
+				'You ask about working as a model, but the photographer says to you, "I''m sorry, but you look like a pretty mature woman, we need models with a more youthful appearance." This is his way of telling you that you look too old for this business.'
+				act 'Leave':gt 'down'
 			end
-
-			if vidage >= 20:'You ask about working as a model, but the photographer says to you, "I''m sorry, but you look like a pretty mature woman, we need young girls." This is his way of telling you that you look too old for this business.'
-
-			act 'Leave':gt 'foto', 'start'
 		end
-	elseif model > 0 and modelmon ! month and venera < 3:
-		act 'Ask about work':gt 'foto', 'model'
+	elseif pcs_apprnc < 80:
+		act 'Ask for work':
+			cla
+			*clr
+			'<center><b><font color="maroon">Photographer</font></b></center>'
+			'<center><img src="images/locations/city/citycenter/photo/fotograph.jpg"></center>'
+			'"I''m sorry but you are going to have to work on your appearance if you want to do a shoot."'
+
+			act 'Leave':gt 'down'
+		end
+	elseif venera < 3:
+		act 'Ask for work':
+			if model_week = (daystart - week) / 7:
+				gt 'foto', 'practicemodel'
+			else
+				gt 'foto', 'model'
+			end
+		end
+		if model = 1:
+			act 'Go to the showers':gt'foto','showers'
+			act 'Go to your makeup station':gt'foto','makeup'
+		end
+	else
+		*nl
+		'There is no way anyone is going to want to see pictures of you while your std is so obvious, you should see a doctor.'
 	end
 end
 
-if $ARGS[0] = 'model':
-$modelopt = {
-	if forand = 1:
-		'So, we need a model to dress in stockings and sexy clothing and show off her body. Payment <<4000 + (modelpay * 2)>> plus tip.'
-
-		act 'Not for me':gt 'foto', 'start'
-
-		act 'Agree (3:00)':
-			cls
-			minut += 180
-			modelpayfin = 4000 + (modelpay * 2) + (200*rand(0,5))
-			money += modelpayfin
-			modelfoto += 1
-			modelfotoTipe[1] += 1
-			gs 'stat'
-			'<center><img <<$set_imgh>> src="images/locations/city/citycenter/photo/model1.jpg"></center>'
-			'You dress up in sexy clothes and spend three hours posing for the photographer.'
-			'After three hours of shooting, the photographer gives you <<modelpayfin>> <b>₽</b>.'
-
-			act 'Change back into your clothes':gt 'foto', 'start'
-		end
-	elseif forand = 2:
-		'So, we need a model to dress in stockings. Photos of breast and genital close-ups and some general pictures. Payment <<6000 + (modelpay * 3)>> plus tip.'
-
-		act 'Not for me':gt 'foto', 'start'
-
-		act 'Agree (3:00)':
-			cls
-			minut += 180
-			modelpayfin = 6000 + (modelpay * 3) + (300*rand(0,7))
-			money += modelpayfin
-			modelfoto += 1
-			modelfotoTipe[2] += 1
-			gs 'stat'
-			'<center><img <<$set_imgh>> src="images/locations/city/citycenter/photo/model2.jpg"></center>'
-			'You dressed up in sexy clothes and three hours spent taking various poses for a photographer.'
-			'After three hours of filming photographer gave you <<modelpayfin>> <b>₽</b>.'
-
-			act 'Change back into your clothes':gt 'foto', 'start'
-		end
-	elseif forand = 3:
-		'So, we need a model dressed in sexy clothing with her breasts exposed. Payment <<4000 + (modelpay * 2)>> plus tip.'
-
-		act 'Not for me':gt 'foto', 'start'
-
-		act 'Agree (3:00)':
-			cls
-			minut += 180
-			modelpayfin = 4000 + (modelpay * 2) + (200*rand(0,5))
-			money += modelpayfin
-			modelfoto += 1
-			modelfotoTipe[3] += 1
-			gs 'stat'
-			'<center><img <<$set_imgh>> src="images/locations/city/citycenter/photo/model3.jpg"></center>'
-			'You dressed up in sexy clothes and three hours spent taking various poses for a photographer.'
-			'After three hours of filming photographer gave you <<modelpayfin>> <b>₽</b>.'
-
-			act 'Change back into your clothes':gt 'foto', 'start'
-		end
-	elseif forand = 4:
-		'So, we need a model completely naked. Photos of breasts genitals and buttocks, close-ups and general pictures. Payment <<6000 + (modelpay * 3)>> plus tip.'
-
-		act 'Not for me':gt 'foto', 'start'
-
-		act 'Agree (3:00)':
-			cls
-			minut += 180
-			modelpayfin = 6000 + (modelpay * 3) + (300*rand(0,7))
-			money += modelpayfin
-			modelfoto += 1
-			modelfotoTipe[4] += 1
-			gs 'stat'
-			'<center><img <<$set_imgh>> src="images/locations/city/citycenter/photo/model4.jpg"></center>'
-			'You dressed up in sexy clothes and three hours spent taking various poses for a photographer.'
-			'After three hours of filming photographer gave you <<modelpayfin>> <b>₽</b>.'
-
-			act 'Change back into your clothes':gt 'foto', 'start'
-		end
-	elseif forand = 5:
-		'You stripped naked and photographer busily began to examine your naked body.'
-		'Photographer examines you and offeres you <<3000 + (modelpay)>> plus tip.'
-
-		act 'Leave':gt 'foto', 'start'
-
-		act 'Agree (3:00)':
-			cla
-			*clr
-			minut += 180
-			modelpayfin = 3000 + (modelpay) + (100*rand(0,5))
-			money += modelpayfin
-			modelfoto += 1
-			modelfotoTipe[7] += 1
-			'<center><img <<$set_imgh>> src="images/locations/city/citycenter/photo/fotograph.jpg"></center>'
-			'Photographer said what poses you should take, you are trying to fully implement his instructions and took the most candid poses horny females.'
-			'You filmed naked 3:00 and earned <<modelpayfin>> <b>₽</b>.'
-
-			act 'Change back into your clothes':gt 'foto', 'start'
-		end
-	elseif forand = 6:
-		'So, we need a model dedicated to lesbian sex with another girl. Payment <<9000 + (modelpay*4)>> plus tip.'
-
-		act 'Not for me':gt 'foto', 'start'
-
-		act 'Agree (3:00)':
-			cls
-			modelpayfin = 9000 + (modelpay*4) + (500*rand(0,13))
-			money += modelpayfin
-			modelfoto += 1
-			girl += 1
-			modelfotoTipe[6] += 1
-			gs 'stat'
-			'<center><img <<$set_imgh>> src="images/locations/city/citycenter/photo/model6.jpg"></center>'
-			'You undressed and three hours spent taking various poses with another girl before Pictured petting orgasms and lust.'
-			'After three hours of filming photographer gave you <<modelpayfin>> <b>₽</b>.'
-			
-			gs 'arousal', 'vaginal_finger_give', 180, 'lesbian'
-			gs 'arousal', 'vaginal_finger', 180, 'lesbian'
-			minut -= 180
-			gs 'arousal', 'end'
-			gs 'stat'
-
-			act 'Change back into your clothes':gt 'foto', 'start'
-		end
-	elseif forand = 7:
-		'So, we need a model completely naked, masturbating using a dildo. Payment <<4000 + (modelpay * 2)>> plus tip.'
-
-		act 'Not for me':gt 'foto', 'start'
-
-		if pcs_vag = 0:
-			'You tell him you are still a virgin.'
-			'He looks a little surprised, but offers to take another look to see if there is something more suitable.'
-			'A couple of minutes later he returns, "I have another job, or the photographer is willing to pay <<8000 + (modelpay*4)>> plus tip if you are willing to lose your virginity masturbating with a dildo."'
-
-			act 'See alternative offer':
-				forand = rand(1, 6)
-				cls
-				'<center><b><font color="maroon">Photographer</font></b></center>'
-				'<center><img <<$set_imgh>> src="images/locations/city/citycenter/photo/fotograph.jpg"></center>'
-				'Ok, we have another job we could use you for.'
-				dynamic $modelopt
-			end
-
-			act 'Agree to new offer (lose virginity) (3:00)':
-				cls
-				pcs_vag = 1
-				if pcs_exhibition < 30:exhibition_exp += rand(1,3)
-				modelpayfin = 8000 + (modelpay*4) + (400*rand(0,10))
-				money += modelpayfin
-				modelfoto += 1
-				modelfotoTipe[5] += 1
-				gs 'stat'
-				'<center><img <<$set_imgh>> src="images/locations/city/citycenter/photo/model5.jpg"></center>'
-				'You undressed and spend three hours taking various poses for a photographer and painfully masturbate using different dildos.'
-				'It is an embarrassing way to lose your virginity and you feel that you have allowed yourself to be taken advantage of.'
-				'After three hours of filming photographer gave you <<modelpayfin>> <b>₽</b>.'
-				
-				gs 'arousal', 'masturbate', 180, 'sub', 'humiliation'
-				gs 'arousal', 'end'
-				gs 'stat'
-
-				act 'Change back into your clothes':gt 'foto', 'start'
-			end
-
-			exit
-		end
-
-		act 'Agree (3:00)':
-			cls
-			stat['mast'] += 1
-			if pcs_exhibition < 30:exhibition_exp += rand(1,3)
-			minut += 180
-			modelpayfin = 4000 + (modelpay * 2) + (200*rand(0,5))
-			money += modelpayfin
-			modelfoto += 1
-			modelfotoTipe[5] += 1
-			gs 'stat'
-			'<center><img <<$set_imgh>> src="images/locations/city/citycenter/photo/model5.jpg"></center>'
-			'You undressed and three hours spent taking various poses for a photographer and poking holes in different dildos.'
-			'After three hours of filming photographer gave you <<modelpayfin>> <b>₽</b>.'
-			
-			gs 'arousal', 'masturbate', 180, 'sub', 'humiliation'
-			gs 'arousal', 'end'
-			gs 'stat'
-
-			act 'Change back into your clothes':gt 'foto', 'start'
-		end
-	end
-}
-
+if $ARGS[0] = 'showers':
 	cla
 	*clr
+	shower_sex = rand(1,7)
+	if shower_sex = 7 and katherine >= 3:gt 'foto','katherineshower'
 
-	if pcs_apprnc >= 80:
-		cls
-		minut += 5
+	'<center><img src="images/locations/city/citycenter/photo/shower.jpg"></center>'
+	'In a section of the studio you find the staff shower room. This is where the models go if they need to clean up. There''s no real privacy here. Anybody walking past can see right in, the only modesty being some panes of slightly frosted glass. Still, none of the other models seem to mind very much and sometimes converse or share shower stalls with each other.'
 
-		if model = 0:model = 1
+	
+	act 'Leave':gt'foto','studio'
+	act 'Take a shower (0:15)':
+		cla
+		*clr
+		minut += 15
+		pcs_horny += 1
+		pcs_hairbsh = 0
+		pcs_makeup = 1
+		dynamic $showerdin
+		'<center><img <<$set_imgh>> src="images/shared/home/bathroom/dush.gif"></center>'
+		'You go into a stall and turn on the shower. You lather your body and wash.'
+		if pcs_horny >= 40:
+			act 'Use the shower head on your pussy':
+				cla
+				*clr
+				minut += 10
+				exhibition_exp += 10
+				'<center><img <<$set_imgh>> src="images/shared/home/bathroom/wash2.gif"></center>'
+				*nl
+				'Despite the openness of the shower area, you can''t help yourself and place the shower head between your legs, massaging your pussy with powerful jets of warm water and fingers.'
 
-		modelpay = (pcs_apprnc/4 * 25) + (modelfoto * 50) + (film * 100)
+				if pcs_horny >= 90:
+					pcs_horny = 0
+					stat['mast'] += 1
+					if pcs_exhibition < 50:
+						exhibition_exp += 1
+						orgasm += 1
+						pcs_mood += 15
+						pcs_willpwr += 15
+						'Soon you feel a warm wave spreading over your entire body and you shudder as an orgasm overtakes you. You quickly look around hoping no one noticed your public masturbation session.'
+						act 'Dry off':gt 'foto', 'showers'
+					else
+						exhibition_exp +=15
+						orgasm += 1
+						pcs_mood += 15
+						pcs_willpwr += 15
+						pcs_horny = 40
+						'You loudly groan as you shudder in orgasm, uncaring if anyone notices what you''re up to. In fact, it kind of turns you on and makes you want to keep going...'
+						act 'Dry off':gt 'foto', 'showers'
+					end	
+				else
+					pcs_horny += 5
+					pcs_mood += 10
+					pcs_willpwr += 10
+					'At first it feels very nice, but after a while you become self conscious of how long you''ve been masturbating in the public staff showers. You think maybe it''s time to stop.'
+					act 'Dry off':gt 'foto', 'showers'
+				end
+				if hypnoAddict > 0:
+					'You unconsciously avoid spraying water into your vagina.'
+				else
+					cumspclnt = 8
+					gs 'cum_cleanup'
+				end
+			end
+		end
 
-		modelmon = month
-		gs 'stat'
-		'<center><b><font color="maroon">Photographer</font></b></center>'
-		'<center><img <<$set_imgh>> src="images/locations/city/citycenter/photo/fotograph.jpg"></center>'
-		'"We do need a model. All sessions last approximately 3 hours. Just a second, I''ll see what we have available.'
-		forand = rand(1, 7)
-
-		dynamic $modelopt
-
-	else
-		'One of the photographers examines you. "I''m afraid you don''t fit the criteria at this time."'
-
-		act 'Leave':gt 'foto', 'start'
+		act 'Get out of the shower':gt 'foto', 'showers'
 	end
+	act'Go to your makeup station':gt'foto','makeup'
+end
+
+if $ARGS[0] = 'katherineshower':
+	'<center><img src="images/locations/city/citycenter/photo/portraits/katherine_a/shower.gif"></center>'
+	'You head to the shower area and realize that you can hear passionate moaning from inside. As you enter, you see Krystal in one of the stalls with her boyfriend doing what sounds like an excellent job of eating her pussy out.'
+	'"Ahh! Yes! Just like that!"'
+	pcs_horny += 10
+	act 'Leave':gt'foto','studio'
+	act 'Take a shower (0:15)':
+		cla
+		*clr
+		minut += 15
+		pcs_horny += 15
+		pcs_hairbsh = 0
+		pcs_makeup = 1
+		exhibition_exp += 10
+		dynamic $showerdin
+		'<center><img <<$set_imgh>> src="images/shared/home/bathroom/dush.gif"><img src="images/characters/pavlovsk/resident/kolka/event/shower/BroShower.gif"></center>'
+		'You step into a stall and turn on the shower, trying your best to ignore what is going on while Krystal starts getting fucked from behind.'
+		if pcs_horny >= 40:
+			act 'Use the shower head on your pussy':
+				cla
+				*clr
+				pcs_horny = 0
+				minut += 10
+				exhibition_exp += 15
+				'<center><img <<$set_imgh>> src="images/shared/home/bathroom/wash2.gif"><img src="images/locations/city/citycenter/photo/portraits/katherine_a/showerfuck.gif"></center>'
+				*nl
+				'Her boyfriend pushes her against the wall and pulls her leg up to get deep inside her. Krystal''s moans and the sound of cock slamming into her pussy are too much for you and you can''t stop yourself from placing the shower head between your legs, massaging your pussy with powerful jets of warm water and fingers.'
+				'Your voices start to sync together, echoing out of the stalls in perfect time with each other.'
+				act '. . .':
+					cla & *clr
+					stat['mast'] += 1
+					if pcs_exhibition < 50:
+					orgasm += 1
+					pcs_mood += 15
+					pcs_willpwr += 15
+					'<center><img src="images/locations/city/citycenter/photo/portraits/katherine_a/showercum.gif"></center>'
+					'Her boyfriend pulls out of her and she jacks him off furiously until he spatters her belly with his cum.'
+					'You feel a warm wave spreading over your entire body and orgasm, biting your lip hard to surpress the scream that wants to come out. You can''t believe that you just masturbated in the studio showers to Krystal having shower sex with her boyfriend...'
+						act 'Dry off':
+							cla & *clr
+							'<center><img src="images/characters/pavlovsk/resident/vladimir/sex/bath_voyer_3.jpg"></center>'
+							'You shyly towel off and start to go when you hear Krystal whisper, "Was it good for you too <<$pcs_nickname>>?"'
+							*nl
+							'Blushing hard you put your towel in the bin and go back to the main floor of the studio.'
+							act'Leave':gt 'foto', 'studio'
+						end
+					else
+						exhibition_exp +=20
+						orgasm += 1
+						pcs_mood += 15
+						pcs_willpwr += 15
+						pcs_horny = 40
+						'<center><img src="images/locations/city/citycenter/photo/portraits/katherine_a/showercum.gif"></center>'
+						'Her boyfriend pulls out of her and she jacks him off furiously until he spatters her belly with his cum.'
+						'You loudly groan as you shudder in orgasm, relishing the beautiful image of Krystal''s boyfriend''s cum all over her.'
+						act 'Dry off':
+							cla & *clr
+							'<center><img src="images/characters/pavlovsk/resident/vladimir/sex/bath_voyer_2.gif"></center>'
+							'You start to towel off, widely smiling at Krystal who is washing the cum off her body.'
+							'She smiles back at you. "Maybe you''d like to join us next time?"'
+							'"Maybe, we''ll see!" you say with a smirk.'
+							act'Leave':gt 'foto', 'studio'
+						end
+							
+					end	
+					cumspclnt = 8
+					gs 'cum_cleanup'
+				end
+			end
+		end
+		
+		if pcs_exhibition > 50:
+			act 'Dry off':
+				cla & *clr
+				'<center><img src="images/locations/city/citycenter/photo/portraits/katherine_a/showerfuck.gif"></center>'
+				'You start to towel off looking a little enviously at Krystal when her boyfriend pushes her against the wall and starts to take her from the front.'
+				*nl
+				'You take one last look with a bit of regret and go back to the main floor of the studio.'
+				pcs_horny += 20
+				act'Leave':gt 'foto', 'studio'
+			end
+		else
+			act 'Dry off':
+				cla & *clr
+				'<center><img src="images/locations/city/citycenter/photo/portraits/katherine_a/showerfuck.gif"></center>'
+				'You shyly towel off, still doing your best to ignore the wild and unashamed sex of your co-worker and her boyfriend, who have now switched positions so Krystal''s back is to the wall with her leg up and his big fat cock now pummelling her from the front.'
+				*nl
+				'As you finish drying off you realize how wet between the legs you are. Blushing hard you put your towel in the bin and go back to the main floor of the studio.'
+				pcs_horny = 70
+				act'Leave':gt 'foto', 'studio'
+			end
+		end
+	end
+	act'Go to your makeup station':gt'foto','makeup'
+end
+	
+if $ARGS[0] = 'makeup':
+*clr & cla
+$locM = 'foto'
+$metkaM = 'makeup'
+'<center><img src="images/locations/city/citycenter/photo/mirrors.jpg"></center>'
+'The backstage area where you and the other girls put on your makeup.'
+	act'Back to the studio':gt'foto','studio'
+	act'Use mirror':gt 'mirror','start'
+	act 'Go to the showers':gt'foto','showers'
+end
+
+if $ARGS[0] = 'practicemodel':
+	*clr & cla
+	minut += 5
+	if model = 0:model = 1
+	gs 'stat'
+	'<center><b><font color="maroon">Photographer</font></b></center>'
+	'<center><img src="images/locations/city/citycenter/photo/fotograph.jpg"></center>'
+	'"Hello <<$pcs_firstname>>. We''ve already done a paid shoot with you this week, so we can''t do another one.'
+	'But would you like to get some practice in?"'
+	act '"Maybe not today"' :gt 'foto','studio'
+	act '"Yes, please."':
+		cla
+		'"What would you like to do today?"'
+		
+		act 'Fashion':
+			cla
+			act 'Maybe not today':gt 'foto','studio'
+
+			act 'Agree (3:00)':
+				*clr & cla
+				minut += 180
+				modelpayfin = 0
+				mdlng_exp += rand(3,5)
+				gs 'stat'
+				'<center><img src="images/locations/city/citycenter/photo/fashion.gif"></center>'
+				'You dress up in the latest in fashion wear and spend the next three hours posing for the photographer.'
+				if pcs_mdlng < 20:
+					act'. . .':
+						cla
+						*nl
+						'You''re not used to the skimpy clothing and your poses are awkward and uncomfortable. You haven''t really gotten the hang of this modelling thing yet.'
+						act'. . .':
+							cla & *clr
+							*nl
+							'The practice shoot ends and he calls you over to his computer to show you what you need to work on.'
+							'<center><img src="images/locations/city/citycenter/photo/modelbts2.gif"></center>'
+
+							if pcs_mdlng >= 40 and commercial = 0:
+								act 'Leave':gt'foto','commercial'
+							else
+								act 'Leave':gt 'foto', 'end'
+							end
+						end
+					end
+				else
+					act'. . .':
+						cla & *clr
+						*nl
+						'The practice shoot ends and he calls you over to his computer to show you what you need to work on.'
+						'<center><img src="images/locations/city/citycenter/photo/modelbts2.gif"></center>'
+
+						if pcs_mdlng >= 40 and commercial = 0:
+							act 'Leave':gt'foto','commercial'
+						else
+							act 'Leave':gt 'foto', 'end'
+						end
+					end
+				end
+			end
+		end
+		
+		act 'Erotic clothed':
+			cla
+			act 'Maybe not today':gt 'foto','studio'
+			
+			if pcs_exhibition < 20:
+				act 'Agree (3:00)':
+					*clr & cla
+					minut += 180
+					modelpayfin = 0
+					mdlng_exp += 1
+					exhibition_exp += rand(1,3)
+
+					gs 'stat'
+					'<center><img src="images/locations/city/citycenter/photo/model1.jpg"></center>'
+					'You''re still not confident to do a shoot like this for real, but you are determined to build up your courage so you can become a better model.'
+					'You dress up in sexy clothes and spend the next three hours posing for the photographer.'
+					if pcs_mdlng < 20:
+						act'. . .':
+							*nl
+							cla
+							'You''re not used to the skimpy clothing and your poses are awkward and uncomfortable. You haven''t really gotten the hang of this modelling thing yet.'
+							'You think that it''s how self conscious you are about your body that''s holding you back and making it hard to focus on learning to be a better model.'
+							act'. . .':
+								cla & *clr
+								*nl
+								'The practice shoot ends and he calls you over to his computer to show you what you need to work on.'
+								'<center><img src="images/locations/city/citycenter/photo/modelbts2.gif"></center>'
+								if pcs_mdlng >= 40 and commercial = 0:
+									act 'Leave':gt'foto','commercial'
+								else
+									act 'Leave':gt 'foto', 'end'
+								end
+							end
+						end
+					else
+						act'. . .':
+							cla & *clr
+							*nl
+							'The practice shoot ends and he calls you over to his computer to show you what you need to work on.'
+							'<center><img src="images/locations/city/citycenter/photo/modelbts2.gif"></center>'
+
+							if pcs_mdlng >= 40 and commercial = 0:
+								act 'Leave':gt'foto','commercial'
+							else
+								act 'Leave':gt 'foto', 'end'
+							end
+						end
+					end
+				end
+			else
+				act 'Agree (3:00)':
+					*clr & cla
+					minut += 180
+					modelpayfin = 0
+					mdlng_exp += rand(5,8)
+					exhibition_exp += 1
+
+					gs 'stat'
+					'<center><img src="images/locations/city/citycenter/photo/model1.jpg"></center>'
+					'You dress up in sexy clothes and spend the next three hours posing for the photographer.'
+					if pcs_mdlng < 20:
+						act'. . .':
+							cla
+							*nl
+							'You''re not used to the skimpy clothing and your poses are awkward and uncomfortable. You haven''t really gotten the hang of this modelling thing yet.'
+							act'. . .':
+								cla & *clr
+								*nl
+								'The practice shoot ends and he calls you over to his computer to show you what you need to work on.'
+								'<center><img src="images/locations/city/citycenter/photo/modelbts2.gif"></center>'
+
+								if pcs_mdlng >= 40 and commercial = 0:
+									act 'Leave':gt'foto','commercial'
+								else
+									act 'Leave':gt 'foto', 'end'
+								end
+							end
+						end
+					else
+						act'. . .':
+							cla & *clr
+							*nl
+							'The practice shoot ends and he calls you over to his computer to show you what you need to work on.'
+							'<center><img src="images/locations/city/citycenter/photo/modelbts2.gif"></center>'
+
+							if pcs_mdlng >= 40 and commercial = 0:
+								act 'Leave':gt'foto','commercial'
+							else
+								act 'Leave':gt 'foto', 'end'
+							end
+						end
+					end
+				end
+			end
+		end
+		
+		act 'Lingerie modelling':
+			cla
+			act 'Maybe not today':gt 'foto','studio'
+
+			if pcs_exhibition < 25:
+				act 'Agree (3:00)':
+					*clr & cla
+					minut += 180
+					modelpayfin = 0
+					mdlng_exp += 1
+					exhibition_exp += rand (1,3)
+					gs 'stat'
+					'<center><img src="images/locations/city/citycenter/photo/lingerie.gif"></center>'
+					'You''re too embarrassed to do a shoot like this that would be released to the public, but you''re determined to work your way up to it so put on some sexy lingerie and spend the next three hours striking various poses for a photographer.'
+					if pcs_mdlng < 20:
+						act'. . .':
+							cla
+							*nl
+							'Even without explicit nudity, you feel exposed and self concsious. It''s hard to focus on getting it right when all you can think about is how much skin you''re showing.'
+							'You spend the majority of the practice shoot trying to stay calm and feel more natural about exposing yourself.'
+							act'. . .':
+								cla & *clr
+								*nl
+								'The practice shoot ends and he calls you over to his computer to show you what you need to work on.'
+								'<center><img src="images/locations/city/citycenter/photo/modelbts2.gif"></center>'
+								if pcs_mdlng >= 40 and commercial = 0:
+									act 'Leave':gt'foto','commercial'
+								else
+									act 'Leave':gt 'foto', 'end'
+								end
+							end
+						end
+					else
+						act'. . .':
+							cla & *clr
+							*nl
+							'The practice shoot ends and he calls you over to his computer to show you what you need to work on.'
+							'<center><img src="images/locations/city/citycenter/photo/modelbts2.gif"></center>'
+							if pcs_mdlng >= 40 and commercial = 0:
+								act 'Leave':gt'foto','commercial'
+							else
+								act 'Leave':gt 'foto', 'end'
+							end
+						end
+					end
+				end
+			else
+				act 'Agree (3:00)':
+					*clr & cla
+					minut += 180
+					modelpayfin = 0
+					mdlng_exp += rand(6,10)
+					exhibition_exp += 2
+					gs 'stat'
+					'<center><img src="images/locations/city/citycenter/photo/lingerie.gif"></center>'
+					'You put on some sexy lingerie and spend the next three hours striking various poses for a photographer.'
+					if pcs_mdlng < 20:
+						act'. . .':
+							cla
+							*nl
+							'It''s hard to show off the beauty of the lingerie without just making the shoot all about you and your body''s physical attractiveness instead. Not that you personally mind, but the photographer says it''s important for the companies selling the clothing.'
+							act'. . .':
+								cla & *clr
+								*nl
+								'The practice shoot ends and he calls you over to his computer to show you what you need to work on.'
+								'<center><img src="images/locations/city/citycenter/photo/modelbts2.gif"></center>'
+								if pcs_mdlng >= 40 and commercial = 0:
+									act 'Leave':gt'foto','commercial'
+								else
+									act 'Leave':gt 'foto', 'end'
+								end
+							end
+						end
+					else
+						act'. . .':
+							cla
+							*nl
+							'The practice shoot ends and he calls you over to his computer to show you what you need to work on.'
+							'<center><img src="images/locations/city/citycenter/photo/modelbts2.gif"></center>'
+							if pcs_mdlng >= 40 and commercial = 0:
+								act 'Leave':gt'foto','commercial'
+							else
+								act 'Leave':gt 'foto', 'end'
+							end
+						end
+					end
+				end
+			end
+		end
+
+		act 'Erotic clothing with breast nudity':
+			cla
+			act 'Maybe not today':gt 'foto','studio'
+
+			if pcs_exhibition < 30:
+				act 'Agree (3:00)':
+					*clr & cla
+					minut += 180
+					modelpayfin = 0
+					mdlng_exp += 1
+					exhibition_exp += rand(1,4)
+					gs 'stat'
+					'<center><img src="images/locations/city/citycenter/photo/model5.gif"></center>'
+					'Exposing your breasts for the world to see is a step up from just modelling lingerie and it still isn''t something you''re willing to do. But this is practice so it isn''t going to be published anywhere and the photographers are recommending it to you so you can feel more comfortable on set.'
+					'You put on some loose clothing and give it a go. The next three hours are filled with instructions from the photographer and clicks from the camera with your nipples occasionally slipping out.'
+					if pcs_mdlng < 20:
+						act'. . .':
+							cla
+							*nl
+							'You''re having difficulty getting in the poses the photographer wants you in. You know that it''s because you''re subconsciously still trying to hide your breasts when the photographer wants them visible. It''s embarrassing after all...'
+							act'. . .':
+								*clr & cla
+								*nl
+								'The practice shoot ends and he calls you over to his computer to show you what you need to work on.'
+								'<center><img src="images/locations/city/citycenter/photo/modelbts2.gif"></center>'
+								if pcs_mdlng >= 40 and commercial = 0:
+									act 'Leave':gt'foto','commercial'
+								else
+									act 'Leave':gt 'foto', 'end'
+								end
+							end
+						end
+					else
+						act'. . .':
+							*clr & cla
+							*nl
+							'The practice shoot ends and he calls you over to his computer to show you what you need to work on.'
+							'<center><img src="images/locations/city/citycenter/photo/modelbts2.gif"></center>'
+							if pcs_mdlng >= 40 and commercial = 0:
+								act 'Leave':gt'foto','commercial'
+							else
+								act 'Leave':gt 'foto', 'end'
+							end
+						end
+					end
+				end
+			else
+				act 'Agree (3:00)':
+					*clr & cla
+					minut += 180
+					modelpayfin = 0
+					mdlng_exp += rand(5,8)
+					exhibition_exp += 2
+					gs 'stat'
+					'<center><img src="images/locations/city/citycenter/photo/model5.gif"></center>'
+					'You dressed up in loose clothes and spend the next three hours striking various poses for a photographer, your nipples occasionally slipping out.'
+					if pcs_mdlng < 20:
+						act'. . .':
+							cla
+							*nl
+							'You''re having difficulty getting in the poses the photographer wants you in. You haven''t quite figured out the best methods of subtly exposing your breasts in a way that''s visually appealing and not just a regular nip slip.'
+							act'. . .':
+								cla & *clr
+								*nl
+								'The practice shoot ends and he calls you over to his computer to show you what you need to work on.'
+								'<center><img src="images/locations/city/citycenter/photo/modelbts2.gif"></center>'
+								if pcs_mdlng >= 40 and commercial = 0:
+									act 'Leave':gt'foto','commercial'
+								else
+									act 'Leave':gt 'foto', 'end'
+								end
+							end
+						end
+					else
+						act'. . .':
+							cla & *clr
+							*nl
+							'The practice shoot ends and he calls you over to his computer to show you what you need to work on.'
+							'<center><img src="images/locations/city/citycenter/photo/modelbts2.gif"></center>'
+							if pcs_mdlng >= 40 and commercial = 0:
+								act 'Leave':gt'foto','commercial'
+							else
+								act 'Leave':gt 'foto', 'end'
+							end
+						end
+					end
+				end
+			end
+		end
+
+		
+		
+		act 'Topless':
+			cla
+			act 'Maybe not today':gt 'foto','studio'
+			
+			if pcs_exhibition < 35:
+				act 'Agree (3:00)':
+					*clr & cla
+					minut += 180
+					modelpayfin = 0
+					mdlng_exp += 1
+					exhibition_exp += rand(2,5)
+					gs 'stat'
+					'<center><img src="images/locations/city/citycenter/photo/model4.gif"></center>'
+					'A topless shoot without even a bikini or a loose shirt to hide your breasts... Unthinkable that you could ever do it for real! But it''s only a practice shoot right now. You''re not comfortable with it, but if you want to grow as a model, this is what you have to do.'
+					*nl
+					'You put on the bottoms the photographer chose for you and omit a top leaving your breasts exposed. You spend the next three hours striking various poses, covering and uncovering your breasts, and listen to instruction while the photographer takes pictures of you.'
+					if pcs_mdlng < 20:
+						act'. . .':
+							cla
+							*nl
+							'You try your best to follow the photographers instructions of covering and uncovering your breasts. Covering them you have no problem with, but whenever he wants you to take your hands off, you feel incredibly reluctant and uncomfortable and its affecting your performance. If you even want to consider do a topless shoot, you need to be more bold.'
+							act'. . .':
+								*clr & cla
+								*nl
+								'The practice shoot ends and he calls you over to his computer to show you what you need to work on.'
+								'<center><img src="images/locations/city/citycenter/photo/modelbts2.gif"></center>'
+								if pcs_mdlng >= 40 and commercial = 0:
+									act 'Leave':gt'foto','commercial'
+								else
+									act 'Leave':gt 'foto', 'end'
+								end
+							end
+						end
+					else
+						act'. . .':
+							*clr & cla
+							*nl
+							'The practice shoot ends and he calls you over to his computer to show you what you need to work on.'
+							'<center><img src="images/locations/city/citycenter/photo/modelbts2.gif"></center>'
+							if pcs_mdlng >= 40 and commercial = 0:
+								act 'Leave':gt'foto','commercial'
+							else
+								act 'Leave':gt 'foto', 'end'
+							end
+						end
+					end
+				end
+			else
+				act 'Agree (3:00)':
+					*clr & cla
+					minut += 180
+					modelpayfin = 0
+					mdlng_exp += rand(6,10)
+					exhibition_exp += 3
+					gs 'stat'
+					'<center><img src="images/locations/city/citycenter/photo/model4.gif"></center>'
+					'You put on the bottoms the photographer chose for you and omit a top leaving your breasts exposed. You spend the next three hours striking various poses, covering and uncovering your breasts, and listen to instruction while the photographer takes pictures of you.'
+					if pcs_mdlng < 20:
+						act'. . .':
+							cla
+							*nl
+							'You try your best to follow the photographers instructions but your movements are more than a little stiff. You get the feeling you aren''t being very sexy when you are hiding <i>or</i> revealing your breasts.'
+							act'. . .':
+								*clr & cla
+								*nl
+								'The practice shoot ends and he calls you over to his computer to show you what you need to work on.'
+								'<center><img src="images/locations/city/citycenter/photo/modelbts2.gif"></center>'
+								if pcs_mdlng >= 40 and commercial = 0:
+									act 'Leave':gt'foto','commercial'
+								else
+									act 'Leave':gt 'foto', 'end'
+								end
+							end
+						end
+					else
+						act'. . .':
+							*clr & cla
+							*nl
+							'The practice shoot ends and he calls you over to his computer to show you what you need to work on.'
+							'<center><img src="images/locations/city/citycenter/photo/modelbts2.gif"></center>'
+							if pcs_mdlng >= 40 and commercial = 0:
+								act 'Leave':gt'foto','commercial'
+							else
+								act 'Leave':gt 'foto', 'end'
+							end
+						end
+					end
+				end
+			end
+		end
+		
+		act 'Nude with covered genitals':
+			cla
+			act 'Not for me':gt 'foto','studio'
+
+			if pcs_exhibition < 35:
+				act 'Agree (3:00)':
+					*clr & cla
+					minut += 180
+					modelpayfin = 0
+					mdlng_exp += 1
+					exhibition_exp += rand(3,5)
+					gs 'stat'
+					'<center><img src="images/locations/city/citycenter/photo/model6.gif"></center>'
+					'It''s okay... It''s a nude shoot but you don''t have to show your pussy. That makes it just like a topless so it''s fine right? A topless shoot except with more of your legs exposed... Or almost completely exposed...'
+					'You pick up the prop you''re using and spend the next three hours taking photos in various poses for a photographer.'
+					if pcs_mdlng < 20:
+						act'. . .':
+							cla
+							*nl
+							'You keep your crotch covered with your hands or props during the shoot. The urge to use them to cover up completely is almost irresistable but you have to power through this if you want to do this kind of work. You must be bold!'
+							'That being said, you''re having a difficult time of it and you can tell you aren''t doing a very good job.'
+							act'. . .':
+							*clr & cla
+							*nl
+							'The practice shoot ends and he calls you over to his computer to show you what you need to work on.'
+							'<center><img src="images/locations/city/citycenter/photo/modelbts2.gif"></center>'
+								if pcs_mdlng >= 40 and commercial = 0:
+									act 'Leave':gt'foto','commercial'
+								else
+									act 'Leave':gt 'foto', 'end'
+								end
+							end
+						end
+					else
+						act'. . .':
+							*clr & cla
+							*nl
+							'The practice shoot ends and he calls you over to his computer to show you what you need to work on.'
+							'<center><img src="images/locations/city/citycenter/photo/modelbts2.gif"></center>'
+							if pcs_mdlng >= 40 and commercial = 0:
+								act 'Leave':gt'foto','commercial'
+							else
+								act 'Leave':gt 'foto', 'end'
+							end
+						end
+					end
+				end
+			else
+				act 'Agree (3:00)':
+					*clr & cla
+					minut += 180
+					modelpayfin = 0
+					mdlng_exp += rand(8,10)
+					exhibition_exp += 4
+					gs 'stat'
+					'<center><img src="images/locations/city/citycenter/photo/model6.gif"></center>'
+					'You put on the bottoms the photographer chose for you and omit a top leaving your breasts exposed. You spend the next three hours striking various poses, covering and uncovering your breasts, and listen to instruction while the photographer takes pictures of you.'
+					if pcs_mdlng < 20:
+						act'. . .':
+							cla
+							*nl
+							'You keep your crotch covered with your hands or props during the shoot. You find it difficult to use them as coverage in a way that is still sexy. You probably need more practice.'
+							act'. . .':
+							*clr & cla
+							*nl
+							'The practice shoot ends and he calls you over to his computer to show you what you need to work on.'
+							'<center><img src="images/locations/city/citycenter/photo/modelbts2.gif"></center>'
+								if pcs_mdlng >= 40 and commercial = 0:
+									act 'Leave':gt'foto','commercial'
+								else
+									act 'Leave':gt 'foto', 'end'
+								end
+							end
+						end
+					else
+						act'. . .':
+							*clr & cla
+							*nl
+							'The practice shoot ends and he calls you over to his computer to show you what you need to work on.'
+							'<center><img src="images/locations/city/citycenter/photo/modelbts2.gif"></center>'
+							if pcs_mdlng >= 40 and commercial = 0:
+								act 'Leave':gt'foto','commercial'
+							else
+								act 'Leave':gt 'foto', 'end'
+							end
+						end
+					end
+				end
+			end
+		end				
+		
+		
+		act 'Nude with stockings':
+			cla
+			act 'Not for me':gt 'foto','studio'
+
+			if pcs_exhibition < 38:
+				act 'Agree (3:00)':
+				*clr & cla
+				minut += 180
+				modelpayfin = 0
+				mdlng_exp += 1
+				exhibition_exp += rand(4,6)
+				gs 'stat'
+				'<center><img src="images/locations/city/citycenter/photo/model2.jpg"></center>'
+				'This is it... If you want to be a top model you''re going to have to be willing to show what''s between you legs on camera... This is a necessary step for moving forward... but that doesn''t make it easy either...'
+				'You go to the changing room and pull up some stockings. Even though it doesn''t cover any of your privates, it''s somehow comforting to be wearing something instead of being completely nude.' 
+				'You spend the next three hours with a photographer taking photos in poses that accentuate your breasts and pussy.'
+					if pcs_mdlng < 20:
+						act'. . .':
+							cla
+							*nl
+							'You''re panicking and it''s showing through to the photographer. The idea of doing this for real and having pictures of your vagina on display in magazines and the internet for people to see horrifies you. Over the course of the session, the photographer helps you find ways to relax and be more comfortable in the nude, but you don''t think your skill as a model has improved very much.'
+							act'. . .':
+								*clr & cla
+								*nl
+								'The practice shoot ends and he calls you over to his computer to show you what you need to work on.'
+								'<center><img src="images/locations/city/citycenter/photo/modelbts2.gif"></center>'
+								if pcs_mdlng >= 40 and commercial = 0:
+									act 'Leave':gt'foto','commercial'
+								else
+									act 'Leave':gt 'foto', 'end'
+								end
+							end
+						end
+					else
+						act'. . .':
+							*clr & cla
+							*nl
+							'The practice shoot ends and he calls you over to his computer to show you what you need to work on.'
+							'<center><img src="images/locations/city/citycenter/photo/modelbts2.gif"></center>'
+							if pcs_mdlng >= 40 and commercial = 0:
+								act 'Leave':gt'foto','commercial'
+							else
+								act 'Leave':gt 'foto', 'end'
+							end
+						end
+					end
+				end
+			else
+				act 'Agree (3:00)':
+					*clr & cla
+					minut += 180
+					modelpayfin = 0
+					mdlng_exp += rand(8,10)
+					exhibition_exp += 2
+					gs 'stat'
+					'<center><img src="images/locations/city/citycenter/photo/model2.jpg"></center>'
+					'You go to the changing room and pull up some stockings.'
+					'You spend the next three hours with a photographer taking photos in poses that accentuate your breasts and pussy.'
+					if pcs_mdlng < 20:
+						act'. . .':
+							cla
+							*nl
+							'You''re having difficulty getting in the poses the photographer wants you in. The stockings can be slippery sometimes and it''s hard finding ways to use them to amplify your own beauty. This will take some getting used to.'
+							act'. . .':
+								cla & *clr
+								*nl
+								'The practice shoot ends and he calls you over to his computer to show you what you need to work on.'
+								'<center><img src="images/locations/city/citycenter/photo/modelbts2.gif"></center>'
+								if pcs_mdlng >= 40 and commercial = 0:
+									act 'Leave':gt'foto','commercial'
+								else
+									act 'Leave':gt 'foto', 'end'
+								end
+							end
+						end
+					else
+						act'. . .':
+							cla & *clr
+							*nl
+							'The practice shoot ends and he calls you over to his computer to show you what you need to work on.'
+							'<center><img src="images/locations/city/citycenter/photo/modelbts2.gif"></center>'
+							if pcs_mdlng >= 40 and commercial = 0:
+								act 'Leave':gt'foto','commercial'
+							else
+								act 'Leave':gt 'foto', 'end'
+							end
+						end
+					end
+				end
+			end
+		end
+
+		act 'Completely nude':
+			cla
+			act 'Maybe not today':gt 'foto','studio'
+
+			if pcs_exhibition < 40:
+				act 'Agree (3:00)':
+				*clr & cla
+				minut += 180
+				modelpayfin = 0
+				mdlng_exp += 1
+				exhibition_exp += rand(5,7)
+				gs 'stat'
+				'<center><img src="images/locations/city/citycenter/photo/nudemodel1.gif"><img src="images/locations/city/citycenter/photo/nudemodel2.gif"></center>'
+				'Full frontal nudity. You don''t even have the clothing comforts of stockings this time. But if you''re going to be a better model, this is what it takes.'
+				'You follow the photographer directly onto set without anything to change into and before you know it, the shoot has already begun.'
+					if pcs_mdlng < 20:
+						act'. . .':
+							cla
+							*nl
+							'You can''t concentrate at all. All you can think about is your naked body on display for anyone with a smart phone to see. You didn''t realize how big a deal this was until you were on camera.'
+							'As the next three hours go by you start to become more accustomed to being naked on camera and you feel your confidence rising, though maybe not your modelling skills.'
+							act'. . .':
+								*clr & cla
+								*nl
+								'The practice shoot ends and he calls you over to his computer to show you what you need to work on.'
+								'<center><img src="images/locations/city/citycenter/photo/modelbts2.gif"></center>'
+								if pcs_mdlng >= 40 and commercial = 0:
+									act 'Leave':gt'foto','commercial'
+								else
+									act 'Leave':gt 'foto', 'end'
+								end
+							end
+						end
+					else
+						act'. . .':
+							*clr & cla
+							*nl
+							'The practice shoot ends and he calls you over to his computer to show you what you need to work on.'
+							'<center><img src="images/locations/city/citycenter/photo/modelbts2.gif"></center>'
+							if pcs_mdlng >= 40 and commercial = 0:
+								act 'Leave':gt'foto','commercial'
+							else
+								act 'Leave':gt 'foto', 'end'
+							end
+						end
+					end
+				end
+			else
+				act 'Agree (3:00)':
+					*clr & cla
+					minut += 180
+					modelpayfin = 0
+					mdlng_exp += rand(9,10)
+					exhibition_exp += 2
+					gs 'stat'
+					'<center><img src="images/locations/city/citycenter/photo/nudemodel1.gif"><img src="images/locations/city/citycenter/photo/nudemodel2.gif"></center>'
+					'You walk directly onto the set, not needing any clothes to change into and begin your practice session immediately.'
+					if pcs_mdlng < 20:
+						act'. . .':
+							cla
+							*nl
+							'Without clothes, the shoot becomes all about posture. You''re comfortable and confident in your naked body at this point, but you never realized how much of an advantage clothes were for making yourself sexier on camera and how straining it can be to pose in ways that compensate. This is going to take some getting used to.'
+							act'. . .':
+								cla & *clr
+								*nl
+								'The practice shoot ends and he calls you over to his computer to show you what you need to work on.'
+								'<center><img src="images/locations/city/citycenter/photo/modelbts2.gif"></center>'
+								if pcs_mdlng >= 40 and commercial = 0:
+									act 'Leave':gt'foto','commercial'
+								else
+									act 'Leave':gt 'foto', 'end'
+								end
+							end
+						end
+					else
+						act'. . .':
+							cla & *clr
+							*nl
+							'The practice shoot ends and he calls you over to his computer to show you what you need to work on.'
+							'<center><img src="images/locations/city/citycenter/photo/modelbts2.gif"></center>'
+							if pcs_mdlng >= 40 and commercial = 0:
+								act 'Leave':gt'foto','commercial'
+							else
+								act 'Leave':gt 'foto', 'end'
+							end
+						end
+					end
+				end
+			end
+		end
+			
+			
+		act 'Variety shoot':
+			cla
+			act 'Maybe not today':gt 'foto','studio'
+
+			if pcs_exhibition < 40:
+				act 'Agree (3:00)':
+				*clr & cla
+				minut += 180
+				modelpayfin = 0
+				mdlng_exp += 3
+				exhibition_exp += rand(4,6)
+				gs 'stat'
+				'<center><img src="images/locations/city/citycenter/photo/vmodel.gif"></center>'
+				'It''s still a shoot with full frontal nudity but you have a few different sets of clothing to change through so it''s going to start with clothes but later progress into being fully nude. Not a great comfort, but at least it''s still practice and you won''t spend all three hours in your birthday suit.'
+					if pcs_mdlng < 20:
+						act'. . .':
+							cla
+							*nl
+							'The hours go by in a rush. You never realized how exhausting it could be to have to change in and out of new clothings and by the time it gets to the full nude part of the shoot, you became so accustomed to stripping down that you didn''t feel all that embarrassed. Unlike previous times you''ve done full nude shoots, you might have actually gained more knowledge as a model this time than confidence in your body.'
+							act'. . .':
+								*clr & cla
+								*nl
+								'The practice shoot ends and he calls you over to his computer to show you what you need to work on.'
+								'<center><img src="images/locations/city/citycenter/photo/modelbts2.gif"></center>'
+								if pcs_mdlng >= 40 and commercial = 0:
+									act 'Leave':gt'foto','commercial'
+								else
+									act 'Leave':gt 'foto', 'end'
+								end
+							end
+						end
+					else
+						act'. . .':
+							*clr & cla
+							*nl
+							'The practice shoot ends and he calls you over to his computer to show you what you need to work on.'
+							'<center><img src="images/locations/city/citycenter/photo/modelbts2.gif"></center>'
+							if pcs_mdlng >= 40 and commercial = 0:
+								act 'Leave':gt'foto','commercial'
+							else
+								act 'Leave':gt 'foto', 'end'
+							end
+						end
+					end
+				end
+			else
+				act 'Agree (3:00)':
+					*clr & cla
+					minut += 180
+					modelpayfin = 0
+					mdlng_exp += 10
+					exhibition_exp += 2
+					gs 'stat'
+					'<center><img src="images/locations/city/citycenter/photo/vmodel.gif"></center>'
+					'This kind of shoot is all about stamina. With the vast array of clothings you need to be changing through you need to be able to get through the intermediary phases quickly to maximize shooting time.'
+					if pcs_mdlng < 20:
+						act'. . .':
+							cla
+							*nl
+							'You didn''t realize just how difficult this kind of thing would be. It''s hard to remember what to be doing when you move from one clothing set to the next, the tone or context changing while you do. You''re going to need way more practice to get this one done.'
+							act'. . .':
+								cla & *clr
+								*nl
+								'The practice shoot ends and he calls you over to his computer to show you what you need to work on.'
+								'<center><img src="images/locations/city/citycenter/photo/modelbts2.gif"></center>'
+								if pcs_mdlng >= 40 and commercial = 0:
+									act 'Leave':gt'foto','commercial'
+								else
+									act 'Leave':gt 'foto', 'end'
+								end
+							end
+						end
+					else
+						act'. . .':
+							cla & *clr
+							*nl
+							'The practice shoot ends and he calls you over to his computer to show you what you need to work on.'
+							'<center><img src="images/locations/city/citycenter/photo/modelbts2.gif"></center>'
+							if pcs_mdlng >= 40 and commercial = 0:
+								act 'Leave':gt'foto','commercial'
+							else
+								act 'Leave':gt 'foto', 'end'
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+if $ARGS[0] = 'end':
+	model_week = (daystart - week) / 7
+	modelfoto += 1
+	money += modelpayfin
+	gt 'foto','studio'
+end
+
+
+if $ARGS[0] = 'model':
+	*clr & cla
+	minut += 5
+	modelpay = (pcs_mdlng/2 * 25) + (city_modelling * 5) + (pcs_apprnc)
+	if model = 0:model = 1
+	gs 'stat'
+	'<center><b><font color="maroon">Photographer</font></b></center>'
+	'<center><img src="images/locations/city/citycenter/photo/fotograph.jpg"></center>'
+	'"Hello <<$pcs_firstname>>. Are you here to work? What would you like to do today?"'
+
+	
+		
+	act 'Fashion':
+		cla
+		act 'Maybe not today':gt 'foto','studio'
+
+		act 'Agree (3:00)':
+			*clr & cla
+			minut += 180
+			modelpayfin = 1000 + (modelpay) + (25*rand(0,5)) + (pcs_apprnc)
+			modelfotoTipe[1] += 1
+			mdlng_exp += rand(5,8)
+			city_modelling += rand(3,5)
+			gs 'stat'
+			'<center><img src="images/locations/city/citycenter/photo/fashion.gif"></center>'
+			'You dress up in the latest in fashion wear and spend the next three hours posing for the photographer.'
+			'Finally having taken all his pictures, the photographer thanks you for your time, counts out your <<modelpayfin>> <b>₽</b>, and pays it to you.'
+			if pcs_mdlng >= 40 and commercial = 0:
+				act 'Leave':gt'foto','commercial'
+			else
+				act 'Leave':gt 'foto', 'end'
+			end
+		end
+	end
+	
+	
+	
+	act 'Erotic clothed':
+		if pcs_exhibition < 20:
+		'You think about asking to do this shoot but then blush and realize you aren''t confident enough to have pictures of yourself like this circling around the internet. Maybe you could practice it later, but you''re not ready to do it for real.'
+		else
+			cla
+			act 'Maybe not today':gt 'foto','studio'
+
+			act 'Agree (3:00)':
+				*clr & cla
+				minut += 180
+				modelpayfin = 1000 + (modelpay) + (25*rand(0,5))
+				modelfotoTipe[1] += 1
+				mdlng_exp += rand(5,10)
+				city_modelling += rand(3,5)
+				exhibition_exp += 1
+				gs 'stat'
+				'<center><img src="images/locations/city/citycenter/photo/model1.jpg"></center>'
+				'You dress up in sexy clothes and spend the next three hours posing for the photographer.'
+				'Finally having taken all his pictures, the photographer thanks you for your time, counts out your <<modelpayfin>> <b>₽</b>, and pays it to you.'
+				if pcs_mdlng >= 40 and commercial = 0:
+					act 'Leave':gt'foto','commercial'
+				else
+					act 'Leave':gt 'foto', 'end'
+				end
+			end
+		end
+	end
+	
+	act 'Lingerie modelling':
+		if pcs_exhibition < 25:
+			'You think about asking to do this shoot but then blush and realize you aren''t confident enough to have pictures of yourself like this circling around the internet. Maybe you could practice it later, but you''re not ready to do it for real.'
+		else
+			cla
+			act 'Maybe not today':gt 'foto','studio'
+
+			act 'Agree (3:00)':
+				*clr & cla
+				minut += 180
+				modelpayfin = 1800 + (modelpay) + (35*rand(0,5))
+				modelfotoTipe[3] += 1
+				mdlng_exp += rand(6,10)
+				city_modelling += rand(4,6)
+				pav_modelling += rand(0,city_modelling)/15
+				exhibition_exp += 2
+				gs 'stat'
+				'<center><img src="images/locations/city/citycenter/photo/lingerie.gif"></center>'
+				'You put on some sexy lingerie and spend the next three hours striking various poses for a photographer.'
+				'Finally having taken all his pictures, the photographer thanks you for your time, counts out your <<modelpayfin>> <b>₽</b>, and pays it to you.'
+				if pcs_mdlng >= 40 and commercial = 0:
+					act 'Leave':gt'foto','commercial'
+				else
+					act 'Leave':gt 'foto', 'end'
+				end
+			end
+		end
+	end
+
+	act 'Erotic clothing with breast nudity':
+		if pcs_exhibition < 30:
+			'You think about asking to do this shoot but then blush and realize you aren''t confident enough to have pictures of yourself like this circling around the internet. Maybe you could practice it later, but you''re not ready to do it for real.'
+		else
+			cla
+			act 'Maybe not today':gt 'foto','studio'
+
+			act 'Agree (3:00)':
+				*clr & cla
+				minut += 180
+				modelpayfin = 2000 + (modelpay) + (35*rand(0,5))
+				modelfotoTipe[3] += 1
+				mdlng_exp += rand(6,10)
+				city_modelling += rand(4,6)
+				exhibition_exp += 2
+				gs 'stat'
+				'<center><img src="images/locations/city/citycenter/photo/model5.gif"></center>'
+				'You dressed up in sexy clothes and spend the next three hours striking various poses for a photographer, your nipples occasionally slipping out from behind the clothing.'
+				'Finally having taken all his pictures, the photographer thanks you for your time, counts out your <<modelpayfin>> <b>₽</b>, and pays it to you.'
+				if pcs_mdlng >= 40 and commercial = 0:
+					act 'Leave':gt'foto','commercial'
+				else
+					act 'Leave':gt 'foto', 'end'
+				end
+			end
+		end
+	end
+	
+	
+	
+	act 'Topless':
+		if pcs_exhibition < 33:
+			'You think about asking to do this shoot but then blush and realize you aren''t confident enough to have pictures of yourself like this circling around the internet. Maybe you could practice it later, but you''re not ready to do it for real.'
+		else
+			cla
+			act 'Maybe not today':gt 'foto','studio'
+
+			act 'Agree (3:00)':
+				*clr & cla
+				minut += 180
+				modelpayfin = 2000 + (modelpay * 2) + (35*rand(0,5))
+				modelfotoTipe[3] += 1
+				mdlng_exp += rand(6,10)
+				city_modelling += rand(5,8)
+				pav_modelling += rand(0,city_modelling)/10
+				exhibition_exp += 3
+				gs 'stat'
+				'<center><img src="images/locations/city/citycenter/photo/model4.gif"></center>'
+				'You put on some pants and omit a top leaving your breasts exposed. You spend the next three hours striking various poses, covering and uncovering your breasts, and listen to instruction while the photographer takes pictures of you.'
+				'Finally having taken all his pictures, the photographer thanks you for your time, counts out your <<modelpayfin>> <b>₽</b>, and pays it to you.'
+				if pcs_mdlng >= 40 and commercial = 0:
+					act 'Leave':gt'foto','commercial'
+				else
+					act 'Leave':gt 'foto', 'end'
+				end
+			end
+		end
+	end
+	
+	act 'Nude with covered genitals':
+		if pcs_exhibition < 36:
+			'You think about asking to do this shoot but then blush and realize you aren''t confident enough to have pictures of yourself like this circling around the internet. Maybe you could practice it later, but you''re not ready to do it for real.'
+		else
+			cla
+			act 'Not for me':gt 'foto','studio'
+
+			act 'Agree (3:00)':
+				*clr & cla
+				minut += 180
+				modelpayfin = 2500 + (modelpay * 2) + (50*rand(0,7))
+				modelfotoTipe[2] += 1
+				mdlng_exp += rand(8,10)
+				city_modelling += rand(5,10)
+				pav_modelling += rand(0,city_modelling)/10
+				exhibition_exp += 4
+				gs 'stat'
+				'<center><img src="images/locations/city/citycenter/photo/model6.gif"></center>'
+				'You strip down your clothes and spend the next three hours taking photos in various poses for a photographer, keeping your pussy covered with your hands or props.'
+				'Finally having taken all his pictures, the photographer thanks you for your time, counts out your <<modelpayfin>> <b>₽</b>, and pays it to you.'
+				*nl
+				if pornstudio = 0:pornstudio = 2 & 'By the way, take this business card. Its for a casting opportunity at the pornostudio.'
+				if pcs_mdlng >= 40 and commercial = 0:
+					act 'Leave':gt'foto','commercial'
+				else
+					act 'Leave':gt 'foto', 'end'
+				end
+			end
+		end
+	end
+	
+	act 'Nude with stockings':
+		if pcs_exhibition < 38:
+			'You think about asking to do this shoot but then blush and realize you aren''t confident enough to have pictures of yourself like this circling around the internet. Maybe you could practice it later, but you''re not ready to do it for real.'
+		else
+			cla
+			act 'Not for me':gt 'foto','studio'
+
+			act 'Agree (3:00)':
+				*clr & cla
+				minut += 180
+				modelpayfin = 3000 + (modelpay * 2) + (50*rand(0,7))
+				modelfotoTipe[2] += 1
+				mdlng_exp += rand(8,10)
+				city_modelling += rand(5,10)
+				pav_modelling += rand(0,city_modelling)/10
+				exhibition_exp += 5
+				gs 'stat'
+				'<center><img src="images/locations/city/citycenter/photo/model2.jpg"></center>'
+				'You strip down your clothes and pull up some stockings and spend the next three hours taking photos in various poses for a photographer.'
+				'Finally having taken all his pictures, the photographer thanks you for your time, counts out your <<modelpayfin>> <b>₽</b>, and pays it to you.'
+				'The majority of photos seem to be focused on your naked breasts and pussy.'
+				*nl
+				if pornstudio = 0:pornstudio = 2 & 'By the way, take this business card. Its for a casting opportunity at the pornostudio.'
+
+				if pcs_mdlng >= 40 and commercial = 0:
+					act 'Leave':gt'foto','commercial'
+				else
+					act 'Leave':gt 'foto', 'end'
+				end
+			end
+		end
+	end
+	
+	act 'Completely nude':
+		if pcs_exhibition < 40:
+			'You think about asking to do this shoot but then blush and realize you aren''t confident enough to have pictures of yourself like this circling around the internet. Maybe you could practice it later, but you''re not ready to do it for real.'
+		else
+			cla
+			act 'Maybe not today':gt 'foto','studio'
+
+			act 'Agree (3:00)':
+				*clr & cla
+				minut += 180
+				modelpayfin = 3000 + (modelpay * 2) + (50*rand(0,7))
+				modelfotoTipe[4] += 1
+				mdlng_exp += rand(9,10)
+				city_modelling += rand(8,10)
+				pav_modelling += rand(0,city_modelling)/10
+				exhibition_exp += 5
+				gs 'stat'
+				'<center><img src="images/locations/city/citycenter/photo/nudemodel1.gif"></center>''<center><img src="images/locations/city/citycenter/photo/nudemodel2.gif"></center>'
+				'You stand completely nude in front of the photographer and spend the next three hours taking various poses for him.'
+				'The majority of photos seem to be focused on your naked breasts and pussy.'
+				'Finally having taken all his pictures, the photographer thanks you for your time, counts out your <<modelpayfin>> <b>₽</b>, and pays it to you.'
+				*nl
+				if pornstudio = 0:pornstudio = 2 & 'By the way, take this business card. Its for a casting opportunity at the pornostudio.'
+
+				if pcs_mdlng >= 40 and commercial = 0:
+					act 'Leave':gt'foto','commercial'
+				else
+					act 'Leave':gt 'foto', 'end'
+				end
+			end
+		end
+	end
+
+	act 'Variety shoot':
+		if pcs_exhibition < 40:
+			'You think about asking to do this shoot but then blush and realize you aren''t confident enough to have pictures of yourself like this circling around the internet. Maybe you could practice it later, but you''re not ready to do it for real.'
+		else
+			cla
+			act 'Maybe not today':gt 'foto','studio'
+
+			act 'Agree (3:00)':
+				*clr & cla
+				minut += 180
+				modelpayfin = 3000 + (modelpay * 3) + (50*rand(0,7))
+				mdlng_exp += 10
+				city_modelling += rand(8,10)
+				pav_modelling += rand(0,city_modelling)/10
+				exhibition_exp += 3
+				gs 'stat'
+				'<center><img src="images/locations/city/citycenter/photo/vmodel.gif"></center>'
+				'You spend the next three hours posing for the photographer, changing in and out of various underwears, sexy clothings, and lingeries until you end the shoot by fully stripping down and dancing naked.'
+				*nl
+				'Finally having taken all his pictures, the photographer thanks you for your time, counts out your <<modelpayfin>> <b>₽</b>, and pays it to you.'
+				if pcs_mdlng >= 40 and commercial = 0:
+					act 'Leave':gt'foto','commercial'
+				else
+					act 'Leave':gt 'foto', 'end'
+				end
+			end
+		end
+	end
+end
+
+if $ARGS[0] = 'commercial':
+	*clr & cla
+	commercial = 1
+	'<center><img src="images/locations/city/citycenter/photo/fotograph.jpg"></center>'
+	'As you wrap the shoot, a staffer at the studio walks up to you and grabs your attention.'
+	'"Hey, <<$pcs_firstname>>, I''m glad I caught you. Listen, we have a special opportunity for you if you''d like to hear about it."'
+	act '"Special opportunity?"':
+		cla
+		'"Yeah. See, you''ve been doing good work here. There are people who are really impressed with your ability to take direction and with the boldness and confidence you have in your body. With that in mind, word has been going around that they want one of our models to be the actress in their commercial. So, I thought I''d ask you."'
+		act '"A commercial? You mean I could become an actress?"':
+			cla
+			*nl
+			'"Yes, that''s exactly what we''re saying. This is an opportunity for you to start branching out your career from just modelling and into acting. Would you like to hear more about the job?"'
+			act '"Sure, tell me about it"':
+				*clr & cla
+				'<center><img src="images/locations/city/citycenter/photo/fotograph.jpg"></center>'
+				'"The job is for a big time network. The idea for the commercial is they need a pretty girl walking down the street with their logos CGI''d over your breasts and between your thighs and passers-by having their attention drawn to you as you walk.'
+				act '"That doesn''t sound too difficult"':
+					cla
+					*nl
+					'"But there''s a catch. See, the marketting team has determined that in order to get the right reactions from people going by, you can''t just wear a strapless bikini. You''re going to have to walk down the street completely naked. That being said, the company is willing to pay you triple our usual nude modelling rate. Are you still willing to do the shoot?"'
+					act '"Sure! I''ve always wanted to be an actress!"':
+						cla
+						*nl
+						'"Sure!" you say. "I''ve always wanted to be an actress, I just never thought I''d get a chance like this. When do we shoot?"'
+						casting = 3
+						if week >= 6:
+							SMTV_commercial = daystart - week + 13
+							'He hands you a business card for a talent agency in the city center. "Be here next Saturday at 10:00, this is where they said they were going to set up the shoot."'
+							act 'Thank him and go':gt 'foto','studio'
+						else
+							SMTV_commercial = daystart - week + 6
+							if week = 5:
+								'He hands you a business card for a talent agency in the city center. "Be here tomorrow at 10:00, this is where they said they were going to set up the shoot."'
+								act 'Thank him and go':gt 'foto','studio'
+							else
+								'He hands you a business card for a talent agency in the city center. "Be here on Saturday at 10:00, this is where they said they were going to set up the shoot."'
+								act 'Thank him and go':gt 'foto','studio'
+							end
+						end	
+					end
+					
+					act '"Triple rate?! Hell yeah!"':
+					casting = 3
+						cla
+						'"Triple rate?! Hell yeah! Who cares about being naked in public when I''m getting paid that much! I''d let them gangbang me for that kind of money!"'
+						*nl
+						'"I''m sure they''d be happy to arrange that with you some other time," he says with a shit eating grin.'
+						'You punch him playfully on the arm.'
+						act '"So when do we shoot?"':
+						cla
+							casting = 3
+							if week >= 6:
+								SMTV_commercial = daystart - week + 13
+								'He hands you a business card for a talent agency in the city center. "Be here next Saturday at 10:00, this is where they said they were going to set up the shoot."'
+								act 'Thank him and go':gt 'foto','studio'
+							else
+								SMTV_commercial = daystart - week + 6
+								if week = 5:
+									'He hands you a business card for a talent agency in the city center. "Be here tomorrow at 10:00, this is where they said they were going to set up the shoot."'
+									act 'Thank him and go':gt 'foto','studio'
+								else
+									'He hands you a business card for a talent agency in the city center. "Be here on Saturday at 10:00, this is where they said they were going to set up the shoot."'
+									act 'Thank him and go':gt 'foto','studio'
+								end
+							end
+						end
+					end
+					
+					act 'I have to be naked in public...?':
+						cla
+						*nl
+						'You blush imagining being on the set in public on a busy street and embarrassedly ask,'
+						'"I''m going to have to walk down the street completely naked in broad daylight...?"'
+						'"Yes, I''m afraid so. The producers won''t budge on this. I''ve been promised that they aren''t going to be broadcasting your uncensored body all over television though. So if you accept, you''ll be guaranteed that at least. So, will you do it?"'
+						act 'I guess so...':
+							cla
+							*nl
+							'"I guess so," you say. "Since they''re paying so much, it''s hard to turn down. Besides, it might be worth it to break into acting, right?"'
+							casting = 3
+							if week >= 6:
+								SMTV_commercial = daystart - week + 13
+								'"If it means anything to you, I think you''re making the right choice for your career." He hands you a business card for a talent agency in the city center. "Be here next Saturday at 10:00, this is where they said they were going to set up the shoot."'
+								act 'Thank him and go':gt 'foto','studio'
+							else
+								SMTV_commercial = daystart - week + 6
+								if week = 5:
+									'"If it means anything to you, I think you''re making the right choice for your career." He hands you a business card for a talent agency in the city center. "Be here tomorrow at 10:00, this is where they said they were going to set up the shoot."'
+									act 'Thank him and go':gt 'foto','studio'
+								else
+									'"If it means anything to you, I think you''re making the right choice for your career." He hands you a business card for a talent agency in the city center. "Be here on Saturday at 10:00, this is where they said they were going to set up the shoot."'
+									act 'Thank him and go':gt 'foto','studio'
+								end
+							end
+						end
+						
+						act '"No, it''s too much for me"':
+							cla
+							*nl
+							'"No," you say with some regret. "Even with all that money, that''s not the kind of model or actress I want to be known for."'
+							'"Ahh, well that''s a shame. Anyways, I''ll let you go now. See you later <<pcs_firstname>>"'
+							act 'Go back to modelling':gt 'foto', 'studio'
+						end
+					end
+				end
+			end
+			
+			act 'No thanks, I''m happy just being a model':
+				cla
+				commercial = 2
+				*nl
+				'"Ahh, well that''s a shame. Anyways, you''re here today. Is there something you''d like to work on?"'
+				act 'Go back to modelling':gt 'foto', 'studio'
+			end
+		end
+	end	
 end
 
 if $ARGS[0] = 'blackm':
 	*clr
+	cla
 	gs 'stat'
 
 	if parkblackmail = 2:
@@ -337,16 +2111,18 @@ if $ARGS[0] = 'blackm':
 				act 'Go into the room':
 					cla
 					'On the back of a chair hung candid lingerie and white shirt. Apparently, all of this meant to you. You dressed up and sat on the edge of the bed. At this time, two men entered the room - blond and pretty inflated to look slender brunette. -So, well, a simple scenario. - Ordered Victor, coming with his camera in the room. Girl undressing. Poraskovanney and do not delay. And then you know all the boys. And for the girls will surprise - and he winked ugly guys. You put on the bed and told to undress. Hands do not listen, but after a couple of blond poking you decided not to resist. Took off his shirt, undid the bra, and then the guys have already taken matters into their own hands. He literally ripped from you and bra and panties and fell into bed. No foreplay in was not in sight. Blond put you on all fours and abruptly entered, you have not even had time to be excited. It hurt, but he fucked sharply, sweeping and clutched his chest hurt. Second, too undressed and decided to give you in the mouth. Slender brunette has given you a good slap in the face, tears gushed from his eyes themselves.'
-						gs 'npcgeneratec', 0, 'Brunette', rand(19,45)
-						gs 'boyStat', $npclastgenerated, 'a'
-						gs 'npcgeneratec', 0, 'blond', rand(19,45)
-						gs 'boyStat', $npclastgenerated, 'b'
+					gs 'npcgeneratec', 0, 'Brunette', rand(19,45)
+					gs 'boyStat', $npclastgenerated, 'a'
+					gs 'npcgeneratec', 0, 'blond', rand(19,45)
+					gs 'boyStat', $npclastgenerated, 'b'
 						
 					act 'Open mouth':
 						cla
-						clr
+						*clr
 						pcs_throat += 1
 						guy += 2
+						stat['bj'] += 1
+						arousal_minut = 30
 						gang += 1
 						gs 'boyStat', $boy1
 						spafinloc = 12
@@ -355,15 +2131,10 @@ if $ARGS[0] = 'blackm':
 						gs 'cum_manage'
 						swallow += 1
 						pose = 1
-						'<center><img <<$set_imgh>> src="images/locations/city/citycenter/studio/sex/studia.jpg"></center>'
+						'<center><img src="images/pics2/studia.jpg"></center>'
 						'You have opened my mouth, and he shoved his cock, long and thick. You began to choke, but it literally you sit down, holding his head. They fuck you together, and walked beside Victor, no longer hiding and shooting, shoot, shoot. In his hand was a lovely big camcorder.'
-						
-						gs 'arousal', 'bj', 30, 'sub', 'humiliation', 'group'
-						gs 'arousal', 'vaginal', 30, 'sub', 'humilation', 'group'
-						minut -= 30
-						gs 'stat'
-						
 						gs 'orgazm', 'start'
+						gs 'stat'
 						'They finished together. Blonde poured everything you into the uterus. Brunette forced to swallow everything. You fell onto the bed.'
 
 						act 'Begin to cry':
@@ -377,7 +2148,11 @@ if $ARGS[0] = 'blackm':
 
 								act 'No!':
 									cla
+									*clr
+									stat['vaginal'] += 1
+									stat['bj'] += 1
 									pcs_throat += 1
+									stat['anal'] += 1
 									gs 'boyStat', $boy1
 									spafinloc = 3
 									gs 'cum_manage'
@@ -388,41 +2163,28 @@ if $ARGS[0] = 'blackm':
 									spafinloc = 11
 									sexvolume = 35
 									gs 'cum_manage'
-									'<center><img <<$set_imgh>> src="images/locations/city/citycenter/studio/sex/studia2.jpg"></center>'
+									'<center><img src="images/pics2/studia2.jpg"></center>'
 									'You shouted No! Do not yell, good soundproofing here. And your ass is still fuck, so do not twitch and relax. - Already two fingers brunette were you. You sobbing again sucking blonde. Three fingers. At that moment, when giving your mouth quickened and was ready to cum, brunette perched member of your rings and abruptly entered. You yelled again, but the blonde quickly plugged your mouth sperm bryzhzhuschim member and roaring "Swallow, swallow, bitch" - planted itself. When he finally finished, black hair pinned you to the bed all over and started to fuck in the ass. It was just crazy sick - without lubrication, but he did not finish, then pulling out entirely, then abruptly entering again, just ripping you. Finally, you feel like it is speeding up, and you poured semen into the rectum. Nothing worse and you could not imagine.'
 
-									gs 'arousal', 'bj', 30, 'sub', 'humiliation', 'group'
-									gs 'arousal', 'vaginal', 30, 'sub', 'humilation', 'group'
-									gs 'arousal', 'anal', 30, 'sub', 'humiliation', 'group'
-									minut -= 30
-									gs 'stat'
-						
 									act 'Substitution':
 										cla
 										*clr
+										stat['anal'] += 1
 										gs 'boyStat', $boy1
 										gs 'cum_manage'
 										gs 'boyStat', $boy2
 										spafinloc = 3
 										gs 'cum_manage'
+										arousal_minut = 30
 										pose = 1
 										dick = 18
-										'<center><img <<$set_imgh>> src="images/locations/city/citycenter/studio/sex/studia3.jpg"></center>'
+										'<center><img src="images/pics2/studia3.jpg"></center>'
 										'After showering you already thought that Victor you let go, it turned out that Victor has not yet finished. Fingered you guys again, a little thin dildo fuck. It already seemed just a trifle compared with anal sex. And then you put black hair on his penis and began to fuck, lifting and dropping a little, came back blond hair and tilted you close to your chest brunette. You felt his cock on her ass and realized that they will fuck you in both holes. The second term is slowly coming into you, and you feel like they rub through the thin partition, you have just used as a whore. They fuck you two about half an hour.'
-										
-										gs 'arousal', 'vaginal', 30, 'sub', 'humilation', 'group'
-										gs 'arousal', 'anal', 30, 'sub', 'humiliation', 'group'
-										minut -= 30
-										gs 'stat'
-									
 										gs 'orgazm', 'start'
 										parkblackmail = 4
 										studiaday = 7
 										'I''ll call you when you said you still need Viktor goodbye.'
 
-										gs 'arousal', 'end'
-										gs 'stat'
-										
 										act 'Leave':gt 'Down'
 									end
 								end
