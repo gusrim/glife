@@ -192,52 +192,48 @@ if $ARGS[0] = 'Main':
 		if staygad ! daystart: gs 'gadukino_event', 'go_home'
 	end		
 	
-	!I am not sure, does anyone really making tissue for money? anyway, copy it here. by illume
-	!{
-	if gobelen > 0:'<<gobelen>> pieces of finished tapestry hangs on the wall.'
-	if pcs_sewng >= 50 and tkan > 0:'There is enough fabric for <<tkan>> lessons.'
-	if pcs_sewng >= 50 and tkan <= 0:'You can''t find any fabric.'
-	if pcs_sewng >= 200:
+	if gobelen>0:'You have <<gobelen>> completed tapestries.'
+	if pcs_sewng >= 40 and tkan > 0:'You have enough fabric for <<tkan>> lessons.'
+	if pcs_sewng >= 40 and tkan <= 0:'You do not have any fabric.'
+	if pcs_sewng >= 80:
 		if newgobelen = 0 and tkan > 0:
-			act'Start on a new tapestry (0:15)':
-			cls
-			tkan -= 1
-			newgobelen = 1
-			minut += 15
-			gs'stat'
-			'The following 15 minutes you manage to pick out the fabric to use and prepare the outline of the pattern to embroider.'
-			act'Postpone': gt $curloc
+			act'Start a new tapestry':
+				cls
+				tkan -= 1
+				newgobelen = 1
+				minut += 15
+				gs'stat'
+				'You spend 15 minutes at the embroidery frame, preparing the fabric and outlining the pattern for the tapestry.'
+				act'Set the tapestry aside':gt gt 'Gadhouse', 'Main'
 			end
 		end
-		if newgobelen>=1:
-		'The tapestry is <<newgobelen/10>> percent complete.'
-			act'Continue embroidering for an hour (1:00)':
-			cls
-			minut += 60
-			sewng_exp += rand(0,1000)
-			gobramax = pcs_sewng/100
-			gobramin = pcs_sewng/200
-			newgobelen += rand(gobramin,gobramax)
-			gs'stat'
-			if newgobelen<1000:'You continue working on the tapestry for the next hour. You are <<newgobelen/10>> percent done.'
-				if newgobelen>=1000:
-				newgobelen=0
-				gobelen+=1
-				'You''ve finished the tapestry. It looks really nice.'
+		if newgobelen >= 1:
+			'Your tapestry is <<newgobelen/10>> percent finished.'
+			act'Work on the tapestry for an hour':
+				cls
+				minut += 60
+				sewng_exp += rand(pcs_intel/10, pcs_intel/5)
+				gobramax = (pcs_sewng - 70) * 6
+				gobramin = (pcs_sewng - 70) * 2
+				newgobelen += rand(gobramin,gobramax)
+				gs'stat'
+				if newgobelen < 1000:'You spent an hour working on your tapestry, which is now <<newgobelen/10>> percent finished.'
+					if newgobelen >= 1000:
+					newgobelen = 0
+					gobelen+=1
+					'Your work on the tapestry is done.'
 				end
-			act'Postpone':gt $curloc
+				act'Set the tapestry aside':gt 'Gadhouse', 'Main'
 			end
 		end
 	end
-	}
-	!125e
 
 	act 'Go outside':
 		if $clothingworntype ! 'nude':
 			minut += 5 & gt 'Gaddvor'
 		else
 			msg'<b><font color = red>You can''t leave the house naked! You need to get dressed first.</font></b>'
-			gt $curloc
+			gt 'Gadhouse', 'Main'
 		end
 	end
 
@@ -262,7 +258,7 @@ if $ARGS[0] = 'Main':
 
 		gs 'stat'
 
-		act 'Get up from the table':gt 'Gadhouse', 'Start'
+		act 'Get up from the table':gt 'Gadhouse', 'Main'
 	end
 
 	if pranik > 0:
@@ -286,7 +282,7 @@ if $ARGS[0] = 'Main':
 			'<center><img <<$set_imgh>> src="images/shared/food/food.jpg"></center>'
 			'You enjoy a cup of tea while you eat some of the cookies. They''re too sweet and can''t be good for your figure, but they taste so good!'
 
-			act 'Get up from the table':gt 'Gadhouse', 'Start'
+			act 'Get up from the table':gt 'Gadhouse', 'Main'
 		end
 	end
 
@@ -320,7 +316,7 @@ if $ARGS[0] = 'Main':
 				'You make a cup of tea, quenching your thirst.'
 			end
 
-			act 'Get up from the table':gt 'Gadhouse', 'Start'
+			act 'Get up from the table':gt 'Gadhouse', 'Main'
 		end
 	end
 
@@ -343,7 +339,7 @@ if $ARGS[0] = 'Main':
 				'<center><img <<$set_imgh>> src="images/locations/shared/apartment/event/sick/lekr<<picrand>>.jpg"></center>'
 				'You swallow the pill, and shortly after you feel a bit better.'
 
-				act 'Continue':gt 'Gadhouse', 'Start'
+				act 'Continue':gt 'Gadhouse', 'Main'
 			end
 		end
 	end
@@ -371,7 +367,7 @@ if $ARGS[0] = 'Main':
 
 				'You swallow a vitamin pill to stay healthy.'
 
-				act 'Continue':gt 'Gadhouse', 'Start'
+				act 'Continue':gt 'Gadhouse', 'Main'
 			end
 		end
 	end
