@@ -1,5 +1,6 @@
 # obj_din
 
+
 if $ARGS[0] = 'show_tits':
 	view 'images/pc/body/tits/t<<tits>>.jpg'
 end
@@ -294,23 +295,70 @@ if $ARGS[0] = 'stats_gen':
 		nl
 	end
 	
-	if kid > 0:
-		i = 1
-		if kid = 1:
-			pl 'You have a child, a <<$polreb[1]>> named <<$kidname[1]>>. Born <<daykid[1]>>-<<monthkid[1]>>-<<yearkid[1]>>. Aged <<kidage[1]>>'
-		else
-			p 'You have children'
-			:LoopKidCounter
-			if i <= kid:
-				if i > 1: p ','
-				p ' a <<$polreb[i]>> named <<$kidname[i]>>. Born <<daykid[i]>>-<<monthkid[i]>>-<<yearkid[i]>>. Aged <<kidage[i]>>'
-				i += 1
-				jump 'LoopKidCounter'
-			end
-			pl '.'
-		end
-		nl
+if kid = 1:
+		pl 'You have 1 child:'
+	else
+		pl 'You have <<kid>> children:'
 	end
+	if kid > 0:
+		k = 0
+		end
+		:kidloop
+		if k < kid:
+			gs 'obj_din','kidlist'
+			k += 1
+			jump 'kidloop'
+		end
+	end
+end
+
+if $ARGS[0] = 'kidlist':
+	if kidage[k] < 1:
+		if (month - monthkid[k]) < 1 and (day-daykid[k]) < 7:
+			kiddaycalc[k] = day - daykid[k]	
+			if kiddaycalc[k] = 0:
+				$kidagetext[k] = 'was born today'
+			elseif kiddaycalc[k] = 1:
+				$kidagetext[k] = 'is <<kiddaycalc[k]>> day old'
+			else
+				$kidagetext[k] = 'is <<kiddaycalc[k]>> days old'
+			end
+		elseif (month - monthkid[k]) < 1 :
+			kiddaycalc[k] = (day - daykid[k]) / 7
+			if kiddaycalc[k] = 1:
+				$kidagetext[k] = 'is <<kiddaycalc[k]>> week old'
+			else
+				$kidagetext[k] = 'is <<kiddaycalc[k]>> weeks old'
+			end
+		else
+			kidmonthcalc[k] = (month - monthkid[k])
+			if kidmonthcalc[k] = 1:
+				$kidagetext[k] = 'is <<kidmonthcalc[k]>> month old'
+			else
+				$kidagetext[k] = 'is <<kidmonthcalc[k]>> months old'
+			end
+		end
+	else
+		if kidage[k] = 1:
+			$kidagetext[k] = 'is <<kidage[k]>> year old'
+		else
+			$kidagetext[k] = 'is <<kidage[k]>> years old'
+		end
+	end
+		if polkid[k] = 0:
+			$sdtext[k] = 'daughter'
+		else
+			$sdtext[k] = 'son'
+		end
+		if polkid[k] = 0:
+			$kidPosProPN[k] = 'She'
+		else
+			$kidPosProPN[k] = 'He'
+		end
+	p'You have a <<$sdtext[k]>> named <<$kidname[k]>>. <<$kidPosProPN[k]>> <<$kidagetext[k]>>. <<$kidname[k]>>''s date of birth is <<daykid[k]>>-<<monthkid[k]>>-<<yearkid[k]>>'
+	pl '.'
+	nl
+end
  	if workPTU > 1:pl 'Reputation as a teacher <<teachlevel>>'
 	nl
 	if npc_QW['A192'] > 0:pl 'Friendship with Nastya <<npc_QW[''A192'']>>'
@@ -452,7 +500,7 @@ if $ARGS[0] = 'stats_sex':
 	if stat['porn'] > 0:pl 'Times you have watched porn: <<stat[''porn'']>>'
 	if stat['flash_breasts'] > 0 or stat['hidden_flash_breasts'] > 0:pl 'Times you have flashed your tits (known/unknown): <<stat[''flash_breasts'']>>/<<stat[''hidden_flash_breasts'']>>'
 	if stat['flash_ass'] > 0 or stat['hidden_flash_ass'] > 0:pl 'Times you have flashed your ass (known/unknown): <<stat[''flash_ass'']>>/<<stat[''hidden_flash_ass'']>>'
-	if stat['flash_pussy'] > 0 or stat['hidden_flash_ass'] > 0:pl 'Times you have flashed your pussy (known/unknown): <<stat[''flash_pussy'']>>/<<stat[''hidden_flash_ass'']>>'
+	if stat['flash_pussy'] > 0 or stat['hidden_flash_pussy'] > 0:pl 'Times you have flashed your pussy (known/unknown): <<stat[''flash_pussy'']>>/<<stat[''hidden_flash_pussy'']>>'
 	if stat['voyeur'] > 0:pl 'Times you have watched other people fuck: <<stat[''voyeur'']>>'
 	if spank > 0:pl 'You have had your ass spanked <<spank>> times'
 	if guy > 0 and hidden_guy = 0:
@@ -531,7 +579,7 @@ if $ARGS[0] = 'stats_sex':
 	if stat['vaginal_vibe'] > 0:pl 'Clitoral / Vaginal vibrator: <<stat[''vaginal_vibe'']>>'
 	if stat['trib'] > 0:pl 'Tribalism: <<stat[''trib'']>>'
 	if stat['anal_finger'] > 0:pl 'Anally fingered: <<stat[''anal_finger'']>>'
-	if stat['anal_finger'] > 0:pl 'Anally fisted: <<stat[''anal_finger'']>>'
+	if stat['anal_fist'] > 0:pl 'Anally fisted: <<stat[''anal_fist'']>>'
 	if stat['rimming'] > 0:pl 'Ass rimmed: <<stat[''rimming'']>>'
 	if stat['anal_dildo'] > 0:pl 'Anal sex with a dildo: <<stat[''anal_dildo'']>>'
 	if stat['anal_strap'] > 0:pl 'Ass fucked with a strap-on: <<stat[''anal_strap'']>>'
@@ -1574,21 +1622,21 @@ if $ARGS[0] = 'records':
 	nl
 	if $bfsex > 0:pl'<<$bfsex>>'
 	nl
-	if pcs_lovers[1] = 1:pl'Your guy <<$boydesc[1]>> <<$boybody[1]>> <<$boybod[1]>> <<$boyface[1]>>.<<$boydesc[1]>> <<$boyClo[1]>> Relationship <<bfA>>, met <<pcs_lovers_days[1]>> time.'
-	if harakBoy[1] = 0 and bfA > 1:pl'He''s calm and self-possessed character.'
-	if harakBoy[1] = 1 and bfA > 1:pl'He has a cheerful and sociable character.'
-	if harakBoy[1] = 2 and bfA > 1:pl'He''s short-tempered and rigid.'
+	if pcs_lovers[1] = 1:pl'Your guy <<$loverdesc[1]>> <<$loverbody[1]>> <<$loverbod[1]>> <<$loverface[1]>>.<<$loverdesc[1]>> <<$loverClo[1]>> Relationship <<loverrelation[1]>>, met <<loversdays[1]>> time.'
+	if haraklover[1] = 0 and loverrelation[1] > 1:pl'He''s calm and self-possessed character.'
+	if haraklover[1] = 1 and loverrelation[1] > 1:pl'He has a cheerful and sociable character.'
+	if haraklover[1] = 2 and loverrelation[1] > 1:pl'He''s short-tempered and rigid.'
 	nl
-	if pcs_lovers[2] = 1:pl'Your guy <<$boydesc[2]>> <<$boybody[2]>> <<$boybod[2]>> <<$boyface[2]>>.<<$boydesc[2]>> <<$boyClo[2]>> Relationship <<bfB>>, met <<pcs_lovers_days[2]>> time.'
-	if harakBoy[2] = 0 and bfB > 1:pl'He''s calm and self-possessed character.'
-	if harakBoy[2] = 1 and bfB > 1:pl'He has a cheerful and sociable character.'
-	if harakBoy[2] = 2 and bfB > 1:pl'He''s short-tempered and rigid.'
+	if pcs_lovers[2] = 1:pl'Your guy <<$loverdesc[2]>> <<$loverbody[2]>> <<$loverbod[2]>> <<$loverface[2]>>.<<$loverdesc[2]>> <<$loverClo[2]>> Relationship <<loverrelation[2]>>, met <<loversdays[2]>> time.'
+	if haraklover[2] = 0 and loverrelation[2] > 1:pl'He''s calm and self-possessed character.'
+	if haraklover[2] = 1 and loverrelation[2] > 1:pl'He has a cheerful and sociable character.'
+	if haraklover[2] = 2 and loverrelation[2] > 1:pl'He''s short-tempered and rigid.'
 	nl
-	if pcs_lovers[3] = 1:pl'Your guy <<$boydesc[3]>> <<$boybody[3]>> <<$boybod[3]>> <<$boyface[3]>>.<<$boydesc[3]>> <<$boyClo[3]>> Relationship <<bfC>>, met <<pcs_lovers_days[3]>> time.'
+	if pcs_lovers[3] = 1:pl'Your guy <<$loverdesc[3]>> <<$loverbody[3]>> <<$loverbod[3]>> <<$loverface[3]>>.<<$loverdesc[3]>> <<$loverClo[3]>> Relationship <<loverrelation[3]>>, met <<loversdays[3]>> time.'
 
-	if harakBoy[3] = 0 and bfC > 1:pl'He''s calm and self-possessed character.'
-	if harakBoy[3] = 1 and bfC > 1:pl'He has a cheerful and sociable character.'
-	if harakBoy[3] = 2 and bfC > 1:pl'He''s short-tempered and rigid.'
+	if haraklover[3] = 0 and loverrelation[3] > 1:pl'He''s calm and self-possessed character.'
+	if haraklover[3] = 1 and loverrelation[3] > 1:pl'He has a cheerful and sociable character.'
+	if haraklover[3] = 2 and loverrelation[3] > 1:pl'He''s short-tempered and rigid.'
 
 
 	nl
@@ -1716,4 +1764,3 @@ if $ARGS[0] = 'autosave':
 	gs'stat'
 end
 --- obj_din ---------------------------------
-

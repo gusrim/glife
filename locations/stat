@@ -1,11 +1,11 @@
 # stat
 
-clr
-
 !!This is error catching to prevent stat from running too early
 if opPRE > 0: exit
 
 if Enable_Android = 0:
+	clr
+	!only clear status and renew object in non-Android mode
 	if oldobjmenu = 0:
 		gs 'obj_din', 'new'
 	else
@@ -80,34 +80,6 @@ if lern >= 10: intel_exp += 1 & lern = 0
 
 if pav_sex >= 25:KatjaKnowBJ = 1
 if pav_sex >= 50 or preg > 0:KatjaKnowSex = 1
-
-if film > 0:
- !pornoaktrissa
-	$kompromatFoto = 'The photo is a screenshot from one of your porn movies.'
-
-elseif fotoyousuck = 1:
-	!!sucked in a couple of guys and was sfotografirovanna
-	$kompromatFoto = 'The picture shows you sucking two cocks at the same time.'
-
-elseif fotoCFNMsex > 0:
-	$kompromatFoto = 'In the photo you see yourself getting fucked from behind by a random guy. This must have been taken in the stripclub.'
-
-elseif fotoCFNMblowjobCum > 0:
-	!!cum on face in the strip club
-	$kompromatFoto = 'In the photo you are sitting infront of a guy, kissing his cock. There seems to be cum on your face. This photo must have been taken in the stripclub.'
-
-elseif fotoCFNMblowjob > 0:
-	!!sucked in front of everyone
-	$kompromatFoto = 'In the photo you are giving a guy a blowjob. You can spot a group of women in the background and it seems like this photo was taken in the stripclub.'
-
-elseif stripdancesum > 0:
-	!!stripper
-	$kompromatFoto = 'In the photo you are dancing on a pole. Obviously someone photographed you, while you were on stage at the stripclub.'
-
-elseif modelfoto > 0:
-	!!photo model
-	$kompromatFoto = 'The photo shows you naked, it is very well taken and must be from a shoot at the modeling agency.'
-end
 
 shameless = guy + stat['bj'] + stat['anal'] + stat['hj'] + ((slutty + gang) * 2)
 moneySUM = money + karta + stolmoney
@@ -386,6 +358,8 @@ if totminut >= heelsminut + 120:
 	else
 		heels_deg -= rand(0,1)
 	end
+!!Bimbo shoe check so bonus will be applied
+	if PShoBimbo = 1: bimbosh = 1
 end
 !!!!!!!!!!!!!!! End heels
 
@@ -477,17 +451,11 @@ if minut >= 60:
 		pcs_mood -= 10
 	end
 
-	if tanga = 0 and PCloPants > 0 and $clothingworntype ! 'nude':mosolpred += 1
+	if tanga = 0 and PCloPants > 0 and $clothingworntype ! 'nude':mosol += 1
 
+	if mosol >= 50: pcs_mood -= 5
 
-	if mosolpred >= 10:
-		mosol += 1
-		mosolpred -= 10
-	end
-
-	if mosol >= 50:
-		pcs_mood -= 5
-	end
+	if mosol >= 30 and pain['pubic'] < 80: gs 'pain', 1, 'pubic', 'ache'
 
 	if pcs_energy > 100:
 		fat += (pcs_energy - 100) / 4
@@ -495,7 +463,7 @@ if minut >= 60:
 	end
 
 	if mosol > 0:
-		if tanga = 1 or $clothingworntype = 'nude':mosol -= 1
+		if tanga = 1 or $clothingworntype = 'nude':mosol -= rand(0,1)
 	end
 
 	if pcs_lipbalm > 0:pcs_lipbalm -= 1
@@ -772,9 +740,14 @@ else
 						gs 'cum_cleanup', 'cleandeposit', suctemparr
 						cumloc[suctempi] = 0
 						spdirty = 0
-						spdirtyn = 0
+						cumloc[1] = 0
+						cumloc[2] = 0
+						cumloc[4] = 0
+						cumloc[5] = 0
+						cumloc[6] = 0
+						cumloc[7] = 0
 						cumloc[11] = 0
-						spdirtyf = 0
+						cumloc[14] = 0
 						!! debug code $stat_msg += '<BR>Absorb ext <<sexnutrition>>'
 					end
 				end

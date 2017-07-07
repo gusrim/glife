@@ -227,10 +227,10 @@ if $ARGS[0] = 'setup':
 	*nl
 	*nl
 	'<center><table><TH></TH><TH></TH><TH>Push ups</TH><TH>Crunches</TH><TH>Jump rope</TH><TH>Yoga</TH><TH>Hula hoop</TH>'
-	'<TR><TD><<$excer_name[1]>></TD><TD><a href="exec:$excer_name[1] = input (''Enter name for exercise routine 1'')">rename</a></TD><TD><<exer_rout0[1]*15>> minutes</TD><TD><<exer_rout1[1]*15>> minutes</TD><TD><<exer_rout2[1]*15>> minutes</TD><TD><<exer_rout3[1]*15>> minutes</TD><TD><<exer_rout4[1]*15>> minutes</TD>'
-	'<TR><TD><<$excer_name[2]>></TD><TD><a href="exec:$excer_name[2] = input (''Enter name for exercise routine 2'')">rename</a></TD><TD><<exer_rout0[2]*15>> minutes</TD><TD><<exer_rout1[2]*15>> minutes</TD><TD><<exer_rout2[2]*15>> minutes</TD><TD><<exer_rout3[2]*15>> minutes</TD><TD><<exer_rout4[2]*15>> minutes</TD>'
-	'<TR><TD><<$excer_name[3]>></TD><TD><a href="exec:$excer_name[3] = input (''Enter name for exercise routine 3'')">rename</a></TD><TD><<exer_rout0[3]*15>> minutes</TD><TD><<exer_rout1[3]*15>> minutes</TD><TD><<exer_rout2[3]*15>> minutes</TD><TD><<exer_rout3[3]*15>> minutes</TD><TD><<exer_rout4[3]*15>> minutes</TD>'
-	'<TR><TD><<$excer_name[4]>></TD><TD><a href="exec:$excer_name[4] = input (''Enter name for exercise routine 4'')">rename</a></TD><TD><<exer_rout0[4]*15>> minutes</TD><TD><<exer_rout1[4]*15>> minutes</TD><TD><<exer_rout2[4]*15>> minutes</TD><TD><<exer_rout3[4]*15>> minutes</TD><TD><<exer_rout4[4]*15>> minutes</TD>'
+	'<TR><TD><<$excer_name[1]>></TD><TD><a href="exec:$excer_name[1] = input (''Enter name for exercise routine 1'') & gt ''exercise'', ''blank''">rename</a></TD><TD><<exer_rout0[1]*15>> minutes</TD><TD><<exer_rout1[1]*15>> minutes</TD><TD><<exer_rout2[1]*15>> minutes</TD><TD><<exer_rout3[1]*15>> minutes</TD><TD><<exer_rout4[1]*15>> minutes</TD>'
+	'<TR><TD><<$excer_name[2]>></TD><TD><a href="exec:$excer_name[2] = input (''Enter name for exercise routine 2'') & gt ''exercise'', ''blank''">rename</a></TD><TD><<exer_rout0[2]*15>> minutes</TD><TD><<exer_rout1[2]*15>> minutes</TD><TD><<exer_rout2[2]*15>> minutes</TD><TD><<exer_rout3[2]*15>> minutes</TD><TD><<exer_rout4[2]*15>> minutes</TD>'
+	'<TR><TD><<$excer_name[3]>></TD><TD><a href="exec:$excer_name[3] = input (''Enter name for exercise routine 3'') & gt ''exercise'', ''blank''">rename</a></TD><TD><<exer_rout0[3]*15>> minutes</TD><TD><<exer_rout1[3]*15>> minutes</TD><TD><<exer_rout2[3]*15>> minutes</TD><TD><<exer_rout3[3]*15>> minutes</TD><TD><<exer_rout4[3]*15>> minutes</TD>'
+	'<TR><TD><<$excer_name[4]>></TD><TD><a href="exec:$excer_name[4] = input (''Enter name for exercise routine 4'') & gt ''exercise'', ''blank''">rename</a></TD><TD><<exer_rout0[4]*15>> minutes</TD><TD><<exer_rout1[4]*15>> minutes</TD><TD><<exer_rout2[4]*15>> minutes</TD><TD><<exer_rout3[4]*15>> minutes</TD><TD><<exer_rout4[4]*15>> minutes</TD>'
 	'</table></center>'
 
 	act 'Return': gt 'exercise', 'workout'
@@ -239,6 +239,12 @@ if $ARGS[0] = 'setup':
 	act 'Define <<$excer_name[3]>>':i = 3 &  gt 'exercise', 'matrix'
 	act 'Define <<$excer_name[4]>>':i = 4 &  gt 'exercise', 'matrix'
 !!exer_rout1 = default
+end
+
+if $ARGS[0] = 'blank':
+	cla
+	*clr
+	act 'Return': gt 'exercise', 'setup'
 end
 
 if $ARGS[0] = 'matrix':
@@ -339,6 +345,8 @@ if $ARGS[0] = 'hula':
 		else
 			'<center><img <<$set_imgh>> src="images/pc/activities/huladressed.gif"></center>'
 		end
+	elseif tanga = 1:
+		'<center><img <<$set_imgh>> src="images/pc/activities/hula_underwear.gif"></center>'
 	else
 		'<center><img <<$set_imgh>> src="images/pc/activities/obruch.gif"></center>'
 	end
@@ -370,7 +378,7 @@ if $ARGS[0] = 'yoga':
 	elseif tanga = 1:
 		'<center><img <<$set_imgh>> src="images/pc/activities/yoga_underwear.gif"></center>'
 	else
-		'<center><img <<$set_imgh>> src="images/pc/activities/yoga_nude.gif"></center>'
+		'<center><img <<$set_imgh>> src="images/pc/activities/yoga_naked.gif"></center>'
 	end
 
 	'You meditate for <<$timestring>> minutes, developing your will.'
@@ -467,7 +475,11 @@ if $ARGS[0] = 'push':
 end
 
 if $ARGS[0] = 'tier1':
-	if ARGS[1] = 0: minut += 15
+	if ARGS[1] = 0:
+		minut += 15
+	else
+		minut += ARGS[1]
+	end
 	pcs_stam -= 5
 	pcs_sweat += 3
 	fat -= 1
@@ -497,7 +509,11 @@ if $ARGS[0] = 'tier1':
 end
 	
 if $ARGS[0] = 'tier2':
-	if ARGS[1] = 0: minut += 15
+	if ARGS[1] = 0:
+		minut += 15
+	else
+		minut += ARGS[1]
+	end
 	pcs_stam -= 10
 	pcs_sweat += 10
 	fat -= 2
@@ -526,7 +542,11 @@ if $ARGS[0] = 'tier2':
 end
 
 if $ARGS[0] = 'tier3':
-	if ARGS[1] = 0: minut += 15
+	if ARGS[1] = 0:
+		minut += 15
+	else
+		minut += ARGS[1]
+	end
 	pcs_stam -= 15
 	pcs_sweat += 15
 	fat -= 3
@@ -555,7 +575,11 @@ if $ARGS[0] = 'tier3':
 end
 
 if $ARGS[0] = 'tier4':
-	if ARGS[1] = 0: minut += 15
+	if ARGS[1] = 0:
+		minut += 15
+	else
+		minut += ARGS[1]
+	end
 	pcs_stam -= 25
 	pcs_sweat += 25
 	fat -= 4

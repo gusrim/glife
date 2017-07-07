@@ -56,152 +56,156 @@ if $ARGS[0] = '':
 	end
 
 	if hour >= 16:
-		act 'Order a beer (5 <b>₽</b>)':
-			cla
-			*clr
-			'<center><img <<$set_imgh>> src="images/locations/city/industrial/bar/bar.jpg"></center>'
-			'You go to the counter, sit down on one of the stools and, when the bartender notices you, ask: "Hey, could you bring me a beer?"'
-			if knowMartin = 1:
-				money -= 5
-				minut += 15
-				alko += 2
-				MartinRand = RAND(1,7)
-				
-				if alko >= 6:
-					*nl
-					'Martin musters you. "I think you''ve had enough."'
-					'"I''m fine", you slur, "just gimme one."'
-					'"You can barely stand-up straight, <<$pcs_firstname>>. And I sure as hell don''t want a young woman like yourself to pass out in my bar. Go home, or at least sober up a bit."'
-					'With that, he turns and walks off to serve somebody else. Looks like he won''t let you drink yourself into a coma.'
-					act 'Give up for now': gt 'qwBarPolet'
-				
-				!![if alko >= 7, Martin will not give you another drink (unless somebody else is ordering it?)]
+		if money >= 5:
+			act 'Order a beer (5 <b>₽</b>)':
+				cla
+				*clr
+				'<center><img <<$set_imgh>> src="images/locations/city/industrial/bar/bar.jpg"></center>'
+				'You go to the counter, sit down on one of the stools and, when the bartender notices you, ask: "Hey, could you bring me a beer?"'
+				if knowMartin = 1:
+					money -= 5
+					minut += 15
+					alko += 2
+					MartinRand = RAND(1,7)
+					
+					if alko >= 6:
+						*nl
+						'Martin musters you. "I think you''ve had enough."'
+						'"I''m fine", you slur, "just gimme one."'
+						'"You can barely stand-up straight, <<$pcs_firstname>>. And I sure as hell don''t want a young woman like yourself to pass out in my bar. Go home, or at least sober up a bit."'
+						'With that, he turns and walks off to serve somebody else. Looks like he won''t let you drink yourself into a coma.'
+						act 'Give up for now': gt 'qwBarPolet'
+					
+					!![if alko >= 7, Martin will not give you another drink (unless somebody else is ordering it?)]
 
-				elseif MartinTalkDay = 0 and MartinTalkVar < 7:
-					MartinTalkDay = 1
-					MartinRel += 1
-					!Replace MartinRel with npc_rel[] format?
-					gt 'qwBarPolet', 'MartinTalk'
-				
-				elseif MartinRand <= 2:
-					gt 'qwBarPolet', 'RandomDrinkEvents'
+					elseif MartinTalkDay = 0 and MartinTalkVar < 7:
+						MartinTalkDay = 1
+						MartinRel += 1
+						!Replace MartinRel with npc_rel[] format?
+						gt 'qwBarPolet', 'MartinTalk'
+					
+					elseif MartinRand <= 2:
+						gt 'qwBarPolet', 'RandomDrinkEvents'
 
-				elseif MartinRand <= 4:
-					if alko <= 5:
-						gt 'qwBarPolet', 'SoberEncounters'
+					elseif MartinRand <= 4:
+						if alko <= 5:
+							gt 'qwBarPolet', 'SoberEncounters'
+						else
+							gt 'qwBarPolet', 'DrunkEncounters'
+						end
 					else
-						gt 'qwBarPolet', 'DrunkEncounters'
+						*nl
+						'"Sure, <<$pcs_firstname>>, coming right up", Martin says, draws a beer for you and hands it to you.'
+						'"Thanks, Martin", you say and give him a friendly smile before he returns to what he was doing.'
+						'You spend the next 15 minutes drinking your beer in peace as you reflect the events of the day, think about your life and the people in it... until you finish your beverage with one last gulp.'
+						act 'Finish your beer': gt 'qwBarPolet'
+						![RANDOM EVENTS (Friendly strangers or friends/acquaintances inviting Sveta to have beer or something else with them)?]
+				
 					end
+					
+				elseif fakepassport = 1 or age >= 18:
+					knowMartin = 1
+					money -= 5
+					minut += 15
+					alko += 2
+					*nl
+					'The bartender comes over and musters you. "Sure. If you are old enough."'
+					'You are surprised that someone in a bar like this seems interested in that, and it must have shown in your face, because he adds: "I have enough things to worry about as is. I don''t need somebody spreading the word that I''m selling alcohol to kids."'
+					'Nodding, you take out your ID and show it to him. He eyes it suspiciously and gives you a stern look... but then nods, hands it back to you and draws a cold beer which he places in front of you.'
+					'"What''s your name, girl?", he asks.'
+					'"<<$pcs_firstname>>", you reply truthfully, taking a small sip from your beverage.'
+					'"Okay, <<$pcs_firstname>>. My name is Martin. This is my bar, and I don''t want any trouble here." You notice a faint accent you cannot quite place - maybe Spanish? "I know most people who come here by name, and most of them are good men, but we are a rowdy bunch and we tend to act more stupid than usual when women are around."'
+					'"So... you don''t want me to come here again?", you ask carefully.'
+					'"No, it means that, if you want to spend time here, I don''t want you doing anything stupid so I don''t have to step in." His words and look almost make you feel like a daughter being scolded by her father, but his voice softens a little as he continues: "But if any of the guys gives you trouble, you just let me know. Got it?"'
+					'You nod, and he gives you a hint of smile - it amazes you how that gruff face lights up as he does - before Martin returns to the regulars he had been talking to.'
+					'You spend the next 15 minutes pondering his words and the impression he has left on you, absentmindedly nursing on your beer until you notice that your glass is empty.'
+					act 'Finish your beer': gt 'qwBarPolet'
+				
 				else
 					*nl
-					'"Sure, <<$pcs_firstname>>, coming right up", Martin says, draws a beer for you and hands it to you.'
-					'"Thanks, Martin", you say and give him a friendly smile before he returns to what he was doing.'
-					'You spend the next 15 minutes drinking your beer in peace as you reflect the events of the day, think about your life and the people in it... until you finish your beverage with one last gulp.'
-					act 'Finish your beer': gt 'qwBarPolet'
-					![RANDOM EVENTS (Friendly strangers or friends/acquaintances inviting Sveta to have beer or something else with them)?]
-			
+					'The bartender comes over and musters you. "Sure. If you are old enough."'
+					'You are surprised that someone in a bar like this seems interested in that, and it must have shown in your face, because he adds: "I have enough things to worry about as is. I don''t need somebody spreading the word that I sell alcohol to kids."'
+					'"Um...", you try to maintain eye contact with him but eventually look down, "I, uh, must have forgotten my ID at home. Couldn''t you-"'
+					'"No, I can''t", he cuts you off. "No ID, no alcohol."'
+					act 'Nod and give up': gt 'qwBarPolet'
+					![RANDOM EVENTS (Strangers inviting her to have beer or something else with them, but overall friendly/consensual tone)?]
 				end
-				
-			elseif fakepassport = 1 or age >= 18:
-				knowMartin = 1
-				money -= 5
-				minut += 15
-				alko += 2
-				*nl
-				'The bartender comes over and musters you. "Sure. If you are old enough."'
-				'You are surprised that someone in a bar like this seems interested in that, and it must have shown in your face, because he adds: "I have enough things to worry about as is. I don''t need somebody spreading the word that I''m selling alcohol to kids."'
-				'Nodding, you take out your ID and show it to him. He eyes it suspiciously and gives you a stern look... but then nods, hands it back to you and draws a cold beer which he places in front of you.'
-				'"What''s your name, girl?", he asks.'
-				'"<<$pcs_firstname>>", you reply truthfully, taking a small sip from your beverage.'
-				'"Okay, <<$pcs_firstname>>. My name is Martin. This is my bar, and I don''t want any trouble here." You notice a faint accent you cannot quite place - maybe Spanish? "I know most people who come here by name, and most of them are good men, but we are a rowdy bunch and we tend to act more stupid than usual when women are around."'
-				'"So... you don''t want me to come here again?", you ask carefully.'
-				'"No, it means that, if you want to spend time here, I don''t want you doing anything stupid so I don''t have to step in." His words and look almost make you feel like a daughter being scolded by her father, but his voice softens a little as he continues: "But if any of the guys gives you trouble, you just let me know. Got it?"'
-				'You nod, and he gives you a hint of smile - it amazes you how that gruff face lights up as he does - before Martin returns to the regulars he had been talking to.'
-				'You spend the next 15 minutes pondering his words and the impression he has left on you, absentmindedly nursing on your beer until you notice that your glass is empty.'
-				act 'Finish your beer': gt 'qwBarPolet'
-			
-			else
-				*nl
-				'The bartender comes over and musters you. "Sure. If you are old enough."'
-				'You are surprised that someone in a bar like this seems interested in that, and it must have shown in your face, because he adds: "I have enough things to worry about as is. I don''t need somebody spreading the word that I sell alcohol to kids."'
-				'"Um...", you try to maintain eye contact with him but eventually look down, "I, uh, must have forgotten my ID at home. Couldn''t you-"'
-				'"No, I can''t", he cuts you off. "No ID, no alcohol."'
-				act 'Nod and give up': gt 'qwBarPolet'
-				![RANDOM EVENTS (Strangers inviting her to have beer or something else with them, but overall friendly/consensual tone)?]
 			end
 		end
 
-		act 'Order a shot of vodka (5 <b>₽</b>)':
-			cla
-			*clr
-			'<center><img <<$set_imgh>> src="images/locations/city/industrial/bar/bar.jpg"></center>'
-			'You go to the counter, sit down on one of the stools and, when the bartender notices you, ask: "Can I have a shot of vodka?"'
-			if knowMartin = 1:
-				money -= 5
-				minut += 5
-				alko += 2
-				MartinRand = RAND(1,7)
-				
-				if alko >= 6:
-					*nl
-					'Martin musters you. "I think you''ve had enough."'
-					'"I''m fine", you slur, "just gimme one."'
-					'"You can barely stand-up straight, <<$pcs_firstname>>. And I sure as hell don''t want a young woman like yourself to pass out in my bar. Go home, or at least sober up a bit."'
-					'With that, he turns and walks off to serve somebody else. Looks like he won''t let you drink yourself into a coma.'
-					act 'Give up for now': gt 'qwBarPolet'
-				
-				![if alko >= 7, Martin will not give you another drink (unless somebody else is ordering it?)]
+		if money >= 5:
+			act 'Order a shot of vodka (5 <b>₽</b>)':
+				cla
+				*clr
+				'<center><img <<$set_imgh>> src="images/locations/city/industrial/bar/bar.jpg"></center>'
+				'You go to the counter, sit down on one of the stools and, when the bartender notices you, ask: "Can I have a shot of vodka?"'
+				if knowMartin = 1:
+					money -= 5
+					minut += 5
+					alko += 2
+					MartinRand = RAND(1,7)
+					
+					if alko >= 6:
+						*nl
+						'Martin musters you. "I think you''ve had enough."'
+						'"I''m fine", you slur, "just gimme one."'
+						'"You can barely stand-up straight, <<$pcs_firstname>>. And I sure as hell don''t want a young woman like yourself to pass out in my bar. Go home, or at least sober up a bit."'
+						'With that, he turns and walks off to serve somebody else. Looks like he won''t let you drink yourself into a coma.'
+						act 'Give up for now': gt 'qwBarPolet'
+					
+					![if alko >= 7, Martin will not give you another drink (unless somebody else is ordering it?)]
 
-				elseif MartinTalkDay = 0 and MartinTalkVar < 7:
-					MartinTalkDay = 1
-					MartinRel += 1
-					!Replace MartinRel with npc_rel[] format?
-					gt 'qwBarPolet', 'MartinTalk'
-				
-				elseif MartinRand <= 2:
-					gt 'qwBarPolet', 'RandomDrinkEvents'
+					elseif MartinTalkDay = 0 and MartinTalkVar < 7:
+						MartinTalkDay = 1
+						MartinRel += 1
+						!Replace MartinRel with npc_rel[] format?
+						gt 'qwBarPolet', 'MartinTalk'
+					
+					elseif MartinRand <= 2:
+						gt 'qwBarPolet', 'RandomDrinkEvents'
 
-				elseif MartinRand <= 4:
-					if alko <= 5:
-						gt 'qwBarPolet', 'SoberEncounters'
+					elseif MartinRand <= 4:
+						if alko <= 5:
+							gt 'qwBarPolet', 'SoberEncounters'
+						else
+							gt 'qwBarPolet', 'DrunkEncounters'
+						end
 					else
-						gt 'qwBarPolet', 'DrunkEncounters'
+						*nl
+						'"Sure, <<$pcs_firstname>>, coming right up", Martin says, pours a shot and hands it to you.'
+						'"Thanks, Martin", you say and give him a friendly smile before he returns to what he was doing.'
+						'You slam back the vodka, enjoying the burning sensation it leaves in your throat, and spend a few minutes looking around the bar and letting your mind drift aimlessly as the alcohol takes effect.'
+						act 'Finish up': gt 'qwBarPolet'
+								
 					end
+					
+				elseif fakepassport = 1 or age >= 18:
+					knowMartin = 1
+					money -= 5
+					minut += 5
+					alko += 2
+					*nl
+					'The bartender comes over and musters you. "Sure. If you are old enough."'
+					'You are surprised that someone in a bar like this seems interested in that, and it must have shown in your face, because he adds: "I have enough things to worry about as is. I don''t need somebody spreading the word that I''m selling alcohol to kids."'
+					'Nodding, you take out your ID and show it to him. He eyes it suspiciously and gives you a stern look... but then nods, hands it back to you, takes an ice-cold bottle of vodka out of the fridge and pours you a shot.'
+					'"What''s your name, girl?", he asks.'
+					'"<<$pcs_firstname>>", you reply truthfully, taking the small glass into your hand.'
+					'"Okay, <<$pcs_firstname>>. My name is Martin. This is my bar, and I don''t want any trouble here." You notice a faint accent you cannot quite place - maybe Spanish? "I know most people who come here by name, and most of them are good men, but we are a rowdy bunch and we tend to act more stupid than usual when women are around."'
+					'"So... you don''t want me to come here again?", you ask carefully.'
+					'"No, it means that, if you want to spend time here, I don''t want you doing anything stupid so I don''t have to step in." His words and look almost make you feel like a daughter being scolded by her father, but his voice softens a little as he continues: "But if any of the guys gives you trouble, you just let me know. Got it?"'
+					'You nod, and he gives you a hint of smile - it amazes you how that gruff face lights up as he does - before Martin returns to the regulars he had been talking to.'
+					'You spend the next 5 minutes pondering his words and the impression he has left on you - you are so caught up in your thoughts that you almost forgot the alcohol in your glass, so you slam it back in one gulp, feeling the cold liquid run down your throat, leaving only a burning sensation in your throat.'
+					act 'Finish up': gt 'qwBarPolet'
+				
 				else
 					*nl
-					'"Sure, <<$pcs_firstname>>, coming right up", Martin says, pours a shot and hands it to you.'
-					'"Thanks, Martin", you say and give him a friendly smile before he returns to what he was doing.'
-					'You slam back the vodka, enjoying the burning sensation it leaves in your throat, and spend a few minutes looking around the bar and letting your mind drift aimlessly as the alcohol takes effect.'
-					act 'Finish up': gt 'qwBarPolet'
-							
+					'The bartender comes over and musters you. "Sure. If you are old enough."'
+					'You are surprised that someone in a bar like this seems interested in that, and it must have shown in your face, because he adds: "I have enough things to worry about as is. I don''t need somebody spreading the word that I sell alcohol to kids."'
+					'"Um...", you try to maintain eye contact with him but eventually look down, "I, uh, must have forgotten my ID at home. Couldn''t you-"'
+					'"No, I can''t", he cuts you off. "No ID, no alcohol."'
+					act 'Nod and give up': gt 'qwBarPolet'
+					![Events where Sveta interacts with random guys, resulting in drunk sex, groping etc. when drinking vodka?]
 				end
-				
-			elseif fakepassport = 1 or age >= 18:
-				knowMartin = 1:
-				money -= 5
-				minut += 5
-				alko += 2
-				*nl
-				'The bartender comes over and musters you. "Sure. If you are old enough."'
-				'You are surprised that someone in a bar like this seems interested in that, and it must have shown in your face, because he adds: "I have enough things to worry about as is. I don''t need somebody spreading the word that I''m selling alcohol to kids."'
-				'Nodding, you take out your ID and show it to him. He eyes it suspiciously and gives you a stern look... but then nods, hands it back to you, takes an ice-cold bottle of vodka out of the fridge and pours you a shot.'
-				'"What''s your name, girl?", he asks.'
-				'"<<$pcs_firstname>>", you reply truthfully, taking the small glass into your hand.'
-				'"Okay, <<$pcs_firstname>>. My name is Martin. This is my bar, and I don''t want any trouble here." You notice a faint accent you cannot quite place - maybe Spanish? "I know most people who come here by name, and most of them are good men, but we are a rowdy bunch and we tend to act more stupid than usual when women are around."'
-				'"So... you don''t want me to come here again?", you ask carefully.'
-				'"No, it means that, if you want to spend time here, I don''t want you doing anything stupid so I don''t have to step in." His words and look almost make you feel like a daughter being scolded by her father, but his voice softens a little as he continues: "But if any of the guys gives you trouble, you just let me know. Got it?"'
-				'You nod, and he gives you a hint of smile - it amazes you how that gruff face lights up as he does - before Martin returns to the regulars he had been talking to.'
-				'You spend the next 5 minutes pondering his words and the impression he has left on you - you are so caught up in your thoughts that you almost forgot the alcohol in your glass, so you slam it back in one gulp, feeling the cold liquid run down your throat, leaving only a burning sensation in your throat.'
-				act 'Finish up': gt 'qwBarPolet'
-			
-			else
-				*nl
-				'The bartender comes over and musters you. "Sure. If you are old enough."'
-				'You are surprised that someone in a bar like this seems interested in that, and it must have shown in your face, because he adds: "I have enough things to worry about as is. I don''t need somebody spreading the word that I sell alcohol to kids."'
-				'"Um...", you try to maintain eye contact with him but eventually look down, "I, uh, must have forgotten my ID at home. Couldn''t you-"'
-				'"No, I can''t", he cuts you off. "No ID, no alcohol."'
-				act 'Nod and give up': gt 'qwBarPolet'
-				![Events where Sveta interacts with random guys, resulting in drunk sex, groping etc. when drinking vodka?]
 			end
 		end
 
@@ -424,7 +428,7 @@ if $ARGS[0] = 'MartinTalk':
 		'Martin wordlessly puts your usual drink in front of you, then examines you like he was seeing you for the first time.'
 		'"You''re skinny."'
 		'"Excuse me?" You are perplexed by his statement.'
-		'"Are you eating right, <<pcs_firstname>>?" He inquires, completely ignoring your visibly confusion.'
+		'"Are you eating right, <<$pcs_firstname>>?" He inquires, completely ignoring your visibly confusion.'
 		'"Uh... I guess. Wait, you didn''t, by any chance, talk to my mother, did you?"'
 		'"Your mother? No no no, mi amor, but I can see that you could use a good meal every now and then - good meat, not the filth they sell you everywhere."'
 		'He snorts indignantly and beckons you to lean in closer, lowering his voice conspiratorially.'
@@ -473,7 +477,7 @@ if $ARGS[0] = 'MartinTalk':
 		'"I think that you are pulling my leg."'
 		'He recoils in mock-shock. "That you would even <b>suggest</b> that! The insolence!"'
 		'You grin at his antics, but your question is still to the point: "Do you do anything besides working out?"'
-		'"This and that," he replies, now more serious. "I don''t know what you want to hear, <<pcs_firstname>>. I don''t run a drug ring or strip club on the side, if that''s what you want to know. Days pass pretty quickly, even when all you do is sleep, work out and go for a walk every now and then."'
+		'"This and that," he replies, now more serious. "I don''t know what you want to hear, <<$pcs_firstname>>. I don''t run a drug ring or strip club on the side, if that''s what you want to know. Days pass pretty quickly, even when all you do is sleep, work out and go for a walk every now and then."'
 		'"You should share that thought at the next book club meeting," you comment dryly.'
 		'"I''d rather not. It would only disturb the other housewives," Martin retorts.'
 		'You chuckle - it''s strange how these conversations with Martin always take the most extraordinary turns. You know that he doesn''t talk to his other regulars like this. Actually, from what you can tell, it seems like he''s acting different with every one of them, adapting to their character, maybe even to their needs. You suggested it before to him, but now you are really starting to understand why they keep coming here, what they see in this place and its scary-looking owner.' 
@@ -518,9 +522,9 @@ if $ARGS[0] = 'MartinTalk':
 			'"Wouldn''t that make for a much better twist than me doing it?"'
 			'"Well," you size him up and nod, "yeah, if this was a movie, making you the culprit would be a little too obvious."'
 			'The bartender smiles at that, but it doesn''t seem as genuine as before.'
-					
-			act 'Finish your drink': gt 'qwBarPolet'
 		end
+
+		act 'Finish your drink': gt 'qwBarPolet'
 	
 	!elseif MartinTalkVar = 7:
 	!	MartinTalkVar = 8
@@ -548,29 +552,29 @@ if $ARGS[0] = 'SoberEncounters':
 		cla
 		'<center><img <<$set_imgh>> src="images/locations/city/industrial/bar/Billiard 1.png"></center>'
 		minut += 5
-		'While you''re sitting idly at the counter, drink in hand, you take a look around the room. After a moment, your attention is pulled to three guys playing pool. Two of them look to be in their mid to late 30s, while the third looks to be in his early 20s. They’re all dressed casually albeit a bit rough looking.'
+		'While you''re sitting idly at the counter, drink in hand, you take a look around the room. After a moment, your attention is pulled to three guys playing pool. Two of them look to be in their mid to late 30s, while the third looks to be in his early 20s. They''re all dressed casually albeit a bit rough looking.'
 		*nl
 		'With not much else to do, you settle on watching them play, only mildly interested until you see the younger guy pull out a small wad of cash and reluctantly hand it over to the other two.'
-		'It looks like they’re playing for money. Maybe they’ll let you join them?'
+		'It looks like they''re playing for money. Maybe they''ll let you join them?'
 		
 		act 'On second thought...':
 			'After a moment, you decide not to join them, and instead go back to your drink. At least that way you can''t lose any money, right?'
 			act 'Finish your drink': gt 'qwBarPolet'
 		end
 
-		act 'Ask them if you can play’':
+		act 'Ask them if you can play':
 			*clr
 			cla
 			'<center><img <<$set_imgh>> src="images/locations/city/industrial/bar/Jaska.jpg"></center>'
-			'You make your way over to the three of them just as they’re setting up for another round. "Are you guys playing for money?" you ask.'
-			'"Not anymore." One of the older guys laughs, flaunting the wad of cash. "We’re done with this dumbass."'
-			'The second one chimes in, "I thought you said you got better, Jaska! You still play like shit, and now you’re broke!" He smirks before looking to you. "You’re late, girl. We cleaned him out," he says with a laugh.'
+			'You make your way over to the three of them just as they''re setting up for another round. "Are you guys playing for money?" you ask.'
+			'"Not anymore." One of the older guys laughs, flaunting the wad of cash. "We''re done with this dumbass."'
+			'The second one chimes in, "I thought you said you got better, Jaska! You still play like shit, and now you''re broke!" He smirks before looking to you. "You''re late, girl. We cleaned him out," he says with a laugh.'
 			'Jaska shakes his head and points his pool cue at them. "Yeah yeah, just fuck off already. Go blow your money on cheap whores and booze, like you always do."'
 			*nl
-			'You watch in silence as the three of them exchange a few more insults before the two older guys gather their things and finally leave. Jaska grabs his glass and finishes off the last bit of alcohol before making his way over to you. He leans against the pool table and looks you up and down. He’s close enough that you can smell a mixture of alcohol, cigarette and a hint of musk.'
-			'"I don’t think I’ve seen you around here before," he says after a moment, "What’s your name?"'
-			'"<<pcs_nickname>>," you tell him.'
-			'"Right. Well, I’m Jaska, if you didn’t already know." He laughs ruefully, "So, you ever play pool?" You shake your head and Jaska’s face lights up a bit. "Then how about I teach you," he suggests, not really asking as much as telling you.'
+			'You watch in silence as the three of them exchange a few more insults before the two older guys gather their things and finally leave. Jaska grabs his glass and finishes off the last bit of alcohol before making his way over to you. He leans against the pool table and looks you up and down. He''s close enough that you can smell a mixture of alcohol, cigarette and a hint of musk.'
+			'"I don''t think I''ve seen you around here before," he says after a moment, "What''s your name?"'
+			'"<<$pcs_nickname>>," you tell him.'
+			'"Right. Well, I''m Jaska, if you didn''t already know." He laughs ruefully, "So, you ever play pool?" You shake your head and Jaska''s face lights up a bit. "Then how about I teach you," he suggests, not really asking as much as telling you.'
 
 			if pcs_billiard < 10:
 				act '"Sounds fun"':
@@ -579,10 +583,10 @@ if $ARGS[0] = 'SoberEncounters':
 					minut += 60
 					gs 'stat'
 					Jaska_Ev = 1
-					'Jaska smiles and hands you his pool cue. You watch him gather the balls into the triangle and set them up in the middle before grabbing another pool cue off the wall. "Alright, since it’s your first time, I won’t bore you with the technical shit, and keep it simple." He says as he moves behind you, his hand on the small of your back as he gently pushes you closer to the table.'
-					'"Like this?" You ask, following his lead. You lean down low to the table and allow yourself to be moved this way and that way by Jaska. Before you know it, an hour has passed and he tells you that you’ve got the basics down, even going as far as to say you could probably beat some of the regulars.'
+					'Jaska smiles and hands you his pool cue. You watch him gather the balls into the triangle and set them up in the middle before grabbing another pool cue off the wall. "Alright, since it''s your first time, I won''t bore you with the technical shit, and keep it simple." He says as he moves behind you, his hand on the small of your back as he gently pushes you closer to the table.'
+					'"Like this?" You ask, following his lead. You lean down low to the table and allow yourself to be moved this way and that way by Jaska. Before you know it, an hour has passed and he tells you that you''ve got the basics down, even going as far as to say you could probably beat some of the regulars.'
 					*nl
-					'"Well, that’s all I got time to teach you," Jaska says, glancing down at his watch. He grabs his worn-out leather jacket and slips it on. "Next time, we’ll play for real!" He says before pausing, "There will be a next, right?"'
+					'"Well, that''s all I got time to teach you," Jaska says, glancing down at his watch. He grabs his worn-out leather jacket and slips it on. "Next time, we''ll play for real!" He says before pausing, "There will be a next, right?"'
 					'"Of course. Just make sure you have your wallet ready,” you tease. He laughs before saying one last goodbye and walking out the door.'
 					act 'Return to the bar': gt 'qwBarPolet'
 				end
@@ -594,12 +598,12 @@ if $ARGS[0] = 'SoberEncounters':
 					minut += 60
 					gs 'stat'
 					'"I already know to how play," you say with a smile.'
-					'Jaska looks a bit surprised, "Oh yeah? Then what are we waiting for, lets play." He says, handing you a pool cue. The two of you spend an hour playing together, and you find that you really enjoy his company, even though he’s absolutely terrible at pool.'
+					'Jaska looks a bit surprised, "Oh yeah? Then what are we waiting for, lets play." He says, handing you a pool cue. The two of you spend an hour playing together, and you find that you really enjoy his company, even though he''s absolutely terrible at pool.'
 					*nl
 					'"No wonder you lost all your money," you tease as you clear the table and beat him again. "How many times have I won now?"'
-					'"Don’t get cocky." He says as he playfully pushes you aside so he can set up again. "I’m just going easy on you." He starts to set up, but pauses when he looks at his watch. "Damn."'
-					'"What’s wrong?" You ask.'
-					'Jaska sighs, "Well, as much as I like being beaten by you, I’ve gotta go." He sets down the pool cue and slips on his worn-out leather jacket. "How about we play again some other time?"'
+					'"Don''t get cocky." He says as he playfully pushes you aside so he can set up again. "I''m just going easy on you." He starts to set up, but pauses when he looks at his watch. "Damn."'
+					'"What''s wrong?" You ask.'
+					'Jaska sighs, "Well, as much as I like being beaten by you, I''ve gotta go." He sets down the pool cue and slips on his worn-out leather jacket. "How about we play again some other time?"'
 					'"Just make sure you have your wallet ready," you tease. Jaska laughs before saying one last goodbye and leaving.'
 					act 'Return to the bar': gt 'qwBarPolet'
 				end
@@ -920,6 +924,7 @@ if $ARGS[0] = 'billiard':
 				act 'Play again':
 					cla
 					*nl
+					billard_ev_var = 1
 					'"Alright, let''s play."'
 					'You open your purse and pull out enough money to lay it down on the table. He grins, racks up the balls and lets you break again as he lays his money down on top of yours.'
 					gt 'qwBarPolet', 'billiard'
@@ -1002,7 +1007,6 @@ if $ARGS[0] = 'billiard':
 		act 'Lose':
 			cls
 			pcs_billiard += rand(1,3)
-			money -= 5000
 			billard_ev_var = 0
 			minut += 30
 			gs 'stat'
@@ -1047,7 +1051,7 @@ if $ARGS[0] = 'billiard':
 					'"I''m not. Get out of my bar," Martin insists.'
 					'"I''m the one who''s getting screwed here!" The guy yells.'
 					'"Oh please, do you really think I don''t notice how you chat up anybody who looks like they might not know how to play? Your con may not be the kind the militia would go for but you are lucky I even let you back in here to begin with."'
-					' The guy seems to want to retort, but Martin cuts him off: "So unless you want to find another place to hang out, I suggest you get lost. Now."'
+					'The guy seems to want to retort, but Martin cuts him off: "So unless you want to find another place to hang out, I suggest you get lost. Now."'
 					'He glares at Martin, then at you, but then angrily grabs his money from the pool table and walks out.'
 					'"Thank you, Mart-"'
 					'"<<$pcs_firstname>>," he cuts you off, "why the fuck would you offer a blowjob as a wager?"'
