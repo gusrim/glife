@@ -288,78 +288,28 @@ if $ARGS[0] = 'stats_gen':
 				*P ' <a href="exec:karta -= 6000 & housr = 1 & BuyHous = 2 & ArendHouseSL += 30 & gs ''$menu_obnovit''">bank account</a>'
 			elseif karta + bankDebtLimit >= 6000: 
 				*P ' <a href="exec:karta -= 6000 & housr = 1 & BuyHous = 2 & ArendHouseSL += 30 & gs ''$menu_obnovit''">bank account, but you will be overdrawn.</a>'
-			end	
+			end
 		else
 			*P ' But you can''t afford to pay the rent right now.'
 		end
 		nl
 	end
 	
-if kid = 1:
+	if kid = 1:
 		pl 'You have 1 child:'
 	else
 		pl 'You have <<kid>> children:'
 	end
 	if kid > 0:
 		k = 0
-		end
-		:kidloop
+:kidloop
 		if k < kid:
-			gs 'obj_din','kidlist'
+			gs 'obj_din','kidlist',k
 			k += 1
 			jump 'kidloop'
 		end
 	end
-end
-
-if $ARGS[0] = 'kidlist':
-	if kidage[k] < 1:
-		if (month - monthkid[k]) < 1 and (day-daykid[k]) < 7:
-			kiddaycalc[k] = day - daykid[k]	
-			if kiddaycalc[k] = 0:
-				$kidagetext[k] = 'was born today'
-			elseif kiddaycalc[k] = 1:
-				$kidagetext[k] = 'is <<kiddaycalc[k]>> day old'
-			else
-				$kidagetext[k] = 'is <<kiddaycalc[k]>> days old'
-			end
-		elseif (month - monthkid[k]) < 1 :
-			kiddaycalc[k] = (day - daykid[k]) / 7
-			if kiddaycalc[k] = 1:
-				$kidagetext[k] = 'is <<kiddaycalc[k]>> week old'
-			else
-				$kidagetext[k] = 'is <<kiddaycalc[k]>> weeks old'
-			end
-		else
-			kidmonthcalc[k] = (month - monthkid[k])
-			if kidmonthcalc[k] = 1:
-				$kidagetext[k] = 'is <<kidmonthcalc[k]>> month old'
-			else
-				$kidagetext[k] = 'is <<kidmonthcalc[k]>> months old'
-			end
-		end
-	else
-		if kidage[k] = 1:
-			$kidagetext[k] = 'is <<kidage[k]>> year old'
-		else
-			$kidagetext[k] = 'is <<kidage[k]>> years old'
-		end
-	end
-		if polkid[k] = 0:
-			$sdtext[k] = 'daughter'
-		else
-			$sdtext[k] = 'son'
-		end
-		if polkid[k] = 0:
-			$kidPosProPN[k] = 'She'
-		else
-			$kidPosProPN[k] = 'He'
-		end
-	p'You have a <<$sdtext[k]>> named <<$kidname[k]>>. <<$kidPosProPN[k]>> <<$kidagetext[k]>>. <<$kidname[k]>>''s date of birth is <<daykid[k]>>-<<monthkid[k]>>-<<yearkid[k]>>'
-	pl '.'
-	nl
-end
- 	if workPTU > 1:pl 'Reputation as a teacher <<teachlevel>>'
+	if workPTU > 1:pl 'Reputation as a teacher <<teachlevel>>'
 	nl
 	if npc_QW['A192'] > 0:pl 'Friendship with Nastya <<npc_QW[''A192'']>>'
 	if tanya > 0:pl 'Friendship with Tanya <<tanya>>'
@@ -377,6 +327,56 @@ end
 
 	!!!WD: Formatting
 	if (Irina + Givi + Ashot + Tamara + Dmitry + afra + gosh + vika + kat + npc_QW['A192'] + tanya) > 0:nl
+end
+
+if $ARGS[0] = 'kidlist':
+	kidnumber = ARGS[1]
+	if kidage[kidnumber] < 1:
+		if (month - monthkid[kidnumber]) < 1 and (day-daykid[kidnumber]) < 7:
+			kiddaycalc[kidnumber] = day - daykid[kidnumber]	
+			if kiddaycalc[kidnumber] = 0:
+				$kidagetext[kidnumber] = 'was born today'
+			elseif kiddaycalc[kidnumber] = 1:
+				$kidagetext[kidnumber] = 'is <<kiddaycalc[kidnumber]>> day old'
+			else
+				$kidagetext[kidnumber] = 'is <<kiddaycalc[kidnumber]>> days old'
+			end
+		elseif (month - monthkid[kidnumber]) < 1 :
+			kiddaycalc[kidnumber] = (day - daykid[kidnumber]) / 7
+			if kiddaycalc[kidnumber] = 1:
+				$kidagetext[kidnumber] = 'is <<kiddaycalc[kidnumber]>> week old'
+			else
+				$kidagetext[kidnumber] = 'is <<kiddaycalc[kidnumber]>> weeks old'
+			end
+		else
+			kidmonthcalc[kidnumber] = (month - monthkid[kidnumber])
+			if kidmonthcalc[kidnumber] = 1:
+				$kidagetext[kidnumber] = 'is <<kidmonthcalc[kidnumber]>> month old'
+			else
+				$kidagetext[kidnumber] = 'is <<kidmonthcalc[kidnumber]>> months old'
+			end
+		end
+	else
+		if kidage[kidnumber] = 1:
+			$kidagetext[kidnumber] = 'is <<kidage[kidnumber]>> year old'
+		else
+			$kidagetext[kidnumber] = 'is <<kidage[kidnumber]>> years old'
+		end
+	end
+		if polkid[kidnumber] = 0:
+			$sdtext[kidnumber] = 'daughter'
+		else
+			$sdtext[kidnumber] = 'son'
+		end
+		if polkid[kidnumber] = 0:
+			$kidPosProPN[kidnumber] = 'She'
+		else
+			$kidPosProPN[kidnumber] = 'He'
+		end
+	p'You have a <<$sdtext[kidnumber]>> named <<$kidname[kidnumber]>>. <<$kidPosProPN[kidnumber]>> <<$kidagetext[kidnumber]>>. <<$kidname[kidnumber]>>''s date of birth is <<daykid[kidnumber]>>-<<monthkid[kidnumber]>>-<<yearkid[kidnumber]>>'
+	pl '.'
+	nl
+	killvar 'kidnumber'
 end
 
 if $ARGS[0] = 'stats_achievements':
