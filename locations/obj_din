@@ -1,5 +1,6 @@
 # obj_din
 
+
 if $ARGS[0] = 'show_tits':
 	view 'images/pc/body/tits/t<<tits>>.jpg'
 end
@@ -287,31 +288,28 @@ if $ARGS[0] = 'stats_gen':
 				*P ' <a href="exec:karta -= 6000 & housr = 1 & BuyHous = 2 & ArendHouseSL += 30 & gs ''$menu_obnovit''">bank account</a>'
 			elseif karta + bankDebtLimit >= 6000: 
 				*P ' <a href="exec:karta -= 6000 & housr = 1 & BuyHous = 2 & ArendHouseSL += 30 & gs ''$menu_obnovit''">bank account, but you will be overdrawn.</a>'
-			end	
+			end
 		else
 			*P ' But you can''t afford to pay the rent right now.'
 		end
 		nl
 	end
 	
-	if kid > 0:
-		i = 1
-		if kid = 1:
-			pl 'You have a child, a <<$polreb[1]>> named <<$kidname[1]>>. Born <<daykid[1]>>-<<monthkid[1]>>-<<yearkid[1]>>. Aged <<kidage[1]>>'
-		else
-			p 'You have children'
-			:LoopKidCounter
-			if i <= kid:
-				if i > 1: p ','
-				p ' a <<$polreb[i]>> named <<$kidname[i]>>. Born <<daykid[i]>>-<<monthkid[i]>>-<<yearkid[i]>>. Aged <<kidage[i]>>'
-				i += 1
-				jump 'LoopKidCounter'
-			end
-			pl '.'
-		end
-		nl
+	if kid = 1:
+		pl 'You have 1 child:'
+	else
+		pl 'You have <<kid>> children:'
 	end
- 	if workPTU > 1:pl 'Reputation as a teacher <<teachlevel>>'
+	if kid > 0:
+		k = 0
+:kidloop
+		if k < kid:
+			gs 'obj_din','kidlist',k
+			k += 1
+			jump 'kidloop'
+		end
+	end
+	if workPTU > 1:pl 'Reputation as a teacher <<teachlevel>>'
 	nl
 	if npc_QW['A192'] > 0:pl 'Friendship with Nastya <<npc_QW[''A192'']>>'
 	if tanya > 0:pl 'Friendship with Tanya <<tanya>>'
@@ -329,6 +327,56 @@ if $ARGS[0] = 'stats_gen':
 
 	!!!WD: Formatting
 	if (Irina + Givi + Ashot + Tamara + Dmitry + afra + gosh + vika + kat + npc_QW['A192'] + tanya) > 0:nl
+end
+
+if $ARGS[0] = 'kidlist':
+	kidnumber = ARGS[1]
+	if kidage[kidnumber] < 1:
+		if (month - monthkid[kidnumber]) < 1 and (day-daykid[kidnumber]) < 7:
+			kiddaycalc[kidnumber] = day - daykid[kidnumber]	
+			if kiddaycalc[kidnumber] = 0:
+				$kidagetext[kidnumber] = 'was born today'
+			elseif kiddaycalc[kidnumber] = 1:
+				$kidagetext[kidnumber] = 'is <<kiddaycalc[kidnumber]>> day old'
+			else
+				$kidagetext[kidnumber] = 'is <<kiddaycalc[kidnumber]>> days old'
+			end
+		elseif (month - monthkid[kidnumber]) < 1 :
+			kiddaycalc[kidnumber] = (day - daykid[kidnumber]) / 7
+			if kiddaycalc[kidnumber] = 1:
+				$kidagetext[kidnumber] = 'is <<kiddaycalc[kidnumber]>> week old'
+			else
+				$kidagetext[kidnumber] = 'is <<kiddaycalc[kidnumber]>> weeks old'
+			end
+		else
+			kidmonthcalc[kidnumber] = (month - monthkid[kidnumber])
+			if kidmonthcalc[kidnumber] = 1:
+				$kidagetext[kidnumber] = 'is <<kidmonthcalc[kidnumber]>> month old'
+			else
+				$kidagetext[kidnumber] = 'is <<kidmonthcalc[kidnumber]>> months old'
+			end
+		end
+	else
+		if kidage[kidnumber] = 1:
+			$kidagetext[kidnumber] = 'is <<kidage[kidnumber]>> year old'
+		else
+			$kidagetext[kidnumber] = 'is <<kidage[kidnumber]>> years old'
+		end
+	end
+		if polkid[kidnumber] = 0:
+			$sdtext[kidnumber] = 'daughter'
+		else
+			$sdtext[kidnumber] = 'son'
+		end
+		if polkid[kidnumber] = 0:
+			$kidPosProPN[kidnumber] = 'She'
+		else
+			$kidPosProPN[kidnumber] = 'He'
+		end
+	p'You have a <<$sdtext[kidnumber]>> named <<$kidname[kidnumber]>>. <<$kidPosProPN[kidnumber]>> <<$kidagetext[kidnumber]>>. <<$kidname[kidnumber]>>''s date of birth is <<daykid[kidnumber]>>-<<monthkid[kidnumber]>>-<<yearkid[kidnumber]>>'
+	pl '.'
+	nl
+	killvar 'kidnumber'
 end
 
 if $ARGS[0] = 'stats_achievements':
@@ -1716,4 +1764,3 @@ if $ARGS[0] = 'autosave':
 	gs'stat'
 end
 --- obj_din ---------------------------------
-

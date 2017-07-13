@@ -1,8 +1,6 @@
 # Gadbana
 
 CLOSE ALL
-$metkaM = ''
-$locM = 'Gadbana'
 $metka = ''
 $loc = 'Gadbana'
 $location_type = 'bathroom'
@@ -27,13 +25,20 @@ else
 end
 
 if mira = 0:
+	if $clothingworntype = 'nude':
+		act 'Get dressed':
+			gs 'clothing', 'wear_last_worn'
+			if remtanga = 1: tanga = 1 & remtanga = 0
+		end
+	end
+
 	act 'Go outside':
-		if $clothingworntype ! 'nude' or pcs_exhibition > 50:
+		if $clothingworntype ! 'nude':
 			minut += 5 & gt'Gaddvor'
 		else
 			cls
 			'<center><img <<$set_imgh>> src="images/locations/gadukino/hunters/noundress.jpg"></center>'	
-			'You are ashamed to appear like this in the open.'
+			'You can''t go out without any clothes on.'
 			act 'Back':gt'Gadbana'
 		end	
 	end
@@ -130,7 +135,7 @@ if mira = 0:
             '<center><img <<$set_imgh>> src="images/locations/gadukino/village/washclothes1.jpg"></center>'
             *nl
             'You soak your dirty panties in the basin and pour in washing powder, then you scrub them until they are finally clean.'
-            act 'Finish':gt $locM, $metkaM
+            act 'Finish':gt $loc, $metka
         end
     end
     if dirtyclothes = 1 and $loc = 'Gadbana':
@@ -152,7 +157,7 @@ if mira = 0:
             end	
             *nl
             'You soak your muddy clothes and panties in the basin and pour in washing powder, then you scrub them until they are finally clean.'
-            act 'Finish':gt $locM, $metkaM
+            act 'Finish':gt $loc, $metka
         end
     end
     if (klismaday ! daystart or arrpos('sparrloc', 3) ! -1):
@@ -173,6 +178,9 @@ else
 	!125st
 	act 'Undress':
 		cls
+		gs 'clothing', 'strip'
+		if tanga = 1: remtanga = 1
+		tanga = 0
 		gs 'stat'
 		'<center><img <<$set_imgh>> src="images/characters/village/mira/miraban.jpg"></center>'
 			'While you undress, through the corner of your eye you notice Mira removing her panties.'
@@ -185,7 +193,7 @@ else
 			gs 'stat'
 			'<center><img <<$set_imgh>> src="images/characters/village/mira/miraban1.jpg"></center>'
 			'You feel the hot steam penetrate into your pores while you blissfully watch Mira lather up. She sometimes throws at you short glances and smiles hesitantly in response...'
-			gs 'arousal', 'voyeur', 10, 'lesbian'
+			gs 'arousal', 'voyeur', 10
 			gs 'stat'
 			act 'Steam':
 				!{
@@ -210,7 +218,7 @@ else
 				gs 'stat'
 				'<center><img <<$set_imgh>> src="images/characters/village/mira/miraban2.jpg"></center>'
 				'Mira finally finishes lathering herself, you take the loofah and lather yourself from head to toe. You enjoy yourselves in the warm bath, relaxing in each other''s company, occasionally exchanging meaningless anecdotes...'
-				gs 'arousal', 'voyeur', 120, 'lesbian'
+				gs 'arousal', 'voyeur', 120
 				gs 'arousal', 'end'
 				gs 'stat'
 				act 'Finish': mira = 0 & gt 'gaddvor'
