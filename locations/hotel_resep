@@ -86,7 +86,75 @@ act'Rent a room':
 		act'No, thank you':gt'HotelHole'
 	end
 end
-
+if proshotelopen = 1 and proshotelday ! daystart:
+	act'Ask for Mr Kislyak':
+	proshotelday = daystart
+	cls
+	gs'stat'
+	'You approach the receptionist and ask for mister Kislyak.'
+	'She picks up the phone and says : "Mr Kislyak, there is another one here for you."" sure I''ll send her right up"'
+	'she gives you a subtle smile and tells you Mr Kislyak is waiting for you in room 305'
+		act 'Go to room 305':
+		cls
+		gs'stat'
+		'You go to the room and knock on the door. Mr Kislyak opens the door.'
+		'He lets you enter the room and offers you to sit down on the couch'
+		'"When the girl at the desk called me I informed the customer straight away, they will be here shortly."'
+		'Indeed not one minute later there was a knock on the door, Mr Kislyak opened up and had a short conversation with the customer. The customer handed him a wad of cash  and entered the room.
+		"I''ll be waiting in the hotelbar , meet me there when you are done girl" said Mr Kislyak while he left the room.'
+			act 'Perform your duty':
+				cls
+				gs'stat'
+				gs 'npcgeneratec', '0'				
+				gs 'boyStat', $npclastgenerated
+				'the customer was <<$npc_notes[$npclastgenerated]>> and introduced himself as  <<$boydesc>>.'
+				'then you both got undressed and you started doing your job.'
+				picrand = rand(0, 14)
+				'<center><img <<$set_imgh>> src="images/shared/sex/blowjob/bj<<picrand>>.gif"></center>'
+				gs 'dinsex','dinrandbj'
+				disrand = rand(0, 100)
+				'You move the dick out of your mouth and tell him to put on a condom and fuck you.'
+				if pcs_dom >= 25:
+				'The man wanted to start arguing but he could see you would not be pursuaded.'
+				gs 'dinsex', 'boy_puts_his_condom'
+				elseif rand(0,1) = 1 and pcs_dom < 25:
+				
+				'The man started arguing but you could could convince him that using a condom would be safer for both of you.'
+					gs 'dinsex', 'boy_puts_his_condom'
+				else
+				'The man started laughing and tells you he paid to fuck you ''raw'' so that''s what he was going to do'
+				
+					if disrand >= 70:dynamic $venerasiak
+				end
+				picrand = rand(1, 5)
+				'<center><img <<$set_imgh>> src="images/shared/sex/vag/miss/vagmis<<picrand>>.jpg"></center>'		
+				gs 'dinsex','vaginal_sex'
+				gs 'arousal', 'bj', 30, 'prostitution'
+				gs 'arousal', 'vaginal', 30
+				gs 'arousal', 'end'
+				dynamic $sexcum
+				guy += 1
+				slutty += 1
+				pcs_vag += 1
+				pcs_throat += 1
+				act'Go to the bar':
+					cls
+					gs'stat'
+					'You stand up, put your clothes back on and step out of the room.'
+					'You go to the bar and see Mr Kislyak sitting in a boot in the corner of the bar.'
+					'He hands you 750  <b>₽</b> . '
+					'You are sure the money he received from the customer was more than double this amount but you don''t feel like arguing.'
+					'You thank him and go back to the hotel lobby'
+					money += 750
+					!kispros counter to be used to trigger future events
+					kispros += 1
+					act'Go back to the hotel lobby':gt'HotelHole'
+				
+				end
+			end
+		end
+	end
+end
 If GermanQW<1:
 	act 'Ask about the maid job':
 		cls
