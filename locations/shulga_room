@@ -139,7 +139,7 @@ if $ARGS[0] = 'start':
 	!You get fucked for days
 	if $ARGS[1] = 'hall':
 		roomsex_gang = RAND(0,100)
-		if roomsex_gang <= 2 and pav_slut >= 75 and gangsexroom_count > 0 and week < 6 and hour >= 0 and hour <= 2: 
+		if kotovLoveQW < 1 and roomsex_gang <= 2 and pav_slut >= 75 and gangsexroom_count > 0 and week < 6 and hour >= 0 and hour <= 2: 
 			gt 'shulga_room', 'gang_sex_room_ev1'
 		end
 
@@ -747,9 +747,9 @@ if $ARGS[0] = 'shulga_beer':
 		'The boys notice and start to harass you'
 		'"We let you drink for free all night <<$pcs_nickname>>. Show us a little skin as a thank you", says Vasily'
 
-		if pav_slut < 75:
+		if pav_slut < 75 or kotovLoveQW > 0:
 			act 'Tell them to knock it off': gt 'shulga_room', 'drunken_sex_no'
-			act 'Get this party started': gt 'shulga_room', 'drunken_sex_yes'
+			if kotovLoveQW < 1: act 'Get this party started': gt 'shulga_room', 'drunken_sex_yes'
 		else
 			act 'Get this party started': gt 'shulga_room', 'drunken_sex_yes'
 		end
@@ -781,11 +781,11 @@ if $ARGS[0] = 'view_pornotv_evgr':
 		'The guys getting excited watching porn with you.'
 		'Vasily asks if you would like to help them get some relief.'
 		'Everyone''s  eyes are fixed on you, as they await your answer.'
-		if pav_slut < 75: 
+		if pav_slut < 75 or kotovLoveQW > 0: 
 			act 'Flee the scene': gt 'shulga_room', 'start'
 		end
 
-		act 'Suck a cock or three':
+		if kotovLoveQW < 1: act 'Suck a cock or three':
 			*clr & cla
 			O = func('gopsex','hide','rndorder3')
 			gs 'boyStat', 'A<<O mod 12>>','3'
@@ -923,9 +923,8 @@ if $ARGS[0] = 'view_pornotv_vasya':
 		if npc_rel['A11'] >=20 and npc_rel['A11'] <50:
 			act 'Handjob':
 				*clr & cla
-				minut += 20
-				pcs_horny += 5
-				gs 'cum_call', 'hj', $boy,1
+				gs 'arousal','hj',20,'sub'
+				gs 'cum_call', 'hands', $boy,1
 				gs 'stat'
 				'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/boy/vasya/sex/shuglinhome/tv/hj'+rand(1,7)+'.jpg"></center>'
 				'Vasily guides your hand around the shaft of his <<dick>>cm <<$dick_girth>> penis, and slowly starts moving your hand up and down his length. When he removes his hand, your hand continues to tentatively pump. Vasily voices a small grunt of encouragement, and you pick up the pace. He relaxes, as you build a steady rhythm.' 
@@ -1307,6 +1306,7 @@ if $ARGS[0] = 'shulga_lern_sex_yes':
 		if lern_imgset = 2 or lern_imgset = 3 or lern_imgset = 4 or lern_imgset = 6 or lern_imgset = 7:
 			if analplugin = 1:
 				analplugin = 0
+				analplugout=1
 				'"<<$pcs_nickname>>, I didn''t expect you to bring toys", Vasily says cheerfully as he pulls out your butt plug.'
 				'"You won''t need this little anymore. I have something more substantial for you.", Vasily continues.'
 			end
@@ -1365,6 +1365,7 @@ if $ARGS[0] = 'shulga_lern_sex_yes':
 				'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/boy/vasya/sex/shuglinhome/lern/ev<<lern_imgset>>_5.jpg"></center>'
 				'His grunts and breathing getting louder and louder, suddenly he pulls out of you and grabs you by the hair. He pulls you around so your face is in front of his cock.'
 				'Just as hot spurts of cum land on your face, in your mouth and even some squirting up in your hair. With a final spasm from his body and a moan, he slows his breath. "That one is called how to be a good little cum slut. Time for clean up." Before you can even consider what he has planned for clean up, he forces his dick back in your mouth and makes you suck him clean.'
+				gs 'dinsex','after_anal','boy',$boydesc
 				'Once you finished sucking his cock clean, he pulls it out of your mouth and puts it back in his pants. He seems to completely lose interest in you now and turns on the tv.'
 
 				act 'Leave': gt 'shulga_room'
