@@ -120,11 +120,11 @@ if $ARGS[0] = 'maid':
 			maid_cloth = 0
 			maidtime += 1			
 			'After several hours of hard work, you finish your maid shift. You walk past the room of the guys who took your money last time and are wondering if you should take them up on their offer.'
-			if slutty = 0:
+			if slutty = 0 and money > 500:
 				'Eventually you decide you are not the kind of girl that sells her body for money (yet..).'
 				act'Continue':gt 'hotelhole'
 			end
-			if slutty > 0:
+			if slutty > 0 or money <= 500:
 				act'Shake your head and go back to the lobby.':
 					threesomewatched = 0
 					gt 'hotelhole'
@@ -198,16 +198,28 @@ if $ARGS[0] = 'maid':
 					'Let''s satisfy her curiousity and give her a show'
 					'"This is of course not a free show" he says while he reaches in your pocket and start taking some of your money.'
 					if money < 1000:
+						montake = money
 						money = 0
+						totalmon = totalmon + montake
+						mongiveback = totalmon - 1000
+						if totalmon => 1000:
+							 money = money + mongiveback
+							 jump 'enoughmoney'
+						end					
 						gs 'pain', 5, 'asscheeks', 'hit'
-						
-						'" What the hell, only <<money>>  <b>₽</b> ? Our show is worth much more than this. The only thing you get for this kind of money is one slap on the ass."  He turns you around and gives you a big slap on your ass, he then takes you by the arm and pushes you out the door.'
+						'" What the hell, only <<montake>>  <b>₽</b> ? Our show is worth much more than this. The only thing you get for this kind of money is one slap on the ass."  He turns you around and gives you a big slap on your ass, he then takes you by the arm and pushes you out the door.'
 						threesomewatched = 0
 						threesometojoin = 0
+						
 						act'Continue':gt 'hotelhole'	
-						end
+					end
 					if money => 1000:
-						money -= 1000
+						if totalmon = 0:
+							money -= 1000
+						else
+							money = money + totalmon - 1000
+						end
+						:enoughmoney
 						'"Now you just sit there and enjoy the show" he says and he pushes you onto a chair in the corner.'
 						
 						act 'Sit and enjoy the show':

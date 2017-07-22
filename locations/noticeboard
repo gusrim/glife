@@ -1,6 +1,10 @@
 # noticeboard
-!! use gt 'noticeboard','look'
+!! use xgt 'noticeboard','start'
 $location_type = 'public_indoors'
+if $ARGS[0] = 'start':
+	gs 'saveposition'
+	gt 'noticeboard','look'
+end
 
 if $ARGS[0] = 'look':
 if $set_imgh!'':givemeheight=val(mid($set_imgh,10,len($set_imgh)-9))/20 else givemeheight = 30
@@ -25,7 +29,7 @@ $advert2 = func('noticeboard','test_advert2')
 	if NumberOfNewAdverts = 0: *nl 'There are no new adverts.'
 	if NumberOfNewAdverts = 1: *nl 'There is one new advert.'
 	if NumberOfNewAdverts > 1: *nl 'There are <<NumberOfNewAdverts>> new adverts'
-	act 'Leave the board': gt 'shop','main'
+	act 'Leave the board': gt 'restoreposition'
 end
 
 if $ARGS[0] = 'advert0':
@@ -41,11 +45,11 @@ if $ARGS[0] = 'advert0':
 end
 
 if $ARGS[0] = 'advert1':
-	'<center><b><font color = "red">Pavlovsk police department newsletter</b><center>'
-	*p 'The Pavlovsk police department recently investigated the rumours that a secret prostitution ring was being run from the Pavlovsk hotel. '
-	*p 'After a very thorough investigation we found absolutely no evidence of this. '
-	*p 'The hotel manager, Herman Leonidovich, was interrogated and not only did we find him completely innocence he also gave a substantial donation to our department. '
-	*pl 'He ensured us that any young, pretty girl could apply for a maid job in their hotel and there is absolutely no chance that they would be forced to prostitute themselves.'
+
+	'<center><table bgcolor="#FFFF66" width="60%" cellspacing="30"><tr><th align="center"><h3>Pavlovsk police department newsletter</h3></th></tr><tr><td align="left">'+ _
+	'&nbsp;&nbsp;&nbsp;The Pavlovsk police department recently investigated the rumours that a secret prostitution ring was being run from the Pavlovsk hotel.<p>'+ _ 
+	'&nbsp;&nbsp;&nbsp;After a very thorough investigation, we found absolutely no evidence of this. The hotel manager, <b>Herman Leonidovich</b>, was interrogated and not only did we find him completely innocence he also gave a substantial donation to our department.'+ _
+	'He ensured us that any young, pretty girl could apply for a maid job in their hotel and there is absolutely no chance that they would be forced to prostitute themselves<p><p>.</td></tr></table></center>'
 	minut +=2
 	gs 'stat'
 	act 'Continue': gt 'noticeboard','look'
@@ -57,6 +61,18 @@ if $ARGS[0] = 'advert2':
 	gs 'stat'
 	act 'Continue': gt 'noticeboard','look'
 end
+
+!! possible coordinates
+!! upper row
+!! 1 '<<3*givemeheight>>,<<2*givemeheight>>,<<7*givemeheight>>,<<8*givemeheight>>' - taken by advert0
+!! 2 '<<8*givemeheight>>,<<2*givemeheight>>,<<12*givemeheight>>,<<8*givemeheight>>'
+!! 3 '<<13*givemeheight>>,<<2*givemeheight>>,<<17*givemeheight>>,<<8*givemeheight>>'
+!! 4 '<<18*givemeheight>>,<<2*givemeheight>>,<<22*givemeheight>>,<<8*givemeheight>>' - taken by advert2
+!! lower row
+!! 5 '<<3*givemeheight>>,<<12*givemeheight>>,<<7*givemeheight>>,<<18*givemeheight>>'
+!! 6 '<<8*givemeheight>>,<<12*givemeheight>>,<<12*givemeheight>>,<<18*givemeheight>>' - taken by advert1
+!! 7 '<<13*givemeheight>>,<<12*givemeheight>>,<<17*givemeheight>>,<<18*givemeheight>>'
+!! 8 '<<18*givemeheight>>,<<12*givemeheight>>,<<22*givemeheight>>,<<18*givemeheight>>'
 
 
 if $ARGS[0] = 'test_advert0':
