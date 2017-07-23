@@ -14,6 +14,10 @@ gs'stat'
 if hour >= 12 and hour <= 13 and GermanQW > 0:
 	'Next to the reception desk, you see a door labeled <a href="exec:minut += 1 & GT ''hoteladmin''">"Administration"</a>. That must be where the hotel manager works. The door is currently open.'
 end
+if hotwait = 1:
+'You go sit in one of the comfortable chairs in the lobby and watch the guests checking in an out.'
+hotwait = 0
+end
 
 if maidqw >= 1 and hour >= 16 and hour < 17:
 	act'Work as a maid':
@@ -31,7 +35,9 @@ if maidqw >= 1 and hour >= 16 and hour < 17:
 		end
 	end
 end
-
+if hotelcouple = 2 and week=4 and hour >=20 and hour <23 and hcday ! daystart:
+	act 'Go visit the couple in room 207':gt 'HotelWork','hotcouple'
+end
 if maidtime > 0:
 	act'Collect your salary':
 		hotelcollect = 1
@@ -45,6 +51,22 @@ if HotelRoom > 0:
 		if hotelroom = 2:gt'hotelroom','better'
 		if hotelroom = 3:gt'hotelroom','best'
 	end
+end
+act 'Kill some time in the hotel lobby ':
+
+	waiting = input ("How long do you want to sit down? (No more than 120 minutes) default = 30 minutes")
+	if waiting <= 0 or waiting > 120:
+				minut += 30
+	elseif waiting > 0 and waiting <= 120:
+				minut += waiting
+				pcs_mood += 10
+				pcs_willpwr += 10
+			
+	end
+	cls
+	gs'stat'
+	hotwait = 1
+	gt 'hotelhole'
 end
 
 act 'Leave the hotel':minut += 3 & gt'vokzalG'
