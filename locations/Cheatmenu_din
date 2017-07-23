@@ -1439,6 +1439,51 @@ $cheatmenu['pain'] = {
 	pl 'pain[cervix] = <<pain[''cervix'']>> <a href="exec:pain[''cervix''] -= 10 & dynamic $cheatmenu[''pain'']">-10</a> <a href="exec:pain[''cervix''] += 10 & dynamic $cheatmenu[''pain'']">+10</a>'
 }
 
+$cheatmenu['DNA'] = {
+	clr
+	pl '<center><a href="exec:dynamic $cheatmenu"><b>Cheat menu</b></a><br>DNA string generation<br>If parents are not in game, leave the respective IDs empty</center>'
+	nl
+	if $cheatDNAM ! '':pl 'Selected mother: <<$npc_firstname[''<<$cheatDNAM>>'']>> <<$npc_lastname[''<<$cheatDNAM>>'']>> (<<$cheatDNAM>>)<br><<$npc_dna[$cheatDNAM]>>'
+	if $cheatDNAF ! '':pl 'Selected father: <<$npc_firstname[''<<$cheatDNAF>>'']>> <<$npc_lastname[''<<$cheatDNAF>>'']>> (<<$cheatDNAF>>)<br><<$npc_dna[$cheatDNAF]>>'
+	nl
+	if $cheatDNAM ! '': pl '<a href="exec:killvar ''cheatDNAM'' & dynamic $cheatmenu[''DNA'']">Remove mother DNA</a>'
+	if $cheatDNAF ! '': pl '<a href="exec:killvar ''cheatDNAF'' & dynamic $cheatmenu[''DNA'']">Remove father DNA</a>'
+	nl
+	pl '<a href="exec:dynamic $cheatmenu[''DNAM'']"><b>ID of mother (if it is known)</b></a>'
+	pl '<a href="exec:dynamic $cheatmenu[''DNAF'']"><b>ID of father (if it is known)</b></a>'
+	nl
+	if $cheatDNAM ! '' and $cheatDNAF ! '':
+		$cheatDNAgenerated = func('DNA','generate',$npc_dna[$cheatDNAM],$npc_dna[$cheatDNAF])
+	elseif $cheatDNAM ! '':
+		$tempDNA = func('DNA','create')
+		$cheatDNAgenerated = func('DNA','generate',$npc_dna[$cheatDNAM],$tempDNA)
+	elseif $cheatDNAF ! '':
+		$tempDNA = func('DNA','create')
+		$cheatDNAgenerated = func('DNA','generate',$tempDNA,$npc_dna[$cheatDNAF])
+	else
+		$cheatDNAgenerated = func('DNA','create')
+	end
+	pl 'Generated DNA strand (please copy it, not preserved): <<$cheatDNAgenerated>>'
+	nl
+	pl '<a href="exec:dynamic $cheatmenu[''DNA'']">Generate again</a>'
+	killvar 'cheatDNAgenerated'
+	killvar 'tempDNA'
+}
+
+$cheatmenu['DNAM'] = {
+   $cheatDNAM = input("Enter genetic mother ID (like A33, without apostrophe)")
+   if $cheatDNAM = '':exit
+   dynamic $cheatDNAM
+   dynamic $cheatmenu['DNA']
+}
+
+$cheatmenu['DNAF'] = {
+   $cheatDNAF = input("Enter genetic father ID (like A34, without apostrophe)")
+   if $cheatDNAF = '':exit
+   dynamic $cheatDNAF
+   dynamic $cheatmenu['DNA']
+}
+
 $cheatmenu['quicktime'] = {
 	minut += ARGS[0]
 	*clr
@@ -1466,6 +1511,7 @@ $cheatmenu = {
 	if MagikDostup = 0: pl'<a href="exec:dynamic $cheatmenu[''magic'']"><b>Magic</b></a>'
 	pl'<a href="exec:gt ''NPCChanger'', ''Start''"><b>NPC Editor</b></a>'
 	pl'<a href="exec:dynamic $cheatmenu[''pain'']"><b>Pain management panel</b></a>'
+	pl'<a href="exec:dynamic $cheatmenu[''DNA'']"><b>Generating DNA string</b></a>'
 	pl '<a href="exec:dynamic $cheatmenu[''bdimmain'']"><b>Body Image Controls</b></a>'
 	nl
 	pl'<a href="exec:pcs_health = pcs_vital*10 + pcs_stren*5+1000 & pcs_willpwr = pcs_intel*5 + will*5+1000 & pcs_manna = (pcs_intel*pcs_magik) + pcs_magik*100 + pcs_vital*10 + rikudo & vgape = 0 & agape = 0 & nippain = 0 & dynamic $cheatmenu">Full restoration of health, manna, Reason.</a>'
