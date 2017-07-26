@@ -18,8 +18,8 @@ if $ARGS[0] = 'start':
 	*nl
 	if daystart  < 10 and StoryLine = 0:'In the mirror, you see a strange woman''s face looking back at you that exactly copies all your actions. You can hardly accept the idea that this is now you.'
 	if daystart >= 10 and daystart < 30 and StoryLine = 0:'In the mirror you see a woman''s face to which you have become accustomed to. But sometimes, you get the feel that this is not your face.'
-	'<<$hair>>'
-	'<<$pcs_makeup>>. <<$lip>>'
+	'<<$hair>>. '
+	'<<$pcs_makeup>>. Your<<$pcdesc_eyesizeinsertive>> eyes are <<$pcdesc_eyecolour>> <<$pcs_lashes>>, and you have <<$pcdesc_fulllipswordy>>.'
 	'<<$skin>>'
 	'<<$pcs_apprnc>>'
 
@@ -32,8 +32,10 @@ if $ARGS[0] = 'start':
 	end
 
 
-	if kosmetica > 0: *nl 'Cosmetics: <<kosmetica>>' else *nl 'You have no makeup'
-	if lipbalm > 0: *pl ' | Lip Balm: <<lipbalm>>' else *pl ' | You have no lip balm left'
+	if kosmetica > 0: *nl 'Cosmetics: <<kosmetica>>' else *nl 'You have no makeup.'
+	if lipbalm > 0: *pl ' | Lip gloss: <<lipbalm>>' else *pl ' You have no lip gloss left.'
+	if falselashesplain > 0: *nl 'False lashes: <<falselashesplain>>' else *nl 'You have no false lashes left.'
+	if falselashesmink > 0: *pl ' | Mink lashes: <<falselashesmink>>' else *pl ' You have no mink lashes left.'
 	*nl
 
 	$makeupLight =   'You subtly apply some neutral tones, with a light application of makeup to bring out your natural beauty.'
@@ -175,6 +177,24 @@ if $ARGS[0] = 'start':
 			act 'View results':gt 'mirror', 'start'
 		end
 	end
+	
+	if falselashesplain > 0 and pcs_lashes < 3 and lashextensionstyle <= 0:
+		act 'Apply false lashes':
+			cla
+			gs 'mirror','applyLashesplain'
+			act 'View results':gt 'mirror', 'start'
+		end
+	end
+	
+	if falselashesmink > 0 and pcs_lashes < 4 and lashextensionstyle <= 0:
+		act 'Apply mink lashes':
+			cla
+			gs 'mirror','applyLashesmink'
+			act 'View results':gt 'mirror', 'start'
+		end
+	end
+	
+
 
 	if (pcs_makeup <= 1 and kosmetica > 0) or (lipbalm > 0 and pcs_lipbalm <= 0 and pcs_hairbsh = 0):
 		act 'Do the works': gt 'mirror', 'works'
@@ -268,6 +288,8 @@ if $ARGS[0] = 'works':
 		'You brush your hair.'
 	end
 	gs 'mirror','applyLipbalm'
+	if falselashesmink >= 1 and pcs_lashes < 4 and lashextensionstyle <= 0:gs 'mirror','applyLashesmink'
+	if falselashesplain >= 1 and pcs_lashes < 3 and lashextensionstyle <= 0:gs 'mirror','applyLashesplain'
 	
 	act 'View results':gt 'mirror', 'start'
 end &! --- works ----
@@ -285,6 +307,27 @@ if $ARGS[0] = 'applyLipbalm':
 		'You apply some moisturizing balm on your lips.'
 	end
 end &! --- applyLipbalm ---
+
+if $ARGS[0] = 'applyLashesmink':
+	if falselashesmink > 0 and pcs_lashes < 4:
+		minut += 15
+		falselashesmink -= 1
+		if false_lashes >= 1 and pcs_lashes = 3:'You remove your old, plain lashes first.'
+		false_lashes = 1
+		pcs_lashes = 4
+		'You spend a good bit of time affixing your lavish, mink lash strips.'
+	end
+end &! --- applyLashesmink ---
+
+if $ARGS[0] = 'applyLashesplain':
+	if falselashesplain > 0 and pcs_lashes < 3:
+		minut += 15
+		falselashesplain -= 1
+		false_lashes = 1
+		pcs_lashes = 3
+		'You spend a fair bit of time carefully trimming and affixing your flirtatious false lashes.'
+	end
+end &! --- applyLashesplain ---
 
 if $ARGS[0] = 'fin':
 	killvar '$makeupLight'

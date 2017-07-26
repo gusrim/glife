@@ -1089,7 +1089,7 @@ if pcs_lipbalm > 0:
 		$pcdesc_lipglossinsertive = ', wet and glossy'
 		$pcdesc_lipglossed = 'glossed'
 		$pcdesc_lipglosswordy = 'suggestively gloss-glazed'
-		$lip = 'You have fat, <<$pcdesc_lipgloss>>, suggestively full lips. <<$pirsB>> <<$pirsA>>'
+		$lip = 'You have pillowy, <<$pcdesc_lipgloss>>, suggestively full lips. <<$pirsB>> <<$pirsA>>'
 	else
 		!! Lip size 0
 		rand_lipgloss = rand(0)
@@ -1240,14 +1240,14 @@ elseif pcs_eyecol = 1:
 	if rand_eyecol = 0:$pcdesc_eyecolourrandom = 'pale'
 	if rand_eyecol = 1:$pcdesc_eyecolourrandom = 'grey'
 	if rand_eyecol = 2:$pcdesc_eyecolourrandom = 'silvery'
-	$pcdesc_eyecolour = ''
+	$pcdesc_eyecolour = 'grey'
 	$pcdesc_eyecolourwordy = 'pale, silvery-grey'
 	$pcs_eyecol = 'grey'
 elseif pcs_eyecol = 2:
 	rand_eyecol = rand(0,1)
 	if rand_eyecol = 0:$pcdesc_eyecolourrandom = 'green'
 	if rand_eyecol = 1:$pcdesc_eyecolourrandom = 'emerald'
-	$pcdesc_eyecolour = ''
+	$pcdesc_eyecolour = 'green'
 	$pcdesc_eyecolourwordy = 'sparkling green'
 	$pcs_eyecol = 'green'
 elseif pcs_eyecol = 3:
@@ -1265,8 +1265,56 @@ else
 	$pcs_eyecol = 'attractive'
 end
 
-if pcs_lashes >= 2:
-	pcs_lashes = 2
+!! extended lash functionality; pcs_lashes = n are: {2, largest natural size}, {3, with temporary false lashes on or basic 2D lash extensions}, {4, with ornate false lashes on or lavish 4D extensions}, {5, with extremely ornate, 6D-style extensions} - xerya
+!! If players do not have a pcs_naturallashes value, extrapolate one as best as possible from what they currently have.
+if pcs_naturallashes <= 0 and pcs_lashes <= 2 and retroactivenaturallashes <= 0:
+	pcs_naturallashes = pcs_lashes
+	retroactivenaturallashes = 1
+end
+
+if pcs_lashes >= 5:
+	rand_lashes = rand(0,3)
+	if rand_lashes = 0:$pcdesc_lashesrandom = 'long, jewel-dusted'
+	if rand_lashes = 1:$pcdesc_lashesrandom = 'incredibly extravagant'
+	if rand_lashes = 2:$pcdesc_lashesrandom = 'overwhelmingly indulgent'
+	if rand_lashes = 3:$pcdesc_lashesrandom = 'jewel-sparkled, showgirl'
+	$pcdesc_lashes = 'long, jewel-dusted'
+	$pcdesc_lasheswordy = 'incredibly extravagant, jewel-dusted'
+	$pcs_lashes = 'with over-the-top, jewel-dusted eyelash extensions'
+elseif pcs_lashes = 4:
+	rand_lashes = rand(0,3)
+	if false_lashes >= 1:
+		if rand_lashes = 0:$pcdesc_lashesrandom = 'mink-feathered'
+		if rand_lashes = 1:$pcdesc_lashesrandom = 'attention-grabbing'
+		if rand_lashes = 2:$pcdesc_lashesrandom = 'intoxicatingly seductive false'
+		if rand_lashes = 3:$pcdesc_lashesrandom = 'wildly flirtatious false'
+		$pcdesc_lashes = 'mink-feathered false'
+		$pcs_lashes = 'with fabulous, mink-feathered false lashes'
+		$pcdesc_lasheswordy = 'fabulous, mink-feathered false'
+	else
+		if rand_lashes = 0:$pcdesc_lashesrandom = 'amazingly lengthy'
+		if rand_lashes = 1:$pcdesc_lashesrandom = 'show-stealing'
+		if rand_lashes = 2:$pcdesc_lashesrandom = 'incredibly lush'
+		if rand_lashes = 3:$pcdesc_lashesrandom = 'stunningly dark and full'
+		$pcdesc_lashes = 'show-stealing'
+		$pcs_lashes = 'with stunningly dark and full lash extensions'
+		$pcdesc_lasheswordy = 'stunningly dark and full, show-stealing'
+	end
+elseif pcs_lashes = 3:
+	rand_lashes = rand(0,3)
+	if rand_lashes = 0:$pcdesc_lashesrandom = 'lavish'
+	if rand_lashes = 1:$pcdesc_lashesrandom = 'lush, dark'
+	if rand_lashes = 2:$pcdesc_lashesrandom = 'seductively-curled'
+	if rand_lashes = 3:$pcdesc_lashesrandom = 'flirtatiously lengthy'
+	$pcdesc_lashes = 'lavish'
+	if false_lashes >= 1:
+		$pcs_lashes = 'with lavish, fluttery false lashes'
+		$pcdesc_lasheswordy = 'lavish, attention-grabbing false'
+	else	
+		$pcs_lashes = 'with lavishly seductive lash extensions'
+		$pcdesc_lasheswordy = 'lavish, seductively dark'
+	end
+elseif pcs_lashes = 2:
 	rand_lashes = rand(0,3)
 	if rand_lashes = 0:$pcdesc_lashesrandom = 'lengthy'
 	if rand_lashes = 1:$pcdesc_lashesrandom = 'long'
@@ -1290,36 +1338,6 @@ else
 	$pcdesc_lashes = 'short'
 	$pcdesc_lasheswordy = 'short, barely-noticeable'
 	$pcs_lashes = 'with short eyelashes'
-end
-
-!! I think browper is supposed to be permanently altered brows, be it a tattoo or electrolysis. Brow decrements by 1 every day, so it is clearly some kind of maintenance thing. This needs fleshed out once we decide what we are going to do with it.
-if brow <= 0 and browper = 0:
-	rand_eyebrows = rand(0)
-	if rand_eyebrows = 0:$pcdesc_eyebrowsrandom = 'natural'
-	$pcdesc_eyebrows = 'natural'
-	$pcdesc_eyebrowswordy = 'natural'
-	$brow = 'natural eyebrows'
-elseif brow > 0 and browper = 0:
-	$brow = 'groomed eyebrows'
-	rand_eyebrows = rand(0)
-	if rand_eyebrows = 0:$pcdesc_eyebrowsrandom = 'groomed'
-	$pcdesc_eyebrows = 'groomed'
-	$pcdesc_eyebrowswordy = 'groomed'
-	brokoef = 1
-elseif browper >= 1:
-	$brow = 'permanent eyebrows'
-	rand_eyebrows = rand(0)
-	if rand_eyebrows = 0:$pcdesc_eyebrowsrandom = 'permanent'
-	$pcdesc_eyebrows = 'permanent'
-	$pcdesc_eyebrowswordy = 'permanent'
-	brokoef = 1
-else
-	!! This should not actually ever trigger.
-	rand_eyebrows = rand(0)
-	if rand_eyebrows = 0:$pcdesc_eyebrowsrandom = 'natural'
-	$pcdesc_eyebrows = 'natural'
-	$pcdesc_eyebrowswordy = 'natural'
-	$brow = 'natural eyebrows'
 end
 
 
@@ -1362,7 +1380,7 @@ if pcs_eyesize = 0:
 	$pcdesc_eyesize = 'small'
 	$pcdesc_eyesizeinsertive = ''
 	$pcdesc_eyesizewordy = 'little'
-	$glaza = 'You have little <<$pcs_eyecol>> eyes <<$pcs_lashes>> and <<$brow>>.<<$glass>>'
+	$glaza = 'You have little <<$pcs_eyecol>> eyes <<$pcs_lashes>>.<<$glass>>'
 elseif pcs_eyesize = 1:
 	rand_eyesize = rand(0)
 	if rand_eyesize = 0:$pcdesc_eyesizerandom = 'medium'
@@ -1370,7 +1388,7 @@ elseif pcs_eyesize = 1:
 	$pcdesc_eyesize = 'medium-sized'
 	$pcdesc_eyesizeinsertive = ''
 	$pcdesc_eyesizewordy = 'medium-sized'
-	$glaza = 'You have medium-sized <<$pcs_eyecol>> eyes <<$pcs_lashes>> and <<$brow>>.<<$glass>>'
+	$glaza = 'You have medium-sized <<$pcs_eyecol>> eyes <<$pcs_lashes>>.<<$glass>>'
 elseif pcs_eyesize = 2:
 	rand_eyesize = rand(0,3)
 	if rand_eyesize = 0:$pcdesc_eyesizerandom = 'big'
@@ -1380,7 +1398,7 @@ elseif pcs_eyesize = 2:
 	$pcdesc_eyesize = 'large'
 	$pcdesc_eyesizeinsertive = ' large,'
 	$pcdesc_eyesizewordy = 'large, expressive'
-	$glaza = 'You have large <<$pcs_eyecol>> eyes <<$pcs_lashes>> and <<$brow>>.<<$glass>>'
+	$glaza = 'You have large <<$pcs_eyecol>> eyes <<$pcs_lashes>>.<<$glass>>'
 else
 	pcs_eyesize = 3
 	rand_eyesize = rand(0,3)
@@ -1391,7 +1409,7 @@ else
 	$pcdesc_eyesize = 'huge'
 	$pcdesc_eyesizeinsertive = ' big, doll-like'
 	$pcdesc_eyesizewordy = 'huge'
-	$glaza = 'You have huge <<$pcs_eyecol>> eyes that almost look like they''re out of an anime, <<$pcs_lashes>> and <<$brow>>.<<$glass>>'
+	$glaza = 'You have huge <<$pcs_eyecol>> eyes that almost look like they''re out of an anime, <<$pcs_lashes>>.<<$glass>>'
 end
 
 mopkoef = pcs_makupskl / 5
