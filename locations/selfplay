@@ -5,46 +5,6 @@ $d_self_ass_fingering = {
 }
 
 
-! WD: Masturbating at night only has 10% chance to be discovered
-$d_van_vtor = {
-	if indorf = 0 and (hour >= 6 or Rand(1, 10) = 1):
-		cls
-		pcs_horny -= 50
-		pcs_mood -= 10
-		gs 'stat'
-		'You hear shouting from outside the bathroom: "<<$pcs_nickname>>! Are you drowning in there or something? What''s taking so long? Get out of there!"'
-
-		act 'Get out of the bath and dry yourself off':
-			analplay = 0
-			selfplaytime = 0
-			mastrOnce = 0
-			proverkasisterhere = 0
-
-			if vaginaTemp > pcs_vag * 2:pcs_vag += 1 & vaginaTemp = 0
-
-			gt $loc, $metka
-		end
-
-		exit
-	else
-		selfplaytime -= 15
-	end
-}
-
-!!if $loc = 'vanrPar' and selfplaytime> = 60:dynamic $d_van_vtor
-!!dynamic $d_sis_prov
-
-$d_sis_prov = {
-	if sister_indorf = 0:
-		if $loc = 'bedrPar':
-			gs 'family'
-
-			if sisterHere = 0 and proverkasisterhere = 0:proverkasisterhere = 1
-			if sisterHere > 0 and proverkasisterhere = 2:gt $loc, $metka
-		end
-	end
-}
-
 if $ARGS[0] = 'start':
 	if mastrOnce = 0:
 		stat['mast'] += 1
@@ -57,42 +17,18 @@ if $ARGS[0] = 'start':
 	if $loc = 'bedrPar' or $loc = 'Gadsarai':'<center><img <<$set_imgh>> src="images/shared/sex/mast/start.jpg"></center>'
 	if $loc = 'vanrPar':'<center><img <<$set_imgh>> src="images/shared/sex/mast/startvann.gif"></center>'
 
+	if sisboytrio > 0 and sis_watch = 0:
+		sis_watch = 1
+		if sisterHere > 0:sis_watch = 2 & 'Anya smiles and let''s you carry on.'
+	end
+
 	!!then the calculation invasion
 	if $loc = 'vanrPar':
 		if selfplaytime >= 60:
 		end
 	end
 
-	if $loc = 'bedrPar':
-		gs 'family'
-
-		if sister_indorf = 0:
-			if sisterHere = 0 and proverkasisterhere = 0:proverkasisterhere = 1
-
-			if sisterHere > 0:
-				cls
-				gs 'stat'
-
-				!!if $loc = 'bedrPar':'<center><img <<$set_imgh>> src="images/shared/sex/mast/start.jpg"></center>'
-
-				if $loc = 'vanrPar':
-					'<center><img <<$set_imgh>> src="images/shared/sex/mast/startvann.gif"></center>'
-				else
-					'<center><img <<$set_imgh>> src="images/shared/sex/mast/start.jpg"></center>'
-				end
-
-				if proverkasisterhere = 2:
-					SisterKnowMastr += 1
-					'<font color="red"><b>Anja saw you masturbate.</b></font>'
-				end
-
-				if proverkasisterhere = 1:
-					proverkasisterhere = 2
-					'<font color="red"><b>You hear footsteps approaching your room.</b></font>'
-				end
-			end
-		end
-	end
+	gs 'selfplay', 'sis_prov'
 
 	! WD: Fix Dildo choice Code
 	!{
@@ -217,9 +153,9 @@ if $ARGS[0] = 'start':
 				'You press a finger against your tight asshole and push it in. Your anus is squeezing your finger tightly.'
 			end
 
-			if $loc = 'vanrPar' and selfplaytime >= 60:dynamic $d_van_vtor
+			if $loc = 'vanrPar' and selfplaytime >= 60:gs 'selfplay', 'van_vtor'
 
-			dynamic $d_sis_prov
+			gs 'selfplay', 'sis_prov'
 			gs 'stat'
 
 			act 'Stop touching yourself':gt $loc, $metka
@@ -269,9 +205,9 @@ if $ARGS[0] = 'start':
 
 				act 'Stop touching yourself':gt $loc, $metka
 
-				if $loc = 'vanrPar' and selfplaytime >= 60:dynamic $d_van_vtor
+				if $loc = 'vanrPar' and selfplaytime >= 60:gs 'selfplay', 'van_vtor'
 
-				dynamic $d_sis_prov
+				gs 'selfplay', 'sis_prov'
 
 				if pcs_horny > 0 and agape < 3:
 					act 'Thrust three fingers in':
@@ -320,9 +256,9 @@ if $ARGS[0] = 'start':
 
 						act 'Stop touching yourself':gt $loc, $metka
 
-						if $loc = 'vanrPar' and selfplaytime >= 60:dynamic $d_van_vtor
+						if $loc = 'vanrPar' and selfplaytime >= 60:gs 'selfplay', 'van_vtor'
 
-						dynamic $d_sis_prov
+						gs 'selfplay', 'sis_prov'
 						gs 'stat'
 
 						if pcs_horny > 0 and agape < 3:
@@ -372,9 +308,9 @@ if $ARGS[0] = 'start':
 
 								act 'Stop touching yourself':gt $loc, $metka
 
-								if $loc = 'vanrPar' and selfplaytime >= 60:dynamic $d_van_vtor
+								if $loc = 'vanrPar' and selfplaytime >= 60:gs 'selfplay', 'van_vtor'
 
-								dynamic $d_sis_prov
+								gs 'selfplay', 'sis_prov'
 								gs 'stat'
 
 								if pcs_horny > 0 and agape < 3:
@@ -425,9 +361,9 @@ if $ARGS[0] = 'start':
 
 										act 'Stop touching yourself':gt $loc, $metka
 
-										if $loc = 'vanrPar' and selfplaytime >= 60:dynamic $d_van_vtor
+										if $loc = 'vanrPar' and selfplaytime >= 60:gs 'selfplay', 'van_vtor'
 
-										dynamic $d_sis_prov
+										gs 'selfplay', 'sis_prov'
 									end
 								end
 							end
@@ -540,11 +476,69 @@ if $ARGS[0] = 'start':
 		gs 'stat'
 	end
 
-	if $loc = 'vanrPar' and selfplaytime >= 60:dynamic $d_van_vtor
+	if $loc = 'vanrPar' and selfplaytime >= 60:gs 'selfplay', 'van_vtor'
 
 	if $loc = 'Gadsarai':
 		npc_horny['A66'] += 1
 		'Bandit the dog is watching you curiously.'
+	end
+end
+
+if $ARGS[0] = 'sis_prov':
+	if $loc = 'bedrPar':
+		gs 'family'
+
+		if sister_indorf = 0:
+			if sisterHere = 0 and proverkasisterhere = 0:proverkasisterhere = 1
+
+			if sisterHere > 0:
+				cls
+				gs 'stat'
+
+				'<center><img <<$set_imgh>> src="images/shared/sex/mast/start.jpg"></center>'
+
+				if sisboytrio > 0 and sis_watch = 1:
+					sis_watch = 2
+					'Anya smiles as she enters the room and waves at you to carry on.'
+				else
+					if proverkasisterhere = 2:
+						SisterKnowMastr += 1
+						'<font color="red"><b>Anja saw you masturbate.</b></font>'
+					end
+
+					if proverkasisterhere = 1:
+						proverkasisterhere = 2
+						'<font color="red"><b>You hear footsteps approaching your room.</b></font>'
+					end
+				end
+			end
+		end
+	end
+end
+
+! WD: Masturbating at night only has 10% chance to be discovered
+if $ARGS[0] = 'van_vtor':
+	if indorf = 0 and (hour >= 6 or Rand(1, 10) = 1):
+		cls
+		pcs_horny -= 50
+		pcs_mood -= 10
+		gs 'stat'
+		'You hear shouting from outside the bathroom: "<<$pcs_nickname>>! Are you drowning in there or something? What''s taking so long? Get out of there!"'
+
+		act 'Get out of the bath and dry yourself off':
+			analplay = 0
+			selfplaytime = 0
+			mastrOnce = 0
+			proverkasisterhere = 0
+
+			if vaginaTemp > pcs_vag * 2:pcs_vag += 1 & vaginaTemp = 0
+
+			gt $loc, $metka
+		end
+
+		exit
+	else
+		selfplaytime -= 15
 	end
 end
 
