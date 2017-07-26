@@ -17,9 +17,6 @@ end
 
 if $ARGS[0] = 'ticket':
 	cls
-!! This is a lie, but a useful one don''t change the $loc and $metka
-	$loc = 'vokzalholle'
-	$metka = 'cottages'
 	gs 'stat'
 	'<center><h4>Ticket office</h4></center>'
 	'<center><img <<$set_imgh>> src="images/locations/shared/train/kassa.jpg"></center>'
@@ -44,67 +41,96 @@ if $ARGS[0] = 'ticket':
 	end
 
 	if money >= 50:
-		act 'Buy a ticket to the old platform by the communal cottages (50 <b>₽</b>)':
+		act 'Buy a ticket to the old platform by the communal village (50 <b>₽</b>)':
+			$loc = 'train'
+			$metka = 'old_platform'
 			train_event = 0
 			money -= 100
 			train_dir = 2
 			train_dest = 3
-			gt 'vokzalholle', 'cottages'
+			minut += 10
+			gs 'stat'
+			if rand(1, 100) < 20: gt 'train', 'events'
+			'<center><img <<$set_imgh>> src="images/locations/shared/train/oldplat.jpg" ></center>'
+			'After 10 minutes you arrive at an old railway platform near the communal village.'
+			act 'Get off the train':
+				if train_event = 0 and rand(1, 100) <= 5: gt 'train_incidental', 'end'
+				gt 'train', 'old_platform'
+			end
 		end
 	end
 
 	if money >= 75:
 		act 'Buy a ticket to the village of Gadyukino (75 <b>₽</b>)':
+			$loc = 'train'
+			$metka = 'village'
 			train_event = 0
 			money -= 75
 			train_dir = 2
 			train_dest = 4
-			gt 'vokzalholle', 'cottages'
+			minut += 20
+			gs 'stat'
+			if rand(1, 100) <= 10: gt 'train_incidental', 'events'
+			if train_event = 0 and rand(1, 100) < 20: gt 'train', 'events'
+			'<center><img <<$set_imgh>> src="images/locations/shared/train/gadplat.jpg" ></center>'
+			'After 20 minutes, the train stops at the small station near the village of Gadyukino.'
+			act 'Get off the train':
+				if train_event = 0 and rand(1, 100) <= 5: gt 'train_incidental', 'end'
+				gt 'train', 'village'
+			end
 		end
 	end
 
 	if money >= 100:
 		act 'Buy a ticket to the old town (100 <b>₽</b>)':
+			loc = 'train'
+			$metka = 'oldtown'
 			train_event = 0
 			money -= 100
 			train_dir = 2
 			train_dest = 5
-			gt 'vokzalholle', 'cottages'
+			minut += 30
+			gs 'stat'
+			if rand(1, 100) <= 10: gt 'train_incidental', 'events'
+			if train_event = 0 and rand(1, 100) < 20: gt 'train', 'events'
+			'<center><img <<$set_imgh>> src="images/locations/shared/train/pushplat.jpg" ></center>'
+			'After 30 minutes, the train stops at old platform by the old town of Pushkin. Famous for its extensive park and old historic buildings, the locals are known to be eccentric but that adds to the charm.'
+			act 'Get off the train':
+				if train_event = 0 and rand(1, 100) <= 5: gt 'train_incidental', 'end'
+				gt 'train', 'oldtown'
+			end
 		end
 	end
 
 	if money >= 125:
 		act 'Buy a ticket to Pavlovsk (125 <b>₽</b>)':
+			$loc = 'vokzalperG'
+			$metka = ''
 			train_event = 0
 			money -= 125
 			train_dir = 2
 			train_dest = 6
+			minut += 35
+			gs 'stat'
+			minut += 5
+			gs 'stat'
 			if rand(1, 100) < 15: gt 'train', 'private'
-			gt 'vokzalholle', 'cottages'
+			if rand(1, 100) < 30: gt 'train', 'Gopnik'
+			if rand(1, 100) <= 10: gt 'train_incidental', 'events'
+			if rand(1, 100) <= 20 and train_event = 0: gt 'train', 'events'
+			if train_event = 0 and rand(1, 100) < 20: gt 'train', 'events'
+			'<center><img <<$set_imgh>> src="images/locations/shared/train/pavplat.jpg" ></center>'
+			'After 35 minutes, you see the town of Pavlovsk approaching. Pavlovsk Castle is an impressive sight, even from a long distance. The train stops at its final destination, a platform in Pavlovsk station.'
+			act 'Get off the train':
+				if train_event = 0 and rand(1, 100) <= 5: gt 'train_incidental', 'end'
+				gt 'vokzalperG'
+			end
 		end
 	end
 	
 	act 'Leave the ticket office': gt 'vokzalholle', ''
 end
 
-if $ARGS[0] = 'cottages':
-	cls
-	minut += 10
-	gs'stat'
-	'<center><img <<$set_imgh>> src="images/locations/shared/train/electri.jpg" ></center>'
-	'After 10 minutes the train stops at a small station. It''s abandoned, and there is not much activity outside.'
-	act 'Get off the train at this station':
-		$loc = 'train'
-		$metka = 'old_platform'
-		if train_event = 0 and rand(1, 100) <= 5: gt 'train_incidental', 'end'
-		gt 'train', 'old_platform'
-	end
-	if train_dest > 3:
-		act 'Continue your journey':
-			gt 'train', 'communalS'
-		end
-	end
-end
 
 --- vokzalholle ---------------------------------
 
