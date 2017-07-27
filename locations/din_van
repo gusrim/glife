@@ -15,6 +15,17 @@ $showerdin = {
 	pcs_hairbsh = 0
 	pcs_makeup = 1
 	if pcs_sweat > 10: pcs_sweat = 10 + rand(0,4)
+	if false_lashes >= 1:
+		lashruinchance = rand(0,4)
+		if lashruinchance <= 2:
+			'You''re careful enough that your false lashes make it through relatively unscathed.'
+		else
+			'Unfortunately, your false lashes don''t make it through the shower.'
+			false_lashes = 0;
+			pcs_lashes = pcs_naturallashes
+			gs 'body_shape', 'basebeautycalc', 1
+		end
+	end
 }
 
 $bteeth = {
@@ -473,6 +484,24 @@ $basin = {
 			*nl
 			'You wash off your makeup.'
 
+			act 'Finish':gt $loc, $metka
+		end
+	end
+	
+	if false_lashes >= 1:
+		act 'Remove false lashes (0:05)':
+			cla
+			'You carefully peel off the glued-on strip, careful to protect your natural lashes.'
+			lashsavechance = rand(0,4)
+			if lashsavechance = 4:
+				'These lashes still look to be in pretty good shape; you could probably use them again.'
+				if pcs_lashes = 4:fakelashesmink += 1
+				if pcs_lashes = 3:fakelashesplain += 1
+			end
+			pcs_lashes = pcs_naturallashes
+			fake_lashes = 0
+			minut += 5
+			gs 'body_shape', 'basebeautycalc', 1
 			act 'Finish':gt $loc, $metka
 		end
 	end

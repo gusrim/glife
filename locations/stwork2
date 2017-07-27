@@ -33,7 +33,7 @@ if hour >= 15 or hour <= 2:
 
 			publichot += rand(pcs_dancero/5, pcs_dancero/3)
 
-			if publichotstart = publichot:publichot -= rand(5, 10) & publichotstart = publichot
+			if publichotstart = publichot: publichot -= rand(5, 10) & publichotstart = publichot
 
 			gs 'stat'
 			'<center><img <<$set_imgh>> src="images/locations/city/citycenter/stripclub/stripclub2.jpg"></center>'
@@ -48,7 +48,7 @@ if hour >= 15 or hour <= 2:
 				end
 			end
 
-			dynamic $pubhotdi
+			gs 'stwork2', 'tipcalculator'
 
 			act 'further':gt $curloc
 		end
@@ -93,7 +93,7 @@ if hour >= 15 or hour <= 2:
 				end
 			end
 
-			dynamic $pubhotdi
+			gs 'stwork2', 'tipcalculator'
 
 			act 'further':gt $curloc
 		end
@@ -104,7 +104,7 @@ if hour >= 15 or hour <= 2:
 			privatrand = rand(0, 100)
 			if privatrand >= 70:
 				'After the dance, the guard approaches you and tells you that you have a customer for a private dance.'
-				dynamic $privatdancedi
+				gs 'stwork2', 'privatdance'
 				exit
 			end
 		end
@@ -116,33 +116,27 @@ end
 act 'Quit the stage':gt 'stwork', 'start'
 
 
-$pubhotdi = {
+if $ARGS[0] = 'tipcalculator':
 	chance = 0
 	paymin = 0
 	paymax = 0
 	
 	if publichot < 30:
 		'Nobody even noticed you or your efforts on the stage.'
-		
-	elseif publichot >= 30 and publichot < 60:
+	elseif publichot < 60:
 		'A couple of people looked at you but no more than that, you didn''t earn a tip.'
-		
-	elseif publichot >= 60 and publichot < 70:
+	elseif publichot < 70:
 		paymax = 1
-
-		if payrand = 0:
-			'A couple of people looked at you but no more than that, you didn''t earn a tip.'
-
-	elseif publichot >= 70 and publichot < 80:
+		if payrand = 0: 'A couple of people looked at you but no more than that, you didn''t earn a tip.'
+	elseif publichot < 80:
 		chance = 5
 		paymin = 3
 		paymax = 10
-		
-	elseif publichot >= 80 and publichot < 90:
+	elseif publichot < 90:
 		chance = 10
 		paymin = 10
 		paymax = 50
-	elseif publichot >= 90:
+	else
 		chance = 15
 		paymin = 10
 		paymax = 100
@@ -151,16 +145,16 @@ $pubhotdi = {
 	payrand = rand(0, chance)
 	if payrand = 0:
 		'Noone tipped you.'
-	else:
+	else
 		paymoneyrand = rand(paymin, paymax)
 		money += paymoneyrand * 10
 		pcs_mood += rand(1,2)
 		'Some guy shoved in your panties, <<paymoneyrand>>0 <b>₽</b>'
 	
 	end
-}
+end
 
-$privatdancedi = {
+if $ARGS[0] = 'privatdance':
 	act 'Go and perform a lap dance':
 		cls
 		minut += 30
@@ -184,7 +178,7 @@ $privatdancedi = {
 
 		act 'Go to the locker room':gt 'stwork', 'start'
 	end
-}
+end
 
 if $ARGS[0] = 'pr1':
 	cla
