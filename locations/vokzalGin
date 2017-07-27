@@ -24,11 +24,13 @@ if $ARGS[0] = '':
 
 	'<center><h4>Pavlovsk train station interior</h4></center>'
 	'<center><img <<$set_imgh>> src="images/locations/pavlovsk/trainstation/vokzal.jpg"></center>'
-	'The center of the station building is a large waiting room, where passengers can wait until their train arrives. Off to one side, the <a href="exec:gt ''vokzalGin'', ''kassi''">ticket office</a> is situated next to the departures board. Opposite to that you can find the <a href="exec:dynamic $din_vokzalg_kabinet">station manager''s office</a>, and the <a href="exec:minut += 1 & gt ''vokmantoiev'', ''start''">toilets</a> on the other end of the building.'
-	'You can go to the train <a href="exec:GT ''vokzalperG'',''start''">platforms</a> through the station building.'
+	'The center of the station building is a large waiting room, where passengers can wait until their train arrives. Opposite to that you can find the <a href="exec:dynamic $din_vokzalg_kabinet">station manager''s office</a>, and the <a href="exec:minut += 1 & gt ''vokmantoiev'', ''start''">toilets</a> on the other end of the building.'
+	'The long-distance trains are at the station platforms between 11:00-11:30 and 18:00-18:30.'
 
+	*nl
 	if katalkinSexOnce = 1:'There is a small <a href="exec:minut += 5 & gt ''katalkin''">police station</a> inside the station building.'
 
+	*nl
 	if StoryLine = 1 and SchoolAtestat = 0:
 		if (sunWeather = 0 or temper <= 0) and hour >= 18 and hour < 20 and week < 6:
 			'You see your classmates <a href="exec:minut += 3 & gt ''gopskver''">Vitek, Dan and Vasily</a> hanging around here.'
@@ -39,57 +41,68 @@ if $ARGS[0] = '':
 		podrand = rand(0, 1)
 
 		if money >= 1000 and hour >= 8 and hour <= 20 and podrand = 0:'As you walk through the station building, you notice a man''s thick <a href="exec:dynamic $din_vokzalg_podbros">wallet</a> dropping from his pocket, not far away from you.'
+		*nl
 	end
 
 	act 'Leave the station building':minut += 3 & gt 'vokzalG'
+	if Trainpass_day > daystart:
+		'You have <<Trainpass_day - daystart>> days left on your train pass.'
+		act 'Go to the platforms': gt 'vokzalperG', 'start'
+	else
+		act 'Got to the ticket office': gt 'vokzalGin', 'ticket'
+	end
 
 	if vokzalVork >= 1:
-		if cleZalDay ! daystart:
-			act 'Mop the waiting room floor (1:00)':
-				cls
-				cleZalDay = daystart
-				gs 'exercise', 'tier1', 60, 'stren_exp', 'vital_exp'
-				pcs_mood -= 6
-				gs 'stat'
-				'<center><img <<$set_imgh>> src="images/locations/city/residential/office/clener1.jpg"></center>'
-				'You take some cleaning supplies from the maintenance closet, pour some water and soap into a bucket and wash the floor in the waiting room.'
+		if cleZalDay ! daystart or cleMTDay ! daystart or cleWTDay ! daystart:
+			act 'Work':
+				cla
+				if cleZalDay ! daystart:
+					act 'Mop the waiting room floor (1:00)':
+						cls
+						cleZalDay = daystart
+						gs 'exercise', 'tier1', 60, 'stren_exp', 'vital_exp'
+						pcs_mood -= 6
+						gs 'stat'
+						'<center><img <<$set_imgh>> src="images/locations/city/residential/office/clener1.jpg"></center>'
+						'You take some cleaning supplies from the maintenance closet, pour some water and soap into a bucket and wash the floor in the waiting room.'
 
-				act 'Continue':minut += 1 & gt 'vokzalGin'
+						act 'Continue':minut += 1 & gt 'vokzalGin'
+					end
+				end
+
+				if cleMTDay ! daystart:
+					act 'Clean the men''s restroom (0:30)':
+						cls
+						cleMTDay = daystart
+						gs 'exercise', 'tier1', 30, 'stren_exp', 'vital_exp'
+						pcs_mood -= 6
+						gs 'stat'
+						'<center><img <<$set_imgh>> src="images/locations/city/residential/office/clener1.jpg"></center>'
+						'You take some cleaning supplies from the maintenance closet, pour some water and soap into a bucket and go to the men''s room.'
+						gs 'vokmantoiev', 'toilet_event'
+						!!'You began to wash the floor in the men''s room, and then began to scrub toilets.'
+
+						act 'Leave':minut += 1 & gt 'vokzalGin'
+					end
+				end
+
+				if cleWTDay ! daystart:
+					act 'Clean the women''s restroom (0:30)':
+						cls
+						cleWTDay = daystart
+						gs 'exercise', 'tier1', 30, 'stren_exp', 'vital_exp'
+						pcs_mood -= 6
+						gs 'stat'
+						'<center><img <<$set_imgh>> src="images/locations/city/residential/office/clener1.jpg"></center>'
+						'You take some cleaning supplies from the maintenance closet, pour some water and soap into a bucket and scrub the toilets in the ladies'' room before mopping the floor.'
+						gs 'vokdinvera'
+
+						act 'Leave':minut += 1 & gt 'vokzalGin'
+					end
+				end
+				act 'Return': gt 'vokzalGin'
 			end
-		end
-
-		if cleMTDay ! daystart:
-			act 'Clean the men''s restroom (0:30)':
-				cls
-				cleMTDay = daystart
-				gs 'exercise', 'tier1', 30, 'stren_exp', 'vital_exp'
-				pcs_mood -= 6
-				gs 'stat'
-				'<center><img <<$set_imgh>> src="images/locations/city/residential/office/clener1.jpg"></center>'
-				'You take some cleaning supplies from the maintenance closet, pour some water and soap into a bucket and go to the men''s room.'
-				gs 'vokmantoiev', 'toilet_event'
-				!!'You began to wash the floor in the men''s room, and then began to scrub toilets.'
-
-				act 'Leave':minut += 1 & gt 'vokzalGin'
-			end
-		end
-
-		if cleWTDay ! daystart:
-			act 'Clean the women''s restroom (0:30)':
-				cls
-				cleWTDay = daystart
-				gs 'exercise', 'tier1', 30, 'stren_exp', 'vital_exp'
-				pcs_mood -= 6
-				gs 'stat'
-				'<center><img <<$set_imgh>> src="images/locations/city/residential/office/clener1.jpg"></center>'
-				'You take some cleaning supplies from the maintenance closet, pour some water and soap into a bucket and scrub the toilets in the ladies'' room before mopping the floor.'
-				gs 'vokdinvera'
-
-				act 'Leave':minut += 1 & gt 'vokzalGin'
-			end
-		end
-
-		if cleMTDay = daystart and cleWTDay = daystart and cleZalDay = daystart and cleZarplatDay ! daystart:
+		elseif cleZarplatDay ! daystart:
 			act 'Collect your salary':
 				cls
 				cleZarplatDay = daystart
@@ -104,6 +117,7 @@ if $ARGS[0] = '':
 		end
 	end
 
+	*nl
 	if hour = 11 and minut = 0:
 		poezddalsled = 1
 		'The 11:30 long-distance train is currently approaching the platform.'
@@ -133,116 +147,165 @@ if $ARGS[0] = '':
 	end
 end
 
-if $ARGS[0] = 'kassi':
+if $ARGS[0] = 'ticket':
 	cls
 	gs 'stat'
 	'<center><h4>Ticket office</h4></center>'
 	'<center><img <<$set_imgh>> src="images/locations/shared/train/kassa.jpg"></center>'
-	'The long-distance trains are at the station platforms between 11:00-11:30 and 18:00-18:30.'
 
 	if money >= 50:
+		act 'Buy a ticket':
+			cla
+			gs 'vokzalGin', 'buy_ticket'
+		end
+	end
+
+	if money >= 1500 and Trainpass_day <= daystart:
+		act 'Buy a weekly pass':
+			cla
+			Trainpass_day = daystart + 7
+			act 'Return': gt 'vokzalGin'
+		end
+	end
+
+	if money >= 5500 and Trainpass_day <= daystart:
+		act 'Buy a monthly pass (30day)':
+			cla
+			Trainpass_day = daystart + 30
+			act 'Return': gt 'vokzalGin'
+		end
+	end
+
+
+	act 'Leave the ticket office':minut += 1 & gt 'vokzalGin'
+end
+
+if $ARGS[0] = 'buy_ticket':
+	if money >= 50:
 		act 'Buy a ticket to the old town (50 <b>₽</b>)':
-			loc = 'train'
-			$metka = 'oldtown'
-			train_event = 0
 			money -= 50
-			train_dest = 5
-			minut += 5
-			gs 'stat'
-			if rand(1, 100) < 20: gt 'train', 'events'
-			'<center><img <<$set_imgh>> src="images/locations/shared/train/pushplat.jpg" ></center>'
-			'After 5 minutes, the train stops at old platform by the old town of Pushkin. Famous for its extensive park and old historic buildings, the locals are known to be eccentric but that adds to the charm.'
-			act 'Get off the train':
-				if train_event = 0 and rand(1, 100) <= 5: gt 'train_incidental', 'end'
-				gt 'train', 'oldtown'
-			end
+			gt 'vokzalholle', 'oldtown'
 		end
 	end
 
 	if money >= 75:
 		act 'Buy a ticket to the village of Gadyukino (75 <b>₽</b>)':
-			$loc = 'train'
-			$metka = 'village'
-			train_event = 0
 			money -= 75
-			train_dest = 4
-			minut += 15
-			gs 'stat'
-			if rand(1, 100) <= 10: gt 'train_incidental', 'events'
-			if train_event = 0 and rand(1, 100) < 20: gt 'train', 'events'
-			'<center><img <<$set_imgh>> src="images/locations/shared/train/gadplat.jpg" ></center>'
-			'After 15 minutes, the train stops at the small station near the village of Gadyukino.'
-			act 'Get off the train':
-				if train_event = 0 and rand(1, 100) <= 5: gt 'train_incidental', 'end'
-				gt 'train', 'village'
-			end
+			gt 'vokzalholle', 'village'
 		end
 	end
 
 	if money >= 100:
 		act 'Buy a ticket to the the communal village (100 <b>₽</b>)':
-			$loc = 'train'
-			$metka = 'old_platform'
-			train_event = 0
 			money -= 100
-			train_dest = 3
-			minut += 25
-			gs 'stat'
-			if rand(1, 100) <= 10: gt 'train_incidental', 'events'
-			if rand(1, 100) <= 20 and train_event = 0: gt 'train', 'events'
-			'<center><img <<$set_imgh>> src="images/locations/shared/train/oldplat.jpg" ></center>'
-			'After 20 minutes you arrive at an old railway platform near the communal village.'
-			act 'Get off the train':
-				if train_event = 0 and rand(1, 100) <= 5: gt 'train_incidental', 'end'
-				gt 'train', 'old_platform'
-			end
+			gt 'vokzalholle', 'communal'
 		end
 	end
 
 	if money >= 125:
 		act 'Buy a ticket to city industrial area (125 <b>₽</b>)':
-			$loc = 'vokzalholle'
-			$metka = ''
-			train_event = 0
 			money -= 125
-			train_dest = 2
-			minut += 35
-			gs 'stat'
-			if rand(1, 100) < 15: gt 'train', 'private'
-			if rand(1, 100) < 30: gt 'train', 'Gopnik'
-			if rand(1, 100) <= 10: gt 'train_incidental', 'events'
-			if rand(1, 100) <= 20 and train_event = 0: gt 'train', 'events'
-			'<center><img <<$set_imgh>> src="images/locations/shared/train/indusplat.jpg" ></center>'
-			'After 35 minutes, the train stops at the St. Petersburg city industrial area station.'
-			act 'Get off the train':
-				if train_event = 0 and rand(1, 100) <= 5: gt 'train_incidental', 'end'
-				gt 'vokzalholle'
-			end
+			gt 'vokzalholle', 'ind'
 		end
 	end
 
 	if money >= 150:
 		act 'Buy a ticket to city center (150 <b>₽</b>)':
-			$loc = 'cityTrain'
-			$metka = 'inside'
-			train_event = 0
 			money -= 150
-			train_dest = 1
-			minut += 40
-			if rand(1, 100) < 15: gt 'train', 'private'
-			if rand(1, 100) < 30: gt 'train', 'Gopnik'
-			if rand(1, 100) <= 10: gt 'train_incidental', 'events'
-			if rand(1, 100) <= 20 and train_event = 0: gt 'train', 'events'
-			'<center><img <<$set_imgh>> src="images/locations/shared/train/cityplat.jpg" ></center>'
-			'After 40 minutes, the train stops at the St. Petersburg city center station. The large office blocks and shopping centers fill your view.'
-			act 'Get off the train':
-				if train_event = 0 and rand(1, 100) <= 5: gt 'train_incidental', 'end'
-				gt 'cityTrain', 'inside'
-			end
+			gt 'vokzalholle', 'centre'
 		end
 	end
 
 	act 'Leave the ticket office':minut += 1 & gt 'vokzalGin'
+end
+
+if $ARGS[0] = 'oldtown':
+	loc = 'train'
+	$metka = 'oldtown'
+	train_event = 0
+	train_dest = 5
+	minut += 5
+	gs 'stat'
+	if rand(1, 100) < 20: gt 'train', 'events'
+	'<center><img <<$set_imgh>> src="images/locations/shared/train/pushplat.jpg" ></center>'
+	'After 5 minutes, the train stops at old platform by the old town of Pushkin. Famous for its extensive park and old historic buildings, the locals are known to be eccentric but that adds to the charm.'
+	act 'Get off the train':
+		if train_event = 0 and rand(1, 100) <= 5: gt 'train_incidental', 'end'
+		gt 'train', 'oldtown'
+	end
+end
+
+if $ARGS[0] = 'village':
+	$loc = 'train'
+	$metka = 'village'
+	train_event = 0
+	money -= 75
+	train_dest = 4
+	minut += 15
+	gs 'stat'
+	if rand(1, 100) <= 10: gt 'train_incidental', 'events'
+	if train_event = 0 and rand(1, 100) < 20: gt 'train', 'events'
+	'<center><img <<$set_imgh>> src="images/locations/shared/train/gadplat.jpg" ></center>'
+	'After 15 minutes, the train stops at the small station near the village of Gadyukino.'
+	act 'Get off the train':
+		if train_event = 0 and rand(1, 100) <= 5: gt 'train_incidental', 'end'
+		gt 'train', 'village'
+	end
+end
+
+if $ARGS[0] = 'communal':
+	$loc = 'train'
+	$metka = 'old_platform'
+	train_event = 0
+	money -= 100
+	train_dest = 3
+	minut += 25
+	gs 'stat'
+	if rand(1, 100) <= 10: gt 'train_incidental', 'events'
+	if rand(1, 100) <= 20 and train_event = 0: gt 'train', 'events'
+	'<center><img <<$set_imgh>> src="images/locations/shared/train/oldplat.jpg" ></center>'
+	'After 20 minutes you arrive at an old railway platform near the communal village.'
+	act 'Get off the train':
+		if train_event = 0 and rand(1, 100) <= 5: gt 'train_incidental', 'end'
+		gt 'train', 'old_platform'
+	end
+end
+
+if $ARGS[0] = 'ind':
+	$loc = 'vokzalholle'
+	$metka = ''
+	train_event = 0
+	train_dest = 2
+	minut += 35
+	gs 'stat'
+	if rand(1, 100) < 15: gt 'train', 'private'
+	if rand(1, 100) < 30: gt 'train', 'Gopnik'
+	if rand(1, 100) <= 10: gt 'train_incidental', 'events'
+	if rand(1, 100) <= 20 and train_event = 0: gt 'train', 'events'
+	'<center><img <<$set_imgh>> src="images/locations/shared/train/indusplat.jpg" ></center>'
+	'After 35 minutes, the train stops at the St. Petersburg city industrial area station.'
+	act 'Get off the train':
+		if train_event = 0 and rand(1, 100) <= 5: gt 'train_incidental', 'end'
+		gt 'vokzalholle'
+	end
+end
+
+if $ARGS[0] = 'centre':
+	$loc = 'cityTrain'
+	$metka = 'inside'
+	train_event = 0
+	train_dest = 1
+	minut += 40
+	if rand(1, 100) < 15: gt 'train', 'private'
+	if rand(1, 100) < 30: gt 'train', 'Gopnik'
+	if rand(1, 100) <= 10: gt 'train_incidental', 'events'
+	if rand(1, 100) <= 20 and train_event = 0: gt 'train', 'events'
+	'<center><img <<$set_imgh>> src="images/locations/shared/train/cityplat.jpg" ></center>'
+	'After 40 minutes, the train stops at the St. Petersburg city center station. The large office blocks and shopping centers fill your view.'
+	act 'Get off the train':
+		if train_event = 0 and rand(1, 100) <= 5: gt 'train_incidental', 'end'
+		gt 'cityTrain', 'inside'
+	end
 end
 
 --- vokzalGin ---------------------------------
