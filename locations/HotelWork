@@ -416,7 +416,7 @@ if $ARGS[0] = 'maid':
 			!! MJ: from 50,51 to 50,150 -- More often but less.
 			if chai1 < 25:chai = 50 + rand(0, maidstat)
 			
-			if maidrand <= 15:
+			if maidrand <= 10:
 				minut += 35
 				gs 'stat'
 				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/hotel/work/maid.work0,'+rand(0,3)+'.jpg"></center>'
@@ -430,6 +430,44 @@ if $ARGS[0] = 'maid':
 
 				act'Continue':gt 'hotelwork', 'maid'
 			end
+			if maidrand > 10 and maidrand <= 15:
+				minut += 30
+				gs 'stat'
+				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/hotel/goteladmin.jpg"></center>'
+				'While you are on your way to your next room you encounter mister Leonidovich, the manager of this hotel. He tells you he spilled a drink in his office and asks you to go clean it up.'
+				'<center><img <<$set_imgh>> src="images/characters/pavlovsk/resident/leonid/office.jpg"></center>'
+				'You go to his office and clean up the spilled drink'
+				if maidstat < 20:'You don''t do a very good job. there are still stains of liquor everywhere.'
+				if maidstat >= 20 and maidstat<50:'Your maid skills have improved a fair bit.  You are able to get most of the stains out of the desk.'
+				if maidstat >= 50 and maidstat<70:'You are pretty good at cleaning rooms, and the room looks quite clean when you''re done with it. there is almost no trace left of the spilled drink'
+				if maidstat >= 70:'You''re a very experienced maid by now. You know how to clean up all sorts of spots and stains with ease, you easily remove all traces of liquor from the desk.'
+				if resepseen = 0:
+					'Just when you were about to leave the room you notice a folder lying on the ground beneath the desk. '
+					' You go and pick it up  but when you place it back with the other folders on the desk  you notice there are some pictures sticking out'
+					' It looks like security footage from the lobby'
+					
+					'should you take a look ?' 
+					act 'No, this is none of my business':
+						cla
+						if maidstat < 100:maidstat+=1
+						act'Continue':gt 'hotelwork', 'maid'
+					end
+					act 'Yeah, let''s see what'' s on these pictures':
+						cla
+						cls
+						'<left><img <<$set_imgh>> src="images/locations/pavlovsk/hotel/resep_flash1.jpg"></left>'
+						'You can''t believe it, it is the girl from the reception exposing herself in the lobby.'
+						'<right><img <<$set_imgh>> src="images/locations/pavlovsk/hotel/resep_flash2.jpg"></right>'
+						'There are dozens of pictures here. From the time stamps you can see that she  always exposes herself around midnight.'
+						'You wonder what would happen if you went to the lobby around midnight?'
+						resepseen = 1
+						act'Place the pictures back and continue your maid work ':gt 'hotelwork', 'maid'
+					end					
+				else
+					act'Continue':gt 'hotelwork', 'maid'
+				end
+			end
+			
 			if maidrand > 15 and maidrand <= 20:
 				hotelcouple = 1
 				gs 'stat'
