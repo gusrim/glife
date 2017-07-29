@@ -17,6 +17,16 @@ else
 	lcolor = rgb(106, 90, 205)
 end
 
+if sisrelparday + 3 < daystart and saveparQW = 1:
+	cls
+	'When you enter the room you notice <<$namepopu2>>''s cage is open and he is gone.'
+	'You sister must have released him since you were not able to find a solution in time.'
+	popugai2 = 0
+	saveparQW = 0
+	act 'continue':gt $loc, $metka
+	exit
+end
+
 if pcs_magik >= 6 and spellbefshild = 1 and tobiQW = 0 and sisterHere < 2:gt 'tobiQW', 'start'
 
 if sisboyday + 1 = daystart and hour = 18:gt'sisterQW','sisboyQW_expel'
@@ -44,7 +54,17 @@ end
 *nl
 'This is the small bedroom you share with your sister, Anya. On one side of the room is a wardrobe that you can use to <a href="exec:gt ''clothing'', ''view_clothing_list'', ''wardrobe''">organize your clothes</a> or <a href="exec:gt ''clothing_QV'', ''list''">pick something to wear</a>. On top of it is a <a href="exec:gt ''clothing'', ''view_clothing_list'', ''store''">suitcase</a> that you could use to store clothes that you don''t wear often. Your <a href="exec:gt ''bed2''">bed</a> is in the corner across from the wardrobe, and your <a href="exec:gt ''stol'' ,''stolPar''">desk</a> is next to it. Your sister''s bed is in the other corner.'
 'In the bottom of your wardrobe you have <a href="exec:gt ''shoes'', ''select''">your shoes</a>.'
-if popugai2 = 1:'In the cell, sitting is <a href="exec:GT ''popu'',''start2''"><<$namepopu2>></a>'
+if popugai2 = 1:
+	'In the cell, sitting is <a href="exec:GT ''popu'',''start2''"><<$namepopu2>></a>'
+	if daystart - parbuydate <= 10: '<<$namepopu2>> starts squawking at you when you enter the room.'
+	if daystart - parbuydate > 10 and daystart - parbuydate <= 20: 'When <<$namepopu2>> sees you he starts ''speaking''. It sounds almost like he is saying "<b>hello  <<$pcs_nickname>></b>"'
+	if daystart - parbuydate > 20 and daystart - parbuydate <= 30: 'When <<$namepopu2>> sees you he starts ''speaking''. He is clearly saying "<b>hello  <<$pcs_nickname>></b>"'
+	if daystart - parbuydate > 30 and daystart - parbuydate <= 40: 'When <<$namepopu2>> sees you he starts ''speaking''. He is saying "<b><<$pcs_nickname>> very pretty</b>"'
+	if daystart - parbuydate > 40 and daystart - parbuydate <= 50: 'When <<$namepopu2>> sees you he starts ''speaking''. He  is saying "<b><<$npc_firstname[''A33'']>> you''re the best</b>"'
+	if daystart - parbuydate > 50 and daystart - parbuydate <= 55: 'When <<$namepopu2>> sees you he starts ''speaking''. He  is saying "<b>Yeah <<$npc_firstname[''A33'']>> swallow it all</b>"'
+	if daystart - parbuydate > 55: 'When <<$namepopu2>> sees you he starts ''speaking''. He  is saying "<b>Yeah <<$npc_firstname[''A33'']>>  your pussy tastes great</b>"'
+	'<br>'
+end
 if budilnikOn = 0:
 	'Your <a href="exec:gt ''budilnik'', ''start''">alarm clock</a> is set for <<timer>> hours <<timerM>> minutes and currently turned <a href="exec: budilnikOn = 1 & GT ''<<$loc>>''">off</a>.'
 else
@@ -71,6 +91,7 @@ gs'dinsister'
 if clrbelo <= 4: clrbelo = 5
 
 act 'Exit the room':
+	if sisterHere = 2 and daystart - parbuydate > 55 and popugai2 = 1 and sisrelparday = 0 :gt'sister','pargone'
 	gt'korrPar'
 end
 if sisboyparty_day + 1 = daystart and sisboyparty = -1 and hour = 22:
