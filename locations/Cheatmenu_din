@@ -1443,31 +1443,37 @@ $cheatmenu['DNA'] = {
 	clr
 	pl '<center><a href="exec:dynamic $cheatmenu"><b>Cheat menu</b></a><br>DNA string generation<br>If parents are not in game, leave the respective IDs empty</center>'
 	nl
-	if $cheatDNAM ! '':pl 'Selected mother: <<$npc_firstname[''<<$cheatDNAM>>'']>> <<$npc_lastname[''<<$cheatDNAM>>'']>> (<<$cheatDNAM>>)<br><<$npc_dna[$cheatDNAM]>>'
-	if $cheatDNAF ! '':pl 'Selected father: <<$npc_firstname[''<<$cheatDNAF>>'']>> <<$npc_lastname[''<<$cheatDNAF>>'']>> (<<$cheatDNAF>>)<br><<$npc_dna[$cheatDNAF]>>'
+	if $cheatDNAM ! '':pl '<b>Selected mother: <<$npc_firstname[''<<$cheatDNAM>>'']>> <<$npc_lastname[''<<$cheatDNAM>>'']>></b> (<<$cheatDNAM>>)<br><<$npc_dna[$cheatDNAM]>>'
+	if $cheatDNAF ! '':pl '<b>Selected father: <<$npc_firstname[''<<$cheatDNAF>>'']>> <<$npc_lastname[''<<$cheatDNAF>>'']>></b> (<<$cheatDNAF>>)<br><<$npc_dna[$cheatDNAF]>>'
 	nl
 	if $cheatDNAM ! '': pl '<a href="exec:killvar ''cheatDNAM'' & dynamic $cheatmenu[''DNA'']">Remove mother DNA</a>'
 	if $cheatDNAF ! '': pl '<a href="exec:killvar ''cheatDNAF'' & dynamic $cheatmenu[''DNA'']">Remove father DNA</a>'
 	nl
-	pl '<a href="exec:dynamic $cheatmenu[''DNAM'']"><b>ID of mother (if it is known)</b></a>'
-	pl '<a href="exec:dynamic $cheatmenu[''DNAF'']"><b>ID of father (if it is known)</b></a>'
+	pl '<a href="exec:killvar ''tempDNAM'' & dynamic $cheatmenu[''DNAM'']"><b>ID of mother (if it is known)</b></a>'
+	pl '<a href="exec:killvar ''tempDNAF'' & dynamic $cheatmenu[''DNAF'']"><b>ID of father (if it is known)</b></a>'
 	nl
 	if $cheatDNAM ! '' and $cheatDNAF ! '':
 		$cheatDNAgenerated = func('DNA','generate',$npc_dna[$cheatDNAM],$npc_dna[$cheatDNAF])
 	elseif $cheatDNAM ! '':
-		$tempDNA = func('DNA','create')
-		$cheatDNAgenerated = func('DNA','generate',$npc_dna[$cheatDNAM],$tempDNA)
+		$tempDNAF = func('DNA','create')
+		$cheatDNAgenerated = func('DNA','generate',$npc_dna[$cheatDNAM],$tempDNAF)
 	elseif $cheatDNAF ! '':
-		$tempDNA = func('DNA','create')
-		$cheatDNAgenerated = func('DNA','generate',$tempDNA,$npc_dna[$cheatDNAF])
+		$tempDNAM = func('DNA','create')
+		$cheatDNAgenerated = func('DNA','generate',$tempDNAM,$npc_dna[$cheatDNAF])
 	else
-		$cheatDNAgenerated = func('DNA','create')
+		$tempDNAM = func('DNA','create')
+		$tempDNAF = func('DNA','create')
+		$cheatDNAgenerated = func('DNA','generate',$tempDNAM,$tempDNAF)
 	end
-	pl 'Generated DNA strand (please copy it, not preserved): <<$cheatDNAgenerated>>'
+	if $cheatDNAM = '':pl '<b>Random mother DNA:</b> <<$tempDNAM>>'
+	if $cheatDNAF = '':pl '<b>Random father DNA:</b> <<$tempDNAF>>'
+	nl
+	pl '<b>Generated DNA strand (please copy it, not preserved):</b> <<$cheatDNAgenerated>>'
 	nl
 	pl '<a href="exec:dynamic $cheatmenu[''DNA'']">Generate again</a>'
+	killvar '$tempDNAF'
+	killvar '$tempDNAM'
 	killvar 'cheatDNAgenerated'
-	killvar 'tempDNA'
 }
 
 $cheatmenu['DNAM'] = {
