@@ -108,6 +108,7 @@ end
 '<center><H4>Pavlovsk hotel</H4></center>'
 '<center><img <<$set_imgh>> src="images/locations/pavlovsk/hotel/hotel.hole.jpg"></center>'
 'As you enter the Pavlovsk hotel you''re always surprised by how fancy it looks on the inside, given the shabby exterior. You can approach the <a href="exec:minut += 1 & GT ''hotel_resep''">reception desk</a> of the hotel where a cute brunette is currently manning the desk, she gives you a friendly nod when you get into her sight range.'
+if hour >= 12 and hour < 20: '<a href="exec:gt ''HotelHole'',''Pavlin''">Pavlin</a> is sitting in the lobby looking around for fresh prey.'
 
 
 
@@ -177,6 +178,70 @@ act 'Kill some time in the hotel lobby ':
 	gt 'hotelhole'
 end
 act 'Leave the hotel':minut += 3 & gt'vokzalG'
+
+if $ARGS[0] = 'Pavlin' :
+	cls
+	'<center><img <<$set_imgh>> src="images/characters/pavlovsk/Pavlin/Pavlin.jpg"></center>'
+	'Varsonofy Krestovoz is a small time gangster who makes his money by whoring out vulnerable women in Pavlovsk. Few people know his name as he is usually called Pavlin (the Peacock).'
+	if pavlin<20:'You and Pavlin have a dysfunctional relation. It is clear he is in charge.'
+	if pavlin>=20 and pavlin<40:'You and Pavlin have some tension. You don''t always accept his commands'
+	if pavlin>=40 and pavlin<60:'You and Pavlin have a normal relationship. '
+	if pavlin>=60 and pavlin<80:'You and Pavlin have a good relationship.'
+	if pavlin>=80:'You and Pavlin have a great relationship.'
+	if pavlevent = 1 and pavldaystart2 ! daystart :
+		act 'Discuss the beating':
+			cls
+			minut += 1
+			'<center><img <<$set_imgh>> src="images/characters/pavlovsk/Pavlin/Pavlin.jpg"></center>'
+			if pavldaystart = daystart:
+				'Before you can even say one word, Pavlin is already yelling at you'
+				if pavldom = 0:
+					'"<font color=#0000FF>Didn''t you have enough with one black eye, do you really need another ?</font>"'
+				else
+					'"<font color=#0000FF>You are lucky we are in a public place right now or I would fucking murder you!</font>"'
+				end
+					'"<font color=#0000FF>Go away <<$pcs_firstname>>, I am too angry right now, we can discuss this later</font>"'
+				
+				pavldaystart2 = daystart
+			elseif pavtalk = 0:
+				'"Pavlin I ..." you start talking but he immediately interrupts you.'
+				'"<font color=#0000FF>I hope you learned your lesson <<$pcs_firstname>>. I am sorry I had to do that but you need to understand the situation here.</font>"'
+				'You were  hoping you could have an honest coversation with  him about the incident but you understand now that that is not possible yet.'
+				pavtalk = 1
+				pavldaystart2 = daystart
+			elseif pavtalk = 1:
+				'"Pavlin I need ..." you start talking but he immediately interrupts you.'
+				'"<font color=#0000FF>What now ? Stop bothering me and go back to work.</font>"'
+				'You were  hoping you could have an honest coversation with  him about the incident but you understand now that that is not possible yet.'
+				pavtalk = 2
+				pavldaystart2 = daystart
+			elseif pavtalk = 2:
+				'"Pavlin I need to talk  ..." you start talking but he immediately interrupts you.'
+				'"<font color=#0000FF><<$pcs_firstname>>,  please go back to work, I think I made myself clear</font>"'
+				'For the first time since you met him, you can see a glimpse of insecurity in his eyes.'
+				'You might be getting through to him'
+				pavtalk = 3
+			elseif pavtalk = 3:
+				'"Pavlin I need to talk  to you about our little incident"'
+				'"<font color=#0000FF><<$pcs_firstname>>, I am very sorry for my behaviour. I don''t know what came over me</font>"'
+				'"<font color=#0000FF>I had a very bad day and your request was just the final drop</font>"'
+				'"<font color=#0000FF>I hope you can forgive me and we can still work together</font>"'
+				'" Well I must say I was really shocked by the way you treated me and I need assurances it won''t happen again."'
+				'"<font color=#0000FF>Of course  <<$pcs_firstname>>, from here on out I will treat you with the respect you deserve.</font>"'
+				'"And I was not kidding about the money, I will need a bigger share in the future."'
+				'"<font color=#0000FF> Ok, I will see what I can do about that</font>"'
+				minut += 4
+				pavlin = 7
+				pavlevent = 2
+				pavldaystart2 = daystart
+			end
+			act '<B>Move away</B>':gt'HotelHole','skip_resepevent'
+		end
+	end
+	act '<B>Move away</B>':gt'HotelHole','skip_resepevent'
+end
+
+
 
 --- HotelHole ---------------------------------
 
