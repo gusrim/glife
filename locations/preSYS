@@ -135,6 +135,7 @@ end
 
 if $ARGS[0] = 'SGStart2':
 !!make sure this image shows up above the text that shows your birthday
+	date_toggle = args[1]
 	'<center><img <<$set_imgh>> src="images/pre/sys/altstart2.jpg"></center>'
 	if birthday < 10 and birthmonth < 10:
 		$startdob = 'Your birthday: <B>0<<birthmonth>>/0<<birthday>>/<<birthyear>></B> (MM/DD/YYYY)'
@@ -156,9 +157,12 @@ if $ARGS[0] = 'SGStart2':
 		'<center><img <<$set_imgh>> src="images/pre/sys/altstart26.jpg"></center>'
 		'You have two options when it comes to beginning your game. You can start at the end of the summer holiday, very close to starting the new school year, or you can start at the beginning of the summer holiday.'
 !!	This is to account for the school year not matching up with the calendar year.
-		if birthmonth >= 7: birthyear -= 1
-		if birthmonth = 6 and day > 1: birthyear -= 1
+		if date_toggle ! 1:
+			if birthmonth >= 7: birthyear -= 1
+			if birthmonth = 6 and day > 1: birthyear -= 1
+		end
 		killvar '$startdob'
+		killvar 'date_toggle'
 		act 'Start at the end of August <B>(recommended for new players)</B>':
 !!		This is the default start
 			kanicont = 6
@@ -167,7 +171,7 @@ if $ARGS[0] = 'SGStart2':
 
 !!	This is to prevent to player from starting at 14
 		if birthmonth = 6 and yearlefttemp = 2:
-			act '<i>Start at the beginning of June</i> Restricted due PC age, set birthday before June or after July to unlock': gt 'preSYS', 'SGStart2'
+			act '<i>Start at the beginning of June</i> Restricted due PC age, set birthday before June or after July to unlock': gt 'preSYS', 'SGStart2', 1
 		else
 			act 'Start at the beginning of June':
 				month = 6
