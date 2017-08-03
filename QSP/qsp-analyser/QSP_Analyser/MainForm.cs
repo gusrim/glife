@@ -95,8 +95,11 @@ namespace Analyser
             if (CheckForFile(edtFile.Text, true))
             {
                 game.ParseGame(edtFile.Text, sender, e);
-                this.Log("The file was read successfully");
-                this.PrintLog();
+                if (!e.Cancel)
+                { 
+                    this.Log("The file was read successfully");
+                    this.PrintLog();
+                }
             }
             else
             {
@@ -576,6 +579,13 @@ namespace Analyser
                 edtFile.Enabled = true;
                 btnBrowse.Enabled = true;
             }
+        }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            _bw.CancelAsync();
+            Log("Cancelled loading of file.");
+            PrintLog();
         }
     }
 }

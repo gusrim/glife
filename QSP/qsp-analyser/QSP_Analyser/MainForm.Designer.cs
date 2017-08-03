@@ -69,6 +69,7 @@
             this.edtSuffixCsv = new System.Windows.Forms.TextBox();
             this.edtFile = new System.Windows.Forms.TextBox();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.btnCancel = new System.Windows.Forms.Button();
             this.tabControl.SuspendLayout();
             this.tabCheck.SuspendLayout();
             this.tabOptions.SuspendLayout();
@@ -183,6 +184,7 @@
             // 
             // tabCheck
             // 
+            this.tabCheck.Controls.Add(this.btnCancel);
             this.tabCheck.Controls.Add(this.btnTry4);
             this.tabCheck.Controls.Add(this.btnReload);
             this.tabCheck.Controls.Add(this.btnTry1);
@@ -537,6 +539,16 @@
             this.progressBar1.Size = new System.Drawing.Size(659, 23);
             this.progressBar1.TabIndex = 13;
             // 
+            // btnCancel
+            // 
+            this.btnCancel.Location = new System.Drawing.Point(455, 6);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(77, 28);
+            this.btnCancel.TabIndex = 14;
+            this.btnCancel.Text = "Cancel";
+            this.btnCancel.UseVisualStyleBackColor = true;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -614,6 +626,7 @@
         private System.Windows.Forms.GroupBox grpTranslateCsv;
         private System.Windows.Forms.Button btnBeautify;
         private System.Windows.Forms.ProgressBar progressBar1;
+        private System.Windows.Forms.Button btnCancel;
     }
 }
 

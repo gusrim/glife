@@ -2167,6 +2167,11 @@ namespace Analyser
                         locationCode.Add(s);
                 }
                 (sender as BackgroundWorker).ReportProgress(Convert.ToInt32(((double)line_counter/(double)totalLines) * 100));
+                if ((sender as BackgroundWorker).CancellationPending)
+                {
+                    e.Cancel = true;
+                    return true;
+                }
             }
             fi.Close();
             return true;
