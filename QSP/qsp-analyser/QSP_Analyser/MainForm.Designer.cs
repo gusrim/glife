@@ -57,23 +57,24 @@
             this.txtVariableNames = new System.Windows.Forms.TextBox();
             this.chkVariableCalls = new System.Windows.Forms.CheckBox();
             this.tabTranslate = new System.Windows.Forms.TabPage();
-            this.chkIgnoreEmptyTranslationsCsv = new System.Windows.Forms.CheckBox();
-            this.lblSuffixCsv = new System.Windows.Forms.Label();
-            this.edtSuffixCsv = new System.Windows.Forms.TextBox();
-            this.btnTranslateFromCsv = new System.Windows.Forms.Button();
+            this.btnBeautify = new System.Windows.Forms.Button();
+            this.grpTranslateCsv = new System.Windows.Forms.GroupBox();
             this.grpCsvDelimiter = new System.Windows.Forms.GroupBox();
             this.radComma = new System.Windows.Forms.RadioButton();
             this.radSemicolon = new System.Windows.Forms.RadioButton();
+            this.btnTranslateFromCsv = new System.Windows.Forms.Button();
+            this.chkIgnoreEmptyTranslationsCsv = new System.Windows.Forms.CheckBox();
+            this.lblSuffixCsv = new System.Windows.Forms.Label();
             this.btnExportCsv = new System.Windows.Forms.Button();
+            this.edtSuffixCsv = new System.Windows.Forms.TextBox();
             this.edtFile = new System.Windows.Forms.TextBox();
-            this.grpTranslateCsv = new System.Windows.Forms.GroupBox();
-            this.btnBeautify = new System.Windows.Forms.Button();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.tabControl.SuspendLayout();
             this.tabCheck.SuspendLayout();
             this.tabOptions.SuspendLayout();
             this.tabTranslate.SuspendLayout();
-            this.grpCsvDelimiter.SuspendLayout();
             this.grpTranslateCsv.SuspendLayout();
+            this.grpCsvDelimiter.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -81,7 +82,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(15, 13);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(372, 13);
+            this.label1.Size = new System.Drawing.Size(287, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "This utility analyzes the QSP game code in form TXT2GAM.";
             // 
@@ -250,7 +251,7 @@
             this.chkCurlyParse.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::Analyser.Properties.Settings.Default, "EnableCurlyParsing", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.chkCurlyParse.Location = new System.Drawing.Point(250, 290);
             this.chkCurlyParse.Name = "chkCurlyParse";
-            this.chkCurlyParse.Size = new System.Drawing.Size(321, 17);
+            this.chkCurlyParse.Size = new System.Drawing.Size(250, 17);
             this.chkCurlyParse.TabIndex = 23;
             this.chkCurlyParse.Text = "Content between curly brackets take as a code";
             this.chkCurlyParse.UseVisualStyleBackColor = true;
@@ -263,7 +264,7 @@
             this.chkActions.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::Analyser.Properties.Settings.Default, "EnableSortingActions", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.chkActions.Location = new System.Drawing.Point(260, 112);
             this.chkActions.Name = "chkActions";
-            this.chkActions.Size = new System.Drawing.Size(76, 17);
+            this.chkActions.Size = new System.Drawing.Size(61, 17);
             this.chkActions.TabIndex = 22;
             this.chkActions.Text = "Actions";
             this.chkActions.UseVisualStyleBackColor = true;
@@ -300,7 +301,7 @@
             this.lblSystemVariables.AutoSize = true;
             this.lblSystemVariables.Location = new System.Drawing.Point(0, 255);
             this.lblSystemVariables.Name = "lblSystemVariables";
-            this.lblSystemVariables.Size = new System.Drawing.Size(408, 13);
+            this.lblSystemVariables.Size = new System.Drawing.Size(292, 13);
             this.lblSystemVariables.TabIndex = 19;
             this.lblSystemVariables.Text = "System variables (exception from the list of unused variables)";
             // 
@@ -309,7 +310,7 @@
             this.lblSortHeader.AutoSize = true;
             this.lblSortHeader.Location = new System.Drawing.Point(245, 14);
             this.lblSortHeader.Name = "lblSortHeader";
-            this.lblSortHeader.Size = new System.Drawing.Size(137, 13);
+            this.lblSortHeader.Size = new System.Drawing.Size(76, 13);
             this.lblSortHeader.TabIndex = 15;
             this.lblSortHeader.Text = "Sort by output:";
             // 
@@ -342,7 +343,7 @@
             this.chkSortObjects.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::Analyser.Properties.Settings.Default, "EnableSortingObjects", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.chkSortObjects.Location = new System.Drawing.Point(260, 88);
             this.chkSortObjects.Name = "chkSortObjects";
-            this.chkSortObjects.Size = new System.Drawing.Size(79, 17);
+            this.chkSortObjects.Size = new System.Drawing.Size(51, 17);
             this.chkSortObjects.TabIndex = 17;
             this.chkSortObjects.Text = "Items";
             this.chkSortObjects.UseVisualStyleBackColor = true;
@@ -355,7 +356,7 @@
             this.chkSortVariables.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::Analyser.Properties.Settings.Default, "EnableSortingVariables", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.chkSortVariables.Location = new System.Drawing.Point(260, 65);
             this.chkSortVariables.Name = "chkSortVariables";
-            this.chkSortVariables.Size = new System.Drawing.Size(92, 17);
+            this.chkSortVariables.Size = new System.Drawing.Size(69, 17);
             this.chkSortVariables.TabIndex = 16;
             this.chkSortVariables.Text = "Variables";
             this.chkSortVariables.UseVisualStyleBackColor = true;
@@ -368,7 +369,7 @@
             this.chkSortLocations.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::Analyser.Properties.Settings.Default, "EnableSortingLocations", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.chkSortLocations.Location = new System.Drawing.Point(260, 42);
             this.chkSortLocations.Name = "chkSortLocations";
-            this.chkSortLocations.Size = new System.Drawing.Size(70, 17);
+            this.chkSortLocations.Size = new System.Drawing.Size(72, 17);
             this.chkSortLocations.TabIndex = 14;
             this.chkSortLocations.Text = "Locations";
             this.chkSortLocations.UseVisualStyleBackColor = true;
@@ -394,7 +395,7 @@
             this.chkVariableCalls.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::Analyser.Properties.Settings.Default, "EnableVariableCalls", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.chkVariableCalls.Location = new System.Drawing.Point(3, 6);
             this.chkVariableCalls.Name = "chkVariableCalls";
-            this.chkVariableCalls.Size = new System.Drawing.Size(210, 30);
+            this.chkVariableCalls.Size = new System.Drawing.Size(166, 30);
             this.chkVariableCalls.TabIndex = 11;
             this.chkVariableCalls.Text = "Consider variable assignment \r\nby link to location:";
             this.chkVariableCalls.UseVisualStyleBackColor = true;
@@ -410,47 +411,30 @@
             this.tabTranslate.Text = "Conversion";
             this.tabTranslate.UseVisualStyleBackColor = true;
             // 
-            // chkIgnoreEmptyTranslationsCsv
+            // btnBeautify
             // 
-            this.chkIgnoreEmptyTranslationsCsv.AutoSize = true;
-            this.chkIgnoreEmptyTranslationsCsv.Checked = global::Analyser.Properties.Settings.Default.IgnoreEmptyTranslationsCsv;
-            this.chkIgnoreEmptyTranslationsCsv.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkIgnoreEmptyTranslationsCsv.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::Analyser.Properties.Settings.Default, "IgnoreEmptyTranslationsCsv", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.chkIgnoreEmptyTranslationsCsv.Location = new System.Drawing.Point(235, 55);
-            this.chkIgnoreEmptyTranslationsCsv.Name = "chkIgnoreEmptyTranslationsCsv";
-            this.chkIgnoreEmptyTranslationsCsv.Size = new System.Drawing.Size(367, 30);
-            this.chkIgnoreEmptyTranslationsCsv.TabIndex = 7;
-            this.chkIgnoreEmptyTranslationsCsv.Text = "Ignore unconverted strings\r\n(for \"empty\" value of conversion will be used original text)";
-            this.chkIgnoreEmptyTranslationsCsv.UseVisualStyleBackColor = true;
+            this.btnBeautify.Location = new System.Drawing.Point(56, 279);
+            this.btnBeautify.Name = "btnBeautify";
+            this.btnBeautify.Size = new System.Drawing.Size(129, 23);
+            this.btnBeautify.TabIndex = 9;
+            this.btnBeautify.Text = "Format the code";
+            this.btnBeautify.UseVisualStyleBackColor = true;
+            this.btnBeautify.Click += new System.EventHandler(this.btnBeautify_Click);
             // 
+            // grpTranslateCsv
             // 
-            // lblSuffixCsv
-            // 
-            this.lblSuffixCsv.AutoSize = true;
-            this.lblSuffixCsv.Location = new System.Drawing.Point(232, 32);
-            this.lblSuffixCsv.Name = "lblSuffixCsv";
-            this.lblSuffixCsv.Size = new System.Drawing.Size(163, 13);
-            this.lblSuffixCsv.TabIndex = 6;
-            this.lblSuffixCsv.Text = "Extension for conversion file:";
-            // 
-            // edtSuffixCsv
-            // 
-            this.edtSuffixCsv.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Analyser.Properties.Settings.Default, "CsvTranslationSuffix", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.edtSuffixCsv.Location = new System.Drawing.Point(401, 29);
-            this.edtSuffixCsv.Name = "edtSuffixCsv";
-            this.edtSuffixCsv.Size = new System.Drawing.Size(100, 20);
-            this.edtSuffixCsv.TabIndex = 5;
-            this.edtSuffixCsv.Text = global::Analyser.Properties.Settings.Default.CsvTranslationSuffix;
-            // 
-            // btnTranslateFromCsv
-            // 
-            this.btnTranslateFromCsv.Location = new System.Drawing.Point(303, 126);
-            this.btnTranslateFromCsv.Name = "btnTranslateFromCsv";
-            this.btnTranslateFromCsv.Size = new System.Drawing.Size(198, 23);
-            this.btnTranslateFromCsv.TabIndex = 4;
-            this.btnTranslateFromCsv.Text = "Make conversion, use CSV";
-            this.btnTranslateFromCsv.UseVisualStyleBackColor = true;
-            this.btnTranslateFromCsv.Click += new System.EventHandler(this.btnTranslateFromCsv_Click);
+            this.grpTranslateCsv.Controls.Add(this.grpCsvDelimiter);
+            this.grpTranslateCsv.Controls.Add(this.btnTranslateFromCsv);
+            this.grpTranslateCsv.Controls.Add(this.chkIgnoreEmptyTranslationsCsv);
+            this.grpTranslateCsv.Controls.Add(this.lblSuffixCsv);
+            this.grpTranslateCsv.Controls.Add(this.btnExportCsv);
+            this.grpTranslateCsv.Controls.Add(this.edtSuffixCsv);
+            this.grpTranslateCsv.Location = new System.Drawing.Point(7, 3);
+            this.grpTranslateCsv.Name = "grpTranslateCsv";
+            this.grpTranslateCsv.Size = new System.Drawing.Size(642, 168);
+            this.grpTranslateCsv.TabIndex = 8;
+            this.grpTranslateCsv.TabStop = false;
+            this.grpTranslateCsv.Text = "Conversion";
             // 
             // grpCsvDelimiter
             // 
@@ -469,7 +453,7 @@
             this.radComma.Checked = true;
             this.radComma.Location = new System.Drawing.Point(6, 19);
             this.radComma.Name = "radComma";
-            this.radComma.Size = new System.Drawing.Size(79, 17);
+            this.radComma.Size = new System.Drawing.Size(72, 17);
             this.radComma.TabIndex = 1;
             this.radComma.TabStop = true;
             this.radComma.Text = "Comma - ,";
@@ -480,10 +464,43 @@
             this.radSemicolon.AutoSize = true;
             this.radSemicolon.Location = new System.Drawing.Point(6, 42);
             this.radSemicolon.Name = "radSemicolon";
-            this.radSemicolon.Size = new System.Drawing.Size(120, 17);
+            this.radSemicolon.Size = new System.Drawing.Size(86, 17);
             this.radSemicolon.TabIndex = 2;
             this.radSemicolon.Text = "Semicolon - ;";
             this.radSemicolon.UseVisualStyleBackColor = true;
+            // 
+            // btnTranslateFromCsv
+            // 
+            this.btnTranslateFromCsv.Location = new System.Drawing.Point(303, 126);
+            this.btnTranslateFromCsv.Name = "btnTranslateFromCsv";
+            this.btnTranslateFromCsv.Size = new System.Drawing.Size(198, 23);
+            this.btnTranslateFromCsv.TabIndex = 4;
+            this.btnTranslateFromCsv.Text = "Make conversion, use CSV";
+            this.btnTranslateFromCsv.UseVisualStyleBackColor = true;
+            this.btnTranslateFromCsv.Click += new System.EventHandler(this.btnTranslateFromCsv_Click);
+            // 
+            // chkIgnoreEmptyTranslationsCsv
+            // 
+            this.chkIgnoreEmptyTranslationsCsv.AutoSize = true;
+            this.chkIgnoreEmptyTranslationsCsv.Checked = global::Analyser.Properties.Settings.Default.IgnoreEmptyTranslationsCsv;
+            this.chkIgnoreEmptyTranslationsCsv.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkIgnoreEmptyTranslationsCsv.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::Analyser.Properties.Settings.Default, "IgnoreEmptyTranslationsCsv", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.chkIgnoreEmptyTranslationsCsv.Location = new System.Drawing.Point(235, 55);
+            this.chkIgnoreEmptyTranslationsCsv.Name = "chkIgnoreEmptyTranslationsCsv";
+            this.chkIgnoreEmptyTranslationsCsv.Size = new System.Drawing.Size(295, 30);
+            this.chkIgnoreEmptyTranslationsCsv.TabIndex = 7;
+            this.chkIgnoreEmptyTranslationsCsv.Text = "Ignore unconverted strings\r\n(for \"empty\" value of conversion will be used origina" +
+    "l text)";
+            this.chkIgnoreEmptyTranslationsCsv.UseVisualStyleBackColor = true;
+            // 
+            // lblSuffixCsv
+            // 
+            this.lblSuffixCsv.AutoSize = true;
+            this.lblSuffixCsv.Location = new System.Drawing.Point(232, 32);
+            this.lblSuffixCsv.Name = "lblSuffixCsv";
+            this.lblSuffixCsv.Size = new System.Drawing.Size(142, 13);
+            this.lblSuffixCsv.TabIndex = 6;
+            this.lblSuffixCsv.Text = "Extension for conversion file:";
             // 
             // btnExportCsv
             // 
@@ -495,6 +512,15 @@
             this.btnExportCsv.UseVisualStyleBackColor = true;
             this.btnExportCsv.Click += new System.EventHandler(this.btnExportCsv_Click);
             // 
+            // edtSuffixCsv
+            // 
+            this.edtSuffixCsv.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Analyser.Properties.Settings.Default, "CsvTranslationSuffix", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.edtSuffixCsv.Location = new System.Drawing.Point(401, 29);
+            this.edtSuffixCsv.Name = "edtSuffixCsv";
+            this.edtSuffixCsv.Size = new System.Drawing.Size(100, 20);
+            this.edtSuffixCsv.TabIndex = 5;
+            this.edtSuffixCsv.Text = global::Analyser.Properties.Settings.Default.CsvTranslationSuffix;
+            // 
             // edtFile
             // 
             this.edtFile.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Analyser.Properties.Settings.Default, "filepath", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
@@ -504,36 +530,19 @@
             this.edtFile.TabIndex = 1;
             this.edtFile.Text = global::Analyser.Properties.Settings.Default.filepath;
             // 
-            // grpTranslateCsv
+            // progressBar1
             // 
-            this.grpTranslateCsv.Controls.Add(this.grpCsvDelimiter);
-            this.grpTranslateCsv.Controls.Add(this.btnTranslateFromCsv);
-            this.grpTranslateCsv.Controls.Add(this.chkIgnoreEmptyTranslationsCsv);
-            this.grpTranslateCsv.Controls.Add(this.lblSuffixCsv);
-            this.grpTranslateCsv.Controls.Add(this.btnExportCsv);
-            this.grpTranslateCsv.Controls.Add(this.edtSuffixCsv);
-            this.grpTranslateCsv.Location = new System.Drawing.Point(7, 3);
-            this.grpTranslateCsv.Name = "grpTranslateCsv";
-            this.grpTranslateCsv.Size = new System.Drawing.Size(642, 168);
-            this.grpTranslateCsv.TabIndex = 8;
-            this.grpTranslateCsv.TabStop = false;
-            this.grpTranslateCsv.Text = "Conversion";
-            // 
-            // btnBeautify
-            // 
-            this.btnBeautify.Location = new System.Drawing.Point(56, 279);
-            this.btnBeautify.Name = "btnBeautify";
-            this.btnBeautify.Size = new System.Drawing.Size(129, 23);
-            this.btnBeautify.TabIndex = 9;
-            this.btnBeautify.Text = "Format the code";
-            this.btnBeautify.UseVisualStyleBackColor = true;
-            this.btnBeautify.Click += new System.EventHandler(this.btnBeautify_Click);
+            this.progressBar1.Location = new System.Drawing.Point(5, 626);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(659, 23);
+            this.progressBar1.TabIndex = 13;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(666, 630);
+            this.ClientSize = new System.Drawing.Size(668, 653);
+            this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.tabControl);
             this.Controls.Add(this.btnBrowse);
             this.Controls.Add(this.edtFile);
@@ -544,19 +553,19 @@
             this.Name = "MainForm";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "QSP Code Analyzer";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.Shown += new System.EventHandler(this.MainForm_Shown);
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.tabControl.ResumeLayout(false);
             this.tabCheck.ResumeLayout(false);
             this.tabCheck.PerformLayout();
             this.tabOptions.ResumeLayout(false);
             this.tabOptions.PerformLayout();
             this.tabTranslate.ResumeLayout(false);
-            this.grpCsvDelimiter.ResumeLayout(false);
-            this.grpCsvDelimiter.PerformLayout();
             this.grpTranslateCsv.ResumeLayout(false);
             this.grpTranslateCsv.PerformLayout();
+            this.grpCsvDelimiter.ResumeLayout(false);
+            this.grpCsvDelimiter.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -604,6 +613,7 @@
         private System.Windows.Forms.CheckBox chkCurlyParse;
         private System.Windows.Forms.GroupBox grpTranslateCsv;
         private System.Windows.Forms.Button btnBeautify;
+        private System.Windows.Forms.ProgressBar progressBar1;
     }
 }
 

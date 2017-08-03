@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.IO;
+using System.Threading;
 
 namespace Analyser
 {
@@ -17,40 +18,26 @@ namespace Analyser
         QSPGameCode game;
 
 
-
         //Глобальные переменные
         ArrayList ObjectsAdded;
         ArrayList ObjectsDeleted;
 
         bool inited = false;
         string logText = "";
+        static BackgroundWorker _bw;
 
         public MainForm()
         {
             InitializeComponent();
+            _bw = new BackgroundWorker
+            {
+                WorkerReportsProgress = true,
+                WorkerSupportsCancellation = true
+            };
+            _bw.DoWork += bw_DoWork;
+            _bw.ProgressChanged += bw_ProgressChanged;
+            _bw.RunWorkerCompleted += bw_RunWorkerCompleted;
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         private void btnBrowse_Click(object sender, EventArgs e)
         {
@@ -65,8 +52,19 @@ namespace Analyser
             }
         }
 
+        private delegate void PrintErrorsDelegate();
         private void PrintErrors()
         {
+
+            if (this.InvokeRequired)
+            {
+                // Pass the same function to BeginInvoke,
+                // but the call would come on the correct
+                // thread and InvokeRequired will be false.
+                this.BeginInvoke(new PrintErrorsDelegate(PrintErrors));
+
+                return;
+            }
             //Выводим ошибки и ворнинги
             //Log("Строка #" + Convert.ToString(game.GetErrorLine()) + ": " + game.GetError());
             Log("No of errors: " + Common.GetErrorsCount() + ", warnings: " + Common.GetWarningsCount());
@@ -87,29 +85,46 @@ namespace Analyser
             PrintLog();
         }
 
-        private void ParseFile()
+        private void bw_DoWork(object sender, DoWorkEventArgs e)
         {
             //Устанаваливаем настройки парсера
             List<string> systemVars = new List<string>(txtSystemVariables.Lines);
             if (chkAero.Checked)
                 systemVars.AddRange(txtSystemAeroVars.Lines);
             Common.SetConfig(new List<string>(txtVariableNames.Lines), systemVars, chkCurlyParse.Checked);
-
             if (CheckForFile(edtFile.Text, true))
             {
-                Log("Trying to read the file ...");
-                if (game.ParseGame(edtFile.Text))
-                {
-                    Log("The file was read successfully");
-                }
-                PrintErrors();
-                Common.ClearNonGameErrors();
+                game.ParseGame(edtFile.Text, sender, e);
+                this.Log("The file was read successfully");
+                this.PrintLog();
             }
             else
             {
-                Log("File was not read.");
+                this.Log("File was not read.");
+                PrintLog();
             }
+        }
+
+        private void bw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+
+            this.PrintErrors();
+            Common.ClearNonGameErrors();
+            this.PrintLog();
+        }
+
+        private void bw_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            progressBar1.Value = e.ProgressPercentage;
+        }
+
+
+        private void ParseFile()
+        {
+            Log("Trying to read the file ...");
             PrintLog();
+            _bw.RunWorkerAsync();
+
         }
 
         private void btnReset_Click(object sender, EventArgs e)
@@ -127,13 +142,23 @@ namespace Analyser
             this.Text += "   v " + System.Windows.Forms.Application.ProductVersion;
         }
 
-        private void Log(string line)
+        public void Log(string line)
         {
             logText += line + Environment.NewLine;
         }
 
+        private delegate void PrintLogDelegate();
         private void PrintLog()
         {
+            if (this.InvokeRequired)
+            {
+                // Pass the same function to BeginInvoke,
+                // but the call would come on the correct
+                // thread and InvokeRequired will be false.
+                this.BeginInvoke(new PrintLogDelegate(PrintLog));
+
+                return;
+            }
             txtStatus.Text = logText;
         }
 

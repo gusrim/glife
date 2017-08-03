@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading;
+using System.ComponentModel;
 
 namespace Analyser
 {
@@ -2107,8 +2109,11 @@ namespace Analyser
             m_lastLocation = null;
         }
 
-        public bool ParseGame(string fileName)
+        public bool ParseGame(string fileName, object sender, DoWorkEventArgs e)
         {
+            int totalLines = 0;
+            StreamReader rTl = new StreamReader(fileName);
+            while (rTl.ReadLine() != null) { totalLines++; };
             m_LocationsByName.Clear();
             m_LocationsByOrder.Clear();
             ClearErrors();
@@ -2161,6 +2166,7 @@ namespace Analyser
                     if (inside && GetLastLocation() != null)
                         locationCode.Add(s);
                 }
+                (sender as BackgroundWorker).ReportProgress(Convert.ToInt32(((double)line_counter/(double)totalLines) * 100));
             }
             fi.Close();
             return true;
