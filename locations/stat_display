@@ -74,14 +74,31 @@ if Enable_statfsize>0:$stat_msg = '<font size=<<Enable_statfsize>>><<$stat_msg>>
 
 $stat_android = '<b><<$mid(100+hour,2,2)>>:<<$mid(100+minut,2,2)>></b>'
 
-$stat_msg += '<<$weather>><BR>'
+$stat_msg += '<table><tr><td><a href="exec:msg ''<<$weather>>''"><<$weatherImage>></a></td><td><<$temperature>></td></tr>'
+!$stat_msg += '<<$weather>><BR>'
+!pl '<<$weatherImage>>'
 $stat_msg += '<BR><<$stat_android>> <<$week[week]>> <<day>> <<$month>> <<year>>'
 $stat_android += '<<$week[week]>> <<day>>/<<month>>, <<money>> ₽, <a href="exec:clr & pl $stat_android">Status</a>'
 ! $stat_android for short desc in android mode, $stat_msg for status bar.
-
-$stat_msg += '<BR>'
+if StoryLine > 0 and SchoolAtestat = 0 and $holyday ! '': $stat_msg += '<BR><<$holyday>>' & $stat_msg += '<BR>'
+if birthday = day and birthmonth = month: $stat_msg += '<BR><b>Today is your birthday.</b>' & $stat_msg += '<BR>'
 $pockets = 'pockets'
 if bag > 0: $pockets = 'purse'
+if bankAccount = 0 and stolmoney = 0:
+	$stat_msg += '<BR>You have <b><<money>> ₽</b> in your <<$pockets>>.'
+else
+	!combine money status to single line
+	$stat_msg += '<BR><<$pockets>>: <b><<money>> ₽</b>'
+	if stolmoney > 0: $stat_msg += ', drawer <b><<stolmoney>> ₽</b>'	
+	if bankAccount = 1:
+		if karta >= 0:
+			$stat_msg += ', bank: <b><<karta>> ₽</b>'
+		else
+			$stat_msg += '<BR><font color="red">Your bank account is overdrawn by <b><<karta>> ₽</b>!!</font>'
+		end
+	end
+end
+!{
 $stat_msg += '<BR>You have <b><<money>> ₽</b> in your <<$pockets>>.'
 if bankAccount = 1:
 	if karta >= 0:
@@ -91,7 +108,8 @@ if bankAccount = 1:
 	end
 end
 if stolmoney > 0: $stat_msg += '<BR>You have <b><<stolmoney>> ₽</b> in your desk drawer.'
-$stat_msg += '<BR>'
+}
+!$stat_msg += '<BR>'
 
 if ETOmenu = 1:
 	$stat_msg += '<BR><b><<$pcs_health>></b>'
@@ -134,13 +152,20 @@ else
 	gs 'indik', '1', pcs_sleep, pcs_sleep
 	$stat_msg += '<BR><<$ind>> Sleep'
 end
-$stat_msg += '<BR>'
 
+
+
+!!----------------Extra messages, start--------------------------
+
+!!----------------▽Attributes--------------------------
+$stat_tool_msg=''
+$stat_extra_msg=''
 if Enable_showattr = 0:
-	$stat_msg += '<BR> <a href="exec:Enable_showattr = 1 & FUNC (''$menu_obnovit'')">Attributes</a><BR>'
-end
-if Enable_showattr = 1:
-	$stat_msg += '<BR> <a href="exec:Enable_showattr = 0 & FUNC (''$menu_obnovit'')">Attributes:</a>'
+	$stat_tool_msg += '<a href="exec:Enable_showattr = 1 & FUNC (''$menu_obnovit'')">▽Attributes</a>'
+else
+	$stat_tool_msg += '<a href="exec:Enable_showattr = 0 & FUNC (''$menu_obnovit'')">▲Attributes</a>'
+	!skip if this is first message
+	if $stat_extra_msg ! null: $stat_extra_msg += '<br><a href="exec:Enable_showattr = 0 & FUNC (''$menu_obnovit'')">▲Attributes:</a>'
 	if Enable_scalepic = 2:
 		if pcs_dom > 10:
 			$dom_stat_msg = 'dominant'
@@ -150,85 +175,85 @@ if Enable_showattr = 1:
 			$dom_stat_msg = 'neutral'
 		end
 
-		$stat_msg += '<font color="<<$st_temp>>"><TABLE cellpadding="1" cellspacing="0" width="300"><TR><TD width="85%">'+FUNC('indiktab', '3', 100+pcs_dom-sub, 100+pcs_dom-sub,$dom_stat_msg)+'</TD><TD> Dominance</TD></TR>  <TR><TD width="85%">'+FUNC('indiktab', '1', pcs_stren, pcs_stren)+'</TD><TD> Strength</TD></TR><TR><TD width="85%">'+FUNC('indiktab', '1', pcs_agil, pcs_agil)+'</TD><TD> Agility</TD></TR><TR><TD width="85%">'+FUNC('indiktab', '1', pcs_vital, pcs_vital)+'</TD><TD> Endurance</TD></TR><TR><TD width="85%">'+FUNC('indiktab', '1', pcs_intel, pcs_intel)+'</TD><TD> Intelligence</TD></TR><TR><TD width="85%">'+FUNC('indiktab', '1', pcs_sprt, pcs_sprt)+'</TD><TD> Spirit</TD></TR><TR><TD width="85%">'+FUNC('indiktab', '1', pcs_react, pcs_react)+'</TD><TD nowrap> Mental Agility</TD></TR><TR><TD width="85%">'+FUNC('indiktab', '1', pcs_chrsm, pcs_chrsm)+'</TD><TD> Charisma</TD></TR><TR><TD width="85%">'+FUNC('indiktab', '1', pcs_prcptn, pcs_prcptn)+'</TD><TD> Perception</TD></TR>'
-		if MagikDostup = 0: $stat_msg += '<TR><TD width="85%">'+FUNC('indiktab', '1', pcs_magik, pcs_magik)+'</TD><TD> Magic</TD></TR>'
-		$stat_msg += '<TR><TD width="85%">'+FUNC('indiktab', '1', pcs_apprnc / 2, pcs_apprnc)+'</TD><TD> Attractiveness</TD></TR>'
-		if SchoolAtestat = 0 and StoryLine > 0:$stat_msg += '<TR><TD width="85%">'+FUNC('indiktab', '1', pcs_grades, pcs_grades)+'</TD><TD nowrap> School Grades</TD></TR>'
-		if pcs_exhibition > 0:$stat_msg += '<TR><TD width="85%">'+FUNC('indiktab', '1', pcs_exhibition, pcs_exhibition)+'</TD><TD> Exhibitionism</TD></TR>'
-		if pcs_heels > 0:$stat_msg += '<TR><TD width="85%">'+FUNC('indiktab', '1', pcs_heels, pcs_heels)+'</TD><TD> Heels skill</TD></TR>'
-		$stat_msg += '</TABLE></font>'
+		$stat_extra_msg += '<font color="<<$st_temp>>"><TABLE cellpadding="1" cellspacing="0" width="300"><TR><TD width="85%">'+FUNC('indiktab', '3', 100+pcs_dom-sub, 100+pcs_dom-sub,$dom_stat_msg)+'</TD><TD> Dominance</TD></TR>  <TR><TD width="85%">'+FUNC('indiktab', '1', pcs_stren, pcs_stren)+'</TD><TD> Strength</TD></TR><TR><TD width="85%">'+FUNC('indiktab', '1', pcs_agil, pcs_agil)+'</TD><TD> Agility</TD></TR><TR><TD width="85%">'+FUNC('indiktab', '1', pcs_vital, pcs_vital)+'</TD><TD> Endurance</TD></TR><TR><TD width="85%">'+FUNC('indiktab', '1', pcs_intel, pcs_intel)+'</TD><TD> Intelligence</TD></TR><TR><TD width="85%">'+FUNC('indiktab', '1', pcs_sprt, pcs_sprt)+'</TD><TD> Spirit</TD></TR><TR><TD width="85%">'+FUNC('indiktab', '1', pcs_react, pcs_react)+'</TD><TD nowrap> Mental Agility</TD></TR><TR><TD width="85%">'+FUNC('indiktab', '1', pcs_chrsm, pcs_chrsm)+'</TD><TD> Charisma</TD></TR><TR><TD width="85%">'+FUNC('indiktab', '1', pcs_prcptn, pcs_prcptn)+'</TD><TD> Perception</TD></TR>'
+		if MagikDostup = 0: $stat_extra_msg += '<TR><TD width="85%">'+FUNC('indiktab', '1', pcs_magik, pcs_magik)+'</TD><TD> Magic</TD></TR>'
+		$stat_extra_msg += '<TR><TD width="85%">'+FUNC('indiktab', '1', pcs_apprnc / 2, pcs_apprnc)+'</TD><TD> Attractiveness</TD></TR>'
+		if SchoolAtestat = 0 and StoryLine > 0:$stat_extra_msg += '<TR><TD width="85%">'+FUNC('indiktab', '1', pcs_grades, pcs_grades)+'</TD><TD nowrap> School Grades</TD></TR>'
+		if pcs_exhibition > 0:$stat_extra_msg += '<TR><TD width="85%">'+FUNC('indiktab', '1', pcs_exhibition, pcs_exhibition)+'</TD><TD> Exhibitionism</TD></TR>'
+		if pcs_heels > 0:$stat_extra_msg += '<TR><TD width="85%">'+FUNC('indiktab', '1', pcs_heels, pcs_heels)+'</TD><TD> Heels skill</TD></TR>'
+		$stat_extra_msg += '</TABLE></font>'
 		killvar '$dom_stat_msg'
 	else
 		gs 'indik','3', 50+(pcs_dom-sub)/2, 50+(pcs_dom-sub)/2
-		$stat_msg += '<BR><<$ind>> Dominance'
+		$stat_extra_msg += '<BR><<$ind>> Dominance'
 		if pcs_dom > 10:
-			$stat_msg += ' (dominant)'
+			$stat_extra_msg += ' (dominant)'
 		elseif sub > 10:
-			$stat_msg += ' (submissive)'
+			$stat_extra_msg += ' (submissive)'
 		else
-			$stat_msg += ' (natural)'
+			$stat_extra_msg += ' (natural)'
 		end
-!		$stat_msg += '<BR>'
+!		$stat_extra_msg += '<BR>'
 		gs 'indik', '1', pcs_stren, pcs_stren
-		$stat_msg += '<BR><<$ind>> Strength'
+		$stat_extra_msg += '<BR><<$ind>> Strength'
 		gs 'indik', '1', pcs_agil, pcs_agil
-		$stat_msg += '<BR><<$ind>> Agility'
+		$stat_extra_msg += '<BR><<$ind>> Agility'
 		gs 'indik', '1', pcs_vital, pcs_vital
-		$stat_msg += '<BR><<$ind>> Endurance'
+		$stat_extra_msg += '<BR><<$ind>> Endurance'
 		gs 'indik', '1', pcs_intel, pcs_intel
-		$stat_msg += '<BR><<$ind>> Intelligence'
+		$stat_extra_msg += '<BR><<$ind>> Intelligence'
 		gs 'indik', '1', pcs_sprt, pcs_sprt
-		$stat_msg += '<BR><<$ind>> Spirit'
+		$stat_extra_msg += '<BR><<$ind>> Spirit'
 		gs 'indik', '1', pcs_react, pcs_react
-		$stat_msg += '<BR><<$ind>> Mental Agility'
+		$stat_extra_msg += '<BR><<$ind>> Mental Agility'
 		gs 'indik', '1', pcs_chrsm, pcs_chrsm
-		$stat_msg += '<BR><<$ind>> Charisma'
+		$stat_extra_msg += '<BR><<$ind>> Charisma'
 		gs 'indik', '1', pcs_prcptn, pcs_prcptn
-		$stat_msg += '<BR><<$ind>> Perception'
+		$stat_extra_msg += '<BR><<$ind>> Perception'
 		if MagikDostup = 0:
 			gs 'indik', '1', pcs_magik, pcs_magik
-			$stat_msg += '<BR><<$ind>> Magic'
+			$stat_extra_msg += '<BR><<$ind>> Magic'
 		end
 		gs 'indik', '1', pcs_apprnc / 2, pcs_apprnc
-		$stat_msg += '<BR><<$ind>> Attractiveness'
+		$stat_extra_msg += '<BR><<$ind>> Attractiveness'
 	
 		if SchoolAtestat = 0 and StoryLine > 0:
 			gs 'indik', '1', pcs_grades, pcs_grades
-			$stat_msg += '<BR><<$ind>> School Grades'
+			$stat_extra_msg += '<BR><<$ind>> School Grades'
 		end
 		if pcs_exhibition > 0:
 			gs 'indik', '1', pcs_exhibition, pcs_exhibition
-			$stat_msg += '<BR><<$ind>> exhibitionism'
+			$stat_extra_msg += '<BR><<$ind>> exhibitionism'
 		end
 		if pcs_heels > 0:
 			gs 'indik', '1', pcs_heels, pcs_heels
-			$stat_msg += '<BR><<$ind>> Heels skill'
+			$stat_extra_msg += '<BR><<$ind>> Heels skill'
 		end
-		$stat_msg += '<BR>' 
+		$stat_extra_msg += '<BR>' 
 	end
 end
 killvar '$st_temp'
+
+!!----------------▽Skills--------------------------
+$stat_sktool_msg=''
+st_count=0
+$show_table=''
 !!----------------Mental skills--------------------------
 if Enable_show_mental_skill = 0:
-	$stat_msg += ' <a href="exec:Enable_show_mental_skill = 1 & FUNC (''$menu_obnovit'')">Mental Skills</a>'
-end
-if Enable_show_mental_skill = 1:
-	st_count=0
-	$show_table=''
+	$stat_sktool_msg += ' <a href="exec:Enable_show_mental_skill = 1 & FUNC (''$menu_obnovit'')">◇Mental</a>'
+else
+	$stat_sktool_msg += ' <a href="exec:Enable_show_mental_skill = 0 & FUNC (''$menu_obnovit'')">◆Mental</a>'
 	if pcs_splcstng > 0: gs 'show_table', '<<pcs_splcstng>> Spell Casting', '2'
 	if pcs_humint > 0: gs 'show_table', '<<pcs_humint>> People skills', '2'
 	if pcs_persuas > 0: gs 'show_table', '<<pcs_persuas>> Persuasion', '2'
 	if pcs_observ > 0: gs 'show_table', '<<pcs_observ>> Observation', '2'
-	if st_count > 0 :$stat_msg += ' <a href="exec:Enable_show_mental_skill = 0 & FUNC (''$menu_obnovit'')">Mental Skills:</a> <TABLE BORDER=1><<$show_table>></TR></TABLE>'
 end
 
 !!-----------------Sport skills--------------------------
 if Enable_show_sport_skill = 0:
-	$stat_msg += '<BR> <a href="exec:Enable_show_sport_skill = 1 & FUNC (''$menu_obnovit'')">Sport Skills</a>'
-end
-if Enable_show_sport_skill = 1:
-	st_count=0
-	$show_table=''
+	$stat_sktool_msg += ' <a href="exec:Enable_show_sport_skill = 1 & FUNC (''$menu_obnovit'')">◇Sport</a>'
+else
+	$stat_sktool_msg += ' <a href="exec:Enable_show_sport_skill = 0 & FUNC (''$menu_obnovit'')">◆Sport</a>'
 	if pcs_jab > 0: gs 'show_table', '<<pcs_jab>> Jabs', '2'
 	if pcs_punch > 0: gs 'show_table', '<<pcs_punch>> Power Strikes', '2'
 	if pcs_kick > 0: gs 'show_table', '<<pcs_kick>> Kicks', '2'
@@ -241,45 +266,36 @@ if Enable_show_sport_skill = 1:
 	if pcs_chess > 0: gs 'show_table', '<<pcs_chess>> Chess', '2'
 	if pcs_icesktng > 0: gs 'show_table', '<<pcs_icesktng>> Ice Skating', '2'
 	if pcs_ttgmng > 0: gs 'show_table', '<<pcs_ttgmng>> Gaming', '2'
-	if st_count > 0 :$stat_msg += '<BR> <a href="exec:Enable_show_sport_skill = 0 & FUNC (''$menu_obnovit'')">Sport Skills:</a> <TABLE BORDER=1><<$show_table>></TR></TABLE>'
 end
 
 !!-----------------Beauty/Modelling skills---------------
 if Enable_show_beauty_skill = 0:
-	$stat_msg += '<BR> <a href="exec:Enable_show_beauty_skill = 1 & FUNC (''$menu_obnovit'')">Beauty/Modelling Skills</a>'
-end
-if Enable_show_beauty_skill = 1:
-	st_count=0
-	$show_table=''
+	$stat_sktool_msg += ' <a href="exec:Enable_show_beauty_skill = 1 & FUNC (''$menu_obnovit'')">◇Beauty</a>'
+else
+	$stat_sktool_msg += ' <a href="exec:Enable_show_beauty_skill = 0 & FUNC (''$menu_obnovit'')">◆Beauty</a>'
 	if pcs_makupskl > 0: gs 'show_table', '<<pcs_makupskl>> Makeup Skill', '2'
 	if pcs_danc > 0: gs 'show_table', '<<pcs_danc>> Modern Dancing', '2'
 	if pcs_dancero > 0: gs 'show_table', '<<pcs_dancero>> Erotic Dancing', '2'
 	if pcs_dancpol > 0: gs 'show_table', '<<pcs_dancpol>> Pole Dancing', '2'
 	if pcs_mdlng > 0: gs 'show_table', '<<pcs_mdlng>> Modelling', '2'
-	if st_count > 0 :$stat_msg += '<BR> <a href="exec:Enable_show_beauty_skill = 0 & FUNC (''$menu_obnovit'')">Beauty/Modelling Skills:</a> <TABLE BORDER=1><<$show_table>></TR></TABLE>'
 end
 
 !!---------------------Artistic skills-------------------
 if Enable_show_art_skill = 0:
-	$stat_msg += '<BR> <a href="exec:Enable_show_art_skill = 1 & FUNC (''$menu_obnovit'')">Artistic Skills</a>'
-end
-if Enable_show_art_skill = 1:
-	st_count=0
-	$show_table=''
+	$stat_sktool_msg += ' <a href="exec:Enable_show_art_skill = 1 & FUNC (''$menu_obnovit'')">◇Artistic</a>'
+else
+	$stat_sktool_msg += ' <a href="exec:Enable_show_art_skill = 0 & FUNC (''$menu_obnovit'')">◆Artistic</a>'
 	if pcs_vokal > 0: gs 'show_table', '<<pcs_vokal>> Singing', '2'
 	if pcs_instrmusic > 0: gs 'show_table', '<<pcs_instrmusic>> Instrumental Music', '2'
 	if pcs_photoskl > 0: gs 'show_table', '<<pcs_photoskl>> Photography', '2'
 	if pcs_artskls > 0: gs 'show_table', '<<pcs_artskls>> Artistic Skills', '2'
-	if st_count > 0 :$stat_msg += '<BR> <a href="exec:Enable_show_art_skill = 0 & FUNC (''$menu_obnovit'')">Artistic Skills:</a> <TABLE BORDER=1><<$show_table>></TR></TABLE>'
 end
 
 !!----------------------Job skills------------------------
 if Enable_show_job_skill = 0:
-	$stat_msg += '<BR> <a href="exec:Enable_show_job_skill = 1 & FUNC (''$menu_obnovit'')">Job Skills</a>'
-end
-if Enable_show_job_skill = 1:
-	st_count=0
-	$show_table=''
+	$stat_sktool_msg += ' <a href="exec:Enable_show_job_skill = 1 & FUNC (''$menu_obnovit'')">◇Job</a>'
+else
+	$stat_sktool_msg += ' <a href="exec:Enable_show_job_skill = 0 & FUNC (''$menu_obnovit'')">◆Job</a>'
 	if pcs_compskl > 0: gs 'show_table', '<<pcs_compskl>> Computer Skill', '2'
 	if pcs_comphckng > 0: gs 'show_table', '<<pcs_comphckng>> Hacking', '2'
 	if pcs_hndiwrk > 0: gs 'show_table', '<<pcs_hndiwrk>> Handy-work', '2'
@@ -287,13 +303,33 @@ if Enable_show_job_skill = 1:
 	if pcs_servng > 0: gs 'show_table', '<<pcs_servng>> Serving', '2'
 	if pcs_medcn > 0: gs 'show_table', '<<pcs_medcn>> Medicine', '2'
 	if workPTU > 1: gs 'show_table','<<teachlevel>> Teacher credibility','2'
-	if st_count > 0 :$stat_msg += '<BR> <a href="exec:Enable_show_job_skill = 0 & FUNC (''$menu_obnovit'')">Job Skills:</a> <TABLE BORDER=1><<$show_table>></TR></TABLE>'
 end
 
-if Enable_showrelation = 0:
-	$stat_msg += '<BR> <a href="exec:Enable_showrelation = 1 & FUNC (''$menu_obnovit'')">Relations</a>'
+!!----------------------▲Skills display------------------------
+
+if Enable_showskill = 0:
+	$stat_tool_msg += ' <a href="exec:Enable_showskill = 1 & FUNC (''$menu_obnovit'')">▽Skills</a>'
+else
+	$stat_tool_msg += ' <a href="exec:Enable_showskill = 0 & FUNC (''$menu_obnovit'')">▲Skills</a>'
+	!skip if this is first message
+	if $stat_extra_msg ! null: 
+		$stat_extra_msg += '<br><a href="exec:Enable_showskill = 0 & FUNC (''$menu_obnovit'')">▲Skills:</a> <<$stat_sktool_msg>>'
+	else
+		$stat_extra_msg += '<br><<$stat_sktool_msg>>'
+	end
+	if st_count > 0 :
+		$stat_extra_msg += '<BR><TABLE BORDER=1><<$show_table>></TR></TABLE>'
+	end	
 end
-if Enable_showrelation = 1:
+
+killvar 'stat_sktool_msg'
+killvar 'stat_skextra_msg'
+
+!!----------------▽relations--------------------------
+if Enable_showrelation = 0:
+	$stat_tool_msg += ' <a href="exec:Enable_showrelation = 1 & FUNC (''$menu_obnovit'')">▽Relations</a>'
+else
+	$stat_tool_msg += ' <a href="exec:Enable_showrelation = 0 & FUNC (''$menu_obnovit'')">▲Relations</a>'
 	st_count=0
 	$show_table=''
 	if npc_QW['A192'] > 0:gs'show_table','Nastja: <<npc_QW[''A192'']>>','2'
@@ -309,7 +345,6 @@ if Enable_showrelation = 1:
 	if Dmitry > 0:gs'show_table','Dima: <<Dmitry>>','2'
 	if afra > 0:gs'show_table','Blacks: <<afra>>','2'
 	if Rex > 0:gs'show_table','Rex: <<Rex>>','2'
-	if Pavlin > 0:gs'show_table','Pavlin: <<Pavlin>>','2'
 	if npc_rel['A69'] > 0:gs'show_table','Mikhail Nikolaevich: <<npc_rel[''A69'']>>','2'
 	if npc_rel['A89'] > 0:gs'show_table','Eugene: <<npc_rel[''A89'']>>','2'
 	if npc_rel['A112'] > 0:gs'show_table','Sergei Shulgin: <<npc_rel[''A112'']>>','2'
@@ -326,34 +361,46 @@ if Enable_showrelation = 1:
 		if npc_rel['A33'] > 0:gs'show_table','Sister: <<npc_rel[''A33'']>>','2'
 		if npc_rel['A34'] > 0:gs'show_table','Brother: <<npc_rel[''A34'']>>','2'
 	end
-	if st_count > 0 :$stat_msg += '<BR> <a href="exec:Enable_showrelation = 0 & FUNC (''$menu_obnovit'')">Relations:</a> <BR><TABLE BORDER=1> <<$show_table>></TR></TABLE>'
-end
-	$stat_msg += '<BR>'
-
-if BuyHous = 2 and ArendHouseSL <= 0:
-	'<font color="red"><b>The rent on your apartment is due today.</b></font>'
-	if money >= 6000 or stolmoney >= 6000 or money + stolmoney >= 6000 or karta + bankDebtLimit >= 6000:
-		*P ' Renew with '
-		if money >= 6000:
-			*P ' <a href="exec:money -= 6000 & housr = 1 & BuyHous = 2 & ArendHouseSL += 30" & FUNC (''$menu_obnovit'')>cash</a>'
-		elseif stolmoney >= 6000:
-			*P ' <a href="exec:stolmoney -= 6000 & housr = 1 & BuyHous = 2 & ArendHouseSL += 30" & FUNC (''$menu_obnovit'')>cash from drawer</a>'
-		elseif money + stolmoney >= 6000:
-			!both < 6000, so money = money - 6000 + stolmoney
-			*P ' <a href="exec:money -= 6000 - stolmoney & stolmoney = 0 & housr = 1 & BuyHous = 2 & ArendHouseSL += 30" & FUNC (''$menu_obnovit'')>cash from purse and drawer</a>'
-		end
-		!from purse, drawer or both
-		if karta >= 6000: 
-			*P ' <a href="exec:karta -= 6000 & housr = 1 & BuyHous = 2 & ArendHouseSL += 30 & FUNC (''$menu_obnovit'')">bank account</a>'
-		elseif karta + bankDebtLimit >= 6000: 
-			*P ' <a href="exec:karta -= 6000 & housr = 1 & BuyHous = 2 & ArendHouseSL += 30 & FUNC (''$menu_obnovit'')">bank account, but you will be overdrawn.</a>'
-		end	
-	else
-		*P ' But you can''t afford to pay the rent.'
+	if st_count > 0 :
+		!skip if this is first message
+		if $stat_extra_msg ! null: $stat_extra_msg += '<BR><a href="exec:Enable_showrelation = 0 & FUNC (''$menu_obnovit'')">▲Relations:</a>'
+		$stat_extra_msg += '<BR><TABLE BORDER=1> <<$show_table>></TR></TABLE>'
 	end
 end
 
-if opPRE = 0: $stat_msg += '<BR><<$pcs_makeup>> and your hair is <<$pcs_hairbsh>>.' & $stat_msg += '<BR>'
+!all end, push back and clean up
+$stat_msg += '<br><br><<$stat_tool_msg>>'
+if $stat_extra_msg ! NULL : $stat_msg += '<<$stat_extra_msg>>'
+$stat_msg += '<br>'
+killvar 'stat_tool_msg'
+killvar 'stat_extra_msg'
+
+!!----------------Extra messages, End--------------------------
+
+if BuyHous = 2 and ArendHouseSL <= 0:
+	$stat_msg += '<br><font color="red"><b>The rent on your apartment is due today.</b></font>'
+	if money >= 6000 or stolmoney >= 6000 or money + stolmoney >= 6000 or karta + bankDebtLimit >= 6000:
+		$stat_msg += ' Renew with '
+		if money >= 6000:
+			$stat_msg += ' <a href="exec:money -= 6000 & housr = 1 & BuyHous = 2 & ArendHouseSL += 30" & FUNC (''$menu_obnovit'')>cash</a>'
+		elseif stolmoney >= 6000:
+			$stat_msg += ' <a href="exec:stolmoney -= 6000 & housr = 1 & BuyHous = 2 & ArendHouseSL += 30" & FUNC (''$menu_obnovit'')>cash from drawer</a>'
+		elseif money + stolmoney >= 6000:
+			!both < 6000, so money = money - 6000 + stolmoney
+			$stat_msg += ' <a href="exec:money -= 6000 - stolmoney & stolmoney = 0 & housr = 1 & BuyHous = 2 & ArendHouseSL += 30" & FUNC (''$menu_obnovit'')>cash from purse and drawer</a>'
+		end
+		!from purse, drawer or both
+		if karta >= 6000: 
+			$stat_msg += ' <a href="exec:karta -= 6000 & housr = 1 & BuyHous = 2 & ArendHouseSL += 30 & FUNC (''$menu_obnovit'')">bank account</a>'
+		elseif karta + bankDebtLimit >= 6000: 
+			$stat_msg += ' <a href="exec:karta -= 6000 & housr = 1 & BuyHous = 2 & ArendHouseSL += 30 & FUNC (''$menu_obnovit'')">bank account, but you will be overdrawn.</a>'
+		end	
+	else
+		$stat_msg += ' But you can''t afford to pay the rent.'
+	end
+end
+
+if opPRE = 0: $stat_msg += '<BR><<$pcs_makeup>> and your hair is <<$pcs_hairbsh>>.' & !$stat_msg += '<BR>'
 
 if thinkpreg = 0 and knowpreg = 0 and cycle ! 6 and pillcon2 <= 30000 and succubusflag ! 1 and cheatSlut = 0 and mesec = 0:
 	if abortionbirthdate = 0 and daystart - lastmens > 21:
@@ -389,14 +436,11 @@ if mesec > 0:
 	end
 	$stat_msg += '</font>'
 end
-$stat_msg += '<BR><a href="exec:dynamic $d_cycreport_choice"><<$cycreport_txt>></a><br>'
-
-if StoryLine > 0 and SchoolAtestat = 0 and $holyday ! '': $stat_msg += '<BR><<$holyday>>' & $stat_msg += '<BR>'
-if birthday = day and birthmonth = month: $stat_msg += '<BR><b>Today is your birthday.</b>' & $stat_msg += '<BR>'
+if $cycreport_txt ! null: $stat_msg += '<BR><a href="exec:dynamic $d_cycreport_choice"><<$cycreport_txt>></a><br>'
 
 !!if shame > 0:$stat_msg += '<BR><<$shame>>' & $stat_msg += '<BR>'
 
-if $pcs_mood ! '':$stat_msg += '<BR><font color="green"><b><<$pcs_mood>></b></font>' & $stat_msg += '<BR>'
+if $pcs_mood ! '':$stat_msg += '<BR><font color="green"><b><<$pcs_mood>></b></font>'
 
 if mentats_dose >= 1:$stat_msg += '<BR><font color = green>You feel sharp and focused.</font>'
 if bcream_used = 1:$stat_msg += '<BR><font color = #DB7093>Your breasts are feeling hot and tingly.</font>'
@@ -476,7 +520,7 @@ if pcs_sweat < 0 : pcs_sweat = 0
 if pcs_sweat > 69 : pcs_sweat = 69
 jump 'statDswt<<pcs_sweat/10>>'
 :statDswt0
-	if arrsize('sparrvol') = 0 : $stat_msg += '<BR><b><font color="green">You are sparkling clean.</font></b><BR>'
+	if arrsize('sparrvol') = 0 : $stat_msg += '<BR><b><font color="green">You are sparkling clean.</font></b>'
 	jump 'statDswtEnd'
 :statDswt1
 	jump 'statDswtEnd'
@@ -881,12 +925,10 @@ elseif Sifilis >= 21:
 end
 
 if Triper > 2:$stat_msg += '<BR><b><font color="red">From your vagina a white discharge comes out strong and stinging when urinating. Also from your vagina there''s a hard and nasty smell.</font></b>'
-if TriperOral > 2 and TriperOralSigns = 1:$stat_msg += '<BR><b><font color="red">Your throat is sore and covered with white spots.</font></b>'
 if Kandidoz > 30:$stat_msg += '<BR><b><font color="red">You have thrush.</font></b>'
 if SLomka > 0:$stat_msg += '<BR><b><font color="red">You are very weak and hurt to the bone. You''re in withdrawal.</font></b>'
 if narkday ! daystart and narkoman = 1:$stat_msg += '<BR><b><font color="red">You are very weak and hurt to the bone. Urgently need pale lady.</font></b>'
 if fingal > 0:$stat_msg += '<BR><b><font color="red">You have a black eye.</font></b>'
-if recuperation = 1:$stat_msg += '<BR><b><font color="red">You are recovering from a medical surgery</font></b>'
 
 ! WD: Bimbo look
 if bimbolevel > 0: $stat_msg += '<BR><<$bimbostatus>>'
@@ -916,7 +958,7 @@ elseif tanga = 0:
 		$stat_msg += '<BR><b><font color = #FF00FF>You are completely naked. It''s exciting and you feel tingly inside.</font></b>'
 	end
 end
-$stat_msg += '<BR>'
+!$stat_msg += '<BR>'
 
 if mosol >= 50:
 	$stat_msg += '<BR><b><font color="red">Your pussy hurts and each step causes more pain, it''s crimson and visibly scuffed from walking without underwear.</font></b>'
@@ -926,7 +968,7 @@ end
 
 if analplugIN = 1:$stat_msg += '<BR><b><font color="red">You have a butt plug inserted in your ass.</font></b>'
 if vibratorin = 1:$stat_msg += '<BR><b><font color="red">You have a vibrator inserted in your vagina.</font></b>'
-$stat_msg += '<BR>'
+!$stat_msg += '<BR>'
 if young_shop_work = 1:
 	if hour = 15 and minut <= 5 and week < 6 and inWorkYoungShop = 0:
 		'You are late for work at Pussy-Cats.'
@@ -1101,10 +1143,9 @@ $stat_msg += '<br><a href="exec:savegame ''quicksave.sav'' && pl''Quicksave Done
 
 $stat_android +=  ' <a href="exec:savegame ''quicksave.sav'' && pl''Quicksave Done''">Q.S</a>  <a href="exec:if input(''Input Anything to confirm Quick Load'') ! null: opengame ''quicksave.sav''">Q.L</a>'
 
-if Enable_statfsize > 0: $stat_msg += '<BR></font>' & !disable this, all texts comes from pl will have the same font size, like[time]
+if Enable_statfsize > 0: $stat_msg += '</font>' & !disable this, all texts comes from pl will have the same font size, like[time]
 if Enable_faceturn = 1:	view FUNC('$face_image')
 if Enable_Android = 0:
-        pl '<<$weatherImage>>'
 	pl '<<$stat_msg>>'
 else
 	'<<$stat_android>>'
