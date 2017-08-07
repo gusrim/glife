@@ -123,6 +123,8 @@ $rexpot = {
 }
 
 $hypnoDaychange = {	
+	!!if for some reason hypnoTime is too high
+	if hypnoTime > 15:hypnoTime = 15
 	timeTresh = 76 - 4*hypnoType
 	!!Withdrawal effect begings if too strong influence and no visitation
 	if daystart-hypnoDay > 7: 
@@ -155,37 +157,35 @@ $hypnoDaychange = {
 }
 
 $hypnoAddiction = {
-	if hypnoAddict > 0:
-		if cumloc[0] = 1 or cumloc[3] = 1:
-			killvar 'missCum'
-			if hypnoAddict = 1:
-				pcs_mood += 5
-			else
-				pcs_mood += 10
-			end
+	if cumloc[0] = 1 or cumloc[3] = 1:
+		killvar 'missCum'
+		if hypnoAddict = 1:
+			pcs_mood += 5
 		else
-			missCum += 1
+			pcs_mood += 10
 		end
-		
-		if missCum > timeTresh:
-			if hypnoAddict = 1:
-				pcs_mood -= 5
-				pcs_horny += 10
-			else
+	else
+		missCum += 1
+	end
+	
+	if missCum > timeTresh:
+		if hypnoAddict = 1:
+			pcs_mood -= 5
+			pcs_horny += 10
+		else
+			pcs_mood -= 10
+			pcs_horny += 20
+		end
+	end
+	
+	if hypnoWithdrawal > 0:
+		if hypnoWithdrawal = 1:
+			if missCum >= timeTresh:
+				sprt_deg -= 2*hypnoAddict
 				pcs_mood -= 10
-				pcs_horny += 20
-			end
-		end
-		
-		if hypnoWithdrawal > 0:
-			if hypnoWithdrawal = 1:
-				if missCum >= timeTresh:
-					sprt_deg -= 2*hypnoAddict
-					pcs_mood -= 10
-				else
-					if rand(0,1) = 0:sprt_deg -= hypnoAddict
-					pcs_mood -= 5
-				end
+			else
+				if rand(0,1) = 0:sprt_deg -= hypnoAddict
+				pcs_mood -= 5
 			end
 		end
 	end
