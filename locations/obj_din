@@ -43,7 +43,9 @@ if $ARGS[0] = 'descrip':
 	pl '<<$pcs_apprnc>>'
 	
 	if preg = 1:
-		if pregtime > 196:
+		if denypreg = 1 and pregtime > 75:
+			pl 'You seem to be putting on a bit of weight, your belly is definitely bigger.'
+		elseif pregtime > 196:
 			pl 'You''re rapidly approaching the finish line and have entered the third trimester. Your belly is so big now that you can barely remember what your toes look like. Your back hurts most of the time and it is a struggle to get to your feet if you sit down. The baby seems to think that your bladder makes a nice punching bag.'
 		elseif pregtime > 130:
 			pl 'Your belly is quite swollen now and shows under even the loosest of clothes. You find yourself constantly caressing your belly without realizing it.'
@@ -1384,13 +1386,13 @@ if $ARGS[0] = 'clothes':
 
 	pl ''
 
-	if $clothingworntype = 'nude' and towel = 1 and tanga = 0:
+	if $clothingworntype = 'nude' and towel = 1 and $pantyworntype = 'none':
 		view 'images/pc/clothing/towel.jpg'
 		pl'You are only wearing a towel'
-	elseif $clothingworntype = 'nude' and tanga = 1:
+	elseif $clothingworntype = 'nude' and $pantyworntype ! 'none':
 		view 'images/pc/clothing/nude.jpg'
 		pl'You are only wearing panties'
-	elseif $clothingworntype = 'nude' and tanga = 0:
+	elseif $clothingworntype = 'nude' and $pantyworntype = 'none':
 		view 'images/pc/clothing/nude1.jpg'
 		pl'You are completely naked.'
 	else
@@ -1420,6 +1422,21 @@ if $ARGS[0] = 'clothes':
 	end
 end
 
+if $ARGS[0] = 'panties':
+	if $pantyworntype = 'none':
+		if pcs_pubes <= 3:
+			view 'images/pc/body/pussy/pussy.jpg'
+		elseif pcs_pubes <= 10:
+			view 'images/pc/body/pussy/stpussy.jpg'
+		elseif pcs_pubes <= 20:
+			view 'images/pc/body/pussy/spussy.jpg'
+		else
+			view 'images/pc/body/pussy/hpussy.jpg'
+		end
+	else
+		view FUNC('$panty_image', $pantyworntype, pantywornnumber)
+	end
+end
 if $ARGS[0] = 'shoes':
 	clr
 	if $clothingworntype = 'nude' or $shoeworntype = 'none':
@@ -1726,6 +1743,7 @@ if $ARGS[0] = 'old':
 	addobj 'Face'
 	addobj 'Body'
 	addobj 'Clothing'
+	addobj 'Panties'
 	addobj 'Shoes'
 	addobj 'Tattoos'
 	addobj 'Piercing'
@@ -1734,6 +1752,7 @@ if $ARGS[0] = 'old':
 	addobj 'Notebook'
 	addobj 'Refresh'
 	addobj 'The new menu'
+	addobj 'Game Setting'
 	addobj 'Cheat menu'
 	addobj 'Emergency exit'
 	if disable_autosave = 1:
@@ -1764,3 +1783,4 @@ if $ARGS[0] = 'autosave':
 	gs'stat'
 end
 --- obj_din ---------------------------------
+

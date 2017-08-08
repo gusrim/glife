@@ -87,21 +87,39 @@ act'Rent a room':
 	end
 end
 if proshotelopen = 1 and proshotelday ! daystart:
-	act'Ask for ''the Peacock''':
-	proshotelday = daystart
-	cls
-	gs'stat'
-	'You approach the receptionist and ask for ''the Peacock''.'
-	'She picks up the phone and says : "<font color=#0000FF>Pavlin</font>, there is another one here for you."" sure I''ll send her right up"'
-	'she gives you a subtle smile and tells you <font color=#0000FF>Pavlin</font> is waiting for you in room 305'
-		act 'Go to room 305':
+	act'Ask for ''The Peacock''':
+		proshotelday = daystart
 		cls
 		gs'stat'
-		'You go to the room and knock on the door. <font color=#0000FF>Pavlin</font> opens the door.'
-		'He lets you enter the room and offers you to sit down on the couch'
-		'<font color=#0000FF>"When the girl at the desk called me I informed the customer straight away, they will be here shortly."</font>'
-		'Indeed not one minute later there was a knock on the door, <font color=#0000FF>Pavlin</font> opened up and had a short conversation with the customer. The customer handed him a wad of cash  and entered the room.'
-		'<font color=#0000FF>"I''ll be waiting in the hotelbar , meet me there when you are done girl"</font> said <font color=#0000FF>Pavlin</font> while he left the room.'
+		if pavlevent = 1:
+			'You are too scared of Pavlin at the moment to meet him in a private place.'
+			act 'Step away from the reception desk':gt'HotelHole','skip_resepevent'
+			exit
+		end
+		'You approach the receptionist and ask for ''The Peacock''.'
+		if hour >= 12 and hour < 20:
+			'She nods and waves to Pavlin who is sitting in the lobby'
+			'<font color=#0000FF>Pavlin</font> comes over and greets you.'
+			'"Are you ready to do some work  <<$pcs_firstname>> ?"'
+			'Without bothering to wait for you to respond he takes out his phone and calls a client.'
+			'"OK, let''s go to the room"'
+		else
+			'She picks up the phone and says : "<font color=#0000FF>Pavlin</font>, there is another one here for you."" sure I''ll send her right up"'
+			'she gives you a subtle smile and tells you <font color=#0000FF>Pavlin</font> is waiting for you in room 305'
+		end
+		act 'Go to room 305':
+			cls
+			gs'stat'
+			if hour >= 12 and hour < 20:
+				'You enter the room with <font color=#0000FF>Pavlin</font>.'
+				'"You just sit down on the bed, the client will be here in a few minutes"'
+			else
+				'You go to the room and knock on the door. <font color=#0000FF>Pavlin</font> opens the door.'
+				'He lets you enter the room and offers you to sit down on the couch'
+				'<font color=#0000FF>"When the girl at the desk called me I informed the customer straight away, they will be here shortly."</font>'
+			end
+			'Indeed not one minute later there was a knock on the door, <font color=#0000FF>Pavlin</font> opened up and had a short conversation with the customer. The customer handed him a wad of cash  and entered the room.'
+			'<font color=#0000FF>"I''ll be waiting in the hotelbar , meet me there when you are done girl"</font> said <font color=#0000FF>Pavlin</font> while he left the room.'
 			act 'Perform your duty':
 				cls
 				gs'stat'
@@ -112,49 +130,188 @@ if proshotelopen = 1 and proshotelday ! daystart:
 				picrand = rand(0, 14)
 				'<center><img <<$set_imgh>> src="images/shared/sex/blowjob/bj<<picrand>>.gif"></center>'
 				gs 'dinsex','dinrandbj'
-				disrand = rand(0, 100)
+				
 				'You move the dick out of your mouth and tell him to put on a condom and fuck you.'
 				if pcs_dom >= 25:
-				'The man wanted to start arguing but he could see you would not be pursuaded.'
-				gs 'dinsex', 'boy_puts_his_condom'
-				elseif rand(0,1) = 1 and pcs_dom < 25:
-				
-				'The man started arguing but you could could convince him that using a condom would be safer for both of you.'
+					'The man wanted to start arguing but he could see you would not be pursuaded.'
 					gs 'dinsex', 'boy_puts_his_condom'
-				else
-				'The man started laughing and tells you he paid to fuck you ''raw'' so that''s what he was going to do'
+				elseif rand(0,2) = 1 and pcs_dom < 25:
 				
-					if disrand >= 70:dynamic $venerasiak
+					'The man started laughing and tells you he paid to fuck you ''raw'' so that''s what he was going to do'
+					dynamic $venerasiak
+					
+				else
+					'The man started arguing but you could could convince him that using a condom would be safer for both of you.'
+					gs 'dinsex', 'boy_puts_his_condom'
+					
 				end
+				gs 'dinsex','vaginal_sex'
 				picrand = rand(1, 5)
 				'<center><img <<$set_imgh>> src="images/shared/sex/vag/miss/vagmis<<picrand>>.jpg"></center>'
-				gs 'dinsex','vaginal_sex'
 				gs 'arousal', 'bj', 30, 'prostitution'
+				dynamic $venerasiakOral
 				gs 'arousal', 'vaginal', 30
 				gs 'arousal', 'end'
-				dynamic $sexcum
 				guy += 1
 				slutty += 1
+				pav_prostitute += 1
 				pcs_vag += 1
 				pcs_throat += 1
-				act'Go to the bar':
+				if pavlin = 15:
+					act'continue':
 					cls
-					gs'stat'
-					'You stand up, put your clothes back on and step out of the room.'
-					'You go to the bar and see <font color=#0000FF>Pavlin</font> sitting in a boot in the corner of the bar.'
-					'He hands you 750  <b>₽</b> . '
-					'You are sure the money he received from the customer was more than double this amount but you don''t feel like arguing.'
-					'You thank him and go back to the hotel lobby'
-					money += 750
-					!pavpros counter to be used to trigger future events
-					pavpros += 1
-					act'Go back to the hotel lobby':gt'HotelHole'
-				
+					cla
+						'"Wow your pussy is good but I really want to try out this sweet little asshole" <<$boydesc>> says.'
+						'"No way, we did not agree to this."'
+						'"I don''t care bitch <<$npc_firstname[''A217'']>> still owes me a favor, so you are going to lie there and take it."'
+						'You try to get away but <<$boydesc>> pins you down and guides his cock towards  your ass'
+						'<center><img <<$set_imgh>> src="images/shared/sex/anal/doggy/anal1.gif"></center>'
+						'"at least use some lub..."'
+						'Before you can finish your sentence  <<$boydesc>> has already penetrated your anus and is thrusting with all his might.'
+						'You were not ready for it and start screaming your longs out.'
+						'Luckily he did not last long and after 30 seconds he blew his load in your ass'
+						gs 'arousal', 'anal', 30, 'prostitution','sub','rough'
+						gs 'arousal', 'end'
+						act'Go to the bar':gt 'hotel_resep','pavlbar'
+					end
+						
+				else
+					dynamic $sexcum
+					act'Go to the bar':gt 'hotel_resep','pavlbar'
 				end
 			end
 		end
 	end
 end
+if $ARGS[0] = 'pavlbar':
+	cls
+	gs'stat'
+	'You stand up, put your clothes back on and step out of the room.'
+	'<center><img <<$set_imgh>> src="images/characters/pavlovsk/Pavlin/Pavlin.jpg"></center>'
+	'You go to the bar and see  <font color=#0000FF>Pavlin</font> sitting in a boot in the corner of the bar.'
+	'He hands you 750  <b>₽</b> . '
+	if pavlin = -1:
+		'You refuse to even take a look at him, you swipe the 750  <b>₽</b> from his hand and walk away'
+		money += 750
+		act'Go back to the hotel lobby':gt'HotelHole','skip_resepevent'
+		exit
+	end
+	if pavlin = 15:
+		'You tell Pavlin that you were basically assraped by the client.'
+		'"<font color=#0000FF>What the fuck, he did not pay for that!!!</font>"'
+		'<font color=#0000FF>Pavlin</font> storms out to find the client.'
+		'<br>'
+		'...'
+		'<br>'
+		'10 minutes later he returns, you can see his fists are covered in blood.'
+		'"<font color=#0000FF>You are lucky I caught up with him, why did you allow this to happen ? You should have checked with me before offering your ass to a client</font>"'
+		'"But I ..." You wanted to explain that you did not offer anything but were forced into it.'
+		'"<font color=#0000FF>If I had known you were in to the more kinky stuff I would have charged more for you.</font>"'
+		'"<font color=#0000FF>Today I obviously can''t pay you extra but if you want to earn an extra buck in the future, let me know and I will arrange some of my more kinky clients for you.</font>"'
+		pavlin = 20
+		act'Go back to the hotel lobby':gt'HotelHole','skip_resepevent'
+		exit
+	end
+	
+	if pavlin > 6:
+		'"this was not what we agreed to you say, I need more ..."'
+		'"<font color=#0000FF>Sure , you can have more, but you need to do some extra work for that.</font>"'
+		'Pavlin takes your hand and moves it towards his crotch'
+		act 'be content with what you have':
+			cls
+			'You wiggle your hand free from his grip, take the money and get up'
+			'"This is really the last time you screwed me over" you say'
+			'Pavlin is not really worried. He is confident you''ll be back.'
+			'he leans back in his chair and checks out your ass while you are leaving.'
+			money += 750
+			act'Go back to the hotel lobby':gt'HotelHole','skip_resepevent'
+		end
+		act 'Do the extra work':
+			cls
+			'"Fine" you say.  You open his fly and take out his half-erect penis.'
+			if pavlin >= 10:
+				
+				'<font color=#0000FF>"Why don''t you use your mouth today ?"</font>'
+				'<center><img <<$set_imgh>> src="images/characters/pavlovsk/Pavlin/Pavlin_bj.jpg"></center>'
+				'You look around to make sure nobody is watching you and then move your head towards his penis.'
+				'After a few minutes he tells you he is coming. You don''t want to make a mess here so you just keep it in your mouth and swallow all the spunk.'
+				'You sit straight again and look at <font color=#0000FF>Pavlin</font>.'
+				gs 'arousal', 'bj', 5, 'prostitution'
+				swallow +=1
+			else	
+				'<center><img <<$set_imgh>> src="images/characters/pavlovsk/Pavlin/Pavlin_hj.jpg"></center>'
+				'After two minutes of stroking you can feel him coming all over your hand.'
+				gs 'arousal', 'hj', 5, 'prostitution'
+				
+				
+			end
+			'With a stupid grin on his face he reaches in his pocket and hands you an extra 250  <b>₽</b> . '
+			money += 1000
+			gs 'arousal', 'end'
+			if pavlin <= 15 or pavlin > 19:pavlin += 1
+			act'Go back to the hotel lobby':gt'HotelHole','skip_resepevent'
+		end
+			
+	end
+	if pavlin <= 5:
+		'You are sure the money he received from the customer was more than double this amount but you don''t feel like arguing.'
+		'You thank him and go back to the hotel lobby'
+		money += 750
+		pavlin += 1
+		act'Go back to the hotel lobby':gt'HotelHole','skip_resepevent'
+	end
+	if pavlin = 6 and pavlevent = 0:
+		'You are sure the money he received from the customer was more than double this amount'
+		'You bring up the issue : " Actually Pavlin I believe I should get more money, I am doing all the work here and I know these guys pay you much more than this."'
+		' Where Pavlin was still sitting there with a big smile a moment before, the moment you mentioned the money a gloom came over his face. this only lasted a few moments and then his smile reappeared.'
+		'"<font color=#0000FF>You are right <<$pcs_firstname>>, come with me to my car I''ll give you a bonus today.</font>"'
+		'You are excited at the prospect of finally getting the money you earned but you are unsure if you can trust Pavlin.'
+		minut += 5
+		
+		act 'Take no chances, accept the amount for today':
+			cls
+			money += 750
+			'<br>"Actually, I have no time for this today, I have a doctor''s appointment in  a few minutes. Next time I will expect that bonus"'
+			'"<font color=#0000FF> Sure  <<$pcs_firstname>>, no problem.</font>"'
+			act'Go back to the hotel lobby':gt'HotelHole','skip_resepevent'
+		end
+		act 'Follow him outside':
+			minut += 15
+			cls
+			' You follow Pavlin outside and around the building towards the parking lot.'
+			'<center><img <<$set_imgh>> src="images/characters/pavlovsk/Pavlin/Pavlin_violent.jpg"></center>'
+			'Once you turned the corner and are out of sight from the street <font color=#0000FF>Pavlin</font> suddenly grabs  you by the shoulders and throws you against the wall'
+			'You are stunned and want to say something when suddenly  Pavlin hits you with his fist in your face'
+			'"<font color=#0000FF>WHO DO YOU THINK YOU ARE ,  BITCH ? You work for ME, I decide how much money you get. YOU UNDERSTAND ME ?</font>"'
+			'He is screaming and after every sentence he hits you in the face again.' 
+			!only check for strength and dom at the moment, might change later 
+			if pcs_dom > 50 and pcs_stren > 60:
+				'You try to defend yourself and start hitting back. He did not expect this and is startled for a moment.'
+				'You see an opening and take advantage of it.'
+				'With a swift movement you are able to  push your knee in his groin.'
+				'<center><img <<$set_imgh>> src="images/characters/pavlovsk/Pavlin/Pavlin_violent3.jpg"></center>'
+				'This brings <font color=#0000FF>Pavlin</font> to his knees, catching his breath.'
+				'You take this opportunity to turn around and run away.'
+				'<font color=#0000FF>"Screw you , bitch, I will get you for this"</font> is the last thing you hear before you are back on the street'
+				pavldom = 1
+			else
+				'You are terrified and the only thing you dare to say is "I am sorry Pavlin. It won''t happen again"'
+				'<center><img <<$set_imgh>> src="images/characters/pavlovsk/Pavlin/Pavlin_violent2.jpg"></center>'
+				'"<font color=#0000FF>You are damn right it won''t happen again.</font>" He waves the money in your face and then puts it in his pocket'
+				'"<font color=#0000FF>Now Get out of my sight.</font>" He grabs you and throws you in the direction of the street'
+				'You quickly crawl on your feet and run away'
+			end
+				gs 'pain', 8,'head','hit'
+				pavlevent = 1
+				pavldaystart = daystart
+				pavlin = 3
+			
+			act'Run away':gt'vokzalG'
+		end
+	end
+	exit
+end
+
 If GermanQW<1:
 	act 'Ask about the maid job':
 		cls
@@ -164,10 +321,10 @@ If GermanQW<1:
 		'You approach the reception desk, and ask the girl: "Excuse me... I hear you are often looking for maids? I would like to come work as a maid here."'
 		'She nods understandingly, and takes a quick look at your figure: "We do often need maids, that''s true. I''d hire you in an instant, but unfortunately it''s not up to me. You should go see Herman Leonidovich, the hotel manager. He''s usually in his office between 12:00 and 14:00. I bet he will hire you! Good luck when you go see him!"'
 
-		act 'Step away from the reception desk':gt'HotelHole'
+		act 'Step away from the reception desk':gt'HotelHole','skip_resepevent'
 	end
 end
-act 'Step away from the reception desk':gt'HotelHole'
+act 'Step away from the reception desk':gt'HotelHole','skip_resepevent'
 
 --- hotel_resep ---------------------------------
 

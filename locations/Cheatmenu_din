@@ -1175,6 +1175,7 @@ $cheatmenu['std_cure'] = {
 	Sifilis = 0
 	TriperOnce = 0
 	Triper = 0
+	TriperOral = 0 
 	KandidozOnce = 0
 	Kandidoz = 0
 }
@@ -1269,25 +1270,113 @@ $cheatmenu['cycle'] = {
 	end
 }
 $cheatmenu['display'] = {
-	gs'stat'
-	clr
-	pl'<center> <a href="exec:dynamic $cheatmenu"><b>Cheat Menu</b></a></center>'
+	!call this for pre-game setting
+	if Enable_settingmode = 0:
+		!call from cheatmenu - Status Display
+		gs'stat'
+		clr
+		pl'<center> <a href="exec:dynamic $cheatmenu"><b>Cheat Menu</b></a></center>'
+	else
+		clr
+		if Enable_settingmode = 1:
+			!call from Menu - Game settings
+			pl'<center> <a href="exec:Enable_settingmode = 0 & dynamic $cheatmenu"><b>Cheat Menu</b></a></center>'
+			nl
+			pl '<center><a href="exec:FUNC (''$menu_obnovit'')"><b>Return</b></a></center>'
+			pl '<center><B>Game Play Setting</B></center>'
+		else
+			!value= 2, call from Character creation
+			pl '<center><B>Game Play Setting</B></center>'
+		end
+		if Enable_nogameover = 1:
+			pl' <a href="exec:Enable_nogameover = 0 & dynamic $cheatmenu[''display'']">Prevent Non-Drama GAMEOVER: ON</a>'
+		else
+			pl' <a href="exec:Enable_nogameover = 1 & dynamic $cheatmenu[''display'']">Prevent Non-Drama GAMEOVER: OFF</a>'
+		end
+		if sound = 1:
+			pl' <a href="exec:sound = 0 & dynamic $cheatmenu[''display'']">Music: OFF</a>'
+		else
+			pl' <a href="exec:sound = 1 & dynamic $cheatmenu[''display'']">Music: ON</a>'
+		end
+		if disable_autosave = 1:
+			pl' <a href="exec:disable_autosave = 0 & dynamic $cheatmenu[''display'']">AutoSave: ON</a>'
+		else
+			pl' <a href="exec:disable_autosave = 1 & dynamic $cheatmenu[''display'']">AutoSave: OFF</a>'
+		end	
+		if autohairbrush = 1:
+			pl' <a href="exec:autohairbrush = 0 & dynamic $cheatmenu[''display'']">Auto brush hair on mirror visit: ON</a>'
+		else
+			pl' <a href="exec:autohairbrush = 1 & dynamic $cheatmenu[''display'']">Auto brush hair on mirror visit: OFF</a>'
+		end
+		if enfullmorrout = 1:
+			pl' <a href="exec:enfullmorrout = 0 & dynamic $cheatmenu[''display'']">Full morning routine enabled: ON</a>'
+		else
+			pl' <a href="exec:enfullmorrout = 1 & dynamic $cheatmenu[''display'']">Full morning routine enabled: OFF</a>'
+		end
+	end
 	nl
+	pl '<center><B>Display Setting</B></center>'
+	if set_imgh > 0:
+		pl'Force Image height: <a href="exec:set_imgh=1+input(''Enter the height of the images'') & dynamic $cheatmenu[''display'']"><<set_imgh-1>></a>, <a href="exec:set_imgh=0 & dynamic $cheatmenu[''display'']">ON</a>'
+		$set_imgh = 'height = <<set_imgh>>'
+	else
+		pl'Force Image height: <a href="exec:set_imgh=1+input(''Enter the height of the images'') & dynamic $cheatmenu[''display'']">OFF</a>'
+		$set_imgh = ''
+	end
+	if night_mode = 1:
+		pl 'Night Mode: <a href="exec:night_mode = 0 & dynamic $cheatmenu[''display'']">ON</a>'
+	else
+		pl 'Night Mode: <a href="exec:night_mode = 1 & dynamic $cheatmenu[''display'']">OFF</a>'
+	end	
 	if Enable_faceturn = 1:
 		pl' <a href="exec:Enable_faceturn = 0 & dynamic $cheatmenu[''display'']">Always show face: ON</a>'
 	else
 		pl' <a href="exec:Enable_faceturn = 1 & dynamic $cheatmenu[''display'']">Always show face: OFF</a>'
 	end
 	nl
-	if ETOmenu = 1:
-		pl' <a href="exec:ETOmenu = 0 & dynamic $cheatmenu[''display'']">Display: Text</a>'
+	if Enable_tablemap = 1:
+		pl' <a href="exec:Enable_tablemap = 0 & dynamic $cheatmenu[''display'']">List friends in table: ON</a>'
 	else
-		pl' <a href="exec:ETOmenu = 1 & dynamic $cheatmenu[''display'']">Display: Bar</a>'
+		pl' <a href="exec:Enable_tablemap = 1 & dynamic $cheatmenu[''display'']">List friends in table: OFF</a>'
+	end
+	if Enable_towntable = 1:
+		pl' <a href="exec:Enable_towntable = 0 & dynamic $cheatmenu[''display'']">Display Pavlovsk description in table: ON</a>'
+	else
+		pl' <a href="exec:Enable_towntable = 1 & dynamic $cheatmenu[''display'']">Display Pavlovsk description in table: OFF</a>'
+	end	
+	nl
+	if Enable_clothwidth<0:Enable_clothwidth=0
+	if Enable_clothwidth > 0:
+		pl'Set Wardrobe cloth image width: <a href="exec:Enable_clothwidth=input(''Input wardrobe cloth image width'') & dynamic $cheatmenu[''display'']"><<Enable_clothwidth>></a>, <a href="exec:Enable_clothwidth=0 & dynamic $cheatmenu[''display'']">ON</a>'
+	else
+		pl'Set Wardrobe cloth image width: <a href="exec:Enable_clothwidth=input(''Input wardrobe cloth image width'') & dynamic $cheatmenu[''display'']">OFF</a>'
+	end
+	nl	
+	if Enable_Android = 1:
+		pl 'Set Fontsize for Status: Unsupported'
+		pl '<a href="exec:Enable_Android = 0 & dynamic $cheatmenu[''display'']">Android Mode :ON</a>'
+		!pl 'click <a href="exec:clr & FUNC (''$menu_obnovit'')">refresh</a> to refresh status window.'
+		pl 'click <B>refresh</B> on top of status window to renew.'
+	else
+		pl '<a href="exec:Enable_Android = 1 & dynamic $cheatmenu[''display'']">Android Mode :OFF</a>'
+	end
+	nl	
+	pl '<center><B>Status Window Display</B></center>'
+		if Enable_statfsize<0:Enable_statfsize=0
+		if Enable_statfsize > 0:
+			pl 'Set Fontsize for Status: <a href="exec:Enable_statfsize=input(''Enter Fontsize'') & dynamic $cheatmenu[''display'']"><<Enable_statfsize>></a>, <a href="exec:Enable_statfsize=0 & dynamic $cheatmenu[''display'']">ON</a>'
+		else
+			pl 'Set Fontsize for Status: <a href="exec:Enable_statfsize=input(''Enter fontsize'') & dynamic $cheatmenu[''display'']">OFF</a>'
+		end
+	if ETOmenu = 1:
+		pl' <a href="exec:ETOmenu = 0 & dynamic $cheatmenu[''display'']">Status Display mode: Text</a>'
+	else
+		pl' <a href="exec:ETOmenu = 1 & dynamic $cheatmenu[''display'']">Status Display mode: Scale Bar</a>'
 	end
 	if Enable_showattr = 1:
-		pl' <a href="exec:Enable_showattr = 0 & dynamic $cheatmenu[''display'']">More attribute: ON</a>'
+		pl' <a href="exec:Enable_showattr = 0 & dynamic $cheatmenu[''display'']">Show More attribute: ON</a>'
 	else
-		pl' <a href="exec:Enable_showattr = 1 & dynamic $cheatmenu[''display'']">More attribute: OFF</a>'
+		pl' <a href="exec:Enable_showattr = 1 & dynamic $cheatmenu[''display'']">Show More attribute: OFF</a>'
 	end
 	if Enable_showskill = 1:
 		pl' <a href="exec:Enable_showskill = 0 & dynamic $cheatmenu[''display'']">Show skill: ON</a>'
@@ -1299,41 +1388,8 @@ $cheatmenu['display'] = {
 	else
 		pl' <a href="exec:Enable_showrelation = 1 & dynamic $cheatmenu[''display'']">Show relations: OFF</a>'
 	end
-	nl
-	if Enable_clothwidth<0:Enable_clothwidth=0
-	if Enable_clothwidth > 0:
-		pl'Set Wardrobe cloth image width: <a href="exec:Enable_clothwidth=input(''Input wardrobe cloth image width'') & dynamic $cheatmenu[''display'']"><<Enable_clothwidth>></a>, <a href="exec:Enable_clothwidth=0 & dynamic $cheatmenu[''display'']">ON</a>'
-	else
-		pl'Set Wardrobe cloth image width: <a href="exec:Enable_clothwidth=input(''Input wardrobe cloth image width'') & dynamic $cheatmenu[''display'']">OFF</a>'
-	end
-	if Enable_tablemap = 1:
-		pl' <a href="exec:Enable_tablemap = 0 & dynamic $cheatmenu[''display'']">List friends in table: ON</a>'
-	else
-		pl' <a href="exec:Enable_tablemap = 1 & dynamic $cheatmenu[''display'']">List friends in table: OFF</a>'
-	end
-	if Enable_towntable = 1:
-		pl' <a href="exec:Enable_towntable = 0 & dynamic $cheatmenu[''display'']">Display Pavlovsk description in table: ON</a>'
-	else
-		pl' <a href="exec:Enable_towntable = 1 & dynamic $cheatmenu[''display'']">Display Pavlovsk description in table: OFF</a>'
-	end
-	nl
-	if Enable_statfsize<0:Enable_statfsize=0
-	if Enable_Android = 1:
-		pl 'Set Fontsize for Status: Unsupported'
-		pl '<a href="exec:Enable_Android = 0 & dynamic $cheatmenu[''display'']">Android Mode :ON</a>'
-		pl 'Quest player for Android by Nex does not support autosave, remember to <B>save</B> from player setting!'
-		pl 'click <a href="exec:clr & pl $stat_android">refresh</a> on menu to refresh status.'
-	else
-		if Enable_statfsize > 0:
-			pl 'Set Fontsize for Status: <a href="exec:Enable_statfsize=input(''Enter Fontsize'') & dynamic $cheatmenu[''display'']"><<Enable_statfsize>></a>, <a href="exec:Enable_statfsize=0 & dynamic $cheatmenu[''display'']">ON</a>'
-		else
-			pl 'Set Fontsize for Status: <a href="exec:Enable_statfsize=input(''Enter fontsize'') & dynamic $cheatmenu[''display'']">OFF</a>'
-		end
-		pl '<a href="exec:Enable_Android = 1 & dynamic $cheatmenu[''display'']">Android Mode :OFF</a>'
-	end
-	nl
 	if Enable_scalepic = 1:
-		pl 'Scalebar is now as <b>Character</b>, you can switch to <a href="exec:Enable_scalepic = 0 & dynamic $cheatmenu[''display'']">Image</a> or <a href="exec:Enable_scalepic = 2 & dynamic $cheatmenu[''display'']">Table</a>'
+		pl 'Scalebar is now as <b>Image</b>, you can switch to <a href="exec:Enable_scalepic = 0 & dynamic $cheatmenu[''display'']">Image</a> or <a href="exec:Enable_scalepic = 2 & dynamic $cheatmenu[''display'']">Table</a>'
 		if Enable_scalewidth > 0:
 			pl'Scalebar Width: <a href="exec:input(''Input Scalebar Width (default to 120)'') & dynamic $cheatmenu[''display'']"><<Enable_scalewidth-1>></a>, Set is currently <a href="exec:Enable_scalewidth = 0 & dynamic $cheatmenu[''display'']">ON</a>'
 		else
@@ -1345,7 +1401,7 @@ $cheatmenu['display'] = {
 			pl'Scalebar Height: Lock is currently <a href="exec:Enable_scaleheight=1+input(''InputS calebar Height (default to 15)'') & dynamic $cheatmenu[''display'']">OFF</a>'
 		end
 	elseif Enable_scalepic = 0:
-		pl 'Scalebar is now as <b>Image</b>, you can switch to <a href="exec:Enable_scalepic = 1 & dynamic $cheatmenu[''display'']">Character</a> or <a href="exec:Enable_scalepic = 2 & dynamic $cheatmenu[''display'']">Table</a>'
+		pl 'Scalebar is now as <b>Character</b>, you can switch to <a href="exec:Enable_scalepic = 1 & dynamic $cheatmenu[''display'']">Character</a> or <a href="exec:Enable_scalepic = 2 & dynamic $cheatmenu[''display'']">Table</a>'
 		if cheatStatusBars = 1:
 			pl ' <a href="exec:cheatStatusBars = 0 & dynamic $cheatmenu[''display'']">Switch to larger status bars</a>'
 		else
@@ -1354,9 +1410,6 @@ $cheatmenu['display'] = {
 	elseif Enable_scalepic = 2:
 		pl 'Scalebar is now as <b>Table</b>, you can switch to <a href="exec:Enable_scalepic = 0 & dynamic $cheatmenu[''display'']">Image</a> or <a href="exec:Enable_scalepic = 1 & dynamic $cheatmenu[''display'']">Character</a>'
 	end
-	
-	
-
 }
 
 $cheatmenu['pain'] = {
@@ -1443,31 +1496,57 @@ $cheatmenu['DNA'] = {
 	clr
 	pl '<center><a href="exec:dynamic $cheatmenu"><b>Cheat menu</b></a><br>DNA string generation<br>If parents are not in game, leave the respective IDs empty</center>'
 	nl
-	if $cheatDNAM ! '':pl 'Selected mother: <<$npc_firstname[''<<$cheatDNAM>>'']>> <<$npc_lastname[''<<$cheatDNAM>>'']>> (<<$cheatDNAM>>)<br><<$npc_dna[$cheatDNAM]>>'
-	if $cheatDNAF ! '':pl 'Selected father: <<$npc_firstname[''<<$cheatDNAF>>'']>> <<$npc_lastname[''<<$cheatDNAF>>'']>> (<<$cheatDNAF>>)<br><<$npc_dna[$cheatDNAF]>>'
+	if $cheatDNAC ! '':pl '<b>Selected Child: <<$npc_firstname[''<<$cheatDNAC>>'']>> <<$npc_lastname[''<<$cheatDNAC>>'']>></b> (<<$cheatDNAC>>)<br><<$npc_dna[$cheatDNAC]>>'
+	if $cheatDNAM ! '':pl '<b>Selected mother: <<$npc_firstname[''<<$cheatDNAM>>'']>> <<$npc_lastname[''<<$cheatDNAM>>'']>></b> (<<$cheatDNAM>>)<br><<$npc_dna[$cheatDNAM]>>'
+	if $cheatDNAF ! '':pl '<b>Selected father: <<$npc_firstname[''<<$cheatDNAF>>'']>> <<$npc_lastname[''<<$cheatDNAF>>'']>></b> (<<$cheatDNAF>>)<br><<$npc_dna[$cheatDNAF]>>'
 	nl
 	if $cheatDNAM ! '': pl '<a href="exec:killvar ''cheatDNAM'' & dynamic $cheatmenu[''DNA'']">Remove mother DNA</a>'
 	if $cheatDNAF ! '': pl '<a href="exec:killvar ''cheatDNAF'' & dynamic $cheatmenu[''DNA'']">Remove father DNA</a>'
+	if $cheatDNAC ! '': pl '<a href="exec:killvar ''cheatDNAC'' & dynamic $cheatmenu[''DNA'']">Remove Child DNA</a>'
 	nl
-	pl '<a href="exec:dynamic $cheatmenu[''DNAM'']"><b>ID of mother (if it is known)</b></a>'
-	pl '<a href="exec:dynamic $cheatmenu[''DNAF'']"><b>ID of father (if it is known)</b></a>'
+	pl '<a href="exec:killvar ''tempDNAM'' & dynamic $cheatmenu[''DNAM'']"><b>ID of mother (if it is known)</b></a>'
+	pl '<a href="exec:killvar ''tempDNAF'' & dynamic $cheatmenu[''DNAF'']"><b>ID of father (if it is known)</b></a>'
+	pl '<a href="exec:killvar ''tempDNAC'' & dynamic $cheatmenu[''DNAC'']"><b>ID of Child (if it is known)</b></a>'
 	nl
 	if $cheatDNAM ! '' and $cheatDNAF ! '':
 		$cheatDNAgenerated = func('DNA','generate',$npc_dna[$cheatDNAM],$npc_dna[$cheatDNAF])
 	elseif $cheatDNAM ! '':
-		$tempDNA = func('DNA','create')
-		$cheatDNAgenerated = func('DNA','generate',$npc_dna[$cheatDNAM],$tempDNA)
+		if $cheatDNAC ! '':
+			$tempDNAF = func('DNA','generateF',$npc_dna[$cheatDNAC])
+		else
+			$tempDNAF = func('DNA','create')
+			$cheatDNAgenerated = func('DNA','generate',$npc_dna[$cheatDNAM],$tempDNAF)
+		end
 	elseif $cheatDNAF ! '':
-		$tempDNA = func('DNA','create')
-		$cheatDNAgenerated = func('DNA','generate',$tempDNA,$npc_dna[$cheatDNAF])
+		if $cheatDNAC ! '':
+			$tempDNAM = func('DNA','generateM',$npc_dna[$cheatDNAC])
+		else
+			$tempDNAM = func('DNA','create')
+			$cheatDNAgenerated = func('DNA','generate',$tempDNAM,$npc_dna[$cheatDNAF])
+		end
 	else
-		$cheatDNAgenerated = func('DNA','create')
+		if $cheatDNAC = '': 
+			$tempDNAM = func('DNA','create')
+			$tempDNAF = func('DNA','create')
+			$cheatDNAgenerated = func('DNA','generate',$tempDNAM,$tempDNAF)
+		else
+			$tempDNAM = func('DNA','generateM',$npc_dna[$cheatDNAC])
+			$tempDNAF = func('DNA','generateF',$npc_dna[$cheatDNAC])
+		end
+		
+		
 	end
-	pl 'Generated DNA strand (please copy it, not preserved): <<$cheatDNAgenerated>>'
+	if $cheatDNAM = '':pl '<b>Random mother DNA:</b> <<$tempDNAM>>'
+	if $cheatDNAF = '':pl '<b>Random father DNA:</b> <<$tempDNAF>>'
+	nl
+	pl '<b>Generated DNA strand (please copy it, not preserved):</b> <<$cheatDNAgenerated>>'
 	nl
 	pl '<a href="exec:dynamic $cheatmenu[''DNA'']">Generate again</a>'
+	killvar '$tempDNAF'
+	killvar '$tempDNAM'
+	killvar '$tempDNAC'
 	killvar 'cheatDNAgenerated'
-	killvar 'tempDNA'
+
 }
 
 $cheatmenu['DNAM'] = {
@@ -1481,6 +1560,13 @@ $cheatmenu['DNAF'] = {
    $cheatDNAF = input("Enter genetic father ID (like A34, without apostrophe)")
    if $cheatDNAF = '':exit
    dynamic $cheatDNAF
+   dynamic $cheatmenu['DNA']
+}
+
+$cheatmenu['DNAC'] = {
+   $cheatDNAC = input("Enter genetic Child ID (like A34, without apostrophe)")
+   if $cheatDNAC = '':exit
+   dynamic $cheatDNAC
    dynamic $cheatmenu['DNA']
 }
 
@@ -1507,7 +1593,7 @@ $cheatmenu = {
 	pl'<a href="exec:dynamic $cheatmenu[''reputation'']"><b>Relationships and Reputation</b></a>'
 	pl'<a href="exec:dynamic $cheatmenu[''documents'']"><b>Documents</b></a>'
 	pl'<a href="exec:dynamic $cheatmenu[''time'']"><b>Manipulating time and temperature</b></a>'
-	pl'<a href="exec:dynamic $cheatmenu[''display'']"><b>Status Display</b></a>'
+	pl'<a href="exec:Enable_settingmode = 0 & dynamic $cheatmenu[''display'']"><b>Status Display</b></a>'
 	if MagikDostup = 0: pl'<a href="exec:dynamic $cheatmenu[''magic'']"><b>Magic</b></a>'
 	pl'<a href="exec:gt ''NPCChanger'', ''Start''"><b>NPC Editor</b></a>'
 	pl'<a href="exec:dynamic $cheatmenu[''pain'']"><b>Pain management panel</b></a>'
@@ -1539,7 +1625,7 @@ $cheatmenu = {
 	pl' <a href="exec:music_on = 0 & music_off = 1">Stop current Music</a>'
 	nl
 	pl '<a href="exec:dynamic $cheatmenu[''dynamic'']">Dynamic Input Command</a>'
-	pl'<a href="exec:$cheatloc = $curloc & gs ''cum_arrcheat''">OOX Debug</a>'
+	pl'<a href="exec:gs ''cum_arrcheat''">OOX Debug</a>'
 	pl'Right now <<$week[week]>> <<$month>> <<day>> <<year>> <<hour>>:<<minut>>'
 	pl '<a href="exec:dynamic $cheatmenu[''quicktime''], 15 & dynamic $cheatmenu">+15</a>'
 	pl '<a href="exec:gs''cum_cleanup'',''reset''">Remove all cum</a>'
@@ -1551,23 +1637,10 @@ $cheatmenu = {
    	pl'<a href="exec:gt''dachi''">Teleport to Suburban Cooperative</a>'
 	pl'<b>Warning!</b> Teleporting while in event is likely to break your game!'
     pl''
-	if set_imgh > 0:
-		pl'Set Image height: <a href="exec:set_imgh=1+input(''Enter the height of the images'') & dynamic $cheatmenu"><<set_imgh-1>></a>, <a href="exec:set_imgh=0 & dynamic $cheatmenu">O</a>'
-		$set_imgh = 'height = <<set_imgh>>'
-	else
-		pl'Set Image height: <a href="exec:set_imgh=1+input(''Enter the height of the images'') & dynamic $cheatmenu">X</a>'
-		$set_imgh = ''
-	end
-	pl''
 	pl'Pregnancy speed multiplier: <a href="exec:if pregspeedcheat < 3:pregspeedcheat += 1 & dynamic $cheatmenu else pregspeedcheat = 0 & dynamic $cheatmenu"><b><<pregspeedcheat+1>></b></a>'
 	pl''
 	pl'<a href="exec:dynamic $cheatmenu[''vartracker'']"><b>Variable tracker</b></a>'
 	nl
-	if night_mode = 1:
-		pl 'Night Mode: <a href="exec:night_mode = 0 & dynamic $cheatmenu">ON</a>'
-	else
-		pl 'Night Mode: <a href="exec:night_mode = 1 & dynamic $cheatmenu">OFF</a>'
-	end
 	nl
 }
 

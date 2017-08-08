@@ -124,7 +124,7 @@ if $ARGS[0] = '':
 		end
 	}
 
-	if $clothingworntype = 'nude' and towel = 1 and tanga = 0:
+	if $clothingworntype = 'nude' and towel = 1 and $pantyworntype = 'none':
 		npc_rel['A29'] -= 2
 		''
 		dynamic $mother_clothes[1]
@@ -245,6 +245,15 @@ if $ARGS[0] = '':
 	end
 
 	if hour > 5:
+		if unintendedabort = 1 and pregTalkFamily = 1:
+			pregTalkFamily = 2
+			npc_rel['A29'] += 20
+			'<br>'
+			'Your mother looks at you in shock. "  <<$pcs_nickname>>, Did you get an abortion ?"'
+			'You break down crying and tell your mother you had a miscarriage.'
+			'She takes you in her arms and tries to console you'
+			'"Don''t worry child, everything will be ok"'
+		end
 		if abort = 1 and pregTalkFamily = 1:
 			pregTalkFamily = 2
 			npc_rel['A29'] = 0
@@ -420,7 +429,7 @@ if $ARGS[0] = '':
 								:markbuyclomother
 								loop_counter += 1
 								if loop_counter = 300:
-									After 30 minutes of trying on various outfits you are unable to find any that you either don't already own or that you are willing to wear.'
+									'After 30 minutes of trying on various outfits you are unable to find any that you either don''t already own or that you are willing to wear.'
 								else
 									numrand = rand(1, 413)
 
@@ -678,7 +687,7 @@ if $ARGS[0] = 'pregreact':
 			end
 		elseif knowpreg = 1 and $clothingworntype ! 'nude' and pregtime <= 150:
 			act 'Tell your mother you are pregnant':
-				cls
+				*clr & cla
 				minut += 5
 				npc_rel['A29'] -= 20
 				pregTalkFamily = 1
@@ -698,7 +707,7 @@ if $ARGS[0] = 'pregreact':
 			end
 		elseif knowpreg = 1 and $clothingworntype = 'nude' and pregtime <= 90:
 			act 'Tell your mother you are pregnant':
-				cls
+				*clr & cla
 				minut += 5
 				npc_rel['A29'] -= 20
 				pregTalkFamily = 1
@@ -715,9 +724,8 @@ if $ARGS[0] = 'pregreact':
 
 				'"And go put on some clothes and then come back to talk to me. I need you to tell me who the father is"'
 
-					act 'Go get dressed':pregTalkFamily = 1 & pregTalkMom = 1 & gt 'mother', 'pregreactnude'
-				end
-			end			
+				act 'Go get dressed':pregTalkFamily = 1 & pregTalkMom = 1 & gt 'mother', 'pregreactnude'
+			end
 		end
 	end
 end

@@ -66,6 +66,17 @@ if katjaPreg = 0 and month >= 2:
 	end
 end
 
+!! after having surgery you will be in recuperation for a few days
+
+if daystart - 7 <= surgeryday:
+	dailyhealthimprov = (daystart - surgeryday) * 50
+	pcs_health = dailyhealthimprov
+	recuperation = 1
+else
+	killvar 'recuperation'
+	killvar 'dailyhealthimprov'
+end
+
 !!Street events daily reset
 streetevent_hour = -2
 
@@ -76,6 +87,10 @@ i = 1
 Clothingstock[i] = rand (0,500)
 i += 1
 if i <= 147:jump 'loopprice'
+
+!!underwear rng
+cheap_panty_number = rand(0,37)
+!!cheap_bra_number = rand(0,37)
 
 if coatH[defaultcoat] <= 0: defaultcoat = 0
 
@@ -404,7 +419,6 @@ if tabletkicheck = 1 and tabletkichday < daystart:
 			'You take your birth control pill for the day.'
 			pilldaychk = 1
 			gs 'din_bad','takepill'
-			end
 			if rand(0,7) = 0 and tabletkiday >= (daystart - 1): tabletkipd += 1
 			tabletkiday = daystart
 			tabletkipt = 0
@@ -444,7 +458,21 @@ if cheatNoEat = 1 and dounspell = 1:fat += 15
 !!STD check
 if SifacOnce = 1:Sifilis += 1
 if GerpesOnce = 1:Gerpes += 1
-if TriperOnce = 1:Triper += 1
+if TriperOnce = 1:
+	if Triper > 0: 
+		Triper += 1
+	end
+	if TriperOral > 0:
+		TriperOral += 1
+	end
+	If TriperOral > 14 and TriperNapr = 0:
+		if rand(TriperOral,100) > 80:
+		TriperOral = 0
+		if Triper = 0:TriperOnce = 0
+		TriperOralSigns = 0
+		end
+	end
+end
 if KandidozOnce = 1:Kandidoz += 1
 
 VeneraN = 0
