@@ -216,6 +216,25 @@ if $args[0] = 'wake':
 		minut += 15
 		gs 'bed2', 'end'
 	end
+	if $loc = 'bedrPar' and enfullmorrout = 1:
+	
+		act 'Full morning routine (01:00)':
+			gs 'clothing', 'wear_last_worn'
+			minut += 15
+			fullmorrout = 1
+			gs 'bed2', 'end'
+		end
+		if kanikuli = 0 and StoryLine = 1 and SchoolAtestat = 0 and SchoolBlock = 0 and week < 6 and hour >= 4 and hour < 9:
+			act ' Full morning routine for School (01:00)':
+				fullmorrout = 1
+				if schtype = 0:schtype = 6
+				if schoolH[schtype] = 0:schtype = 6
+				gs 'clothing', 'wear', 'school', schtype
+				minut += 15
+				gs 'bed2', 'end'
+			end
+		end
+	end
 
 	act 'Get out of bed (0:10)':
 		minut += 10
@@ -238,7 +257,11 @@ if $args[0] = 'end':
 	else
 		if bedpanty = 0 and clrbelo > 0:gs 'underwear', 'fresh'
 	end
-	gt $loc, $metka
+	if fullmorrout = 1 and $loc = 'bedrPar':
+		gt 'vanrPar'
+	else
+		gt $loc, $metka
+	end
 end
 
 if $ARGS[0] = 'succhoice':
