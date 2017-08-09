@@ -40,6 +40,7 @@
             this.txtStatus = new System.Windows.Forms.TextBox();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabCheck = new System.Windows.Forms.TabPage();
+            this.btnCancel = new System.Windows.Forms.Button();
             this.btnTry4 = new System.Windows.Forms.Button();
             this.btnReload = new System.Windows.Forms.Button();
             this.tabOptions = new System.Windows.Forms.TabPage();
@@ -69,7 +70,6 @@
             this.edtSuffixCsv = new System.Windows.Forms.TextBox();
             this.edtFile = new System.Windows.Forms.TextBox();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
-            this.btnCancel = new System.Windows.Forms.Button();
             this.tabControl.SuspendLayout();
             this.tabCheck.SuspendLayout();
             this.tabOptions.SuspendLayout();
@@ -201,6 +201,16 @@
             this.tabCheck.TabIndex = 0;
             this.tabCheck.Text = "Analysis";
             this.tabCheck.UseVisualStyleBackColor = true;
+            // 
+            // btnCancel
+            // 
+            this.btnCancel.Location = new System.Drawing.Point(455, 6);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(77, 28);
+            this.btnCancel.TabIndex = 14;
+            this.btnCancel.Text = "Cancel";
+            this.btnCancel.UseVisualStyleBackColor = true;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // btnTry4
             // 
@@ -539,16 +549,6 @@
             this.progressBar1.Size = new System.Drawing.Size(659, 23);
             this.progressBar1.TabIndex = 13;
             // 
-            // btnCancel
-            // 
-            this.btnCancel.Location = new System.Drawing.Point(455, 6);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(77, 28);
-            this.btnCancel.TabIndex = 14;
-            this.btnCancel.Text = "Cancel";
-            this.btnCancel.UseVisualStyleBackColor = true;
-            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -561,7 +561,6 @@
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
-            this.MinimizeBox = false;
             this.Name = "MainForm";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "QSP Code Analyzer";
