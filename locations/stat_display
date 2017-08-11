@@ -72,11 +72,83 @@ end
 
 if pcs_sleep > 100: pcs_sleep = 100
 
-if Enable_statfsize>0:$stat_msg = '<font size=<<Enable_statfsize>>><<$stat_msg>>'
+
+!!----------------image Extra messages, start--------------------------
+$stat_imgtool_msg=''
+$stat_imgextra_msg=''
+	
+if Enable_showstatimg = 1 or Enable_statimg_loc > 0:
+	!There are 3 display mode, with toobar / top / bottom, controlled by Enable_statimg_loc
+	if Enable_statimg_face = 0:
+		$stat_imgtool_msg += '<a href="exec:Enable_statimg_face = 1 & gs ''$menu_obnovit''">◇Face</a>'
+	else
+		$stat_imgtool_msg += '<a href="exec:Enable_statimg_face = 0 & gs ''$menu_obnovit''">◆Face</a>'
+		$img_temp = FUNC('$face_image')
+		if $img_temp ! null:  $stat_imgextra_msg += '<a href="exec:view ''<<$img_temp>>''"><img <<$set_statimgh>> src="<<$img_temp>>"></a> '
+	end
+
+	if Enable_statimg_body = 0:
+		$stat_imgtool_msg += ' <a href="exec:Enable_statimg_body = 1 & gs ''$menu_obnovit''">◇Body</a>'
+	else
+		$stat_imgtool_msg += ' <a href="exec:Enable_statimg_body = 0 & gs ''$menu_obnovit''">◆Body</a>'
+		$img_temp = FUNC('$body_image','body')
+		if $img_temp ! null:  $stat_imgextra_msg += '<a href="exec:view ''<<$img_temp>>''"><img <<$set_statimgh>> src="<<$img_temp>>"></a> '
+	end	
+
+	if Enable_statimg_breast = 0:
+		$stat_imgtool_msg += ' <a href="exec:Enable_statimg_breast = 1 & gs ''$menu_obnovit''">◇Breast</a>'
+	else
+		$stat_imgtool_msg += ' <a href="exec:Enable_statimg_breast = 0 & gs ''$menu_obnovit''">◆Breast</a>'
+		$img_temp = FUNC('$body_image','breast')
+		if $img_temp ! null:  $stat_imgextra_msg += '<a href="exec:view ''<<$img_temp>>''"><img <<$set_statimgh>> src="<<$img_temp>>"></a> '
+	end
+
+	if Enable_statimg_coat = 0:
+		$stat_imgtool_msg += ' <a href="exec:Enable_statimg_coat = 1 & gs ''$menu_obnovit''">◇Coat</a>'
+	else
+		$stat_imgtool_msg += ' <a href="exec:Enable_statimg_coat = 0 & gs ''$menu_obnovit''">◆Coat</a>'
+		$img_temp = FUNC('$body_image','coat')
+		if $img_temp ! null:  $stat_imgextra_msg += '<a href="exec:view ''<<$img_temp>>''"><img <<$set_statimgh>> src="<<$img_temp>>"></a> '
+	end	
+
+	if Enable_statimg_cloth = 0:
+		$stat_imgtool_msg += ' <a href="exec:Enable_statimg_cloth = 1 & gs ''$menu_obnovit''">◇Cloth</a>'
+	else
+		$stat_imgtool_msg += ' <a href="exec:Enable_statimg_cloth = 0 & gs ''$menu_obnovit''">◆Cloth</a>'
+		$img_temp = FUNC('$body_image','clothes')
+		if $img_temp ! null:  $stat_imgextra_msg += '<a href="exec:view ''<<$img_temp>>''"><img <<$set_statimgh>> src="<<$img_temp>>"></a> '
+	end	
+
+	if Enable_statimg_panties = 0:
+		$stat_imgtool_msg += ' <a href="exec:Enable_statimg_panties = 1 & gs ''$menu_obnovit''">◇Panties</a>'
+	else
+		$stat_imgtool_msg += ' <a href="exec:Enable_statimg_panties = 0 & gs ''$menu_obnovit''">◆Panties</a>'
+		$img_temp = FUNC('$body_image','panties')
+		if $img_temp ! null:  $stat_imgextra_msg += '<a href="exec:view ''<<$img_temp>>''"><img <<$set_statimgh>> src="<<$img_temp>>"></a> '
+	end	
+
+	if Enable_statimg_shoes = 0:
+		$stat_imgtool_msg += ' <a href="exec:Enable_statimg_shoes = 1 & gs ''$menu_obnovit''">◇Shoes</a>'
+	else
+		$stat_imgtool_msg += ' <a href="exec:Enable_statimg_shoes = 0 & gs ''$menu_obnovit''">◆Shoes</a>'
+		$img_temp = FUNC('$body_image','shoes')
+		if $img_temp ! null:  $stat_imgextra_msg += '<a href="exec:view ''<<$img_temp>>''"><img <<$set_statimgh>> src="<<$img_temp>>"></a> '
+	end	
+	$stat_imgtool_msg += ' <a href="exec:gs ''Cheatmenu_din'' & Enable_settingmode = 1 & dynamic $cheatmenu[''display'']">◎Setting</a>'
+	
+end
+!!----------------image Extra messages, end --------------------------
+
+if Enable_statimg_loc = 1:
+	$stat_msg = '<<$stat_imgtool_msg>><br><<$stat_imgextra_msg>><br><$stat_msg>'
+end
 
 $stat_android = '<b><<$mid(100+hour,2,2)>>:<<$mid(100+minut,2,2)>></b>'
 
 $stat_msg += '<table><tr><td><a href="exec:msg ''<<$weather>>''"><<$weatherImage>></a></td><td><<$temperature>></td></tr>'
+
+if Enable_statfsize>0:$stat_msg = '<font size=<<Enable_statfsize>>><<$stat_msg>>'
+
 !$stat_msg += '<<$weather>><BR>'
 !pl '<<$weatherImage>>'
 $stat_msg += '<BR><<$stat_android>> <<$week[week]>> <<day>> <<$month>> <<year>>'
@@ -163,11 +235,11 @@ end
 $stat_tool_msg=''
 $stat_extra_msg=''
 if Enable_showattr = 0:
-	$stat_tool_msg += '<a href="exec:Enable_showattr = 1 & FUNC (''$menu_obnovit'')">▽Attributes</a>'
+	$stat_tool_msg += '<a href="exec:Enable_showattr = 1 & gs ''$menu_obnovit''">▽Attributes</a>'
 else
-	$stat_tool_msg += '<a href="exec:Enable_showattr = 0 & FUNC (''$menu_obnovit'')">▲Attributes</a>'
+	$stat_tool_msg += '<a href="exec:Enable_showattr = 0 & gs ''$menu_obnovit''">▲Attributes</a>'
 	!skip if this is first message
-	if $stat_extra_msg ! null: $stat_extra_msg += '<br><a href="exec:Enable_showattr = 0 & FUNC (''$menu_obnovit'')">▲Attributes:</a>'
+	if $stat_extra_msg ! null: $stat_extra_msg += '<br><a href="exec:Enable_showattr = 0 & gs ''$menu_obnovit''">▲Attributes:</a>'
 	if Enable_scalepic = 2:
 		if pcs_dom > 10:
 			$dom_stat_msg = 'dominant'
@@ -237,85 +309,84 @@ end
 killvar '$st_temp'
 
 !!----------------▽Skills--------------------------
-$stat_sktool_msg=''
-st_count=0
-$show_table=''
-!!----------------Mental skills--------------------------
-if Enable_show_mental_skill = 0:
-	$stat_sktool_msg += ' <a href="exec:Enable_show_mental_skill = 1 & FUNC (''$menu_obnovit'')">◇Mental</a>'
-else
-	$stat_sktool_msg += ' <a href="exec:Enable_show_mental_skill = 0 & FUNC (''$menu_obnovit'')">◆Mental</a>'
-	if pcs_splcstng > 0: gs 'show_table', '<<pcs_splcstng>> Spell Casting', '2'
-	if pcs_humint > 0: gs 'show_table', '<<pcs_humint>> People skills', '2'
-	if pcs_persuas > 0: gs 'show_table', '<<pcs_persuas>> Persuasion', '2'
-	if pcs_observ > 0: gs 'show_table', '<<pcs_observ>> Observation', '2'
-end
-
-!!-----------------Sport skills--------------------------
-if Enable_show_sport_skill = 0:
-	$stat_sktool_msg += ' <a href="exec:Enable_show_sport_skill = 1 & FUNC (''$menu_obnovit'')">◇Sport</a>'
-else
-	$stat_sktool_msg += ' <a href="exec:Enable_show_sport_skill = 0 & FUNC (''$menu_obnovit'')">◆Sport</a>'
-	if pcs_jab > 0: gs 'show_table', '<<pcs_jab>> Jabs', '2'
-	if pcs_punch > 0: gs 'show_table', '<<pcs_punch>> Power Strikes', '2'
-	if pcs_kick > 0: gs 'show_table', '<<pcs_kick>> Kicks', '2'
-	if pcs_def > 0: gs 'show_table', '<<pcs_def>> Defence', '2'
-	if pcs_run > 0: gs 'show_table', '<<pcs_run>> Running', '2'
-	if pcs_vball > 0: gs 'show_table', '<<pcs_vball>> Volleyball', '2'
-	if pcs_ftbll > 0: gs 'show_table', '<<pcs_ftbll>> Football', '2'
-	if pcs_wrstlng > 0: gs 'show_table', '<<pcs_wrstlng>> Wrestling', '2'
-	if pcs_shoot > 0: gs 'show_table', '<<pcs_shoot>> Marksmanship', '2'
-	if pcs_chess > 0: gs 'show_table', '<<pcs_chess>> Chess', '2'
-	if pcs_icesktng > 0: gs 'show_table', '<<pcs_icesktng>> Ice Skating', '2'
-	if pcs_ttgmng > 0: gs 'show_table', '<<pcs_ttgmng>> Gaming', '2'
-end
-
-!!-----------------Beauty/Modelling skills---------------
-if Enable_show_beauty_skill = 0:
-	$stat_sktool_msg += ' <a href="exec:Enable_show_beauty_skill = 1 & FUNC (''$menu_obnovit'')">◇Beauty</a>'
-else
-	$stat_sktool_msg += ' <a href="exec:Enable_show_beauty_skill = 0 & FUNC (''$menu_obnovit'')">◆Beauty</a>'
-	if pcs_makupskl > 0: gs 'show_table', '<<pcs_makupskl>> Makeup Skill', '2'
-	if pcs_danc > 0: gs 'show_table', '<<pcs_danc>> Modern Dancing', '2'
-	if pcs_dancero > 0: gs 'show_table', '<<pcs_dancero>> Erotic Dancing', '2'
-	if pcs_dancpol > 0: gs 'show_table', '<<pcs_dancpol>> Pole Dancing', '2'
-	if pcs_mdlng > 0: gs 'show_table', '<<pcs_mdlng>> Modelling', '2'
-end
-
-!!---------------------Artistic skills-------------------
-if Enable_show_art_skill = 0:
-	$stat_sktool_msg += ' <a href="exec:Enable_show_art_skill = 1 & FUNC (''$menu_obnovit'')">◇Artistic</a>'
-else
-	$stat_sktool_msg += ' <a href="exec:Enable_show_art_skill = 0 & FUNC (''$menu_obnovit'')">◆Artistic</a>'
-	if pcs_vokal > 0: gs 'show_table', '<<pcs_vokal>> Singing', '2'
-	if pcs_instrmusic > 0: gs 'show_table', '<<pcs_instrmusic>> Instrumental Music', '2'
-	if pcs_photoskl > 0: gs 'show_table', '<<pcs_photoskl>> Photography', '2'
-	if pcs_artskls > 0: gs 'show_table', '<<pcs_artskls>> Artistic Skills', '2'
-end
-
-!!----------------------Job skills------------------------
-if Enable_show_job_skill = 0:
-	$stat_sktool_msg += ' <a href="exec:Enable_show_job_skill = 1 & FUNC (''$menu_obnovit'')">◇Job</a>'
-else
-	$stat_sktool_msg += ' <a href="exec:Enable_show_job_skill = 0 & FUNC (''$menu_obnovit'')">◆Job</a>'
-	if pcs_compskl > 0: gs 'show_table', '<<pcs_compskl>> Computer Skill', '2'
-	if pcs_comphckng > 0: gs 'show_table', '<<pcs_comphckng>> Hacking', '2'
-	if pcs_hndiwrk > 0: gs 'show_table', '<<pcs_hndiwrk>> Handy-work', '2'
-	if pcs_sewng > 0: gs 'show_table', '<<pcs_sewng>> Tailoring', '2'
-	if pcs_servng > 0: gs 'show_table', '<<pcs_servng>> Serving', '2'
-	if pcs_medcn > 0: gs 'show_table', '<<pcs_medcn>> Medicine', '2'
-	if workPTU > 1: gs 'show_table','<<teachlevel>> Teacher credibility','2'
-end
-
-!!----------------------▲Skills display------------------------
 
 if Enable_showskill = 0:
-	$stat_tool_msg += ' <a href="exec:Enable_showskill = 1 & FUNC (''$menu_obnovit'')">▽Skills</a>'
+	$stat_tool_msg += ' <a href="exec:Enable_showskill = 1 & gs ''$menu_obnovit''">▽Skills</a>'
 else
-	$stat_tool_msg += ' <a href="exec:Enable_showskill = 0 & FUNC (''$menu_obnovit'')">▲Skills</a>'
+	$stat_tool_msg += ' <a href="exec:Enable_showskill = 0 & gs ''$menu_obnovit''">▲Skills</a>'
+	!!----------------------▲Skills display------------------------
+	$stat_sktool_msg=''
+	st_count=0
+	$show_table=''
+	!!----------------Mental skills--------------------------
+	if Enable_show_mental_skill = 0:
+		$stat_sktool_msg += ' <a href="exec:Enable_show_mental_skill = 1 & gs ''$menu_obnovit''">◇Mental</a>'
+	else
+		$stat_sktool_msg += ' <a href="exec:Enable_show_mental_skill = 0 & gs ''$menu_obnovit''">◆Mental</a>'
+		if pcs_splcstng > 0: gs 'show_table', '<<pcs_splcstng>> Spell Casting', '2'
+		if pcs_humint > 0: gs 'show_table', '<<pcs_humint>> People skills', '2'
+		if pcs_persuas > 0: gs 'show_table', '<<pcs_persuas>> Persuasion', '2'
+		if pcs_observ > 0: gs 'show_table', '<<pcs_observ>> Observation', '2'
+	end
+
+	!!-----------------Sport skills--------------------------
+	if Enable_show_sport_skill = 0:
+		$stat_sktool_msg += ' <a href="exec:Enable_show_sport_skill = 1 & gs ''$menu_obnovit''">◇Sport</a>'
+	else
+		$stat_sktool_msg += ' <a href="exec:Enable_show_sport_skill = 0 & gs ''$menu_obnovit''">◆Sport</a>'
+		if pcs_jab > 0: gs 'show_table', '<<pcs_jab>> Jabs', '2'
+		if pcs_punch > 0: gs 'show_table', '<<pcs_punch>> Power Strikes', '2'
+		if pcs_kick > 0: gs 'show_table', '<<pcs_kick>> Kicks', '2'
+		if pcs_def > 0: gs 'show_table', '<<pcs_def>> Defence', '2'
+		if pcs_run > 0: gs 'show_table', '<<pcs_run>> Running', '2'
+		if pcs_vball > 0: gs 'show_table', '<<pcs_vball>> Volleyball', '2'
+		if pcs_ftbll > 0: gs 'show_table', '<<pcs_ftbll>> Football', '2'
+		if pcs_wrstlng > 0: gs 'show_table', '<<pcs_wrstlng>> Wrestling', '2'
+		if pcs_shoot > 0: gs 'show_table', '<<pcs_shoot>> Marksmanship', '2'
+		if pcs_chess > 0: gs 'show_table', '<<pcs_chess>> Chess', '2'
+		if pcs_icesktng > 0: gs 'show_table', '<<pcs_icesktng>> Ice Skating', '2'
+		if pcs_ttgmng > 0: gs 'show_table', '<<pcs_ttgmng>> Gaming', '2'
+	end
+
+	!!-----------------Beauty/Modelling skills---------------
+	if Enable_show_beauty_skill = 0:
+		$stat_sktool_msg += ' <a href="exec:Enable_show_beauty_skill = 1 & gs ''$menu_obnovit''">◇Beauty</a>'
+	else
+		$stat_sktool_msg += ' <a href="exec:Enable_show_beauty_skill = 0 & gs ''$menu_obnovit''">◆Beauty</a>'
+		if pcs_makupskl > 0: gs 'show_table', '<<pcs_makupskl>> Makeup Skill', '2'
+		if pcs_danc > 0: gs 'show_table', '<<pcs_danc>> Modern Dancing', '2'
+		if pcs_dancero > 0: gs 'show_table', '<<pcs_dancero>> Erotic Dancing', '2'
+		if pcs_dancpol > 0: gs 'show_table', '<<pcs_dancpol>> Pole Dancing', '2'
+		if pcs_mdlng > 0: gs 'show_table', '<<pcs_mdlng>> Modelling', '2'
+	end
+
+	!!---------------------Artistic skills-------------------
+	if Enable_show_art_skill = 0:
+		$stat_sktool_msg += ' <a href="exec:Enable_show_art_skill = 1 & gs ''$menu_obnovit''">◇Artistic</a>'
+	else
+		$stat_sktool_msg += ' <a href="exec:Enable_show_art_skill = 0 & gs ''$menu_obnovit''">◆Artistic</a>'
+		if pcs_vokal > 0: gs 'show_table', '<<pcs_vokal>> Singing', '2'
+		if pcs_instrmusic > 0: gs 'show_table', '<<pcs_instrmusic>> Instrumental Music', '2'
+		if pcs_photoskl > 0: gs 'show_table', '<<pcs_photoskl>> Photography', '2'
+		if pcs_artskls > 0: gs 'show_table', '<<pcs_artskls>> Artistic Skills', '2'
+	end
+
+	!!----------------------Job skills------------------------
+	if Enable_show_job_skill = 0:
+		$stat_sktool_msg += ' <a href="exec:Enable_show_job_skill = 1 & gs ''$menu_obnovit''">◇Job</a>'
+	else
+		$stat_sktool_msg += ' <a href="exec:Enable_show_job_skill = 0 & gs ''$menu_obnovit''">◆Job</a>'
+		if pcs_compskl > 0: gs 'show_table', '<<pcs_compskl>> Computer Skill', '2'
+		if pcs_comphckng > 0: gs 'show_table', '<<pcs_comphckng>> Hacking', '2'
+		if pcs_hndiwrk > 0: gs 'show_table', '<<pcs_hndiwrk>> Handy-work', '2'
+		if pcs_sewng > 0: gs 'show_table', '<<pcs_sewng>> Tailoring', '2'
+		if pcs_servng > 0: gs 'show_table', '<<pcs_servng>> Serving', '2'
+		if pcs_medcn > 0: gs 'show_table', '<<pcs_medcn>> Medicine', '2'
+		if workPTU > 1: gs 'show_table','<<teachlevel>> Teacher credibility','2'
+	end	
 	!skip if this is first message
 	if $stat_extra_msg ! null: 
-		$stat_extra_msg += '<br><a href="exec:Enable_showskill = 0 & FUNC (''$menu_obnovit'')">▲Skills:</a> <<$stat_sktool_msg>>'
+		$stat_extra_msg += '<br><a href="exec:Enable_showskill = 0 & gs ''$menu_obnovit''">▲Skills:</a> <<$stat_sktool_msg>>'
 	else
 		$stat_extra_msg += '<br><<$stat_sktool_msg>>'
 	end
@@ -329,9 +400,9 @@ killvar 'stat_skextra_msg'
 
 !!----------------▽relations--------------------------
 if Enable_showrelation = 0:
-	$stat_tool_msg += ' <a href="exec:Enable_showrelation = 1 & FUNC (''$menu_obnovit'')">▽Relations</a>'
+	$stat_tool_msg += ' <a href="exec:Enable_showrelation = 1 & gs ''$menu_obnovit''">▽Relations</a>'
 else
-	$stat_tool_msg += ' <a href="exec:Enable_showrelation = 0 & FUNC (''$menu_obnovit'')">▲Relations</a>'
+	$stat_tool_msg += ' <a href="exec:Enable_showrelation = 0 & gs ''$menu_obnovit''">▲Relations</a>'
 	st_count=0
 	$show_table=''
 	if npc_QW['A192'] > 0:gs'show_table','Nastja: <<npc_QW[''A192'']>>','2'
@@ -342,7 +413,7 @@ else
 	if Tamara > 0:gs'show_table','Tamara: <<Tamara>>','2'
 	if alla > 0:gs'show_table','Alla: <<alla>>','2'
 	if masha > 0:gs'show_table','Masha: <<masha>>','2'
-	if npc_rel['A41'] > 0:gs'show_table','Givi Karapetovich: <<npc_rel[''A41'']>>','2'
+	if Givi > 0:gs'show_table','Givi Karapetovich: <<Givi>>','2'
 	if Ashot > 0:gs'show_table','Ashot: <<Ashot>>','2'
 	if Dmitry > 0:gs'show_table','Dima: <<Dmitry>>','2'
 	if afra > 0:gs'show_table','Blacks: <<afra>>','2'
@@ -365,8 +436,24 @@ else
 	end
 	if st_count > 0 :
 		!skip if this is first message
-		if $stat_extra_msg ! null: $stat_extra_msg += '<BR><a href="exec:Enable_showrelation = 0 & FUNC (''$menu_obnovit'')">▲Relations:</a>'
+		if $stat_extra_msg ! null: $stat_extra_msg += '<BR><a href="exec:Enable_showrelation = 0 & gs ''$menu_obnovit''">▲Relations:</a>'
 		$stat_extra_msg += '<BR><TABLE BORDER=1> <<$show_table>></TR></TABLE>'
+	end
+end
+
+!!----------------▽image, default to toolbar, can move to top or bottom from setting--------------------------
+if Enable_statimg_loc = 0:
+	if Enable_showstatimg = 0:
+		$stat_tool_msg += ' <a href="exec:Enable_showstatimg = 1 & gs ''$menu_obnovit''">▽Image</a>'
+	else
+		$stat_tool_msg += ' <a href="exec:Enable_showstatimg = 0 & gs ''$menu_obnovit''">▲Image</a>'	
+		!skip if this is first message
+		if $stat_extra_msg ! null: 
+			$stat_extra_msg += '<br><a href="exec:Enable_showstatimg = 0 & gs ''$menu_obnovit''">▲Image:</a> <<$stat_imgtool_msg>>'
+		else
+			$stat_extra_msg += '<br><<$stat_imgtool_msg>>'
+		end
+		$stat_extra_msg += '<br><<$stat_imgextra_msg>>'
 	end
 end
 
@@ -377,6 +464,7 @@ $stat_msg += '<br>'
 killvar 'stat_tool_msg'
 killvar 'stat_extra_msg'
 
+
 !!----------------Extra messages, End--------------------------
 
 if BuyHous = 2 and ArendHouseSL <= 0:
@@ -384,18 +472,18 @@ if BuyHous = 2 and ArendHouseSL <= 0:
 	if money >= 6000 or stolmoney >= 6000 or money + stolmoney >= 6000 or karta + bankDebtLimit >= 6000:
 		$stat_msg += ' Renew with '
 		if money >= 6000:
-			$stat_msg += ' <a href="exec:money -= 6000 & housr = 1 & BuyHous = 2 & ArendHouseSL += 30" & FUNC (''$menu_obnovit'')>cash</a>'
+			$stat_msg += ' <a href="exec:money -= 6000 & housr = 1 & BuyHous = 2 & ArendHouseSL += 30" & gs ''$menu_obnovit''>cash</a>'
 		elseif stolmoney >= 6000:
-			$stat_msg += ' <a href="exec:stolmoney -= 6000 & housr = 1 & BuyHous = 2 & ArendHouseSL += 30" & FUNC (''$menu_obnovit'')>cash from drawer</a>'
+			$stat_msg += ' <a href="exec:stolmoney -= 6000 & housr = 1 & BuyHous = 2 & ArendHouseSL += 30" & gs ''$menu_obnovit''>cash from drawer</a>'
 		elseif money + stolmoney >= 6000:
 			!both < 6000, so money = money - 6000 + stolmoney
-			$stat_msg += ' <a href="exec:money -= 6000 - stolmoney & stolmoney = 0 & housr = 1 & BuyHous = 2 & ArendHouseSL += 30" & FUNC (''$menu_obnovit'')>cash from purse and drawer</a>'
+			$stat_msg += ' <a href="exec:money -= 6000 - stolmoney & stolmoney = 0 & housr = 1 & BuyHous = 2 & ArendHouseSL += 30" & gs ''$menu_obnovit''>cash from purse and drawer</a>'
 		end
 		!from purse, drawer or both
 		if karta >= 6000: 
-			$stat_msg += ' <a href="exec:karta -= 6000 & housr = 1 & BuyHous = 2 & ArendHouseSL += 30 & FUNC (''$menu_obnovit'')">bank account</a>'
+			$stat_msg += ' <a href="exec:karta -= 6000 & housr = 1 & BuyHous = 2 & ArendHouseSL += 30 & gs ''$menu_obnovit''">bank account</a>'
 		elseif karta + bankDebtLimit >= 6000: 
-			$stat_msg += ' <a href="exec:karta -= 6000 & housr = 1 & BuyHous = 2 & ArendHouseSL += 30 & FUNC (''$menu_obnovit'')">bank account, but you will be overdrawn.</a>'
+			$stat_msg += ' <a href="exec:karta -= 6000 & housr = 1 & BuyHous = 2 & ArendHouseSL += 30 & gs ''$menu_obnovit''">bank account, but you will be overdrawn.</a>'
 		end	
 	else
 		$stat_msg += ' But you can''t afford to pay the rent.'
@@ -1153,9 +1241,17 @@ if boletus + bilberry > 0:
 	if bilberry > 0:$stat_msg +='berries: <b><<bilberry>></b> kg.'
 end
 
-$stat_msg += '<br><a href="exec:savegame ''quicksave.sav'' && pl''Quicksave Done''">Q.Save</a>  <a href="exec:savegame">Save</a>  <a href="exec:opengame">Load</a>  <a href="exec:if input(''Input Anything to confirm Quick Load'') ! null: opengame ''quicksave.sav''">Q.Load</a>'
+$stat_msg += '<br><br><a href="exec:savegame ''quicksave.sav'' && pl''Quicksave Done''">Q.Save</a>  <a href="exec:savegame">Save</a>  <a href="exec:opengame">Load</a>  <a href="exec:if input(''Input Anything to confirm Quick Load'') ! null: opengame ''quicksave.sav''">Q.Load</a>'
 
 $stat_android +=  ' <a href="exec:savegame ''quicksave.sav'' && pl''Quicksave Done''">Q.S</a>  <a href="exec:if input(''Input Anything to confirm Quick Load'') ! null: opengame ''quicksave.sav''">Q.L</a>'
+
+
+if Enable_statimg_loc = 2:
+	$stat_msg += '<br><<$stat_imgtool_msg>><br><<$stat_imgextra_msg>>'
+end
+
+killvar 'stat_imgtool_msg'
+killvar 'stat_imgextra_msg'
 
 if Enable_statfsize > 0: $stat_msg += '</font>' & !disable this, all texts comes from pl will have the same font size, like[time]
 if Enable_faceturn = 1:	view FUNC('$face_image')
@@ -1163,7 +1259,7 @@ if Enable_Android = 0:
 	pl '<<$stat_msg>>'
 else
 	'<<$stat_android>>'
-	$stat_msg = 'Android mode, <a href="exec:FUNC (''$menu_obnovit'')">Refresh</a><<$stat_msg>>'
+	$stat_msg = 'Android mode, <a href="exec:gs ''$menu_obnovit''">Refresh</a><<$stat_msg>>'
 end
 
 --- stat_display ---------------------------------
