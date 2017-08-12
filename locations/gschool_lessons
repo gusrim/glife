@@ -30,6 +30,17 @@ if $ARGS[0] = 'morning':
 	end
 end
 
+if $ARGS[0] = 'DimaRevenge1':
+	cls
+	pav_sex +=10
+	'<center><b><font color="maroon">Classroom</font></b></center>'
+	'<center><img src="images/characters/pavlovsk/school/boy/dimka/revenge/cantconcentrate.jpg"></center>'
+	'You try paying attention in class, but you find it impossible to concentrate. You can''t stop thinking about what Dimka said this morning. As you try to figure out what he has planned, you swear you keep hearing your name being whispered.'
+	act Continue:
+		gt 'gschool_lessons', ''$ARGS[1]''
+	end
+end
+
 if $ARGS[0] = 'class':
 	if hour = 10:
 		minut += 60
@@ -69,7 +80,6 @@ if $ARGS[0] = 'class':
 
 	if Enable_skipnoevclass > 0 and ($teacher = 'Ilya Yenotin' or RAND(1,100) > Enable_skipnoevclass):
 		gt 'gschool_lunch', 'lesson_end' & !skip class ev if 1.not Anatoly E. or 2. rand < set chance by illume
-
 	elseif rand(1,100) < 3:
 		*clr
 		'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/sleeping.jpg"></center>'
@@ -182,7 +192,7 @@ if $ARGS[0] = 'class':
 					ivrand = RAND (1,4)
 				end
 				if ivrand = 1:
-!!check to make sure I got these images for all these options in the correct place.
+				!!check to make sure I got these images for all these options in the correct place.
 					npc_rel['A26'] += 1
 					if RAND(1,3) = 1:
 					    '<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/blackboard.jpg"></center>'
@@ -249,7 +259,7 @@ if $ARGS[0] = 'class':
 						
 						elseif pcs_dom > 70:
 							'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/bored.jpg"></center>'
-!!This one should add 5 demerits for this or the else below 
+							!!This one should add 5 demerits for this or the else below 
 							'<<$teacher>> tries to convince you of the importance of todays lesson, "<<$pcs_nickname>>, please pay attention, this is very important. Today''s topic is going to be on the exam for sure."'
 							'"Of course, sir. Please continue your super-fascinating lesson. Just keep it a bit up-beat please. If you talk any slower, I might fall asleep!" you answer boldly.'
 							'The whole class bursts into loud laughter, and <<$teacher>> has a rough time getting everyone to quiet down.'
@@ -301,7 +311,7 @@ if $ARGS[0] = 'class':
 		end
 		
 		act'Play with your phone':
-!!make sure the images for all the options will work
+			!!make sure the images for all the options will work
 			*clr & cla
 			pcs_grades -= 1
 			
@@ -310,7 +320,7 @@ if $ARGS[0] = 'class':
 				$school_class_txtrand = 'The lesson is so boring that you have to do something to keep yourself entertained. You take out your phone and begin to play a mobile game, hoping the lesson will be over soon.'
 			
 			elseif RAND(1,2) = 1:
-!!this should result in 5 demerit
+				!!this should result in 5 demerit
 				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/bored.jpg"></center>'
 				$school_class_txtrand = 'Unfortunately, <<$teacher>> notices you''re not listening at all and asks you to put your phone away. You decide not to make things worse and put your phone back in your pocket. The lesson feels like it takes forever to end, and you''re glad when it''s finally over.'
 			
@@ -330,16 +340,15 @@ if $ARGS[0] = 'class':
 			end
 			
 			act 'Wait for the end of the lesson': gt 'gschool_lunch', 'lesson_end'
-		
 		end
-	
 	end
-
 end
 
 if $ARGS[0] = 'afternoon':
-!!added image and text to the next two parts make sure it works please.
-	act 'Go to class':gt 'gschool_lessons', 'afternoon2'
+	!!added image and text to the next two parts make sure it works please.
+	act 'Go to class':
+		gt 'gschool_lessons', 'afternoon2' 
+	end
 	act 'Skip one of your classes':
 		cla
 		*clr
@@ -347,9 +356,13 @@ if $ARGS[0] = 'afternoon':
 		'<center><b><font color="maroon">School Hallway</font></b></center>'
 	    '<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/building/gschool_hall0<<Rand(0,2)>>.jpg"></center>'
 		'You don''t feel like attending all of your classes this afternoon. Surely no one will miss you if you skip one of your three afternoon classes.'
-		act 'Go to girl''s bathroom': gt 'gschool_girls_bathroom', 'start'
-		act 'Go to boy''s bathroom': gt 'gschool_boys_bathroom', 'start'
-!!		act 'Go to old school building': gt
+		act 'Go to girl''s bathroom': 
+			gt 'gschool_girls_bathroom', 'start'
+		end
+		act 'Go to boy''s bathroom': 
+			gt 'gschool_boys_bathroom', 'start'
+		end
+		!!act 'Go to old school building': gt
 	end
 end
 
@@ -370,6 +383,14 @@ if $ARGS[0] = 'afternoon2':
 		school_event_hour = 0
 		'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/gym/fizra.jpg"></center>'
 		'On Wednesdays and Fridays, you have gym class as always. After everyone gets dressed and gets ready for gym class, Viktor Pavlovich conducts a roll call to ensure everyone is there.'
+		if DimaRevenge = 1:
+			DimaRevenge += 1
+			pav_sex +=10
+			'<center><b><font color="maroon">Classroom</font></b></center>'
+			'<center><img src="images/characters/pavlovsk/school/boy/dimka/revenge/cantconcentrate.jpg"></center>'
+			'You try paying attention to Mr Pavlovich, but you find it impossible to concentrate. You can''t stop thinking about what Dimka said this morning. As you try to figure out what he has planned, you swear you keep hearing your name being whispered.'
+		end
+
 		if week = 5 and LocalRun = 0:
 			if schoolSorev = 0:schoolSorev = 1
 
@@ -391,7 +412,7 @@ if $ARGS[0] = 'afternoon2':
 				*clr
 				cla
 				if temper >= 10 and sunWeather = 1:
-!!I changed temper to 10 which is 50F which is plenty warm for running. For weather I would like to change it so as long as it isn''t raining/storming or really bad weather.
+				!!I changed temper to 10 which is 50F which is plenty warm for running. For weather I would like to change it so as long as it isn''t raining/storming or really bad weather.
 					'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/gym/fizra2.jpg"></center>'
 					'Since the weather is nice outside, Mr. Pavlovich decides to stage the run outside, on the forest track on school grounds, near the old school building.'
 					if pcs_horny => 90 and npcSex[3] = 1:
