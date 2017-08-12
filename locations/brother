@@ -45,7 +45,7 @@ if $ARGS[0] = 'start':
 	if hour >= 7 and hour < 21:
 		! WD: Fix old nude variable
 		if (cumloc[1] > 0 or cumloc[4] > 0 or cumloc[8] > 0 or cumloc[9] > 0 or cumloc[10] > 0 or cumloc[14] > 0 or cumloc[15] > 0) and $clothingworntype = 'nude':
-			if tanga = 0 and cumloc[1] = 1:
+			if $pantyworntype = 'none' and cumloc[1] = 1:
 				if brotherknowslut < 1: brotherknowslut = 1
 				'"Go wash yourself, you''ve got something on your pussy."'
 				if brotherSex = 0:
@@ -53,7 +53,7 @@ if $ARGS[0] = 'start':
 					act 'Move away':gt $loc, $metka
 					exit
 				end
-			elseif tanga = 0 and cumloc[4] = 1:
+			elseif $pantyworntype = 'none' and cumloc[4] = 1:
 				if brotherknowslut < 1: brotherknowslut = 1
 				'"Go wash yourself, you''ve got something on your butt."'
 				if brotherSex = 0:
@@ -89,11 +89,11 @@ if $ARGS[0] = 'start':
 		if (cumloc[6] = 1 or cumloc[7] = 1) and $clothingworntype ! 'nude':
 			'"Your clothes are dirty. Wash them, or at least get mum to do it."'
 		end
-		if spanked > 1 and $clothingworntype = 'nude' and tanga = 0:
+		if spanked > 1 and $clothingworntype = 'nude' and $pantyworntype = 'none':
 			'"Got a sore bum? Did someone punish you? You bad girl."'
 		end
 
-		if $clothingworntype = 'nude' and towel = 1 and tanga = 0:
+		if $clothingworntype = 'nude' and towel = 1 and $pantyworntype = 'none':
 			if brotherSex < 1:
 				'Your brother sarcastically comments on the small towel you are wearing:'
 				'<<$pcs_nickname>>, Are you sure that is not a hand towel?'
@@ -101,7 +101,7 @@ if $ARGS[0] = 'start':
 				'Your brother sarcastically comments on the small towel you are wearing:'
 				'Sister, are you wearing that for me?'
 			end
-		elseif $clothingworntype = 'nude' and pcs_pubes > 10 and tanga = 0:
+		elseif $clothingworntype = 'nude' and pcs_pubes > 10 and $pantyworntype = 'none':
 			'"You should have shaved," your brother comments, "it looks like you''re growing a forest."'
 		elseif $clothingworntype = 'nude':
 			if brotherSex >= 1:
@@ -909,7 +909,7 @@ if $ARGS[0] = 'brother_go_away':
 	'You hide your pussy with your hands and shout at your brother:'
 	'"Kolka! What the fuck? Get the fuck out of here, you small fry!'
 	'Caught red-handed, Kolka slams the door and runs away. You finish showering quietly and dry yourself.'
-	act 'Exit the bathroom':mirror_steam = hour & gt $locM, $metkaM
+	act 'Exit the bathroom':mirror_steam = hour & gt $loc, $metka
 end
 
 if $ARGS[0] = 'brother_voyeur_end':
@@ -930,7 +930,7 @@ if $ARGS[0] = 'brother_voyeur_end':
 		'You feel uncomfortable and ashamed, but smile at recalling his wide open eyes, his flushed face and red ears and how they increased the more you decided to tease him.'
 !	else
 !	end
-	act 'Exit the bathroom':mirror_steam = hour & gt $locM, $metkaM
+	act 'Exit the bathroom':mirror_steam = hour & gt $loc, $metka
 end
 
 if $ARGS[0] = 'brother_voyeur_ev1':
@@ -1044,13 +1044,13 @@ if $ARGS[0] = 'brother_sex_end':
 	'<center><img <<$set_imgh>> src="images/characters/pavlovsk/resident/kolka/event/shower/shower.gif"></center>'
 	'You stay under the shower for a while, touching yourself, remembering Kolka inside of you.'
 	if brothersex > 10:
-		'You really enjoyed this little thirst, and in secret you are hoping in a repeat.'
+		'You really enjoyed this little tryst, and in secret you are hoping for a repeat.'
 	elseif brothersex > 0:
-		'You are a little bevilded that you just had sex with your own brother, in the shower, not the least, but you can''t deny that you enjoyed it, maybe more so because it is taboo.'
+		'You are a little bedevilled that you just had sex with your own brother, in the shower, not the least, but you can''t deny that you enjoyed it, maybe more so because it is taboo.'
  	else
-		'You can''t believe that you just had sex with your little brother. You are in a small shock, but also feel a strange glow too, even knowing that this is fundamentally wrong.'
+		'You can''t believe that you just had sex with your little brother. You are a little shocked, but also feel a strange glow, even knowing that this is fundamentally wrong.'
 	end
-	act 'Exit the bathroom':mirror_steam = hour & gt $locM, $metkaM
+	act 'Exit the bathroom':mirror_steam = hour & gt $loc, $metka
 end
 
 if $ARGS[0] = 'brother_voyeur_ev4':
@@ -1587,7 +1587,6 @@ end
 
 !Once pregnancy fetish is added, these will be expanded
 if $ARGS[0] = 'brotherknows6':
-	cla
 	pregTalkbrother = 1
 	*nl
 	if arrpos('$ChildThFath','Kolka') >= 0 and arrpos('$ChildThFath','Kolka') ! arrsize($ChildThFath)-1 and BrotherHappy = 1:
@@ -1660,6 +1659,17 @@ if $ARGS[0] = 'brotherknows6':
 		end
 	elseif arrpos('$ChildThFath','Kolka') >= 0 and arrpos('$ChildThFath','Kolka') ! arrsize($ChildThFath)-1 and BrotherHappy = 1:
 		cla
+		act 'Happy':gt 'brother', 'brotherknows1'
+		act 'Angry':gt 'brother', 'brotherknows2'
+	else
+		cla
+		*pl
+		'If you see this text, report it please as a bug and remember a few variables:'
+		'arrposkolka = <<arrpos(''$ChildThFath'',''Kolka'')>>'
+		'arrsizeChild = <<arrsize($ChildThFath)-1>>'
+		'momKnowsKolka = <<momKnowsKolka>>'
+		'brotherBlackmail = <<brotherBlackmail>>'
+		'BrotherHappy = <<BrotherHappy>>'
 		act 'Happy':gt 'brother', 'brotherknows1'
 		act 'Angry':gt 'brother', 'brotherknows2'
 	end

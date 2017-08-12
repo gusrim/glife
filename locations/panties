@@ -1,0 +1,118 @@
+# panties
+
+!!gs 'panties', 'dispose'
+!!gs 'panties', 'remove'
+!!gs 'panties', 'wear'
+!!gs 'panties', 'linen'
+!!gs 'panties', 'fresh'
+
+if $ARGS[0] = 'dispose':
+	if $pantyworntype = 'cheap':
+		clrbelo -= 1
+	else
+		dynamic $pantyworntype + '_panties[<<ARGS[3]>>] = 0'
+	end
+	$lastwornpantytype = 'none'
+	lastwornpantynumber = 0
+	$pantyworntype = 'none'
+	pantywornnumber = 0
+end
+
+if $ARGS[0] = 'remove':
+	$lastwornpantytype = $pantyworntype
+	lastwornpantynumber = pantywornnumber
+	$pantyworntype = 'none'
+	pantywornnumber = 0
+end
+
+if $ARGS[0] = 'wear':
+	$pantyworntype = $lastwornpantytype
+	pantywornnumber = lastwornpantynumber
+end
+
+if $ARGS[0] = 'linen':
+	$lastwornpantytype = $pantyworntype
+	lastwornpantynumber = pantywornnumber
+	$pantyworntype = 'none'
+	pantywornnumber = 0
+	dirtbelo += 1
+end
+
+if $ARGS[0] = 'fresh':
+	if $ARGS[1] = '':
+		$pantyworntype = 'cheap'
+		pantywornnumber = rand(0,37)
+		clrbelo -= 1
+	else
+		$pantyworntype = $ARGS[1]
+		pantywornnumber = ARGS[0]
+	end
+end
+
+if $ARGS[0] = 'wear_options':
+	if cheap_panties > 0 and $pantyworntype ! 'cheap':*P dyneval($panty_list_line, $ARGS[1], 'cheap', cheap_panty_number)
+end
+
+if $ARGS[0] = 'view_panty_list':
+	!! ARGS 0 - view_panty_list
+	!! ARGS 1 - action type (clean, dirty, store)
+	$metka_panties = $args[1]
+
+	act 'Leave':gt $loc, $metka
+
+	'<center><table border=1><TH><a href="exec:gt ''panties'', ''view_panty_list'', ''clean''">Clean</a></TH><TH><a href="exec:gt ''panties'', ''view_panty_list'', ''dirty''">Dirty</a></TH><TH><a href="exec:gt ''panties'', ''view_panty_list'', ''store''">Storage</a></TH></center>'
+
+	if $pantyworntype ! 'none':act 'Remove panties':gs 'panties', 'strip' & gt 'view_panty_list', $metka_panties
+	
+	if $ARGS[1] = 'store':
+		cloc = 1
+	end
+	
+	if $ARGS[1] = 'unwanted':
+		cloc = 2
+	end
+
+	i = 1
+	:loopboutiquepanties 
+	if ($metka_panties = 'clean' and boutique_pantiesC[i] = 0) or ($metka_panties = 'dirty' and boutique_pantiesC[i] = 1) or $metka_panties = 'store':
+		if boutique_panties[i] = 1 and boutique_pantiesS[i] = cloc:*p '<a href="exec:gt ''panties'', ''fresh'', ''boutique'', <<i>>"><img src="images/pc/panties/boutique/<<i>>.jpg" 	height="300" /></a>'
+	end
+	i += 1
+	if i <= ARRSIZE('boutique_panties'):jump 'loopboutiquepanties'
+
+	i = 1
+	:loopexhibitionistpanties 
+	if ($metka_panties = 'clean' and exhibitionist_pantiesC[i] = 0) or ($metka_panties = 'dirty' and exhibitionist_pantiesC[i] = 1) or $metka_panties = 'store':
+		if exhibitionist_panties[i] = 1 and exhibitionist_pantiesS[i] = cloc:*p '<a href="exec:gt ''panties'', ''fresh'', ''exhibitionist'', <<i>>"><img src="images/pc/panties/exhibitionist/<<i>>.jpg" 	height="300" /></a>'
+	end
+	i += 1
+	if i <= ARRSIZE('exhibitionist_panties'):jump 'loopexhibitionistpanties'
+
+	i = 1
+	:loopfashionistapanties 
+	if ($metka_panties = 'clean' and fashionista_pantiesC[i] = 0) or ($metka_panties = 'dirty' and fashionista_pantiesC[i] = 1) or $metka_panties = 'store':
+		if fashionista_panties[i] = 1 and fashionista_pantiesS[i] = cloc:*p '<a href="exec:gt ''panties'', ''fresh'', ''fashionista'', <<i>>"><img src="images/pc/panties/fashionista/<<i>>.jpg" 	height="300" /></a>'
+	end
+	i += 1
+	if i <= ARRSIZE('fashionista_panties'):jump 'loopfashionistapanties'
+
+	i = 1
+	:loopkatspanties 
+	if ($metka_panties = 'clean' and kats_pantiesC[i] = 0) or ($metka_panties = 'dirty' and kats_pantiesC[i] = 1) or $metka_panties = 'store':
+		if kats_panties[i] = 1 and kats_pantiesS[i] = cloc:*p '<a href="exec:gt ''panties'', ''fresh'', ''kats'', <<i>>"><img src="images/pc/panties/kats/<<i>>.jpg" 	height="300" /></a>'
+	end
+	i += 1
+	if i <= ARRSIZE('kats_panties'):jump 'loopkatspanties'
+
+	i = 1
+	:loopsexshoppanties 
+	if ($metka_panties = 'clean' and sexshop_pantiesC[i] = 0) or ($metka_panties = 'dirty' and sexshop_pantiesC[i] = 1) or $metka_panties = 'store':
+		if sexshop_panties[i] = 1 and sexshop_pantiesS[i] = cloc:*p '<a href="exec:gt ''panties'', ''fresh'', ''sexshop'', <<i>>"><img src="images/pc/panties/sexshop/<<i>>.jpg" 	height="300" /></a>'
+	end
+	i += 1
+	if i <= ARRSIZE('sexshop_panties'):jump 'loopsexshoppanties'
+end
+
+
+--- panties ---------------------------------
+

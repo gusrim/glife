@@ -58,40 +58,56 @@ if $ARGS[0] = 'start':
 		bcolor = rgb(255, 255, 255)
 		lcolor = rgb(106, 90, 205)
 	end
-	''
+	*nl
 
-	if money >= 500 and pcs_hairlng > 15:'<a href="exec:gt ''barbershop'', ''cuthair''">Cut your hair - 500 <b>₽</b></a>'
-	if money < 500 and pcs_hairlng <= 15:'You don''t have enough money to get your hair cut. It costs 500 <b>₽</b> and you only have <<money>>.'
+	if pcs_hairlng <= 15:
+		'Your hair is not long enough to require cutting.'
+	else
+		'<a href=' + iif(money >= 500, '"exec:gt ''barbershop'', ''cuthair''"', '') + '>Cut your hair - 500 <b>₽</b></a>'
+	end
 
-	''
+	*nl
 
-	if money >= 300 and pcs_hairlng > 80:'<a href="exec:gt ''barbershop'', ''perm''">Curl your hair - 300 <b>₽</b></a>'
-	if money < 300:'You cannot afford to get your hair curled. It costs 300 <b>₽</b>, which you do not have at the moment.'
-	if pcs_hairlng <= 80:'Your hair is not long enough to be curled.'
+	if pcs_hairlng <= 80:
+		'Your hair is not long enough to be curled.'
+	else
+		'<a href=' + iif(money >= 300, '"exec:gt ''barbershop'', ''perm''"','') + '>Curl your hair - 300 <b>₽</b></a>'
+	end
 	
-	''
+	*nl
 
-	if money >= 300 and pcs_hairlng > 80:'<a href="exec:gt ''barbershop'', ''perm2''">Straighten your hair - 300 <b>₽</b></a>'
-	if money < 300:'You cannot afford to get your hair straightened. It costs 300 <b>₽</b>, which you do not have at the moment.'
-	if pcs_hairlng <= 80:'Your hair is not long enough to be straightened.'
+	if pcs_hairlng <= 80:
+		'Your hair is not long enough to be straightened.'
+	else
+		'<a href=' + iif(money >= 300, '"exec:gt ''barbershop'', ''perm2''"', '') + '>Straighten your hair - 300 <b>₽</b></a>'
+	end
 	
-	''
+	*nl
 
-	if money >= 750:'<a href="exec:gt ''barbershop'', ''dyehair''">Dye your hair - 750 <b>₽</b></a>'
-	if money < 750:'You cannot afford to dye your hair, as you are short the 750 <b>₽</b> required.'
+	'<a href=' + iif(money >= 750, '"exec:gt ''barbershop'', ''dyehair''"', '') + '>Dye your hair - 750 <b>₽</b></a>'
 
-	''
+	*nl
+
+	if dyefade > 0 and dyefade < 7:
+		'<a href=' + iif(money >= 375, '"exec:gt ''barbershop'', ''touchup''"', '') + '>Touch up hair color - 375 <b>₽</b></a>'
+		*nl
+	elseif dyefade = 0:
+		'<a href=' + iif(money >= 750, '"exec:gt ''barbershop'', ''touchup2''"', '') + '>Re-dye your existing hair color - 750 <b>₽</b></a>'
+		*nl
+	end
+	
+	*nl
 
 	if hour =< 8 or hour >= 20:
 		cls
 		'The barber shop is closed at the moment, you should probably come back, when Mr. Syomin is in'
 
-		act 'Leave':minut += 2 & gt 'pavCommercial'
+		act 'Leave':minut += 3 & gt 'pavCommercial'
 
 		exit
 	end
 
-	act 'Leave':minut += 2 & gt 'pavCommercial'
+	act 'Leave':minut += 3 & gt 'pavCommercial'
 end
 
 if money >= 60:
@@ -1167,6 +1183,44 @@ if $ARGS[0] = 'dyehair':
 			end
 		end
 	end
+end
+
+if $ARGS[0] = 'touchup':
+	cla
+	*clr
+	minut += 45
+	dyefade = rand(35,42)
+	collength = pcs_hairlng
+	money -= 375
+	gs 'stat'
+	'The hairdresser nods her head excitedly and leads you to an empty chair.'
+	'She has a bubbly personality, chatting about this and that without pause or much feedback from you, but you don''t mind as it keeps you distracted while you go through the usual wash and dry routine.'
+	'She flits around your head with her tools, and before you know it, your hair is restored to its earlier luster and color.'
+	'You stand up from the chair and pay her 375 <b>₽</b>.'
+
+	act 'Move away':gt 'hairsalon', 'start'
+end
+
+if $ARGS[0] = 'touchup2':
+	cla
+	*clr
+	'The hairdresser smiles apologetically, "Sorry, but you''re going to need a completely new dye job to cover that up. I can do it, if you want? It''s only 1000 <b>₽</b>."'
+	act 'Sure':
+		cla
+		*clr
+		minut += 45
+		dyefade = rand(35,42)
+		collength = pcs_hairlng
+		money -= 750
+		gs 'stat'
+		'About an hour later, everything should be dried up.'
+		'The hairdresser removes the dryer hood. "And we''re all done."'
+		'You stand up from the chair and pay her 750 <b>₽</b>.'
+
+		act 'Move away':gt 'hairsalon', 'start'
+	end
+
+	act 'No thanks':gt 'hairsalon', 'start'
 end
 
 !!! Maruda Hair Mod

@@ -2,12 +2,11 @@
 
 if $ARGS[0] = 'start':
 
-	$metka = $ARGS[0]
-	$loc = $CURLOC
+	$metka = 'start'
+	$loc = 'zaprF'
+	$location_type = 'public_outdoors'
 	cla
-	clr
 	*clr
-	minut += 5
 	gs 'stat'
 	'<center><b>Gas Station</b></center>'
 	'<center><img <<$set_imgh>> src="images/locations/shared/gas/zapr.jpg"></center>'
@@ -68,16 +67,16 @@ if $ARGS[0] = 'start':
 		end
 	end
 
-
-
 	act 'Leave':
 		if cardrive = 6:
 			gt 'nord'
 		elseif cardrive = 21:
+			minut += 5
 			gt 'pavCommercial'
 		elseif litltown = 0:
 			gt 'nord'
 		elseif litltown = 1:
+			minut += 5
 			gt 'pavCommercial'
 		end
 	end
@@ -85,29 +84,31 @@ end
 
 if $ARGS[0] = 'toilet':
 	CLOSE ALL
+	if night_mode = 1:
+		fcolor = rgb(255, 255, 255)
+		bcolor = rgb(0, 0, 0)
+		lcolor = rgb(106, 90, 205)
+	else
+		fcolor = rgb(0, 0, 0)
+		bcolor = rgb(255, 255, 255)
+		lcolor = rgb(106, 90, 205)
+	end
 	cla
 	*clr
-	$locM = 'zaprF'
 	$metka = 'toilet'
-	$metkaM = 'toilet'
 	$loc = 'zaprF'
 	$location_type = 'bathroom'
-	$gt1 = 'zaprF'
-	$gt2 = 'toilet'
+	$locM = 'zaprF'
+	$metkaM = 'toilet'
 	minut += 2
+	gs 'stat'
 
 	'<center><h4>Gas station toilet</h4></center>'
 	'<center><img <<$set_imgh>> src="images/locations/shared/bathroom/toilet.jpg"></center>'
 	'You are in a dirty gas station toilet. At least it provides some privacy.'
 
-	act 'Look in the mirror':
-		cla
-		gt 'portmirror', 'start'
-	end
-
-	if pcs_hairbsh = 0:
-		act 'Brush your hair': gt 'portmirror', 'brush'
-	end
+	act 'Look in the mirror': gt 'mirror', 'start'
+	if pcs_hairbsh = 0: act 'Brush your hair': gt 'mirror', 'brush'
 
 	if (cumloc[6] = 1 or cumloc[7] = 1):
 		act 'Wipe the cum off your clothes (0:10)':

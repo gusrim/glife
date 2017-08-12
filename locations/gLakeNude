@@ -52,6 +52,7 @@ if $clothingworntype = 'swimwear' or $clothingworntype = 'nude':
 		*clr
 		minut+=5
 		gs 'clothing', 'wear_last_worn'
+		gs 'underwear', 'wear'
 		'<center><img <<$set_imgh>> src="images/locations/pavlovsk/lake/secluded_beach/dress/dress_nudebeach.jpg"></center>'
 		'You put your clothes back on.'
 		act'Continue':gt'gLakeNude'
@@ -83,37 +84,29 @@ end
 if temper >= 15 and month >= 5 and month <= 9:
 	if $clothingworntype ! 'nude':
 		act'Take off your clothes':
-			if pcs_exhibition > 30 and pcs_horny >= 80:
+			if pcs_exhibition > 30:
 				cla
 				*clr
 				minut+=5
 				gs 'clothing', 'strip'
-				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/lake/secluded_beach/self/wetpussypants3.jpg"></center>'
-				'You strip off. A couple of passing men do a double-take and pause a moment to look at your sopping wet panties, probably thinking about what is making you so excited.  You don''t care about what they might say or think of you.'
-				act'Continue':gt'gLakeNude'
-			elseif pcs_exhibition >= 40:
-				cla
-				*clr
-				minut+=5
-				gs 'clothing', 'strip'
-				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/lake/secluded_beach/dress/undressnudebeach.jpg"></center>'
-				'Not caring if anyone is looking at you, you slowly take off your clothes.  You peel off each item like a stripper.  You feel so naughty.  Soon, you completely naked.'
-				act'Continue':gt'gLakeNude'
-			elseif pcs_exhibition > 30:
-				cla
-				*clr
-				minut+=5
-				gs 'clothing', 'strip'
-				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/lake/secluded_beach/dress/undressnudebeach.jpg"></center>'
-				'You quickly check to see if anyone is watching, and when you''re satisfied no one is paying you undue attention, you take off your clothes. You''re naked now.'
-				act'Continue':gt'gLakeNude'	
+				gs 'underwear', 'remove'
+				if pcs_horny >= 80:
+					'<center><img <<$set_imgh>> src="images/locations/pavlovsk/lake/secluded_beach/self/wetpussypants3.jpg"></center>'
+					'You strip off. A couple of passing men do a double-take and pause a moment to look at your sopping wet panties, probably thinking about what is making you so excited.  You don''t care about what they might say or think of you.'
+				elseif pcs_exhibition >= 40:
+					'<center><img <<$set_imgh>> src="images/locations/pavlovsk/lake/secluded_beach/dress/undressnudebeach.jpg"></center>'
+					'Not caring if anyone is looking at you, you slowly take off your clothes.  You peel off each item like a stripper.  You feel so naughty.  Soon, you completely naked.'
+				elseif pcs_exhibition > 30:
+					'<center><img <<$set_imgh>> src="images/locations/pavlovsk/lake/secluded_beach/dress/undressnudebeach.jpg"></center>'
+					'You quickly check to see if anyone is watching, and when you''re satisfied no one is paying you undue attention, you take off your clothes. You''re naked now.'
+				end
 			else
 				cla
 				*clr
 				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/lake/secluded_beach/self/shyness.jpg"></center>'
 				'Even though no one is around, you don''t feel confident enough to actually take your clothes off. What if someone would see you nude?'
-				act'Continue':gt'gLakeNude'
 			end
+			act'Continue':gt'gLakeNude'
 		end
 	end
 	if hour >= 6 and hour <= 20:
@@ -152,7 +145,7 @@ if temper >= 15 and month >= 5 and month <= 9:
 				minut = minut + 60
 				if pcs_sweat < 35 : pcs_sweat += 5
 				pcs_mood += 5
-				if bikini = 1:
+				if $clothingworntype = 'swimwear':
 					'<center><img <<$set_imgh>> src="images/locations/shared/lake/zagar.jpg"></center>'
 				else
 					'<center><img <<$set_imgh>> src="images/locations/city/residential/lake/nudezagarat.jpg"></center>'
@@ -244,8 +237,8 @@ if temper >= 15 and month >= 5 and month <= 9:
 			act'Hide in the woods near the beach': gt'gLakeNudeForest'
 		end
 	end
-	if $clothingworntype ! 'nude' or ($clothingworntype = 'nude' and pcs_exhibition > 40):
-		act'Leave the secluded beach without changing':
+	act'Leave the secluded beach without changing':
+		if $clothingworntype ! 'nude' or ($clothingworntype = 'nude' and pcs_exhibition > 40):
 			cla
 			minut += 10
 			gt'glake'

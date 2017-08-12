@@ -422,7 +422,7 @@ if $ARGS[0] = 'cyc2':
 				end
 				hairkid[nextbaby] = rand(0, 3)
 				eyeskid[nextbaby] = rand(0, 3)
-				ChildConType = cumarrcon[nextbaby]
+				ChildConType[nextbaby] = cumarrcon[nextbaby]
 				if fertegg > 1:
 					$childtype[nextbaby] = 'paternal twin'
 					$childtype[nextbaby-1] = 'paternal twin'
@@ -591,24 +591,25 @@ if $ARGS[0] = 'cyc3':
 			killvar '$cumfthname'
 			killvar '$cumfthusedname'
 			killvar 'cumtime'
-			temprand = rand(0,10)
-			if pillcon < 30000 or temprand = 0:
-				cycle = 0
-				killvar 'abortionbirthdate'
-				if cyccustom = 1: daylastperiod = daystart
-				temprand = rand(0,10)
-				if temprand = 0:
-					mesec = 120
-				elseif temprand < 9:
-					mesec = 96
-				else
-					mesec = 72
-				end
-			else
+			if pillcon >= 30000 or rand(1,24) = 1:
 				FocH = 0
 				EggRH = 0
 				cycle = 1
 				mesec = 0
+			else
+				cycle = 0
+				killvar 'abortionbirthdate'
+				if cyccustom = 1: daylastperiod = daystart
+				temprand = rand(0,10)
+				if temprand = 0 and pillcon < 10000:
+					mesec = 120
+				elseif temprand < 9 and pillcon < 15000:
+					mesec = 96
+				elseif pillcon < 20000:
+					mesec = 72
+			else
+					mesec = 48
+				end
 			end
 		end
 	else

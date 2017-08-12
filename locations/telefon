@@ -1,24 +1,9 @@
 # telefon
 
-$telotkaz = {
-	cla
-	minut += 10
-	'<<$telsob>>, "Sorry I''m busy, maybe next time."'
-
-	act 'Hangup':gt 'telefon', 'fin'
-}
-
-$telotkazboy = {
-	cla
-	minut += 10
-	'<<$loverdesc[lover_number]>>, "Sorry, I''m busy right now, maybe next time."'
-
-	act 'Hangup':gt 'telefon', 'fin'
-}
 
 if $ARGS[0] = 'start':
 	gs 'stat'
-	dynamic $phone_call_receive
+	gs 'telefon','phone_call_receive'
 
 	if npc_QW['A192'] = 1 and week = 6 and pcs_apprnc > 80:
 		gt 'nastja', 'pos4'
@@ -32,7 +17,7 @@ if $ARGS[0] = 'start':
 		gt 'nastja', 'pos31'
 	else
 		$callerid = 'icon_nastja'
-		dynamic $phone_call_reject
+		gs 'telefon','phone_call_reject'
 	end
 end
 
@@ -41,8 +26,8 @@ if $ARGS[0] = 'mobilaraz':
 	cla
 	gs'din_bad'
 	$caller = '<<$telsob>>'
-	dynamic $phone_balance
-	dynamic $phone_call_receive
+	gs 'telefon','phone_balance'
+	gs 'telefon','phone_call_receive'
 	telotvet = rand(0, 10)
 	'"Yes, I''m listening," says a voice from the speaker.'
 
@@ -56,7 +41,7 @@ if $ARGS[0] = 'mobilaraz':
 
 				act 'Go':gt 'parksvid'
 			elseif telotvet <= 3:
-				dynamic $telotkaz
+				gs 'telefon','telotkaz'
 			end
 		end
 	end
@@ -69,7 +54,7 @@ if $ARGS[0] = 'mobilaraz':
 			'<<$telsob>>, "See you at the movie theater in an hour."'
 			act 'Go':gt 'kinosvid'
 		elseif telotvet <= 3:
-			dynamic $telotkaz
+			gs 'telefon','telotkaz'
 		end
 	end
 
@@ -82,7 +67,7 @@ if $ARGS[0] = 'mobilaraz':
 
 			act 'Go':gt 'billsvid'
 		elseif telotvet <= 3:
-			dynamic $telotkaz
+			gs 'telefon','telotkaz'
 		end
 	end
 
@@ -95,7 +80,7 @@ if $ARGS[0] = 'mobilaraz':
 
 			act 'Go':gt 'kafesvid'
 		elseif telotvet <= 3:
-			dynamic $telotkaz
+			gs 'telefon','telotkaz'
 		end
 	end
 
@@ -108,7 +93,7 @@ if $ARGS[0] = 'mobilaraz':
 
 			act 'Go':gt 'kazinosvid'
 		elseif telotvet <= 3:
-			dynamic $telotkaz
+			gs 'telefon','telotkaz'
 		end
 	end
 
@@ -121,8 +106,8 @@ if $ARGS[0] = 'mobilarazboyA':
 	gs'din_bad'
 	$caller = '<<$loverdesc[1]>>'
 	$callerid = 'images/characters/shared/'+boypicA+'.jpg'
-	dynamic $phone_balance
-	dynamic $phone_call_receive
+	gs 'telefon','phone_balance'
+	gs 'telefon','phone_call_receive'
 	telotvet = rand(0, 10)
 	'"Yes, I''m listening," says a voice from the speaker.'
 
@@ -136,7 +121,7 @@ if $ARGS[0] = 'mobilarazboyA':
 
 				act 'Go':gt 'svidboy', 'parksvid'
 			elseif telotvet <= 3:
-				dynamic $telotkazboy
+				gs 'telefon','telotkazboy'
 			end
 		end
 	end
@@ -150,7 +135,7 @@ if $ARGS[0] = 'mobilarazboyA':
 
 			act 'Go':gt 'svidboy', 'kinosvid'
 		elseif telotvet <= 3:
-			dynamic $telotkaz
+			gs 'telefon','telotkaz'
 		end
 	end
 
@@ -163,7 +148,7 @@ if $ARGS[0] = 'mobilarazboyA':
 
 			act 'Go':gt 'svidboy', 'billsvid'
 		elseif telotvet <= 3:
-			dynamic $telotkazboy
+			gs 'telefon','telotkazboy'
 		end
 	end
 
@@ -176,8 +161,15 @@ if $ARGS[0] = 'mobilarazboyA':
 
 			act 'Go':gt 'svidboy', 'kafesvid'
 		elseif telotvet <= 3:
-			dynamic $telotkazboy
+			gs 'telefon','telotkazboy'
 		end
+	end
+	
+	act 'I think we should break up...':
+		cla 
+		'He sounds hurt, but you insist it is for the best. You both say goodbye and part ways.'
+		pcs_lovers[1] = 0
+		pcs_lover -= 1
 	end
 
 	act 'Hangup':gt 'telefon', 'fin'
@@ -188,8 +180,8 @@ if $ARGS[0] = 'mobilarazboyB':
 	gs'din_bad'
 	$caller = '<<$loverdesc[2]>>'
 	$callerid = 'images/characters/shared/'+boypicB+'.jpg'
-	dynamic $phone_balance
-	dynamic $phone_call_receive
+	gs 'telefon','phone_balance'
+	gs 'telefon','phone_call_receive'
 	telotvet = rand(0, 10)
 	'"Yes, I''m listening," says a voice from the speaker.'
 
@@ -203,7 +195,7 @@ if $ARGS[0] = 'mobilarazboyB':
 
 				act 'Go':gt 'svidboy', 'parksvid'
 			elseif telotvet <= 3:
-				dynamic $telotkazboy
+				gs 'telefon','telotkazboy'
 			end
 		end
 	end
@@ -217,7 +209,7 @@ if $ARGS[0] = 'mobilarazboyB':
 
 			act 'Go':gt 'svidboy', 'kinosvid'
 		elseif telotvet <= 3:
-			dynamic $telotkaz
+			gs 'telefon','telotkaz'
 		end
 	end
 
@@ -230,7 +222,7 @@ if $ARGS[0] = 'mobilarazboyB':
 
 			act 'Go':gt 'svidboy', 'billsvid'
 		elseif telotvet <= 3:
-			dynamic $telotkazboy
+			gs 'telefon','telotkazboy'
 		end
 	end
 
@@ -243,8 +235,15 @@ if $ARGS[0] = 'mobilarazboyB':
 
 			act 'Go':gt 'svidboy', 'kafesvid'
 		elseif telotvet <= 3:
-			dynamic $telotkazboy
+			gs 'telefon','telotkazboy'
 		end
+	end
+	
+	act 'I think we should break up...':
+		cla 
+		'He sounds hurt, but you insist it is for the best. You both say goodbye and part ways.'
+		pcs_lovers[2] = 0
+		pcs_lover -= 1
 	end
 
 	act 'Hangup':gt 'telefon', 'fin'
@@ -255,8 +254,8 @@ if $ARGS[0] = 'mobilarazboyC':
 	gs'din_bad'
 	$caller = '<<$loverdesc[3]>>'
 	$callerid = 'images/characters/shared/'+boypicC+'.jpg'
-	dynamic $phone_balance
-	dynamic $phone_call_receive
+	gs 'telefon','phone_balance'
+	gs 'telefon','phone_call_receive'
 	telotvet = rand(0, 10)
 	'"Yes, I''m listening," says a voice from the speaker.'
 
@@ -270,7 +269,7 @@ if $ARGS[0] = 'mobilarazboyC':
 
 				act 'Go':gt 'svidboy', 'parksvid'
 			elseif telotvet <= 3:
-				dynamic $telotkazboy
+				gs 'telefon','telotkazboy'
 			end
 		end
 	end
@@ -284,7 +283,7 @@ if $ARGS[0] = 'mobilarazboyC':
 
 			act 'Go':gt 'svidboy', 'kinosvid'
 		elseif telotvet <= 3:
-			dynamic $telotkaz
+			gs 'telefon','telotkaz'
 		end
 	end
 
@@ -297,7 +296,7 @@ if $ARGS[0] = 'mobilarazboyC':
 
 			act 'Go':gt 'svidboy', 'billsvid'
 		elseif telotvet <= 3:
-			dynamic $telotkazboy
+			gs 'telefon','telotkazboy'
 		end
 	end
 
@@ -310,8 +309,15 @@ if $ARGS[0] = 'mobilarazboyC':
 
 			act 'Go':gt 'svidboy', 'kafesvid'
 		elseif telotvet <= 3:
-			dynamic $telotkazboy
+			gs 'telefon','telotkazboy'
 		end
+	end
+	
+	act 'I think we should break up...':
+		cla 
+		'He sounds hurt, but you insist it is for the best. You both say goodbye and part ways.'
+		pcs_lovers[2] = 0
+		pcs_lover -= 1
 	end
 
 	act 'Hangup':gt 'telefon', 'fin'
@@ -324,7 +330,7 @@ if $ARGS[0] = 'boyA':
 	ringA = 0
 	loverday[1] = daystart
 	gs 'stat'
-	dynamic $phone_call_receive
+	gs 'telefon','phone_call_receive'
 	svetrand = rand(0, 5)
 
 	if svetrand = 0:$sveta = 'cutie'
@@ -369,7 +375,7 @@ if $ARGS[0] = 'boyA':
 								cla
 								meetdayA = daystart
 
-								meethourA = input ("When do you want to be picked up? It is now <<hour>>:<<minut>>.")
+								meethourA = input ("When do you want to be picked up? It is now <<$mid(100+hour,2,2)>>:<<$mid(100+minut,2,2)>>.")
 
 								if meethourA <= hour or meethourA > 23:meethourA = 20
 
@@ -432,7 +438,7 @@ if $ARGS[0] = 'boyA':
 
 			act 'Pick a time':
 				cla
-				meethourA = input ("When do you want to be picked up. It is now <<hour>>:<<minut>>.")
+				meethourA = input ("When do you want to be picked up. It is now <<$mid(100+hour,2,2)>>:<<$mid(100+minut,2,2)>>.")
 				if meethourA <= hour or meethourA > 23:meethourA = 20
 
 				'"How about <<meethourA>>:00?."'
@@ -478,7 +484,7 @@ if $ARGS[0] = 'boyB':
 	ringB = 0
 	loverday[2] = daystart
 	gs 'stat'
-	dynamic $phone_call_receive
+	gs 'telefon','phone_call_receive'
 	svetrand = rand(0, 5)
 
 	if svetrand = 0:$sveta = 'cutie'
@@ -521,7 +527,7 @@ if $ARGS[0] = 'boyB':
 							act 'Pick a time':
 								cla
 								meetdayB = daystart
-								meethourB = input ("When do you want to be picked up? It is now <<hour>>:<<minut>>.")
+								meethourB = input ("When do you want to be picked up? It is now <<$mid(100+hour,2,2)>>:<<$mid(100+minut,2,2)>>.")
 
 								if meethourB <= hour or meethourB > 23:meethourB = 20
 
@@ -580,7 +586,7 @@ if $ARGS[0] = 'boyB':
 
 			act 'Pick a time':
 				cla
-				meethourB = input ("When do you want to be picked up. It is now <<hour>>:<<minut>>.")
+				meethourB = input ("When do you want to be picked up. It is now <<$mid(100+hour,2,2)>>:<<$mid(100+minut,2,2)>>.")
 				if meethourB <= hour or meethourB > 23:meethourB = 20
 
 				'"How about <<meethourB>>:00?."'
@@ -625,7 +631,7 @@ if $ARGS[0] = 'boyC':
 	ringC = 0
 	loverday[3] = daystart
 	gs 'stat'
-	dynamic $phone_call_receive
+	gs 'telefon','phone_call_receive'
 	svetrand = rand(0, 5)
 
 	if svetrand = 0:$sveta = 'cutie'
@@ -668,7 +674,7 @@ if $ARGS[0] = 'boyC':
 							act 'Pick a time':
 								cla
 								meetdayC = daystart
-								meethourC = input ("When do you want to be picked up? It is now <<hour>>:<<minut>>.")
+								meethourC = input ("When do you want to be picked up? It is now <<$mid(100+hour,2,2)>>:<<$mid(100+minut,2,2)>>.")
 
 								if meethourC <= hour or meethourC > 23:meethourC = 20
 
@@ -728,7 +734,7 @@ if $ARGS[0] = 'boyC':
 
 			act 'Pick a time':
 				cla
-				meethourC = input ("When do you want to be picked up. It is now <<hour>>:<<minut>>.")
+				meethourC = input ("When do you want to be picked up. It is now <<$mid(100+hour,2,2)>>:<<$mid(100+minut,2,2)>>.")
 				if meethourC <= hour or meethourC > 23:meethourC = 20
 
 				'"How about <<meethourC>>:00."'
@@ -767,9 +773,421 @@ if $ARGS[0] = 'boyC':
 	end
 end
 
+
+if $ARGS[0] = 'phone_ring':
+	clr
+	pl '<center><b><<$mid(100+hour,2,2)>>:<<$mid(100+minut,2,2)>></b></center>'
+	pl '<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="images/system/icon/icon_statusbar_left.png"></TD><TD></TD><TD align="right"><img src="images/system/icon/icon_statusbar_right.png"></TD></TR></TABLE></center>'
+	pl'<center><font size=6><<$caller>> calling</font></center>'
+	pl'<center><img src="<<$callerid>>"><br></center>'
+	pl''
+	pl''
+	pl''
+	pl''
+!	pl'<center><a href="exec:gt ''telefon'', ''start''"><img src="images/system/phone/call_accept.png"></a>                               <a href="exec:gs ''stat''"><img src="images/system/phone/decline.png"></a></center>'
+end &! --- phone_ring ---
+
+if $ARGS[0] = 'phone_call_receive':
+	clr
+	pl '<center><b><<$mid(100+hour,2,2)>>:<<$mid(100+minut,2,2)>></b></center>'
+	pl '<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="images/system/icon/icon_statusbar_left.png"></TD><TD></TD><TD align="right"><img src="images/system/icon/icon_statusbar_right.png"></TD></TR></TABLE></center>'
+	pl'<center><font size=6>Talking to <<$caller>></font></center>'
+	pl'<center><img src="<<$callerid>>"><br></center>'
+end &! --- phone_call_receive ---
+
+if $ARGS[0] = 'phone_balance':
+	if balans < 4:
+		clr
+		pl '<center><b><<$mid(100+hour,2,2)>>:<<$mid(100+minut,2,2)>></b></center>'
+		pl '<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="images/system/icon/icon_statusbar_left.png"></TD><TD></TD><TD align="right"><img src="images/system/icon/icon_statusbar_right.png"></TD></TR></TABLE></center>'
+		pl'<center><font size=6>Not enough credit on your account</font></center>'
+		pl'<center><img src="<<$callerid>>"><br></center>'
+		pl'<center><a href="exec:gs ''telefon'', ''Phone_menu'' "><img src="images/system/phone/decline.png"></a></center>'
+		wait 3500
+		cla
+		gt $loc, $metka
+	elseif balans >= 4:
+		balans -= 4
+	end
+end &! --- phone_balance ---
+
+if $ARGS[0] = 'Phone_call':
+	clr
+	pl '<center><b><<$mid(100+hour,2,2)>>:<<$mid(100+minut,2,2)>></b></center>'
+	pl '<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="images/system/icon/icon_statusbar_left.png"></TD><TD></TD><TD align="right"><img src="images/system/icon/icon_statusbar_right.png"></TD></TR></TABLE></center>'
+	pl'<center><font size=6>Calling Mom</font></center>'
+	pl'<center><img src="images/system/phone/icons/icon_npc1.png"><br></center>'
+	pl'<center><a href="exec:gs ''telefon'', ''Phone_contactlist'' "><img src="images/system/phone/decline.png"></a></center>'
+	wait 1500
+	minut += 1
+	$callerid = 'images/system/phone/icons/icon_npc1.png'
+	gs 'telefon', 'phone_balance'
+	$callerid = 'icon_npc1'
+	gs 'telefon', 'phone_call_reject'
+end &! --- Phone_call ---
+
+if $ARGS[0] = 'phone_call_reject':
+	clr
+	pl '<center><b><<$mid(100+hour,2,2)>>:<<$mid(100+minut,2,2)>></b></center>'
+	pl '<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="images/system/icon/icon_statusbar_left.png"></TD><TD></TD><TD align="right"><img src="images/system/icon/icon_statusbar_right.png"></TD></TR></TABLE></center>'
+	pl'<center><font size=6>Calling....</font></center>'
+	pl'<center><img src="images/system/phone/icons/<<$callerid>>.png"><br></center>'
+	pl'<center><a href="exec:gs ''telefon'', ''Phone_contactlist'' "><img src="images/system/phone/decline.png"></a></center>'
+end &! --- phone_call_reject ---
+
+if $ARGS[0] = 'Phone_megafon':
+	clr
+	pl '<center><b><<$mid(100+hour,2,2)>>:<<$mid(100+minut,2,2)>></b></center>'
+	pl '<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="images/system/icon/icon_statusbar_left.png"></TD><TD></TD><TD align="right"><img src="images/system/icon/icon_statusbar_right.png"></TD></TR></TABLE></center>'
+	pl'<center><font size=6>Bullhorn</font></center>'
+	pl'<center><img src="images/system/icon/icon_megafon.png"><br></center>'
+	pl'<center><b>The balance in the account: </b><font size=5><i><font size=6><<balans>></font></i> <b>₽</b>.</center>.'
+	pl'<center><a href="exec:gs ''telefon'', ''Phone_menu'' "><img src="images/system/icon/back.png"></a></center>'
+end &! --- Phone_megafon ---
+
+
+if $ARGS[0] = 'Phone_contactlist':
+	clr
+	pl '<center><b><<$mid(100+hour,2,2)>>:<<$mid(100+minut,2,2)>></b></center>'
+	pl '<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="images/system/icon/icon_statusbar_left.png"></TD><TD></TD><TD align="right"><img src="images/system/icon/icon_statusbar_right.png"></TD></TR></TABLE></center>'
+	pl '<center><font size=6>Contacts</font></center>'
+	pl '<center><img src="images/system/icon/icon_call.png"><br></center>'
+	if StoryLine = 1:pl'<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="images/system/phone/icons/icon_npc1.png"></TD><TD>Mum</TD><TD align="right"><a href="exec:gs ''telefon'', ''Phone_call'' "><b>Call</b></a></TD></TR></TABLE></center>'
+	if hour >= 8 and hour <= 19:
+		if telalla > 0:
+			pl'<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="images/system/phone/icons/icon_ira1.png"></TD><TD></TD><TD align="right"><a href="exec:$callerid = ''images/system/phone/icons/icon_ira1.png'' & $telsob = ''Alla'' & gt ''telefon'', ''mobilaraz''"><b>Call</b></a></TD></TR></TABLE></center>'
+		end
+
+		if telmasha > 0:
+			pl'<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="images/system/phone/icons/icon_masha.png"></TD><TD></TD><TD align="right"><a href="exec:$callerid = ''images/system/phone/icons/icon_masha.png'' & $telsob = ''Masha'' & gt ''telefon'', ''mobilaraz''"><b>Call</b></a></TD></TR></TABLE></center>'
+		end
+
+		if telkat > 0:
+			pl'<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="images/system/phone/icons/icon_kat.png"></TD><TD></TD><TD align="right"><a href="exec:$callerid = ''images/system/phone/icons/icon_kat.png'' & $telsob = ''Kate'' & gt ''telefon'', ''mobilaraz''"><b>Call</b></a></TD></TR></TABLE></center>'
+		end
+
+		if pcs_lovers[1] = 1 and svidanieA = 0 and rand(1,7) > 3:
+			pl'<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="images/system/phone/icons/icon_bf'+boypicA+'.png"></TD><TD></TD><TD align="right"><a href="exec:gt ''telefon'', ''mobilarazboyA''"><b>Call</b></a></TD></TR></TABLE></center>'
+		end
+		if pcs_lovers[2] = 1 and svidanieB = 0 and rand(1,7) > 3:
+			pl'<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="images/system/phone/icons/icon_bf'+boypicB+'.png"></TD><TD></TD><TD align="right"><a href="exec:gt ''telefon'', ''mobilarazboyB''"><b>Call</b></a></TD></TR></TABLE></center>'
+		end
+		if pcs_lovers[3] = 1 and svidanieC = 0 and rand(1,7) > 3:
+			pl'<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="images/system/phone/icons/icon_bf'+boypicC+'.png"></TD><TD></TD><TD align="right"><a href="exec:gt ''telefon'', ''mobilarazboyC''"><b>Call</b></a></TD></TR></TABLE></center>'
+		end
+	else
+		if telalla > 0:
+			pl'<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="images/system/phone/icons/icon_ira1.png"></TD><TD></TD><TD align="right"><a href="exec:$callerid = ''icon_ira1'' & gs ''telefon'', ''phone_call_reject'' "><b>Call</b></a></TD></TR></TABLE></center>'
+		end
+
+		if telmasha > 0:
+			pl'<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="images/system/phone/icons/icon_masha.png"></TD><TD></TD><TD align="right"><a href="exec:$callerid = ''icon_masha'' & gs ''telefon'', ''phone_call_reject'' "><b>Call</b></a></TD></TR></TABLE></center>'
+		end
+
+		if telkat > 0:
+			pl'<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="images/system/phone/icons/icon_kat.png"></TD><TD></TD><TD align="right"><a href="exec:$callerid = ''icon_kat'' & gs ''telefon'', ''phone_call_reject'' "><b>Call</b></a></TD></TR></TABLE></center>'
+		end
+
+		if pcs_lovers[1] = 1 and svidanieA = 0:
+			pl'<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="images/system/phone/icons/icon_bf'+boypicA+'.png"></TD><TD></TD><TD align="right"><a href="exec:$callerid = ''icon_bf''+boypicA & gs ''telefon'', ''phone_call_reject'' "><b>Call</b></a></TD></TR></TABLE></center>'
+		end
+		if pcs_lovers[2] = 1 and svidanieB = 0:
+			pl'<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="images/system/phone/icons/icon_bf'+boypicB+'.png"></TD><TD></TD><TD align="right"><a href="exec:$callerid = ''icon_bf''+boypicB & gs ''telefon'', ''phone_call_reject'' "><b>Call</b></a></TD></TR></TABLE></center>'
+		end
+		if pcs_lovers[3] = 1 and svidanieC = 0:
+			pl'<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="images/system/phone/icons/icon_bf'+boypicC+'.png"></TD><TD></TD><TD align="right"><a href="exec:$callerid = ''icon_bf''+boypicC & gs ''telefon'', ''phone_call_reject'' "><b>Call</b></a></TD></TR></TABLE></center>'
+		end
+	end
+	if npc_QW['A192'] > 0:
+		pl'<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="images/system/phone/icons/icon_nastja.png"></TD><TD align="right"><a href="exec:gs ''telefon'', ''start''"><b>Call</b></a></TD></TR></TABLE></center>'
+	end
+	dummyas = arrsize('$contact')
+:din_bad_as
+	dummyas -= 1
+	if dummyas >= 0: 
+		pl '<<$contact[dummyas]>>'
+		jump 'din_bad_as'
+	end
+	killvar 'dummyas'
+
+	if arrsize('$contact')>0:pl'<center><a href="exec:gs ''telefon'', ''Edit_Custom_list'' "><b>Edit Contacts</b></a></center>'
+
+	pl'<center><a href="exec:gs ''telefon'', ''Phone_menu'' "><img src="images/system/icon/back.png"></a></center>'
+end &! --- Phone_contactlist ---
+
+if $ARGS[0] = 'Edit_Custom_list':
+	clr
+	dummyas = arrsize('$contact')
+:din_bad_as1
+	dummyas -= 1
+	if dummyas >= 0: 
+		$dummyedit = $contact[dummyas]
+		$dummyedit1 = dyneval('$result = ''</a><a href="exec:killvar ''''$contact'''',<<dummyas>> & gs ''''telefon'''', ''''Edit_Custom_list'''' "><b>Remove</b>'' ')
+		$dummyedit2 = $replace($dummyedit,'<b>Call</b>',$dummyedit1)
+		pl $dummyedit2
+		jump 'din_bad_as1'
+	end
+	killvar 'dummyas'
+	killvar 'dummyedit'
+	killvar 'dummyedit1'
+	killvar 'dummyedit2'
+
+	pl'<center><a href="exec:gs ''telefon'', ''Phone_menu'' "><img src="images/system/icon/back.png"></a></center>'
+end &! --- Edit_Custom_list ---
+
+
+
+if $ARGS[0] = 'Phone_notebook':
+	clr
+	pl'<center><font size=6>Planner</font></center>'
+	pl'<center><<year>>-<<$month>>-<<day>>, <<$week[week]>><br></center>'
+	rent = -1
+	if BuyHous = 2 and ArendHouseSL > 0:rent = ArendHouseSL
+	preg1 = pregtime
+	d1 = day
+	w1 = week
+	m1 = month
+	y1 = year
+	i = 0
+	$list = '<br>&emsp;<b>•</b> '
+	:pnotebook
+		daynum = daystart+i
+		$calendarday = ''
+
+		if m1 = 1 and d1 >= 1 and d1 <= 8:
+			$calendarday += $list + 'New Year holidays'
+			if d1 = 1:$calendarday += ', New Year'
+			if d1 = 7:$calendarday += ', Christmas'
+		end
+		if m1 = 2 and d1 = 23:$calendarday += $list + 'Defender of Fatherland Day'
+		if m1 = 3 and d1 = 8:$calendarday += $list + 'Women''s Day'
+		if m1 = 5 and d1 = 1:$calendarday += $list + 'Spring and Labor Day'
+		if m1 = 5 and d1 = 2:$calendarday += $list + 'National holiday'
+		if m1 = 5 and d1 = 9:$calendarday += $list + 'Victory Day'
+		if m1 = 6 and d1 = 12:$calendarday += $list + 'Russia Day'
+		if m1 = 6 and d1 = 13:$calendarday += $list + 'National holiday'
+		if m1 = 11 and d1 = 4:$calendarday += $list + 'Unity Day'
+		
+		if storyline = 1 and SchoolAtestat = 0:
+			if m1 = 1 and d1 = 1:$calendarday += $list + 'First day of Winter break.'
+			if m1 = 1 and d1 = 15:$calendarday += $list + 'Last day of Winter break.'
+			if m1 = 3 and d1 = 20:$calendarday += $list + 'First day of Spring break.'
+			if m1 = 3 and d1 = 26:$calendarday += $list + 'Last day of Spring break.'
+			if schoool_year = 2000 and y1 = 2017 and m1 = 5 and d1 = 25:$calendarday += $list + 'Graduation Day!'
+			if schoool_year = 2001 and y1 = 2018 and m1 = 6 and d1 = 1:$calendarday += $list + 'First day of Summer break.'
+			if m1 = 8 and d1 = 31:$calendarday += $list + 'Last day of Summer break.'
+			if m1 = 11 and d1 = 4:$calendarday += $list + 'First day of Autumn break.'
+			if m1 = 11 and d1 = 11:$calendarday += $list + 'Last day of Autumn break.'
+		end
+		
+		if daynum >= lastmens+20 and daynum < lastmens+24:$calendarday += $list + '<font color=''red''><b>Menstruation!</b></font>'
+		if daynum >= lastmens+6 and daynum < lastmens+8:$calendarday += $list + '<font color=#336600><b>Ovulation!</b></font>'
+		if preg1 = 280:$calendarday += $list + '<font color=''red''><b>Birthing day!</b></font>'
+		
+		if w1 < 5 and (workSec >= 1 or PersSecWork = 1):$calendarday += $list + 'Working as a secretary. <i>(9:00 - 17:00)</i>'
+		if w1 < 5 and workFabrika = 1:
+			$calendarday += $list + 'Working as a seamstress. '
+			if age < 18:$calendarday += '<i>(16:00 - 20:00)</i>' else $calendarday += '<i>(8:00 - 16:00)</i>'
+		end
+		if w1 > 1 and w1 <= 5 and workhosp = 1:$calendarday += $list + 'Working as nurse. <i>(8:00 - 16:00)</i>'
+		if worksalon = 1 and (w1 = 1 or w1 = 3 or w1 = 5):$calendarday += $list + 'Working as masseuse. <i>(9:00 - 17:00)</i>'
+!!		if maidqw > 0:$calendarday += '<br>&emsp;<b>•</b> Working as maid. <i>(16:00 - 19:00)</i>'
+		if pfilmday[i] > 0:$calendarday += $list + 'Porn shoot: <i><<$porndesc[pfilmday[i]]>></i>'
+		if d1 = 25 and (PersSecWork = 1 or workKafe = 1 or workhosp = 1 or worksalon = 1 or tanwork = 1 or workSec = 1 or workFabrika = 1):$calendarday += $list + '<i>Pay day!</i>'
+		if d1 = 31 and m1 = 12 and (year - year_start) < 2 and StoryLine = 1:$calendarday += $list + 'New Year''s party at 14:00!'
+		if (npc_QW['A33']-2) mod 2 = 1 and sisboyday+1 = daynum:
+			if sisboytrioQW = 1:
+				$calendarday += $list + '<font color="orange">Threesome with Anja and Roma at 18:00</font>'
+			else
+				$calendarday += $list + '<font color="orange">Anja having sex with Roma at 18:00</font>'
+			end
+		end
+		if sisboyparty = 2 and sisboyparty_day+1 = daynum:$calendarday += $list + '<font color="orange">Party at Rex, gathering before 18:00 at Community Center</font>'
+		if rent = 0:$calendarday += $list + 'Rent on apartment expires!'
+		if birthday = d1 and birthmonth = m1:$calendarday += $list + 'My birthday!'
+		if kid > 0:
+			k1 = kid
+			:kiddieloop
+				if daykid[k1] = d1 and monthkid[k1] = m1:$calendarday += $list + 'Birthday of my <<$polreb[k1]>> <<$kidname[k1]>>, my <<kid>>. baby!'
+			if k1 > 1:k1 -= 1 & jump 'kiddieloop'
+		end
+		
+		if $calendarday ! '':
+			p '<b><<$monthName[m1]>> <<d1>>, <<$week[w1]>>:</b>'
+			pl $calendarday
+		end
+	if i < 14:
+		preg1 += 1
+		rent -= 1
+		i += 1
+		w1 += 1
+		if w1 > 7:w1 = 1
+		d1 += 1
+		if monthsend[m1] < d1: 
+			m1 += 1 & d1 = 1
+			if m1 = 13: m1 = 1 & y1 += 1
+		end
+		jump 'pnotebook'
+	end
+	killvar 'calendarday'
+	killvar 'rent'
+	killvar 'preg1'
+	killvar 'd1'
+	killvar 'w1'
+	killvar 'm1'
+	killvar 'y1'
+	killvar 'daynum'
+	pl'<center><a href="exec:gs ''telefon'', ''Phone_menu'' "><img src="images/system/icon/back.png"></a></center>'
+end &! --- Phone_notebook ---
+
+if $ARGS[0] = 'Phone_pictures':
+	clr
+	pl '<center><b><<$mid(100+hour,2,2)>>:<<$mid(100+minut,2,2)>></b></center>'
+	pl '<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="images/system/icon/icon_statusbar_left.png"></TD><TD></TD><TD align="right"><img src="images/system/icon/icon_statusbar_right.png"></TD></TR></TABLE></center>'
+	pl'<center><font size=6>Gallery</font></center>'
+	pl'<center><img src="images/system/icon/icon_pictures.png"><br></center>'
+	if phone_selfie[1] = 1:pl'<a href="exec:view''images/system/phone/selfie/phone_selfie1.jpg''"><b>Selfie number1</b></a>'
+	if phone_selfie[2] = 1:pl'<a href="exec:view''images/system/phone/selfie/phone_selfie2.jpg''"><b>Selfie number2</b></a>'
+	if vanr_selfie[0] = 1:pl'<a href="exec:view''images/system/phone/selfie/bathroom/s (0).jpg''"><b>After shower selfie number1</b></a>'
+	if vanr_selfie[1] = 1:pl'<a href="exec:view''images/system/phone/selfie/bathroom/s (1).jpg''"><b>After shower selfie number2</b></a>'
+	if vanr_selfie[2] = 1:pl'<a href="exec:view''images/system/phone/selfie/bathroom/s (2).jpg''"><b>After shower selfie number3</b></a>'
+	if vanr_selfie[3] = 1:pl'<a href="exec:view''images/system/phone/selfie/bathroom/s (3).jpg''"><b>After shower selfie number4</b></a>'
+	if vanr_selfie[4] = 1:pl'<a href="exec:view''images/system/phone/selfie/bathroom/s (4).jpg''"><b>After shower selfie number5</b></a>'
+	if vanr_selfie[5] = 1:pl'<a href="exec:view''images/system/phone/selfie/bathroom/s (5).jpg''"><b>After shower selfie number6</b></a>'
+	if vanr_selfie[6] = 1:pl'<a href="exec:view''images/system/phone/selfie/bathroom/s (6).jpg''"><b>After shower selfie number7</b></a>'
+	if vanr_selfie[7] = 1:pl'<a href="exec:view''images/system/phone/selfie/bathroom/s (7).jpg''"><b>After shower selfie number8</b></a>'
+	if vanr_selfie[8] = 1:pl'<a href="exec:view''images/system/phone/selfie/bathroom/s (8).jpg''"><b>After shower selfie number9</b></a>'
+	if vanr_selfie[9] = 1:pl'<a href="exec:view''images/system/phone/selfie/bathroom/s (9).jpg''"><b>After shower selfie number10</b></a>'
+	if vanr_selfie[10] = 1:pl'<a href="exec:view''images/system/phone/selfie/bathroom/s (10).jpg''"><b>After shower selfie number11</b></a>'
+	if vanr_selfie[11] = 1:pl'<a href="exec:view''images/system/phone/selfie/bathroom/s (11).jpg''"><b>After shower selfie number12</b></a>'
+	if vanr_selfie[12] = 1:pl'<a href="exec:view''images/system/phone/selfie/bathroom/s (12).jpg''"><b>After shower selfie number13</b></a>'
+	if vanr_selfie[13] = 1:pl'<a href="exec:view''images/system/phone/selfie/bathroom/s (13).jpg''"><b>After shower selfie number14</b></a>'
+	if vanr_selfie[14] = 1:pl'<a href="exec:view''images/system/phone/selfie/bathroom/s (14).jpg''"><b>After shower selfie number15</b></a>'
+	if vanr_selfie[15] = 1:pl'<a href="exec:view''images/system/phone/selfie/bathroom/s (15).jpg''"><b>After shower selfie number16</b></a>'
+	if vanr_selfie[16] = 1:pl'<a href="exec:view''images/system/phone/selfie/bathroom/s (16).jpg''"><b>After shower selfie number17</b></a>'
+	if vanr_selfie[17] = 1:pl'<a href="exec:view''images/system/phone/selfie/bathroom/s (17).jpg''"><b>After shower selfie number18</b></a>'
+	if vanr_selfie[18] = 1:pl'<a href="exec:view''images/system/phone/selfie/bathroom/s (18).jpg''"><b>After shower selfie number19</b></a>'
+	if vanr_selfie[19] = 1:pl'<a href="exec:view''images/system/phone/selfie/bathroom/s (19).jpg''"><b>After shower selfie number20</b></a>'
+	!if vanr_selfie[20] = 1:pl'<a href="exec:view''images/system/phone/selfie/bathroom/s (20).jpg''"><b>After shower selfie number21</b></a>'
+	if vanr_selfie[21] = 1:pl'<a href="exec:view''images/system/phone/selfie/bathroom/s (21).jpg''"><b>After shower selfie number22</b></a>'
+	if vanr_selfie[22] = 1:pl'<a href="exec:view''images/system/phone/selfie/bathroom/s (22).jpg''"><b>After shower selfie number23</b></a>'
+	if vanr_selfie[23] = 1:pl'<a href="exec:view''images/system/phone/selfie/bathroom/s (23).jpg''"><b>After shower selfie number24</b></a>'
+	if vanr_selfie[24] = 1:pl'<a href="exec:view''images/system/phone/selfie/bathroom/s (24).jpg''"><b>After shower selfie number25</b></a>'
+	if vanr_selfie[25] = 1:pl'<a href="exec:view''images/system/phone/selfie/bathroom/s (25).jpg''"><b>After shower selfie number26</b></a>'
+	if vanr_selfie[26] = 1:pl'<a href="exec:view''images/system/phone/selfie/bathroom/s (26).jpg''"><b>After shower selfie number27</b></a>'
+	if vanr_selfie[27] = 1:pl'<a href="exec:view''images/system/phone/selfie/bathroom/s (27).jpg''"><b>After shower selfie number28</b></a>'
+	if vanr_selfie[28] = 1:pl'<a href="exec:view''images/system/phone/selfie/bathroom/s (28).jpg''"><b>After shower selfie number29</b></a>'
+	if vanr_selfie[29] = 1:pl'<a href="exec:view''images/system/phone/selfie/bathroom/s (29).jpg''"><b>After shower selfie number30</b></a>'
+	if vanr_selfie[30] = 1:pl'<a href="exec:view''images/system/phone/selfie/bathroom/s (30).jpg''"><b>After shower selfie number31</b></a>'
+	if vanr_selfie[31] = 1:pl'<a href="exec:view''images/system/phone/selfie/bathroom/s (31).jpg''"><b>After shower selfie number32</b></a>'
+	if vanr_selfie[32] = 1:pl'<a href="exec:view''images/system/phone/selfie/bathroom/s (32).jpg''"><b>After shower selfie number33</b></a>'
+	if vanr_selfie[33] = 1:pl'<a href="exec:view''images/system/phone/selfie/bathroom/s (33).jpg''"><b>After shower selfie number34</b></a>'
+	if vanr_selfie[34] = 1:pl'<a href="exec:view''images/system/phone/selfie/bathroom/s (34).jpg''"><b>After shower selfie number35</b></a>'
+	if vanr_selfie[35] = 1:pl'<a href="exec:view''images/system/phone/selfie/bathroom/s (35).jpg''"><b>After shower selfie number36</b></a>'
+	if vanr_selfie[36] = 1:pl'<a href="exec:view''images/system/phone/selfie/bathroom/s (36).jpg''"><b>After shower selfie number37</b></a>'
+	if vanr_selfie[37] = 1:pl'<a href="exec:view''images/system/phone/selfie/bathroom/s (37).jpg''"><b>After shower selfie number38</b></a>'
+	if vanr_selfie[38] = 1:pl'<a href="exec:view''images/system/phone/selfie/bathroom/s (38).jpg''"><b>After shower selfie number39</b></a>'
+	!if phone_selfie[m] = 1:pl'<a href="exec:view''images/system/phone/phone_selfiem.jpg''"><b>Photo in sperm number1</b></a>'
+	!if phone_selfie[n] = 1:pl'<a href="exec:view''images/system/phone/phone_selfien.jpg''"><b>Photo in sperm number2</b></a>'
+	!if phone_selfie[x] = 1:pl'<a href="exec:view''images/system/phone/phone_selfiex.jpg''"><b>Photo Event number1</b></a>'
+	!if phone_selfie[y] = 1:pl'<a href="exec:view''images/system/phone/phone_selfiey.jpg''"><b>Photo Event number2</b></a>'
+	pl'<center><a href="exec:gs ''telefon'', ''Phone_menu'' "><img src="images/system/icon/back.png"></a></center>'
+end &! --- Phone_pictures ---
+
+if $ARGS[0] = 'Phone_camera_selfie':
+	if $loc = 'vanrPar' and mirror_steam = hour or $loc = 'vanr' and mirror_steam = hour or $loc = 'yvan' and mirror_steam = hour:
+		minut += RAND (5,7)
+		phone_rand = RAND (0,38)
+		vanr_selfie[phone_rand] = 1
+		gs 'telefon', 'Phone_pictures'
+		view 'images/system/phone/selfie/bathroom/s (<<phone_rand>>).jpg'
+	else
+		minut += RAND (5,7)
+		phone_rand = RAND (1,2)
+		phone_selfie[phone_rand] = 1
+		gs 'telefon', 'Phone_pictures'
+		view 'images/system/phone/selfie/phone_selfie<<phone_rand>>.jpg'
+	end
+	!if spdirtyf > 0: phone_rand = RAND (m,n) - for SELF in the semen
+	!if photo_event_pic = x: phone_rand = RAND (x,y) - for photos during the events (by heart)
+	!view 'images/system/phone/phone_selfie<<phone_rand>>.jpg'
+end &! --- Phone_camera_selfie ---
+
+if $ARGS[0] = 'Phone_camera':
+	clr
+	pl '<center><b><<$mid(100+hour,2,2)>>:<<$mid(100+minut,2,2)>></b></center>'
+	pl '<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="images/system/icon/icon_statusbar_left.png"></TD><TD></TD><TD align="right"><img src="images/system/icon/icon_statusbar_right.png"></TD></TR></TABLE></center>'
+	pl'<center><font size=6>Camera</font></center>'
+	pl'<center><img src="images/system/icon/icon_camera.png"><br></center>'
+	pl'<a href="exec:gs ''telefon'', ''Phone_camera_selfie'' "><b>Take a selfie</b></a>'
+	pl'<center><a href="exec:gs ''telefon'', ''Phone_menu'' "><img src="images/system/icon/back.png"></a></center>'
+end &! --- Phone_camera ---
+
+if $ARGS[0] = 'Phone_wheather':
+	clr
+	pl '<center><b><<$mid(100+hour,2,2)>>:<<$mid(100+minut,2,2)>></b></center>'
+	pl '<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="images/system/icon/icon_statusbar_left.png"></TD><TD></TD><TD align="right"><img src="images/system/icon/icon_statusbar_right.png"></TD></TR></TABLE></center>'
+	pl'<center><font size=6>Weather</font></center>'
+	pl'<center><img src="images/system/icon/icon_weather.png"><br></center>'
+	pl'<center><font size=6><b>Temperature: <<$temperature>>. <i><<$osadki>></i></b></font></center>'
+	pl'<center><a href="exec:gs ''telefon'', ''Phone_menu'' "><img src="images/system/icon/back.png"></a></center>'
+end &! --- Phone_wheather ---
+
+if $ARGS[0] = 'Phone_calendar':
+	clr
+	pl '<center><b><<$mid(100+hour,2,2)>>:<<$mid(100+minut,2,2)>></b></center>'
+	pl '<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="images/system/icon/icon_statusbar_left.png"></TD><TD></TD><TD align="right"><img src="images/system/icon/icon_statusbar_right.png"></TD></TR></TABLE></center>'
+	pl'<center><font size=6>Calendar</font></center>'
+	pl'<center><img src="images/system/icon/icon_calendar.png"><br></center>'
+	pl'<center><B>Today: </B><font size=5><<$week[week]>>, <i><font size=6><<day>></font></i> <<$month>> <i><font size=6><<year>></font></i> year.</font></center>'
+	pl'<center><a href="exec:gs ''telefon'', ''Phone_menu'' "><img src="images/system/icon/back.png"></a></center>'
+end &! --- Phone_calendar ---
+
+if $ARGS[0] = 'Phone_noactive':
+	clr
+	pl '<center><b><<$mid(100+hour,2,2)>>:<<$mid(100+minut,2,2)>></b></center>'
+	pl '<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="images/system/icon/icon_statusbar_left.png"></TD><TD></TD><TD align="right"><img src="images/system/icon/icon_statusbar_right.png"></TD></TR></TABLE></center>'
+	pl'<center><font size=6>This option is not active</font></center>'
+	pl'<center><a href="exec:gs ''telefon'', ''Phone_menu'' "><img src="images/system/icon/back.png"></a></center>'
+end &! --- Phone_noactive ---
+
+if $ARGS[0] = 'Phone_menu':
+	clr
+	pl'<center><b><<$mid(100+hour,2,2)>>:<<$mid(100+minut,2,2)>></b></center>'
+	pl'<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="images/system/icon/icon_statusbar_left.png"></TD><TD></TD><TD align="right"><img src="images/system/icon/icon_statusbar_right.png"></TD></TR></TABLE></center>'
+	pl'<center><a href="exec:gs ''telefon'', ''Phone_camera'' "><img src="images/system/icon/icon_camera.png"></a><a href="exec:gs ''telefon'', ''Phone_calendar'' "><img src="images/system/icon/icon_calendar.png"></a><a href="exec:gs ''telefon'', ''Phone_pictures'' "><img src="images/system/icon/icon_pictures.png"></a></center>'
+	pl'<center><a href="exec:gs ''telefon'', ''Phone_noactive'' "><img src="images/system/icon/icon_music.png"></a><a href="exec:gs ''Cheatmenu_din'' & Enable_settingmode = 1 & dynamic $cheatmenu[''display'']"><img src="images/system/icon/icon_settings.png"></a><a href="exec:gs ''telefon'', ''Phone_wheather'' "><img src="images/system/icon/icon_weather.png"></a></center>'
+	pl'<center><a href="exec:gs ''telefon'', ''Phone_contactlist'' "><img src="images/system/icon/icon_call.png"></a><a href="exec:gs ''telefon'', ''Phone_noactive'' "><img src="images/system/icon/icon_sms.png"></a><a href="exec:gs ''telefon'', ''Phone_megafon'' "><img src="images/system/icon/icon_megafon.png"></a></center>'
+	pl'<center><a href="exec:gs ''telefon'', ''Phone_notebook'' "><img src="images/system/icon/icon_notebook.png"></a></center>'
+	pl'<center><a href="exec:gs''stat''"><img src="images/system/icon/back.png"></a></center>'
+end &! --- Phone_menu ---
+
+if $ARGS[0] = 'Add_contact':
+	$dummy = INPUT('Enter a note:')
+	$contact[arrsize('$contact')] = '<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="<<$ARGS[1]>>"></TD><TD><<$dummy>></TD><TD align="right"><a href="exec:<<$ARGS[2]>>"><b>Call</b></a></TD></TR></TABLE>'
+	killvar '$dummy'
+end &! --- Add_contact ---
+
+if $ARGS[0] = 'telotkaz':
+	cla
+	minut += 10
+	'<<$telsob>>, "Sorry I''m busy, maybe next time."'
+
+	act 'Hangup':gt 'telefon', 'fin'
+end &! --- telotkaz ---
+
+if $ARGS[0] = 'telotkazboy':
+	cla
+	minut += 10
+	'<<$loverdesc[lover_number]>>, "Sorry, I''m busy right now, maybe next time."'
+
+	act 'Hangup':gt 'telefon', 'fin'
+end &! --- telotkazboy ---
+
+
 if $ARGS[0] = 'fin':
 	cla
-	gt $locM, $metkaM
+	gt $loc, $metka
 end
 --- telefon ---------------------------------
 

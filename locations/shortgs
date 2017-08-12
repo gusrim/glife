@@ -19,7 +19,7 @@ if $ARGS[0] = 'smoker':
 end &!--- smoker ---
 
 !! milk_me
-!! use href="exec:gt ''shortgs'', ''milk_me''"
+!! use href="exec:gt ''shortgs'',''milk_me''"
 if $ARGS[0] = 'milk_me':
 	minut += 15
 	if $location_type ! 'bathroom':
@@ -52,7 +52,7 @@ if $ARGS[0] = 'milk_me':
 	else
 		'Your nipples feel too sore to use the pump right now.'
 	end
-	act 'Finish':gt $locM, $metkaM
+	act 'Finish':gt $loc, $metka
 end &! --- milk_me ---
 
 !! following function counts the number of guys which PC slept with. 
@@ -71,7 +71,6 @@ if $ARGS[0] = 'guy':
 		jump 'loop_shya'
 	end
 	if len($temptask) > 0:jump 'loop_shtty'
-	end
 	result = r_sht
 	killvar 'r_sht'
 	killvar '$temptask'
@@ -105,18 +104,49 @@ end &! --- girl ---
 !! following procedure should be used when PC gets naked, but it should be paired with the reverse procedure 
 !! use gs 'shortgs','undress'
 if $ARGS[0] = 'undress':
-	gs 'clothing', 'strip'
-	if tanga = 1:panties = 1 & tanga = 0
+	gs 'clothing','strip'
+	gs 'underwear', 'remove'
 end &! --- undress ---
 
 !! reverse procedure, it can be modified for lose or stolen panties later. 
 !! use gs 'shortgs','dress'
 if $ARGS[0] = 'dress':
-	gs 'clothing', 'wear_last_worn'
-	if panties = 1:tanga = 1
-	panties = 0
+	gs 'clothing','wear_last_worn'
+	gs 'underwear', 'wear'
 end &! --- dress ---
 
+!! procedure, which prevents PC to leave a room naked.  
+!! use gs 'shortgs','checkdress',' <<$loc>>,<<$metka>> '  or equivalent
+if $ARGS[0] = 'checkdress':
+	if $clothingworntype = 'nude':
+		msg '<b><font color="red">You need to get dressed before going out.</font></b>'
+		dynamic 'gt <<$ARGS[1]>>'
+	end
+end &! --- checkdress ---
+
+!! this is an integer sqrt function
+!! call func('shortgs','sqrt', n)
+if $ARGS[0] = 'sqrt':
+	sqrtnum = ARGS[1]
+	if sqrtnum = 0: result = 0 & exit
+	sqrtn = sqrtnum/2 + 1
+	sqrtn1 = (sqrtn + sqrtnum / sqrtn) / 2
+:sqrtloop
+	if sqrtn1 < sqrtn:
+		sqrtn = sqrtn1
+		sqrtn1 = (sqrtn + sqrtnum / sqrtn) / 2
+		jump 'sqrtloop'
+	end
+    result = sqrtn  
+end
+
+!! this function calculates modul of given arguments as it was coordinates in cartezian systeme
+!! use func('shortgs','modul',n1,n2,..n8)
+if $ARGS[0] = 'modul':
+	modul_sum = ARGS[1]*ARGS[1]+ARGS[2]*ARGS[2]+ARGS[3]*ARGS[3]+ARGS[4]*ARGS[4]+ARGS[5]*ARGS[5]+ARGS[6]*ARGS[6]+ARGS[7]*ARGS[7]+ARGS[8]*ARGS[8]
+    result = func('shortgs','sqrt',modul_sum)
+	killvar 'modul_sum'
+end
 
 --- shortgs ---------------------------------
 

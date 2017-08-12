@@ -13,6 +13,12 @@ if (film > 0 or pornstack = 1) and pfilmNO = 0 and pfilmSTOP = 0:
 	gs 'pornschedule', 'schedule'
 end
 
+!!acting strings to set available jobs
+if casting = 1:
+	acting_string1 = rand(1111111111,9999999999)
+	acting_string2 = rand(1111111111,9999999999)
+end
+
 gs 'daystart'
 dynamic $hypnoDaychange
 
@@ -60,6 +66,17 @@ if katjaPreg = 0 and month >= 2:
 	end
 end
 
+!! after having surgery you will be in recuperation for a few days
+
+if daystart - 7 <= surgeryday:
+	dailyhealthimprov = (daystart - surgeryday) * 50
+	pcs_health = dailyhealthimprov
+	recuperation = 1
+else
+	killvar 'recuperation'
+	killvar 'dailyhealthimprov'
+end
+
 !!Street events daily reset
 streetevent_hour = -2
 
@@ -70,6 +87,10 @@ i = 1
 Clothingstock[i] = rand (0,500)
 i += 1
 if i <= 147:jump 'loopprice'
+
+!!underwear rng
+cheap_panty_number = rand(0,37)
+!!cheap_bra_number = rand(0,37)
 
 if coatH[defaultcoat] <= 0: defaultcoat = 0
 
@@ -398,7 +419,6 @@ if tabletkicheck = 1 and tabletkichday < daystart:
 			'You take your birth control pill for the day.'
 			pilldaychk = 1
 			gs 'din_bad','takepill'
-			end
 			if rand(0,7) = 0 and tabletkiday >= (daystart - 1): tabletkipd += 1
 			tabletkiday = daystart
 			tabletkipt = 0
@@ -438,7 +458,21 @@ if cheatNoEat = 1 and dounspell = 1:fat += 15
 !!STD check
 if SifacOnce = 1:Sifilis += 1
 if GerpesOnce = 1:Gerpes += 1
-if TriperOnce = 1:Triper += 1
+if TriperOnce = 1:
+	if Triper > 0: 
+		Triper += 1
+	end
+	if TriperOral > 0:
+		TriperOral += 1
+	end
+	If TriperOral > 14 and TriperNapr = 0:
+		if rand(TriperOral,100) > 80:
+		TriperOral = 0
+		if Triper = 0:TriperOnce = 0
+		TriperOralSigns = 0
+		end
+	end
+end
 if KandidozOnce = 1:Kandidoz += 1
 
 VeneraN = 0
@@ -726,9 +760,35 @@ elseif painpub = 1:
 	end
 end
 
+!!---- Calculation of lash extension degradation and false lash removal
+if pcs_lashes > 2:
+	if lashextensionstyle >= 1:
+		lashextensionduration -= 1
+		if lashextensionduration >= 1 and lashextensionduration <= 4:
+			'It''s time for you to do your maintenance on your lash extensions; you should go to the salon or you risk growing them all out.'
+		end
+		if lashextensionduration <= 0:
+			'You waited too long to do maintenance on your lash extensions; there''s too little there to notice or work with at this point.'
+			pcs_lashes = pcs_naturallashes
+			killvar lashextensionstyle
+			killvar lashextensionduration
+			killvar lashextensionnew			
+		end
+	end
+	if false_lashes > 0:
+		false_lashes -= 1
+		if false_lashes = 0:
+			'Your false lashes came off in the night; there''s no recovering them now.'
+			pcs_lashes = pcs_naturallashes
+		else
+			'Somehow, your lashes managed to stay attached throughout the night. You might be able to get away with wearing them another day straight.'
+		end
+	end
+end
+	
+
 prezikProver += 1
 if pirs_pain_ton > 0:pirs_pain_ton -= 1
-if brow > 0 and browper = 0:brow -= 1
 if shorthair = 1:
 	shorthairday += 1
 	if shorthairday >= 45:shorthairday = 0 & shorthair = 0

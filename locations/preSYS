@@ -1,5 +1,4 @@
 # preSYS
-
 !!Background Options
 cls
 if night_mode = 1:
@@ -31,6 +30,9 @@ end
 
 !!******************** SG Start Background Options ******************************
 if $ARGS[0] = 'SGStart':
+
+
+	$pcs_dna = func('dna','generate',$npc_dna['A29'],$npc_dna['A35'])
 
 	StoryLine = 1
 
@@ -99,23 +101,30 @@ if $ARGS[0] = 'SGStart':
 	$pcs_nickname = input("What is your nick name? (Note: If you chose a custom name, you have to enter something here!)")
 
 	if $pcs_nickname = '':$pcs_nickname = 'Sveta'
+	
+	gs 'npcstatic1'
+	gs 'npcstatic2'
+	gs 'npcstatic3'
+	gs 'npcstatic4'
+	gs 'npcstatic5'
+	
 	'<center><img <<$set_imgh>> src="images/pre/sys/altstart.jpg"></center>'
-	'Your name is <<$pcs_firstname>> <<$pcs_lastname>>, Friends and family sometimes call you <<$pcs_nickname>>. Your mother''s name is Natasha, and your biological father left before you was born. Your mother married your stepfather, Vladimir, shortly afterwards. Anya is your older sister; she is two years your senior and is still living at home while working at the local grocery story. She chose not to attend college and instead spends most of her free time drinking with her friends or going to parties, much to your mother''s dismay. You have a younger half-brother, Kolka, who is really into sports - especially football - and is shaping up to be a fine athlete. He is a year younger than you are, and his father is your stepfather.'
+	'Your name is <<$pcs_firstname>> <<$pcs_lastname>>, Friends and family sometimes call you <<$pcs_nickname>>. Your mother''s name is <<$npc_firstname[''A29'']>>, and your biological father left before you were born. Your mother married your stepfather, <<$npc_firstname[''A28'']>>, shortly afterwards. <<$npc_firstname[''A33'']>> is your older sister. She is two years older than you and is still living at home while working at the local grocery story. She chose not to attend college and instead spends most of her free time drinking with her friends or going to parties, much to your mother''s dismay. You also have a younger half-brother, <<$npc_firstname[''A34'']>>, who is really into sports, especially football, and is shaping up to be a fine athlete. He is a year younger than you are, and his father is your stepfather.'
 	*nl
-	'Your Aunt Lyuda lives in the same building as you do, though you rarely see her except when you pass her in the stairwell. She is your mother''s sister. Uncle Misha, as everyone calls him, is best friends with your stepfather. Vasily Shulgin, your childhood friend, is the same age as you and grew up living in the same apartment building on the floor above yours. His father, Sergey, is an old friend of your mother''s.'
+	'Your <<$npc_usedname[''A30'']>> lives in the same building as you do, though you rarely see her except when you pass her in the stairwell. She is your mother''s sister. <<$npc_usedname[''A54'']>>, as everyone calls him, is best friends with your stepfather. <<$npc_firstname[''A11'']>> <<$npc_lastname[''A11'']>>, your childhood friend, is the same age as you and grew up living in the same apartment building on the floor above yours. His father, <<$npc_firstname[''A112'']>>, is an old friend of your mother''s.'
 
 	act 'Re-enter name/s': gt 'preSYS', 'SGStart'
 	act 'Continue':
 		cls
 		'<center><img <<$set_imgh>> src="images/pre/sys/altstart1.jpg"></center>'
 		'Please select how long you have left in school.'
-		act 'Begin at the last year of school, age 16 or 17':
+		act 'You have one year of school remaining. (age 16 or 17)':
 			birthyear = 2000
 			yearlefttemp = 1
 			schoool_year = 2000
 			gt 'preSYS', 'SGStart2'
 		end
-		act 'Begin at the second-to-last year of school, age 15 or 16':
+		act 'You have two years of school remaining. (age 15 or 16)':
 			birthyear = 2001
 			yearlefttemp = 2
 			schoool_year = 2001
@@ -126,6 +135,7 @@ end
 
 if $ARGS[0] = 'SGStart2':
 !!make sure this image shows up above the text that shows your birthday
+	date_toggle = args[1]
 	'<center><img <<$set_imgh>> src="images/pre/sys/altstart2.jpg"></center>'
 	if birthday < 10 and birthmonth < 10:
 		$startdob = 'Your birthday: <B>0<<birthmonth>>/0<<birthday>>/<<birthyear>></B> (MM/DD/YYYY)'
@@ -147,9 +157,12 @@ if $ARGS[0] = 'SGStart2':
 		'<center><img <<$set_imgh>> src="images/pre/sys/altstart26.jpg"></center>'
 		'You have two options when it comes to beginning your game. You can start at the end of the summer holiday, very close to starting the new school year, or you can start at the beginning of the summer holiday.'
 !!	This is to account for the school year not matching up with the calendar year.
-		if birthmonth >= 7: birthyear -= 1
-		if birthmonth = 6 and day > 1: birthyear -= 1
+		if date_toggle ! 1:
+			if birthmonth >= 7: birthyear -= 1
+			if birthmonth = 6 and day > 1: birthyear -= 1
+		end
 		killvar '$startdob'
+		killvar 'date_toggle'
 		act 'Start at the end of August <B>(recommended for new players)</B>':
 !!		This is the default start
 			kanicont = 6
@@ -158,7 +171,7 @@ if $ARGS[0] = 'SGStart2':
 
 !!	This is to prevent to player from starting at 14
 		if birthmonth = 6 and yearlefttemp = 2:
-			act '<i>Start at the beginning of June</i> Restricted due PC age, set birthday before June or after July to unlock': gt 'preSYS', 'SGStart2'
+			act '<i>Start at the beginning of June</i> Restricted due PC age, set birthday before June or after July to unlock': gt 'preSYS', 'SGStart2', 1
 		else
 			act 'Start at the beginning of June':
 				month = 6
@@ -174,12 +187,7 @@ end
 
 if $ARGS[0] = 'SGStart3':
 
-	gs 'npcstatic1'
-	gs 'npcstatic2'
-	gs 'npcstatic3'
-	gs 'npcstatic4'
-	gs 'npcstatic5'
-	$pcs_dna = func('dna','generate',$npc_dna['A29'],$npc_dna['A35'])
+
 
 !! Sets family relationship values and overwrites the npcstatic data for them
 	npc_rel['A28'] = 50
@@ -228,7 +236,7 @@ if $ARGS[0] = 'charselect':
 		'<center><img <<$set_imgh>> src="images/pre/sys/altstart3.jpg"></center>'
         'While you were growing up, you spent virtually all of your free time at home, pursuing various cerebral pursuits. These might have included reading comics, fantasy or sci-fi books, learning about chess or computers, or playing cards, board games, or RPGs with the other nerds in addition to faithfully going to school. While you have gained a huge amount of knowledge from this, your lack of interest in exercising as a child has left your body a little frail.'
 		*nl
-		'The long nights of trying to read in poor light have taken a toll on your eyesight as well, and you now need glasses to be able to read. Your cerebral pursuits have also had somewhat of a negative impact on your friendship with Vasily: as you grew up, he became a gopnik and the two of you slowly started hanging out less and less, although you still consider each other to be friends. On the plus side, doing well in school has made your parents happy and has left you with some extra spending money as a reward for your hard work. Now...'
+		'The long nights of trying to read in poor light have taken a toll on your eyesight as well, and you now need glasses to be able to read. Your cerebral pursuits have also had somewhat of a negative impact on your friendship with <<$npc_firstname[''A11'']>>: as you grew up, he became a gopnik and the two of you slowly started hanging out less and less, although you still consider each other to be friends. On the plus side, doing well in school has made your parents happy and has left you with some extra spending money as a reward for your hard work. Now...'
 
         act 'I am the queen of the nerds!':
 			!!above average looks and average physically fit
@@ -337,12 +345,12 @@ if $ARGS[0] = 'charselect':
         *clr
 		cla
 		'<center><img <<$set_imgh>> src="images/pre/sys/altstart4.jpg"></center>'
-        'While you were growing up, you spent virtually all of your free time outdoors. You loved playing sports, running, biking, horseback riding, hiking, and most other outdoor activities. This has kept you in fairly good shape as well as decently socially active in a variety of team sports over the years. Doing this, however, negatively impacted your friendship with Vasily somewhat. As you grew up, he became a gopnik and the two of you slowly started hanging out less and less, though you still consider each other to be friends. From all the sports available, you are a...'
+        'While you were growing up, you spent virtually all of your free time outdoors. You loved playing sports, running, biking, horseback riding, hiking, and most other outdoor activities. This has kept you in fairly good shape as well as decently socially active in a variety of team sports over the years. Doing this, however, negatively impacted your friendship with <<$npc_firstname[''A11'']>> somewhat. As you grew up, he became a gopnik and the two of you slowly started hanging out less and less, though you still consider each other to be friends. From all the sports available, you are a...'
 
         act 'Avid volleyball player!':
             cls
 			'<center><img <<$set_imgh>> src="images/pre/sys/altstart12.jpg"></center>'
-			'Ever since the first time you played volleyball, you have been in love with the sport. You spent a lot of your free time trying to improve your ability, and it paid off; you''re actually quite good now! Your obsession with volleyball, however, has had some repercussions on your school performance. You''re a sub-par student, and you haven''t made many friends other than your fellow jocks. You are especially close with Lariska and your coach.'
+			'Ever since the first time you played volleyball, you have been in love with the sport. You spent a lot of your free time trying to improve your ability, and it paid off; you''re actually quite good now! Your obsession with volleyball, however, has had some repercussions on your school performance. You''re a sub-par student, and you haven''t made many friends other than your fellow jocks. You are especially close with <<$npc_firstname[''A13'']>> and your coach.'
 			act 'Select another': gt 'preSYS', 'charselect'
 			act 'Confirm this option':
 				gs 'preSYS', 'jock'
@@ -363,7 +371,7 @@ if $ARGS[0] = 'charselect':
         act 'Avid dancer!':
             cls
 			'<center><img <<$set_imgh>> src="images/pre/sys/altstart13.jpg"></center>'
-			'You fell in love with dance at an early age and never looked back. You spent a lot of your free time trying to improve your skills, and it paid off; you''re actually quite good now! Vasily helpfully pointed out that an added benefit of dance was a greater increase in your flexibility (that is, of course, typical of Vasily). Your obsession with dancing, however, has had some repercussions on your school performance. You''re a sub-par student, and you haven''t made many friends other than your fellow jocks and Albina, one of the popular girls, who is just as passionate about dance as you are.'
+			'You fell in love with dance at an early age and never looked back. You spent a lot of your free time trying to improve your skills, and it paid off; you''re actually quite good now! <<$npc_firstname[''A11'']>> helpfully pointed out that an added benefit of dance was a greater increase in your flexibility (that is, of course, typical of <<$npc_firstname[''A11'']>>). Your obsession with dancing, however, has had some repercussions on your school performance. You''re a sub-par student, and you haven''t made many friends other than your fellow jocks and <<$npc_firstname[''A23'']>>, one of the popular girls, who is just as passionate about dance as you are.'
 			act 'Select another': gt 'preSYS', 'charselect'
 			act 'Confirm this option':
 				gs 'preSYS', 'jock'
@@ -418,7 +426,7 @@ if $ARGS[0] = 'charselect':
         act 'Avid football player.':
             cls
 			'<center><img <<$set_imgh>> src="images/pre/sys/altstart15.jpg"></center>'
-			'Ever since your first football game, you have been in love with the sport. You spent a lot of your free time trying to get better at it, and it paid off; you''re actually quite good now! Your obsession with running has had some repercussions on your school performance, however, and you''re now a sub-par student. You haven''t made many friends other than your fellow jocks, especially Lazar and your coach.'
+			'Ever since your first football game, you have been in love with the sport. You spent a lot of your free time trying to get better at it, and it paid off; you''re actually quite good now! Your obsession with football has had some repercussions on your school performance, however, and you''re now a sub-par student. You haven''t made many friends other than your fellow jocks, especially <<$npc_firstname[''A149'']>> and your coach.'
 			act 'Select another': gt 'preSYS', 'charselect'
 			act 'Confirm this option':
 				gs 'preSYS', 'jock'
@@ -442,7 +450,7 @@ if $ARGS[0] = 'charselect':
         *clr
 		cla
 		'<center><img <<$set_imgh>> src="images/pre/sys/altstart5.jpg"></center>'
-        'You spent most of your childhood outdoors, playing with other girls and boys. As a result, you''re quite healthy. You’’re also pretty strong verbally, with a keen understanding about how to get yourself out of trouble (or shifting the blame to someone else). You were never very interested in school or sports, however, and are only a sub-par student. Your popularity has negatively impacted your relationship with Vasily somewhat, and you are not as close as you once were. Now...'
+        'You spent most of your childhood outdoors, playing with other girls and boys. As a result, you''re quite healthy. You''re also pretty strong verbally, with a keen understanding about how to get yourself out of trouble (or shifting the blame to someone else). You were never very interested in school or sports, however, and are only a sub-par student. Your popularity has negatively impacted your relationship with <<$npc_firstname[''A11'']>> somewhat, and you are not as close as you once were. Now...'
 
         act 'I have a lot of friends!':
             cls
@@ -470,7 +478,7 @@ if $ARGS[0] = 'charselect':
         act 'I am beautiful':
             cls
 			'<center><img <<$set_imgh>> src="images/pre/sys/altstart17.jpg"></center>'
-			'You might not be the smartest, and you might not be the most social or have the toughest attitude - but what you do have are natural good looks, that’s not something you can earn! You blossomed earlier than most girls and the boys took note, especially Vasily, who started acting differently around you. You know he is attracted to you, but who can blame him? After all, you’’re fairly certain that all of the boys (and even some of the girls) lust after you either openly or secretly. As you got older your looks only improved, and you are often considered one of the best-looking girls in the room wherever you go. In fact, most consider you to be one of - if not THE - most beautiful girl in school.'
+			'You might not be the smartest, and you might not be the most social or have the toughest attitude - but what you do have are natural good looks, that’s not something you can earn! You blossomed earlier than most girls and the boys took note, especially <<$npc_firstname[''A11'']>>, who started acting differently around you. You know he is attracted to you, but who can blame him? After all, you''re fairly certain that all of the boys (and even some of the girls) lust after you either openly or secretly. As you got older your looks only improved, and you are often considered one of the best-looking girls in the room wherever you go. In fact, most consider you to be one of - if not THE - most beautiful girl in school.'
 			act 'Select another': gt 'preSYS', 'charselect'
 			act 'Confirm this option':
 				gs 'preSYS', 'cool'
@@ -485,7 +493,11 @@ if $ARGS[0] = 'charselect':
 				genbsize = 37
 				pcs_exhibition = 25
 				kosmetica = 50
+				falselashesplain = 10
+				falselashesmink = 2
 				bag = 1
+				if menu_option = 1:dynamic $menu_addoldmenu
+				if menu_option = 0:gs 'obj_din', 'new'
 				greben = 1
 				kosmetitka = 10
 				krem = 10
@@ -507,7 +519,7 @@ if $ARGS[0] = 'charselect':
 		*clr
 		'<center><img <<$set_imgh>> src="images/pre/sys/altstart6.jpg"></center>'
         'You spent most of your childhood outdoors, playing with the other girls and boys. As a result, you''re quite healthy. As you got older you lost any interest you might have once had with fitting in - now you do your own thing, and you’’re ready to tell anyone where they can stick it if they have a problem with that.'
-		'As you and Vasily walked a similar path, your bond of friendship only deepened. This has had some repercussions on your school performance; you''re a sub-par student. It has also had some less enjoyable consequences leading you into more than your fair share of fights, into all sorts of problems at home, landing you in trouble and often punished at school, and even into a few run-ins with the local police. Now most consider you...'
+		'As you and <<$npc_firstname[''A11'']>> walked a similar path, your bond of friendship only deepened. This has had some repercussions on your school performance; you''re a sub-par student. It has also had some less enjoyable consequences leading you into more than your fair share of fights, into all sorts of problems at home, landing you in trouble and often punished at school, and even into a few run-ins with the local police. Now most consider you...'
 
 		act 'A Gopnik':
             cls
@@ -574,11 +586,11 @@ if $ARGS[0] = 'charselect':
 			end
 		end
 
-        act 'Vitek''s Girl Friend':
+        act '<<$npc_nickname[''A9'']>>''s Girl Friend':
             cls
 			'<center><img <<$set_imgh>> src="images/pre/sys/altstart20.jpg"></center>'
-			'You are Vitek''s girlfriend. You love the thrill and danger of hanging out with the gopniks, even if you lack the true attitude yourself. You met Vitek after he and Vasily became friends. There was something about his bad boy attitude that drew you in, and you soon found yourself falling for him.'
-			'As you developed, he started to take an interest in you as well. Soon thereafter the two of you started dating. You’’re not technically a gopnik - you are considered more of a hanger on - but the rest of the gopniks seem to accept you anyways. You’’re not sure what would happen if you ever broke up with Vitek, however, as being his girlfriend and hanging out with the other gopniks has cost you any real, close friends outside of their group.'
+			'You are <<$npc_nickname[''A9'']>>''s girlfriend. You love the thrill and danger of hanging out with the gopniks, even if you lack the true attitude yourself. You met <<$npc_nickname[''A9'']>> after he and <<$npc_firstname[''A11'']>> became friends. There was something about his bad boy attitude that drew you in, and you soon found yourself falling for him.'
+			'As you developed, he started to take an interest in you as well. Soon thereafter the two of you started dating. You’’re not technically a gopnik - you are considered more of a wanna-be - but the rest of the gopniks seem to accept you anyways. You’’re not sure what would happen if you ever broke up with <<npc_nickname[''A9'']>>, however, as being his girlfriend and hanging out with the other gopniks has cost you any real, close friends outside of their group.'
 			act 'Select another': gt 'preSYS', 'charselect'
 			act 'Confirm this option':
 				gs 'preSYS', 'gopnik'
@@ -624,7 +636,7 @@ if $ARGS[0] = 'charselect':
 			end
 		end
 
-        act 'a Alternative, Party Girl, or Rebel':
+        act 'An Alternative, Party Girl, or Rebel':
 !!can choose two more starting tattoo''s
             cls
 			'<center><img <<$set_imgh>> src="images/pre/sys/altstart21.jpg"></center>'
@@ -644,6 +656,8 @@ if $ARGS[0] = 'charselect':
 				pcs_makupskl = 30
 				pcs_danc = 20
 				pcs_heels = 10
+				falselashesplain = 5
+				kosmetica = 20
 				pirsD = 5
 				PirsD5_owned = 1
 				pirsA = 2
@@ -684,12 +698,12 @@ if $ARGS[0] = 'charselect':
 		cla
 		'<center><img <<$set_imgh>> src="images/pre/sys/altstart7.jpg"></center>'
         'You never really fit in. You’’re just one of those individuals who, by choice or circumstance, never really clicked with the other kids. As you got older things only got worse, and now you are seen as an outcast. This breaks one of the most important social rules among your peers, and you are now considered in the same vein as sluts, losers, gay boys and the like.'
-		'Being an outcast has also had a somewhat negative impact on your friendship with Vasily. As you grew up, he became a gopnik and the two of you slowly started hanging out less and less, although you still consider each other to be friends - if just barely. You have no other real friends, and you get bullied and made fun of all the time because...'
+		'Being an outcast has also had a somewhat negative impact on your friendship with <<$npc_firstname[''A11'']>>. As you grew up, he became a gopnik and the two of you slowly started hanging out less and less, although you still consider each other to be friends - if just barely. You have no other real friends, and you get bullied and made fun of all the time because...'
 
         act 'I have no friends':
             cls
             '<center><img <<$set_imgh>> src="images/pre/sys/altstart22.jpg"></center>'
-			'You were never very social and you never learned how to make friends. You were often made fun of or bullied by the other kids as you grew up. As such, you naturally shied away from them, an action that only served to isolate you even further. Now, years later, you have yet to make any real friends - even Vasily, who is your closest friend, wouldn''t be considered a particularly close one.'
+			'You were never very social and you never learned how to make friends. You were often made fun of or bullied by the other kids as you grew up. As such, you naturally shied away from them, an action that only served to isolate you even further. Now, years later, you have yet to make any real friends - even <<$npc_firstname[''A11'']>>, who is your closest friend, wouldn''t be considered a particularly close one.'
 			act 'Select another': gt 'preSYS', 'charselect'
 			act 'Confirm this option':
 				gs 'preSYS', 'outcast'
@@ -719,7 +733,7 @@ if $ARGS[0] = 'charselect':
 				pcs_skin = 0
 				pcs_eyesize = 0
 				pcs_lip = 0
-				pcs_lashes = 3
+				pcs_lashes = 2
 				salo = 20
 				gt 'preCUST', 'SGStart'
 			end
@@ -770,7 +784,10 @@ if $ARGS[0] = 'charselect':
 				pcs_heels = 30
 				genbsize = 32
 				kosmetica = 30
+				falselashesplain = 20
 				bag = 1
+				if menu_option = 1:dynamic $menu_addoldmenu
+				if menu_option = 0:gs 'obj_din', 'new'
 				greben = 1
 				kosmetitka = 10
 				salfetka = 10

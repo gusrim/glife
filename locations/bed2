@@ -97,7 +97,7 @@ if $args[0] = '':
 	end
 	
 
-	act 'Get out of bed':gt $locM, $metkaM
+	act 'Get out of bed':gt $loc, $metka
 end
 
 if $args[0] = 'sleep':
@@ -108,7 +108,7 @@ if $args[0] = 'sleep':
 	InSleep = 1
 	cloth_vid = 0
 	pain['killer'] = 0
-	if StoryLine = 1 and $locM ! 'bedrPar' and SchoolAtestat = 0:
+	if StoryLine = 1 and $loc ! 'bedrPar' and SchoolAtestat = 0:
 		notathomesleep += 1
 	else
 		notathomesleep = 0
@@ -130,7 +130,7 @@ if $args[0] = 'sleep':
 	:loopson
 	minut += 1
 	stime += 1
-	pcs_health += 5
+	if recuperation = 0:pcs_health += 5
 
 	if vibratorIn = 1:
 		vtime += 1
@@ -146,7 +146,7 @@ if $args[0] = 'sleep':
 			minut += 5
 			gs 'stat'
 			'<center><img <<$set_imgh>> src="images/shared/sex/oface/o_face.jpg"></center>'
-			'You abruptly wake up in the throes of an orgasm. As you recover, you check the time, <<hour>>:<<minut>>.'
+			'You abruptly wake up in the throes of an orgasm. As you recover, you check the time, <<$mid(100+hour,2,2)>>:<<$mid(100+minut,2,2)>>.'
 
 			act 'Go back to sleep':
 				*clr
@@ -216,6 +216,24 @@ if $args[0] = 'wake':
 		minut += 15
 		gs 'bed2', 'end'
 	end
+	if enfullmorrout = 1 and hour >= 4 and hour < 12:
+		act 'Full morning routine (01:00)':
+			gs 'clothing', 'wear_last_worn'
+			minut += 15
+			fullmorrout = 1
+			gs 'bed2', 'end'
+		end
+		if kanikuli = 0 and StoryLine = 1 and SchoolAtestat = 0 and SchoolBlock = 0 and week < 6 and hour >= 4 and hour < 9:
+			act ' Full morning routine for School (01:00)':
+				fullmorrout = 1
+				if schtype = 0:schtype = 6
+				if schoolH[schtype] = 0:schtype = 6
+				gs 'clothing', 'wear', 'school', schtype
+				minut += 15
+				gs 'bed2', 'end'
+			end
+		end
+	end
 
 	act 'Get out of bed (0:10)':
 		minut += 10
@@ -225,21 +243,26 @@ end
 
 if $args[0] = 'end':
 	InSleep = 0
-	if tanga = 1:
+	if $pantyworntype ! 'none':
 		if bedpanty = 1:
-			tanga = 0
-			dirtbelo += 1
+			gs 'underwear', 'linen'
 		else
 			if clrbelo > 0:
 				clrbelo -= 1 & dirtbelo += 1
 			else
-				tanga = 0 & dirtbelo += 1
+				gs 'underwear', 'linen'
 			end
 		end
 	else
-		if bedpanty = 0 and clrbelo > 0:tanga = 1 & clrbelo -= 1
+		if bedpanty = 0 and clrbelo > 0:gs 'underwear', 'fresh'
 	end
-	gt $locM, $metkaM
+	if fullmorrout = 1 and $loc = 'bedrPar':
+		gt 'vanrPar'
+	elseif fullmorrout = 1 and $loc = 'bedr':
+		gt 'vanr'
+	else
+		gt $loc, $metka
+	end
 end
 
 if $ARGS[0] = 'succhoice':
@@ -340,7 +363,7 @@ if $ARGS[0] = 'succubinit':
 	'<center><img <<$set_imgh>> src="images/pc/body/succubusself.jpg"></center>'
 	''
 	'<font color="red">You feel the power flowing around your body for several minutes, leaking through your skin and making changes all throughout you, before fading to a presence deep in your core leaving you looking the same as before... but feeling so different! </font>'
-	act 'Finish': gt $locM, $metkaM
+	act 'Finish': gt $loc, $metka
 end
 
 if $ARGS[0] = 'magbstchoice':

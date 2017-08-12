@@ -1,11 +1,11 @@
 # kafe2
 
 if $ARGS[0] = 'toilet':
+
+	$location_type = 'bathroom'
 	$locM = 'kafe2'
 	$metkaM = 'toilet'
-	$gt1 = 'kafe2'
-	$gt2 = 'toilet'
-	cls
+
 	gs 'stat'
 	'<center><img <<$set_imgh>> src="images/locations/shared/bathroom/toilet.jpg"></center>'
 	'Dirty and smelly toilet that seems to have never been cleaned'
@@ -40,14 +40,8 @@ if $ARGS[0] = 'toilet':
 		exit
 	end
 
-	act 'Look in the mirror':
-		cla
-		gt 'portmirror', 'start'
-	end
-
-	if pcs_hairbsh = 0:
-		act 'Brush your hair': gt 'portmirror', 'brush'
-	end
+	act 'Look in the mirror': gt 'mirror', 'start'
+	if pcs_hairbsh = 0: act 'Brush your hair': gt 'mirror', 'brush'
 
 	dynamic $quickwash
 	dynamic $basin
@@ -78,11 +72,11 @@ if $ARGS[0] = 'givi':
 	if hour < 22:
 		'You go to the bar, behind which stands the cafe owner Givi K., he looks up from wiping glasses to look at you.'
 
-		if hour = 20 and Givi >= 90:
+		if hour = 20 and npc_rel['A41'] >= 90:
 			act 'Beg for time off':
 				cla
 				minut += 5
-				Givi -= 5
+				npc_rel['A41'] -= 5
 				'You take time off to leave early, Givi was a little angry but let you go.'
 
 				act 'Move away':gt 'street'
@@ -108,18 +102,18 @@ if $ARGS[0] = 'givi':
 				minut += 30
 				pcs_mood += 5
 
-				if Givi <= 90:Givi += rand(10, 25)
-				if Givi > 90 and GiviSex = 0:Givi = 90
+				if npc_rel['A41'] <= 90:npc_rel['A41'] += rand(10, 25)
+				if npc_rel['A41'] > 90 and GiviSex = 0:npc_rel['A41'] = 90
 
 				'You talk at the bar with the cafe owner and part-time bartender Givi.'
 
-				if Givi = 90:'As you depart a hand slaps you on the ass. Turning around you see that Givi is smiling mischievously.'
+				if npc_rel['A41'] = 90:'As you depart a hand slaps you on the ass. Turning around you see that Givi is smiling mischievously.'
 
 				act 'Move away':gt 'kafe', 'workPred'
 			elseif GiviSex >= 1 and kavslut = 0:
 				minut += 30
 				pcs_mood += 5
-				Givi = 100
+				npc_rel['A41'] = 100
 				'You talk at the bar with the cafe owner and part-time bartender Givi.'
 				'"Hey <<$pcs_nickname>>, I enjoyed it so much last time. Stay with me tonight and help."'
 				'As you depart a hand slaps you on the ass. Turning around you see that Givi is smiling mischievously.'
@@ -128,7 +122,7 @@ if $ARGS[0] = 'givi':
 			elseif GiviSex >= 1 and kavslut > 0:
 				minut += 30
 				pcs_mood -= 5
-				Givi = 100
+				npc_rel['A41'] = 100
 				givirand = rand(0, 100)
 
 				if givirand < 10 and Venera < 4:
@@ -201,8 +195,8 @@ if $ARGS[0] = 'givi':
 end
 
 if $ARGS[0] = 'ashot':
-	$locM = 'kafe2'
-	$metkaM = 'ashot'
+	$loc = 'kafe2'
+	$metka = 'ashot'
 	cls
 	gs 'stat'
 	'You go into the kitchen where trainee chef Ashot is cooking. Dishwasher <a href="exec:gt ''kafe2'', ''tamdin''">Tamara</a> as always stands near the sink and washes the dishes.'
@@ -570,7 +564,7 @@ if $ARGS[0] = 'givipredlog':
 
 			act 'I''ve got to get home':
 				cla
-				Givi = 0
+				npc_rel['A41'] = 0
 				minut += 5
 				gt 'kafeend'
 			end

@@ -122,7 +122,13 @@ if $ARGS[0] = 'start':
 					minut += 120
 					gs 'pain', 4, 'tummy', 'hit'
 
-					act 'Recover':gt $locM
+					act 'Recover':
+						if bankloc = 1:
+							gt 'down'
+						else
+							gt 'pavCommercial'
+						end
+					end
 				end
 			end
 		end
@@ -142,13 +148,7 @@ if $ARGS[0] = 'start':
 		end
 	end
 
-	act 'Leave':
-		if bankloc = 1:
-			gt 'down'
-		else
-			gt 'pavCommercial'
-		end
-	end
+	act 'Leave':$postloc = 'leave' & gt 'postoffice'
 end
 
 if $postloc = 'counter':
@@ -178,15 +178,7 @@ if $postloc = 'counter':
 
 			act 'Yes':$postloc = 'counter' & gt 'postoffice'
 
-			act 'Leave the post office':
-				minut += 5
-				gs 'stat'
-				if bankloc = 1:
-					gt 'down'
-				else
-					gt 'pavCommercial'
-				end
-			end
+			act 'Leave the post office':$postloc = 'leave' & gt 'postoffice'
 		end
 	end
 	
@@ -218,15 +210,7 @@ if $postloc = 'counter':
 
 		act 'Yes':$postloc = 'counter' & gt 'postoffice'
 
-		act 'Leave the post office':
-			minut += 5
-			gs 'stat'
-			if bankloc = 1:
-				gt 'down'
-			else
-				gt 'pavCommercial'
-			end
-		end
+		act 'Leave the post office':$postloc = 'leave' & gt 'postoffice'
 	end
 	
 	i = 0
@@ -289,15 +273,7 @@ if $postloc = 'counter':
 
 					act 'Yes':$postloc = 'counter' & gt 'postoffice'
 
-					act 'Leave the post office':
-						minut += 5
-						gs 'stat'
-						if bankloc = 1:
-							gt 'down'
-						else
-							gt 'pavCommercial'
-						end
-					end
+					act 'Leave the post office':$postloc = 'leave' & gt 'postoffice'
 				end
 			end
 		end
@@ -320,14 +296,17 @@ if $postloc = 'counter':
 !!		end
 !!	end
 
-	act 'Leave':
-		minut += 5
-		gs 'stat'
-		if bankloc = 1:
-			gt 'down'
-		else
-			gt 'pavCommercial'
-		end
+	act 'Leave':$postloc = 'leave' & gt 'postoffice'
+end
+
+
+if $postloc = 'leave':
+	minut += 3
+	killvar '$postloc'
+	if bankloc = 1:
+		gt 'down'
+	else
+		gt 'pavCommercial'
 	end
 end
 

@@ -87,6 +87,7 @@ if $ARGS[1] = 'extras':
 		vnerand = rand(0, 1200)
 		if vnerand <= pcs_apprnc:
 			gs 'boy'
+!!			gt 'dateM', 'start'
 			'A <<$boybody>>, <<$boybod>> guy with <<$boyface>> hair walks up to you, he is <<$boyClo>>'
 			'The guy introduces himself as <<$boydesc>> and asks for your phone number.'
 			act 'Tell him your number':
@@ -100,8 +101,8 @@ if $ARGS[1] = 'extras':
 	end
 
 	if streetev_home = 1:
-		if vladimirday = daystart and vladimirQW = 30 and hour >= 16 and week = 6:'<a href="exec:gt ''qwmeet2''">There''s an Audi parked in front of your building and standing beside it you notice Vladimir</a>.'
-		if vladimirday = daystart and vladimirQW = 40 and hour >= 16 and week = 6:'<a href="exec:gt ''qwmeet3''">There''s an Audi parked in front of your building and standing beside it you notice Vladimir</a>.'
+		if vladimirday = daystart and vladimirQW = 30 and hour >= 16 and week = 6:'<a href="exec:gt ''qwmeet'',''2''">There''s an Audi parked in front of your building and standing beside it you notice Vladimir</a>.'
+		if vladimirday = daystart and vladimirQW = 40 and hour >= 16 and week = 6:'<a href="exec:gt ''qwmeet'',''3''">There''s an Audi parked in front of your building and standing beside it you notice Vladimir</a>.'
 
 		if hour = meethourA:
 			if svidanieA = 1:'<b><a href="exec:gt ''meet'', ''start''"><<$loverdesc[1]>></a> waits <<$streetev_home>>.</b>'
@@ -125,7 +126,7 @@ end
 
 
 if $ARGS[1] = 'main':
-	if lesbiday <= daystart + 21 and RAND(0,100) < streetev_mistmeet and lesbiQW >= 11 and hour >= 8 and hour < 21 and tanga = 1 and month > 2 and month ! 12 and sub > 0:gt 'lesbimistress', 'mistmeet'
+	if lesbiday <= daystart + 21 and RAND(0,100) < streetev_mistmeet and lesbiQW >= 11 and hour >= 8 and hour < 21 and $pantyworntype ! 'none' and month > 2 and month ! 12 and sub > 0:gt 'lesbimistress', 'mistmeet'
 
 
 	streetrand = rand(0, 100)
@@ -291,6 +292,7 @@ if $ARGS[1] = 'main':
 				gs 'stat'
 				act 'Leave':gt $loc
 			else
+				cla
 				'You manage to lose him and get to a safer well lit area.'
 				act 'Continue':gt $loc
 			end
@@ -380,13 +382,13 @@ if $ARGS[1] = 'main':
 				'You try to run away, but you''re not quick enough and he catches you. He grabs your purse and rummages in it. Knocking most of the contents out on the ground. Once he has your money he throws the purse back at you and then takes off running. You try to calm yourself down as you squat to gather your stuff back up and put them back in your purse.'
 				act 'Leave':gt $loc
 			else
+				cla
 				'You manage to lose him and get to a safer well lit area.'
 				act 'Continue':gt $loc
 			end
 		end
 		act 'Don''t fight, just give him your money':
 			cla
-			clr
 			money = 0
 			gs 'stat'
 			'You quickly open your purse, as you do he grabs it from you and rummages in it. Knocking most of the contents out on the ground. Once he has your money he throws the purse back at you and then takes off running. You try to calm yourself down as you squat to gather your stuff back up and put them back in your purse.'
@@ -395,7 +397,8 @@ if $ARGS[1] = 'main':
 		act 'Fight':
 			cla
 			'You clutch your purse to your body and tell him. "Fuck you asshole!" He snarls and lunges at you.'
-			act 'Fight':
+			act 'Defend yourself':
+				cla
 				gs 'npcgeneratec', 0, 'Robber', rand(18,45)
 				gs 'boyStat', $npclastgenerated
 				!!stats
@@ -446,10 +449,10 @@ if $ARGS[1] = 'main':
 			act 'That jackass':gt $loc
 		end
 		act 'Chase him':
+			*clr
+			cla
 			if pcs_react < 55 or pcs_agil < 55 or pcs_vital < 55:
-				cla
 				money = 0
-				clr
 				gs 'stat'
 				'<<$streetev_title>>'
 				'<center><img src="images/locations/shared/street/purselose.jpg"></center>'
@@ -806,7 +809,7 @@ if $ARGS[1] = 'main':
 		elseif streetrand > 84:
 			if hour >= 9:
 		!!first one is dress with panties
-				if PCloSkirt > 0 and tanga = 1 and CloOnePiece = 1:
+				if PCloSkirt > 0 and $pantyworntype ! 'none' and CloOnePiece = 1:
 			!!all the getting partially stripped ones from 09:00 till 24:00
 					*clr
 					cla
@@ -824,7 +827,7 @@ if $ARGS[1] = 'main':
 					end
 					act 'continue':gt $loc
 			!!dress without panties
-				elseif PCloSkirt > 0 and tanga = 0 and CloOnePiece = 1:
+				elseif PCloSkirt > 0 and $pantyworntype = 'none' and CloOnePiece = 1:
 					*clr
 					cla
 					minut += 5
@@ -841,7 +844,7 @@ if $ARGS[1] = 'main':
 					end
 					act 'continue':gt $loc
 			!!skirt with panties
-				elseif PCloSkirt > 0 and tanga = 1:
+				elseif PCloSkirt > 0 and $pantyworntype ! 'none':
 					*clr
 					cla
 					minut += 5
@@ -880,7 +883,7 @@ if $ARGS[1] = 'main':
 			end
 		elseif streetrand > 82:
 		!!This can only happen if Sveta is wearing a dress or skirt and panties. Since I have no image for a pantyless version
-			if PCloSkirt > 0 and tanga = 1:
+			if PCloSkirt > 0 and $pantyworntype ! 'none':
 				*clr
 				cla
 				minut += 5
@@ -1310,7 +1313,8 @@ if $ARGS[1] = 'main':
 							end
 						end
 					end
-				elseif money >= 100:
+				end
+				if money >= 100:
 					act 'Give her 100':
 						cla
 						*clr
@@ -1334,7 +1338,8 @@ if $ARGS[1] = 'main':
 							end
 						end
 					end
-				elseif money >= 250:
+				end
+				if money >= 250:
 					act 'Give her 250':
 						cla
 						*clr
@@ -1358,7 +1363,8 @@ if $ARGS[1] = 'main':
 							end
 						end
 					end
-				elseif money >= 500:
+				end
+				if money >= 500:
 					act 'Give her 500':
 						cla
 						*clr
@@ -1382,7 +1388,8 @@ if $ARGS[1] = 'main':
 							end
 						end
 					end
-				elseif money >= 1000:
+				end
+				if money >= 1000:
 					act 'Give her 1000':
 						cla
 						*clr
@@ -1595,7 +1602,7 @@ if $ARGS[1] = 'main':
 				else
 					gt $loc
 				end
-			elseif streetrand > 46 and tanga = 0 and PCloSkirt > 2 and hour > 6 and hour <= 20:
+			elseif streetrand > 46 and $pantyworntype = 'none' and PCloSkirt > 2 and hour > 6 and hour <= 20:
 				if pcs_exhibition < 30: pcs_mood -= 5
 				exhibition_exp += 1
 				pcs_horny += pcs_exhibition/5

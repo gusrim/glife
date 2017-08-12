@@ -15,8 +15,6 @@ $location_type = 'indoors'
 if day <= 25 and mey_vika['mey_vika_qw'] > 40: mey_vika['mey_vika_qw'] = 40
 
 if $args[0] = 'door':
-	$metkaM = 'door'
-	$locM = 'mey_home'
 	$metka = 'door'
 	$loc = 'mey_home'
 	cls
@@ -64,8 +62,6 @@ end
 
 ! hall
 if $ARGS[0] = 'start':
-	$metkaM = 'start'
-	$locM = 'mey_home'
 	$metka = 'start'
 	$loc = 'mey_home'
 	cls
@@ -289,6 +285,7 @@ if $ARGS[0] = '2':
 	!bathroom
 	$locM = 'mey_home'
 	$metkaM = '2'
+	$metka = '2'
 	minut += 1
 	cls
 	gs'stat'
@@ -299,13 +296,14 @@ if $ARGS[0] = '2':
 	'Above the beautiful vanity and sink there is a huge <a href="exec:GT ''mirror'',''start''">mirror</a>.'
 	!acts copy from [shulgabath]
 	act 'Return to the hallway': gt 'mey_home', 'start'
-
 	gs 'din_van', 'private'
 end
 
 ! guestroom
 if $ARGS[0] = '3':
 	cls
+	$locM = 'mey_home'
+	$metkaM = '3'
 	$loc = 'mey_home'
 	$metka = '3'
 	minut += 1
@@ -320,7 +318,7 @@ if $ARGS[0] = '3':
 	act 'Exit to hallway':
 		if ($clothingworntype = 'nude' or $clothingworntype = 'swimwear'):
 			*clr
-			'<center><img <<$set_imgh>> src="'+'images/pc/clothing/'+iif(tanga=0,'0','tanga')+'.jpg'+'"></center>'
+			'<center><img <<$set_imgh>> src="'+'images/pc/clothing/'+iif($pantyworntype = 'none','0','tanga')+'.jpg'+'"></center>'
 			'<center><font color=red><b>You can''t go out dressed like this!</b></font></center>'
 			exit
 		end
@@ -356,21 +354,19 @@ if $ARGS[0] = '3':
 			'<center><img <<$set_imgh>> src="images/shared/drugs/dur.jpg"></center>'
 			'You snort some White Lady, feeling dizzy for a moment. After that you feel fantastic, and incredibly horny.'
 
-			act 'Continue':gt 'mey_home', 3
+			act 'Continue':gt 'mey_home', '3'
 		end
 	end
 
-	if tanga = 0:
+	if $pantyworntype = 'none':
 		act 'Wear underwear':
-			cla
-			tanga = 1
-			gt 'mey_home', 3
+			gs 'underwear', 'wear'
+			gt 'mey_home', '3'
 		end
-	elseif tanga = 1:
+	elseif $pantyworntype ! 'none':
 		act 'Take off your underwear':
-			cla
-			tanga = 0
-			gt 'mey_home', 3
+			gs 'underwear', 'remove'
+			gt 'mey_home', '3'
 		end
 	end
 	
@@ -384,7 +380,7 @@ if $ARGS[0] = '3':
 			minut += waiting
 		end
 
-		act 'Take a look at the clock':gt 'mey_home', 3
+		act 'Take a look at the clock':gt 'mey_home', '3'
 	end
 
 	if rand (0,2) ! 0:gs 'din_bad' & dynamic $mobile_check	
