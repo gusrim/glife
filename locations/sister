@@ -708,18 +708,136 @@ if hour >= 7 and hour < 24:
 	end
 
 	if npc_rel['A33'] >= 80 and sisterknowslut > 0 and sisterdialog < 2:
-		act 'Talk about sex':
-			cla
-			cls
-			gs'stat'
-			minut+=rand(10,15)
-			pcs_horny += RAND(5,10)
-			npc_rel['A33'] += 1
-			dynamic $d_sistersexstories[1]
-			act '<B>Move away</B>':gt 'sister'
+		if TwinQW = 1:
+			act 'Talk about the Twin request':
+				*clr & cla
+				'<center><img <<$set_imgh>> src="images/characters/pavlovsk/resident/anya/sister2.jpg"></center>'
+				if Twin3QW = 1:jump 'twinboyfriendtalk'
+				if Twin2QW ! 1:
+					'"Sis, I have a confession to make.... I have been selling my body in the Pavlovsk hotel"'
+					'"<<$pcs_nickname>>, really ? Why would you do something like that ? If people find out they will start treating you like a whore."'
+					'" Don''t worry , nobody will find out, there is a guy there who takes care of everything. and take a look at all the money I have been making"'
+					'You open your wallet and show your sis the full amount of <<money>>  <b>₽</b>'
+				elseif TwinQW = 1:
+					'You bring up your prostitution job again to your sister and show off your wallet.'
+				end
+				if money < 5000:
+					'"wait, how many times have you prostituted yourself so far"'
+					'" I don''t know . about  <<pavproscount>> times."'
+					'You sister gives you a concerned look.'
+					'" <<pavproscount>> times and this is all you have to show for it ?"'
+					'Your sister approaches you and gives you a hug'
+					'" I hope you can stop what you are doing, it is not worth it <<$pcs_nickname>>"'
+					'<br>'
+					'You didn''t even get the chance to bring up the twin request. It looks like you''ll have to convince your sister that the work you do is worth the risks.'
+					Twin2QW = 1
+				end
+				if money => 5000:
+					'"Ok, I must admit that looks like a lot. Do you know how long I have to work in the supermarket to earn this kind of money ? Still it looks very risky to me."'
+					'"How would you like to earn some of this and spent some time with your favourite sister at the same time ?" You ask.'
+					'"What do you mean <<$pcs_nickname>>"'
+					'You explain the twins request to your sister.'
+					if sisboyparty ! 0:
+						'"Ha, that actually sounds like a lot of fun. Ok I''ll do it.  When do we leave ?"'
+						'" Well first I will have to make myself look more like you, I''ll come and get you when I am ready."'
+						TwinQW = 2
+						
+					else
+						'"Sorry <<$pcs_nickname>>. You know I love you but my boyfriend would never allow this. Anyway, thanks for confiding in me. Please stay safe little sis."'
+						'Anya gives you a little smile. You were always happy for your sister that she had a boyfriend she loved but right now you would give anything to get rid of him.'
+						Twin3QW = 1
+						jump 'twinmoveaway'
+					end
+				end
+				:twinboyfriendtalk
+				if Twin3QW = 1:
+					if sisboyparty = 0:
+						'You bring up the twins request again but she still refuses claiming Roma would not allow it.'
+					else
+						'You bring up the twins request again. Since her relationship with Roma is a little different now she actually is a lot more receptive.'
+						'"Ha, that actually sounds like a lot of fun. Ok I''ll do it.  When do we leave ?"'
+						'" Well first I will have to make myself look more like you, I''ll come and get you when I a m ready."'
+						TwinQW = 2
+					end
+					
+				end
+				:twinmoveaway
+				act '<B>Move away</B>':gt 'sister'
+			end
+		end
+		if TwinQW = 2:
+			act 'Compare yourself with your sister':
+				*clr & cla
+				'<center><img <<$set_imgh>> src="images/characters/pavlovsk/resident/anya/sister2.jpg"></center>'
+				'You sister has straight blonde hair. Her hair reaches her shoulders with several strands going just beyond.'
+				'She has good looks. Men and women check her out when they think she isn''t looking.'
+				'<br>'
+				'<<$hair>>'
+				'<<$pcs_apprnc>>'
+				'<<$pcs_makeup>>'
+				'<br>'
+				if pcs_hairlng > 160 and pcs_hairlng <= 260:
+					'<font color=#008000>Your hair is the correct length</font>'
+					twinqwsiscompare +=1
+				else
+					'<font color=#FF0000>Your hair is not the correct length.</font>'
+				end
+				if pcs_hairbsh = 0:
+					'<font color=#FF0000>You need to brush your hair.</font>'
+				else
+					twinqwsiscompare +=1
+				end
+				if pcs_haircol = 3:
+					'<font color=#008000>Your hair is the correct color.</font>'
+					twinqwsiscompare +=1
+				else
+					'<font color=#FF0000>Your hair is not the correct color.</font>'
+				end
+				if curly = 0:
+					'<font color=#008000>Your hair is straight</font>'
+					twinqwsiscompare +=1
+				else
+					'<font color=#FF0000>Your hair is too curly</font>'
+				end
+				if pcs_apprnc => 60 and pcs_apprnc < 120:
+					'<font color=#008000>Your looks matches your sister''s.</font>'
+					twinqwsiscompare +=1
+				else
+					'<font color=#FF0000>Your looks are too different from your sister''s. You are at <<pcs_apprnc>>. you need a score between 60 and 120  </font>'
+				end
+				if pcs_makeup = 4:
+					'<font color=#008000>Your make up hides the last differences between you and your sister.</font>'
+					twinqwsiscompare +=1
+				else
+					'<font color=#FF0000>You need some more make up to make you look more like your sister.</font>'
+				end
+				act '<B>Move away</B>':killvar 'twinqwsiscompare' & gt 'sister'
+				if twinqwsiscompare = 6:
+					
+					act ' Go to the hotel and have some Twin fun':
+						if hour >= 12 and hour < 20:
+							killvar 'twinqwsiscompare'
+							killvar 'Twin2QW'
+							killvar 'Twin3QW'
+							gt 'HotelHole','Twins'
+						else
+							'Pavlin is usually in the hotel lobby between 12:00 and 20:00, No reason to go now.'
+						end
+					end
+				end
+			end
+			act 'Talk about sex':
+				cla
+				cls
+				gs'stat'
+				minut+=rand(10,15)
+				pcs_horny += RAND(5,10)
+				npc_rel['A33'] += 1
+				dynamic $d_sistersexstories[1]
+				act '<B>Move away</B>':gt 'sister'
+			end
 		end
 	end
-
 else
 	'OK <<$pcs_nickname>>, it''s time for bed.'
 end
