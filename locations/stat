@@ -383,11 +383,19 @@ if minut >= 60:
 	if scpopt > 1: scpopt = 0
 
 	if insleep = 1:
-		pcs_energy -= (4 + succublvl/2)
+		if amphHigh > 0:
+			pcs_energy -= (4 / amphetamineBonus + succublvl/2)
+		else
+			pcs_energy -= (4 * amphetamineBonus + succublvl/2)
+		end
 		pcs_stam += stammax / 10
 		pcs_sleep -= 4
 	else
-		pcs_energy -= (8 + succublvl)
+		if amphHigh > 0:
+			pcs_energy -= (8 / amphetamineBonus + succublvl)
+		else
+			pcs_energy -= (8 * amphetamineBonus + succublvl)
+		end
 		pcs_stam += stammax / 20
 		pcs_sleep -= 4
 	end
@@ -441,7 +449,11 @@ if minut >= 60:
 	if smoker >= 20:smokerNeed += 1
 	if smokerNeed > 10 and InSleep = 0 and pcs_mood > 20:pcs_mood -= pcs_mood / 10
 	if smokerNeed > 300:smokerNeed = 0 & smoker = 0
-	if StrongNarkota > 0:StrongNarkota -= 1
+	if StrongNarkota > 0:StrongNarkota -= 1 & pcs_mood -= (40 / StrongNarkota)
+	if amphWithdrawl > 5: amphWithdrawl += 1 & pcs_mood -= (amphWithdrawl / 5)
+	if amphHigh > 0: amphWithdrawl = 2 & amphetamineBonus = 3 & amphHigh -= 1 & amphHigh -= 4 & pcs_mood += (2 * amphHigh)
+	if amphHigh = 0 and amphWithdrawl = 2 : amphetamineBonus = 2 & amphWithdrawl += 1 & pcs_mood -= pcs_mood / 10
+	if amphWithdrawl > 169: amphWithdrawl = 1 & amphetamineBonus = 1 & amphCount = 0
 	if SLomka > 0 and pcs_mood > 10:SLomka += 1 & pcs_mood -= pcs_mood / 10
 	if SLomka > 100 and StrongNarkota <= 0:SLomka = 0 & SNarkTimes = 0
 
@@ -451,9 +463,11 @@ if minut >= 60:
 		pcs_mood -= 10
 	end
 
-	if $pantyworntype = 'none' and PCloPants > 0 and $clothingworntype ! 'nude':mosol += 1
+	if tanga = 0 and PCloPants > 0 and $clothingworntype ! 'nude':mosol += 1
 
 	if mosol >= 50: pcs_mood -= 5
+
+	if mosol >= 30 and pain['pubic'] < 80: gs 'pain', 1, 'pubic', 'ache'
 
 	if pcs_energy > 100:
 		fat += (pcs_energy - 100) / 4
@@ -461,7 +475,7 @@ if minut >= 60:
 	end
 
 	if mosol > 0:
-		if $pantyworntype ! 'none' or $clothingworntype = 'nude':mosol -= rand(0,1)
+		if tanga = 1 or $clothingworntype = 'nude':mosol -= rand(0,1)
 	end
 
 	if pcs_lipbalm > 0:pcs_lipbalm -= 1
@@ -989,6 +1003,3 @@ end
 if insleep = 0: gs 'stat_display'
 
 if cumcondslip <= 0: cumcondslip_deep = 0
-
---- stat ---------------------------------
-
