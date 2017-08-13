@@ -53,72 +53,64 @@ if $ARGS[0] = 'fresh':
 	end
 end
 
-if $ARGS[0] = 'wear_options':
-	if cheap_panties > 0 and $pantyworntype ! 'cheap':*P dyneval($panty_list_line, $ARGS[1], 'cheap', cheap_panty_number)
-end
-
 if $ARGS[0] = 'view_panty_list':
 	!! ARGS 0 - view_panty_list
 	!! ARGS 1 - action type (clean, dirty, store)
-	$metka_panties = $args[1]
+	if $args[1] = 'clean':
+		metka_panties = 0
+	elseif $args[1] = 'dirty':
+		metka_panties = 1
+	else
+		metka_panties = 2
+	end
 
 	act 'Leave':gt $loc, $metka
 
 	'<center><table border=1><TH><a href="exec:gt ''panties'', ''view_panty_list'', ''clean''">Clean</a></TH><TH><a href="exec:gt ''panties'', ''view_panty_list'', ''dirty''">Dirty</a></TH><TH><a href="exec:gt ''panties'', ''view_panty_list'', ''store''">Storage</a></TH></center>'
 
-	if $pantyworntype ! 'none':act 'Remove panties':gs 'panties', 'strip' & gt 'view_panty_list', $metka_panties
+	if $pantyworntype ! 'none':act 'Remove panties':gs 'panties', 'linen' & gt 'view_panty_list', $ARGS[1]
 	
 	if $ARGS[1] = 'store':
 		cloc = 1
 	end
 
-	'<center><src="images/locations/city/citycenter/mall/moncheri.png"></center>'
+	'<center><img src="images/locations/city/citycenter/mall/moncheri.png"></center>'
 
 	i = 1
 	:loopboutiquepanties 
-	if ($metka_panties = 'clean' and boutique_pantiesC[i] = 0) or ($metka_panties = 'dirty' and boutique_pantiesC[i] = 1) or $metka_panties = 'store':
-		if boutique_panties[i] = 1 and boutique_pantiesS[i] = cloc:*p '<a href="exec:gt ''panties'', ''view_panty_item'', ''wardrobe'', ''boutique'', <<i>>"><img src="images/pc/panties/boutique/<<i>>.jpg" 	height="300" /></a>'
-	end
+	if boutique_pantiesC[i] = metka_panties and boutique_panties[i] = 1:*p '<a href="exec:gt ''panties'', ''view_panty_item'', <<metka_panties>>, ''boutique'', <<i>>"><img src="images/pc/panties/boutique/<<i>>.jpg" 	height="300" /></a>'
 	i += 1
 	if i <= ARRSIZE('boutique_panties'):jump 'loopboutiquepanties'
 
-	'<center><src="images/locations/oldtown/exhibitshop/shop_name.png"></center>'
+	'<center><img src="images/locations/oldtown/exhibitshop/shop_name.png"></center>'
 
 	i = 1
 	:loopexhibitionistpanties 
-	if ($metka_panties = 'clean' and exhibitionist_pantiesC[i] = 0) or ($metka_panties = 'dirty' and exhibitionist_pantiesC[i] = 1) or $metka_panties = 'store':
-		if exhibitionist_panties[i] = 1 and exhibitionist_pantiesS[i] = cloc:*p '<a href="exec:gt ''panties'', ''view_panty_item'', ''wardrobe'', ''exhibitionist'', <<i>>"><img src="images/pc/panties/exhibitionist/<<i>>.jpg" 	height="300" /></a>'
-	end
+	if exhibitionist_pantiesC[i] = metka_panties and exhibitionist_panties[i] = 1:*p '<a href="exec:gt ''panties'', ''view_panty_item'', <<metka_panties>>, ''exhibitionist'', <<i>>"><img src="images/pc/panties/exhibitionist/<<i>>.jpg" 	height="300" /></a>'
 	i += 1
 	if i <= ARRSIZE('exhibitionist_panties'):jump 'loopexhibitionistpanties'
 
-	'<center><src="images/locations/city/citycenter/mall/fashionistat.png"></center>'
+	'<center><img src="images/locations/city/citycenter/mall/fashionistat.png"></center>'
 
 	i = 1
 	:loopfashionistapanties 
-	if ($metka_panties = 'clean' and fashionista_pantiesC[i] = 0) or ($metka_panties = 'dirty' and fashionista_pantiesC[i] = 1) or $metka_panties = 'store':
-		if fashionista_panties[i] = 1 and fashionista_pantiesS[i] = cloc:*p '<a href="exec:gt ''panties'', ''view_panty_item'', ''wardrobe'', ''fashionista'', <<i>>"><img src="images/pc/panties/fashionista/<<i>>.jpg" 	height="300" /></a>'
-	end
+	if fashionista_pantiesC[i] = metka_panties and fashionista_panties[i] = 1:*p '<a href="exec:gt ''panties'', ''view_panty_item'', <<metka_panties>>, ''fashionista'', <<i>>"><img src="images/pc/panties/fashionista/<<i>>.jpg" 	height="300" /></a>'
 	i += 1
 	if i <= ARRSIZE('fashionista_panties'):jump 'loopfashionistapanties'
 
-	'<center><src="images/locations/city/citycenter/mall/pussycat.png"></center>'
+	'<center><img src="images/locations/city/citycenter/mall/pussycat.png"></center>'
 
 	i = 1
 	:loopkatspanties 
-	if ($metka_panties = 'clean' and kats_pantiesC[i] = 0) or ($metka_panties = 'dirty' and kats_pantiesC[i] = 1) or $metka_panties = 'store':
-		if kats_panties[i] = 1 and kats_pantiesS[i] = cloc:*p '<a href="exec:gt ''panties'', ''view_panty_item'', ''wardrobe'', ''kats'', <<i>>"><img src="images/pc/panties/kats/<<i>>.jpg" 	height="300" /></a>'
-	end
+	if kats_pantiesC[i] = metka_panties and kats_panties[i] = 1:*p '<a href="exec:gt ''panties'', ''view_panty_item'', <<metka_panties>>, ''kats'', <<i>>"><img src="images/pc/panties/kats/<<i>>.jpg" 	height="300" /></a>'
 	i += 1
 	if i <= ARRSIZE('kats_panties'):jump 'loopkatspanties'
 
-	'<center><src="images/locations/city/citycenter/sexshop/shop_name.png"></center>'
+	'<center><img src="images/locations/city/citycenter/sexshop/shop_name.png"></center>'
 
 	i = 1
 	:loopsexshoppanties 
-	if ($metka_panties = 'clean' and sexshop_pantiesC[i] = 0) or ($metka_panties = 'dirty' and sexshop_pantiesC[i] = 1) or $metka_panties = 'store':
-		if sexshop_panties[i] = 1 and sexshop_pantiesS[i] = cloc:*p '<a href="exec:gt ''panties'', ''view_panty_item'', ''wardrobe'', ''sexshop'', <<i>>"><img src="images/pc/panties/sexshop/<<i>>.jpg" 	height="300" /></a>'
-	end
+	if sexshop_pantiesC[i] = metka_panties and sexshop_panties[i] = 1:*p '<a href="exec:gt ''panties'', ''view_panty_item'', <<metka_panties>>, ''sexshop'', <<i>>"><img src="images/pc/panties/sexshop/<<i>>.jpg" 	height="300" /></a>'
 	i += 1
 	if i <= ARRSIZE('sexshop_panties'):jump 'loopsexshoppanties'
 end
@@ -129,6 +121,17 @@ if $ARGS[0] = 'view_panty_item':
 	!! ARGS 2 - panty type
 	!! ARGS 3 - panty index
 	!! ARGS 4 - price for shop
+	if $ARGS[1] ! '':
+		if metka_panties = 0:
+			$ARGS[1] = 'clean'
+		elseif metka_panties = 1:
+			$ARGS[1] = 'dirty'
+		elseif metka_panties = 2:
+			$ARGS[1] = 'store'
+		else
+			$ARGS[1] = 'shop'
+		end
+	end
 
 	cla
 	'<center><img src="<<FUNC(''$panty_image'',  $ARGS[2], ARGS[3])>>"></center>'
@@ -139,10 +142,10 @@ if $ARGS[0] = 'view_panty_item':
 !!	gs 'panty_descriptions'
 !!	'<<$description>>'
 
-	if PanExhibit + 10 > pcs_exhibition: 'You find this outfit more revealing than you are completely comfortable with but that makes it quite exciting too.'
+!!	if PanExhibit + 10 > pcs_exhibition: 'You find these panties more revealing than you are completely comfortable with but that makes it quite exciting too.'
 
 	if $ARGS[1] = 'shop':
-		if dyneval('RESULT = <<$ARGS[2]>>[<<ARGS[3]>>]') = 1:
+		if dyneval('RESULT = <<$ARGS[2]>>_panties[<<ARGS[3]>>]') = 1:
 			'You already own this item.'
 			act 'Leave': gt $loc, $metka
 		else
@@ -153,9 +156,8 @@ if $ARGS[0] = 'view_panty_item':
 			elseif money >= Price:
 				act 'Buy':
 					money -= price
-					dynamic $ARGS[2] + '[<<ARGS[3]>>] = 1'
-					dynamic $ARGS[2] + 'S[<<ARGS[3]>>] = 0'
-					dynamic $ARGS[2] + 'C[<<ARGS[3]>>] = 0'
+					dynamic $ARGS[2] + '_panties[<<ARGS[3]>>] = 1'
+					dynamic $ARGS[2] + '_pantiesC[<<ARGS[3]>>] = 0'
 					gt $loc, $metka
 				end
 			else
@@ -164,13 +166,23 @@ if $ARGS[0] = 'view_panty_item':
 		end
 	elseif $ARGS[1] = 'clean':
 		act 'Return':gt 'panties', 'view_panty_list', $ARGS[1]
-
-		if PanExhibit > pcs_exhibition:
-			'You don''t feel confident enough to wear these panties.'
+		
+		if $pantyworntype = $ARGS[2] and pantywornnumber = ARGS[3]:
+			'You are wearing these panties.'
 		else
-			act 'Wear':
-				gs 'panties', 'fresh', $ARGS[2], ARGS[3]
+			if PanExhibit > pcs_exhibition:
+				'You don''t feel confident enough to wear these panties.'
+			else
+				act 'Wear':
+					gs 'panties', 'fresh', $ARGS[2], ARGS[3]
 
+					gt 'panties', 'view_panty_list', $ARGS[1]
+				end
+			end
+			
+			act 'Store them':
+				dynamic $ARGS[2] + '_pantiesC[<<ARGS[3]>>] = 2'
+				
 				gt 'panties', 'view_panty_list', $ARGS[1]
 			end
 		end
@@ -182,7 +194,7 @@ if $ARGS[0] = 'view_panty_item':
 		act 'Return':gt 'panties', 'view_panty_list', $ARGS[1]
 
 		act 'Move back to wardrobe':
-			dynamic $ARGS[2] + 'S[<<ARGS[3]>>] = 0'
+			dynamic $ARGS[2] + '_pantiesC[<<ARGS[3]>>] = 0'
 			gt 'panties', 'view_panty_list', $ARGS[1]
 		end
 	end
