@@ -11,6 +11,32 @@ if $ARGS[0] = '':
 	'The room looks like a study room, appearing warm and inviting. There is desk with a chair at one end of the room, but it appears to be seldom used. On the desk there is an older <a href="exec: VIEW ''images/locations/pavlovsk/clinic/therapist/pavlovfamily.jpg''">photograph of Dr. Pavlov''s family</a>, in which he appears to be about two decades younger.'
 	'"Come in, Miss <<$pcs_lastname>>! Please, tell me what can I help you with today?"'
 	gs 'stat'
+	if pcs_childtrauma > 0:
+		act 'Deal with losing the baby':
+			cla
+			*clr
+			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/clinic/therapist/room.jpg"></center>'
+			$therapy = 'trauma'
+			'"I would like some help dealing with my beatings and losing my child."'
+			'"I think the best way to do that would be hypnotherapy."'
+			act 'Regular therapy':
+				cls
+				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/clinic/therapist/therapy1.jpg"></center>'
+				minut += 60
+				pcs_childtrauma -= 1
+				gs 'stat'
+				
+					'You talk about your traumatic issues, and Dr. Pavlov makes some suggestions, and asks some pointed questions. Although he makes you uncomfortable, it somehow makes you feel better about yourself.'
+				if pcs_childtrauma = 0:
+					'You were able to give the events a place in your life and you are finally ready to move on.'
+					npc_rel['A217'] = 20
+				end
+				'"Please, visit me again if you have any further problems, I will be glad to help!" Says Dr. Pavlov, as he escort you out of his door.'
+				act 'Leave':gt $loc
+			end
+			act 'Hypnotherapy':gt 'therapist', 'hypno'
+		end
+	end
 	act 'Raise your mood':
 		cls
 		'<center><img <<$set_imgh>> src="images/locations/pavlovsk/clinic/therapist/therapy1.jpg"></center>'
@@ -137,18 +163,27 @@ if $ARGS[0] = 'hypno':
 		
 		if $therapy = 'confidence':
 			pcs_willpwr += rand(1,2)
-			$session = 'You will feel more confident. You are smart, beautiful, and if other people has other opinions, that is their problem. You know what you want, and do not fear to act upon your desires."<br>...<br>...<br>...'
+			$session = 'You will feel more confident. You are smart, beautiful, and if other people has other opinions, that is their problem. You know what you want, and do not fear to act upon your desires."<br>...<br>...<br>..."'
 		elseif $therapy = 'dominance':
 			pcs_dom += rand(1,2)
-			$session = 'You like to do what you want to do. It pleases you if people do what you tell them to do, or act according to your wishes, and you like to couse them pleasure this way. You have to be in control constantly, but that means others around you can relax."<br>...<br>...<br>...'
+			$session = 'You like to do what you want to do. It pleases you if people do what you tell them to do, or act according to your wishes, and you like to couse them pleasure this way. You have to be in control constantly, but that means others around you can relax."<br>...<br>...<br>..."'
 		elseif $therapy = 'submission':
 			sub += rand(1,2)
-			$session = 'You want to be told what to do and what to think, what to feel and whom to please. Obeying others pleases you because it pleases them, and for a while you do not have to take responsibility for your actions."<br>...<br>...<br>...'
+			$session = 'You want to be told what to do and what to think, what to feel and whom to please. Obeying others pleases you because it pleases them, and for a while you do not have to take responsibility for your actions."<br>...<br>...<br>..."'
+		elseif $therapy = 'trauma':
+			pcs_childtrauma -= rand(2,4)
+			if pcs_childtrauma >0:
+			$session = 'You are able to observe the events happened to you without the sharp emotional effect. You still feel the emotions, but they are no longer enormous, and you can put them aside. "<br>...<br>...<br>..."'
+			else
+			killvar 'pcs_childtrauma'
+			npc_rel['A217'] = 20
+			$session = 'You are able to observe the events happened to you without the sharp emotional effect. You still feel the emotions, but they are no longer enormous, and you can put them aside. "<br>...<br>...<br>..."<br> You were able to give the events a place in your life and you are finally ready to move on.'
+			end
 		end
 		'<font color=brown>'
 			$firsthypno2
 			'"Good. <<$firsthypno>>"'
-			'"All right <i>Cunt</i>, let''s work on your <<$therapy>>. <<$session>>'
+			'"All right <i>Cunt</i>, let''s work on your <<$therapy>>. <<$session>>"'
 			'"And now let''s play. You will enjoy the play, <i>Cunt</i>, but you will not remember anything about it when you are awake. Understand?"'
 			'"Yes, <i>Master</i>."'
 			'"Perfect! Now take off your clothes."</font>'
