@@ -49,7 +49,7 @@ if $ARGS[0] = 'fresh':
 		clrbelo -= 1
 	else
 		$pantyworntype = $ARGS[1]
-		pantywornnumber = ARGS[0]
+		pantywornnumber = ARGS[2]
 	end
 end
 
@@ -68,7 +68,7 @@ if $ARGS[0] = 'view_panty_list':
 
 	'<center><table border=1><TH><a href="exec:gt ''panties'', ''view_panty_list'', ''clean''">Clean</a></TH><TH><a href="exec:gt ''panties'', ''view_panty_list'', ''dirty''">Dirty</a></TH><TH><a href="exec:gt ''panties'', ''view_panty_list'', ''store''">Storage</a></TH></center>'
 
-	if $pantyworntype ! 'none':act 'Remove panties':gs 'panties', 'linen' & gt 'view_panty_list', $ARGS[1]
+	if $pantyworntype ! 'none':act 'Remove panties':gs 'panties', 'linen' & gt 'panties', 'view_panty_list', $ARGS[1]
 	
 	if $ARGS[1] = 'store':
 		cloc = 1
@@ -121,7 +121,7 @@ if $ARGS[0] = 'view_panty_item':
 	!! ARGS 2 - panty type
 	!! ARGS 3 - panty index
 	!! ARGS 4 - price for shop
-	if $ARGS[1] ! '':
+	if $ARGS[1] = '':
 		if metka_panties = 0:
 			$ARGS[1] = 'clean'
 		elseif metka_panties = 1:
@@ -149,11 +149,12 @@ if $ARGS[0] = 'view_panty_item':
 			'You already own this item.'
 			act 'Leave': gt $loc, $metka
 		else
+			price = ARGS[4]
 			'Price: <<ARGS[4]>> <b>₽</b>'
 			act 'Leave': gt $loc, $metka
 			if PanExhibit > pcs_exhibition:
 				'You don''t feel confident enough to wear panties this revealing and can''t bring yourself to buy them.'
-			elseif money >= Price:
+			elseif money >= price:
 				act 'Buy':
 					money -= price
 					dynamic $ARGS[2] + '_panties[<<ARGS[3]>>] = 1'
