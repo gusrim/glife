@@ -246,9 +246,10 @@ end
 !{Menstruation to Follicular. Verifies that the cycle is in the bloody phase. It then checks to see if you are done bleeding. If you are, it starts the Follicular phase. There is a small chance your follcular phase will be anywhere from a day to 3 days short, done by the random release of a boosted EggRH. Otherwise, it just starts it clean.}
 
 if $ARGS[0] = 'cyc0':
-	if mesec <= 0:
+	if menstr <= 0:
 		lastmens = daystart
 		cycle = 1
+		menstr = 0
 		mesec = 0
 		if rand(0,1000) = 1000:
 			EggRH = rand(20,80)
@@ -257,6 +258,7 @@ if $ARGS[0] = 'cyc0':
 		end
 		FocH = EggRH
 	else
+		menstr -= 1
 		mesec -= 1
 	end
 end
@@ -591,25 +593,27 @@ if $ARGS[0] = 'cyc3':
 			killvar '$cumfthname'
 			killvar '$cumfthusedname'
 			killvar 'cumtime'
-			if pillcon >= 30000 or rand(1,24) = 1:
+!! I added the variable menstr, which replace mesec in the downcount
+!! The menstruation part of the cycle will not be omited from now
+			cycle = 0
+			killvar 'abortionbirthdate'
+			if temprand = 0 and pillcon < 10000:
+				mesec = 120
+			elseif temprand < 9 and pillcon < 15000:
+				mesec = 96
+			elseif pillcon < 20000:
+				mesec = 72
+			else
+				mesec = 48
+			end
+			menstr = mesec + 24
+			if pillcon >= 38000 or rand(1,24) = 1:
 				FocH = 0
 				EggRH = 0
-				cycle = 1
 				mesec = 0
 			else
-				cycle = 0
-				killvar 'abortionbirthdate'
 				if cyccustom = 1: daylastperiod = daystart
 				temprand = rand(0,10)
-				if temprand = 0 and pillcon < 10000:
-					mesec = 120
-				elseif temprand < 9 and pillcon < 15000:
-					mesec = 96
-				elseif pillcon < 20000:
-					mesec = 72
-			else
-					mesec = 48
-				end
 			end
 		end
 	else

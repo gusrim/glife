@@ -1,6 +1,4 @@
 # obj_din
-
-
 if $ARGS[0] = 'show_tits':
 	view 'images/pc/body/tits/t<<tits>>.jpg'
 end
@@ -314,21 +312,21 @@ if $ARGS[0] = 'stats_gen':
 	if workPTU > 1:pl 'Reputation as a teacher <<teachlevel>>'
 	nl
 	if npc_QW['A192'] > 0:pl 'Friendship with Nastya <<npc_QW[''A192'']>>'
-	if tanya > 0:pl 'Friendship with Tanya <<tanya>>'
-	if kat > 0:pl 'Friendship with Kate <<kat>>'
-	if vika > 0:pl 'Friendship with Vika <<vika>>'
-	if Irina > 0:pl 'Friendship with Irene <<Irina>>'
-	if Tamara > 0:pl 'Friendship with Tamara <<Tamara>>'
+	if npc_rel['A218'] > 0:pl 'Friendship with Tanya <<npc_rel[''A218'']>>'
+	if npc_rel['A219'] > 0:pl 'Friendship with Kat <<npc_rel[''A219'']>>'
+	if npc_rel['A220'] > 0:pl 'Friendship with Vika <<npc_rel[''A220'']>>'
+	if npc_rel['A93'] > 0:pl 'Friendship with Ira <<npc_rel[''A93'']>>'
+	if npc_rel['A43'] > 0:pl 'Friendship with Tamara <<npc_rel[''A43'']>>'
 	if alla > 0:pl 'Friendship with Alla <<alla>>'
 	if masha > 0:pl 'Friendship with Masha <<masha>>'
-	if Givi > 0:pl 'Friendship with Givi K. <<Givi>>'
-	if Ashot > 0:pl 'Friendship with Ashot <<Ashot>>'
+	if npc_rel['A41'] > 0:pl 'Friendship with Givi K. <<npc_rel[''A41'']>>'
+	if npc_rel['A42'] > 0:pl 'Friendship with Ashot <<npc_rel[''A42'']>>'
 	if Dmitry > 0:pl 'Friendship with Dima <<Dmitry>>'
 	if afra > 0:pl 'Friendship with blacks <<afra>>'
 	if npc_rel['A69'] > 0:pl'Friendship with Mikhail Nikolaevich  <<npc_rel[''A69'']>>'
 
 	!!!WD: Formatting
-	if (Irina + Givi + Ashot + Tamara + Dmitry + afra + gosh + vika + kat + npc_QW['A192'] + tanya) > 0:nl
+	if (npc_rel['A93'] + npc_rel['A41'] + npc_rel['A42'] + npc_rel['A43'] + afra + gosh + npc_rel['A220'] + npc_rel['A219'] + npc_QW['A192'] + npc_rel['A218']) > 0:nl
 end
 
 if $ARGS[0] = 'kidlist':
@@ -1366,6 +1364,24 @@ end
 
 if $ARGS[0] = 'clothes':
 	clr
+	pl'<center><a href="exec:gs''$menu_obnovit''"><b>Clothes</b></a></center>'	
+	!move image define to $body_image
+	
+	!display coat
+	$img_temp = FUNC('$body_image','coat')
+	if $img_temp ! null:  pl '<a href="exec:view ''<<$img_temp>>''"><img <<$set_imgh>> src="<<$img_temp>>"></a>'
+	pl '<<$body_image_msg>>'
+
+	pl ''
+	
+	!display cloth
+	$img_temp = FUNC('$body_image','clothes')
+	if $img_temp ! null: pl '<a href="exec:view ''<<$img_temp>>''"><img <<$set_imgh>> src="<<$img_temp>>"></a>'	
+	pl '<<$body_image_msg>>'
+	
+	killvar 'img_temp'
+	killvar 'body_image_msg'	
+	!{	
 	if defaultcoat = 0:
 		pl 'You have no default coat set.'
 
@@ -1420,9 +1436,18 @@ if $ARGS[0] = 'clothes':
 		end
 
 	end
+	}
 end
 
 if $ARGS[0] = 'panties':
+	clr
+	pl'<center><a href="exec:gs''$menu_obnovit''"><b>Panties</b></a></center>'	
+	$img_temp = FUNC('$body_image','panties')
+	pl '<a href="exec:view ''<<$img_temp>>''"><img <<$set_imgh>> src="<<$img_temp>>"></a>'
+	pl '<<$body_image_msg>>'
+	killvar 'img_temp'
+	killvar 'body_image_msg'
+	!{
 	if $pantyworntype = 'none':
 		if pcs_pubes <= 3:
 			view 'images/pc/body/pussy/pussy.jpg'
@@ -1436,9 +1461,17 @@ if $ARGS[0] = 'panties':
 	else
 		view FUNC('$panty_image', $pantyworntype, pantywornnumber)
 	end
+	}
 end
 if $ARGS[0] = 'shoes':
 	clr
+	pl'<center><a href="exec:gs''$menu_obnovit''"><b>Shoes</b></a></center>'
+	$img_temp = FUNC('$body_image','shoes')
+	pl '<a href="exec:view ''<<$img_temp>>''"><img <<$set_imgh>> src="<<$img_temp>>"></a>'
+	pl '<<$body_image_msg>>'
+	killvar 'img_temp'
+	killvar 'body_image_msg'
+	!{
 	if $clothingworntype = 'nude' or $shoeworntype = 'none':
 		view 'images/pc/body/feet.jpg'
 	else
@@ -1446,11 +1479,15 @@ if $ARGS[0] = 'shoes':
 
 		pl 'You are wearing ' + FUNC('$shoe_description', $shoeworntype) + '<<shoewornnumber>>.'
 	end
+	}
 end
 		
 		
 if $ARGS[0] = 'body':
 !!	This displays the body image; $bodimgsets[x9] is the folder name
+	!some in-game script may call this to display image, so leave it be
+	view FUNC('$body_image','body')
+	!{
 	if salocatnow >= 1 and salocatnow <= 5:
 		view 'images/pc/body/shape/<<$bodimgsets[((bodset * 10) + 9)]>>/<<salocatnow>>.jpg'
 	elseif salocatnow <= 0:
@@ -1468,8 +1505,43 @@ if $ARGS[0] = 'body':
 			view 'images/pc/body/shape/7.jpg'
 		end
 	end
+	}
 end
 
+if $ARGS[0] = 'menubody':
+	!display image and escription for menu
+	clr
+	pl'<center><a href="exec:gs''$menu_obnovit''"><b>Body</b></a></center>'
+	$img_temp = FUNC('$body_image','body')
+	pl '<a href="exec:view ''<<$img_temp>>''"><img <<$set_imgh>> src="<<$img_temp>>"></a>'
+	pl '<<$body_image_msg>>'
+	killvar 'img_temp'
+	killvar 'body_image_msg'
+end
+
+if $ARGS[0] = 'menuface':
+	!display image and escription for menu
+	clr
+	pl'<center><a href="exec:gs''$menu_obnovit''"><b>Face</b></a></center>'
+	$img_temp = FUNC('$face_image')
+	pl '<a href="exec:view ''<<$img_temp>>''"><img <<$set_imgh>> src="<<$img_temp>>"></a>'
+	killvar 'img_temp'
+	if avatar_hair = 1:
+		pl'Your hair: <<$av_hair>>.'
+	else
+		pl'<<$hair>>'
+	end
+	if defcurly = 0 and curly > 0:pl 'Your curls are good for another <<curly>> days.'
+	if defcurly = 1 and straight > 0:pl 'Your hair should be straight for another <<straight>> days.'
+	nl
+
+	pl '<<$lip>>'
+	pl '<<$pcs_throat>>'
+	pl '<<$skin>>'
+	pl '<<$glaza>>'
+	pl '<<$pcs_makeup>>.'
+
+end
 
 !!Image displays for tattoos
 if $ARGS[0] = 'tattooarm':
@@ -1542,6 +1614,7 @@ end
 
 if $ARGS[0] = 'tattoos':
 	clr
+	pl'<center><a href="exec:gs''$menu_obnovit''"><b>Tatoos</b></a></center>'
 	tatcounter = 0
 	if tatarm > 0:tatcounter = 1 & pl'<a href="exec: gs ''obj_din'', ''tattooarm''">Tattoo on your arm</a>'
 	if tatass > 0:tatcounter = 1 & pl'<a href="exec: gs ''obj_din'', ''tattooass''">Tattoo on your ass</a>'
@@ -1568,6 +1641,7 @@ end
 
 if $ARGS[0] = 'piercing':
 	clr
+	pl'<center><a href="exec:gs''$menu_obnovit''"><b>Piercing</b></a></center>'
 	if pirsA = 0 and pirsB = 0 and pirsC = 0 and pirsD = 0 and pirsE = 0 and pirsF = 0 and pirsN = 0 and pirsG = 0 and pirsGL = 0:
 		pl 'You have no piercings.'
 	elseif pirsA = 10000 and pirsB = 10000 and pirsC = 10000 and pirsD = 10000 and pirsE = 10000 and pirsF = 10000 and pirsN = 10000 and pirsG = 10000 and pirsGL = 10000:

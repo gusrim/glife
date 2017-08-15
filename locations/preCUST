@@ -69,6 +69,39 @@ if $ARGS[0] = 'SGStart':
 	act 'Done': gt 'preCUST', 'Done', 'SGS'
 end
 
+!!******************** NT Start Body Customization Options ******************************
+if $ARGS[0] = 'NTStart':
+!!	This is to bypass the next part if the avatar system was used
+!!	It will be changed to bypass the head options, once more body options are added
+!!  It is using the TG done to complete and the magikDostup to split at the end
+	NTstart = 1
+	pcs_hairlng = 100
+	if player_avatar = 1: gt 'preCUST', 'Done', 'TGS'
+
+!!	Just hair and eye color here for now; the dialog will be update as more options are added
+	'You close the cabinet in front of you, displaying a mirror as you prepare yourself to tell your mother that you are leaving for good. '
+	'You are fairly tall.'
+	''
+	'<center>Current face image (based on hairstyle)</center>'
+	'<center><img <<$set_imgh>> src="<<FUNC(''$face_image'')>>"></center>'
+	if pcs_eyecol = 0: 'You have <a href="exec:pcs_eyecol = 1 & gt ''preCUST'', ''NTStart''">brown</a> eyes.'
+	if pcs_eyecol = 1: 'You have <a href="exec:pcs_eyecol = 2 & gt ''preCUST'', ''NTStart''">gray</a> eyes.'
+	if pcs_eyecol = 2: 'You have <a href="exec:pcs_eyecol = 3 & gt ''preCUST'', ''NTStart''">green</a> eyes.'
+	if pcs_eyecol = 3: 'You have <a href="exec:pcs_eyecol = 0 & gt ''preCUST'', ''NTStart''">blue</a> eyes.'
+	''
+	if pcs_haircol = 0: 'Your hair is <a href="exec:pcs_haircol = 1 & gt ''preCUST'', ''NTStart''">black</a>.'
+	if pcs_haircol = 1: 'Your hair is <a href="exec:pcs_haircol = 2 & gt ''preCUST'', ''NTStart''">brown</a>.'
+	if pcs_haircol = 2: 'Your hair is <a href="exec:pcs_haircol = 3 & gt ''preCUST'', ''NTStart''">red</a>.'
+	if pcs_haircol = 3: 'Your hair is <a href="exec:pcs_haircol = 0 & gt ''preCUST'', ''NTStart''">blonde</a>.'
+	if defcurly = 0:'And it''s naturally <a href="exec:defcurly = 1 & curly = 2147483647 & gt ''preCUST'', ''NTStart''">straight</a>.'
+	if defcurly = 1:'And it''s naturally <a href="exec:defcurly = 0 & curly = 0 & gt ''preCUST'', ''NTStart''">curly</a>.'
+	*nl
+	'Personalize attributes related to your <a href="exec:gs ''begin'', ''eyes''">eyes</a></center>.'
+	*nl
+
+	act 'Done': gt 'preCUST', 'Done', 'TGS'
+end
+
 !!******************** Final variable setting and initializations ***********************
 if $ARGS[0] = 'Done':
 !!	Top area for things that need to be done before setting the variables for either start
@@ -172,7 +205,7 @@ if $ARGS[0] = 'Done':
 		housr = 1
 
 !!		Maruda Hair Mod
-		pcs_hairlng = 17
+		if NTstart = 0: pcs_hairlng = 17
 !!		***********
 		cltarelka = 1
 		fairy = 10
@@ -451,7 +484,11 @@ if $ARGS[0] = 'Done':
 	showstat 0
 	showobjs 0
 	if $ARGS[1] = 'TGS':
-		gt 'preTG', 'sleepPRE'
+		if MagikDostup = 1:
+			gt 'preNT'
+		else
+			gt 'preTG', 'sleepPRE'
+		end
 	else
 		gt 'preALT', 'One'
 	end

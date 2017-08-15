@@ -147,6 +147,64 @@ if $ARGS[0] = 'modul':
     result = func('shortgs','sqrt',modul_sum)
 	killvar 'modul_sum'
 end
+!! day of week 1 - Monday .. 7 - Sunday
+if $ARGS[0] = 'dow':
+	dow_a = (14 - month) / 12
+	dow_Y = year - dow_a
+	dow_M = month + 12*dow_a - 2
+	dummy = (day + dow_y + dow_y/4 - dow_y/100 + dow_y/400 + (31*dow_m)/12) mod 7
+	if dummy = 0: dummy = 7
+	result = dummy
+end
+!! day of year
+if $ARGS[0] = 'doy':
+	doy_N1 = 275 * ARGS[2] / 9
+	doy_N2 = (ARGS[2] + 9) / 12
+	doy_N3 = 1 + (ARGS[1] - 4 * (ARGS[1] / 4) + 2) / 3
+	result = doy_N1 - (doy_N2 * doy_N3) + ARGS[3] - 30
+end
+if $ARGS[0] = 'mk':
+	gs 'saveposition'
+	*clr & cla
+	$mk_subst['0'] = 'M' & $mk_subst['1'] = 'F' & $mk_subst['2'] = 'O' & $mk_subst['3'] = 'L' & $mk_subst['4'] = 'R' & $mk_subst['5'] = 'P'
+	'<center><font face="courier" size=1>'
+	'<table border = 1>'
+	'<tr><th>Mon</th><th>Tue</th><th>Wen</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th><th>Mon</th><th>Tue</th><th>Wen</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th>
+	<th>Mon</th><th>Tue</th><th>Wen</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th><th>Mon</th><th>Tue</th><th>Wen</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th></tr>'
+	i = ArrSize('$MenCal')
+	empty0 = week + 29 - i - 1
+	empty1 = min(28,empty0)
+	full1 = max(0,28 - empty0)
+	empty2 = max(0,empty0-28)
+	full2 = i - full1
+	empty3 = 28 - empty2 - full2
+	count=0
+	$tabmc = '<tr>'
+:tabmcl1
+	if empty1 > 0: empty1 -=1 & $tabmc +='<td>&nbsp</td>' & jump 'tabmcl1'
+:tabmcl2
+	if full1 > 0: 
+		full1 -=1 
+		if $MenCal[count]='0': $tabmc +='<td bgcolor="red"><<$mk_subst[$MenCal[count]]>></td>' else $tabmc +='<td><<$mk_subst[$MenCal[count]]>></td>'
+		count +=1
+		jump 'tabmcl1'
+	end
+	$tabmc += '</tr><tr>'
+:tabmcl3
+	if empty2 > 0: empty2 -=1 & $tabmc +='<td>&nbsp</td>' & jump 'tabmcl3'
+:tabmcl4
+	if full2 > 0:
+		full2 -=1
+		if $MenCal[count]='0': $tabmc +='<td bgcolor="red"><<$mk_subst[$MenCal[count]]>></td>' else $tabmc +='<td><<$mk_subst[$MenCal[count]]>></td>'
+		count +=1
+		jump 'tabmcl4'
+	end
+:tabmcl5
+	if empty3 > 0: empty3 -=1 & $tabmc +='<td></td>' & jump 'tabmcl5'
+	$tabmc += '</tr><table></font></center>'
+	$tabmc
+	act 'Back': gt 'restoreposition'
+end
 
 --- shortgs ---------------------------------
 
