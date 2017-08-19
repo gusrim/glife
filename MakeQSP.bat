@@ -5,7 +5,7 @@
 :: set CP_TO=..\GL_ECV
 
 :: This is the program used to open the QSPFILE. If you comment this line windows will launch the default app for the ".qsp" extension.
-set QSPGUI=QSP\Player-original\qspgui.exe
+set QSPGUI=QSP\Player-video\qspgui.exe
 set QGEN=QSP\QGen5\QGen.exe
 
 :: The file that will be generated or open
