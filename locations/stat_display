@@ -406,19 +406,18 @@ else
 	st_count=0
 	$show_table=''
 	if npc_QW['A192'] > 0:gs'show_table','Nastja: <<npc_QW[''A192'']>>','2'
-	if tanya > 0:gs'show_table','Tanya: <<tanya>>','2'
-	if kat > 0:gs'show_table','Kate: <<kat>>','2'
-	if vika > 0:gs'show_table','Vika: <<vika>>','2'
-	if Irina > 0:gs'show_table','Irina: <<Irina>>','2'
-	if Tamara > 0:gs'show_table','Tamara: <<Tamara>>','2'
+	if npc_rel['A218'] > 0:gs'show_table','Tanya: <<npc_rel[''A218'']>>','2'
+	if npc_rel['A219'] > 0:gs'show_table','Kat: <<npc_rel[''A219'']>>','2'
+	if npc_rel['A220'] > 0:gs'show_table','Vika: <<npc_rel[''A220'']>>','2'
+	if npc_rel['A93'] > 0:gs'show_table','Ira: <<npc_rel[''A93'']>>','2'
+	if npc_rel['A43'] > 0:gs'show_table','Tamara: <<npc_rel[''A43'']>>','2'
 	if alla > 0:gs'show_table','Alla: <<alla>>','2'
 	if masha > 0:gs'show_table','Masha: <<masha>>','2'
 	if npc_rel['A41'] > 0:gs'show_table','Givi Karapetovich: <<npc_rel[''A41'']>>','2'
-	if Ashot > 0:gs'show_table','Ashot: <<Ashot>>','2'
-	if Dmitry > 0:gs'show_table','Dima: <<Dmitry>>','2'
+	if npc_rel['A42'] > 0:gs'show_table','Ashot: <<npc_rel[''A42'']>>','2'
 	if afra > 0:gs'show_table','Blacks: <<afra>>','2'
 	if Rex > 0:gs'show_table','Rex: <<Rex>>','2'
-	if npc_rel['A217'] > 0:gs'show_table','Pavlin: <<Pavlin>>','2'
+	if npc_rel['A217'] > 0:gs'show_table','Pavlin: <<npc_rel[''A217''] >>','2'
 	if npc_rel['A69'] > 0:gs'show_table','Mikhail Nikolaevich: <<npc_rel[''A69'']>>','2'
 	if npc_rel['A89'] > 0:gs'show_table','Eugene: <<npc_rel[''A89'']>>','2'
 	if npc_rel['A112'] > 0:gs'show_table','Sergei Shulgin: <<npc_rel[''A112'']>>','2'
@@ -659,19 +658,12 @@ if lactate = 1:
 	end
 end
 
-if Enable_Hymenrestore = 1: pcs_vag = 0
-if Enable_tightrestore = 1: pcs_ass = 0 & if pcs_vag > 0:pcs_vag = 1
-if Enable_clearwrite > 0: body_write = 0 & face_write = 0
 if Enable_clearcum > 0:
-	killvar 'sparrvol[0]'
+	gs 'cum_cleanup', 'reset'
 end
-if Enable_fbreath > 0:
-	cumspclnt = 2
-	gs 'cum_cleanup'
-	pcs_breath=1
+if recuperation = 1:
+	$stat_msg += '<b><font color="red">You are still recovering from major surgery.</font></b>'
 end
-
-
 $clear_write = {
 	body_write = 0
 	face_write = 0
@@ -1038,7 +1030,7 @@ if $clothingworntype = 'nude':
 			if pcs_exhibition < 5:
 				$stat_msg += '<BR><b><font color = red>You are completely naked, and it makes you feel nervous and ashamed.</font></b>'
 			elseif pcs_exhibition < 20:
-				$stat_msg += '<BR><b><font color = red>You are completely naked, you''re not too comfortable we nudity but it is a little exciting.</font></b>'
+				$stat_msg += '<BR><b><font color = orange>You are completely naked, you''re not too comfortable we nudity but it is a little exciting.</font></b>'
 			elseif pcs_exhibition >= 90:
 				$stat_msg += '<BR><b><font color = blue>You are completely naked, which is far better than having to wear clothes.</font></b>'
 			else
@@ -1052,7 +1044,11 @@ elseif $pantyworntype = 'none':
 	elseif PCloBimbo = 1 or bimbolevel > 0 and PCloSkirt > 3:
 		$stat_msg += '<BR><b><font color = #FF00FF>You like, totally forgot to put on any panties. You are such a bimbo.</font></b>'
 	elseif PCloSkirt > 3:
-		$stat_msg += '<BR><b><font color="red">Your face is flushed with shame, you are not wearing panties and your naked ass flashes from under your short skirt.</font></b>'
+		if pcs_exhibition > 50:
+			$stat_msg += '<BR><b><font color="blue">You feel liberated not wearing panties as your naked ass flashes from under your short skirt.</font></b>'
+		else
+			$stat_msg += '<BR><b><font color="red">Your face is flushed with shame, you are not wearing panties and your naked ass flashes from under your short skirt.</font></b>'
+		end
 	elseif $clothingworntype ! 'nude':
 		$stat_msg += '<BR><b><font color="red">You are not wearing panties.</font></b>'
 	elseif towel = 1:

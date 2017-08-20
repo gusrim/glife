@@ -68,13 +68,15 @@ end
 
 !! after having surgery you will be in recuperation for a few days
 
-if daystart - 7 <= surgeryday:
-	dailyhealthimprov = (daystart - surgeryday) * 50
-	pcs_health = dailyhealthimprov
-	recuperation = 1
-else
-	killvar 'recuperation'
-	killvar 'dailyhealthimprov'
+if surgeryday ! '':
+	if daystart - 7 <= surgeryday:
+		dailyhealthimprov = (daystart - surgeryday) * 50
+		pcs_health = dailyhealthimprov
+		recuperation = 1
+	else
+		killvar 'recuperation'
+		killvar 'dailyhealthimprov'
+	end
 end
 
 !!Street events daily reset
@@ -89,8 +91,8 @@ i += 1
 if i <= 147:jump 'loopprice'
 
 !!underwear rng
-cheap_panty_number = rand(0,37)
-!!cheap_bra_number = rand(0,37)
+cheap_panty_number = rand(1,37)
+!!cheap_bra_number = rand(1,37)
 
 if coatH[defaultcoat] <= 0: defaultcoat = 0
 
@@ -443,8 +445,8 @@ pilldaychk = 0
 if pilldays > 18: pilldays = 18
 if pilldays < 0: pilldays = 0
 !!
-$MenCal[ArrSize('$MenCal')] = $str(cycle)
-if ArrSize('$MenCal') = 30: killvar '$MenCal[0]'
+$MenCal[] = $str(cycle)
+if ArrSize('$MenCal') = 30: killvar '$MenCal',0
 
 
 !!------------------------------------------------------------------------------------------------------------
@@ -1093,6 +1095,14 @@ end
 
 killvar 'holyday'
 killvar 'kanikuli'
+
+!!sisboyparty
+!!-1 - don''t go to the party
+!!0 - don''t know about parties
+!!1 - knows about the parties
+!!2 - agreed to go to the party
+!!3 - Missed the party
+
 if storyline = 1:
 !!Party refresh if you didn''t see sis
 	if week = 1 and sisboyparty ! 2:
@@ -1102,6 +1112,8 @@ if storyline = 1:
 			sisboyparty_day = daystart + rand(3,5)
 		end
 	end
+	
+	if sisboyparty = 2 and sisboyparty_day > daystart: sisboyparty = 3
 
 !!missed graduation
 	if month = 5 and day = 25:

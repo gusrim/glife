@@ -12,8 +12,8 @@ gs 'stat'
 gs 'dinsister'
 dynamic $sischecks
 
-if hour = 8 and week < 6: 
-	'God damn it, <<$pcs_nickname>>, because of you I will be late for work.'	
+if hour = 8 and week < 6:
+	'God damn it, <<$pcs_nickname>>, because of you I will be late for work.'
 	act '<B> Apologize and move away</B>':gt $loc, $metka
 exit
 end
@@ -22,11 +22,11 @@ if $ARGS[0] = 'gdk':
 	!Near the club with friends
 	if npc_rel['A33'] < 40:
 		'"What do you want? Fuck off!" Anya and her friends laugh and point at you, until you leave them alone.'
-       
-	elseif sisboypartyQW < 2 and sisboyparty = 2 and sisboyparty_day + 1 = daystart:   
+
+	elseif sisboypartyQW < 2 and sisboyparty = 2 and sisboyparty_day + 1 = daystart:
 		cla
 		'Anya and some of her friends are dressed up organizing themselves before going to a party. Anya sees you and waves you to her.'
-			
+
 		act 'Go to the party':gt 'sisterQW','sisboyQW_party'
 
 	elseif sisboypartyQW >= 2 and sisboyparty = 2 and sisboyparty_day + 1 = daystart:
@@ -112,12 +112,12 @@ $party_pre_conditions ={
 				'"I''d love to, but I have a lot of homework to do. I''m sorry."'
 				'"Don''t worry, maybe next time you can come."'
 				act 'Move away':SiSgdk = 0 & gt $loc, $metka
-		
+
 			end
 
 		end
 	end
-	
+
 	if rex > 80:
 		'<center><img <<$set_imgh>> src="images/characters/pavlovsk/resident/reks/reks.jpg"></center>'
 		*nl
@@ -150,9 +150,9 @@ $party_pre_conditions ={
 			act 'Move away':SiSgdk = 0 & gt $loc, $metka
 		else
 			'"Baby, let''s go to my place, once again I am hosting a great get together."'
-				
+
 			act 'Accept':gt 'sbReksHome','party'
-				
+
 			act 'Decline':
 				cla
 				minut += 5
@@ -160,7 +160,7 @@ $party_pre_conditions ={
 				gs'stat'
 				'"Sorry Rex, I have a lot of homework. I''d love to but I don''t want to fail my exams."'
 				'"Well, go on then, but next time you definitely come, okay?"'
-		
+
 				act 'Move away':SiSgdk = 0 & gt $loc, $metka
 			end
 
@@ -179,18 +179,17 @@ if hour >= 7 and hour < 24:
 			tampon=3
 			npc_rel['A33'] -= 15
 			minut += 3
-			cla 
+			cla
 			act '<B>Move away</B>':gt $loc, $metka
 			exit
 		end
 	end
-	
+
 	!!This is to make sure that you have this skill
 	if canBraidHair ! 0 and canBraidHair ! 1:
 		canBraidHair = 0
 	end
-	
-	
+
 	if canBraidHair = 0 and npc_rel['A33'] > 75 and (pcs_hairlng > 80 and pcs_hairlng <= 800):
 		act '"Hey sis, can you teach me how to braid my hair...?"':
 			cls
@@ -212,17 +211,10 @@ if hour >= 7 and hour < 24:
 				minut += 3
 				act 'Thank your sister and leave':gt $loc, $metka
 			end
-			
+
 		end
-	
-	
-	
 	end
-	
-	
-	
-	
-	
+
 	act 'Chat':
 		cls
 		minut+=rand(10,15)
@@ -236,14 +228,16 @@ if hour >= 7 and hour < 24:
 		if npc_rel['A33'] >= 40 and npc_rel['A33'] < 60:'You and your sister have a normal relationship.'
 		if npc_rel['A33'] >= 60 and npc_rel['A33'] < 80:'You and your sister have a good relationship.'
 		if npc_rel['A33'] >= 80:'You have a great relationship with your sister.'
-		''
-!sisboyparty
-!-1 - don''t go to the party
-!0 - don''t know about Vecherinka
-!1 - knows about the parties
-!2 - agreed to go to the party
+		*nl
 
-		if sisboypartyQW >= 2 and sisboyparty = 1:
+!!sisboyparty
+!!-1 - don''t go to the party
+!!0 - don''t know about parties
+!!1 - knows about the parties
+!!2 - agreed to go to the party
+!!3 - Missed the party
+
+		if sisboypartyQW >= 2 and sisboyparty = 1 and week >= 2:
 			if sisboyparty_day = daystart:
 				'"Listen, <<$pcs_nickname>>, Rex''s apartment is available tomorrow and he''s having a party, do you want to go?"'
 			elseif week + sisboyparty_day - daystart = 4:
@@ -258,7 +252,7 @@ if hour >= 7 and hour < 24:
 				act 'Finish':SiSgdk = 0 & gt'sister'
 				exit
 			end
-	
+
 			act 'Yes':
 				cls
 				minut += 5
@@ -313,7 +307,7 @@ if hour >= 7 and hour < 24:
 			end
 
 			exit
-		elseif sisboypartyQW >= 2 and sisboyparty = 2 and (sisboyparty_day ! 0 and sisboyparty_day +2 <= daystart):
+		elseif sisboypartyQW >= 2 and sisboyparty = 3:
 			sisboyparty = 1
 			'"We missed you at the party, <<$pcs_nickname>>." Anya pouts at you, "I''ll let you know when the next party is and maybe you''ll be able to make it, okay?"'
 			'You apologize for missing the party and Anya smiles at you.'
@@ -377,7 +371,7 @@ if hour >= 7 and hour < 24:
 	!0 - ''t know about Vecherinka
 	!1 - knows about the parties
 	!2 - agreed to go to the party
-			if sisboytrio >= 5 and sisboyparty = 0 and sisboyparty_day ! daystart:
+			if sisboytrio >= 5 and sisboyparty = 0 and sisboyparty_day ! daystart and week >= 2:
 				cls
 				minut += 5
 				sisboyparty = 1
@@ -561,7 +555,7 @@ if hour >= 7 and hour < 24:
 					'You hug and kiss with your beloved sister.'
 					act 'Finish':SiSgdk = 0 & gt'sister'
 				end
-				
+
 				act 'Sounds interesting, but can we postpone it?':
 					cls
 					minut += 5
@@ -596,7 +590,8 @@ if hour >= 7 and hour < 24:
 				end
 			else
 				minut += 10
-				npc_rel['A33'] += 2
+				sistalkabromaday = daystart
+				if sistalkabromaday ! daystart:npc_rel['A33'] += 2
 				talkrand = RAND(0,10)
 				gs'stat'
 
@@ -645,7 +640,7 @@ if hour >= 7 and hour < 24:
 		'<center><img <<$set_imgh>> src="images/characters/pavlovsk/resident/anya/home/sisboyqw_00.jpg"></center>'
 		*nl
 		'Merrily Anya runs up to you and wraps her arms around your neck.'
-		
+
 		if sisboytrioQW ! 1:
 			'"Sister, I adore you! I spent a lovely evening with Roma."'
 			'"Yes, I''m glad for you. Enough already, you''ll strangle me."'
@@ -742,7 +737,7 @@ if hour >= 7 and hour < 24:
 						'"Ha, that actually sounds like a lot of fun. Ok I''ll do it.  When do we leave ?"'
 						'" Well first I will have to make myself look more like you, I''ll come and get you when I am ready."'
 						TwinQW = 2
-						
+
 					else
 						'"Sorry <<$pcs_nickname>>. You know I love you but my boyfriend would never allow this. Anyway, thanks for confiding in me. Please stay safe little sis."'
 						'Anya gives you a little smile. You were always happy for your sister that she had a boyfriend she loved but right now you would give anything to get rid of him.'
@@ -760,7 +755,7 @@ if hour >= 7 and hour < 24:
 						'" Well first I will have to make myself look more like you, I''ll come and get you when I a m ready."'
 						TwinQW = 2
 					end
-					
+
 				end
 				:twinmoveaway
 				act '<B>Move away</B>':gt 'sister'
@@ -814,7 +809,7 @@ if hour >= 7 and hour < 24:
 				end
 				act '<B>Move away</B>':killvar 'twinqwsiscompare' & gt 'sister'
 				if twinqwsiscompare = 6:
-					
+
 					act ' Go to the hotel and have some Twin fun':
 						if hour >= 12 and hour < 20:
 							killvar 'twinqwsiscompare'
@@ -834,7 +829,7 @@ if hour >= 7 and hour < 24:
 			gs'stat'
 			minut+=rand(10,15)
 			pcs_horny += RAND(5,10)
-			npc_rel['A33'] += 1
+			if sistalkabromaday ! daystart:npc_rel['A33'] += 1
 			dynamic $d_sistersexstories[1]
 			act '<B>Move away</B>':gt 'sister'
 		end
@@ -857,14 +852,14 @@ if $ARGS[0] = 'pargone':
 		'"Thanks sis, don''t worry I will find something."'
 		sisrelparday = daystart
 		saveparQW = 1
-		
+
 	else
 		'"No <<$pcs_nickname>>, it is too dangerous"'
 		'<<$npc_firstname[''A33'']>>, reaches for the cage and opens it.  <<$namepopu2>> immediately flies out and leaves through the open window.'
 		'You look at your pet flying away and have to hold back your tears'
 		'You turn away from your sister because you don''t want her to see you crying.'
 		popugai2 = 0
-		
+
 	end
 	act '<B>Move away</B>':gt $loc, $metka
 end
