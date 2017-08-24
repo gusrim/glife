@@ -160,6 +160,9 @@ else
 	killvar 'pcs_splcstng'
 end
 
+if pcs_dom < 0: SUB = SUB - pcs_dom
+if SUB < 0: pcs_dom = pcs_dom - SUB
+
 if pcs_dom > 100: pcs_dom = 100
 if SUB > 100: SUB = 100
 
@@ -383,11 +386,19 @@ if minut >= 60:
 	if scpopt > 1: scpopt = 0
 
 	if insleep = 1:
-		pcs_energy -= (4 + succublvl/2)
+		if amphHigh > 0:
+			pcs_energy -= (4 / amphetamineBonus + succublvl/2)
+		else
+			pcs_energy -= (4 * amphetamineBonus + succublvl/2)
+		end
 		pcs_stam += stammax / 10
 		pcs_sleep -= 4
 	else
-		pcs_energy -= (8 + succublvl)
+		if amphHigh > 0:
+			pcs_energy -= (8 / amphetamineBonus + succublvl)
+		else
+			pcs_energy -= (8 * amphetamineBonus + succublvl)
+		end
 		pcs_stam += stammax / 20
 		pcs_sleep -= 4
 	end
@@ -441,7 +452,11 @@ if minut >= 60:
 	if smoker >= 20:smokerNeed += 1
 	if smokerNeed > 10 and InSleep = 0 and pcs_mood > 20:pcs_mood -= pcs_mood / 10
 	if smokerNeed > 300:smokerNeed = 0 & smoker = 0
-	if StrongNarkota > 0:StrongNarkota -= 1
+	if StrongNarkota > 0:StrongNarkota -= 1 & pcs_mood -= (40 / StrongNarkota)
+	if amphWithdrawl > 5: amphWithdrawl += 1 & pcs_mood -= (amphWithdrawl / 5)
+	if amphHigh > 0: amphWithdrawl = 2 & amphetamineBonus = 3 & amphHigh -= 1 & amphHigh -= 4 & pcs_mood += (2 * amphHigh)
+	if amphHigh = 0 and amphWithdrawl = 2 : amphetamineBonus = 2 & amphWithdrawl += 1 & pcs_mood -= pcs_mood / 10
+	if amphWithdrawl > 169: amphWithdrawl = 1 & amphetamineBonus = 1 & amphCount = 0
 	if SLomka > 0 and pcs_mood > 10:SLomka += 1 & pcs_mood -= pcs_mood / 10
 	if SLomka > 100 and StrongNarkota <= 0:SLomka = 0 & SNarkTimes = 0
 
@@ -451,9 +466,11 @@ if minut >= 60:
 		pcs_mood -= 10
 	end
 
-	if $pantyworntype = 'none' and PCloPants > 0 and $clothingworntype ! 'nude':mosol += 1
+	if tanga = 0 and PCloPants > 0 and $clothingworntype ! 'nude':mosol += 1
 
 	if mosol >= 50: pcs_mood -= 5
+
+	if mosol >= 30 and pain['pubic'] < 80: gs 'pain', 1, 'pubic', 'ache'
 
 	if pcs_energy > 100:
 		fat += (pcs_energy - 100) / 4
@@ -461,7 +478,7 @@ if minut >= 60:
 	end
 
 	if mosol > 0:
-		if $pantyworntype ! 'none' or $clothingworntype = 'nude':mosol -= rand(0,1)
+		if tanga = 1 or $clothingworntype = 'nude':mosol -= rand(0,1)
 	end
 
 	if pcs_lipbalm > 0:pcs_lipbalm -= 1
@@ -477,80 +494,15 @@ if minut >= 60:
 		if KGManna < KGMannaMax:KGManna += 10
 	end
 
-	if pain['head'] > 0:pain['head'] -= rand(0,1)
-	if pain['hair'] > 0:pain['hair'] -= rand(0,1)
-	if pain['ears'] > 0:pain['ears'] -= rand(0,1)
-	if pain['eyebrows'] > 0:pain['eyebrows'] -= rand(0,1)
-	if pain['eyes'] > 0:pain['eyes'] -= rand(0,1)
-	if pain['cheeks'] > 0:pain['cheeks'] -= rand(0,1)
-	if pain['nose'] > 0:pain['nose'] -= rand(0,1)
-	if pain['mouth'] > 0:pain['mouth'] -= rand(0,1)
-	if pain['lips'] > 0:pain['lips'] -= rand(0,1)
-	if pain['tongue'] > 0:pain['tongue'] -= rand(0,1)
-	if pain['throat'] > 0:pain['throat'] -= rand(0,1)
-	if pain['neck'] > 0:pain['neck'] -= rand(0,1)
-	if pain['back'] > 0:pain['back'] -= rand(0,1)
-	if pain['asscheeks'] > 0:pain['asscheeks'] -= rand(0,1)
-	if pain['asshole'] > 0:pain['asshole'] -= rand(0,1)
-	if pain['hips'] > 0:pain['hips'] -= rand(0,1)
-	if pain['thighs'] > 0:pain['thighs'] -= rand(0,1)
-	if pain['legL'] > 0:pain['legL'] -= rand(0,1)
-	if pain['legR'] > 0:pain['legR'] -= rand(0,1)
-	if pain['feet'] > 0:pain['feet'] -= rand(0,1)
-	if pain['toes'] > 0:pain['toes'] -= rand(0,1)
-	if pain['shoulders'] > 0:pain['shoulders'] -= rand(0,1)
-	if pain['armL'] > 0:pain['armL'] -= rand(0,1)
-	if pain['armR'] > 0:pain['armR'] -= rand(0,1)
-	if pain['hands'] > 0:pain['hands'] -= rand(0,1)
-	if pain['fingers'] > 0:pain['fingers'] -= rand(0,1)
-	if pain['chest'] > 0:pain['chest'] -= rand(0,1)
-	if pain['breasts'] > 0:pain['breasts'] -= rand(0,1)
-	if pain['nipples'] > 0:pain['nipples'] -= rand(0,1)
-	if pain['ribs'] > 0:pain['ribs'] -= rand(0,1)
-	if pain['tummy'] > 0:pain['tummy'] -= rand(0,1)
-	if pain['pubic'] > 0:pain['pubic'] -= rand(0,1)
-	if pain['vaginal'] > 0:pain['vaginal'] -= rand(0,1)
-	if pain['clitoris'] > 0:pain['clitoris'] -= rand(0,1)
-	if pain['urethra'] > 0:pain['urethra'] -= rand(0,1)
-	if pain['cervix'] > 0:pain['cervix'] -= rand(0,1)
-
-	! fix for pain going into negatives and "increasing"
-	if pain['head'] < 0:pain['head'] = 0
-	if pain['hair'] < 0:pain['hair'] = 0
-	if pain['ears'] < 0:pain['ears'] = 0
-	if pain['eyebrows'] < 0:pain['eyebrows'] = 0
-	if pain['eyes'] < 0:pain['eyes'] = 0
-	if pain['cheeks'] < 0:pain['cheeks'] = 0
-	if pain['nose'] < 0:pain['nose'] = 0
-	if pain['mouth'] < 0:pain['mouth'] = 0
-	if pain['lips'] < 0:pain['lips'] = 0
-	if pain['tongue'] < 0:pain['tongue'] = 0
-	if pain['throat'] < 0:pain['throat'] = 0
-	if pain['neck'] < 0:pain['neck'] = 0
-	if pain['back'] < 0:pain['back'] = 0
-	if pain['asscheeks'] < 0:pain['asscheeks'] = 0
-	if pain['asshole'] < 0:pain['asshole'] = 0
-	if pain['hips'] < 0:pain['hips'] = 0
-	if pain['thighs'] < 0:pain['thighs'] = 0
-	if pain['legL'] < 0:pain['legL'] = 0
-	if pain['legR'] < 0:pain['legR'] = 0
-	if pain['feet'] < 0:pain['feet'] = 0
-	if pain['toes'] < 0:pain['toes'] = 0
-	if pain['shoulders'] < 0:pain['shoulders'] = 0
-	if pain['armL'] < 0:pain['armL'] = 0
-	if pain['armR'] < 0:pain['armR'] = 0
-	if pain['hands'] < 0:pain['hands'] = 0
-	if pain['fingers'] < 0:pain['fingers'] = 0
-	if pain['chest'] < 0:pain['chest'] = 0
-	if pain['breasts'] < 0:pain['breasts'] = 0
-	if pain['nipples'] < 0:pain['nipples'] = 0
-	if pain['ribs'] < 0:pain['ribs'] = 0
-	if pain['tummy'] < 0:pain['tummy'] = 0
-	if pain['pubic'] < 0:pain['pubic'] = 0
-	if pain['vaginal'] < 0:pain['vaginal'] = 0
-	if pain['clitoris'] < 0:pain['clitoris'] = 0
-	if pain['urethra'] < 0:pain['urethra'] = 0
-	if pain['cervix'] < 0:pain['cervix'] = 0
+!! pain[0] = pain['total'] , pain[1] = pain['damage'] , pain[2] = pain['relief']
+	i = arrsize('pain')
+:statpainloop
+	if i > 0:
+		i -= 1
+		pain[i] -= rand(0,1)
+		if pain[i] < 0: pain[i] = 0
+		jump 'statpainloop'
+	end
 	
 	if aphrodisiac_timer >= 1:
 		if pcs_horny < 80:
@@ -988,9 +940,10 @@ if hour >= 8 and hour < 14 and week < 6 and StoryLine > 0 and SchoolAtestat = 0 
 	schoolProgulDay = daystart
 end
 
+if cumcondslip <= 0: cumcondslip_deep = 0
+
 if insleep = 0: gs 'stat_display'
 
-if cumcondslip <= 0: cumcondslip_deep = 0
 
 --- stat ---------------------------------
 

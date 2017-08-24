@@ -7,38 +7,203 @@
 !!gs 'bras', 'fresh'
 
 if $ARGS[0] = 'dispose':
-!!	$braworntype = 'none'
-!!	clrbelo -= 1
+	if $braworntype = 'cheap':
+		clrbelo -= 1
+	else
+		dynamic $braworntype + '_bras[<<lastwornbranumber>>] = 0'
+	end
+	$lastwornbratype = 'none'
+	lastwornbranumber = 0
+	$braworntype = 'none'
+	brawornnumber = 0
 end
 
 if $ARGS[0] = 'remove':
+	$lastwornbratype = $braworntype
+	lastwornbranumber = brawornnumber
+	$braworntype = 'none'
+	brawornnumber = 0
 !!	$braworntype = 'none'
 end
 
 if $ARGS[0] = 'wear':
-!!	$braworntype = 'cheap'
+	$braworntype = $lastwornbratype
+	brawornnumber = lastwornbranumber
 end
 
 if $ARGS[0] = 'linen':
-!!	$braworntype = 'none'
-!!	dirtbelo += 1
+	if $braworntype = 'cheap':
+		dirtbelo += 1
+	else
+		dynamic $braworntype + '_brasC[<<lastwornbranumber>>] = 1'
+	end
+	$lastwornbratype = 'none'
+	lastwornbranumber = 0
+	$braworntype = 'none'
+	brawornnumber = 0
 end
 
 if $ARGS[0] = 'fresh':
-!!	$braworntype = 'cheap'
-!!	clrbelo -= 1
+	if $ARGS[1] = '':
+		$braworntype = 'cheap'
+		brawornnumber = rand(1,19)
+		clrbelo -= 1
+	else
+		$braworntype = $ARGS[1]
+		brawornnumber = ARGS[2]
+	end
 end
- 
+
+
 
 if $ARGS[0] = 'view_bra_list':
 	!! ARGS 0 - view_bra_list
 	!! ARGS 1 - action type (clean, dirty, store)
-
-
-	'<b>Under construction</b>'
+	if $args[1] = 'clean':
+		metka_bras = 0
+	elseif $args[1] = 'dirty':
+		metka_bras = 1
+	else
+		metka_bras = 2
+	end
 
 	act 'Leave':gt $loc, $metka
+
+	'<center><table border=1><TH><a href="exec:gt ''bras'', ''view_bra_list'', ''clean''">Clean</a></TH><TH><a href="exec:gt ''bras'', ''view_bra_list'', ''dirty''">Dirty</a></TH><TH><a href="exec:gt ''bras'', ''view_bra_list'', ''store''">Storage</a></TH></center>'
+
+	if $braworntype ! 'none':act 'Remove bras':gs 'bras', 'linen' & gt 'bras', 'view_bra_list', $ARGS[1]
+	
+	if $ARGS[1] = 'store':
+		cloc = 1
+	end
+
+	'<center><img src="images/locations/city/citycenter/mall/moncheri.png"></center>'
+
+	i = 1
+	:loopboutiquebras 
+	if boutique_brasC[i] = metka_bras and boutique_bras[i] = 1:*p '<a href="exec:gt ''bras'', ''view_bra_item'', <<metka_bras>>, ''boutique'', <<i>>"><img src="images/pc/bras/boutique/<<i>>.jpg" 	height="300" /></a>'
+	i += 1
+	if i <= ARRSIZE('boutique_bras'):jump 'loopboutiquebras'
+
+	'<center><img src="images/locations/oldtown/exhibitshop/shop_name.png"></center>'
+
+	i = 1
+	:loopexhibitionistbras 
+	if exhibitionist_brasC[i] = metka_bras and exhibitionist_bras[i] = 1:*p '<a href="exec:gt ''bras'', ''view_bra_item'', <<metka_bras>>, ''exhibitionist'', <<i>>"><img src="images/pc/bras/exhibitionist/<<i>>.jpg" 	height="300" /></a>'
+	i += 1
+	if i <= ARRSIZE('exhibitionist_bras'):jump 'loopexhibitionistbras'
+
+	'<center><img src="images/locations/city/citycenter/mall/fashionistat.png"></center>'
+
+	i = 1
+	:loopfashionistabras 
+	if fashionista_brasC[i] = metka_bras and fashionista_bras[i] = 1:*p '<a href="exec:gt ''bras'', ''view_bra_item'', <<metka_bras>>, ''fashionista'', <<i>>"><img src="images/pc/bras/fashionista/<<i>>.jpg" 	height="300" /></a>'
+	i += 1
+	if i <= ARRSIZE('fashionista_bras'):jump 'loopfashionistabras'
+
+	'<center><img src="images/locations/city/citycenter/mall/pussycat.png"></center>'
+
+	i = 1
+	:loopkatsbras 
+	if kats_brasC[i] = metka_bras and kats_bras[i] = 1:*p '<a href="exec:gt ''bras'', ''view_bra_item'', <<metka_bras>>, ''kats'', <<i>>"><img src="images/pc/bras/kats/<<i>>.jpg" 	height="300" /></a>'
+	i += 1
+	if i <= ARRSIZE('kats_bras'):jump 'loopkatsbras'
+
+	'<center><img src="images/locations/city/citycenter/sexshop/shop_name.png"></center>'
+
+	i = 1
+	:loopsexshopbras 
+	if sexshop_brasC[i] = metka_bras and sexshop_bras[i] = 1:*p '<a href="exec:gt ''bras'', ''view_bra_item'', <<metka_bras>>, ''sexshop'', <<i>>"><img src="images/pc/bras/sexshop/<<i>>.jpg" 	height="300" /></a>'
+	i += 1
+	if i <= ARRSIZE('sexshop_bras'):jump 'loopsexshopbras'
 end
+
+if $ARGS[0] = 'view_bra_item':
+	!! ARGS 0 - view_bra_item
+	!! ARGS 1 = action type (clean, dirty, store, shop)
+	!! ARGS 2 - bra type
+	!! ARGS 3 - bra index
+	!! ARGS 4 - price for shop
+	if $ARGS[1] = '':
+		if metka_bras = 0:
+			$ARGS[1] = 'clean'
+		elseif metka_bras = 1:
+			$ARGS[1] = 'dirty'
+		elseif metka_bras = 2:
+			$ARGS[1] = 'store'
+		else
+			$ARGS[1] = 'shop'
+		end
+	end
+
+	cla
+	'<center><img src="<<FUNC(''$bra_image'',  $ARGS[2], ARGS[3])>>"></center>'
+!!	gs 'bra_attributes', $ARGS[2], ARGS[3]
+!!	$RESULT = FUNC('$short_description', $ARGS[2], CloStyle2)
+!!	$RESULT += '<<ARGS[3]>>'
+!!	'<<$RESULT>>'
+!!	gs 'bra_descriptions'
+!!	'<<$description>>'
+
+!!	if PanExhibit + 10 > pcs_exhibition: 'You find this bra more revealing than you are completely comfortable with but that makes it quite exciting too.'
+
+	if $ARGS[1] = 'shop':
+		if dyneval('RESULT = <<$ARGS[2]>>_bras[<<ARGS[3]>>]') = 1:
+			'You already own this item.'
+			act 'Leave': gt $loc, $metka
+		else
+			price = ARGS[4]
+			'Price: <<ARGS[4]>> <b>₽</b>'
+			act 'Leave': gt $loc, $metka
+			if PanExhibit > pcs_exhibition:
+				'You don''t feel confident enough to a bra this revealing and can''t bring yourself to buy them.'
+			elseif money >= price:
+				act 'Buy':
+					money -= price
+					dynamic $ARGS[2] + '_bras[<<ARGS[3]>>] = 1'
+					dynamic $ARGS[2] + '_brasC[<<ARGS[3]>>] = 0'
+					gt $loc, $metka
+				end
+			else
+				'You cannot afford this bra.'
+			end
+		end
+	elseif $ARGS[1] = 'clean':
+		act 'Return':gt 'bras', 'view_bra_list', $ARGS[1]
+		
+		if $braworntype = $ARGS[2] and brawornnumber = ARGS[3]:
+			'You are wearing this bra.'
+		else
+			if PanExhibit > pcs_exhibition:
+				'You don''t feel confident enough to wear this bra.'
+			else
+				act 'Wear':
+					gs 'bras', 'fresh', $ARGS[2], ARGS[3]
+
+					gt 'bras', 'view_bra_list', $ARGS[1]
+				end
+			end
+			
+			act 'Store them':
+				dynamic $ARGS[2] + '_brasC[<<ARGS[3]>>] = 2'
+				
+				gt 'bras', 'view_bra_list', $ARGS[1]
+			end
+		end
+	elseif $ARGS[1] = 'dirty':
+!! Included for possible future events involving the selling of used underwear
+		'This bra is dirty and waiting to be washed.'
+		act 'Return':gt 'bras', 'view_bra_list', $ARGS[1]
+	elseif $ARGS[1] = 'store':
+		act 'Return':gt 'bras', 'view_bra_list', $ARGS[1]
+
+		act 'Move back to wardrobe':
+			dynamic $ARGS[2] + '_brasC[<<ARGS[3]>>] = 0'
+			gt 'bras', 'view_bra_list', $ARGS[1]
+		end
+	end
+end
+
 
 --- bras ---------------------------------
 
