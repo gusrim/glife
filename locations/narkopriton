@@ -23,45 +23,56 @@ act 'Get out of here':
 end
 
 if $ARGS[0] = 'start':
-		gs 'stat'
-		cls
-		'The skinny guy at the door looks you up and down as you enter,"So what can I get for you honey?"'
-		if drugUser = 1:
-		    if StoryLine = 1 and snarkozak = 0:
-		        act 'Ask for a drop-off point in Pavlovsk':gs 'events', 'narkozakladka'
-		    end
-		elseif drugUser = 0:
-			'"Ahhh, what do you have?"'
-			'His eyes light up at a freshy and smiles wildy "Well I have some Heroin and Amphetamine"'
+	gs 'stat'
+	cls
+	'The skinny guy at the door looks you up and down as you enter,"So what can I get for you honey?"'
+	if drugUser = 1:
+	    if StoryLine = 1 and snarkozak = 0:
+	        act 'Ask for a drop-off point in Pavlovsk':gs 'events', 'narkozakladka'
+	    end
+		act 'H please': 
+			gt 'narkopriton', 'heroin'
 		end
-		if (StrongNarkota > 23 and ampHigh > 23) or ampHigh > 23 or StrongNarkota > 23:
-			gt 'narkopriton', 'kiteHigh'
-		else
-			act 'Heroin please': 
-				gt 'narkopriton', 'heroin'
-			end
-			act 'Amphetamine please': 
-				gt 'narkopriton', 'amphetamine' 
-			end
-			act 'Leave the drug den': 
-				minut += 15 & gt'street' 
-			end
+		act 'Amphetamine please': 
+			gt 'narkopriton', 'amphetamine' 
 		end
+		act 'Leave the drug den': 
+			minut += 15 & gt'street' 
+		end
+	elseif drugUser = 0:
+		'"Ahhh, what do you have?"'
+		'His eyes light up at a freshy and smiles wildy "Well I have some H and Amphetamine"'
+		act 'H please': 
+			gt 'narkopriton', 'heroin'
+		end
+		act 'Amphetamine please': 
+			gt 'narkopriton', 'amphetamine' 
+		end
+		act 'Leave the drug den': 
+			minut += 15 & gt'street' 
+		end
+	elseif (StrongNarkota > 23 and ampHigh > 23) or ampHigh > 23 or StrongNarkota > 23:
+		gt 'narkopriton', 'kiteHigh'
+	end
 end
 
 if $ARGS[0] = 'kiteHigh':
-	act 'Leave the drug den':minut += 15 & gs 'events', 'snkayf1' end
+	act 'Leave the drug den':
+		minut += 15
+		gs 'events', 'snkayf1' 
+	end
 end
 
 if $ARGS[0] = 'amphetamine':
 	cls
+	drugUser = 1
 	'He nods, that''ll be 800.'
 	if money >= 800:
 		money -= 800
 		minut += 5
 		amphetamine += 10
 		act 'Thanks': 
-			gt 'narkopriton', 'start' 
+			gs 'narkopriton', 'start' 
 		end
 	elseif money <= 800 & addict = 1:
 		act 'Beg': 
@@ -74,11 +85,12 @@ end
 if $ARGS[0] = 'heroin':
 	if money >= 1000:
 		act 'Buy some heroin and use it (1,000 <b>₽</b>)':
+			drugUser = 1
 			cls
 			minut += 5
 			money -= 1000
 			gs 'stat'
-			if SNarkTimes <= 0 :
+			if SNarkTimes <= 1 :
 				'Guy takes pitty on you and cooks you up a shot. He loads the needle full and gives it to you.'
 				'"Thanks" You take the needle and go find a couch in the house to sit on.'
 
@@ -88,14 +100,12 @@ if $ARGS[0] = 'heroin':
 						'The rush is instanteous, you close your eyes as it rolls over you'
 						StrongNarkota += 25
 						SNarkTimes += 1
-						gs 'stat'
-						gt $curloc
+						act 'You lay there briefly rolling, before leaving': gs 'events', 'snkayf1' 
 					end
 					act 'You can''t help but think of all the horror stories':
 						'You change your mind and give the syringe back to the guy'
 						'"I don''t do refunds girl" you simply nod'
-						'"I know"'
-						gt $curloc
+						act '"I know"': gt 'street'
 					end
 			elseif SNarkTimes > 1:
 				StrongNarkota += 25
