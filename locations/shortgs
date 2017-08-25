@@ -207,7 +207,7 @@ if $ARGS[0] = 'mk1':
 	act 'Back': gt 'restoreposition'
 end
 
-!! use gs 'shortgs','mk1'
+!! use gs 'shortgs','mk'
 if $ARGS[0] = 'mk':
 	gs 'saveposition'
 	*clr & cla
@@ -433,6 +433,43 @@ if $ARGS[0] = 'mk':
 	$tabmc += '</tr><table></font></center>'
 	$tabmc
 	act 'Back': gt 'restoreposition'
+end
+
+!! gs 'shortgs','fonts'
+if $ARGS[0] = 'fonts':
+	if $ARGS[1] = 'refresh': 
+		jump 'fontsloop'
+	else
+		$dynamicreturn = $ARGS[1]
+	end
+	gs 'saveposition'
+	$fontlist[] = 'Lucida' & $fontlist[] = 'Ariel' & $fontlist[] = 'Tahoma' & $fontlist[] = 'Verdana' & $fontlist[] = 'Courier New' & $fontlist[] = 'Courier' & $fontlist[] = 'Georgia' & $fontlist[] = 'Times New Roman' & $fontlist[] = 'Garamond' & $fontlist[] = 'Bookman' & $fontlist[] = 'Times New Roman' & $fontlist[] = 'Times' & $fontlist[] = 'Comic Sans MS' & $fontlist[] = 'Trebuchet MS' & $fontlist[] = 'Impact' & $fontlist[] = 'BankGothic'
+	$fontcolor[] = 'aqua' & $fontcolor[] = 'black' & $fontcolor[] = 'blue' & $fontcolor[] = 'fuchsia' & $fontcolor[] = 'green' & $fontcolor[] = 'gray' & $fontcolor[] = 'lime' & $fontcolor[] = 'maroon' & $fontcolor[] = 'navy' & $fontcolor[] = 'olive' & $fontcolor[] = 'purple' & $fontcolor[] = 'red' & $fontcolor[] = 'silver' & $fontcolor[] = 'teal' & $fontcolor[] = 'white' & $fontcolor[] = 'yellow' 
+	i = 15
+:fontsloop0
+	if $CurFont = $fontlist[i]: curfont = i
+	if $CurColor = $fontcolor[i]: curcolor = i
+	i -= 1
+	if i > 0: jump 'fontsloop0'
+	jump 'fontsloop1'
+:fontsloop
+	$OpenInnerThough = '<font size="<<CurFontSize>>" color="<<$CurColor>>" face="<<$CurFont>>" >'+$CurBold+$CurItalic
+	$CloseInnerThough = $CurItalicBack+$CurBoldBack+'</font>'
+:fontsloop1
+	*clr & cla
+	$OpenInnerThough+'Current font is <<$CurFont>> Size <<CurFontSize>>, the color is <<$CurColor>>, the Bold is <<iif($CurBold = ''<b>'',''On'',''Off'')>> and Italic is <<iif($CurItalic = ''<i>'',''On'',''Off'')>>'+$CloseInnerThough
+	'<a href="exec: curfont = (curfont + 1) mod 16 & $CurFont = $fontlist[curfont] & gs ''shortgs'',''fonts'',''refresh'' ">Change the Font</a>'
+	'<a href="exec: curcolor = (curcolor + 1) mod 16 & $CurColor = $fontcolor[curcolor] & gs ''shortgs'',''fonts'',''refresh'' ">Change the Color</a>'
+	'<a href="exec:$CurBold = iif($CurBold ! ''<b>'',''<b>'','' '') & $CurBoldBack = iif($CurBold = ''<b>'',''</b>'','' '') & gs ''shortgs'',''fonts'',''refresh'' ">Change the BoldState</a>'
+	'<a href="exec:$CurItalic = iif($CurItalic ! ''<i>'',''<i>'','' '') & $CurItalicBack = iif($CurItalic = ''<i>'',''</i>'','' '') & gs ''shortgs'',''fonts'',''refresh'' ">Change the ItalicState</a>'
+	'<a href="exec:CurfontSize -= 1 & gs ''shortgs'',''fonts'',''refresh'' ">Decrease the Font</a>&nbsp&nbsp&nbsp<a href="exec:CurfontSize += 1 & gs ''shortgs'',''fonts'',''refresh'' ">Increase the font</a>'
+
+	act 'Back': 
+		killvar '$fontlist'
+		killvar '$fontcolor'
+		if $dynamicreturn ! '': dynamic 'dynamic <<$dynamicreturn>>'
+		gt 'restoreposition'
+	end
 end
 
 --- shortgs ---------------------------------
