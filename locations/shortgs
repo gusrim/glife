@@ -441,6 +441,8 @@ if $ARGS[0] = 'fonts':
 		jump 'fontsloop'
 	else
 		$dynamicreturn = $ARGS[1]
+		$OpenPhraseSave = $ARGS[2]
+		$ClosePhraseSave = $ARGS[3]
 	end
 	gs 'saveposition'
 	$fontlist[] = 'Lucida' & $fontlist[] = 'Ariel' & $fontlist[] = 'Tahoma' & $fontlist[] = 'Verdana' & $fontlist[] = 'Courier New' & $fontlist[] = 'Courier' & $fontlist[] = 'Georgia' & $fontlist[] = 'Times New Roman' & $fontlist[] = 'Garamond' & $fontlist[] = 'Bookman' & $fontlist[] = 'Times New Roman' & $fontlist[] = 'Times' & $fontlist[] = 'Comic Sans MS' & $fontlist[] = 'Trebuchet MS' & $fontlist[] = 'Impact' & $fontlist[] = 'BankGothic'
@@ -453,11 +455,11 @@ if $ARGS[0] = 'fonts':
 	if i > 0: jump 'fontsloop0'
 	jump 'fontsloop1'
 :fontsloop
-	$OpenInnerThough = '<font size="<<CurFontSize>>" color="<<$CurColor>>" face="<<$CurFont>>" >'+$CurBold+$CurItalic
-	$CloseInnerThough = $CurItalicBack+$CurBoldBack+'</font>'
+	$OpenPhrase = '<font size="<<CurFontSize>>" color="<<$CurColor>>" face="<<$CurFont>>" >'+$CurBold+$CurItalic
+	$ClosePhrase = $CurItalicBack+$CurBoldBack+'</font>'
 :fontsloop1
 	*clr & cla
-	$OpenInnerThough+'Current font is <<$CurFont>> Size <<CurFontSize>>, the color is <<$CurColor>>, the Bold is <<iif($CurBold = ''<b>'',''On'',''Off'')>> and Italic is <<iif($CurItalic = ''<i>'',''On'',''Off'')>>'+$CloseInnerThough
+	$OpenPhrase+'Current font is <<$CurFont>> Size <<CurFontSize>>, the color is <<$CurColor>>, the Bold is <<iif($CurBold = ''<b>'',''On'',''Off'')>> and Italic is <<iif($CurItalic = ''<i>'',''On'',''Off'')>>'+$ClosePhrase
 	'<a href="exec: curfont = (curfont + 1) mod 16 & $CurFont = $fontlist[curfont] & gs ''shortgs'',''fonts'',''refresh'' ">Change the Font</a>'
 	'<a href="exec: curcolor = (curcolor + 1) mod 16 & $CurColor = $fontcolor[curcolor] & gs ''shortgs'',''fonts'',''refresh'' ">Change the Color</a>'
 	'<a href="exec:$CurBold = iif($CurBold ! ''<b>'',''<b>'','' '') & $CurBoldBack = iif($CurBold = ''<b>'',''</b>'','' '') & gs ''shortgs'',''fonts'',''refresh'' ">Change the BoldState</a>'
@@ -467,6 +469,8 @@ if $ARGS[0] = 'fonts':
 	act 'Back': 
 		killvar '$fontlist'
 		killvar '$fontcolor'
+		dynamic '<<$OpenPhraseSave>> = $OpenPhrase'
+		dynamic '<<$ClosePhraseSave>> = $ClosePhrase'
 		if $dynamicreturn ! '': dynamic 'dynamic <<$dynamicreturn>>'
 		gt 'restoreposition'
 	end
