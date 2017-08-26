@@ -764,6 +764,28 @@ if $ARGS[0] = 'pregreact1':
 		end
 	elseif $wombthfath = 'Kolka' and npc_rel['A34'] > 50 and brotherSecret = 0 and momKnowsKolka = 0:
 		gt 'mother', 'pregreactbrother'
+	elseif $wombthfath = 'Vladimir' and npc_rel['28'] > 50 and stepdadSecret = 1 and momKnowsVladimir = 0:
+		'"I... I don''t actually know. I was," you stammer as you struggle to get the next word out. "I got jumped one night, I tried to fight back but they were too strong. They raped me..."'
+		'"What? Are you okay? Why did''t you tell me sooner?"'
+		'"I was scared and ashamed and I didn''t know how you would react." Your lip quivers as tears begin to flow down your face. "I''m sorry. I should have said something earlier."'
+		'"No, it''s not your fault." Your mother tries her best to comfort you, giving you a hug and speaking in the most calming voice she can manage. "I know it''s difficult, but please try to tell me what happened."'
+		'You do your best to make up a convincing story while also trying to act convincingly. You can''t seem to keep all of the details of your story consistent, but your mother seems to write off your mistakes as the result of stress. You also manage to make most of your crying convincing, secretly thinking to yourself that your show would make trained actors jealous.'
+		'"Oh sweetheart, I''m so sorry. Don''t worry, I''ll stand right by your side. We''ll get through this together." she says as she wipes your fake tears from your eyes.'
+
+		if stepdadSecret = 1 and pcs_intel >= 60:
+			cla
+			'You continue on with your successful act, "Thank you. I''m so glad you didn''t get mad at me." The two of you then share a warm embrace as you''re doing a victory dance inside your head over your successful ruse.'
+
+			act 'Continue':gt 'kuhrPar'
+		elseif stepdadSecret = 1 and pcs_intel < 60:
+			cla
+			'"Wow, I can''t believe that worked. I was for certain that you would figure out I was lying and I would have to tell you that Vladimir''s the true father."'
+			'Your mother stops in her tracks and looks at you stunned as you realize your mistake. "I was only... I was only joking mom." Your mother is not moving an inch and is still looking at you with wide-opened eyes. "Shit." you mumble under your breath.'
+
+			act 'Continue':gt 'mother', 'pregreactstepdad'
+		end
+	elseif $wombthfath = 'Vladimir' and npc_rel['A28'] > 50 and stepdadSecret = 0 and momKnowsVladimir = 0:
+		gt 'mother', 'pregreactstepdad'
 	elseif $wombthfath = '':
 		cla
 		if rape > 0:
@@ -928,6 +950,153 @@ if $ARGS[0] = 'pregreactbrother':
 			'You decide to look for a place to sleep tonight. Tomorrow, you’ll need to go apartment shopping.'
 
 			act 'Continue':momKnowsKolka = 1 & ParHomeBlock = 1 & minut += 15 & gt 'pod_ezd', 'etaj_2'
+		end
+	end
+end
+
+!!When Sveta has another place to stay in Pav, there will be a follow-up to this conversation that restores access to the family apartment, if mom relationship is high enough.
+if $ARGS[0] = 'pregreactstepdad':
+	if npc_rel['A29'] < 60 and pregtalkstepdad = 1 and stepdadSecret = 0:
+		'As soon as your step-father''s name crosses your lips, your mother''s face visibly reddens. Her mouth curls into a snarl and she reaches up and grips you by your hair and starts draging you around.'
+		'"What the fuck is wrong with you?" she screams in your face. "I know you are a worthless whore, but this? Even I didn''t think you''d stoop this low as seducting your own step-father... What kind of sick people are you two?"'
+		'Vladimir begins clearing his throat, "Honey, <<$pcs_nickname>> and I-"'
+		'Your mother furiously cuts him off. "Vladimir, shut the fuck up right now... You''re already on a thin line, I can''t even look at you right now... I don''t care where you go, but you need to leave before I hurt the both of you... I''ll deal with you later."'
+		'Knowing he''s in deep trouble, he hurries out of the room, only to stop by the doorway as he looks at you sympathetically for a moment...'
+		'Your mother lets go of your hair as tears begin to stream down your face.'
+		*nl
+		'"Mom, I''m s-"'
+		'You feel a hard slap across the face before you even begin explaining yourself.'
+		'"I don''t care what you have to say, there''s nothing that makes this okay. I... I can''t deal with you anymore. I want you out of this apartment right now! I don''t ever want to see you or that filthy child you''re bearing ever here again!"'
+		'You panic a little as you think that she won''t go through it, throwing you to fend on your own.'
+		*nl
+		'You try to reason with her, "But..."'
+		'"Get! Out!" she abruptly cuts you off.'
+		'You quickly run out of the apartment with tears running down your face and as soon you''re outside you slump to the floor. <i>What are you going to do now, where will you go? Can you even afford your own apartment?</i> You continue to sob in the same position for several minutes, too distraught to even notice if anyone else is around.'
+		'Eventually, you get up and wipe your face. You have no choice but to fend for yourself now.'
+		if hour < 19:
+			'As there is still some time left of the day you decide to go apartment hunting. You need to find somewhere to stay as soon as possible.'
+			act 'Continue':momKnowsVladimir = 1 & ParHomeBlock = 1 & minut += 15 & gt 'pod_ezd', 'etaj_2'
+		else
+			'It''s too late to look for an apartment today. Instead you decide to look for a place to sleep tonight. You''ll need to go apartment hunting first thing tomorrow.'
+			act 'Continue':momKnowsVladimir = 1 & ParHomeBlock = 1 & minut += 15 & gt 'pod_ezd', 'etaj_2'
+		end
+	elseif npc_rel['A29'] >= 60 and npc_rel['A29'] <= 80 and pregtalkbrother = 1 and brothersecret = 0:
+		'Before you''re able to finish the second syllable of your step-father''s name, you see the rage building in your mother''s face. She tightens her fist and is visibly shaking, making it clear that she is using all of her might to hinder herself from attacking you...'
+		'When she finally manages to speak up, through gritted teeth, only saying, "Get out!"'
+		'You stare at her dumbfounded, unsure where she expects you to go.'
+		'Vladimir tries to speak up in your defense, but as the first word rolls off his tongue, a quick glare from your mother shuts him down. She shifts her gaze back from your step-father to you before she begins yelling...'
+		*nl
+		'"Why the fuck are you still here? Am I speaking another language? Get the hell out!"'
+		'"Where am I supposed to go?" you ask through quivering lips, tears welling in your eyes...'
+		'"I don''t care, you should have thought about that before fucking your step-father. Just get out of my sight. You''re not welcome here anymore..."'
+		'Once you''re out of the apartment, she door slams behind you. You slump to the floor. <i>What are you going to do now, where will you go? Can you even afford your own apartment?</i> You continue to sob in the same position for several minutes, too distraught to even notice if anyone else is around.'
+		'Eventually, you get up and wipe your face. You have no choice but to fend for yourself now.'
+		if hour < 19:
+			'As there is still some time left of the day you decide to go apartment hunting. You need to find somewhere to stay as soon as possible.'
+			act 'Continue':momKnowsVladimir = 1 & ParHomeBlock = 1 & minut += 15 & gt 'pod_ezd', 'etaj_2'
+		else
+			'It''s too late to look for an apartment today. Instead you decide to look for a place to sleep tonight. You''ll need to go apartment hunting first thing tomorrow.'
+			act 'Continue':momKnowsVladimir = 1 & ParHomeBlock = 1 & minut += 15 & gt 'pod_ezd', 'etaj_2'
+		end
+	elseif npc_rel['A29'] > 80 and pregtalkstepdad = 1 and stepdadSecret = 0:
+		'Your mother stares at you in stunned silence as you utter Vladimir''s name. Her knees seem to give out, as she barely manages to hold herself up by leaning on the counter.'
+		'After long period of silence that feels like an eternity, your mother finally manages to speak up, "Please tell me I just misheard you. Did I really hear you just say your step-father''s name?"'
+		'You stare shamefully at the floor, only giving your mother the smallest nod you can manage as a reply.'
+		'Vladimir is quickly following your example... He dejectengly stares on the floor as if he''s admitting that you''re telling the truth...'
+		*nl
+		'"How could you both do this?" she gasps. "What the hell were you thinking?" she angrily asks.'
+		'As you begin to reply, your mother cuts you off.'
+		'"It doesn''t matter what the reason is. You had sex with your own step-father. If this comes out I''ll be the laughing stock of the town... There''s no way I''m letting you stay here. You have to move out."'
+		'Vladimir grabs your hand before rising to your defense, "Honey, that''s not fair. You can’t just kick <<$pcs_nickname>> out. We''ll figure out something..."'
+		'"Vladimir, you dipshit. You''re close to getting thrown out yourself, so I suggest you let go of <<$pcs_nickname>>''s hand right now and shut the fuck up. I still haven''t decided what to do with your sorry ass..."'
+		*nl
+		'Vladimir reluctantly lets go of your hand, and in that moment you want nothing more than to feel the warmth of his skin against yours. Without his re-assuring touch, you feel more alone and terrified than you''ve ever been in your life.'
+		'Still, you can''t fault your step-father from backing down. There isn''t much else he could have done in this situation as he himself isn''t aware of his fate. If you somehow manage to pull through this, you fully intend to reward your step-father for this small moment of bravery...'
+		'Your eyes are filled with tears and not before long they begins to trickle down past your quivering lips... "W-Where am I supposed to go?"'
+		'Your mother shurgs her shoulders, "I don''t know and to be honest I don''t really care. All I know is that you can''t stay here..."'
+		*nl
+		'"Why can''t I stay?" you respond without thinking.'
+		'"Why you can''t stay?" your mother repeats indignantly, and you feel her getting annoyed by your stupid question.'
+		'"You''re really asking me that? Maybe it''s because you fucked your step-father, a man that raised you since you were this small!" she points and pauses staring angrily at you. "I can''t believe I''m even having to explain why I want you out of this house. Now leave, before things get worse for you."'
+		'Dejected, you reluctantly leave the apartment, closing the door behind you. You slump to the floor. <i>What are you going to do now, where will you go? Can you even afford your own apartment?</i> You continue to sob in the same position for several minutes, too distraught to even notice if anyone else is around.'
+		'Eventually, you get up and wipe your face. You have no choice but to fend for yourself now.'
+		if hour < 19:
+			'As there is still some time left of the day you decide to go apartment hunting. You need to find somewhere to stay as soon as possible.'
+			act 'Continue':momKnowsVladimir = 1 & ParHomeBlock = 1 & minut += 15 & gt 'pod_ezd', 'etaj_2'
+		else
+			'It''s too late to look for an apartment today. Instead you decide to look for a place to sleep tonight. You''ll need to go apartment hunting first thing tomorrow.'
+			act 'Continue':momKnowsVladimir = 1 & ParHomeBlock = 1 & minut += 15 & gt 'pod_ezd', 'etaj_2'
+		end
+	elseif npc_rel['A29'] < 60 and (pregtalkstepdad = 0 or stepdadSecret = 1):
+		'As soon as your step-father''s name crosses your lips, your mother''s face visibly reddens. Her mouth curls into a snarl and she reaches up and grips you by your hair and starts draging you around.'
+		'"What the fuck is wrong with you?" she screams in your face. "I know you are a worthless whore, but this? Even I didn''t think you''d stoop this low as seducting your own step-father... What kind of sick people are you two?"'
+		'Vladimir begins clearing his throat, "Honey, <<$pcs_nickname>> and I-"'
+		'Your mother furiously cuts him off. "Vladimir, shut the fuck up right now... You''re already on a thin line, I can''t even look at you right now... I don''t care where you go, but you need to leave before I hurt the both of you... I''ll deal with you later."'
+		'Knowing he''s in deep trouble, he hurries out of the room, only to stop by the doorway as he looks at you sympathetically for a moment...'
+		'Your mother lets go of your hair as tears begin to stream down your face.'
+		*nl
+		'"Mom, I''m s-"'
+		'You feel a hard slap across the face before you even begin explaining yourself.'
+		'"I don''t care what you have to say, there''s nothing that makes this okay. I... I can''t deal with you anymore. I want you out of this apartment right now! I don''t ever want to see you or that filthy child you''re bearing ever here again!"'
+		'You panic a little as you think that she won''t go through it, throwing you to fend on your own.'
+		*nl
+		'You try to reason with her, "But..."'
+		'"Get! Out!" she abruptly cuts you off.'
+		'You quickly run out of the apartment with tears running down your face and as soon you''re outside you slump to the floor. <i>What are you going to do now, where will you go? Can you even afford your own apartment?</i> You continue to sob in the same position for several minutes, too distraught to even notice if anyone else is around.'
+		'Eventually, you get up and wipe your face. You have no choice but to fend for yourself now.'
+		if hour < 19:
+			'As there is still some time left of the day you decide to go apartment hunting. You need to find somewhere to stay as soon as possible.'
+			act 'Continue':momKnowsVladimir = 1 & ParHomeBlock = 1 & minut += 15 & gt 'pod_ezd', 'etaj_2'
+		else
+			'It''s too late to look for an apartment today. Instead you decide to look for a place to sleep tonight. You''ll need to go apartment hunting first thing tomorrow.'
+			act 'Continue':momKnowsVladimir = 1 & ParHomeBlock = 1 & minut += 15 & gt 'pod_ezd', 'etaj_2'
+		end
+	elseif npc_rel['A29'] >= 60 and npc_rel['A29'] <= 80 and (pregtalkstepdad = 0 or stepdadSecret = 1):
+		'Before you''re able to finish the second syllable of your step-father''s name, you see the rage building in your mother''s face. She tightens her fist and is visibly shaking, making it clear that she is using all of her might to hinder herself from attacking you...'
+		'When she finally manages to speak up, through gritted teeth, only saying, "Get out!"'
+		'You stare at her dumbfounded, unsure where she expects you to go.'
+		'Vladimir tries to speak up in your defense, but as the first word rolls off his tongue, a quick glare from your mother shuts him down. She shifts her gaze back from your step-father to you before she begins yelling...'
+		*nl
+		'"Why the fuck are you still here? Am I speaking another language? Get the hell out!"'
+		'"Where am I supposed to go?" you ask through quivering lips, tears welling in your eyes...'
+		'"I don''t care, you should have thought about that before fucking your step-father. Just get out of my sight. You''re not welcome here anymore..."'
+		'Once you''re out of the apartment, she door slams behind you. You slump to the floor. <i>What are you going to do now, where will you go? Can you even afford your own apartment?</i> You continue to sob in the same position for several minutes, too distraught to even notice if anyone else is around.'
+		'Eventually, you get up and wipe your face. You have no choice but to fend for yourself now.'
+		if hour < 19:
+			'As there is still some time left of the day you decide to go apartment hunting. You need to find somewhere to stay as soon as possible.'
+			act 'Continue':momKnowsVladimir = 1 & ParHomeBlock = 1 & minut += 15 & gt 'pod_ezd', 'etaj_2'
+		else
+			'It''s too late to look for an apartment today. Instead you decide to look for a place to sleep tonight. You''ll need to go apartment hunting first thing tomorrow.'
+			act 'Continue':momKnowsVladimir = 1 & ParHomeBlock = 1 & minut += 15 & gt 'pod_ezd', 'etaj_2'
+		end
+	elseif npc_rel['A29'] > 80 and (pregtalkstepdad = 0 or stepdadSecret = 1):
+		'Your mother stares at you in stunned silence as you utter Vladimir''s name. Her knees seem to give out, as she barely manages to hold herself up by leaning on the counter.'
+		'After long period of silence that feels like an eternity, your mother finally manages to speak up, "Please tell me I just misheard you. Did I really hear you just say your step-father''s name?"'
+		'You stare shamefully at the floor, only giving your mother the smallest nod you can manage as a reply.'
+		'Vladimir is quickly following your example... He dejectengly stares on the floor as if he''s admitting that you''re telling the truth...'
+		*nl
+		'"How could you both do this?" she gasps. "What the hell were you thinking?" she angrily asks.'
+		'As you begin to reply, your mother cuts you off.'
+		'"It doesn''t matter what the reason is. You had sex with your own step-father. If this comes out I''ll be the laughing stock of the town... There''s no way I''m letting you stay here. You have to move out."'
+		'Vladimir grabs your hand before rising to your defense, "Honey, that''s not fair. You can’t just kick <<$pcs_nickname>> out. We''ll figure out something..."'
+		'"Vladimir, you dipshit. You''re close to getting thrown out yourself, so I suggest you let go of <<$pcs_nickname>>''s hand right now and shut the fuck up. I still haven''t decided what to do with your sorry ass..."'
+		*nl
+		'Vladimir reluctantly lets go of your hand, and in that moment you want nothing more than to feel the warmth of his skin against yours. Without his re-assuring touch, you feel more alone and terrified than you''ve ever been in your life.'
+		'Still, you can''t fault your step-father from backing down. There isn''t much else he could have done in this situation as he himself isn''t aware of his fate. If you somehow manage to pull through this, you fully intend to reward your step-father for this small moment of bravery...'
+		'Your eyes are filled with tears and not before long they begins to trickle down past your quivering lips... "W-Where am I supposed to go?"'
+		'Your mother shurgs her shoulders, "I don''t know and to be honest I don''t really care. All I know is that you can''t stay here..."'
+		*nl
+		'"Why can''t I stay?" you respond without thinking.'
+		'"Why you can''t stay?" your mother repeats indignantly, and you feel her getting annoyed by your stupid question.'
+		'"You''re really asking me that? Maybe it''s because you fucked your step-father, a man that raised you since you were this small!" she points and pauses staring angrily at you. "I can''t believe I''m even having to explain why I want you out of this house. Now leave, before things get worse for you."'
+		'Dejected, you reluctantly leave the apartment, closing the door behind you. You slump to the floor. <i>What are you going to do now, where will you go? Can you even afford your own apartment?</i> You continue to sob in the same position for several minutes, too distraught to even notice if anyone else is around.'
+		'Eventually, you get up and wipe your face. You have no choice but to fend for yourself now.'
+		if hour < 19:
+			'As there is still some time left of the day you decide to go apartment hunting. You need to find somewhere to stay as soon as possible.'
+			act 'Continue':momKnowsVladimir = 1 & ParHomeBlock = 1 & minut += 15 & gt 'pod_ezd', 'etaj_2'
+		else
+			'It''s too late to look for an apartment today. Instead you decide to look for a place to sleep tonight. You''ll need to go apartment hunting first thing tomorrow.'
+			act 'Continue':momKnowsVladimir = 1 & ParHomeBlock = 1 & minut += 15 & gt 'pod_ezd', 'etaj_2'
 		end
 	end
 end
