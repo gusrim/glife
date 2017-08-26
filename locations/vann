@@ -1,17 +1,4 @@
 # vann
-$stirkao = {
-	cla
-	*clr
-	minut += dirtbelo * 5
-	clrbelo += dirtbelo
-	poroshok -= 1
-	dirtbelo = 0
-	pcs_mood -= 10
-	'<center><img <<$set_imgh>> src="images/locations/city/residential/apartment/stir.jpg"></center>'
-	'You soak the clothes in a basin and add the power detergent. You then wash your clothes until they are clean.'
-
-	act 'Finish':gt 'vann', 'start'
-}
 
 if $ARGS[0] = 'start':
     $location_type = 'bathroom'
@@ -33,7 +20,7 @@ if $ARGS[0] = 'start':
 	if shampoo = 0:'You''re out of shampoo'
 
 	if obdysh = 1 or palMir = 1 or bordysh = 1:
-		if dirtbelo > 0 and poroshok > 0:'<a href="exec:dynamic $stirkao">You have clothes you can wash</a>'
+		if washingbelo = 1 and poroshok > 0:'<a href="exec:gt ''vann'', ''washing''">You have clothes you can wash</a>'
 
 		if pirsA + pirsB + pirsC + pirsD + pirsE + pirsF + pirsN + pirsG + pirsGL > 0:'<a href="exec:dynamic $pirManage">Manage Piercings</a>'
 
@@ -159,6 +146,19 @@ if $ARGS[0] = 'start':
 		dynamic $shower
 		dynamic $bath
 	end
+end
+
+if $ARGS[0] = 'washing':
+	cla
+	*clr
+	minut += 15
+	poroshok -= 1
+	pcs_mood -= 10
+	gs 'underwear', 'cleaning'
+	'<center><img <<$set_imgh>> src="images/locations/city/residential/apartment/stir.jpg"></center>'
+	'You soak the clothes in a basin and add the power detergent. You then wash your clothes until they are clean.'
+
+	act 'Finish':gt 'vann', 'start'
 end
 
 if $ARGS[0] = 'brit':
