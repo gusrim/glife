@@ -32,6 +32,10 @@ end
 if $ARGS[0] = 'lunch':
 	cla
 	
+	if dimaRevenge = 3:
+		gt 'dimaRevenge', 3
+	end if
+
 	if marcus_event ! daystart and Marcus_sextype > 0 and rand(0,3) = 0:gt 'gschool_lunch', 'marcus_event'
 
 	gs 'stat'
@@ -42,8 +46,15 @@ if $ARGS[0] = 'lunch':
 		$metka = 'break'
 		minut += 30
 		gs 'stat'
-		'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/lunch/lunch.jpg"></center>'
-		'During the break, students and some of the <a href="exec:gt ''Sgrup''">teachers</a> are standing in line waiting for their food.'
+		if dimaRevenge = 5 and dimaRevChoice = 5:
+			!!during lunch!!
+			'<center><b><font color="maroon">Cafeteria</font></b></center>'
+			'<center><img src="images/locations/pavlovsk/school/lunch/lunch.jpg"></center>'
+			'As you wait in line for your meal, you hear the other students talking about a girl you don''t know. None of them are talking about you anymore. Dimka works quick. You enjoy the rest of your lunch break.'
+		else
+			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/lunch/lunch.jpg"></center>'
+			'During the break, students and some of the <a href="exec:gt ''Sgrup''">teachers</a> are standing in line near the kitchen, waiting for their food.'
+		end
 		if money >= 50:
 			act 'Buy food (50 <b>₽</b>)':
 				cla
@@ -75,8 +86,14 @@ if $ARGS[0] = 'break':
 	cla
 	gs'stat'
 
-!!Lunch events requiring unlock
-	if fedorKozlovQW = 0 and FedorIntro = 0 and pcs_apprnc >= 20:
+	!!Lunch events requiring unlock
+	if dimaRevenge = 2:
+		gt 'dimaRevenge', 2
+	elseif dimaRevenge = 4:
+		gt 'dimaRevenge', 4, 'lunch'
+	elseif dimaRevenge = 5:
+		gt 'dimaRevenge', 5, 'afterlunch'
+	elseif fedorKozlovQW = 0 and FedorIntro = 0 and pcs_apprnc >= 20:
 		gt 'FedorMisc', 'Fedor Intro'
 	elseif NikoVolkovQW = 0 and NikoLuv >= 4:
 		gt 'NikoEv', 'Date Intro'
@@ -106,7 +123,7 @@ if $ARGS[0] = 'break':
 
 	if lunch_event ! daystart:lunch_event = daystart & gt 'gschool_lunch', 'events'
 
-	if soniaPS = 2:soniaPS = 3 & 'When you walk through the hallways of your school during the break, you see Sonia Ivanko and Vitek Kotov talking about something. Sonia looks like she''s about to cry, but nods when Vitek tells her something.'
+	if soniaPS = 2:soniaPS = 3 & 'During break, while you''re wandering through the school hallways killing time, you notice Sonia Ivanko and Vitek Kotov talking about something. Sonia looks like she''s about to cry, but eventually she gives a quiet nod as Vitek whispers something in her ear.'
 
 
 	act 'Relax in a classroom':
@@ -116,12 +133,12 @@ if $ARGS[0] = 'break':
 		gs 'stat'
 		if rand(1,6) = 1 and pcs_vag > 12 and mesec <= 0:
 			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/events/boysex_tualet.jpg"></center>'
-			'When you enter the class, you feel someone moving up behind you and pulling up your skirt. Then you feel hands pawing your ass. When you move to turn around, the hand quickly pulls away. By the time you can see who''s behind you, you find half the guys in your class standing there, all looking in different directions inconspicuously, a few of them even having the gall to whistle innocently. You try to tell from their faces which one of them just touched you.'
+			'When you enter the class, you feel someone moving in behind you and quickly pulling your skirt up. Your skirt is barely in the air, before you feel hands pawing at your ass. As you move to turn around, the hand quickly pulls away. By the time you can see who''s behind you, you find half the guys in your class standing there, all looking in different directions and trying to act inconspicuous, a few of them even having the gall to whistle innocently. You try to tell from their faces which one of them just touched you.'
 
 			act 'Identify the perpetrator':gt 'gschool_events', 'rand_scoolboy'
 		else
 			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/lunch/peremena<<urand>>.jpg"></center>'
-			'You decide to spend your break in a classroom. As you enter, you find several classmates already sitting there: the <a href="exec:gt ''Sgrup1''">smart kids</a> decided to get an early start on their homework assignments, while the <a href="exec:gt ''Sgrup5''">outcasts</a> are mostly just hoping no one will pick on them today.'
+			'You decide to spend your break in a classroom. As you enter, you find several of your classmates already sitting there: the <a href="exec:gt ''Sgrup1''">smart kids</a> decided to get an early start on their homework assignments, while the <a href="exec:gt ''Sgrup5''">outcasts</a> are mostly hiding away from everyone else, hoping that no one will pick on them today.'
 
 			gs 'gschool_lessons', 'afternoon'
 		end
@@ -134,19 +151,19 @@ if $ARGS[0] = 'break':
 
 		if soniaPS = 5 and rand(1,6) = 1:
 			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/lunch/school.jpg"></center>'
-			'As you walk past the Geography classroom, you hear a strange moaning.'
+			'As you walk past the Geography classroom, you hear a strange moaning coming from inside.'
 			act'See what''s happening':
 				cls
 				gs'stat'
 				pcs_horny += 5
 				'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/girl/sonia/sex/school/sonia.teach0,'+rand(0,1)+'.jpg"></center>'
-				'You carefully look around the corner, inside the classroom. You see Sonia and your geography teacher, both half naked. Sonia did her best to look the part, even wearing glasses to complete her look as a desperate student in need of help. Suddenly her good grades in school make perfect sense; all the teachers don''t miss their chance to take advantage of the school slut, in exchange for a decent grade. Sonia is currently giving the teacher a skillful blowjob, really giving it her all; you can see the teacher''s cock glistening with saliva all the way from where you''re standing.'
+				'You carefully look around the corner, trying to see inside the classroom. You see Sonia and your geography teacher, both half naked. Sonia did her best to look the part, even wearing glasses to complete her look as a desperate schoolgirl in need of help. Suddenly her good grades in school make perfect sense; the teachers don''t miss their chance to take advantage of the school slut, in exchange for a decent grade. Sonia is currently giving the teacher a very skilful blowjob, really giving it her all; you can see the teacher''s cock glistening with saliva all the way from where you''re standing.'
 				act'Continue':
 					cls
 					gs'stat'
 					pcs_horny += 10
 					'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/girl/sonia/sex/school/sonia.teach1,0.jpg"></center>'
-					'When the teacher has had enough of her mouth, he puts her hands on his desk and begins to fuck her from behind. He''s quite rough about it, but Sonia doesn''t seem to mind at all and moans like a wanton whore. Realizing the loud moans might attract more attention from outside the class, you leave before anyone else finds you staring.'
+					'When the teacher has had enough of her mouth, he lets her stand and turn around, having her put her hands on his desk before he slides his slick cock up her pussy, fucking her from behind. He''s quite rough about it, but Sonia doesn''t seem to mind at all and moans like a wanton whore. Realizing the loud moans might attract more attention from outside the class, you leave before anyone else finds you staring.'
 					gs 'gschool_lessons', 'afternoon'
 				end
 			end
@@ -154,7 +171,7 @@ if $ARGS[0] = 'break':
 			gs 'gschool_lessons', 'afternoon'
 		else
 			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/lunch/school.jpg"></center>'
-			'When the break finally comes, the girls wander through the hallways of the school, gossiping about pretty much everyone they know. The guys are standing around in small groups, some of them sneaking off to have a smoke behind the school building. The <a href="exec:gt ''Sgrup3''">cool kids</a> are hanging out in one area, and on the opposite side of the hallway the <a href="exec:gt ''Sgrup2''">sporty kids</a> are talking about their upcoming competitions.'
+			'When the break finally comes, the girls wander through the hallways of the school, gossiping about pretty much everyone they know. The guys are standing around in small groups, some of them sneaking off to have a smoke behind the school building. The <a href="exec:gt ''Sgrup3''">cool kids</a> are hanging out in one area, and on the other side of the hallway the <a href="exec:gt ''Sgrup2''">sporty kids</a> are talking about their upcoming competitions.'
 
 			gs 'gschool_lessons', 'afternoon'
 		end	
@@ -166,7 +183,7 @@ if $ARGS[0] = 'break':
 		urand = rand(0, 12)
 		gs 'stat'
 		'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/lunch/toilet.jpg"></center>'
-		'You need to use the restroom, and as you enter you notice a lot of beautiful girls from your school there. They do some minor touch-ups on their make-up while they gossip about their classmates who happen to not be there. Some people are standing by the windows, smoking. The <a href="exec:gt ''Sgrup4''">Gopniks</a> from your class are standing near the toilets.'
+		'You need to use the restroom and as you enter you notice a lot of beautiful girls from your school there. They check their make-up, doing minor touch-ups while they gossip about their classmates who happen to not be there. Some people are standing by the windows, smoking. The <a href="exec:gt ''Sgrup4''">Gopniks</a> from your class are standing near the toilets.'
 		gs 'gschool_lessons', 'afternoon'
 
 		if rand(0,30) >= 25:
@@ -182,7 +199,7 @@ if $ARGS[0] = 'break':
 				if soniaPS < 5:soniasextime += 1
 				gs 'stat'
 				'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/girl/sonia/sex/school/toilet.jpg"></center>'
-				'When you enter the restroom you see Sonia, giving some kid you don''t know a skillful blowjob. She''s very much focused on her task, doing her best to make him feel good.'
+				'When you enter the restroom you see Sonia, giving some kid you don''t know a skilful blowjob. She''s very much focused on her task, doing her best to make him feel good.'
 				gs 'gschool_lessons', 'afternoon'
 			elseif soniasexrand = 2:
 				cls
@@ -197,13 +214,13 @@ if $ARGS[0] = 'break':
 				pcs_horny += 20
 				gs'stat'
 				'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/girl/sonia/sex/school/sonia.orgy.pre0,0.jpg"></center>'
-				'When you enter the restroom you see Sonia, surrounded by several guys. She stripped down completely, and is sitting on her knees waiting for the guys to give her what she wants.'
+				'When you enter the restroom you see Sonia, surrounded by several guys. She''s stripped down completely, and is sitting on her knees waiting for the guys to give her what she wants.'
 				act'Continue':
 					cls
 					pcs_horny += 10
 					gs'stat'
 					'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/girl/sonia/sex/school/sonia.orgy0,0.jpg"></center>'
-					'One of the guys brought a collar, and he puts it around Sonia''s neck for a bit of roleplaying, "You''re ours now... ain''t that right, whore?" Sonia, content to play along as long as she gets dicks to suck on, happily agrees and begins to deepthroat the guys one by one, massaging the others in turn with her hands to make sure no one feels left out. Sometimes an impatient tug on the leash tells her to switch cocks, when she''s sucking one cock for too long. Having seen enough, you leave them to their fun and head for your next class.'
+					'One of the guys brought a collar, and he puts it around Sonia''s neck for a bit of roleplay, "You''re ours now... ain''t that right, whore?" Sonia, content to play along as long as she gets dicks to suck on, happily agrees and begins to deepthroat the guys one by one, massaging the others in turn with her hands to make sure no one feels left out. Sometimes an impatient tug on the leash tells her to switch cocks, when she''s been sucking on one for too long. Having seen enough, you leave them to their fun and head for your next class.'
 					gs 'gschool_lessons', 'afternoon'
 				end
 			end
@@ -221,14 +238,14 @@ if $ARGS[0] = 'break':
 	end
 
 	if zverevaQW = 2 and zverRageQW = 0 or zverevaQW = 3 and zverRageQW = 0:
-		act 'Spread rumors about Christina':
+		act 'Spread rumours about Christina':
 			cls
 
 			if zverRageQW = 0:zverRageQW = 1
 
 			minut += 60
 			gs 'stat'
-			'You spread rumours about how Christina Zvereva has sex with Mr. Pavlovich, the P.E. teacher. The rumour spreads like wildfire: within the hour, everyone is talking about it.'
+			'You spread rumours about how Christina Zvereva has sex with Mr. Pavlovich, the P.E. teacher. The rumour spreads like wildfire: within the hour, everyone knows how she stays ahead.'
 			gs 'gschool_lessons', 'afternoon'
 		end
 	end
@@ -241,8 +258,8 @@ if $ARGS[0] = 'marcus_event':
 	gs'stat'
 	'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/boy/marcus/marcusflirt.jpg"></center>'
 	'As you stop at your locker before lunch, Marcus walks over. "Hey <<$pcs_nickname>> you are looking fine today, damn but you look good in that little plaid skirt."'
-	'You can''t help but smile and shake your head a little, you can tell by the way his eyes roam all over you body that despite his compliments he is only thinking about once thing right now and if that wasn''t obvious enough, the bulge straining against his pants is a sure give away. "Well you''re not looking to bad yourself and by the look of things you are VERY happy to see me." You say with a giggle and a pointed look at his crotch.'
-	'He blushes slightly and pulls out his shirt so it hangs over his crotch and hides it a little. "Fuck sorry about that, but I just had two girls in my last class taking turns flashing me. I swear those girls get a huge kick out of teasing me." He looks around a bit and then leans in a little close to you and says softly. "Hey think you might be able to you know... help me out with this?" He says indicating the evident bulge in his pants.'
+	'You can''t help but smile and shake your head a little, you can tell by the way his eyes roam all over your body that despite his compliments there is only one thing on his mind right now right now. If the way he''s flirting wasn''t obvious enough, the bulge straining against his pants is a dead give away. "Well you''re not looking too bad yourself Marcus and by the look of things, you sure are VERY happy to see me." You say with a giggle and a pointed look at his crotch.'
+	'He blushes slightly and pulls out his shirt so it hangs over his crotch, trying to hide his erection a little. "Oh fuck, sorry about that. I just had two girls in my last class who took turns flashing me. I swear those girls get a huge kick out of teasing me." He looks around a bit and then leans in a little close to you and says softly. "Hey, think you might be able to you know... help me out with this?" He says indicating the evident bulge in his pants.'
 
 	act 'Make excuse and go':
 		'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/head/27.jpg"></center>'
@@ -290,24 +307,24 @@ if $ARGS[0] = 'marcus_event':
 		cls
 		gs 'boyStat', 'A146'
 		'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/boy/marcus/sex/school/marcl.jpg"></center>'
-		'You purse your lips a moment in thought and then figure what the hell. You grab him by the hand and when no one is looking you lead him into one of the empty class rooms. You squat down in front of him, as you do he pulls his rock hard <<dick>>cm <<$dick_girth>> cock from his pants and puts it right in your face. With your hand you give it several strokes, as you listen to many of your classmates out in the hall, just on the other side of the door. You briefly wonder how many of them do similar things on different days or how many might even be doing something similar right now.'
+		'You purse your lips a moment in thought and then figure, what the hell. You grab him by the hand and when no one is looking you lead him into one of the empty class rooms. You squat down in front of him as he frees his rock hard <<dick>>cm <<$dick_girth>> cock from his pants, putting it right in your face. You take it in your hand, giving it several lengthy strokes while you listen to many of your classmates out in the hall, just on the other side of the door. You briefly wonder how many of them do similar things on different days or how many might even be doing something similar right this minute.'
 		gs 'arousal', 'hj', 5
 		gs 'stat'
 		act 'Blow him':
 			cls
 			'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/boy/marcus/sex/school/marcl.jpg"></center>'
-			'After giving his <<dick>>cm <<$dick_girth>> cock a few strokes you can feel it already pulsing in your hand. You can tell he has had a hard on for sometime now, opening your mouth you leave forward and wrap your lips around the shaft of his cock and start sucking him off. One of your hands massages his balls while the other strokes his shaft in rhythm with your lips. He starts moaning louder and louder, briefly you remove your hands from him so you can pull down your shirt and give him a nice view of your titties, before they find their way back to his cock and balls.'
+			'After giving his <<dick>>cm <<$dick_girth>> cock a few strokes, you can already feel it pulsing in your hand. You can tell he''s been struggling with this hard on for some time now. Leaning forward, you open your mouth nice and wide, before slowly wrapping your lips around the shaft of his cock, sucking him down deep. You use one of your hands to massage his balls while the other strokes up and down his shaft in rhythm with your lips. He starts moaning louder and louder, you briefly remove your hands so you can pull down your shirt and give him a nice view of your pert titties, before they find their way back to his cock and balls.'
 			gs 'arousal', 'bj', 5
 			gs 'stat'
 			act 'Finish him':
 				cls
 				'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/boy/marcus/sex/school/marcl.jpg"></center>'
-				'He doesn''t last very long at all, several minutes of sucking on his dick was all it took for his cum to blast the back of your throat. He pulls his dick out of your mouth, while your hand is still stroking him, spurt after spurt splashes across your face, in your hair, across your boobs in what seems like a never ending stream of cum. You are starting to seriously wonder if it is ever going to stop, when a final tiny spurt comes out landing on the floor. You take his dick back in your mouth and suck it clean and milk the last couple of drops out of it.'
+				'He doesn''t last very long at all: just a few short minutes of sucking was all it took for his cum to blast the back of your throat. He shudders and pulls back, his dick popping out from between your lips even as you keep stroking his shaft with one hand. Spurt after spurt of his sticky semen splashes across your face, into your hair, across your exposed boobs all in what seems like a never ending stream of cum. You are seriously starting to wonder whether it''s going stop, it just keeps going for as long as you''re stroking until finally, the last tiny spurt shoots out and lands on the floor. You take his now softening dick back in your mouth and suck on it softly, cleaning him off and milking out the last few warm drops.'
 				gs 'arousal', 'bj', 5
 				gs 'cum_call', 'mouth'
 				gs 'stat'
-				'With a loud sigh, he leans against the teachers desk. "Fuck I needed that, thank you so much <<$pcs_nickname>>, hey why don''t you come sit with me at lunch. I will even buy if you are not already full." He adds with a smirk.'
-				'You can''t help but roll your eyes at that as you do the best you can to clean up, jesus your whole face is nearly coated in his cum. You can''t believe that all came from one guy. But sitting with him at lunch sounds nice, but he''s is kinda right. Do you really want anything to eat, well anything else to eat that is.'
+				'With a loud sigh, he leans back against the teacher''s desk. "Fuck yeah, thanks <<$pcs_nickname>> I really needed that. Hey, why don''t you come sit with me at lunch? I will even buy if you are not already full." He adds with a smirk.'
+				'You can''t help but roll your eyes at that as you do the best you can to clean up, <i>Jesus, your whole face is nearly coated in his cum</i>. You can''t believe all that came from just one guy. Sitting with him at lunch sounds nice, but he does kinda have a point. Do you really want anything to eat, well anything else to eat that is?'
 				act 'Yes':
 					cls
 					cumspclnt = 2
@@ -317,7 +334,7 @@ if $ARGS[0] = 'marcus_event':
 					water += 40
 					gs 'stat'
 					'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/lunch/lunch.jpg"></center>'
-					'"Sure I would love that." With that, the two of you walk to the lunch room together. He buys both your lunches, you find a table and sit together while you eat and talk for the rest lunch period.'
+					'"Sure, I would love to have lunch with you!" With that, the two of you walk to the cafeteria together. He buys you both lunch, you find a table and sit together while you eat and talk for the rest lunch period.'
 
 					gs 'gschool_lessons', 'afternoon'
 				end
@@ -325,7 +342,7 @@ if $ARGS[0] = 'marcus_event':
 					*clr
 					cla
 					'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/lunch/lunch.jpg"></center>'
-					'"I''m not hungry but thank you Marcus, but I would love to sit with you." With that, the two of you walk to the lunch room together. He buys his lunch, you find a table and sit together while he eats, the two of you talk for the rest lunch period.'
+					'"I''m not really hungry Marcus, but thank you I would love to sit with you." With that, the two of you walk to the cafeteria together. He buys his lunch, you find a table and sit together while he eats, the two of you talk for the rest lunch period.'
 
 					gs 'gschool_lessons', 'afternoon'
 				end
@@ -337,14 +354,14 @@ end
 if $ARGS[0] = 'events':
 	if npcSex[14] = 1 and KatjaLust >= 50 and Katjahorny + KatjaSlut >= 100 and KatjaHorny > 50:
 		cla
-		'During the break Katja Meynold approaches you, her face flustered in a mixture of arousal and shame. After a few seconds, she gathers enough courage to ask if you want go somewhere quiet with her.'
+		'During the break Katja Meynold approaches you, her face flushed in a mixture of shame and what seems to be arousal. After a few seconds, she gathers enough courage to ask if you want go somewhere quiet with her.'
 
 		act 'Go with Katja':
 			cls
 			minut += 60
 			gs 'stat'
 			'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/girl/katja/sex/school/petting.jpg"></center>'
-			'You quietly nod and Katja takes you by the hand, leading you to a small storage closet. The door is barely closed behind you when she pulls you tightly against her, giving you an aggressive kiss on the lips. She whispers passionately, "<<$pcs_nickname>>, I want you."'
+			'You nod at Katja and she quickly takes you by the hand, leading you to a small storage closet. The door has barely closed behind you when she pulls you tightly against her, kissing your lips aggressively. She leans in and softly whispers in your ear, "<<$pcs_nickname>>, I want you."'
 
 			if rand(1,2) = 1 and katschoolsex >= 1:
 				act 'go somewhere private': gt 'Katja_Tanga', 'secretroom'
@@ -361,10 +378,10 @@ if $ARGS[0] = 'events':
 					KatjaHorny = 0
 					gs 'stat'
 					'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/girl/katja/sex/school/lesbian.jpg"></center>'
-					'You get down on your knees in front of Katya, as she lifts her skirt up and pulls her panties to the side. You waste no time, nuzzling her groin as your tongue deftly licks her tiny clitoris. You can feel her pussy getting wetter and wetter from your thorough licking, and enjoy the taste of her pussy a lot.'
+					'Katja lightly presses down on your shoulders, letting you know to get down on your knees in front of her, as she lifts up her skirt and pulls her panties to the side. You waste no time, nuzzling at her groin as your tongue deftly starts licking her tiny clitoris. You can feel her pussy getting wetter and wetter from your thorough licking, and you enjoy the taste of her pussy a lot.'
 					*nl
-					'As Katya gets closer to her orgasm, she firmly clutches your hair and roughly pulls your face even harder into her crotch, encouraging you to keep going. A short while later, you can feel her pussy convulse against your mouth and a few drops of squirt come out, landing on your tongue and lips. You slowly keep lapping at her pussy while she recovers from her orgasm. When you look up into her eyes, you see her staring down at you lovingly for a second, before pushing your face away and quickly straightening her clothes.'
-					'"Damn, next period is about to start! I''m sorry <<$pcs_nickname>>, I owe you one!" she apologizes, as she quickly gathers her things and leaves the closet. You''re hornier than ever, but also need to get going.'
+					'As Katja gets closer to her orgasm, she firmly clutches your hair and roughly pulls your face even harder into her crotch, encouraging you to work harder. A short while later, you can feel her pussy convulsing against your mouth, a few drops of girl cum squirting out and landing on your mouth. You slowly keep lapping at her twitching pussy, bringing her down carefully while she recovers from her orgasm. When you look up into her eyes, you see her staring down at you lovingly for a second, before pushing your face away and quickly straightening her clothes.'
+					'"Damn, next period is about to start! I''m sorry <<$pcs_nickname>>, I owe you one!" she apologizes, as she quickly gathers her things and leaves the closet. You''re hornier than ever, but you need to get going too.'
 
 					gs 'gschool_lessons', 'afternoon'
 				end
@@ -385,12 +402,12 @@ if $ARGS[0] = 'events':
 	elseif (Anush_lunch > 0 or grupTipe = 4) and rand(0, 5) = 0:
 		pcs_horny += 20
 		'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/girl/anushka/sex/school/want.jpg"></center>'
-		'As you are leaving the canteen, Anushka grabs you and pushes you up against the wall. She starts passionately kissing you, while one of her hands slides up your skirt and starts rubbing your clits. You can hear several of your fellow classmates whistling, hooting and hollering, but you don''t really care. She breaks the kiss just long enough to moan into your ear. "I want to fuck you, come with me." While she says it, her fingers slide inside of your pussy.'
+		'As you are leaving the canteen, Anushka grabs you and pushes you up against the wall. She starts kissing you passionately, while one of her hands slides up your skirt and starts rubbing at your clit. You can hear several of your fellow classmates whistling, hooting and hollering, but right now you don''t really care. She breaks the kiss just long enough to moan into your ear. "I want to fuck you, come with me." , her fingers sliding up into your pussy as she says it.'
 		act 'Not today':
 			*clr
 			cla
 			'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/girl/anushka/nomake.jpg"></center>'
-			'You are barely able to break away, mostly because you mostly don''t want to, but you do finally manage to break away and shake your head. "I''m sorry but I can''t right now, sorry." With that you hurry off.'
+			'You are barely able to tear yourself away, mostly because you don''t want to, but after struggling with yourself for a bit you finally manage to break away and shake your head at Anushka. "I''m sorry but I can''t right now... sorry." With that you hurry off.'
 
 			act 'Continue': gt 'gschool_lunch', 'break'
 		end
@@ -399,8 +416,8 @@ if $ARGS[0] = 'events':
 			cla
 			Anush_lunch = 2
 			pcs_horny += 20
-			'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/girl/anushka/makeout.gif"></center>'
-			'As her fingers invade your wet pussy, you spread your legs a bit wider to give her easier access, barely even aware of your fellow students in the hall and you softly moan back to her. "Yes, I want you to fuck me." With that she grabs you by the hand and leads you off somewhere private.'
+			'<center><video src="images/characters/pavlovsk/school/girl/anushka/makeout.mp4"></center>'
+			'As her fingers invade your already dripping pussy, you spread your legs a bit wider to give her easier access, barely even aware of your fellow students in the hall and you softly moan back at her. "Mmm yes, I want you to fuck me." With that she grabs you by the hand and leads you away so you can find somewhere private.'
 
 			act 'Go somewhere private': gt 'gschool_sex', 'Anush_private'
 		end
@@ -409,12 +426,12 @@ if $ARGS[0] = 'events':
 !!Event Anushka is horny with friends
 	elseif (Anush_lunch > 1 or grupTipe = 4) and rand(0, 2) = 0:
 		'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/lunch/hall.jpg"></center>'
-		'As you stop by your locker after lunch, Anushka comes over to you and leans against the locker next to yours. She leans in close to you "Hey <<$pcs_nickname>> want to have some fun? The boys got some stuff and they are waiting for us in one of the unused classrooms." By the look in her eye and the way she is acting, you know exactly what she means by having fun with the boys.'
+		'As you stop by your locker after lunch, Anushka comes over and rests against the locker next to yours. She leans in close to you "Hey <<$pcs_nickname>>, you wanna come have some fun? The boys brought something special and they are waiting for us in one of the unused classrooms." By the look in her eye and the way she is acting, you know exactly what she means by having fun with the boys.'
 		act 'Not today':
 			*clr & cla
 			'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/head/45.jpg"></center>'
-			'You think about it a moment but decided you have other things you need to do. So you shake your head. "Sorry not today, maybe some other time, I got some stuff I need to do."'
-			'She shrugs slightly "Whatever." With that she turns and walks off. Leaving you behind wondering if you made the right decision.'
+			'You think about it a moment but decide that you have other things you need to do. So you shake your head. "Sorry Nush not today, maybe some other time, I got some stuff I need to do."'
+			'She gives a little shrug "Whatever." With that she turns and walks off. Leaving you behind wondering if you made the right decision.'
 !!minor drop is gopnik standing. Not sure how we are going to do reps but only a very minor drop.
 			act 'Continue': gt 'gschool_lunch', 'break'
 		end
@@ -424,19 +441,19 @@ if $ARGS[0] = 'events':
 !!chance this happens is 1 in 4, if the other unlock scenes don''t trigger first of course.
 	elseif gruptipe = 4 and rand(0, 3) = 0:
 		cla
-		'During the break, you are approached by some local Gopniks in your school, "<<$pcs_nickname>>, come to the bathroom with us so we can have a little fun. You look like you could use a protein snack anyways." A couple of them snicker at that, as they put their hands around your arms and begin to guide you to the restrooms.'
+		'During the break, you are approached by some of the local Gopniks in your school, "<<$pcs_nickname>>, come to the bathroom with us so we can have a little fun. You look like you could use a protein snack anyways." A couple of them snicker at that, as they put their hands around your arms and try to guide you towards the restrooms.'
 		*nl
-		'You remove their hands from you, "Give a girl a chance to consider her options." Really you already know what you plan to do, but you like to tease them when you get the chance. A quick suck or leave them high and dry, choices choices.'
+		'You pull back, slapping their hands away playfully, "Give a girl a chance to consider her options." You already know what you plan to do, but you like to tease them when you get the chance. Give them all a quick suck or just leave them high and dry? Hmm... choices choices.'
 
 		act 'Nah I don''t think so':
 			*clr
 			cla
-			if tanga = 1:
-				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/lunch/buttflash.gif"></center>'
+			if $pantyworntype ! 'none':
+				'<center><video src="images/locations/pavlovsk/school/lunch/buttflash.mp4"></center>'
 			else
-				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/lunch/nudebflash.gif"></center>'
+				'<center><video src="images/locations/pavlovsk/school/lunch/nudebflash.mp4"></center>'
 			end
-			'Shaking your head "Not today boys, maybe some other time." Their expressions are amusing a mixture of anger, disappointment and acceptance. As you walk off you give them a parting shot and give them a nice view of your ass as you lift your skirt.'
+			'Shaking your head you say, "Not today boys, maybe some other time." Their expressions are an amusing mixture of anger, disappointment and acceptance. As you walk off you decide to give them a parting shot, lifting your skirt and giving them them a nice view of your ass.'
 
 			act 'Continue': gt 'gschool_lunch', 'break'
 		end
@@ -445,9 +462,9 @@ if $ARGS[0] = 'events':
 			cls
 			gs 'stat'
 			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/bathroom/boysbathroom.jpg"></center>'
-			'Your heart is pounding as you walk with them. You know perfectly well that they won''t let you go now, no matter what you say. When you arrive at the men''s restroom, one of the Gopniks stays by the door to keep watch while the others shove you in. The walls are covered in all sorts of crude text. A lot of it involves you. Across the entire wall, a large text reads "<<$name>> <<$surname>> = <$$gnikname>>".'
+			'Your heart is pounding as you let them guide you along. You know perfectly well that they won''t let you go now, no matter what you say. When you arrive at the men''s restroom, one of the Gopniks stays by the door to keep watch while the others shove you in. The walls are covered in all sorts of crude text. A lot of it involves you. Across the entire wall, a large text reads "<<$name>> <<$surname>> = <$$gnikname>>".'
 			*nl
-			'Vitek grabs you by your hair, and snarks, "You know why you''re here, slut. Get down and get to work."'
+			'Vitek quickly grabs you by your hair, snarling in your your face, "You know why you''re here, slut. Now get down and get to work."'
 
 			act 'Suck Vitek''s dick':
 				cls
@@ -462,11 +479,11 @@ if $ARGS[0] = 'events':
 				sub += 1
 				gs 'stat'
 				'<center><img <<$set_imgh>> src="images/shared/sex/blowjob/toiletbj.jpg"></center>'
-				'You obediently kneel before him, rubbing your hand over the bulge in Vitek''s sweatpants before pulling out his rdick. Clasping your <<$liptalk3>> around the head, you lick it a few times before starting to suck. You don''t want him to get angry at you so you put some effort into it, sometimes licking his balls and taking his dick down your throat without really straining yourself. He mistakes your obedience for enthusiasm though, and tells his friends, "Look at this whore, she''s loving it!"'
+				'You obediently kneel before him, rubbing your hand over the bulge in Vitek''s sweatpants before pulling out his dick. Clasping your <<$liptalk3>> around the head, you run your tongue around the head a few times before sucking it in a bit deeper. You don''t want him to get angry at you: so you put some effort into it, sometimes licking his balls and taking his cock down your throat without really straining yourself. He mistakes your obedience for enthusiasm though and laughin, he turns to his friends and says, "Guys just look at this whore going at it, she''s loving it!"'
 				*nl
-				'A few minutes later, Vitek is about to cum and tells you, "Good job, cocksucker. When I drop my load in your mouth, I want you swallow it all and lick me clean. If you spill anything, you''re licking it up from the floor. Got that?" You nod and diligently swallow his cum, making sure you don''t miss anything. Then you lick and suck his dick clean, and put it back in his sweatpants.'
+				'A few minutes later, Vitek is about to cum and tells you, "Good job, cocksucker. I''m going to drop my load in your mouth now and when I do, you ''re going to swallow it all and lick me clean. If you spill anything, you''re licking it up from the floor. Got that?" You nod up at him and as soon as his cum hits your tongue, you diligently swallow his load, making sure not to let a single drop escape. When you''re sure he''s finished, you lick and suck his slowly softening dick clean, before tucking it back into his pants for him.'
 				*nl
-				'"That was great, <<$name>>, I can see why you''ve earned your reputation. We''ll definitely be doing this more often, maybe the other boys can have a turn as well next time. We''ll come find you when we want you. Understood?"'
+				'"That was great, <<$name>>, I see you''ve certainly earned your reputation. We''ll definitely be doing this more often, maybe next time I''ll make sure the other boys can have a turn as well. We''ll come find you when we want you. Understood?"'
 				*nl
 				'You''re not looking forward to the prospect, but not knowing what else to do you just nod. After the guys leave the bathroom you quickly have a drink, trying to wash the nasty taste of his cum out of your mouth.'
 				gs 'gschool_lessons', 'afternoon'
@@ -478,25 +495,25 @@ if $ARGS[0] = 'events':
 	elseif rand(1,100) < 3:
 		cla
 		gs 'gschool_events', 'rand_boy_arg', 1, 1, 0, 1, 0, 0
-		if tanga = 1:
+		if $pantyworntype ! 'none':
 			gs 'pain', 1, 'asscheeks', 'spank'
-			'As you walk through the hallways between classes a hand gives you a hard swat on the ass!'
+			'As you walk through the hallways between classes, a hand suddenly swoops in, giving you a hard swat on the ass!'
 			act 'Ignore it':
 				cla
-				'After a brief shock in the moment of impact, you decide that such an act does not even dignify a response from you and continue walking as if nothing happened, although the cheeks on your face are visibly flushed.'
+				'After a brief shock and a slight jump on the moment of impact, you decide that such an act does not even dignify a response from you and continue walking as if nothing happened, although the cheeks on your face are visibly flushed.'
 
 				act 'Continue your break': gt 'gschool_lunch', 'break'
 			end
 			act 'Smack the boy':
 				cla
-				'The moment the hand makes contact with your bottom, you jump mid-stride and squeal at the stinging pain. You whip around and glare furiously at <<$rand_boy>> who is standing right behind you with a shit eating grin on his face. "What the fuck do you think you''re doing you fucking perv!" you scream in his face before slapping him with a resounding clap that is echoed by the, "ooooh!" of your observing classmates. Before giving him a chance to respond, you storm off in the direction you were originally headed.'
+				'The moment the hand makes contact with your bottom, you jump mid-stride and squeal at the stinging pain. You whip around and glare furiously at <<$rand_boy>> who is standing right behind you with a shit eating grin on his face. "What the fuck do you think you''re doing you fucking perv!" you scream in his face before swinging your hand, your smack causing a resounding clap that is echoed by the, "Ooooh!" of your observing classmates. Before giving him a chance to respond, you storm off in the direction you were originally headed.'
 
 				act 'Continue your break': gt 'gschool_lunch', 'break'
 			end
 			act 'Tease the boy':
 				cla
 				pcs_horny += 5
-				'You turn to face <<$rand_boy>> who is standing right behind you with a shit eating grin on his face. You step towards him and put your face centimeters from his. With a sultry smile you move your lips up to his ear and whisper, "Baby, if you wanted to cop a feel, all you had to do was ask..." as your hand gently slides up his thigh to caress his stiffening member through his trousers. As the word "ask" leaves your lips, you give a gentle blow into his ear before quickly turn back and cheerfully continued down the hall before he can even respond. Observant individuals might have noticed a slight skip in your step.'
+				'You turn to face <<$rand_boy>> who is standing right behind you with a shit eating grin on his face. You step towards him and put your face centimetres from his. With a sultry smile you move your lips up to his ear and whisper, "Baby, if you wanted to cop a feel, all you had to do was ask..." as your hand gently slides up his thigh to caress his now rapidly stiffening member through his trousers. As the word "ask" leaves your lips, you give a gentle blow into his ear before quickly turning back and cheerfully continuing down the hall before he can even respond. Observant individuals might have noticed a slight skip in your step and an extra sway to your hips as you walk away.'
 
 				act 'Continue your break': gt 'gschool_lunch', 'break'
 			end
@@ -511,20 +528,20 @@ if $ARGS[0] = 'events':
 			'As you walk through the hallways between classes a hand suddenly flies up under your skirt to give you a hard swat on the ass! The palm of his hand coming into contact with your panty-less butt cheeks creates an audible clap that sounds through the entire hallway.'
 			act 'Ignore it':
 				cla
-				'After a brief shock in the moment of impact, you decide that such an act does not even dignify a response from you and continue walking as if nothing happened, although the cheeks on your face are visibly flushed.'
+				'After a brief shock and a slight jump on the moment of impact, you decide that such an act does not even dignify a response from you and continue walking as if nothing happened, although the cheeks on your face are visibly flushed.'
 
 				act 'Continue your break': gt 'gschool_lunch', 'break'
 			end
 			act 'Smack the boy':
 				cla
-				'The moment the hand makes contact with your bottom, you jump mid-stride and squeal at the stinging pain. You whip around and glare furiously at <<$rand_boy>> who is standing right behind you with a shit eating grin on his face. "What the fuck do you think you''re doing you fucking perv!" you scream in his face before slapping him with a resounding clap that is echoed by the, "ooooh!" of your observing classmates. Before giving him a chance to respond, you storm off in the direction you were originally headed. though the whispers of your classmates regarding the sound of his hand on your naked ass cheeks follow you down the hallway.'
+				'The moment the hand makes contact with your bottom, you jump mid-stride and squeal at the stinging pain. You whip around and glare furiously at <<$rand_boy>> who is standing right behind you with a shit eating grin on his face. "What the fuck do you think you''re doing you fucking perv!" you scream in his face before swinging your hand, your smack causing a resounding clap that is echoed by the, "Ooooh!" of your observing classmates. Before giving him a chance to respond, you storm off in the direction you were originally headed, though the whispers of your classmates regarding the sound of his hand on your naked ass cheeks follow you down the hallway.'
 
 				act 'Continue your break': gt 'gschool_lunch', 'break'
 			end
 			act 'Tease the boy':
 				cla
 				pcs_horny += 5
-				'You turn to face <<$rand_boy>> who is standing right behind you with a shit eating grin on his face. You step towards him and put your face centimeters from his. With a sultry smile you move your lips up to his ear and whisper, "Baby, if you wanted to cop a feel, all you had to do was ask..." as you grab his hand by the wrist and dance his fingers across your bare pussy lips. As the word "ask" leaves your lips you give a quick wink and lick your juices off his fingers before cheerfully continuing down the hall without giving him a chance to respond. Observant individuals might have noticed a slight skip in your step and a shiny wetness on the inside of your thighs.'
+				'You turn to face <<$rand_boy>> who is standing right behind you with a shit eating grin on his face. You step towards him and put your face centimetres from his. With a sultry smile you move your lips up to his ear and whisper, "Baby, if you wanted to cop a feel, all you had to do was ask..." as you grab his hand by the wrist and dance his fingers across your bare pussy lips. As the word "ask" leaves your lips you give a quick wink and lick your juices off his fingers before cheerfully continuing down the hall, without giving him a chance to respond. Observant individuals might have noticed a slight skip in your step and a shiny wetness on the inside of your thighs.'
 
 				act 'Continue your break': gt 'gschool_lunch', 'break'
 			end
@@ -538,7 +555,7 @@ if $ARGS[0] = 'events':
 	elseif rand(1,100) < 3:
 		cla
 		gs 'gschool_events', 'rand_boy_arg', 1, 1, 0, 1, 0, 0
-		if tanga = 1:
+		if $pantyworntype ! 'none':
 			'As you walk through the halls you hear the sound of running footsteps behind you. Before you can turn to see what''s happening, you feel hands on your skirt and in a flash the button and zipper has been undone and your skirt is around your ankles. You hear whooping laughter and whistles as all of your present classmates have a clear view of your panties.'
 			act 'Embarrassment':
 				cla
@@ -548,7 +565,7 @@ if $ARGS[0] = 'events':
 			end
 			act 'Chase after the culprit':
 				cla
-				'Not missing a beat, you quickly identify <<$rand_boy>> as the one who has just forcibly flashed you. You leave your skirt where it''s fallen, stepping out of it to take a full sprint running after him and yelling angrily. The laughter around you intensifies as it''s a real spectacle now as a girl in her panties chases a genuinely scared boy. Eventually you corner him and slap him silly before going back to retrieve your skirt and stomping away not even bothering to put it back on.'
+				'Not missing a beat, you quickly identify <<$rand_boy>> as the one who has just forcibly flashed you. You leave your skirt where it fell, stepping out of it to take a full sprint running after him and yelling angrily. The laughter around you intensifies as it''s a real spectacle now as a girl in her panties chases a genuinely scared boy. Eventually you corner him and slap him silly before going back to retrieve your skirt and stomping away not even bothering to put it back on.'
 
 				act 'Continue your break': gt 'gschool_lunch', 'break'
 			end
@@ -568,20 +585,20 @@ if $ARGS[0] = 'events':
 			end
 			act 'Chase after the culprit':
 				cla
-				'Not missing a beat, you quickly identify <<$rand_boy>> as the one who has just forcibly flashed you. You leave your skirt where it''s fallen, stepping out of it to take a full sprint running after him and yelling angrily. The laughter around you intensifies as it''s a real spectacle now as a fully bottomless girl chases a genuinely scared boy. Eventually you corner him and slap him silly before going back to retrieve your skirt and stomping away not even bothering to put it back on.'
+				'Not missing a beat, you quickly identify <<$rand_boy>> as the one who has just forcibly flashed you. You leave your skirt where it fell, stepping out of it to take a full sprint running after him and yelling angrily. The laughter around you intensifies as it''s a real spectacle now as a fully bottomless girl chases a genuinely scared boy. Eventually you corner him and slap him silly before going back to retrieve your skirt and stomping away not even bothering to put it back on.'
 
 				act 'Continue your break': gt 'gschool_lunch', 'break'
 			end
 			act 'Ooh lah lah!':
 				cla
-				'You look at all of your classmates around you and figure that the best way out of this is to go with the flow. You quickly bring your knees together and in the most dramatic and exaggerated way possible you put one hand over your crotch and one over your lips and make your eyes go wide. You continue to leave one hand over your crotch as you very slowly bend down and pull up your skirt with your other hand, giving the people behind you a fantastic view of your asshole and pussy. Once your skirt is properly in place, you smooth it out a bit before briefly flipping up the back and then the front with a wink and your tongue out. Your classmates seem genuinely impressed by your courage and confidence, though rumors about you will probably still spread.'
+				'You look at all of your classmates around you and figure that the best way out of this is to go with the flow. You quickly bring your knees together and in the most dramatic and exaggerated way possible you put one hand over your crotch and one over your lips and make your eyes go wide. You continue to leave one hand over your crotch as you very slowly bend down and pull up your skirt with your other hand, giving the people behind you a fantastic view of your asshole and pussy. Once your skirt is properly in place, you smooth it out a bit before briefly flipping up the back and then the front with a wink and your tongue out. Your classmates seem genuinely impressed by your courage and confidence, though rumours about you will probably still spread.'
 
 				act 'Continue your break': gt 'gschool_lunch', 'break'
 			end
 		end
 	elseif rand(1,100) < 3:
 		cla
-		'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/lunch/foodfight.gif"></center>'
+		'<center><video src="images/locations/pavlovsk/school/lunch/foodfight.mp4"></center>'
 		'As you are in the cafeteria you see a girl flirting with a boy, another girl comes up behind her and pours her drink over her head. Which quickly turns into a chase and fight that has to be broken up between the two girls.'
 
 		act 'Continue your break': gt 'gschool_lunch', 'break'
@@ -607,7 +624,7 @@ if $ARGS[0] = 'events':
 			act 'Flip him off':
 				*clr
 				cla
-				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/afterschool/teasefo.gif"></center>'
+				'<center><video src="images/locations/pavlovsk/school/afterschool/teasefo.mp4"></center>'
 				'You turn around briefly and suck on your fingers a moment before flipping him off.'
 
 				gs 'gschool_lessons', 'afternoon'
@@ -621,7 +638,7 @@ if $ARGS[0] = 'events':
 			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/lunch/hallflirt.jpg"></center>'
 			'You think he is kinda cute so you decided to flirt back with him. You lay your had on his chest and tell him he isn''t so bad himself, soon you are flirting back just as much as he is flirting with you.'
 			*nl
-			'After a bit he seems to become embolden by your flirting back and if you are not mistaken he is sporting a raging hardon as well. "Hey <<$pcs_nickname>>, want to go somewhere private and have some fun?"'
+			'After a bit he seems emboldened by you flirting back at him and if you are not mistaken, he is sporting a raging hard-on as well. "Hey <<$pcs_nickname>>, want to go somewhere private and have some fun?"'
 			act 'Offer to suck him off':
 				*clr
 				cla
@@ -638,7 +655,7 @@ if $ARGS[0] = 'events':
 					*clr
 					cla
 					'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/lunch/hallflirt.jpg"></center>'
-					'You think about it for a few moments and realize you really do want to fuck, you can''t believe how horny you are feeling. Fuck it, maybe your a slut but at least you enjoy your life. You lean in close to him. "I''ll fuck you if your promise not to tell anyone, I don''t want every guy coming up to me asking for a fuck."'
+					'You think about it for a few moments and realize you really do want to fuck, you actually can''t believe how horny you are right now. Fuck it, this may mean that you''re a slut but at least you''re enjoying your life. You lean in close to him. "I''ll fuck you if your promise not to tell anyone, I don''t want every guy coming up to me asking for a fuck."'
 					*nl
 					'Before you even finish saying it he is grinning and nodding his head. "I promise, I swear I won''t tell a soul." With that you grab his hand and lead him to the roof.'	
 
@@ -648,8 +665,8 @@ if $ARGS[0] = 'events':
 				act 'Hell no':
 					*clr
 					cla
-					'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/lunch/flipoff.gif"></center>'
-					'You can not believe he asked that, well yes you can. That seems to be the only thing boys are even remotely capable of thinking about. "No! What kind of girl do you think I am anyways? What ever I don''t even want to know." With that you turn and storm off, leaving him behind.'
+					'<center><video src="images/locations/pavlovsk/school/lunch/flipoff.mp4"></center>'
+					'You can not believe he asked that, well yes you can. That seems to be the only thing boys are even remotely capable of thinking about. "No! What kind of girl do you think I am anyways? Whatever, I don''t even want to know." With that you turn and storm off, leaving him behind.'
 
 					gs 'gschool_lessons', 'afternoon'
 				end
@@ -657,7 +674,7 @@ if $ARGS[0] = 'events':
 					*clr
 					cla
 					'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/lunch/hallflirt.jpg"></center>'
-					'You pause and act like you are giving it serious thought to fuck with him, but then you realize you really are considering it, maybe you are a bit of a slut. After a few moment you shake your head. "You seem nice but I hardly know you, maybe some other time, but I need to run. Talk to you later." With that you hurry off leaving him unsure if this was a good or bad thing.'
+					'You pause for a bit, acting like you are giving his suggestion some serious thought, just to fuck with him, until you realize you''re not pretending: you really are considering it! Damn, maybe you are a bit of a slut. After a few moments you shake your head. "You seem nice but I hardly know you, maybe some other time, but now I need to run. Talk to you later." With that you hurry off leaving him unsure if this was a good or bad thing.'
 
 					gs 'gschool_lessons', 'afternoon'
 				end
@@ -675,7 +692,7 @@ if $ARGS[0] = 'events':
 		act 'Peek':
 			cla
 			pcs_horny += 10
-			'You close the door quickly enough so that they didn''t notice you were there but leave open just a crack and continue to peer through. You watch as Sonia is really working that cock with a vigor you''ve never seen before. After about another minute the boy grabs her by the hair and pulls her towards him while thrusting his hips forward. After violently shaking for a few seconds, he releases his grasp on her and she pulls back with a gasp as long strands of cum spatter onto the floor, unable to be contained by her mouth or caught by her hands. The boy pulls her head towards him again and pokes her in the cheek with his member saying, "Come on slut. Finish the job and clean me up." The last thing you see is Sonia obediently licking his cock before the door is completely closed again.'
+			'You close the door quickly enough so that they didn''t notice you were there but leave open just a crack and continue to peer through. You watch as Sonia is really working that cock with a vigour you''ve never seen before. After about another minute the boy grabs her by the hair and pulls her towards him while thrusting his hips forward. After violently shaking for a few seconds, he releases his grasp on her and she pulls back with a gasp as long strands of cum spatter onto the floor, unable to be contained by her mouth or caught by her hands. The boy pulls her head towards him again and pokes her in the cheek with his member saying, "Come on slut. Finish the job and clean me up." The last thing you see is Sonia obediently licking his cock before the door is completely closed again.'
 			act 'Continue your break': gt 'gschool_lunch', 'break'
 		end
 !!Sonia hasn''t got a friendship rating with player yet for this option to work
@@ -709,29 +726,30 @@ if $ARGS[0] = 'bjs':
 			AlbinaBlockHumiliation = 1
 			minut += 60
 			if SchoolGossip > 0:
-				'During the break, you are approached by some local Gopniks in your school, "I know why you look so glum, you miss our cocks! Ain''t that right, cocksucker? Don''t worry, come with us. We''ll give you all the dick you want."'
+				'During the break, you are approached by some of the local Gopniks in your school, "I know why you look so glum <<$pcs_nickname>>, you miss our cocks! Ain''t that right, cocksucker? Don''t worry, you can come along with us. We''ll give you all the dick you want."'
 				*nl
-				'They put their hands around your arms and begin to guide you to the restrooms. Knowing you can''t take all of them on you meekly follow them, hoping for some miracle to get you out of this mess. Just when you arrive at the restrooms, Albina comes to your rescue! They try to shove her out of the way and pull you into a restroom, but she stands in the middle of their doorway and stops them, "Pull up your pants boys, and get out of here. <<$pcs_nickname>> is my friend. If I see you pestering her one more time, I''ll tell my father on you. You know who he is you don''t want to get on his bad side, trust me!"'
+				'They put their hands around your arms and begin to guide you to the restrooms. Knowing you can''t take all of them on you follow along meekly, hoping for some miracle to get you out of this mess. Just when you arrive at the restrooms, Albina suddenly blocks the doorway: She''s come to your rescue! They try to shove her out of the way and pull you into the restroom, but she stands firmly in the middle of their doorway and doesn''t budge and inch, "Pull up your pants boys, and get out of here. <<$pcs_nickname>> is my friend. If I see you pestering her one more time, I''ll tell my father on you. You know who he is you don''t want to get on his bad side, trust me!"'
 				*nl
 				'The guys look at each other for a moment, and then decide to let you go. They curse loudly as they walk away, and you give Albina a weak smile in gratitude. She gives you an encouraging nod and continues on her way to her next class."'
 
 				act 'Continue': gt 'gschool_lunch', 'break'
 			end
 		else
-			'During the break, you are approached by some local Gopniks in your school, "<<$name>>, I hear you''re great at giving blowjobs. I think you should show us. Come on, let''s go to a restroom and you can show us your skills."'
+			'During the break, you are approached by some of local Gopniks in your school, "<<$name>>, I hear you''re an amazing cocksucker. I think you should show us. Come on, let''s go to a restroom and you can show us your skills."'
 			*nl
-			'They put their hands around your arms and begin to guide you to the restrooms. Knowing you can''t take all of them on you meekly follow them, hoping for some miracle to save you.'
+			'They put their hands around your arms and begin to guide you to the restrooms. Knowing you can''t take all of them on you follow along meekly, hoping for some miracle to save you.'
 
 			act 'Enter the men''s restroom':
 				cls
-				SchoolGossip = 1
 				gs 'stat'
-				'Your heart is pounding as you walk with them. You know perfectly well that they won''t let you go now, no matter what you say. When you arrive at the men''s restroom, they quickly chase everyone out and one of the Gopniks stays by the door to keep watch. The others shove you in and close the door behind them. The walls are covered in all sorts of crude text.'
+				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/bathroom/boysbathroom.jpg"></center>'
+				'Your heart is pounding as you let them guide you along. You know perfectly well that they won''t let you go now, no matter what you say. When you arrive at the men''s restroom, one of the Gopniks stays by the door to keep watch while the others shove you in. The walls are covered in all sorts of crude text. A lot of it involves you. Across the entire wall, a large text reads "<<$name>> <<$surname>> = <$$gnikname>>".'
 				*nl
-				'Vitek grabs you by your hair, and snarks, "You know why you''re here, slut. Get down and get to work."'
-				act 'Suck':
+				'Vitek quickly grabs you by your hair, snarling in your your face, "You know why you''re here, slut. Now get down and get to work."'
+
+				act 'Suck Vitek''s dick':
 					cls
-					minut += 10
+					minut += 60
 					stat['bj'] += 1
 
 					if npcSex[9] = 0:npcSex[9] = 1 & guy += 1
@@ -742,11 +760,11 @@ if $ARGS[0] = 'bjs':
 					sub += 1
 					gs 'stat'
 					'<center><img <<$set_imgh>> src="images/shared/sex/blowjob/toiletbj.jpg"></center>'
-					'You obediently squat before him, rubbing your hand over the bulge in Vitek''s sweatpants before pulling out his rod. Clasping your <<$liptalk3>> around the head, you lick it a few times before starting to suck. You don''t want him to get angry at you so you put some effort into it, sometimes licking his balls and taking his dick down your throat without really straining yourself. He mistakes your obedience for enthusiasm though, and tells his friends, "Look at this whore, she''s loving it!"'
+					'You obediently kneel before him, rubbing your hand over the bulge in Vitek''s sweatpants before pulling out his dick. Clasping your <<$liptalk3>> around the head, you run your tongue around the head a few times before sucking it in a bit deeper. You don''t want him to get angry at you: so you put some effort into it, sometimes licking his balls and taking his cock down your throat without really straining yourself. He mistakes your obedience for enthusiasm though and laughin, he turns to his friends and says, "Guys just look at this whore going at it, she''s loving it!"'
 					*nl
-					'A few minutes later, Vitek is about to cum and tells you, "Good job, cocksucker. When I drop my load in your mouth, I want you swallow it all and lick me clean. If you spill anything, you''re licking it up from the floor. Got that?" You nod and diligently swallow his cum, making sure you don''t miss anything. Then you lick and suck his dick clean, and put it back in his sweatpants.'
+					'A few minutes later, Vitek is about to cum and tells you, "Good job, cocksucker. I''m going to drop my load in your mouth now and when I do, you ''re going to swallow it all and lick me clean. If you spill anything, you''re licking it up from the floor. Got that?" You nod up at him and as soon as his cum hits your tongue, you diligently swallow his load, making sure not to let a single drop escape. When you''re sure he''s finished, you lick and suck his slowly softening dick clean, before tucking it back into his pants for him.'
 					*nl
-					'"That was great, <<$name>>, I can see you''ve earned your reputation. We''ll definitely be doing this more often, maybe the other boys can have a turn as well next time. We''ll come find you when we need you. Understood?"'
+					'"That was great, <<$name>>, I see you''ve certainly earned your reputation. We''ll definitely be doing this more often, maybe next time I''ll make sure the other boys can have a turn as well. We''ll come find you when we want you. Understood?"'
 					*nl
 					'You''re not looking forward to the prospect, but not knowing what else to do you just nod. After the guys leave the bathroom you quickly have a drink, trying to wash the nasty taste of his cum out of your mouth.'
 					gs 'gschool_lessons', 'afternoon'
@@ -756,12 +774,12 @@ if $ARGS[0] = 'bjs':
             act 'Threaten to scream':
 				cla
 !!can improve rep like refusing to blow the guys outside the dance, but also a big hit to gopnik rep and lower Vitek friendship rating a lot. Like down to zero rep with them after this, making it very hard to become a gopnik after this has happened. 
-			    '"Let me go or I will scream and then you will have to explain to the teachers what you was trying to do to me." Vitek grabs you by the throat and slams you up against the wall and squeezes till you can''t breath.'
+			    '"Let me go or I will scream and then you will have to explain to the teachers exactly what it was you were trying to do to me." Vitek grabs you by the throat and slams you up against the wall, squeezing until you can''t breathe.'
 				*nl
 				'"You threatening me bitch? I should beat the shit out of you for that." He growls as you struggle in his grip, but his friends notice everyone is starting to stare at what is going on and they grab him by the arm.'
 				*nl
-				'"Come on Vitek we can deal with the bitch later, lets go" He jerks free from them but does let you go and you collapse to the floor gasping for air.'
-				'"This isn''t over bitch!" With that he walks off just as one of the teachers take notice that something was going on, seeing that what ever it was is over, they lose interest. You slowly get up rubbing your bruised throat and wonder if you just made a huge mistake.'
+				'"Come on Vitek, we can deal with the bitch later, lets go" He jerks free from them but does let you go and you collapse to the floor, gasping for air.'
+				'"This isn''t over bitch!" With that he walks off just as one of the teachers take notice that something was going on, seeing that what ever it was is over, they lose interest. You get up slowly, rubbing your bruised throat and wondering if you just made a huge mistake.'
 				act 'Continue': gt 'gschool_lunch', 'break'
 				!!if dom > 0:end
 			end
@@ -783,7 +801,7 @@ if $ARGS[0] = 'bjs':
 			cls
 			gs 'stat'
 			if pav_slut < 150:
-				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/lunch/flipoff.gif"></center>'
+				'<center><video src="images/locations/pavlovsk/school/lunch/flipoff.mp4"></center>'
 				'You''re outraged by the suggestion, and let him know just that! When he notices your angry face he quickly turns and leaves, running as fast as he can while your swear words echo in the hallway.'
 			elseif pav_slut >= 150:
 				'You give him a haughty smile, "Sweetie, does it look like I''m working now? Come find me at my home later, or in the nightclub."'
@@ -792,7 +810,7 @@ if $ARGS[0] = 'bjs':
 		end
 
 	elseif soniaPS>= 3 and rand(0, 10) < 4:
-		'During the break, you are approached by some local Gopniks in your school, "I know why you look so glum, you miss our cocks! Ain''t that right, cocksucker? Don''t worry, come with us. We''ll give you all the dick you want."'
+		'During the break, you are approached by some of the local Gopniks in your school, "I know why you look so glum <<$pcs_nickname>>, you miss our cocks! Ain''t that right, cocksucker? Don''t worry, you can come along with us. We''ll give you all the dick you want."'
 		*nl
 		'You struggle a bit as the guys try to grab you, and you can see them get frustrated. Then another Gopnik says, "Ah, forget about her. We already have Sonia in there, ready and willing. She''ll just have to suck the dicks for both of them today."'
 		*nl
@@ -804,7 +822,7 @@ if $ARGS[0] = 'bjs':
 			pcs_horny += 10
 			gs'stat'
 			'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/girl/sonia/sex/school/toilet.jpg"></center>'
-			'You walk to the restroom and carefully look inside, making sure not to draw any attention to you. You see Sonia resting on her knees, a cock deep down her throat. She must''ve had a lot of practice, there is no gag reflex whatsoever. Just around the corner two more Gopniks are stroking their dicks, getting it nice and hard for when it''s their turn. You watch Sonia''s head bob up and down the cock for a few minutes before you decide to leave, while you still can.'
+			'You walk to the restroom and carefully look inside, making sure not to draw any attention to yourself. You see Sonia resting on her knees, a cock deep down her throat. She must''ve had a lot of practice, because it looks like she has no gag reflex whatsoever. Just around the corner there are two more Gopniks stroking their dicks, getting them nice and hard for when it''s their turn. You watch Sonia''s head bob up and down the cock for a few minutes before you decide to leave, while you still can.'
 			gs 'gschool_lessons', 'afternoon'
 		end
 		act'Quickly get away from them':
@@ -826,7 +844,7 @@ if $ARGS[0] = 'bjs':
 			if pav_slut >= 150:
 				'You give him a haughty smile, "Sweetie, does it look like I''m working now? Come find me at my home later, or in the nightclub."'
 			else
-				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/lunch/flipoff.gif"></center>'
+				'<center><video src="images/locations/pavlovsk/school/lunch/flipoff.mp4"></center>'
 				'You''re outraged by the suggestion, and let him know just that! When he notices your angry face he quickly turns and leaves, running as fast as he can while your swear words echo in the hallway.'
 			end
 			act 'Continue': gt 'gschool_lunch', 'break'

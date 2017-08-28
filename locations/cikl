@@ -66,6 +66,19 @@ if katjaPreg = 0 and month >= 2:
 	end
 end
 
+!! after having surgery you will be in recuperation for a few days
+
+if surgeryday ! '':
+	if daystart - 7 <= surgeryday:
+		dailyhealthimprov = (daystart - surgeryday) * 50
+		pcs_health = dailyhealthimprov
+		recuperation = 1
+	else
+		killvar 'recuperation'
+		killvar 'dailyhealthimprov'
+	end
+end
+
 !!Street events daily reset
 streetevent_hour = -2
 
@@ -76,6 +89,10 @@ i = 1
 Clothingstock[i] = rand (0,500)
 i += 1
 if i <= 147:jump 'loopprice'
+
+!!underwear rng
+cheap_panty_number = rand(1,37)
+cheap_bra_number = rand(1,19)
 
 if coatH[defaultcoat] <= 0: defaultcoat = 0
 
@@ -270,6 +287,9 @@ if prezikmsg = 2: prezikmsg = 3
 !!	pillcon			: The number for the current birth control chemical level.
 !!	pilldays		: The number of consecutive days (you believe) you have taken your pill
 
+if Luth > 225 and placebopart <= 0: placebopart = 8
+placebopart -= 1
+
 if tabletkishot <= 0: pillcon -= 1000 & pillcon2 -= 1000
 if pillcon < 0:	pillcon = 0
 if pillcon2 < 0: pillcon2 = 0
@@ -404,7 +424,6 @@ if tabletkicheck = 1 and tabletkichday < daystart:
 			'You take your birth control pill for the day.'
 			pilldaychk = 1
 			gs 'din_bad','takepill'
-			end
 			if rand(0,7) = 0 and tabletkiday >= (daystart - 1): tabletkipd += 1
 			tabletkiday = daystart
 			tabletkipt = 0
@@ -425,6 +444,10 @@ end
 pilldaychk = 0
 if pilldays > 18: pilldays = 18
 if pilldays < 0: pilldays = 0
+!!
+$MenCal[] = $str(cycle)
+if ArrSize('$MenCal') = 30: killvar '$MenCal',0
+
 
 !!------------------------------------------------------------------------------------------------------------
 
@@ -444,7 +467,21 @@ if cheatNoEat = 1 and dounspell = 1:fat += 15
 !!STD check
 if SifacOnce = 1:Sifilis += 1
 if GerpesOnce = 1:Gerpes += 1
-if TriperOnce = 1:Triper += 1
+if TriperOnce = 1:
+	if Triper > 0: 
+		Triper += 1
+	end
+	if TriperOral > 0:
+		TriperOral += 1
+	end
+	If TriperOral > 14 and TriperNapr = 0:
+		if rand(TriperOral,100) > 80:
+		TriperOral = 0
+		if Triper = 0:TriperOnce = 0
+		TriperOralSigns = 0
+		end
+	end
+end
 if KandidozOnce = 1:Kandidoz += 1
 
 VeneraN = 0
@@ -517,7 +554,7 @@ end
 !!	Arousal
 !!------------------------------------------------------------------------------------------------------------
 
-if StoryLine = 0 or altQS = 1:
+if magikDostup = 0:
 	if pcs_horny < 100:pcs_horny += pcs_vag
 else
 	if pcs_vag = 0:
@@ -643,7 +680,7 @@ gs 'fame', 'deg'
 !!------------------------------------------------------------------------------------------------------------
 !! Max. Hair length 600mm, or 60cm, which should be somewhere in the lower back area.
 !! Hair grows 1mm each day, it takes 20 months (1 month = 30 days) to regrow the hair from 0.
-if pcs_hairlng < 1001:pcs_hairlng += 1
+if pcs_hairlng < 1001 and hairgrowcht = 0:pcs_hairlng += 1
 
 if pcs_haircol ! nathcol: 
 	dyefade -=1
@@ -660,7 +697,11 @@ end
 
 !!------------------------------------------------------------------------------------------------------------
 
+!! Clothing wear and tear
 gs 'starenie'
+
+!! Underwear cleaning at home
+if tanwork = 1 or (StoryLine = 1 and ParHomeBlock = 0): gs 'underwear', 'cleaning'
 
 if nark > 60:
 	nark = 60
@@ -855,6 +896,15 @@ end
 petersexday = 0
 klismaday1 = 0
 
+!! Resetting relationships that go over the max
+
+:toptemprel
+if temprel < 250:
+	temprel +=1
+	if npc_rel['A'+'<<temprel>>'] > 100:npc_rel['A'+'<<temprel>>'] = 100
+	jump 'toptemprel'
+end
+killvar 'temprel'
 !!------------------------------------------------------------------------------------------------------------
 !!	Banking
 !!------------------------------------------------------------------------------------------------------------
@@ -1049,6 +1099,14 @@ end
 
 killvar 'holyday'
 killvar 'kanikuli'
+
+!!sisboyparty
+!!-1 - don''t go to the party
+!!0 - don''t know about parties
+!!1 - knows about the parties
+!!2 - agreed to go to the party
+!!3 - Missed the party
+
 if storyline = 1:
 !!Party refresh if you didn''t see sis
 	if week = 1 and sisboyparty ! 2:
@@ -1058,6 +1116,8 @@ if storyline = 1:
 			sisboyparty_day = daystart + rand(3,5)
 		end
 	end
+	
+	if sisboyparty = 2 and sisboyparty_day > daystart: sisboyparty = 3
 
 !!missed graduation
 	if month = 5 and day = 25:

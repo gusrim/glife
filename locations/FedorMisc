@@ -85,23 +85,15 @@ if $ARGS[0] =  'Fedor Chat':
 		if npc_rel['A5'] < 20:
 			'You speak to Fedor about a number of random experiences you had. Fedor listens to you with a moderate amount of interest.'
 		elseif npc_rel['A5'] < 80 and npc_rel['A5'] >= 20:
-			'You chat with Fedor, sharing mulitple stories as Fedor happily listens and shares some thoughts on a number of them.'			
+			'You chat with Fedor, sharing mulitple stories as Fedor happily listens and shares some thoughts on a number of them.'
 		elseif npc_rel['A5'] >= 80:
 			'You chat with Fedor, sharing mulitple stories as Fedor happily listens while sharing several new stories of his own.'
 		end
 		
-		act 'Go to class':gt 'gschool_lessons', 'class'
-		
-		act 'Skip one of your classes':
-			cls
-			gs'stat'
-			'<center><b><font color=#00eaff>School Hallway</font></b></center>'
-	        '<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/building/gschool_hall0<<Rand(0,2)>>.jpg"></center>'
-			'You don''t feel like attending all of your classes this morning. Surely no one will miss you if you skip one of your three morning classes.'
-			
-			act 'Go to girl''s bathroom': gt 'gschool_girls_bathroom', 'start'
-			
-			act 'Go to boy''s bathroom': gt 'gschool_boys_bathroom', 'start'
+		if $loc ! 'gdkin':
+			gs 'gschool_lessons', 'afternoon'
+		else
+			act 'Move away': gt $loc, $metka
 		end
 	end
 	
@@ -111,18 +103,10 @@ if $ARGS[0] =  'Fedor Chat':
 
 	if fedorKozlovQW > 1 and NikoPayback = 2 and FyodorVsNiko = 0 and FedorVsNiko = 0:act 'Ask for help with Niko':gt 'NikoPayback', 'Fedor Help'
 
-	act 'Go to class':gt 'gschool_lessons', 'class'
-	
-	act 'Skip one of your classes':
-		cls
-		gs'stat'
-		'<center><b><font color=#00eaff>School Hallway</font></b></center>'
-		'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/building/gschool_hall0<<Rand(0,2)>>.jpg"></center>'
-		'You don''t feel like attending all of your classes this morning. Surely no one will miss you if you skip one of your three morning classes.'
-		
-		act 'Go to girl''s bathroom': gt 'gschool_girls_bathroom', 'start'
-		
-		act 'Go to boy''s bathroom': gt 'gschool_boys_bathroom', 'start'
+	if $loc ! 'gdkin':
+		gs 'gschool_lessons', 'afternoon'
+	else
+		act 'Move away': gt $loc, $metka
 	end
 end		
 
@@ -133,13 +117,20 @@ if $ARGS[0] =  'Fedor Chat 2':
 	'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/boy/fedor/school/hall/fedor.jpg"></center>'
 	'You approach Fedor and ask "How about we spend some alone time together?" Fedor gives you a playful smile as he wraps his arm around your neck, he then leads you to the hallway near the back of the school. Fedor rests against a nearby window and asks "So, what would you like to do today?"'
 
-	act 'Wanna fool around in the locker room?.':gt 'FedorMisc', 'Locker Room'
+	act 'Wanna fool around in the locker room?':gt 'FedorMisc', 'Locker Room'
 	
-	act 'Begin caressing Fedor.':gt 'FedorMisc', 'Hall'
+	act 'Begin caressing Fedor':gt 'FedorMisc', 'Hall'
 	
-	act 'I could really use a smoke.':gt 'FedorMisc', 'Smoke'
+	act 'I could really use a smoke':gt 'FedorMisc', 'Smoke'
 	
-	act 'Sorry but I need to go.':gt 'gschool_lessons', 'afternoon'
+	act 'Sorry but I need to go':
+		*clr
+		cla
+		'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/boy/fedor/school/hall/fedor.jpg"></center>'
+		'You apologise and make your way back to school'
+
+		gs 'gschool_lessons', 'afternoon'
+	end
 end
 
 if $ARGS[0] =  'Fedor Hate':
@@ -150,7 +141,11 @@ if $ARGS[0] =  'Fedor Hate':
 	'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/boy/fedor/fedorev/fedorangry.jpg"></left>'
 	'Fedor looks at you with hatred as he says, "I have nothing to say to you. Go away!"'	
 	
-	act 'Move away':gt 'gschool_lessons', 'afternoon'
+	if $loc ! 'gdkin':
+		gs 'gschool_lessons', 'afternoon'
+	else
+		act 'Move away': gt $loc, $metka
+	end
 end
 
 if $ARGS[0] =  'Comb':
@@ -229,7 +224,7 @@ if $ARGS[0] =  'Locker Room 1':
 				'Fedor looks down at you and says, "I can think of no better way to spend my lunchtime then here with you <<$pcs_firstname>>."'
 				'to which you reply, "Lunchtime is always more fun with you Fyodor." Fedor gives you a kiss on the cheek as he gets dressed and walks out of the locker room.'
 				*nl
-				'<center><img <<$set_imgh>> src="images/shared/sex/cum/stomach/cumbelly2.gif"></center>'
+				'<center><video src="images/shared/sex/cum/stomach/cumbelly2.mp4"></center>'
 				gs 'cum_call', 'stomach', 'A5'
 				gs 'arousal', 'vaginal', 5
 				gs 'arousal', 'end'
@@ -248,7 +243,7 @@ if $ARGS[0] =  'Locker Room 1':
 					'After a few seconds Fedor looks down to you. "I always feel so lucky having the hottest girl in school as my girlfriend."'
 					'Your face grows a little flushed as you respond, "You really are the sweetest boyfriend ever." Fedor gives you a passionate kiss before getting dressed and leaving the locker room.'
 					*nl
-					'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/boy/fedor/fedorev2/home/bedroom/cum/cum5.gif"></center>'
+					'<center><video src="images/characters/pavlovsk/school/boy/fedor/fedorev2/home/bedroom/cum/cum5.mp4"></center>'
 					gs 'cum_call', '', 'A5'
 					gs 'arousal', 'vaginal', 5
 					gs 'arousal', 'end'
@@ -298,7 +293,7 @@ if $ARGS[0] =  'Locker Room 2':
 				'You look back at him and reply, "Well maybe next time you can give it a good fucking."'
 				'Fedor gives your ass a smack as he responds, "I might just do that sometime." Fedor then gets dressed and walks out of the locker room.'
 				*nl
-				'<center><img <<$set_imgh>> src="images/shared/sex/cum/cum3.gif"></center>'
+				'<center><video src="images/shared/sex/cum/cum3.mp4"></center>'
 				gs 'cum_call', 'butt', 'A5'
 				gs 'arousal', 'vaginal', 5, 'dom'
 				gs 'arousal', 'end'
@@ -317,7 +312,7 @@ if $ARGS[0] =  'Locker Room 2':
 					'Fedor gives you a pleased smile as he increases the pace of his thrusts. You can feel his penis pushing deeper inside you then it begins throbbing and you feel a warmth growing inside you. You let out a moan as Fedor drains his cock inside your vagina and you do your best to milk his penis. Fedor gives your ass a firm smack as he says, "You are so beautiful <<$pcs_firstname>> and so damn sexy too."'
 					'You turn to Fedor and reply, "Well I''m al yours, my love and I always will be." Fedor leans forward and gives you a soft kiss before getting dressed then leaving the locker room.'
 					*nl
-					'<center><img <<$set_imgh>> src="images/shared/sex/cum/analcreampie/cumanal2.gif"></center>'
+					'<center><video src="images/shared/sex/cum/analcreampie/cumanal2.mp4"></center>'
 					gs 'cum_call', '', 'A5'
 					gs 'arousal', 'vaginal', 5, 'dom'
 					gs 'arousal', 'end'
@@ -370,7 +365,7 @@ if $ARGS[0] =  'Locker Room 3':
 				'You turn back to face Fedor as you respond, "How would you know how a bunny fucks? Is there something you are not telling me?"'
 				'Fedor gives you a goofy smirk as he replies, "Well there is this bunny that hangs around in front of my house who''s been giving me looks." You give Fedor a playful punch in the arm as he gets dressed then leaves the locker room.'
 				*nl
-				'<center><img <<$set_imgh>> src="images/shared/sex/cum/cum5.gif"></center>'
+				'<center><video src="images/shared/sex/cum/cum5.mp4"></center>'
 				gs 'cum_call', 'back', 'A5'
 				gs 'arousal', 'vaginal', 5, 'dom'
 				gs 'arousal', 'end'
@@ -390,7 +385,7 @@ if $ARGS[0] =  'Locker Room 3':
 					'When Fedor finishes filling you up, he leans over your shoulder then says, "<<$pcs_firstname>> you are the sexiest, most beautiful girl I''ve ever met. I''m so lucky to have you."'
 					'You turn to Fedor then respond, "You and I are perfect for each other. You make my life complete Fyodor." Fedor gives you a long passionate kiss before getting dressed then leaving the locker room.'
 					*nl
-					'<center><img <<$set_imgh>> src="images/shared/sex/cum/cum81.gif"></center>'
+					'<center><video src="images/shared/sex/cum/cum81.mp4"></center>'
 					gs 'cum_call', '', 'A5'
 					gs 'arousal', 'vaginal', 5, 'dom'
 					gs 'arousal', 'end'
@@ -410,7 +405,7 @@ if $ARGS[0] =  'Hall':
 	npc_rel['A5'] += 10
 	minut -= 5
 	gs'stat'
-	'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/boy/fedor/fedorev/kiss2.gif"></center>'
+	'<center><video src="images/characters/pavlovsk/school/boy/fedor/fedorev/kiss2.mp4"></center>'
 	'You approach Fedor with a mischievous smile on your face as you begin rubbing on his crotch. Fedor gives you a pleased look as he begins gently kissing your lips. while rubbing your ass with both his hands and pushing you toward the windowsill.'
 	gs 'arousal', 'foreplay', 5, 'sub'		
 	gs 'arousal', 'foreplay_give', 5, 'dom'	
@@ -419,7 +414,7 @@ if $ARGS[0] =  'Hall':
 	act 'Pull down his pants':	
 		cls
 		gs'stat'
-		'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/boy/fedor/school/hall/sex/hall1.gif"></center>'
+		'<center><video src="images/characters/pavlovsk/school/boy/fedor/school/hall/sex/hall1.mp4"></center>'
 		'You pull down Fedor''s pants, revealing his rock hard penis which you wrap your fingers around and begin stroking as he caresses your cheek, admiring your beauty. You continue stroking his penis as you look into his eyes to see a very lustful look in them, turning you on, knowing how badly he wants you.'	
 		gs 'arousal', 'hj', 5, 'dom'									
 		gs'stat'
@@ -427,7 +422,7 @@ if $ARGS[0] =  'Hall':
 		act 'Get down on your knees':	
 			cls
 			gs'stat'
-			'<center><img <<$set_imgh>> src="images/shared/sex/blowjob/blowjob1.gif"></center>'
+			'<center><video src="images/shared/sex/blowjob/blowjob1.mp4"></center>'
 			'Wanting to please Fedor you drop to your knees in front of him then begin licking his hard cock, Licking from the shaft to the tip. After licking him for a few seconds you wrap your lips around his shaft, taking it into your mouth before licking and sucking it vigorously, wanting to please Fedor as best you could.'
 			gs 'arousal', 'bj', 5, 'sub'									
 			gs'stat'
@@ -435,7 +430,7 @@ if $ARGS[0] =  'Hall':
 			act 'Continue':	
 				cls
 				gs'stat'
-				'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/boy/fedor/school/hall/sex/hall2.gif"></center>'
+				'<center><video src="images/characters/pavlovsk/school/boy/fedor/school/hall/sex/hall2.mp4"></center>'
 				'As you are sucking him off, Fedor grabs you by your shoulders then lifts you to your feet as he begins undressing you before lifting you off the ground and onto his penis which slides smoothly into your vagina, giving you a jolt of pleasure. You wrap your arms around Fedor''s neck to give yourself leverage to assist Fedor by thrusting your own body onto his hard cock. After a few minutes, Fedor whispers in your ear "I''m gonna cum real soon."'
 				gs 'arousal', 'vaginal', 5, 'sub'									
 				gs'stat'
@@ -444,11 +439,11 @@ if $ARGS[0] =  'Hall':
 					cls
 					minut += 5
 					gs'stat'
-					'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/boy/fedor/school/hall/sex/hall2.gif"></center>'
+					'<center><video src="images/characters/pavlovsk/school/boy/fedor/school/hall/sex/hall2.mp4"></center>'
 					'You tell Fedor "Cum on my face." Fedor lowers you to your feet as he begins stroking his penis. You drop to your knees and look up at him with a sweet smile on your face, waiting for him to paint your face with his seed. After a few seconds, Fedor groans and begins spraying his load on your face, covering your face in his hot cum.'
 					'After Fedor finishes, he looks down to you and says, "That''s my girl. Always doing dirty things for me." you blow Fedor a kiss as he pulls up his pants and begins walking back to class while saying "Don''t forget to clean up before going back to class."'
 					*nl
-					'<center><img <<$set_imgh>> src="images/locations/shared/carwash/sex/cummouth1.gif"></center>'
+					'<center><video src="images/locations/shared/carwash/sex/cummouth1.mp4"></center>'
 					gs 'cum_call', 'face', 'A5'
 					gs 'arousal', 'vaginal', 5
 					gs 'arousal', 'end'
@@ -463,12 +458,12 @@ if $ARGS[0] =  'Hall':
 						cls
 						minut += 5
 						gs'stat'
-						'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/boy/fedor/school/hall/sex/hall2.gif"></center>'
+						'<center><video src="images/characters/pavlovsk/school/boy/fedor/school/hall/sex/hall2.mp4"></center>'
 						'You look Fedor in the eyes and say, "Please fill me with your cum." Fedor gives you a pleased smile as he picks up his pace, thrusting his penis deeper inside you. Fedor groans and begins filling your womb with his seed which his penis throbs as it fills your womb. You push against Fedor''s pelvis driving his dick further inside you.'
 						'Fedor lowers you to the ground then gives you a kiss before saying "<<$pcs_firstname>> You are a shining light in my life and I will always love you."'
 						'Your face becomes a bit flushed at his sweet words as you respond, "I love you with all my heart Fyodor and will always be by your side when you need me." Fedor smiles at you for a few seconds in silence before grabbing your neck and bringing your lips to his as he gives you a long passionate kiss. After a full minute of kissing, Fedor pulls up his pants then walks away with an almost blissful look on his face.'
 						*nl
-						'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/boy/fedor/fedorev2/home/bedroom/cum/cum3.gif"></center>'
+						'<center><video src="images/characters/pavlovsk/school/boy/fedor/fedorev2/home/bedroom/cum/cum3.mp4"></center>'
 						gs 'cum_call', '', 'A5'
 						gs 'arousal', 'vaginal', 5, 'dom'
 						gs 'arousal', 'end'
@@ -657,7 +652,7 @@ if $ARGS[0] =  'Strength':
 	minut += 30
 	stren_exp += rand(1, 4) + (steroid_dose - rand(0,steroid_dose)) & gs 'obj_din', 'steroids'
 	fat -= 1
-	pcs_mood -= 5
+	pcs_mood += 5
 	pcs_sweat += 30
 	gs'stat'
 	'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/boy/fedor/fedormisc/gym/strength2.jpg"></center>'
@@ -701,7 +696,7 @@ if $ARGS[0] =  'Agility':
 	speed_exp += rand(1, 3)	
 	agil_exp += rand(1, 3)
 	fat -= 1
-	pcs_mood -= 5
+	pcs_mood += 5
 	pcs_sweat += 30		
 	gs'stat'
 	'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/boy/fedor/fedormisc/gym/agility2.jpg"></center>'
@@ -744,7 +739,7 @@ if $ARGS[0] =  'Endurance':
 	minut += 30
 	vital_exp += rand(1, 4)
 	fat -= 1
-	pcs_mood -= 5
+	pcs_mood += 5
 	pcs_sweat += 30	
 	gs'stat'	
 	'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/boy/fedor/fedormisc/gym/endurance2.jpg"></center>'
@@ -920,7 +915,7 @@ if $ARGS[0] =  'Outcast':
 				'Fedor stares into your eyes for a second before grabbing you shoulders then pulling you to him, kissing you very passionately for five minutes straight.'
 				'After you both finish kissing, Fedor says, "Ok <<$pcs_firstname>> here is how it works. I will remain here after school, so whenever you would like to go out, just ask me here and we could sneak through town but know that I wont be able to speak with you at school but we can go on anywhere that Viktor and his friends don''t hang out. Do you understand?" you nod your head and Fedor gives you a smile followed by a kiss.'			
 				*nl
-				'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/boy/fedor/fedorev/kiss2.gif"></center>'
+				'<center><video src="images/characters/pavlovsk/school/boy/fedor/fedorev/kiss2.mp4"></center>'
 			
 				act 'Remain here':gt 'FedorMisc', 'Outcast'
 			
@@ -1009,7 +1004,7 @@ if $ARGS[0] =  'Fedor Vs Dimka':
 					pain['asshole'] += 10
 					pcs_health -= 10
 					gs'stat'
-					'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/boy/fedor/school/events/dimka/anal.gif"></center>'
+					'<center><video src="images/characters/pavlovsk/school/boy/fedor/school/events/dimka/anal.mp4"></center>'
 					'You feel Dimka''s hands on your asscheeks, spreading them open. You suddenly feel a sharp pain as Dimka shoves his dick inside your asshole, causing you to shriek in searing pain before hearing some thumping behind you. You turn around to see Fedor sprinting at the both of you. Dimka quickly pulls off of you as he begins zipping his pants, he then angrily shouts "What the fu.."'
 					'Fedor punches him in his face, knocking Dimka a meter away. Dimka quickly looks up at Fedor. "What the fuck is wrong with you!?"'
 					'Fedor begins kicking him in his ribs while shouting "<b>How dare you fuck with <<$pcs_firstname>>! She is my girl and no one fucks with my girl!</b>" Fedor continues kicking Dimka in his ribs.'

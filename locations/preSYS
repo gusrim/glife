@@ -19,9 +19,12 @@ if $ARGS[0] = 'TGStart':
 	gs 'npcstatic2'
 	gs 'npcstatic3'
 	gs 'npcstatic4'
+	gs 'npcstatic5'
 	$pcs_dna = func('dna','create')
 	
-	if tgs_skipinto = 1:
+	if MagikDostup = 1:
+		gt 'preCUST', 'NTStart'
+	elseif tgs_skipinto = 1:
 		gt 'preCUST', 'TGStart'
 	else
 		gt 'preTG', 'roomPRE'
@@ -135,6 +138,7 @@ end
 
 if $ARGS[0] = 'SGStart2':
 !!make sure this image shows up above the text that shows your birthday
+	date_toggle = args[1]
 	'<center><img <<$set_imgh>> src="images/pre/sys/altstart2.jpg"></center>'
 	if birthday < 10 and birthmonth < 10:
 		$startdob = 'Your birthday: <B>0<<birthmonth>>/0<<birthday>>/<<birthyear>></B> (MM/DD/YYYY)'
@@ -156,9 +160,12 @@ if $ARGS[0] = 'SGStart2':
 		'<center><img <<$set_imgh>> src="images/pre/sys/altstart26.jpg"></center>'
 		'You have two options when it comes to beginning your game. You can start at the end of the summer holiday, very close to starting the new school year, or you can start at the beginning of the summer holiday.'
 !!	This is to account for the school year not matching up with the calendar year.
-		if birthmonth >= 7: birthyear -= 1
-		if birthmonth = 6 and day > 1: birthyear -= 1
+		if date_toggle ! 1:
+			if birthmonth >= 7: birthyear -= 1
+			if birthmonth = 6 and day > 1: birthyear -= 1
+		end
 		killvar '$startdob'
+		killvar 'date_toggle'
 		act 'Start at the end of August <B>(recommended for new players)</B>':
 !!		This is the default start
 			kanicont = 6
@@ -167,7 +174,7 @@ if $ARGS[0] = 'SGStart2':
 
 !!	This is to prevent to player from starting at 14
 		if birthmonth = 6 and yearlefttemp = 2:
-			act '<i>Start at the beginning of June</i> Restricted due PC age, set birthday before June or after July to unlock': gt 'preSYS', 'SGStart2'
+			act '<i>Start at the beginning of June</i> Restricted due PC age, set birthday before June or after July to unlock': gt 'preSYS', 'SGStart2', 1
 		else
 			act 'Start at the beginning of June':
 				month = 6
@@ -586,7 +593,7 @@ if $ARGS[0] = 'charselect':
             cls
 			'<center><img <<$set_imgh>> src="images/pre/sys/altstart20.jpg"></center>'
 			'You are <<$npc_nickname[''A9'']>>''s girlfriend. You love the thrill and danger of hanging out with the gopniks, even if you lack the true attitude yourself. You met <<$npc_nickname[''A9'']>> after he and <<$npc_firstname[''A11'']>> became friends. There was something about his bad boy attitude that drew you in, and you soon found yourself falling for him.'
-			'As you developed, he started to take an interest in you as well. Soon thereafter the two of you started dating. You’’re not technically a gopnik - you are considered more of a wanna-be - but the rest of the gopniks seem to accept you anyways. You’’re not sure what would happen if you ever broke up with <<npc_nickname[''A9'']>>, however, as being his girlfriend and hanging out with the other gopniks has cost you any real, close friends outside of their group.'
+			'As you developed, he started to take an interest in you as well. Soon thereafter the two of you started dating. You’’re not technically a gopnik - you are considered more of a wanna-be - but the rest of the gopniks seem to accept you anyways. You’’re not sure what would happen if you ever broke up with <<$npc_nickname[''A9'']>>, however, as being his girlfriend and hanging out with the other gopniks has cost you any real, close friends outside of their group.'
 			act 'Select another': gt 'preSYS', 'charselect'
 			act 'Confirm this option':
 				gs 'preSYS', 'gopnik'

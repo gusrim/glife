@@ -1,210 +1,6 @@
 # dinSex
 
-$universalklient = {
-	if klient_needs = 0:$klientwanttext = 'blow job'
-	if klient_needs = 1 or klient_needs = 3 or klient_needs = 4:$klientwanttext = 'sex'
-	if klient_needs = 2:$klientwanttext = 'anal'
-	if klient_needs = 5:$klientwanttext = 'Cooney'
-	'<center><img <<$set_imgh>> src="images/locations/city/centralpark/park2.jpg"></center>'
-	'You said client, that <<$klientwanttext>> It will cost <<ProsMoney*100>> <b>₽</b>.'
-	dynamic $dinprostable
-	if vnpr >= 0:
-		if ProsMoney = 1:
-			clientPRyes = 1
-		end
-		if ProsMoney > 1:
-			if KlientMON >= ProsMoney:
-				if vnpr >= klienVNPR:
-					clientPRyes = 1
-				else
-					clientPRyes = 0
-				end
-			elseif KlientMON < ProsMoney:
-				if vnpr >= klienVNPR:
-					torgklirand = RAND(0,1)
-					if torgklirand = 0:
-						clientPRyes = 0
-					elseif torgklirand = 1:
-						'Customer grins and offers <<KlientMON*100>> <b>₽</b> for the job.'
-						act 'Agree':
-							cla
-							clientPRyes = 1
-							ProsMoney = KlientMON
-							dynamic $dinklient
-						end
-						act 'Takeout':gt'prostitute','start'
-						exit
-					end
-				else
-					clientPRyes = 0
-				end
-			end
-		end
-	end
-	if vnpr < 0:clientPRyes = 0
-	dynamic $dinklient
-}
 
-$dinprostable = {
-	vnpr = 0
-	if vidage >= 40:vnpr -= 20
-	if vidage >= 35 and vidage < 40:vnpr -= 10
-	if vidage >= 30 and vidage < 35:vnpr -= 5
-	if vidage >= 25 and vidage < 30:vnpr += 1
-	if vidage >= 20 and vidage < 25:vnpr += 5
-	if vidage >= 18 and vidage < 20:vnpr += 10
-	if vidage < 18:vnpr += 15
-	if pcs_apprnc = -10:
-		vnpr -= 100
-	elseif pcs_apprnc < 20:
-		vnpr -= 10
-	elseif pcs_apprnc < 60:
-		vnpr -= 5
-	elseif pcs_apprnc < 120:
-		vnpr += 1
-	elseif pcs_apprnc < 200:
-		vnpr += 5
-	else
-		vnpr += 10
-	end
-	if cumSUM > 0:vnpr -= 10
-	if pcs_makeup = 0:vnpr -= 10
-	if pcs_makeup = 1:vnpr -= 1
-	if pcs_makeup = 2:vnpr += 1
-	if pcs_makeup = 3:vnpr += 5
-	if pcs_makeup = 4:vnpr += 10
-	if pcs_leghair <= 3:vnpr += 1
-	if pcs_leghair > 3:vnpr -= 5
-	if pcs_pubes > 3:vnpr -= 5
-	if pcs_pubes <= 3:vnpr += 1
-	if pcs_tan > 0:vnpr += 1
-	if curly > 0:vnpr += 1
-	if pcs_sweat > 19 :
-		vnpr -= 10
-	elseif pcs_sweat < 10 :
-		vnpr += 1
-	end
-	if pcs_hairbsh = 0:vnpr -= 1
-	if pcs_lip = 4:vnpr += 1
-	!max. 40
-	!minimum -161
-}
-
-$dinklient = {
-	if clientPRyes = 1:
-		'The client nods <<$xem>> head and you open the door of <<$xem>> car.'
-		if klient_needs = 0:dynamic $din_prost_bj
-		if klient_needs = 1:dynamic $din_prost_sex
-		if klient_needs = 2:dynamic $din_prost_anal
-		if klient_needs = 3:dynamic $whore_event_1
-		if klient_needs = 4:dynamic $whore_event_2
-		if klient_needs = 5:dynamic $whore_event_3
-	elseif clientPRyes = 0:
-		'The customer meticulously examined you and said, "No fucking way." Then <<$xe>> started the car and drove away.'
-		act 'Leave':gt'prostitute','start'
-	end
-}
-
-$din_prost_bj = {
-	act 'Going to the client machine':
-		vidageday -= 5
-		gs 'npcgeneratec', 0, 'stranger', rand(19,45)
-		gs 'boyStat', $npclastgenerated
-		slutty += 1
-		dick = RAND(12,21)
-		money += ProsMoney*100
-		gt'blowPR','start'
-	end
-}
-
-$din_prost_sex = {
-	act 'Going to the client machine':
-		vidageday -= 10
-		gs 'npcgeneratec', 0, 'stranger', rand(19,45)
-		gs 'boyStat', $npclastgenerated
-		dick = RAND(12,21)
-		money += ProsMoney*100
-		prosti = 1
-		slutty += 1
-		gt'blowPR','start'
-	end
-}
-
-$din_prost_anal = {
-	act 'Going to the client machine':
-		vidageday -= 20
-		gs'boy'
-		prosti = 2
-		analprotect = 0
-		slutty += 1
-		gt'blowPR','start'
-	end
-}
-
-$whore_event_1={
-	act'Work':
-		cla
-		*clr
-		gs 'npcgeneratec', 0, 'Fat Prostitution Client', rand(19,45)
-		gs 'boyStat', $npclastgenerated
-		cumprecheck = 1
-		gs 'Cum_Manage'
-		spafinloc = 14
-		gs 'Cum_Manage'
-		slutty+=1
-		money += ProsMoney*100
-		gs'stat'
-		'<center><img <<$set_imgh>> src="images/locations/city/centralpark/sex/whore.event0.jpg"></center>'
-		'Out of the car climbed a group of men. One of them, The fattest of the bunch, walked towards you.'
-		'"Well you greasy fuckhead,  you asked us to stop here. sow what are you waiting for ? go fuck, that whore." - one of them shouted to the fat man.'
-		'The fat man turned around to the men standing around the car: - "you are right. I want to fuck" - this slut will have to do for a quick fuck.'
-		'<<$xec>>  approached you, <<$xec>> took your hand and led you to his car. There <<$xe>> laid you on the hood and started fucking you. <<$xec>> did not hold out very long. after only a few minutes inside your pussy, <<$xec>> pulled out his dick and finished on your stomach.'
-      
-		act'Leave':gt'prostitute','start'
-	end
-}
-
-$whore_event_2={
-	act'Work':
-		cla
-		*clr
-		slutty+=1
-		gs 'npcgeneratec', 0, 'Prostitution Client', rand(19,45)
-		gs 'boyStat', $npclastgenerated
-		cumprecheck = 1
-		gs 'Cum_Manage'
-		spafinloc = 4
-		gs 'Cum_Manage'
-		gs 'npcgeneratec', 0, 'Prostitution Client', rand(19,45)
-		gs 'boyStat', $npclastgenerated
-		spafinloc = 12
-		gs 'Cum_Manage'
-		money += ProsMoney*100
-		gs'stat'
-		'<center><img <<$set_imgh>> src="images/locations/city/centralpark/sex/whore.event1.jpg"></center>'
-		'"fuck all these bitches, first flirting with us all evening and then just leaving us hanging with our dicks in our hands" - You heard a voice coming out of the stopped car'
-		'"Yes fuck, we really thought we found a beauty queen we could mess around with. Oh well,  we''ll just have to settle for a quick slut fuck." - There was a second voice.'
-		'The two men approached you. you quickly agreed on a price and bent down on the hood of the car. One of the guys came up behind you and put his cock in your pussy. The second guy went to your face and gave <<$xem>> cock to you for servicing.'
-		'After ten minutes the boys had finished: one finished first in your mouth, and the other one on your ass.'
-		act'Leave':gt'prostitute','start'
-	end
-}
-
-$whore_event_3={
-	act'Work':
-		cla
-		*clr
-		slutty+=1
-		money += ProsMoney*100
-		gs'stat'
-		'<center><img <<$set_imgh>> src="images/locations/city/centralpark/sex/whore.event2.jpg"></center>'
-		'From  a stopped car you could see a woman''s hand, beckoning you to come closer.'
-		'When you approached the car a woman stepped out.'
-		'"little slut, I am tired of the day. please releave me of some stress" - she said, and lifted her skirt.'
-		'You began to lick her crotch, alternately inserting fingers in her pussy and in her ass finally the woman broke down and finished, showering you with her juices.'
-		act'Leave':gt'prostitute','start'
-	end
-}
 
 $dinrandbj = {
 	tperbjran = rand(0, 3)
@@ -240,9 +36,6 @@ $dinrandswallow = {
 	'<<$tperswal>> <<$tperswal2>> <<$tperswal3>>'
 }
 
-$dinrandfacial = {
-
-}
 
 $venerasiak = {
 	tipvenerarand = rand(0, 10)
@@ -255,6 +48,55 @@ $venerasiak = {
 	end
 }
 
+$venerasiakOral = {
+	tipvenerarand = rand(0, 10)
+	if protect = 1:venrand = rand(0, 1000)
+	if venrand = 1000:
+		dynamic $veneradinitogOral
+	else
+		venrand = rand(0, 100)
+		if venrand >= 80:dynamic $veneradinitogOral
+	end
+}
+$veneradinitogOral = {
+	if cheatHealth = 0:
+		if tipvenerarand >= 5 and tipvenerarand < 7:
+			if rand(1, 100) > 95: Venera += 1
+			if TriperOnce = 0:
+				TriperOnce = 1
+				TriperOral += 1
+				if rand (0,100) < 15: TriperOralSigns = 1 
+			end
+		elseif tipvenerarand = 7:
+			if rand(0,1) = 1:
+				!!syphilis
+				if rand(1, 100) > 95: Venera += 1
+				if SifacOnce = 0:
+					SifacOnce = 1
+					Sifilis += 1
+				end
+			end
+		elseif tipvenerarand < 5:
+			!!candidiasis/thrush
+			if rand(1, 100) > 85:
+				if KandidozOnce = 0:
+					KandidozOnce = 1
+					Kandidoz += 1
+				end
+			end
+		elseif tipvenerarand = 8:
+			!!herpes
+			if rand(1, 100) > 90:
+				if GerpesOnce = 0:
+					GerpesOnce = 1
+					Venera += 1
+					Gerpes += 1
+					OrHerpes = 1
+				end
+			end
+		end
+	end
+}
 $veneradinitog = {
 	if cheatHealth = 0:
 		if tipvenerarand = 8:
@@ -264,6 +106,8 @@ $veneradinitog = {
 					GerpesOnce = 1
 					Venera += 1
 					Gerpes += 1
+					GenHerpes = 1
+					
 				end
 			end
 		elseif tipvenerarand = 7:
@@ -802,187 +646,6 @@ $sexstart4 = {
 	gs 'cum_manage'
 }
 
-$sexudo = {
-	protect = 0
-	vidageday -= 1
-	frost = 0
-	if tabletki <= 0 and prezik > 0:
-		dynamic $prezik
-		protect = 1
-		if preziktype = 2:
-			sexcontra = 7
-			'<<$boydesc>> took a sabotaged condom and put it on <<$xem>> <<dick>> centimeter cock.'
-		else
-			sexcontra = 3
-			'<<$boydesc>> took a condom and put it on <<$xem>> <<dick>> centimeter cock.'
-		end
-	else
-		sexcontra = 0
-	end
-	if cycle <= 0:
-		!!periods, orgasm is not possible
-		pcs_horny = 0
-		pcs_mood -= 10
-		pcs_willpwr -= 10
-		'You are menstruating but this does not stop <<$xe>> from ramming <<$xem>> dick into you. vaginal blood flows slowly out of your pussy. You are experiencing both painful and pleasant sensations. You moan while a strong <<dick>> centimeter dick fucks your pussy.'
-	elseif cycle > 0 and pcs_vag > 0:
-		!!no monthly
-		!!horny - arousal
-		!!pcs_vag - elasticy of the vagina
-		!!silavag - skill man 0-sad sack, 1-middle pleasant 2-stud
-		!!dick - рenis man
-		!!orgazm - Total coefficient of pleasure
-		!!0 - very painful, 1 - it hurts, 2 - not nice, 3 - so-so, 4 - needoorgazm 5 - orgasm
-		smazka = pcs_horny / 10
-		prinat = smazka + pcs_vag
-		if dick >= prinat * 2:
-			!!member of the critical features more years
-			if silavag = 0:orgazm = 0
-			if silavag = 1:orgazm = 1
-			if silavag = 2:orgazm = 2
-    
-		elseif dick < prinat * 2 and dick > prinat:
-			!!member more options gg
-			if silavag = 0:
-			if pcs_horny >= 100:orgazm = 5
-			if pcs_horny >= 90 and pcs_horny < 100:orgazm = 4
-			if pcs_horny >= 80 and pcs_horny < 90:orgazm = 3
-			if pcs_horny >= 70 and pcs_horny < 80:orgazm = 2
-			if pcs_horny >= 60 and pcs_horny < 70:orgazm = 1
-			if pcs_horny < 60:orgazm = 0
-			elseif silavag = 1:
-				if pcs_horny >= 90:orgazm = 5
-				if pcs_horny >= 80 and pcs_horny < 90:orgazm = 4
-				if pcs_horny >= 70 and pcs_horny < 80:orgazm = 3
-				if pcs_horny >= 60 and pcs_horny < 70:orgazm = 2
-				if pcs_horny >= 50 and pcs_horny < 60:orgazm = 1
-				if pcs_horny < 50:orgazm = 0
-			elseif silavag = 2:
-				if pcs_horny >= 80:orgazm = 5
-				if pcs_horny >= 70 and pcs_horny < 80:orgazm = 4
-				if pcs_horny >= 60 and pcs_horny < 70:orgazm = 3
-				if pcs_horny >= 50 and pcs_horny < 60:orgazm = 2
-				if pcs_horny >= 40 and pcs_horny < 50:orgazm = 1
-				if pcs_horny < 40:orgazm = 0
-			end
-
-		elseif dick <= prinat and dick >= pcs_vag:
-			!!Member fewer opportunities gg
-			if silavag = 0:
-				if pcs_horny >= 80:orgazm = 5
-				if pcs_horny >= 60 and pcs_horny < 80:orgazm = 4
-				if pcs_horny >= 40 and pcs_horny < 60:orgazm = 3
-				if pcs_horny < 40:orgazm = 2
-			elseif silavag = 1:
-				if pcs_horny >= 70:orgazm = 5
-				if pcs_horny >= 50 and pcs_horny < 70:orgazm = 4
-				if pcs_horny >= 30 and pcs_horny < 50:orgazm = 3
-				if pcs_horny < 30:orgazm = 2
-			elseif silavag = 2:
-				if pcs_horny >= 60:orgazm = 5
-				if pcs_horny >= 40 and pcs_horny < 60:orgazm = 4
-				if pcs_horny >= 20 and pcs_horny < 40:orgazm = 3
-				if pcs_horny < 20:orgazm = 2
-			end
-		elseif dick <= prinat and dick < pcs_vag:
-			if silavag = 0:
-				if pcs_horny >= 100:orgazm = 5
-				if pcs_horny >= 90 and pcs_horny < 100:orgazm = 4
-				if pcs_horny < 90:orgazm = 6
-			elseif silavag = 1:
-				if pcs_horny >= 90:orgazm = 5
-				if pcs_horny >= 80 and pcs_horny < 90:orgazm = 4
-				if pcs_horny < 80:orgazm = 6
-			elseif silavag = 2:
-				if pcs_horny >= 80:orgazm = 5
-				if pcs_horny >= 70 and pcs_horny < 80:orgazm = 4
-				if pcs_horny < 70:orgazm = 6
-			end
-		end
-
-		if oragazm = 5:
-			preOrg += 1
-			if razeba < 4:
-				if silavag = 2:
-					orgrand = rand(50, 300)
-					if orgrand > preOrg:oragazm = 4
-				elseif silavag < 2:
-					oragazm = 4
-				end
-			elseif razeba = 4:
-				if silavag = 2:
-					orgrand = rand(0, 100)
-					if orgrand > preOrg:oragazm = 4
-				elseif silavag < 2:
-					orgrand = rand(50, 300)
-					if orgrand > preOrg:oragazm = 4
-				end
-			elseif razeba >= 5:
-				if silavag = 2:
-					orgrand = rand(0, 50)
-					if orgrand > preOrg:oragazm = 4
-           	elseif silavag < 2:
-					orgrand = rand(0, 100)
-					if orgrand > preOrg:oragazm = 4
-				end
-			end
-		end
-    
-		if orgazm = 0:
-			pcs_horny = 0
-			pcs_mood -= 15
-			pcs_willpwr -= 15
-			if vgape < 3:vgape = 3
-			'You groaned in pain when <<$boydesc>> entered inside you, tears flowed from your eyes, and you can feel a strong pressure between your legs. It feels as if a red-hot rod is being driven inside your pussy. You cry and moan while <<$xem>> strong <<dick>> centimeter dick fucks your pussy.'
-		elseif orgazm = 1:
-			pcs_horny -= 10
-			pcs_mood -= 10
-			pcs_willpwr -= 10
-			if vgape < 2:vgape = 2
-			'You bite your lip in pain when <<$boydesc>> put <<$xem>> dick inside you. You have a painful feeling between your legs. You are frowning and moaning in pain while <<$xem>> strong <<dick>> centimeter dick fucks your pussy.'
-		elseif orgazm = 2:
-			pcs_horny -= 5
-			pcs_mood -= 5
-			pcs_willpwr -= 5
-			if vgape < 1:vgape = 1
-			'You winced at the sudden pain when <<$boydesc>> entered your pussy. That feeling of pain between your legs gradually settles down and becomes quite tolerable. You were trying to get aroused while <<$xem>> strong <<dick>> centimeter dick fucks your pussy, but you could not succeed.'
-		elseif orgazm = 3:
-			pcs_horny += 5
-			pcs_mood += 5
-			pcs_willpwr += 5
-			'You are startled by the feeling that your pussy is being stretched when <<$boydesc>> penetrated you. You sense a little pleasant feeling between your legs when <<$xem>> strong <<dick>> centimeter dick fucks your pussy.'
-		elseif orgazm = 4:
-			pcs_horny += 10
-			pcs_mood += 10
-			pcs_willpwr += 10
-			'You are startled by the feeling that your pussy is being stretched when <<$boydesc>> entered you. You sense a nice sensation between your legs while a strong <<dick>> centimeter dick fucks your pussy. Gradually a pleasant warmth and some pulsations started building up in your stomach. Then the feeling decreased a little and remained like that until the end.'
-		elseif orgazm = 5:
-			pcs_horny = 0
-			pcs_mood += 15
-			pcs_willpwr += 15
-			orgasm += 1
-			vaginalOrgasm += 1
-			'You flinched from a pleasant feeling when your pussy stretched and started taking a dick. Your pussy becomes very warm and pleasant when <<$xem>> strong <<dick>> centimeter dick fucks your pussy. Gradually a pleasant warmth and some pulsations started building up in your stomach. Then the feeling became unbearable and your entire body was covered with hot waves of orgasm You scream with pleasure.'
-		elseif orgazm = 6:
-			pcs_horny += 5
-			pcs_mood += 5
-			pcs_willpwr += 5
-			'You feel <<$boydesc>> entering you. This feels nice between your legs , but <<$xem>> <<dick>> cm dick  is significantly less than what your pussy needs .This is not enough for you. Gradually a pleasant warmth and some pulsations started building up in your stomach. Then the feeling decreased a little and remained like that until the end.'
-		end
-		if pcs_vag = 0:
-			pcs_horny = 0
-			pcs_mood -= 15
-			pcs_willpwr -= 15
-			pcs_vag += 1
-			'You were biting your <<$liptalk>> in pain and tears started to flow from your eyes when <<$boydesc>> entered, breaking your hymen. You moan while crying and <<$xem>> <<dick>> centimeter dick fucks your bloody pussy.'
-		elseif pcs_vag <= dick:
-			pcs_vag += 1
-		end
-
-	cumprecheck = 1
-	gs 'cum_manage'
-	end
-}
 
 $sexcum = {
 	frost = 0
@@ -1378,6 +1041,8 @@ if $ARGS[0] = 'after_anal':
 end &! --- after_anal ---
 
 !! replacement of  "dynamic $sexstart2"
+!! replacement of  "dynamic $sexstart3"
+!! replacement of  "dynamic $sexstart4"
 !! this procedure calls 'arousal','vaginal', so the rest of the parameters for arousal should be passed as parameters: call like gs 'dinsex','vaginal_sex',10,'rough','sub'
 if $ARGS[0] = 'vaginal_sex':
 	frost = 0 &! the sex heats

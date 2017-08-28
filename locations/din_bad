@@ -10,19 +10,19 @@ $mobile_check = {
 			$caller = 'Vladimir'
 			$callerid = 'images/characters/city/vladimir/001.jpg'
 			gs 'telefon','phone_ring'
-			pl'<center><a href="exec:gt ''qwloc2''"><img src="images/system/phone/call_accept.png"></a>         <a href="exec:vladimirday = daystart & gt $loc, $metka"><img src="images/system/phone/decline.png"></a></center>'
+			pl'<center><a href="exec:gt ''qwloc'',''2''"><img src="images/system/phone/call_accept.png"></a>         <a href="exec:vladimirday = daystart & gt $loc, $metka"><img src="images/system/phone/decline.png"></a></center>'
 		elseif vladimirQW = 25 and week = 6:
 			'<b><font color="red">Your phone is ringing</font></b>'
 			$caller = 'Vladimir'
 			$callerid = 'images/characters/city/vladimir/001.jpg'
 			gs 'telefon','phone_ring'
-			pl'<center><a href="exec:gt ''qwloc3''"><img src="images/system/phone/call_accept.png"></a>         <a href="exec:vladimirday = daystart & gt $loc, $metka"><img src="images/system/phone/decline.png"></a></center>'
+			pl'<center><a href="exec:gt ''qwloc'',''3''"><img src="images/system/phone/call_accept.png"></a>         <a href="exec:vladimirday = daystart & gt $loc, $metka"><img src="images/system/phone/decline.png"></a></center>'
 		elseif vladimirQW = 35 and week = 6:
 			'<b><font color="red">Your phone is ringing</font></b>'
 			$caller = 'Vladimir'
 			$callerid = 'images/characters/city/vladimir/001.jpg'
 			gs 'telefon','phone_ring'
-			pl'<center><a href="exec:gt ''qwloc4''"><img src="images/system/phone/call_accept.png"></a>         <a href="exec:vladimirday = daystart & gt $loc, $metka"><img src="images/system/phone/decline.png"></a></center>'
+			pl'<center><a href="exec:gt ''qwloc'',''4''"><img src="images/system/phone/call_accept.png"></a>         <a href="exec:vladimirday = daystart & gt $loc, $metka"><img src="images/system/phone/decline.png"></a></center>'
 		end
 	end
 
@@ -162,6 +162,9 @@ $d_bag = {
 		NL
 	else
 		pl 'You are out of condoms.'
+	end
+	if amphetamine > 0 :
+		pl 'You have <<amphetamine>> tablets of amphetamine left. <b><a href="exec:dynamic $use_amphetamines & dynamic $d_bag">Take One</a></b>'
 	end
 	if tabletki > 0 and pillsleft[ptype] > 0:
 		pl 'You have <<tabletki>> unopened packages of <a href="exec:dynamic $d_tabletkied">birth control pills</a> and <<pillsleft[ptype]>> pills left in your opened package.</b>'
@@ -583,14 +586,14 @@ $d_cycreport_update = {
 					$cycreport_txt = 'It has been <<temp[1]>> days since you last had a period. <font color=green>You are currently protected by a birth control shot.</font>'
 				elseif pillcon2 > 30000:
 					$cycreport_txt = 'It has been <<temp[1]>> days since you last had a period. <font color=green>You are currently on the pill.</font>'
-				elseif pillcon2 > 8000 and (FocH > 70 or ovulate > 0):
+				elseif pillcon2 > 8000 and ((FocH > (Foch_Max - 96)) or ovulate > 0):
 					$cycreport_txt = 'It has been <<temp[1]>> days since you last had a period. You are currently on the pill but it is not yet effective. <font color=red>It is currently a dangerous day.</font>'
 				elseif pillcon2 > 8000:
 					$cycreport_txt = 'It has been <<temp[1]>> days since you last had a period. You are currently on the pill but it is not yet effective.'
 				elseif daystart = tabletkiday:
 					$cycreport_txt = 'It has been <<temp[1]>> days since you last had a period. You have taken the pill but it will be several weeks before it is fully effective.'
-				elseif FocH > 70 or ovulate > 0:
-					$cycreport_txt = 'It has been <<temp[1]>> days since you last had a period. <font color=red>It is currently a dangerous day.</font>'
+				elseif FocH > (Foch_Max - 96) or ovulate > 0:
+					$cycreport_txt = 'It has been <<temp[1]>> days since you last had a period. <font color=red>It is currently your fertile stage.</font>'
 				else
 					$cycreport_txt = 'It has been <<temp[1]>> days since you last had a period.'
 				end
@@ -785,6 +788,18 @@ $use_steroids = {
         'You really shouldn''t take any more today.'
     end
 }
+
+$use_amphetamines = {
+	if amphIntake < 2:
+		'<font color= blue>You take a white pill</font>'
+		amphIntake += 1
+		amphetamine -=1
+		amphHigh = 12
+	else
+		'Your hearts already hammering in your chest, perhaps you shouldn''t take anymore'
+	end
+}
+
 $use_bcream = {
     if bcream_used < 1:
         '<font color = #DB7093>You smear cream onto your breasts and rub it in.</font>'
@@ -861,40 +876,41 @@ if $ARGS[0] = 'takepill':
 		end
 		killvar 'tabletkirand'
 	end
+	!! added empty week to allow menstruation - it take effect only when the pills are taken automatically
+	if placebopart <= 0 or tabletkicheck ! 1:
+		!!pillcon2 is the ideal state, PC cosiders this the believed pillcon value
+		pillcon2 += ((pillcon2+15000)/40)+1000
+		if pillcon2 > 40000:pillcon2 = 40000
 
-	!!pillcon2 is the ideal state, PC cosiders this the believed pillcon value
-	pillcon2 += ((pillcon2+15000)/40)+1000
-	if pillcon2 > 40000:pillcon2 = 40000
-	
-	if ptype = 0:
-		pillsleft[ptype] -= 1
-		pcs_skin += 1
-		pillcon += ((pillcon+15000)/40)+1000
-		if pillcon > 40000: pillcon = 40000
-	elseif ptype = 1:
-		pillsleft[ptype] -= 1
-		pcs_skin += rand(0,1)
-		pillcon += ((pillcon+15000)/40)+ rand(250,1000)
-		if pillcon > 40000: pillcon = 40000
-	elseif ptype = 2:
-		pillsleft[ptype] -= 1
-		pcs_skin += rand(0,1)
-		pillcon += ((pillcon+15000)/40)+ rand(0,500)
-		if pillcon > 40000: pillcon = 40000
-	elseif ptype = 3:
-		pillsleft[ptype] -= 1
-		pcs_skin += rand(0,1)
-		if rand(0,4) = 0: pain['tummy'] += rand(5,10)
-		pillcon += ((pillcon+15000)/40)+ rand(250,2000)
-		if pillcon > 40000: pillcon = 40000
-	elseif ptype = 4:
-		pillsleft[ptype] -= 1
-	elseif ptype = 5:
-		pillsleft[ptype] -= 1
-		pcs_skin += 1
-		EggRH += rand(10,80)
+		if ptype = 0:
+			pillsleft[ptype] -= 1
+			pcs_skin += 1
+			pillcon += ((pillcon+15000)/40)+1000
+			if pillcon > 40000: pillcon = 40000
+		elseif ptype = 1:
+			pillsleft[ptype] -= 1
+			pcs_skin += rand(0,1)
+			pillcon += ((pillcon+15000)/40)+ rand(250,1000)
+			if pillcon > 40000: pillcon = 40000
+		elseif ptype = 2:
+			pillsleft[ptype] -= 1
+			pcs_skin += rand(0,1)
+			pillcon += ((pillcon+15000)/40)+ rand(0,500)
+			if pillcon > 40000: pillcon = 40000
+		elseif ptype = 3:
+			pillsleft[ptype] -= 1
+			pcs_skin += rand(0,1)
+			if rand(0,4) = 0: pain['tummy'] += rand(5,10)
+			pillcon += ((pillcon+15000)/40)+ rand(250,2000)
+			if pillcon > 40000: pillcon = 40000
+		elseif ptype = 4:
+			pillsleft[ptype] -= 1
+		elseif ptype = 5:
+			pillsleft[ptype] -= 1
+			pcs_skin += 1
+			EggRH += rand(10,80)
+		end
 	end
 end
 
 --- din_bad ---------------------------------
-
