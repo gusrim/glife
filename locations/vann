@@ -1,6 +1,8 @@
 # vann
 
 if $ARGS[0] = 'start':
+	$loc = 'vann'
+	$metka = 'start'
     $location_type = 'bathroom'
 	cls
 	gs 'stat'
@@ -17,201 +19,11 @@ if $ARGS[0] = 'start':
 	vannin = 1
 	'<center><img <<$set_imgh>> src="images/shared/home/bathroom/wash1.jpg"></center>'
 
-	if shampoo = 0:'You''re out of shampoo'
-
 	if obdysh = 1 or palMir = 1 or bordysh = 1:
-		if (washingbelo = 1 or washingbra = 1) and poroshok > 0:'<a href="exec:gt ''vann'', ''washing''">You have clothes you can wash</a>'
-
-		if pirsA + pirsB + pirsC + pirsD + pirsE + pirsF + pirsN + pirsG + pirsGL > 0:'<a href="exec:dynamic $pirManage">Manage Piercings</a>'
-
-		if breastpump > 0:'<a href="exec:gt ''shortgs'', ''milk_me''">Use breast pump</a></center>'
-
-		dynamic $bteeth
-		dynamic $tampon
-		dynamic $quickwash
-		dynamic $wearpan
-		dynamic $basin
-
-		if klisma = 1 and (klismaday ! daystart or arrpos('sparrloc', 3) ! -1):
-			act 'Give yourself an enema (0:05)':
-				cla
-				*clr
-				cumspclnt = 7
-				gs 'cum_cleanup'
-				minut += 5
-				klismaday = daystart
-				klismaday1= 1
-				'<center><img <<$set_imgh>> src="images/shared/home/bathroom/klisma.jpg"></center>'
-				'You prepare an enema and clean out your intestines, now your ass is ready for anal sex.'
-
-				act 'Finish':gt 'vann', 'start'
-			end
-		end
-
-		if vibrator = 1 and vibratorIN = 0:
-			act 'Insert the vibrator (0:05)':
-				cla
-				*clr
-				minut += 5
-				vibratorIN = 1
-
-				if pcs_vag < 30:pcs_vag += 2
-
-				'<center><img <<$set_imgh>> src="images/shared/accessories/toys/vibrator.jpg"></center>'
-				'You bend over the sink and insert the vibrator into your pussy.'
-
-				act 'Finish':gt 'vann', 'start'
-			end
-		end
-
-		if vibrator = 1 and vibratorIN = 1:
-			act 'Remove the vibrator (0:05)':
-				cla
-				*clr
-				minut += 5
-				vibratorIN = 0
-
-				if pcs_vag < 30:pcs_vag += 1
-
-				'<center><img <<$set_imgh>> src="images/shared/accessories/toys/vibrator.jpg"></center>'
-				'You bend over the sink and take the vibrator out of your pussy.'
-
-				act 'Finish':gt 'vann', 'start'
-			end
-		end
-
-		if analplug = 1 and analplugin = 0 and klismaday = daystart:
-			act 'Insert a butt plug (0:05)':
-				cla
-				*clr
-				minut += 5
-				analplugIN = 1
-
-				if pcs_ass < 30:pcs_ass += 5
-
-				'<center><img <<$set_imgh>> src="images/pc/body/analplug.jpg"></center>'
-
-				if butpluguse > 0:'You bent over and inserted the butt plug.'
-				if butpluguse = 0:butpluguse = 1 & '"If I don''t use it then why did I buy it!" you thought. You decided to take a closer look while thinking, "It is necessary to start developing my ass so I could have great adventures someday, you could even say a huge and thick adventures with crimson heads, uh, now I got carried away." You scratched your head. Then you directed it in your ass, it was a bit painful at first, but as soon as the widest part was plunged into the murky depths of your anus it became easier to push it all the way.'
-
-				act 'Finish':gt 'vann', 'start'
-			end
-		end
-
-		if analplug = 1 and analplugin = 1:
-			act 'Remove the butt plug (0:05)':
-				cla
-				*clr
-				minut += 5
-				analplugIN = 0
-
-				if pcs_ass < 30:pcs_ass += 1
-
-				'<center><img <<$set_imgh>> src="images/pc/body/analplug.jpg"></center>'
-
-				'You bent over and took out the butt plug.' & !!0.2.6: Removed unneccessary var check
-
-				act 'Finish':gt 'vann', 'start'
-			end
-		end
+		dynamic $private
 	end
 
 	act 'Get out':gt 'vann', 'fin'
-
-	if mosolmaz > 0 and mosol > 0 and mosal_time ! (daystart * 100) + hour:
-		act 'Rub ointment onto your pussy (0:05)':
-			cla
-			mosal_time = (daystart * 100) + hour
-			minut += 5
-			mosolmaz -= 1
-			mosol -= 5
-			'You take a tube of cream and rub it onto your itchy vulva.'
-
-			act 'Get out and get dressed':gt 'vann', 'start'
-		end
-	end
-	
-	if pain['killer'] = 0 and painkiller > 0:
-		'You have <<painkiller>> painkillers.'
-		act 'Take a painkiller':
-			pain['killer'] = 1
-			painkiller -= 1
-			'You take a painkiller.'
-
-			act 'Get out and get dressed':gt 'vann', 'start'
-		end
-	end
-
-	if shampoo > 0:
-		dynamic $shower
-		dynamic $bath
-	end
-end
-
-if $ARGS[0] = 'washing':
-	cla
-	*clr
-	minut += 30
-	poroshok -= 1
-	pcs_mood -= 10
-	gs 'underwear', 'cleaning'
-	'<center><img <<$set_imgh>> src="images/locations/city/residential/apartment/stir.jpg"></center>'
-	'You soak the clothes in a basin and add the power detergent. You then wash your clothes until they are clean.'
-
-	act 'Finish':gt 'vann', 'start'
-end
-
-if $ARGS[0] = 'brit':
-	cla
-	'You rinse the razor blade which looks in good enough shape for <b><<stanok>></b> more shaves.'
-
-	if pcs_leghair > 3 and stanok > 0:
-		act 'Shave your legs (0:15)':
-			cla
-			*clr
-			minut += 15
-			pcs_leghair = 0
-			pcs_horny += 5
-			stanok -= 1
-			'<center><img <<$set_imgh>> src="images/shared/home/bathroom/shave.jpg"></center>'
-
-			if daystart < 10:'You have decided to shave your pussy and picking up a razor realized that you do not know how to shave. To begin, you have shaved pubic hair, it was not difficult, but then you notice that near your newfound pussy hair grow too. Here you have difficulties began, you tried to pull one hand, all these soft folds to the side so the second hand to shave all the hairs. Gradually, you still managed to shave off all his hair with your new vagina. As long as you shave you hardly came out of shock contemplating his crotch which was not at all what you''re used to. But finally it was done with shaving and you flushed with foam pussy stroking your hand and wondering sensations.'
-			if daystart >= 10 and daystart < 30:'You lathered her soft feet and took in hand razor. You have grown accustomed to his new body and shaved legs calmly knowing that hairy legs with your new body is not beautiful. Finally shaving was done with and you flushed foam stroking his smooth as silk legs.'
-			if daystart >= 30:'You lathered his feet and took a razor. Habitual movements you shaved hair on the legs and washed shaving foam.'
-
-			!!'You lathered up and shaved hair with them.'
-
-			act 'Postpone machine':gt 'vann', 'brit'
-		end
-	end
-
-	if pcs_pubes > 3 and stanok > 0:
-		act 'Shave pubis (0:15)':
-			cla
-			*clr
-			minut += 15
-			pcs_pubes = 0
-			pcs_horny += 5
-			stanok -= 1
-
-			if obdysh = 1 and obbritinvent = 0:
-				britrand = rand(0, 5)
-
-				if britrand = 5:gt 'vann', 'brit1'
-			end
-
-			'<center><img <<$set_imgh>> src="images/shared/home/bathroom/shave3.jpg"></center>'
-
-			if daystart < 10:'You have decided to shave pubis, lathered his foam and picking up a razor realized that he did not imagine how it shaved. To begin, you have shaved pubic hair, it was not difficult, but then you notice that near your newfound pussy hair grow too. Here you have difficulties began, you tried to pull one hand, all these soft folds to the side so the second hand to shave all the hairs. Gradually, you still managed to shave off all his hair with your new vagina. As long as you shave you hardly came out of shock contemplating his crotch which was not at all what you''re used to. But finally it was done with shaving and you flushed with foam pussy stroking her hand and wondering sensations.'
-			if daystart >= 10 and daystart < 30:'You foam lathered his groin, trying not to miss a single crease on her pussy. Then neat movements began shave pussy trying not to cut. Finally you did it and you flushed foam pubic hair and pussy.'
-			if daystart >= 30:'You lathered crotch and took a razor habitual movements began to shave pubic hairs and shave pussy vokurug. Finally shaving was finished and you flushed with foam pussy.'
-
-			!!'You lathered pubis, then shaved all the hair from it.'
-			act 'Postpone machine':gt 'vann', 'brit'
-		end
-	end
-
-	act 'Get out and get dressed':gt 'vann', 'fin'
 end
 
 if $ARGS[0] = 'fin':
@@ -396,7 +208,7 @@ if $ARGS[0] = 'v4':
     $location_type = 'event'
 	cla
 	*clr
-	minut += 30
+	minut += 10
 	stat['mast'] += 1
 	if pcs_exhibition < 30:exhibition_exp += rand(1,3)
 	'<center><img <<$set_imgh>> src="images/locations/city/island/university/dorm/sex/bathroom/v9.jpg"></center>'
