@@ -2,7 +2,7 @@
 
 if $ARGS[0] = 'start' or $shoplocation = 'start':
 	$metka = $ARGS[0]
-	$loc = $CURLOC
+	$loc = 'budgetclothes'
 	$location_type = 'event'
 	$shoplocation = 'start'
 	'<center><b><font color="maroon">Welcome to G & M - Clothes for all your needs</font></b></center>'
@@ -10,10 +10,10 @@ if $ARGS[0] = 'start' or $shoplocation = 'start':
 	clr
 
 	*pl '<center><table align="center" width=80%>' 
-	*P FUNC ('$stock_item', 1, 'Panties', 300, 'clrbelo', $CURLOC)
-	*P FUNC ('$stock_item', 7, 'Pack of 7 pairs of panties', 2000, 'clrbelo', $CURLOC)
-	*P FUNC ('$stock_item', 1, 'Bra', 300, 'clrbra', $CURLOC)
-	*P FUNC ('$stock_item', 7, 'Pack of 7 bras', 2000, 'clrbra', $CURLOC)
+	*P FUNC ('$stock_item', 1, 'Panties', 300, 'clrbelo', 'budgetclothes')
+	*P FUNC ('$stock_item', 7, 'Pack of 7 pairs of panties', 2000, 'clrbelo', 'budgetclothes')
+	*P FUNC ('$stock_item', 1, 'Bra', 300, 'clrbra', 'budgetclothes')
+	*P FUNC ('$stock_item', 7, 'Pack of 7 bras', 2000, 'clrbra', 'budgetclothes')
 	*P '</table></center>'
 
 	gs 'stat'
@@ -81,6 +81,13 @@ if $ARGS[0] = 'start' or $shoplocation = 'start':
 		gt 'budgetclothes', 'coats'
 	end
 
+	act 'View purses':
+		cla
+		$shoplocation = ''
+		minut += 5
+		gt 'budgetclothes', 'purses'
+	end
+
 	act 'Leave the store':
 		cla
 		$shoplocation = ''
@@ -95,7 +102,7 @@ end
 
 if $ARGS[0] = 'clothes':
 	$metka = $ARGS[0]
-	$loc = $CURLOC
+	$loc = 'budgetclothes'
 	cls
 	gs'stat'
 
@@ -135,7 +142,7 @@ end
 
 if $ARGS[0] = 'office':
 	$metka = $ARGS[0]
-	$loc = $CURLOC
+	$loc = 'budgetclothes'
 	cls
 	gs'stat'
 
@@ -172,7 +179,7 @@ end
 
 if $ARGS[0] = 'uniform':
 	$metka = $ARGS[0]
-	$loc = $CURLOC
+	$loc = 'budgetclothes'
 	cls
 	gs'stat'
 
@@ -209,7 +216,7 @@ end
 
 if $ARGS[0] = 'school':
 	$metka = $ARGS[0]
-	$loc = $CURLOC
+	$loc = 'budgetclothes'
 	cls
 	gs'stat'
 
@@ -303,7 +310,7 @@ if $ARGS[0] = 'training_shoes': gt 'shoes', 'view_shoe_item', 'shop', 'trainers'
 
 if $ARGS[0] = 'coats':
 	$metka = $ARGS[0]
-	$loc = $CURLOC
+	$loc = 'budgetclothes'
 	cls
 	gs'stat'
 
@@ -333,6 +340,27 @@ if $ARGS[0] = 'coatsclo':
 
 	gt 'clothing', 'view_clothing_item', 'shop', 'coat',i, 8000
 end
+
+if $ARGS[0] = 'purses':
+	$metka = 'purses'
+	$loc = 'budgetclothes'
+	cls
+	gs'stat'
+
+	act 'Return':
+		cla
+		minut += 5
+		gt 'budgetclothes', 'start'
+	end
+
+	i = 1
+	:looppurses
+		if cheap_purse[i] = 0:*p '<a href="exec: i = <<i>> & gt ''budgetclothes'', ''purses2''"><img src="images/pc/purses/cheap/<<i>>.jpg" 	height="250" /></a>'
+		i += 1
+	if i <= 14:jump 'looppurses'
+end
+
+if $ARGS[0] = 'purses2': gt 'clothing', 'view_purse_item', 'shop', 'cheap',i, 5000
 
 --- budgetclothes ---------------------------------
 

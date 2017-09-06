@@ -1,0 +1,115 @@
+# purses
+
+if $ARGS[0] = 'view_purse_list':
+	!! ARGS 0 - view_purse_list
+
+	act 'Leave':gt $loc, $metka
+
+!!	'<center><img src="images/locations/?/shop_name.png"></center>'
+	'<center>Dolls (image pending)</center>'
+
+	i = 1
+	:loopdollspurses 
+	if dolls_purse[i] = 1:*p '<a href="exec:gt ''purses'', ''view_purse_item'', ''home'', ''dolls'', <<i>>"><img src="images/pc/purses/dolls/<<i>>.jpg" 	height="300" /></a>'
+	i += 1
+	if i <= ARRSIZE('dolls_purses'):jump 'loopdollspurses'
+
+	'<center><img src="images/locations/city/citycenter/mall/fashionistat.png"></center>'
+
+	i = 1
+	:loopfashionistapurses 
+	if fashionista_purse[i] = 1:*p '<a href="exec:gt ''purses'', ''view_purse_item'', ''home'', ''fashionista'', <<i>>"><img src="images/pc/purses/fashionista/<<i>>.jpg" 	height="300" /></a>'
+	i += 1
+	if i <= ARRSIZE('fashionista_purses'):jump 'loopfashionistapurses'
+
+	'<center><img src="images/locations/city/citycenter/mall/GM.png"></center>'
+
+	i = 1
+	:loopcheappurses 
+	if cheap_purse[i] = 1:*p '<a href="exec:gt ''purses'', ''view_purse_item'', ''home'', ''cheap'', <<i>>"><img src="images/pc/purses/cheap/<<i>>.jpg" 	height="300" /></a>'
+	i += 1
+	if i <= ARRSIZE('cheap_purses'):jump 'loopcheappurses'
+
+	'<center><img src="images/locations/city/citycenter/mall/pussycat.png"></center>'
+
+	i = 1
+	:loopkatspurses 
+	if kats_purse[i] = 1:*p '<a href="exec:gt ''purses'', ''view_purse_item'', ''home'', ''kats'', <<i>>"><img src="images/pc/purses/kats/<<i>>.jpg" 	height="300" /></a>'
+	i += 1
+	if i <= ARRSIZE('kats_purses'):jump 'loopkatspurses'
+
+	'<center><img src="images/locations/city/citycenter/mall/moncheri.png"></center>'
+
+	i = 1
+	:loopboutiquepurses 
+	if boutique_purses[i] = 1:*p '<a href="exec:gt ''purses'', ''view_purse_item'', ''home'', ''boutique'', <<i>>"><img src="images/pc/purses/boutique/<<i>>.jpg" 	height="300" /></a>'
+	i += 1
+	if i <= ARRSIZE('boutique_purses'):jump 'loopboutiquepurses'
+end
+
+if $ARGS[0] = 'view_purse_item':
+	!! ARGS 0 - view_purse_item
+	!! ARGS 1 = action type (home, shop)
+	!! ARGS 2 - purse type
+	!! ARGS 3 - purse index
+	!! ARGS 4 - price for shop
+
+	cla
+	'<center><img src="<<FUNC(''$purse_image'',  $ARGS[2], ARGS[3])>>"></center>'
+
+	gs 'purses', 'descriptions', $ARGS[2]
+
+	if $ARGS[1] = 'shop':
+		if dyneval('RESULT = <<$ARGS[2]>>_purses[<<ARGS[3]>>]') = 1:
+			'You already own this purse.'
+			act 'Leave': gt $loc, $metka
+		else
+			price = ARGS[4]
+			'Price: <<ARGS[4]>> <b>₽</b>'
+			act 'Leave': gt $loc, $metka
+			if money >= price:
+				act 'Buy':
+					money -= price
+					dynamic $ARGS[2] + '_purses[<<ARGS[3]>>] = 1'
+					dynamic $ARGS[2] + '_pursesC[<<ARGS[3]>>] = 0'
+					gt $loc, $metka
+				end
+			else
+				'You cannot afford this purse.'
+			end
+		end
+	elseif $ARGS[1] = 'home':
+		act 'Return':gt 'purses', 'view_purse_list', $ARGS[1]
+		
+		if $currentpursetype = $ARGS[2] and currentpursenumber = ARGS[3]:
+			'You are using this purse.'
+		else
+			act 'Use this purse':
+				$currentpursetype = $ARGS[2]
+				currentpursenumber = ARGS[3]
+				bag = 1
+				if menu_option = 1:dynamic $menu_addoldmenu
+				if menu_option = 0:gs 'obj_din', 'new'
+
+				gt 'purses', 'view_purse_list', $ARGS[1]
+			end
+		end
+	end
+end
+
+if $ARGS[0] = 'descriptions':
+	if $ARGS[1] = 'dolls':
+		'Let your freak flag fly with this perfect purse for the hot, independent girl that lives the alt lifestyle.'
+	elseif $ARGS[1] = 'fashionista':
+		'A stylish handbag for any fashion-forward female!'
+	elseif $ARGS[1] = 'cheap':
+		'A functional, if not too fashionable, handbag for carrying all of the essentials.'
+	elseif $ARGS[1] = 'kats':
+		'A fun and flirty purse for any young lady looking for fun on a night out.'
+	elseif $ARGS[1] = 'boutique':
+		'A high-fashion handbag for ladies with discerning tastes. Show how classy you are with this expensive accessory.'
+	end
+end
+
+--- purses ---------------------------------
+
