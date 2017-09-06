@@ -327,7 +327,7 @@ if $ARGS[0] = 'boyA':
 	clr
 	ring = 0
 	ringA = 0
-	loverday[0] = daystart
+	lover_days = daystart - loverday[0]
 	gs 'stat'
 	gs 'telefon','phone_call_receive'
 	svetrand = rand(0, 5)
@@ -346,7 +346,7 @@ if $ARGS[0] = 'boyA':
 		'"Pretty good, you?"'
 		'<<$loverdesc[0]>>, "Great, but I kind of miss you, can we meet today?"'
 
-		if pregtime <= loversday[0] and knowpreg = 1 and pregtalk = 0:
+		if pregtime <= lover_days and knowpreg = 1 and pregtalk = 0:
 			act 'Tell him he''s going to be a dad':
 				cla
 				pregtalk = 1
@@ -366,22 +366,17 @@ if $ARGS[0] = 'boyA':
 
 						act 'Meet tonight':
 							cla
-							svidanieA = 1
+							svidanie[0] = 1
 							'"How about this evening?"'
 							'<<$loverdesc[0]>>, "Sounds great! When can I come to pick you up?"'
 
 							act 'Pick a time':
 								cla
-								meetdayA = daystart
-
-								meethourA = input ("When do you want to be picked up? It is now <<$mid(100+hour,2,2)>>:<<$mid(100+minut,2,2)>>.")
-
-								if meethourA <= hour or meethourA > 23:meethourA = 20
-
-
-								'"How about <<meethourA>>:00?"'
-
-								'<<$loverdesc[0]>>, "Okay <<$sveta>>, see you at <<meethourA>>:00."'
+								meetday[0] = daystart
+								meethour[0] = input ("When do you want to be picked up? It is now <<$mid(100+hour,2,2)>>:<<$mid(100+minut,2,2)>>.")
+								if meethour[0] <= hour or meethour[0] > 23:meethour[0] = 20
+								'"How about <<meethour[0]>>:00?"'
+								'<<$loverdesc[0]>>, "Okay <<$sveta>>, see you at <<meethour[0]>>:00."'
 
 								act 'Hang up':gt 'telefon', 'fin'
 							end
@@ -400,14 +395,14 @@ if $ARGS[0] = 'boyA':
 					act 'Hang up':gt 'telefon', 'fin'
 				elseif haraklover[0] = 2:
 
-					gs 'boyfrend','remove',0
 					pregtalk = 0
 					'<<$loverdesc[0]>>, "What? You whore! Someone fucked your pussy and now you drop it on me. You''re dumped.'
+					gs 'boyfrend','remove',0
 
 					act 'Hang up':gt 'telefon', 'fin'
 				end
 			end
-		elseif pregtime > loversday[0] and knowpreg = 1 and pregtalk = 0:
+		elseif pregtime > lover_days and knowpreg = 1 and pregtalk = 0:
 			act 'Honey, you will soon become a dad':
 				cla
 				loverrelation[0] = 0
@@ -429,18 +424,18 @@ if $ARGS[0] = 'boyA':
 		act 'Tonight':
 			cla
 			loverrelation[0] += 1
-			svidanieA = 1
-			meetdayA = daystart
+			svidanie[0] = 1
+			meetday[0] = daystart
 			'"How about this evening?"'
 			'<<$loverdesc[0]>>, "Sounds great! When can I come to pick you up?"'
 
 			act 'Pick a time':
 				cla
-				meethourA = input ("When do you want to be picked up. It is now <<$mid(100+hour,2,2)>>:<<$mid(100+minut,2,2)>>.")
-				if meethourA <= hour or meethourA > 23:meethourA = 20
+				meethour[0] = input ("When do you want to be picked up. It is now <<$mid(100+hour,2,2)>>:<<$mid(100+minut,2,2)>>.")
+				if meethour[0] <= hour or meethour[0] > 23:meethour[0] = 20
 
-				'"How about <<meethourA>>:00?."'
-				'<<$loverdesc[0]>>, "Okay <<$sveta>>, see you at <<meethourA>>:00."'
+				'"How about <<meethour[0]>>:00?."'
+				'<<$loverdesc[0]>>, "Okay <<$sveta>>, see you at <<meethour[0]>>:00."'
 
 				act 'Hang up':gt 'telefon', 'fin'
 			end
@@ -451,7 +446,7 @@ if $ARGS[0] = 'boyA':
 			loverrelation[0] -= 1
 			'"I''m busy today. Call tomorrow."'
 
-			if loverrelation[0] <= 0:gs 'boyfrend','remove',0 & '<<$loverdesc[0]>>, Are you fucking me, you know what. Suck my dick.'
+			if loverrelation[0] <= 0:'<<$loverdesc[0]>>, Are you fucking me, you know what. Suck my dick.' & gs 'boyfrend','remove',0
 			if loverrelation[0] > 0:'(<<$loverdesc[0]>>) -  Okay, I''ll call tomorrow.'
 
 			act 'Hang up':gt 'telefon', 'fin'
@@ -468,7 +463,7 @@ if $ARGS[0] = 'boyA':
 
 	act 'Leave':
 		cla
-		loverrelation[0] = 0
+		gs 'boyfrend','remove',0
 		gt 'telefon', 'fin'
 	end
 end
@@ -478,7 +473,7 @@ if $ARGS[0] = 'boyB':
 	clr
 	ring = 0
 	ringB = 0
-	loverday[1] = daystart
+	lover_days = daystart - loverday[1]
 	gs 'stat'
 	gs 'telefon','phone_call_receive'
 	svetrand = rand(0, 5)
@@ -498,7 +493,7 @@ if $ARGS[0] = 'boyB':
 		'"Pretty good, you?"'
 		'<<$loverdesc[1]>>, "Great, but I kind of miss you, can we meet today?"'
 
-		if pregtime <= loversday[1] and knowpreg = 1 and pregtalk = 0:
+		if pregtime <= lover_days and knowpreg = 1 and pregtalk = 0:
 			act 'Tell him he''s going to be a dad':
 				cla
 				pregtalk = 1
@@ -516,19 +511,19 @@ if $ARGS[0] = 'boyB':
 
 						act 'Meet tonight':
 							cla
-							svidanieB = 1
+							svidanie[1] = 1
 							'"How about this evening?"'
 							'<<$loverdesc[1]>>, "Sounds great! When can I come to pick you up?"'
 
 							act 'Pick a time':
 								cla
-								meetdayB = daystart
-								meethourB = input ("When do you want to be picked up? It is now <<$mid(100+hour,2,2)>>:<<$mid(100+minut,2,2)>>.")
+								meetday[1] = daystart
+								meethour[1] = input ("When do you want to be picked up? It is now <<$mid(100+hour,2,2)>>:<<$mid(100+minut,2,2)>>.")
 
-								if meethourB <= hour or meethourB > 23:meethourB = 20
+								if meethour[1] <= hour or meethour[1] > 23:meethour[1] = 20
 
-								'"How about <<meethourB>>:00?"'
-								'<<$loverdesc[1]>>, "Okay <<$sveta>>, see you at <<meethourB>>:00."'
+								'"How about <<meethour[1]>>:00?"'
+								'<<$loverdesc[1]>>, "Okay <<$sveta>>, see you at <<meethour[1]>>:00."'
 
 								act 'Hang up':gt 'telefon', 'fin'
 							end
@@ -545,14 +540,14 @@ if $ARGS[0] = 'boyB':
 
 					act 'Hang up':gt 'telefon', 'fin'
 				elseif haraklover[1] = 2:
-					gs 'boyfrend','remove',1
 					pregtalk = 0
 					'<<$loverdesc[1]>>, "What? You whore! Someone fucked your pussy and now you drop it on me. You''re dumped.'
+					gs 'boyfrend','remove',1
 
 					act 'Hang up':gt 'telefon', 'fin'
 				end
 			end
-		elseif pregtime > loversday[1] and knowpreg = 1 and pregtalk = 0:
+		elseif pregtime > lover_days and knowpreg = 1 and pregtalk = 0:
 			act 'Honey, you will soon become a dad':
 				cla
 				loverrelation[1] = 0
@@ -574,18 +569,18 @@ if $ARGS[0] = 'boyB':
 		act 'Tonight':
 			cla
 			loverrelation[1] += 1
-			svidanieB = 1
-			meetdayB = daystart
+			svidanie[1] = 1
+			meetday[1] = daystart
 			'"How about this evening?"'
 			'<<$loverdesc[1]>>, "Sounds great! When can I come to pick you up?"'
 
 			act 'Pick a time':
 				cla
-				meethourB = input ("When do you want to be picked up. It is now <<$mid(100+hour,2,2)>>:<<$mid(100+minut,2,2)>>.")
-				if meethourB <= hour or meethourB > 23:meethourB = 20
+				meethour[1] = input ("When do you want to be picked up. It is now <<$mid(100+hour,2,2)>>:<<$mid(100+minut,2,2)>>.")
+				if meethour[1] <= hour or meethour[1] > 23:meethour[1] = 20
 
-				'"How about <<meethourB>>:00?."'
-				'<<$loverdesc[1]>>, "Okay <<$sveta>>, see you at <<meethourB>>:00."'
+				'"How about <<meethour[1]>>:00?."'
+				'<<$loverdesc[1]>>, "Okay <<$sveta>>, see you at <<meethour[1]>>:00."'
 
 				act 'Hang up':gt 'telefon', 'fin'
 			end
@@ -596,7 +591,7 @@ if $ARGS[0] = 'boyB':
 			loverrelation[1] -= 1
 			'"I''m busy today. Call tomorrow."'
 
-			if loverrelation[1] <= 0:gs 'boyfrend','remove',1 & '<<$loverdesc[1]>>, Are you fucking me, you know what. Suck my dick.'
+			if loverrelation[1] <= 0:'<<$loverdesc[1]>>, Are you fucking me, you know what. Suck my dick.' & gs 'boyfrend','remove',1
 			if loverrelation[1] > 0:'(<<$loverdesc[1]>>) -  Okay, I''ll call tomorrow.'
 
 			act 'Hang up':gt 'telefon', 'fin'
@@ -613,7 +608,7 @@ if $ARGS[0] = 'boyB':
 
 	act 'Leave':
 		cla
-		loverrelation[1] = 0
+		gs 'boyfrend','remove',1
 		gt 'telefon', 'fin'
 	end
 end
@@ -623,7 +618,7 @@ if $ARGS[0] = 'boyC':
 	clr
 	ring = 0
 	ringC = 0
-	loverday[2] = daystart
+	lover_days = daystart - loverday[2]
 	gs 'stat'
 	gs 'telefon','phone_call_receive'
 	svetrand = rand(0, 5)
@@ -643,7 +638,7 @@ if $ARGS[0] = 'boyC':
 		'"Pretty good, you?"'
 		'<<$loverdesc[2]>>, "Great, but I kind of miss you, can we meet today?"'
 
-		if pregtime <= loversday[2] and knowpreg = 1 and pregtalk = 0:
+		if pregtime <= lover_days and knowpreg = 1 and pregtalk = 0:
 			act 'Tell him he''s going to be a dad':
 				cla
 				pregtalk = 1
@@ -661,19 +656,19 @@ if $ARGS[0] = 'boyC':
 
 						act 'Meet tonight':
 							cla
-							svidanieC = 1
+							svidanie[2] = 1
 							'"How about this evening?"'
 							'<<$loverdesc[2]>>, "Sounds great! When can I come to pick you up?"'
 
 							act 'Pick a time':
 								cla
-								meetdayC = daystart
-								meethourC = input ("When do you want to be picked up? It is now <<$mid(100+hour,2,2)>>:<<$mid(100+minut,2,2)>>.")
+								meetday[2] = daystart
+								meethour[2] = input ("When do you want to be picked up? It is now <<$mid(100+hour,2,2)>>:<<$mid(100+minut,2,2)>>.")
 
-								if meethourC <= hour or meethourC > 23:meethourC = 20
+								if meethour[2] <= hour or meethour[2] > 23:meethour[2] = 20
 
-								'"How about <<meethourC>>:00?"'
-								'<<$loverdesc[2]>>, "Okay <<$sveta>>, see you at <<meethourC>>:00."'
+								'"How about <<meethour[2]>>:00?"'
+								'<<$loverdesc[2]>>, "Okay <<$sveta>>, see you at <<meethour[2]>>:00."'
 
 								act 'Hang up':gt 'telefon', 'fin'
 							end
@@ -690,19 +685,19 @@ if $ARGS[0] = 'boyC':
 
 					act 'Hang up':gt 'telefon', 'fin'
 				elseif haraklover[2] = 2:
-					gs 'boyfrend','remove',2
 					pregtalk = 0
 					'<<$loverdesc[2]>>, "What? You whore! Someone fucked your pussy and now you drop it on me. You''re dumped.'
+					gs 'boyfrend','remove',2
 
 					act 'Hang up':gt 'telefon', 'fin'
 				end
 			end
-		elseif pregtime > loversday[2] and knowpreg = 1 and pregtalk = 0:
+		elseif pregtime > lover_days and knowpreg = 1 and pregtalk = 0:
 			act 'Honey, you will soon become a dad':
 				cla
-				gs 'boyfrend','remove',lover_number
 				'"Honey, I''m pregnant with your child."'
 				'<<$loverdesc[2]>>, "How the fuck did I manage that? Unless I own a time-machine and went back to before we met and fucked you, it''s someone elses, go and tell him. I don''t want to see you again, goodbye."'
+				gs 'boyfrend','remove',2
 
 				act 'Hang up.':gt 'telefon', 'fin'
 			end
@@ -719,18 +714,18 @@ if $ARGS[0] = 'boyC':
 		act 'Tonight':
 			cla
 			loverrelation[2] += 1
-			svidanieC = 1
-			meetdayC = daystart
+			svidanie[2] = 1
+			meetday[2] = daystart
 			'"How about this evening?"'
 			'<<$loverdesc[2]>>, "Sounds great! When can I come to pick you up?"'
 
 			act 'Pick a time':
 				cla
-				meethourC = input ("When do you want to be picked up. It is now <<$mid(100+hour,2,2)>>:<<$mid(100+minut,2,2)>>.")
-				if meethourC <= hour or meethourC > 23:meethourC = 20
+				meethour[2] = input ("When do you want to be picked up. It is now <<$mid(100+hour,2,2)>>:<<$mid(100+minut,2,2)>>.")
+				if meethour[2] <= hour or meethour[2] > 23:meethour[2] = 20
 
-				'"How about <<meethourC>>:00."'
-				'<<$loverdesc[2]>>, "Okay <<$sveta>>, see you at <<meethourC>>:00."'
+				'"How about <<meethour[2]>>:00."'
+				'<<$loverdesc[2]>>, "Okay <<$sveta>>, see you at <<meethour[2]>>:00."'
 
 				act 'Hang up':gt 'telefon', 'fin'
 			end
@@ -741,7 +736,7 @@ if $ARGS[0] = 'boyC':
 			loverrelation[2] -= 1
 			'"I''m busy today. Call tomorrow."'
 
-			if loverrelation[2] <= 0:gs 'boyfrend','remove',2 & '<<$loverdesc[2]>>, Are you fucking me, you know what. Suck my dick.'
+			if loverrelation[2] <= 0:'<<$loverdesc[2]>>, Are you fucking me, you know what. Suck my dick.' & gs 'boyfrend','remove',2
 			if loverrelation[2] > 0:'(<<$loverdesc[2]>>) -  Okay, I''ll call tomorrow.'
 
 			act 'Hang up':gt 'telefon', 'fin'
@@ -856,13 +851,13 @@ if $ARGS[0] = 'Phone_contactlist':
 			pl'<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="images/system/phone/icons/icon_kat.png"></TD><TD></TD><TD align="right"><a href="exec:$callerid = ''images/system/phone/icons/icon_kat.png'' & $telsob = ''Kate'' & gt ''telefon'', ''mobilaraz''"><b>Call</b></a></TD></TR></TABLE></center>'
 		end
 
-		if pcs_lovers[0] = 1 and svidanieA = 0 and rand(1,7) > 3:
+		if pcs_lovers[0] = 1 and svidanie[0] = 0 and rand(1,7) > 3:
 			pl'<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="images/system/phone/icons/icon_bf'+boypic[0]+'.png"></TD><TD></TD><TD align="right"><a href="exec:lover_number = 0 & gt ''telefon'', ''mobilarazboyA''"><b>Call</b></a></TD></TR></TABLE></center>'
 		end
-		if pcs_lovers[1] = 1 and svidanieB = 0 and rand(1,7) > 3:
+		if pcs_lovers[1] = 1 and svidanie[1] = 0 and rand(1,7) > 3:
 			pl'<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="images/system/phone/icons/icon_bf'+boypic[1]+'.png"></TD><TD></TD><TD align="right"><a href="exec:lover_number = 1 & gt ''telefon'', ''mobilarazboyB''"><b>Call</b></a></TD></TR></TABLE></center>'
 		end
-		if pcs_lovers[2] = 1 and svidanieC = 0 and rand(1,7) > 3:
+		if pcs_lovers[2] = 1 and svidanie[2] = 0 and rand(1,7) > 3:
 			pl'<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="images/system/phone/icons/icon_bf'+boypic[2]+'.png"></TD><TD></TD><TD align="right"><a href="exec:lover_number = 2 & gt ''telefon'', ''mobilarazboyC''"><b>Call</b></a></TD></TR></TABLE></center>'
 		end
 	else
@@ -878,13 +873,13 @@ if $ARGS[0] = 'Phone_contactlist':
 			pl'<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="images/system/phone/icons/icon_kat.png"></TD><TD></TD><TD align="right"><a href="exec:$callerid = ''icon_kat'' & gs ''telefon'', ''phone_call_reject'' "><b>Call</b></a></TD></TR></TABLE></center>'
 		end
 
-		if pcs_lovers[0] = 1 and svidanieA = 0:
+		if pcs_lovers[0] = 1 and svidanie[0] = 0:
 			pl'<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="images/system/phone/icons/icon_bf'+boypic[0]+'.png"></TD><TD></TD><TD align="right"><a href="exec:$callerid = ''icon_bf''+boypic[0] & gs ''telefon'', ''phone_call_reject'' "><b>Call</b></a></TD></TR></TABLE></center>'
 		end
-		if pcs_lovers[1] = 1 and svidanieB = 0:
+		if pcs_lovers[1] = 1 and svidanie[1] = 0:
 			pl'<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="images/system/phone/icons/icon_bf'+boypic[1]+'.png"></TD><TD></TD><TD align="right"><a href="exec:$callerid = ''icon_bf''+boypic[1] & gs ''telefon'', ''phone_call_reject'' "><b>Call</b></a></TD></TR></TABLE></center>'
 		end
-		if pcs_lovers[2] = 1 and svidanieC = 0:
+		if pcs_lovers[2] = 1 and svidanie[2] = 0:
 			pl'<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="images/system/phone/icons/icon_bf'+boypic[2]+'.png"></TD><TD></TD><TD align="right"><a href="exec:$callerid = ''icon_bf''+boypic[2] & gs ''telefon'', ''phone_call_reject'' "><b>Call</b></a></TD></TR></TABLE></center>'
 		end
 	end
