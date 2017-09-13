@@ -20,16 +20,19 @@ if $ARGS[0] = 'view_swim_list':
 		:loopswimwear
 			if swimwear[i] = 1 and swimwearS[i] = 0 and ($clothingworntype ! 'swimwear' or clothingwornnumber ! i):h += 1 & *p '<a href="exec:gt ''changingroom'', ''view_swim_item'', ''swimwear'', <<i>>"><img <<$set_imgh>> src="images/pc/clothing/12swimwear/<<i>>.jpg" 	height="250" /></a>'
 			i += 1
-		if i <= 135:jump 'loopswimwear'
+		if i <= ARRSIZE('swimwear'):jump 'loopswimwear'
 
 		if h = 0:'<center>You do not own any swimwear.</center>'
 
+	elseif $loc ! 'etoexhib' and (month < 5 or month > 9):
+		'<center>There''s no point in changing as you cannot go swimming or sunbathing here at this time of year, you need to wait until May.</center>'
 	else
-		'<center>You cannot go swimming or sunbathing now, so there is no point in getting changed.</center>'
+		'<center>You cannot go swimming or sunbathing when the temperature below 15C, so there is no point in getting changed.</center>'
 	end
 
 	if $clothingworntype = 'swimwear':
 		act 'Put your regular clothes back on':
+			gs 'underwear', 'wear'
 			gs 'clothing', 'wear', $normalclothingworntype, normalclothingwornno
 			gt 'changingroom', 'view_swim_list'
 		end
@@ -70,6 +73,7 @@ if $ARGS[0] = 'view_swim_item':
 	else
 		if CloExhibit + 10 > pcs_exhibition: 'You find this swimwear to be more revealing than you are completely comfortable with but that makes it quite exciting too.'
 		act 'Wear':
+			gs 'underwear', 'remove'
 			gs 'clothing', 'wear', $ARGS[1], ARGS[2]
 			gt 'changingroom', 'view_swim_list'
 		end

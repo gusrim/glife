@@ -1,27 +1,5 @@
 # dina
 
-$gladbelo = {
-	cla
-	*clr
-	minut += suhbelo2 * 3
-	clrbelo += suhbelo2
-	suhbelo2 = 0
-	pcs_mood -= 10
-	elektro += 10
-
-	if $clothingworntype ! 'nude':
-		'<center><img <<$set_imgh>> src="images/pc/activities/iron_dressed.jpg"></center>'
-	elseif tanga = 1:
-		'<center><img <<$set_imgh>> src="images/pc/activities/iron_underwear.jpg"></center>'
-	else
-		'<center><img <<$set_imgh>> src="images/pc/activities/iron_naked.jpg"></center>'
-	end
-
-	'You iron your underwear.'
-
-	act 'Leave':gt $curloc
-}
-
 $brodila = {
 	sexpartkno = 0
 	if housr = 1:
@@ -122,11 +100,11 @@ $rexpot = {
 	gs 'boyStat', 'A166'
 }
 
-!! therapist values/dynamics:
-timeTresh = 300
-
 $hypnoDaychange = {	
-	!Therapist - missed visitation effect
+	!!if for some reason hypnoTime is too high
+	if hypnoTime > 15:hypnoTime = 15
+	timeTresh = 76 - 4*hypnoType
+	!!Withdrawal effect begings if too strong influence and no visitation
 	if daystart-hypnoDay > 7: 
 		if hypnoAddict = 1:
 			hypnoWithdrawal = 1
@@ -134,7 +112,7 @@ $hypnoDaychange = {
 			hypnoWithdrawal = 2
 		end
 	end
-	!daily weaning of therapist influence
+	!!daily weaning of therapist influence
 	if hypnoStrength > 0: hypnoStrength -= 1
 	if hypnoTime > 0 and hypnoStrength = 0:
 		if hypnoAddict = 0:
@@ -157,34 +135,41 @@ $hypnoDaychange = {
 }
 
 $hypnoAddiction = {
-	if cumloc[0] = 1:
+	if cumloc[0] = 1 or cumloc[3] = 1:
+		killvar 'missCum'
 		if hypnoAddict = 1:
-			pcs_mood += 2
-		else
 			pcs_mood += 5
+		else
+			pcs_mood += 10
 		end
 	else
-		missCum += hypnoTime
+		missCum += 1
 	end
 	
-	if missCum >= timeTresh:
+	if missCum > timeTresh:
 		if hypnoAddict = 1:
 			pcs_mood -= 5
-			pcs_horny += 5
+			pcs_horny += 10
 		else
 			pcs_mood -= 10
-			pcs_horny += 10
+			pcs_horny += 20
 		end
 	end
 	
-	if hypnoWithdrawal > 0 and missCum >= timeTresh and pcs_sprt > 0:
+	if hypnoWithdrawal > 0:
 		if hypnoWithdrawal = 1:
-			sprt_deg -= 1
-		else
-			sprt_deg -= 2
+			if missCum >= timeTresh:
+				sprt_deg -= 2*hypnoAddict
+				pcs_mood -= 10
+			else
+				if rand(0,1) = 0:sprt_deg -= hypnoAddict
+				pcs_mood -= 5
+			end
 		end
 	end
 }
+
+!!---------------
 
 $prezik = {
 	if prezik > 0:

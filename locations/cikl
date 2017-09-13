@@ -1,8 +1,38 @@
 # cikl
 
+!!----------------------------------------------------------------------------
+!! Time calculations
+
 day += 1
 week += 1
 hour -= 24
+
+if day > monthsEnd[month]:
+	day -= monthsEnd[month]
+	month += 1
+
+	if month > 12: month = 1 & year += 1
+
+	!!MJ: Dont think that one is needed. But it was in the original loop.
+	if month < 1: month = 1
+
+	$month = $monthName[month]
+end
+
+!!MJ: Dont think that one is needed. But it was here already.
+if day <= 0:day = 1
+
+if week > 7:
+	:loopweek
+	week -= 7
+	husbandrink = 0
+
+	if military = 1:military = 0
+
+	if week > 7:jump 'loopweek'
+end
+
+!!----------------------------------------------------------------------------
 
 !!Fame call to update all the fame variables
 gs 'fame'
@@ -11,6 +41,12 @@ gs 'fame'
 if (film > 0 or pornstack = 1) and pfilmNO = 0 and pfilmSTOP = 0:
 	if pfilmday[0] > 0: gs 'pornschedule', 'pornmiss'
 	gs 'pornschedule', 'schedule'
+end
+
+!!acting strings to set available jobs
+if casting = 1:
+	acting_string1 = rand(10000000000,199999999999)
+	acting_string2 = rand(10000000000,199999999999)
 end
 
 gs 'daystart'
@@ -60,6 +96,19 @@ if katjaPreg = 0 and month >= 2:
 	end
 end
 
+!! after having surgery you will be in recuperation for a few days
+
+if surgeryday ! '':
+	if daystart - 7 <= surgeryday:
+		dailyhealthimprov = (daystart - surgeryday) * 50
+		pcs_health = dailyhealthimprov
+		recuperation = 1
+	else
+		killvar 'recuperation'
+		killvar 'dailyhealthimprov'
+	end
+end
+
 !!Street events daily reset
 streetevent_hour = -2
 
@@ -70,6 +119,10 @@ i = 1
 Clothingstock[i] = rand (0,500)
 i += 1
 if i <= 147:jump 'loopprice'
+
+!!underwear rng
+cheap_panty_number = rand(1,37)
+cheap_bra_number = rand(1,19)
 
 if coatH[defaultcoat] <= 0: defaultcoat = 0
 
@@ -264,6 +317,9 @@ if prezikmsg = 2: prezikmsg = 3
 !!	pillcon			: The number for the current birth control chemical level.
 !!	pilldays		: The number of consecutive days (you believe) you have taken your pill
 
+if Luth > 225 and placebopart <= 0: placebopart = 8
+placebopart -= 1
+
 if tabletkishot <= 0: pillcon -= 1000 & pillcon2 -= 1000
 if pillcon < 0:	pillcon = 0
 if pillcon2 < 0: pillcon2 = 0
@@ -398,7 +454,6 @@ if tabletkicheck = 1 and tabletkichday < daystart:
 			'You take your birth control pill for the day.'
 			pilldaychk = 1
 			gs 'din_bad','takepill'
-			end
 			if rand(0,7) = 0 and tabletkiday >= (daystart - 1): tabletkipd += 1
 			tabletkiday = daystart
 			tabletkipt = 0
@@ -419,6 +474,10 @@ end
 pilldaychk = 0
 if pilldays > 18: pilldays = 18
 if pilldays < 0: pilldays = 0
+!!
+$MenCal[] = $str(cycle)
+if ArrSize('$MenCal') = 30: killvar '$MenCal',0
+
 
 !!------------------------------------------------------------------------------------------------------------
 
@@ -429,8 +488,6 @@ end
 
 if age < 18 and rand (0,2) = 0 and pcs_leghair > 0: pcs_leghair -= 1
 
-if suhbelo > 0:suhbelo2 = suhbelo & suhbelo = 0
-
 if pcs_breath = 1:pcs_breath = 0
 
 if cheatNoEat = 1 and dounspell = 1:fat += 15
@@ -438,7 +495,21 @@ if cheatNoEat = 1 and dounspell = 1:fat += 15
 !!STD check
 if SifacOnce = 1:Sifilis += 1
 if GerpesOnce = 1:Gerpes += 1
-if TriperOnce = 1:Triper += 1
+if TriperOnce = 1:
+	if Triper > 0: 
+		Triper += 1
+	end
+	if TriperOral > 0:
+		TriperOral += 1
+	end
+	If TriperOral > 14 and TriperNapr = 0:
+		if rand(TriperOral,100) > 80:
+		TriperOral = 0
+		if Triper = 0:TriperOnce = 0
+		TriperOralSigns = 0
+		end
+	end
+end
 if KandidozOnce = 1:Kandidoz += 1
 
 VeneraN = 0
@@ -511,7 +582,7 @@ end
 !!	Arousal
 !!------------------------------------------------------------------------------------------------------------
 
-if StoryLine = 0 or altQS = 1:
+if magikDostup = 0:
 	if pcs_horny < 100:pcs_horny += pcs_vag
 else
 	if pcs_vag = 0:
@@ -632,12 +703,16 @@ end
 !!Fame degradation
 gs 'fame', 'deg'
 
+!!Traits
+gs 'traits', 'overnight'
+
+
 !!------------------------------------------------------------------------------------------------------------
 !!	Maruda hair mod
 !!------------------------------------------------------------------------------------------------------------
 !! Max. Hair length 600mm, or 60cm, which should be somewhere in the lower back area.
 !! Hair grows 1mm each day, it takes 20 months (1 month = 30 days) to regrow the hair from 0.
-if pcs_hairlng < 1001:pcs_hairlng += 1
+if pcs_hairlng < 1001 and hairgrowcht = 0:pcs_hairlng += 1
 
 if pcs_haircol ! nathcol: 
 	dyefade -=1
@@ -654,7 +729,11 @@ end
 
 !!------------------------------------------------------------------------------------------------------------
 
+!! Clothing wear and tear
 gs 'starenie'
+
+!! Underwear cleaning at home
+if tanwork = 1 or (StoryLine = 1 and ParHomeBlock = 0): gs 'underwear', 'cleaning'
 
 if nark > 60:
 	nark = 60
@@ -726,9 +805,35 @@ elseif painpub = 1:
 	end
 end
 
+!!---- Calculation of lash extension degradation and false lash removal
+if pcs_lashes > 2:
+	if lashextensionstyle >= 1:
+		lashextensionduration -= 1
+		if lashextensionduration >= 1 and lashextensionduration <= 4:
+			'It''s time for you to do your maintenance on your lash extensions; you should go to the salon or you risk growing them all out.'
+		end
+		if lashextensionduration <= 0:
+			'You waited too long to do maintenance on your lash extensions; there''s too little there to notice or work with at this point.'
+			pcs_lashes = pcs_naturallashes
+			killvar lashextensionstyle
+			killvar lashextensionduration
+			killvar lashextensionnew			
+		end
+	end
+	if false_lashes > 0:
+		false_lashes -= 1
+		if false_lashes = 0:
+			'Your false lashes came off in the night; there''s no recovering them now.'
+			pcs_lashes = pcs_naturallashes
+		else
+			'Somehow, your lashes managed to stay attached throughout the night. You might be able to get away with wearing them another day straight.'
+		end
+	end
+end
+	
+
 prezikProver += 1
 if pirs_pain_ton > 0:pirs_pain_ton -= 1
-if brow > 0 and browper = 0:brow -= 1
 if shorthair = 1:
 	shorthairday += 1
 	if shorthairday >= 45:shorthairday = 0 & shorthair = 0
@@ -823,6 +928,15 @@ end
 petersexday = 0
 klismaday1 = 0
 
+!! Resetting relationships that go over the max
+
+:toptemprel
+if temprel < 250:
+	temprel +=1
+	if npc_rel['A'+'<<temprel>>'] > 100:npc_rel['A'+'<<temprel>>'] = 100
+	jump 'toptemprel'
+end
+killvar 'temprel'
 !!------------------------------------------------------------------------------------------------------------
 !!	Banking
 !!------------------------------------------------------------------------------------------------------------
@@ -990,33 +1104,16 @@ end
 !!------------------------------------------------------------------------------------------------------------
 
 
-if day > monthsEnd[month]:
-	day -= monthsEnd[month]
-	month += 1
-
-	if month > 12: month = 1 & year += 1
-
-	!!MJ: Dont think that one is needed. But it was in the original loop.
-	if month < 1: month = 1
-
-	$month = $monthName[month]
-end
-
-!!MJ: Dont think that one is needed. But it was here already.
-if day <= 0:day = 1
-
-if week > 7:
-	:loopweek
-	week -= 7
-	husbandrink = 0
-
-	if military = 1:military = 0
-
-	if week > 7:jump 'loopweek'
-end
-
 killvar 'holyday'
 killvar 'kanikuli'
+
+!!sisboyparty
+!!-1 - don''t go to the party
+!!0 - don''t know about parties
+!!1 - knows about the parties
+!!2 - agreed to go to the party
+!!3 - Missed the party
+
 if storyline = 1:
 !!Party refresh if you didn''t see sis
 	if week = 1 and sisboyparty ! 2:
@@ -1026,9 +1123,11 @@ if storyline = 1:
 			sisboyparty_day = daystart + rand(3,5)
 		end
 	end
+	
+	if sisboyparty = 2 and sisboyparty_day > daystart: sisboyparty = 3
 
 !!missed graduation
-	if month = 5 and day = 25:
+	if month = 5 and day = 26:
 		if schoool_year = 2001 and year = 2018 and kanikuli ! 7:
 			grad_miss = daystart + 1
 		elseif schoool_year = 2000 and year = 2017 and kanikuli ! 7:

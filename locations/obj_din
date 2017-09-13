@@ -1,5 +1,4 @@
 # obj_din
-
 if $ARGS[0] = 'show_tits':
 	view 'images/pc/body/tits/t<<tits>>.jpg'
 end
@@ -42,7 +41,9 @@ if $ARGS[0] = 'descrip':
 	pl '<<$pcs_apprnc>>'
 	
 	if preg = 1:
-		if pregtime > 196:
+		if denypreg = 1 and pregtime > 75:
+			pl 'You seem to be putting on a bit of weight, your belly is definitely bigger.'
+		elseif pregtime > 196:
 			pl 'You''re rapidly approaching the finish line and have entered the third trimester. Your belly is so big now that you can barely remember what your toes look like. Your back hurts most of the time and it is a struggle to get to your feet if you sit down. The baby seems to think that your bladder makes a nice punching bag.'
 		elseif pregtime > 130:
 			pl 'Your belly is quite swollen now and shows under even the loosest of clothes. You find yourself constantly caressing your belly without realizing it.'
@@ -180,7 +181,7 @@ end
 if $ARGS[0] = 'sex_skills':
 	clr
 	pl'<center><img src="images/system/icon/stats.png"><br></center>'
-	pl'<a href="exec:gs ''obj_din'', ''stats''">Return to skills main page</a>'
+	pl'<a href="exec:gs ''obj_din'', ''stats''">To skills main page</a><right><a href="exec:gs ''obj_din'', ''skills''">To characteristics page</a></right>'
 	nl
 	pl '<b>Sexual characteristics</b>'
 	nl
@@ -248,6 +249,7 @@ if $ARGS[0] = 'stats':
 	nl
 	pl' <a href="exec:gs ''obj_din'', ''stats_gen''">View general statistics</a>'
 	pl' <a href="exec:gs ''obj_din'', ''stats_achievements''">View achievements</a>'
+	pl' <a href="exec:gs ''obj_din'', ''skills''">View characteristics page</a>'
 	pl' <a href="exec:gs ''obj_din'', ''stats_sex''">View sex statistics</a>'
 	nl
 	nl
@@ -287,48 +289,95 @@ if $ARGS[0] = 'stats_gen':
 				*P ' <a href="exec:karta -= 6000 & housr = 1 & BuyHous = 2 & ArendHouseSL += 30 & gs ''$menu_obnovit''">bank account</a>'
 			elseif karta + bankDebtLimit >= 6000: 
 				*P ' <a href="exec:karta -= 6000 & housr = 1 & BuyHous = 2 & ArendHouseSL += 30 & gs ''$menu_obnovit''">bank account, but you will be overdrawn.</a>'
-			end	
+			end
 		else
 			*P ' But you can''t afford to pay the rent right now.'
 		end
 		nl
 	end
 	
-	if kid > 0:
-		i = 1
-		if kid = 1:
-			pl 'You have a child, a <<$polreb[1]>> named <<$kidname[1]>>. Born <<daykid[1]>>-<<monthkid[1]>>-<<yearkid[1]>>. Aged <<kidage[1]>>'
-		else
-			p 'You have children'
-			:LoopKidCounter
-			if i <= kid:
-				if i > 1: p ','
-				p ' a <<$polreb[i]>> named <<$kidname[i]>>. Born <<daykid[i]>>-<<monthkid[i]>>-<<yearkid[i]>>. Aged <<kidage[i]>>'
-				i += 1
-				jump 'LoopKidCounter'
-			end
-			pl '.'
-		end
-		nl
+	if kid = 1:
+		pl 'You have 1 child:'
+	else
+		pl 'You have <<kid>> children:'
 	end
- 	if workPTU > 1:pl 'Reputation as a teacher <<teachlevel>>'
+	if kid > 0:
+		k = 0
+:kidloop
+		if k < kid:
+			gs 'obj_din','kidlist',k
+			k += 1
+			jump 'kidloop'
+		end
+	end
+	if workPTU > 1:pl 'Reputation as a teacher <<teachlevel>>'
 	nl
 	if npc_QW['A192'] > 0:pl 'Friendship with Nastya <<npc_QW[''A192'']>>'
-	if tanya > 0:pl 'Friendship with Tanya <<tanya>>'
-	if kat > 0:pl 'Friendship with Kate <<kat>>'
-	if vika > 0:pl 'Friendship with Vika <<vika>>'
-	if Irina > 0:pl 'Friendship with Irene <<Irina>>'
-	if Tamara > 0:pl 'Friendship with Tamara <<Tamara>>'
+	if npc_rel['A218'] > 0:pl 'Friendship with Tanya <<npc_rel[''A218'']>>'
+	if npc_rel['A219'] > 0:pl 'Friendship with Kat <<npc_rel[''A219'']>>'
+	if npc_rel['A220'] > 0:pl 'Friendship with Vika <<npc_rel[''A220'']>>'
+	if npc_rel['A93'] > 0:pl 'Friendship with Ira <<npc_rel[''A93'']>>'
+	if npc_rel['A43'] > 0:pl 'Friendship with Tamara <<npc_rel[''A43'']>>'
 	if alla > 0:pl 'Friendship with Alla <<alla>>'
 	if masha > 0:pl 'Friendship with Masha <<masha>>'
-	if Givi > 0:pl 'Friendship with Givi K. <<Givi>>'
-	if Ashot > 0:pl 'Friendship with Ashot <<Ashot>>'
+	if npc_rel['A41'] > 0:pl 'Friendship with Givi K. <<npc_rel[''A41'']>>'
+	if npc_rel['A42'] > 0:pl 'Friendship with Ashot <<npc_rel[''A42'']>>'
 	if Dmitry > 0:pl 'Friendship with Dima <<Dmitry>>'
 	if afra > 0:pl 'Friendship with blacks <<afra>>'
 	if npc_rel['A69'] > 0:pl'Friendship with Mikhail Nikolaevich  <<npc_rel[''A69'']>>'
 
 	!!!WD: Formatting
-	if (Irina + Givi + Ashot + Tamara + Dmitry + afra + gosh + vika + kat + npc_QW['A192'] + tanya) > 0:nl
+	if (npc_rel['A93'] + npc_rel['A41'] + npc_rel['A42'] + npc_rel['A43'] + afra + gosh + npc_rel['A220'] + npc_rel['A219'] + npc_QW['A192'] + npc_rel['A218']) > 0:nl
+end
+
+if $ARGS[0] = 'kidlist':
+	kidnumber = ARGS[1]
+	if kidage[kidnumber] < 1:
+		if (month - monthkid[kidnumber]) < 1 and (day-daykid[kidnumber]) < 7:
+			kiddaycalc[kidnumber] = day - daykid[kidnumber]	
+			if kiddaycalc[kidnumber] = 0:
+				$kidagetext[kidnumber] = 'was born today'
+			elseif kiddaycalc[kidnumber] = 1:
+				$kidagetext[kidnumber] = 'is <<kiddaycalc[kidnumber]>> day old'
+			else
+				$kidagetext[kidnumber] = 'is <<kiddaycalc[kidnumber]>> days old'
+			end
+		elseif (month - monthkid[kidnumber]) < 1 :
+			kiddaycalc[kidnumber] = (day - daykid[kidnumber]) / 7
+			if kiddaycalc[kidnumber] = 1:
+				$kidagetext[kidnumber] = 'is <<kiddaycalc[kidnumber]>> week old'
+			else
+				$kidagetext[kidnumber] = 'is <<kiddaycalc[kidnumber]>> weeks old'
+			end
+		else
+			kidmonthcalc[kidnumber] = (month - monthkid[kidnumber])
+			if kidmonthcalc[kidnumber] = 1:
+				$kidagetext[kidnumber] = 'is <<kidmonthcalc[kidnumber]>> month old'
+			else
+				$kidagetext[kidnumber] = 'is <<kidmonthcalc[kidnumber]>> months old'
+			end
+		end
+	else
+		if kidage[kidnumber] = 1:
+			$kidagetext[kidnumber] = 'is <<kidage[kidnumber]>> year old'
+		else
+			$kidagetext[kidnumber] = 'is <<kidage[kidnumber]>> years old'
+		end
+	end
+		if polkid[kidnumber] = 0:
+			$sdtext[kidnumber] = 'daughter'
+		else
+			$sdtext[kidnumber] = 'son'
+		end
+		if polkid[kidnumber] = 0:
+			$kidPosProPN[kidnumber] = 'She'
+		else
+			$kidPosProPN[kidnumber] = 'He'
+		end
+	p'You have a <<$sdtext[kidnumber]>> named <<$kidname[kidnumber]>>. <<$kidPosProPN[kidnumber]>> <<$kidagetext[kidnumber]>>. <<$kidname[kidnumber]>>''s date of birth is <<daykid[kidnumber]>>-<<monthkid[kidnumber]>>-<<yearkid[kidnumber]>>'
+	pl '.'
+	nl
+	killvar 'kidnumber'
 end
 
 if $ARGS[0] = 'stats_achievements':
@@ -398,14 +447,19 @@ if $ARGS[0] = 'stats_achievements':
 	end
 	nl
 	!!!
-	if maxdamage > 0:pl 'The impact force on the dynamometer <<maxdamage>> kgN' & nl
-	if modelfoto > 0 and hidden_modelfoto = 0:
-		pl 'You have been photographed naked <<modelfoto>> times'
-	elseif modelfoto = 0 and hidden_modelfoto > 0:
-		pl 'You have been photographed naked <<hidden_modelfoto>> times, but you do not even know about it'
-	elseif modelfoto > 0 and hidden_modelfoto > 0:
-		pl 'You have been photographed naked <<modelfoto+hidden_modelfoto>> times, but you do know only about <<modelfoto>> photoshoot'
+	if modelfoto > 0:
+		pl'<<modelfoto>> - Number of times you have worked as a model'
+		if modelfoto_fashion > 0: pl'<<modelfoto_fashion>> - Number of times you have been a fashion model'
+		if modelfoto_ero_clo > 0: pl'<<modelfoto_ero_clo>> - Number of times you have been an erotic clothing model'
+		if modelfoto_bikini > 0: pl'<<modelfoto_bikini>> - Number of times you have been a bikini modelling'
+		if modelfoto_lingerie > 0: pl'<<modelfoto_lingerie>> - Number of times you have been a lingerie model'
+		if modelfoto_nip > 0: pl'<<modelfoto_nip>> - Number of times you have been a model with intentional nip slips'
+		if modelfoto_topless > 0: pl'<<modelfoto_topless>> - Number of times you have been a topless model'
+		if modelfoto_nude > 0: pl'<<modelfoto_nude>> - Number of times you have been a nude model'
+		nl
 	end
+
+	if maxdamage > 0:pl 'The impact force on the dynamometer <<maxdamage>> kgN' & nl
 
 	if stripdancesum > 0 and hidden_stripdancesum = 0:
 		pl 'You have been dancing <<stripdancesum>> times in the stripclub'
@@ -419,7 +473,7 @@ if $ARGS[0] = 'stats_achievements':
 	if diplom = 1:pl 'You graduated.'
 	if teachlevel > 0:pl 'Your credibility as a teacher is <<teachlevel>>'
 	!WD:FORMATING
-	if (maxdamage + modelfoto + stripdancesum + profiDanceTime + SchoolAtestat + diplom + teachlevel) > 0:nl
+	if (maxdamage + stripdancesum + profiDanceTime + SchoolAtestat + diplom + teachlevel) > 0:nl
 	
 	if film > 0:
 		gs 'pornhist', 'short'
@@ -1107,7 +1161,7 @@ if $ARGS[0] = 'pain':
 	end
 	if pain['asshole'] + (agape * 10) > 0:
 		if pain['asshole'] + (agape * 10) > 70:
-			pl '<b><font color="red">You an extremely sore anus and it emits blood.</font></b>'
+			pl '<b><font color="red">You an extremely sore anus and it is bleeding.</font></b>'
 		elseif pain['asshole'] + (agape * 10) > 40:
 			pl '<b><font color="red">You have a very sore anus.</font></b>'
 		else
@@ -1316,6 +1370,24 @@ end
 
 if $ARGS[0] = 'clothes':
 	clr
+	pl'<center><a href="exec:gs''$menu_obnovit''"><b>Clothes</b></a></center>'	
+	!move image define to $body_image
+	
+	!display coat
+	$img_temp = FUNC('$body_image','coat')
+	if $img_temp ! null:  pl '<a href="exec:view ''<<$img_temp>>''"><img <<$set_imgh>> src="<<$img_temp>>"></a>'
+	pl '<<$body_image_msg>>'
+
+	pl ''
+	
+	!display cloth
+	$img_temp = FUNC('$body_image','clothes')
+	if $img_temp ! null: pl '<a href="exec:view ''<<$img_temp>>''"><img <<$set_imgh>> src="<<$img_temp>>"></a>'	
+	pl '<<$body_image_msg>>'
+	
+	killvar 'img_temp'
+	killvar 'body_image_msg'	
+	!{	
 	if defaultcoat = 0:
 		pl 'You have no default coat set.'
 
@@ -1336,13 +1408,13 @@ if $ARGS[0] = 'clothes':
 
 	pl ''
 
-	if $clothingworntype = 'nude' and towel = 1 and tanga = 0:
+	if $clothingworntype = 'nude' and towel = 1 and $pantyworntype = 'none':
 		view 'images/pc/clothing/towel.jpg'
 		pl'You are only wearing a towel'
-	elseif $clothingworntype = 'nude' and tanga = 1:
+	elseif $clothingworntype = 'nude' and $pantyworntype ! 'none':
 		view 'images/pc/clothing/nude.jpg'
 		pl'You are only wearing panties'
-	elseif $clothingworntype = 'nude' and tanga = 0:
+	elseif $clothingworntype = 'nude' and $pantyworntype = 'none':
 		view 'images/pc/clothing/nude1.jpg'
 		pl'You are completely naked.'
 	else
@@ -1370,10 +1442,53 @@ if $ARGS[0] = 'clothes':
 		end
 
 	end
+	}
+end
+
+if $ARGS[0] = 'panties':
+	clr
+	pl'<center><a href="exec:gs''$menu_obnovit''"><b>Panties</b></a></center>'	
+	$img_temp = FUNC('$body_image','panties')
+	pl '<a href="exec:view ''<<$img_temp>>''"><img <<$set_imgh>> src="<<$img_temp>>"></a>'
+	pl '<<$body_image_msg>>'
+	killvar 'img_temp'
+	killvar 'body_image_msg'
+	!{
+	if $pantyworntype = 'none':
+		if pcs_pubes <= 3:
+			view 'images/pc/body/pussy/pussy.jpg'
+		elseif pcs_pubes <= 10:
+			view 'images/pc/body/pussy/stpussy.jpg'
+		elseif pcs_pubes <= 20:
+			view 'images/pc/body/pussy/spussy.jpg'
+		else
+			view 'images/pc/body/pussy/hpussy.jpg'
+		end
+	else
+		view FUNC('$panty_image', $pantyworntype, pantywornnumber)
+	end
+	}
+end
+
+if $ARGS[0] = 'bra':
+	clr
+	pl'<center><a href="exec:gs''$menu_obnovit''"><b>Bra</b></a></center>'	
+	$img_temp = FUNC('$body_image','bra')
+	pl '<a href="exec:view ''<<$img_temp>>''"><img <<$set_imgh>> src="<<$img_temp>>"></a>'
+	pl '<<$body_image_msg>>'
+	killvar 'img_temp'
+	killvar 'body_image_msg'
 end
 
 if $ARGS[0] = 'shoes':
 	clr
+	pl'<center><a href="exec:gs''$menu_obnovit''"><b>Shoes</b></a></center>'
+	$img_temp = FUNC('$body_image','shoes')
+	pl '<a href="exec:view ''<<$img_temp>>''"><img <<$set_imgh>> src="<<$img_temp>>"></a>'
+	pl '<<$body_image_msg>>'
+	killvar 'img_temp'
+	killvar 'body_image_msg'
+	!{
 	if $clothingworntype = 'nude' or $shoeworntype = 'none':
 		view 'images/pc/body/feet.jpg'
 	else
@@ -1381,11 +1496,15 @@ if $ARGS[0] = 'shoes':
 
 		pl 'You are wearing ' + FUNC('$shoe_description', $shoeworntype) + '<<shoewornnumber>>.'
 	end
+	}
 end
 		
 		
 if $ARGS[0] = 'body':
 !!	This displays the body image; $bodimgsets[x9] is the folder name
+	!some in-game script may call this to display image, so leave it be
+	view FUNC('$body_image','body')
+	!{
 	if salocatnow >= 1 and salocatnow <= 5:
 		view 'images/pc/body/shape/<<$bodimgsets[((bodset * 10) + 9)]>>/<<salocatnow>>.jpg'
 	elseif salocatnow <= 0:
@@ -1403,8 +1522,43 @@ if $ARGS[0] = 'body':
 			view 'images/pc/body/shape/7.jpg'
 		end
 	end
+	}
 end
 
+if $ARGS[0] = 'menubody':
+	!display image and escription for menu
+	clr
+	pl'<center><a href="exec:gs''$menu_obnovit''"><b>Body</b></a></center>'
+	$img_temp = FUNC('$body_image','body')
+	pl '<a href="exec:view ''<<$img_temp>>''"><img <<$set_imgh>> src="<<$img_temp>>"></a>'
+	pl '<<$body_image_msg>>'
+	killvar 'img_temp'
+	killvar 'body_image_msg'
+end
+
+if $ARGS[0] = 'menuface':
+	!display image and escription for menu
+	clr
+	pl'<center><a href="exec:gs''$menu_obnovit''"><b>Face</b></a></center>'
+	$img_temp = FUNC('$face_image')
+	pl '<a href="exec:view ''<<$img_temp>>''"><img <<$set_imgh>> src="<<$img_temp>>"></a>'
+	killvar 'img_temp'
+	if avatar_hair = 1:
+		pl'Your hair: <<$av_hair>>.'
+	else
+		pl'<<$hair>>'
+	end
+	if defcurly = 0 and curly > 0:pl 'Your curls are good for another <<curly>> days.'
+	if defcurly = 1 and straight > 0:pl 'Your hair should be straight for another <<straight>> days.'
+	nl
+
+	pl '<<$lip>>'
+	pl '<<$pcs_throat>>'
+	pl '<<$skin>>'
+	pl '<<$glaza>>'
+	pl '<<$pcs_makeup>>.'
+
+end
 
 !!Image displays for tattoos
 if $ARGS[0] = 'tattooarm':
@@ -1477,6 +1631,7 @@ end
 
 if $ARGS[0] = 'tattoos':
 	clr
+	pl'<center><a href="exec:gs''$menu_obnovit''"><b>Tatoos</b></a></center>'
 	tatcounter = 0
 	if tatarm > 0:tatcounter = 1 & pl'<a href="exec: gs ''obj_din'', ''tattooarm''">Tattoo on your arm</a>'
 	if tatass > 0:tatcounter = 1 & pl'<a href="exec: gs ''obj_din'', ''tattooass''">Tattoo on your ass</a>'
@@ -1503,6 +1658,7 @@ end
 
 if $ARGS[0] = 'piercing':
 	clr
+	pl'<center><a href="exec:gs''$menu_obnovit''"><b>Piercing</b></a></center>'
 	if pirsA = 0 and pirsB = 0 and pirsC = 0 and pirsD = 0 and pirsE = 0 and pirsF = 0 and pirsN = 0 and pirsG = 0 and pirsGL = 0:
 		pl 'You have no piercings.'
 	elseif pirsA = 10000 and pirsB = 10000 and pirsC = 10000 and pirsD = 10000 and pirsE = 10000 and pirsF = 10000 and pirsN = 10000 and pirsG = 10000 and pirsGL = 10000:
@@ -1574,21 +1730,21 @@ if $ARGS[0] = 'records':
 	nl
 	if $bfsex > 0:pl'<<$bfsex>>'
 	nl
-	if pcs_lovers[1] = 1:pl'Your guy <<$loverdesc[1]>> <<$loverbody[1]>> <<$loverbod[1]>> <<$loverface[1]>>.<<$loverdesc[1]>> <<$loverClo[1]>> Relationship <<loverrelation[1]>>, met <<loversdays[1]>> time.'
+	if pcs_lovers[0] = 1:pl'Your guy <<$loverdesc[0]>> <<$loverbody[0]>> <<$loverbod[0]>> <<$loverface[0]>>.<<$loverdesc[0]>> <<$loverClo[0]>> Relationship <<loverrelation[0]>>, met <<loverdays[0]>> time.'
+	if haraklover[0] = 0 and loverrelation[0] > 1:pl'He''s calm and self-possessed character.'
+	if haraklover[0] = 1 and loverrelation[0] > 1:pl'He has a cheerful and sociable character.'
+	if haraklover[0] = 2 and loverrelation[0] > 1:pl'He''s short-tempered and rigid.'
+	nl
+	if pcs_lovers[1] = 1:pl'Your guy <<$loverdesc[1]>> <<$loverbody[1]>> <<$loverbod[1]>> <<$loverface[1]>>.<<$loverdesc[1]>> <<$loverClo[1]>> Relationship <<loverrelation[1]>>, met <<loverdays[1]>> time.'
 	if haraklover[1] = 0 and loverrelation[1] > 1:pl'He''s calm and self-possessed character.'
 	if haraklover[1] = 1 and loverrelation[1] > 1:pl'He has a cheerful and sociable character.'
 	if haraklover[1] = 2 and loverrelation[1] > 1:pl'He''s short-tempered and rigid.'
 	nl
-	if pcs_lovers[2] = 1:pl'Your guy <<$loverdesc[2]>> <<$loverbody[2]>> <<$loverbod[2]>> <<$loverface[2]>>.<<$loverdesc[2]>> <<$loverClo[2]>> Relationship <<loverrelation[2]>>, met <<loversdays[2]>> time.'
+	if pcs_lovers[2] = 1:pl'Your guy <<$loverdesc[2]>> <<$loverbody[2]>> <<$loverbod[2]>> <<$loverface[2]>>.<<$loverdesc[2]>> <<$loverClo[2]>> Relationship <<loverrelation[2]>>, met <<loverdays[2]>> time.'
+
 	if haraklover[2] = 0 and loverrelation[2] > 1:pl'He''s calm and self-possessed character.'
 	if haraklover[2] = 1 and loverrelation[2] > 1:pl'He has a cheerful and sociable character.'
 	if haraklover[2] = 2 and loverrelation[2] > 1:pl'He''s short-tempered and rigid.'
-	nl
-	if pcs_lovers[3] = 1:pl'Your guy <<$loverdesc[3]>> <<$loverbody[3]>> <<$loverbod[3]>> <<$loverface[3]>>.<<$loverdesc[3]>> <<$loverClo[3]>> Relationship <<loverrelation[3]>>, met <<loversdays[3]>> time.'
-
-	if haraklover[3] = 0 and loverrelation[3] > 1:pl'He''s calm and self-possessed character.'
-	if haraklover[3] = 1 and loverrelation[3] > 1:pl'He has a cheerful and sociable character.'
-	if haraklover[3] = 2 and loverrelation[3] > 1:pl'He''s short-tempered and rigid.'
 
 
 	nl
@@ -1673,11 +1829,13 @@ if $ARGS[0] = 'old':
 	addobj 'Skills'
 	addobj 'Statistics'
 	addobj 'Pain'
+	addobj 'Traits'
 	addobj 'Fame'
 	if pcs_magik > 0:addobj 'Magic'
 	addobj 'Face'
 	addobj 'Body'
 	addobj 'Clothing'
+	addobj 'Panties'
 	addobj 'Shoes'
 	addobj 'Tattoos'
 	addobj 'Piercing'
@@ -1686,6 +1844,7 @@ if $ARGS[0] = 'old':
 	addobj 'Notebook'
 	addobj 'Refresh'
 	addobj 'The new menu'
+	addobj 'Game Setting'
 	addobj 'Cheat menu'
 	addobj 'Emergency exit'
 	if disable_autosave = 1:

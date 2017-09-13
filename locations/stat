@@ -87,7 +87,8 @@ cumSUM = cumsumbod/40
 
 if husbizvradd > 5:izvratH = 1
 if husbharmin > 10:harakHusb = 0
-if clrbelo < 0:clrbelo = 0 & tanga = 0
+if clrbelo < 0:clrbelo = 0 & gs 'underwear', 'remove'
+if clrbra < 0:clrbra = 0 & gs 'underwear', 'remove'
 
 if husband = 0:
 	husbizvradd = 0
@@ -160,6 +161,9 @@ else
 	killvar 'pcs_splcstng'
 end
 
+if pcs_dom < 0: SUB = SUB - pcs_dom
+if SUB < 0: pcs_dom = pcs_dom - SUB
+
 if pcs_dom > 100: pcs_dom = 100
 if SUB > 100: SUB = 100
 
@@ -199,8 +203,9 @@ if hypnoAddict = 1 and pcs_horny < 30:
 elseif hypnoAddict = 2 and pcs_horny < 50:
 	pcs_horny = 50
 end
-if cumloc[0] = 1 or hypnoAddict = 0:missCum = 0
-if missCum >= timeTresh:
+if cumloc[0] = 1 or cumloc[3] = 1 or hypnoAddict = 0:
+	killvar 'missCum'
+elseif missCum > timeTresh:
 	if pcs_horny < 90: pcs_horny = 90
 	if preziktype = 0: prezikcount = prezik
 	if preziktype = 2: preziksabo = prezik
@@ -323,19 +328,19 @@ if totminut >= heelsminut + 120:
 			heelsSkilldiff = heelsRequiredskill - pcs_heels
 			if heelsSkilldiff <= 5:
 				heels_exp += rand(3,6)
-				gs 'pain', rand(0,1), 'feet', 'ache'
+				if pain['feet'] < 40: gs 'pain', rand(0,1), 'feet', 'ache'
 			elseif heelsSkilldiff <= 10:
 				heels_exp += rand(5,9)
-				gs 'pain', rand(0,2), 'feet', 'ache'
+				if pain['feet'] < 50: gs 'pain', rand(0,2), 'feet', 'ache'
 			elseif heelsSkilldiff <= 15:
 				heels_exp += rand(7,12)
-				gs 'pain', rand(1,3), 'feet', 'ache'
+				if pain['feet'] < 60: gs 'pain', rand(1,3), 'feet', 'ache'
 			elseif heelsSkilldiff <= 20:
 				heels_exp += rand(9,15)
-				gs 'pain', rand(2,4), 'feet', 'ache'
+				if pain['feet'] < 70: gs 'pain', rand(2,4), 'feet', 'ache'
 			elseif heelsSkilldiff > 20:
 				heels_exp += rand(12,20)
-				gs 'pain', rand(3,5), 'feet', 'ache'
+				if pain['feet'] < 80: gs 'pain', rand(3,5), 'feet', 'ache'
 			end
 		!! Player skill is equal to or higher than the required skill
 		!! Maybe have excessive skill result in no gain, or even a degrading skill?
@@ -358,7 +363,7 @@ if totminut >= heelsminut + 120:
 		heels_deg -= rand(0,1)
 	end
 !!Bimbo shoe check so bonus will be applied
-	if PShoBimbo = 1: bimbosh = 1
+	if PShoStyle = 2: bimbosh = 1
 end
 !!!!!!!!!!!!!!! End heels
 
@@ -382,11 +387,19 @@ if minut >= 60:
 	if scpopt > 1: scpopt = 0
 
 	if insleep = 1:
-		pcs_energy -= (4 + succublvl/2)
+		if amphHigh > 0:
+			pcs_energy -= (4 / amphetamineBonus + succublvl/2)
+		else
+			pcs_energy -= (4 * amphetamineBonus + succublvl/2)
+		end
 		pcs_stam += stammax / 10
 		pcs_sleep -= 4
 	else
-		pcs_energy -= (8 + succublvl)
+		if amphHigh > 0:
+			pcs_energy -= (8 / amphetamineBonus + succublvl)
+		else
+			pcs_energy -= (8 * amphetamineBonus + succublvl)
+		end
 		pcs_stam += stammax / 20
 		pcs_sleep -= 4
 	end
@@ -440,7 +453,16 @@ if minut >= 60:
 	if smoker >= 20:smokerNeed += 1
 	if smokerNeed > 10 and InSleep = 0 and pcs_mood > 20:pcs_mood -= pcs_mood / 10
 	if smokerNeed > 300:smokerNeed = 0 & smoker = 0
-	if StrongNarkota > 0:StrongNarkota -= 1
+	if StrongNarkota > 0:pcs_mood -= (40 / StrongNarkota) & StrongNarkota -= 1
+
+	if amphWithdrawl > 5: amphWithdrawl += 1 & pcs_mood -= (amphWithdrawl / 5)
+	if amphHigh > 0: amphWithdrawl = 2 & amphetamineBonus = 3 & amphHigh -= 1 & amphHigh -= 4 & pcs_mood += (2 * amphHigh)
+	if amphHigh = 0 and amphWithdrawl = 2: 
+		amphetamineBonus = 2 & amphWithdrawl += 1 & pcs_mood -= pcs_mood / 10
+	elseif amphHigh = 0 and amphWithdrawl = 0:
+		amphetamineBonus = 1
+	end
+	if amphWithdrawl > 169: amphWithdrawl = 1 & amphetamineBonus = 1 & amphCount = 0
 	if SLomka > 0 and pcs_mood > 10:SLomka += 1 & pcs_mood -= pcs_mood / 10
 	if SLomka > 100 and StrongNarkota <= 0:SLomka = 0 & SNarkTimes = 0
 
@@ -450,7 +472,7 @@ if minut >= 60:
 		pcs_mood -= 10
 	end
 
-	if tanga = 0 and PCloPants > 0 and $clothingworntype ! 'nude':mosol += 1
+	if $pantyworntype = 'none' and PCloPants > 0 and $clothingworntype ! 'nude':mosol += 1
 
 	if mosol >= 50: pcs_mood -= 5
 
@@ -462,7 +484,7 @@ if minut >= 60:
 	end
 
 	if mosol > 0:
-		if tanga = 1 or $clothingworntype = 'nude':mosol -= rand(0,1)
+		if $pantyworntype ! 'none' or $clothingworntype = 'nude':mosol -= rand(0,1)
 	end
 
 	if pcs_lipbalm > 0:pcs_lipbalm -= 1
@@ -478,81 +500,27 @@ if minut >= 60:
 		if KGManna < KGMannaMax:KGManna += 10
 	end
 
-	if pain['head'] > 0:pain['head'] -= rand(0,1)
-	if pain['hair'] > 0:pain['hair'] -= rand(0,1)
-	if pain['ears'] > 0:pain['ears'] -= rand(0,1)
-	if pain['eyebrows'] > 0:pain['eyebrows'] -= rand(0,1)
-	if pain['eyes'] > 0:pain['eyes'] -= rand(0,1)
-	if pain['cheeks'] > 0:pain['cheeks'] -= rand(0,1)
-	if pain['nose'] > 0:pain['nose'] -= rand(0,1)
-	if pain['mouth'] > 0:pain['mouth'] -= rand(0,1)
-	if pain['lips'] > 0:pain['lips'] -= rand(0,1)
-	if pain['tongue'] > 0:pain['tongue'] -= rand(0,1)
-	if pain['throat'] > 0:pain['throat'] -= rand(0,1)
-	if pain['neck'] > 0:pain['neck'] -= rand(0,1)
-	if pain['back'] > 0:pain['back'] -= rand(0,1)
-	if pain['asscheeks'] > 0:pain['asscheeks'] -= rand(0,1)
-	if pain['asshole'] > 0:pain['asshole'] -= rand(0,1)
-	if pain['hips'] > 0:pain['hips'] -= rand(0,1)
-	if pain['thighs'] > 0:pain['thighs'] -= rand(0,1)
-	if pain['legL'] > 0:pain['legL'] -= rand(0,1)
-	if pain['legR'] > 0:pain['legR'] -= rand(0,1)
-	if pain['feet'] > 0:pain['feet'] -= rand(0,1)
-	if pain['toes'] > 0:pain['toes'] -= rand(0,1)
-	if pain['shoulders'] > 0:pain['shoulders'] -= rand(0,1)
-	if pain['armL'] > 0:pain['armL'] -= rand(0,1)
-	if pain['armR'] > 0:pain['armR'] -= rand(0,1)
-	if pain['hands'] > 0:pain['hands'] -= rand(0,1)
-	if pain['fingers'] > 0:pain['fingers'] -= rand(0,1)
-	if pain['chest'] > 0:pain['chest'] -= rand(0,1)
-	if pain['breasts'] > 0:pain['breasts'] -= rand(0,1)
-	if pain['nipples'] > 0:pain['nipples'] -= rand(0,1)
-	if pain['ribs'] > 0:pain['ribs'] -= rand(0,1)
-	if pain['tummy'] > 0:pain['tummy'] -= rand(0,1)
-	if pain['pubic'] > 0:pain['pubic'] -= rand(0,1)
-	if pain['vaginal'] > 0:pain['vaginal'] -= rand(0,1)
-	if pain['clitoris'] > 0:pain['clitoris'] -= rand(0,1)
-	if pain['urethra'] > 0:pain['urethra'] -= rand(0,1)
-	if pain['cervix'] > 0:pain['cervix'] -= rand(0,1)
+!! pain[0] = pain['total'] , pain[1] = pain['damage'] , pain[2] = pain['relief']
+	i = arrsize('pain')
+:statpainloop
+	if i > 0:
+		i -= 1
+		pain[i] -= rand(0,1)
+		if pain[i] < 0: pain[i] = 0
+		jump 'statpainloop'
+	end
 
-	! fix for pain going into negatives and "increasing"
-	if pain['head'] < 0:pain['head'] = 0
-	if pain['hair'] < 0:pain['hair'] = 0
-	if pain['ears'] < 0:pain['ears'] = 0
-	if pain['eyebrows'] < 0:pain['eyebrows'] = 0
-	if pain['eyes'] < 0:pain['eyes'] = 0
-	if pain['cheeks'] < 0:pain['cheeks'] = 0
-	if pain['nose'] < 0:pain['nose'] = 0
-	if pain['mouth'] < 0:pain['mouth'] = 0
-	if pain['lips'] < 0:pain['lips'] = 0
-	if pain['tongue'] < 0:pain['tongue'] = 0
-	if pain['throat'] < 0:pain['throat'] = 0
-	if pain['neck'] < 0:pain['neck'] = 0
-	if pain['back'] < 0:pain['back'] = 0
-	if pain['asscheeks'] < 0:pain['asscheeks'] = 0
-	if pain['asshole'] < 0:pain['asshole'] = 0
-	if pain['hips'] < 0:pain['hips'] = 0
-	if pain['thighs'] < 0:pain['thighs'] = 0
-	if pain['legL'] < 0:pain['legL'] = 0
-	if pain['legR'] < 0:pain['legR'] = 0
-	if pain['feet'] < 0:pain['feet'] = 0
-	if pain['toes'] < 0:pain['toes'] = 0
-	if pain['shoulders'] < 0:pain['shoulders'] = 0
-	if pain['armL'] < 0:pain['armL'] = 0
-	if pain['armR'] < 0:pain['armR'] = 0
-	if pain['hands'] < 0:pain['hands'] = 0
-	if pain['fingers'] < 0:pain['fingers'] = 0
-	if pain['chest'] < 0:pain['chest'] = 0
-	if pain['breasts'] < 0:pain['breasts'] = 0
-	if pain['nipples'] < 0:pain['nipples'] = 0
-	if pain['ribs'] < 0:pain['ribs'] = 0
-	if pain['tummy'] < 0:pain['tummy'] = 0
-	if pain['pubic'] < 0:pain['pubic'] = 0
-	if pain['vaginal'] < 0:pain['vaginal'] = 0
-	if pain['clitoris'] < 0:pain['clitoris'] = 0
-	if pain['urethra'] < 0:pain['urethra'] = 0
-	if pain['cervix'] < 0:pain['cervix'] = 0
-	
+!! Panty happiness gain
+	if pcs_mood < 60 and $pantyworntype = 'kats': pcs_mood += 2
+	if pcs_mood < 60 and $braworntype = 'kats': pcs_mood += 2
+
+!!Arousal adjustments
+	if ($pantyworntype = 'exhibitionist' and $braworntype = 'exhibitionist') and pcs_horny < 25:
+		pcs_horny += 10
+	elseif pcs_horny < 10 and ($pantyworntype = 'exhibitionist' or $braworntype = 'exhibitionist'):
+		pcs_honry += 5
+	end
+
 	if aphrodisiac_timer >= 1:
 		if pcs_horny < 80:
 			pcs_horny = 80
@@ -562,7 +530,7 @@ if minut >= 60:
 		aphrodisiac_timer -= 1
 	end
 
-	if tanga = 1 and clit_size >= 25:pcs_horny += 20
+	if $pantyworntype ! 'none' and clit_size >= 25 and pcs_horny < 60:pcs_horny += 20
 
 	if insleep = 0:
 		pcs_sweat += rand(0,1)
@@ -577,6 +545,8 @@ if minut >= 60:
 	if hantslutsex > 0: hantslutsex -= 1
 	if mira_go_blok > 0: mira_go_blok -= 1
 	if mira_no_home > 0: mira_no_home -= 1
+
+	gs 'traits', 'hourly'
 
 	gs 'outdoors', 'weather'
 
@@ -927,16 +897,18 @@ else
 	$pcs_willpwr = '<font color="red">You are on the verge of madness.</font>'
 end
 
-if pcs_mood >= 100:
-	$pcs_mood = '<font color="green">You are in a good mood.</font>'
-elseif pcs_mood >= 75:
-	$pcs_mood = '<font color="blue">You have a normal mood.</font>'
-elseif pcs_mood >= 50:
-	$pcs_mood = '<font color="brown">You are in a bad mood.</font>'
-elseif pcs_mood >= 25:
+if pcs_mood >= 80:
+	$pcs_mood = '<font color="green">You are in a great mood.</font>'
+elseif pcs_mood >= 60:
+	$pcs_mood = '<font color="blue">You are in a good mood.</font>'
+elseif pcs_mood >= 40:
+	$pcs_mood = '<font color="brown">You are in an OK mood.</font>'
+elseif pcs_mood >= 20:
+	$pcs_mood = '<font color="orange">You are in a bad mood.</font>'
+elseif pcs_mood >= 5:
 	$pcs_mood = '<font color="red">You are in a terrible mood.</font>'
 else
-	$pcs_mood = '<font color="red">Your mood is stuck in the gutter.</font>'
+	$pcs_mood = '<font color="red">You are really depressed and need to improve your mood.</font>'
 end
 
 if pcs_energy >= 80:
@@ -987,9 +959,10 @@ if hour >= 8 and hour < 14 and week < 6 and StoryLine > 0 and SchoolAtestat = 0 
 	schoolProgulDay = daystart
 end
 
+if cumcondslip <= 0: cumcondslip_deep = 0
+
 if insleep = 0: gs 'stat_display'
 
-if cumcondslip <= 0: cumcondslip_deep = 0
 
 --- stat ---------------------------------
 

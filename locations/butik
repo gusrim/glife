@@ -3,8 +3,6 @@
 if $ARGS[0] = 'start':
 	$metka = $ARGS[0]
 	$loc = $CURLOC
-	$metkaM = $ARGS[0]
-	$locM = $CURLOC
     $location_type = 'public_indoors'
 	cla
 	clr
@@ -21,14 +19,14 @@ if $ARGS[0] = 'start':
 		bcolor = rgb(255, 255, 255)
 		lcolor = rgb(106, 90, 205)
 	end
-	'<center><b><font color="maroon">Boutique</font></b></center>'
+	'<center><b><font color="maroon">Mon Chéri</font></b></center>'
 	'<center><img <<$set_imgh>> src="images/locations/city/citycenter/mall/boutique/butik.jpg"></center>'
-	'You see all kinds of dresses, all at 25,000 <b>₽</b>'
+	'An expensive boutique that caters to the wealthiest women, everything speaks of quality and maturity.'
 
 	if rand(1, 100) >= 80 and pcs_skin >= 20 and lesbiQW = 0:
 		'In the boutique you see a stylish and slender woman, about forty years old.'
 
-		act 'Stare at the woman.':gt 'event', 'lesbi'
+		act 'Stare at the woman':gt 'event', 'lesbi'
 	end
 
 	if QWdogreiqTimer = 0 and QWdogReiq = 1 and week = 7 and qwdogiventday ! daystart:
@@ -49,11 +47,17 @@ if $ARGS[0] = 'start':
 		end
 	end
 
-	'The boutique sells designer winter coats - 50,000 <b>₽</b>'
+	'The boutique sells designer winter coats, formal clothing, beautiful shoes, expensive underwear and exquisite handbags.'
 
-	act 'View clothes':gt 'butik', 'clothes'
+	act 'Browse the clothing': gt 'butik', 'clothes'
 
-	act 'View shoes':gt 'butik', 'shoes'
+	act 'Browse the panties': gt 'butik', 'panties'
+
+	act 'Browse the bras': gt 'butik', 'bras'
+
+	act 'Browse the shoes': gt 'butik', 'shoes'
+
+	act 'Browse the handbags': gt 'butik', 'purses'
 
 	if money >= 50000:
 		if coat[9] < 1:
@@ -108,6 +112,70 @@ if $ARGS[0] = 'formal':
 
 end
 
+if $ARGS[0] = 'panties':
+	$metka = 'panties'
+	$loc = 'butik'
+	cls
+	gs'stat'
+
+	act 'Return':
+		cla
+		minut += 5
+		gt 'butik', 'start'
+	end
+
+	i = 1
+
+	:loopboutique_panties
+		if boutique_panties[i] = 0:*p '<a href="exec: i = <<i>> & gt ''butik'', ''panties2''"><img src="images/pc/panties/boutique/<<i>>.jpg" 	height="150" /></a> '
+		i += 1
+	if i <= 82:jump 'loopboutique_panties'
+end
+
+if $ARGS[0] = 'panties2':
+	cla
+	
+	if boutique_panties[i] ! 0:
+		msg 'You already own these panties.'
+		gt 'butik', 'panties'
+	end
+
+	gt 'panties', 'view_panty_item', 'shop', 'boutique',i, 1000
+
+end
+
+if $ARGS[0] = 'bras':
+	$metka = 'bras'
+	$loc = 'butik'
+	cls
+	gs'stat'
+
+	act 'Return':
+		cla
+		minut += 5
+		gt 'butik', 'start'
+	end
+
+	i = 1
+
+	:loopboutique_bras
+		if boutique_bras[i] = 0:*p '<a href="exec: i = <<i>> & gt ''butik'', ''bras2''"><img src="images/pc/bras/boutique/<<i>>.jpg" 	height="150" /></a> '
+		i += 1
+	if i <= 33:jump 'loopboutique_bras'
+end
+
+if $ARGS[0] = 'bras2':
+	cla
+	
+	if boutique_bras[i] ! 0:
+		msg 'You already own these bras.'
+		gt 'butik', 'bras'
+	end
+
+	gt 'bras', 'view_bra_item', 'shop', 'boutique',i, 1000
+
+end
+
 if $ARGS[0] = 'shoes':
 	$metka = $ARGS[0]
 	$loc = $CURLOC
@@ -133,6 +201,28 @@ if $ARGS[0] = 'shoes':
 end
 
 if $ARGS[0] = 'boutique_shoes':	gt 'shoes', 'view_shoe_item', 'shop', 'boutique',i, 5000
+
+if $ARGS[0] = 'purses':
+	$metka = 'purses'
+	$loc = 'butik'
+	cls
+	gs'stat'
+
+	act 'Return':
+		cla
+		minut += 5
+		gt 'butik', 'start'
+	end
+
+	i = 1
+
+	:loopboutique_purses
+		if boutique_purse[i] = 0:*p '<a href="exec: i = <<i>> & gt ''butik'', ''purses2''"><img src="images/pc/purses/moncheri/<<i>>.jpg" 	height="150" /></a> '
+		i += 1
+	if i <= 17:jump 'loopboutique_purses'
+end
+
+if $ARGS[0] = 'purses2': gt 'purses', 'view_purse_item', 'shop', 'boutique',i, 10000
 
 if $ARGS[0] = 'rima':
 	cls

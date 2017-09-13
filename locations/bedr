@@ -7,6 +7,7 @@ $locM = 'bedr'
 $metka = ''
 $loc = 'bedr'
 $location_type = 'private'
+$locclass = 'bedr'
 act 'The corridor':
 	gt 'korr'
 end
@@ -35,12 +36,12 @@ if rembedr = 0:
 	'<center><img <<$set_imgh>> src="images/locations/city/residential/apartment/bedr.jpg"></center>'
 	'A tight, little room with a <a href="exec:gt ''bed'', ''start''">double bed</a> and an <a href="exec:gt ''budilnik'', ''start''">alarm clock</a>.' 
 	'An old wooden wardrobe (where you can <a href="exec:gt ''clothing'', ''view_clothing_list'', ''wardrobe''">organize your clothes</a> or <a href="exec:gt ''clothing_QV'', ''list''">pick something to wear</a>) stands near the door to the corridor, on top of it there''s a <a href="exec:gt ''clothing'', ''view_clothing_list'', ''store''">suitcase</a> you can store some clothes in. The windows are closed with faded, heavy curtains.'
-	'In the bottom of your wardrobe you have <a href="exec:gt ''shoes'', ''select''">your shoes</a>.'
+	'In the bottom of your wardrobe you have <a href="exec:gt ''shoes'', ''select''">your shoes</a> and next to the wardrobe is a dresser you keep <a href="exec:gt ''underwear'', ''dresser''">your underwear</a> and <a href="exec:gt ''purses'', ''view_purse_list''">purses</a> in.'
 else
 	'<center><img <<$set_imgh>> src="images/locations/city/residential/apartment/bedr2.jpg"></center>'
 	'A bright and beautiful room, with a large, kingsized <a href="exec:gt ''bed'', ''start''">double bed</a>.'
 	'A modern wardrobe(where you can <a href="exec:gt ''clothing'', ''view_clothing_list'', ''wardrobe''">organize your clothes</a> or <a href="exec:gt ''clothing_QV'', ''list''">pick something to wear</a>) stands near the door to the corridor. You have a <a href="exec:gt ''clothing'', ''view_clothing_list'', ''store''">chest</a> at the end of your bed where you can store some clothes. At a wall stand a make-up table with a <a href="exec:gt ''mirror'', ''start''">mirror</a> on it.'
-	'In the bottom of your wardrobe you have <a href="exec:gt ''shoes'', ''select''">your shoes</a>.'
+	'In the bottom of your wardrobe you have <a href="exec:gt ''shoes'', ''select''">your shoes</a> and next to the wardrobe is a dresser you keep <a href="exec:gt ''underwear'', ''dresser''">your underwear</a> in and <a href="exec:gt ''purses'', ''view_purse_list''">purses</a> in.'
 end
 
 if $clothingworntype = 'nude':
@@ -243,6 +244,32 @@ end
 if pornMagazine > 0:'Under your mattress you hide a porn magazine.'
 
 gs 'events', 'read_porn'
+gs 'subkid'
+
+if pcs_sleep <= 80:
+	if succubusQW = 2:
+		act 'Undress and go to sleep':
+			if $clothingworntype ! 'nude': gs 'clothing', 'strip'
+			gt 'bed2', 'succhoice'
+		end
+	else
+		act 'Undress and go to sleep':
+			if disable_autosave = 0:
+				if StoryLine = 0:
+					savegame 'autosave.sav'
+				else
+					savegame 'autosave_alt.sav'
+				end
+			end
+			if $clothingworntype ! 'nude': gs 'clothing', 'strip'
+			if magf2bdo = 2:
+				gt 'bed2', 'magbstchoice'
+			else
+				gt 'bed2', 'sleep'
+			end
+		end
+	end
+end
 
 --- bedr ---------------------------------
 

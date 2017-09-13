@@ -3,6 +3,7 @@ if $ARGS[0] = 'start':
 	cla
 	cls
 	'<center><b><font color="maroon">The Golden Curl Salon</font></b></center>'
+	'<center><img <<$set_imgh>> src="images/locations/city/citycenter/mall/golden curl/golden curl.jpg"</center>'
 	'<center>A well reviewed hair salon, capable of creating the most beautiful hairstyles. For a price of course.</center>'
 	'<center>Next to the check out are two aisles filled with premium merchandise for you hair, including Scrunchies, Hairpins and Shampoo.</center>'
 	clr
@@ -24,15 +25,22 @@ if $ARGS[0] = 'start':
 		exit
 	end
 
-	''
+	*nl
 	'<a href=' + iif(money >= 750, '"exec:gt ''hairsalon'', ''cuthair''"', '') + '>Get a haircut - 750 <b>₽</b></a>'
-	''
+	*nl
 	'<a href=' + iif(money >= 500, '"exec:gt ''hairsalon'', ''curlhair''"', '') + '>Get your hair curled - 500 <b>₽</b></a>'
-	''
+	*nl
 	'<a href=' + iif(money >= 500, '"exec:gt ''hairsalon'', ''straighthair''"', '') + '>Get your hair straightened - 500 <b>₽</b></a>'
-	''
+	*nl
 	'<a href=' + iif(money >= 1000, '"exec:gt ''hairsalon'', ''dyehair''"', '') + '>Get your hair dyed - 1000 <b>₽</b></a>'
-	''
+	*nl
+	if dyefade > 0 and dyefade < 7:
+		'<a href=' + iif(money >= 500, '"exec:gt ''hairsalon'', ''touchup''"', '') + '>Touch up hair color - 500 <b>₽</b></a>'
+		*nl
+	elseif dyefade = 0:
+		'<a href=' + iif(money >= 1000, '"exec:gt ''hairsalon'', ''touchup2''"', '') + '>Re-dye your existing hair color - 1000 <b>₽</b></a>'
+		*nl
+	end
 	'<a href=' + iif(money >= 1250, '"exec:gt ''hairsalon'', ''braidhair''"', '') + '>Get your hair braided - 1250 <b>₽</b></a>'
 
 	act 'Leave':minut += 2 & gt 'torgcentr'
@@ -1075,6 +1083,44 @@ if $ARGS[0] = 'dyehair':
 		end
 	end
 	gs 'stat'
+end
+
+if $ARGS[0] = 'touchup':
+	cla
+	*clr
+	minut += 45
+	dyefade = rand(35,42)
+	collength = pcs_hairlng
+	money -= 500
+	gs 'stat'
+	'The hairdresser nods her head excitedly and leads you to an empty chair.'
+	'She has a bubbly personality, chatting about this and that without pause or much feedback from you, but you don''t mind as it keeps you distracted while you go through the usual wash and dry routine.'
+	'She flits around your head with her tools, and before you know it, your hair is restored to its earlier luster and color.'
+	'You stand up from the chair and pay her 500 <b>₽</b>.'
+
+	act 'Move away':gt 'hairsalon', 'start'
+end
+
+if $ARGS[0] = 'touchup2':
+	cla
+	*clr
+	'The hairdresser smiles apologetically, "Sorry, but you''re going to need a completely new dye job to cover that up. I can do it, if you want? It''s only 1000 <b>₽</b>."'
+	act 'Sure':
+		cla
+		*clr
+		minut += 45
+		dyefade = rand(35,42)
+		collength = pcs_hairlng
+		money -= 1000
+		gs 'stat'
+		'About an hour later, everything should be dried up.'
+		'The hairdresser removes the dryer hood. "And we''re all done."'
+		'You stand up from the chair and pay her 1000 <b>₽</b>.'
+
+		act 'Move away':gt 'hairsalon', 'start'
+	end
+
+	act 'No thanks':gt 'hairsalon', 'start'
 end
 
 if $ARGS[0] = 'braidhair':

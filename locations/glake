@@ -2,8 +2,6 @@
 CLOSE ALL
 $metka = $ARGS[0]
 $loc = $CURLOC
-$metkaM = $ARGS[0]
-$locM = $CURLOC
 $location_type = 'public_outdoors'
 cls
 gs'stat'
@@ -11,11 +9,7 @@ gs'stat'
 if $clothingworntype ! 'swimwear' and $clothingworntype ! 'nude' and temper >= 5 and sunWeather = 1 and month >= 5 and month <= 10 and hour < 20 and ((hour >= 10 and week >= 6) or (hour >= 14 and week < 6)) and mey_vika['mey_vika_qw'] >= 18 and mey_vika['mey_vika_qw'] < 20 and mey_vika['qw_day'] ! daystart: gt 'mey_vika_events', 'beach_event1'
 
 '<center><H4>Lake</H4></center>'
-if tanga = 0:
-	tangamemb = 0
-else
-	tangamemb = 1
-end
+
 ! to memorize were cowards or not
 if month>=3 and month<=5:
 	if hour>=6 and hour<=17:
@@ -87,6 +81,7 @@ if $clothingworntype = 'nude':
 						money -= 3000
 						exercise[1] = 1
 						if exerciseH[1] > 40:exerciseH[1] = 40
+						gs 'underwear', 'wear'
 						gs 'clothing', 'wear', 'exercise', 1
 						'So... there''s the catch. The guy looks at your naked body while you mull over his proposition, and you come to the conclusion that you really don''t have any other choice. You can''t walk home through town naked! You silently nod and give him the money, quickly putting the clothes on when he hands them over. You feel relieved in the knowledge that at least you won''t have to go home naked... hopefully your clothes will turn up later.'
 						gt 'glake'
@@ -101,6 +96,7 @@ if $clothingworntype = 'nude':
 						cls
 						exercise[1] = 1
 						if exerciseH[1] > 40:exerciseH[1] = 40
+						gs 'underwear', 'wear'
 						gs 'clothing', 'wear', 'exercise', 1
 						'<center><img <<$set_imgh>> src="images/locations/shared/sex/car/sexcar.jpg"></center>'
 						'He wastes no time for you to second guess yourself, and immediately throws you down on the back seat of his car when you agree. He quickly pulls down his pants and, after quickly putting a condom on, quickly guides his cock to your pussy lips. He obviously doesn''t plan on spending a lot of time with you and sinks it in in one firm thrust, fucking you with rapid, short strokes. Soon he shoots his load in the condom, ties a knot in it and throws it away. Seconds after he hands you the clothes as promised, he drives off.'
@@ -115,6 +111,7 @@ if $clothingworntype = 'nude':
 							money -= 3000
 							exercise[1] = 1
 							if exerciseH[1] > 40:exerciseH[1] = 40
+							gs 'underwear', 'wear'
 							gs 'clothing', 'wear', 'exercise', 1
 							'You don''t want to have sex with him... but you also don''t want to go home naked! Not seeing any other option, you decide to pay him the 3,000 <b>₽</b> after all. You quickly put on the clothes as he hands them over, feeling relieved in the knowledge that at least you don''t have to walk through town in the nude. Now that you''re clothed, you feel more confident in searching the beach a bit more; hopefully your clothes will turn up after all.'
 							act 'Continue': gt 'glake'
@@ -123,7 +120,7 @@ if $clothingworntype = 'nude':
 				end
 			end
 		else
-			if tangamemb = 1: tanga = 1
+			gs 'underwear', 'wear'
 			'You return to the place where you left your clothes, and put them back on.'
 			act'Continue':gt'glake'
 		end
@@ -159,7 +156,7 @@ if temper >= 15 and month>=5 and month<=9 and hour>=6 and hour<=20:
 		act'Strip naked':
 			cla
 			minut += 5
-			tanga = 0
+			gs 'underwear', 'remove'
 			gs 'clothing', 'strip'
 			'Without hesitation, you take off all your clothes and neatly fold them before putting them down on a pile. Without your clothes holding you back, you can go for a nice swim in the lake or just lie down in the sand and do some sunbathing.'
     
@@ -233,8 +230,19 @@ if temper >= 15 and month>=5 and month<=9 and hour>=6 and hour<=20:
 								'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/boy/fedor/fedorev/strela/vadimbely.jpg"></center>'
 								'While you are sunbathing, you see Vadim Bely and his brother sitting not far away from you. The brother points at you, and moments later Vadim walks over to you and sits down next to you. He idly scratches his tattoo covered belly as he asks: "Hello <<$pcs_nickname>>, want to go for a ride with me?"'
 								'The greedy look in his eyes tells you that when he says ''ride'', he doesn''t just mean in his car.'
-								act 'Go with him':gt 'LakeBoyDy', 'ride'
-							else
+								if $clothingworntype = 'nude':
+									act 'Get dressed and go with him':
+										gs 'clothing', 'wear_last_worn'
+										if $clothingworntype = 'swimwear':gs 'clothing', 'wear', $normalclothingworntype, normalclothingwornno
+										gt 'LakeBoyDy', 'ride'
+									end
+								else
+									act 'Get dressed and go with him':
+										gs 'clothing', 'wear', $normalclothingworntype, normalclothingwornno
+										gt 'LakeBoyDy', 'ride'
+									end
+								end
+							elseif $clothingworntype ! 'nude':
 								'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/boy/fedor/fedorev/strela/vadimbely.jpg"></center>'
 								'While you are sunbathing you can''t help but notice a man walking towards you. He looks truly intimidating, his entire body covered in criminal gang tattoos. A bit further down the beach you see a younger man with similar tattoos, keeping an eye on the man approaching you.'
 								'His head is mostly bald, and a large golden cross dangles on a thick chain from his neck. He sits his fat body down next to you before you can protest, idly scratching his belly as he begins to chat: "Hello! I''m not interrupting anything, am I?"'

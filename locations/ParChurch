@@ -29,8 +29,10 @@ if $ARGS[0] = 'start':
 	if Churchbad = 3 and Churchbadtime > daystart:
 		cla
 		'The priest would probably still be mad at you. You decide to avoid him and leave.'
-		act 'Return to town':gt 'pavResidential'
-		exit
+		act 'Go to the residential area':minut += 5 & gt 'pavResidential'
+		act 'Go to the high street':minut += 10 & gt 'pavCommercial'
+	exit
+
 	elseif Churchbad = 3 and Churchbadtime <= daystart:
 		Churchbad = 2
 		"You figure that the priest has probably calmed down enough by now that you could talk to him."
@@ -44,7 +46,7 @@ if $ARGS[0] = 'start':
 	end
 	
 	act 'Go to the residential area':minut += 5 & gt 'pavResidential'
-	act 'Go to the high street':minut += 5 & gt 'pavCommercial'
+	act 'Go to the high street':minut += 10 & gt 'pavCommercial'
 end
 
 if $ARGS[0] = 'vigil':
@@ -80,7 +82,7 @@ if $ARGS[0] = 'vigil':
 		moral += 1
 		gs 'stat'
 		temprand = rand(1,100)
-		if temprand >= 80:
+		if temprand <= 80:
 			if pav_sex > 10: pav_sex -= 10
 			if pav_prostitute > 10: pav_prostitute -= 10
 		end
@@ -111,8 +113,8 @@ if $ARGS[0] = 'liturgy':
 		pcs_sleep += 5
 		'You participate fully in the Divine Liturgy. You listen to the preaching and sing along. When going to communion and receiving the ceremonial bread, you lock eyes with Father Kirill. He seems happy to see you participating in the service.'
 	elseif pav_slut >= 50:
-		if rand(1,100) > 50:
-			if pav_sex > 10: pav_sex -= 10
+		if rand(1,100) > 20:
+			if pav_sex > 10: pav_sex -= 25
 			if pav_prostitute > 10: pav_prostitute -= 10
 		end
 		Kirill += 1
@@ -180,6 +182,8 @@ if $ARGS[0] = 'pray':
 	cls
 	randtime = rand(15,60)
 	minut += randtime
+	pav_sex -= 1
+	pav_prostitute -= rand(0,1)
 	gs 'stat'
 	'<center><img <<$set_imgh>> src="images/locations/pavlovsk/church/ch_praying.jpg"></center>'
 	if hour >6 and hour < 20 and moral < 30:
@@ -321,7 +325,7 @@ if $ARGS[0] = 'amends':
 						Churchbad = 3
 						badrand = rand(7,21)
 						Churchbadtime = daystart + badrand
-						'You look the priest right in the eyes then when his attention is on you, you slowly lean forward, allowing your breasts to be exposed. To your delight, you see his eyes dart to your tits then snap back up to your face. His face flushes red."'
+						'You look the priest right in the eyes then when his attention is on you, you slowly lean forward, allowing your breasts to be exposed. To your delight, you see his eyes dart to your tits then snap back up to your face. His face flushes red.'
 						if Kirill <= 0: 
 						'"You whore!" The priest roars in fury, "I''ll teach you what happens to those who desecrate the House of God!"'
 						'Stunned by his unexpected fury, you were unable to react before the furious priest grabs you by the arm and drags you to his office.'
@@ -410,7 +414,7 @@ if $ARGS[0] = 'fillers':
 	elseif randtext = 9:
 		$safesub = 'your garandparents'
 	elseif randtext = 0:
-		moral + = 1
+		moral += 1
 		$safesub = 'God and Jesus'
 	end
 end

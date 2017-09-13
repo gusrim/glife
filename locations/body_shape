@@ -24,6 +24,7 @@
 !! fixbodset = the identification number of the fixed image set
 !! bodsetcnt = the number of sets present
 !! imgset6ovr[x] and imgset7ovr[x] = a flag to indicate that an image set (x) has its own image 6 and/or 7
+!! extended lash functionality; pcs_lashes = n are: {2, largest natural size}, {3, with temporary false lashes on or basic 2D lash extensions}, {4, with ornate false lashes on or lavish 4D extensions}, {5, with extremely ornate, 6D-style extensions} - xerya
 
 if $ARGS[0] = '':
 !!This controls the gradual change in stat to -buf
@@ -108,7 +109,7 @@ if $ARGS[0] = '':
 	killvar 'hrtemp'
 
 !!Salo Handling; the first part is because during a reset fat is not used and should be cleared
-	if sftrstflag = 1:
+	if sftrstflag = 1 or cheatNoFat = 1:
 		fat = 0
 	else
 		if fat > (2 + vitalbuf / 25): salo += 1 & fat = 0
@@ -390,12 +391,21 @@ if $args[0] = 'basebeautycalc':
 	if vidage > 30: vidagebonus = 100 - 2 * (vidage - 30)
 
 !!	Setting Eyelashes bonus
-	if pcs_lashes = 1:
+	if pcs_lashes <= 0:
+		pcs_lashes = 0
+		resnicbonus = 0
+	elseif pcs_lashes = 1:
 		resnicbonus = 2
 	elseif pcs_lashes = 2:
 		resnicbonus = 5
+	elseif pcs_lashes = 3:
+		resnicbonus = 7
+	elseif pcs_lashes = 4:
+		resnicbonus = 8
+	elseif pcs_lashes = 5:
+		resnicbonus = 10
 	else
-		resnicbonus = 0
+		resnicbonus = 0		
 	end
 
 !!	Setting Eye Size bonus

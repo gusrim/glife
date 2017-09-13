@@ -1,9 +1,8 @@
 # bank
 if $ARGS[0] = 'start':
 	cla
-	clr
 	*clr
-	minut += 5
+	minut += 2
 	gs 'stat'
 	if night_mode = 1:
 		fcolor = rgb(255, 255, 255)
@@ -19,28 +18,28 @@ if $ARGS[0] = 'start':
 
 	if week <= 5 and hour = 16 and minut >= 30 and mey_vika['mey_vika_qw'] >= 32: 
 		!r125
-		'Looks like <a href="exec:gs''mey_tamara_events'',''tamara''">Tamara Mikhailovna</a> is going home.'
+		'Seems like <a href="exec:gs''mey_tamara_events'',''tamara''">Tamara Mikhailovna</a> is heading home.'
 	end	
 	
 	if bankAccount = 0:
-		'Do you want to open your account?'
+		'Do you want to open an account?'
 	else
 		if karta >= 0:
 			'You have <<karta>> <b>₽</b> in your account.'
-			'You have an approved credit of <font color="blue"><<bankDebtLimit>></font>!'
+			'You can take out a loan of <font color="blue"><<bankDebtLimit>></font>!'
 		else
 			'You hava a debt of <font color="red"><<-1 * karta>></font> <b>₽</b>.'
-			'You have an approved credit of <font color="blue"><<bankDebtLimit + karta>></font>!'
+			'You can take out a loan of <font color="blue"><<bankDebtLimit + karta>></font>!'
 		end
 	end
 
 	if BankPapper = 1 and dayBankPapper = daystart:
-		act 'Give documents':
+		act 'Show documents':
 			cls
 			minut += 15
 			BankPapper = 2
 			gs 'stat'
-			'You went to the office and gave the documents to the manager.'
+			'You went to the office and showed the required documents to the manager.'
 
 			act 'Leave':
 				minut += 5
@@ -56,7 +55,6 @@ if $ARGS[0] = 'start':
 	if money > 0:
 		act 'Deposit money':
 			cla
-			minut += 5
 			kartaIN = input ("How much money you want to deposit into the account?")
 
 			if kartaIN <= 0 or kartaIN > money:
@@ -73,14 +71,13 @@ if $ARGS[0] = 'start':
 				'<br>You deposited <<kartaIN>> <b>₽</b>, your account balance is now <<karta>> <b>₽</b>.'
 			end
 
-			act 'Move away':gt 'bank', 'start'
+			act 'Walk away':gt 'bank', 'start'
 		end
 	end
 
 	if karta + bankDebtLimit > 0:
 		act 'Withdraw money':
 			cla
-			minut += 5
 			kartaOUT = input ("How much do you want to withdraw from account?")
 
 			if kartaOUT <= 0 or kartaOUT > karta + bankDebtLimit:
@@ -96,12 +93,12 @@ if $ARGS[0] = 'start':
 					'<br>You withdraw <<kartaOUT>> <b>₽</b>. <font color="red">Your bank account is overdrawn by <b><<karta>> ₽</b>.</font>'
 				end
 			end
-			act 'Move away':gt 'bank', 'start'
+			act 'Walk away':gt 'bank', 'start'
 		end
 	end
 
 	act 'Leave':
-		minut += 5
+		minut += 2
 		if bankloc = 1:
 			gt 'down'
 		else

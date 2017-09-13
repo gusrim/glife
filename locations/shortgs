@@ -19,14 +19,14 @@ if $ARGS[0] = 'smoker':
 end &!--- smoker ---
 
 !! milk_me
-!! use href="exec:gt ''shortgs'', ''milk_me''"
+!! use href="exec:gt ''shortgs'',''milk_me''"
 if $ARGS[0] = 'milk_me':
 	minut += 15
 	if $location_type ! 'bathroom':
 		'You can''t use it here.'
 	elseif lactatemv > 0 and pain['nipples'] < 60:
 		'<center><img <<$set_imgh>> src="images/pc/body/tits/pump_lactating.jpg"></center>'
-		'You attach the pump to your breast and start rythmically squeezing the bulb until your breasts feel empty.<br>You give it a few more pumps and detach the pump.<br>You filled the bottle with <<lactatemv>>ml of your milk.'
+		'You attach the pump to your breast and start rythmically squeezing the bulb until your breasts feel empty.<br>You give it a few more pumps and detach the pump.<br>You filled the bottle with <<lactatemv/10>>ml of your milk.'
 		breastcounter += 1
 		lactatemv = 0
 		if breastpumped = 1:pain['nipples'] += 10 & 'Your nipples are feeling sore.'
@@ -39,7 +39,7 @@ if $ARGS[0] = 'milk_me':
 			'As usual, you attach the pump but after a few pumps white liquid suddenly starts spurting from your nipples.<br>You started lactating!'
 			lactate = 1
 			lactatemv = 0
-			lactatemm = 10
+			lactatemm = 100
 		else
 			'<center><img <<$set_imgh>> src="images/pc/body/tits/t<<tits>>.jpg"></center>'
 			'You attach the pump to your nipples and start squeezing the bulb. The vacuum feels good on your nipples.<br>A few droplets of liquid come out of your nipples but it is not milk.'
@@ -52,7 +52,7 @@ if $ARGS[0] = 'milk_me':
 	else
 		'Your nipples feel too sore to use the pump right now.'
 	end
-	act 'Finish':gt $locM, $metkaM
+	act 'Finish':gt $loc, $metka
 end &! --- milk_me ---
 
 !! following function counts the number of guys which PC slept with. 
@@ -71,7 +71,6 @@ if $ARGS[0] = 'guy':
 		jump 'loop_shya'
 	end
 	if len($temptask) > 0:jump 'loop_shtty'
-	end
 	result = r_sht
 	killvar 'r_sht'
 	killvar '$temptask'
@@ -105,18 +104,377 @@ end &! --- girl ---
 !! following procedure should be used when PC gets naked, but it should be paired with the reverse procedure 
 !! use gs 'shortgs','undress'
 if $ARGS[0] = 'undress':
-	gs 'clothing', 'strip'
-	if tanga = 1:panties = 1 & tanga = 0
+	gs 'clothing','strip'
+	gs 'underwear', 'remove'
 end &! --- undress ---
 
 !! reverse procedure, it can be modified for lose or stolen panties later. 
 !! use gs 'shortgs','dress'
 if $ARGS[0] = 'dress':
-	gs 'clothing', 'wear_last_worn'
-	if panties = 1:tanga = 1
-	panties = 0
+	gs 'clothing','wear_last_worn'
+	gs 'underwear', 'wear'
 end &! --- dress ---
 
+!! procedure, which prevents PC to leave a room naked.  
+!! use gs 'shortgs','checkdress',' <<$loc>>,<<$metka>> '  or equivalent
+if $ARGS[0] = 'checkdress':
+	if $clothingworntype = 'nude':
+		msg '<b><font color="red">You need to get dressed before going out.</font></b>'
+		dynamic 'gt <<$ARGS[1]>>'
+	end
+end &! --- checkdress ---
+
+!! this is an integer sqrt function
+!! call func('shortgs','sqrt', n)
+if $ARGS[0] = 'sqrt':
+	sqrtnum = ARGS[1]
+	if sqrtnum = 0: result = 0 & exit
+	sqrtn = sqrtnum/2 + 1
+	sqrtn1 = (sqrtn + sqrtnum / sqrtn) / 2
+:sqrtloop
+	if sqrtn1 < sqrtn:
+		sqrtn = sqrtn1
+		sqrtn1 = (sqrtn + sqrtnum / sqrtn) / 2
+		jump 'sqrtloop'
+	end
+    result = sqrtn  
+end
+
+!! this function calculates modul of given arguments as it was coordinates in cartezian systeme
+!! use func('shortgs','modul',n1,n2,..n8)
+if $ARGS[0] = 'modul':
+	modul_sum = ARGS[1]*ARGS[1]+ARGS[2]*ARGS[2]+ARGS[3]*ARGS[3]+ARGS[4]*ARGS[4]+ARGS[5]*ARGS[5]+ARGS[6]*ARGS[6]+ARGS[7]*ARGS[7]+ARGS[8]*ARGS[8]
+    result = func('shortgs','sqrt',modul_sum)
+	killvar 'modul_sum'
+end
+!! day of week 1 - Monday .. 7 - Sunday
+if $ARGS[0] = 'dow':
+	dow_a = (14 - month) / 12
+	dow_Y = year - dow_a
+	dow_M = month + 12*dow_a - 2
+	dummy = (day + dow_y + dow_y/4 - dow_y/100 + dow_y/400 + (31*dow_m)/12) mod 7
+	if dummy = 0: dummy = 7
+	result = dummy
+end
+!! day of year
+!! use xdoy = func('shortgs','doy',year,month,day) 
+if $ARGS[0] = 'doy':
+	doy_N1 = 275 * ARGS[2] / 9
+	doy_N2 = (ARGS[2] + 9) / 12
+	doy_N3 = 1 + (ARGS[1] - 4 * (ARGS[1] / 4) + 2) / 3
+	result = doy_N1 - (doy_N2 * doy_N3) + ARGS[3] - 30
+end
+if $ARGS[0] = 'mk1':
+	gs 'saveposition'
+	*clr & cla
+	$mk_subst['0'] = 'M' & $mk_subst['1'] = 'F' & $mk_subst['2'] = 'O' & $mk_subst['3'] = 'L' & $mk_subst['4'] = 'R' & $mk_subst['5'] = 'P'
+	'<center><font face="courier" size=1>'
+	'<table border = 1>'
+	'<tr><th>Mon</th><th>Tue</th><th>Wen</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th><th>Mon</th><th>Tue</th><th>Wen</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th>
+	<th>Mon</th><th>Tue</th><th>Wen</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th><th>Mon</th><th>Tue</th><th>Wen</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th></tr>'
+	i = ArrSize('$MenCal')
+	empty0 = week + 29 - i - 1
+	empty1 = min(28,empty0)
+	full1 = max(0,28 - empty0)
+	empty2 = max(0,empty0-28)
+	full2 = i - full1
+	empty3 = 28 - empty2 - full2
+	count=0
+	$tabmc = '<tr>'
+:tabmcl1
+	if empty1 > 0: empty1 -=1 & $tabmc +='<td>&nbsp</td>' & jump 'tabmcl1'
+:tabmcl2
+	if full1 > 0: 
+		full1 -=1 
+		if $MenCal[count]='0': $tabmc +='<td bgcolor="red"><<$mk_subst[$MenCal[count]]>></td>' else $tabmc +='<td><<$mk_subst[$MenCal[count]]>></td>'
+		count +=1
+		jump 'tabmcl1'
+	end
+	$tabmc += '</tr><tr>'
+:tabmcl3
+	if empty2 > 0: empty2 -=1 & $tabmc +='<td>&nbsp</td>' & jump 'tabmcl3'
+:tabmcl4
+	if full2 > 0:
+		full2 -=1
+		if $MenCal[count]='0': $tabmc +='<td bgcolor="red"><<$mk_subst[$MenCal[count]]>></td>' else $tabmc +='<td><<$mk_subst[$MenCal[count]]>></td>'
+		count +=1
+		jump 'tabmcl4'
+	end
+:tabmcl5
+	if empty3 > 0: empty3 -=1 & $tabmc +='<td></td>' & jump 'tabmcl5'
+	$tabmc += '</tr><table></font></center>'
+	$tabmc
+	act 'Back': gt 'restoreposition'
+end
+
+!! use gs 'shortgs','mk'
+if $ARGS[0] = 'mk':
+	gs 'saveposition'
+	*clr & cla
+	copyarr '$MenCalCopy','$MenCal'
+	length_of_month_field = arrsize('$MenCalCopy')
+	if daystart - firstmens > 40:
+		mensnotfound = 1
+		i = 0
+:tabmcfm
+		if $MenCalCopy[length_of_month_field-i] = '0' and $MenCalCopy[length_of_month_field-i-1] = '3': mensnotfound = 0
+		i += 1
+		if i < length_of_month_field and mensnotfound = 1: jump 'tabmcfm'
+		if mensnotfound = 0:
+			firstmens = daystart - i + 1
+		end
+	end
+	i=1
+:tabmcc1
+	if daystart - firstmens < 40:
+		if (daystart - firstmens + i) = 28:
+			$MenCalCopy[] = ' bgcolor="#df2020"'
+		elseif (daystart - firstmens + i) = 29:
+			$MenCalCopy[] = ' bgcolor="#df3030"'
+		elseif (daystart - firstmens + i) = 30:
+			$MenCalCopy[] = ' bgcolor="#df4040"'
+		elseif (daystart - firstmens + i) = 12:
+			$MenCalCopy[] = ' bgcolor="#d8ff00"'
+		elseif (daystart - firstmens + i) = 13:
+			$MenCalCopy[] = ' bgcolor="#d0ff00"'
+		elseif (daystart - firstmens + i) = 14:
+			$MenCalCopy[] = ' bgcolor="#c8ff00"'
+		elseif (daystart - firstmens + i) = 15:
+			$MenCalCopy[] = ' bgcolor="#c0ff00"'
+		elseif (daystart - firstmens + i) = 16:
+			$MenCalCopy[] = ' bgcolor="#d0ff00"'
+		elseif (daystart - firstmens + i) = 12+28:
+			$MenCalCopy[] = ' bgcolor="#d8ff00"'
+		elseif (daystart - firstmens + i) = 13+28:
+			$MenCalCopy[] = ' bgcolor="#d0ff00"'
+		elseif (daystart - firstmens + i) = 14+28:
+			$MenCalCopy[] = ' bgcolor="#c8ff00"'
+		elseif (daystart - firstmens + i) = 15+28:
+			$MenCalCopy[] = ' bgcolor="#c0ff00"'
+		elseif (daystart - firstmens + i) = 16+28:
+			$MenCalCopy[] = ' bgcolor="#d0ff00"'
+		else
+			$MenCalCopy[] = ''
+		end
+		i += 1
+		if i < 40: jump 'tabmcc1'
+	end
+	i = length_of_month_field
+:tabmcc2
+	if i > 0:
+		if $MenCalCopy[i-1] = '2' and i = 1 : $MenCalCopy[i-1] = ' bgcolor="#c0ff00"'
+		if $MenCalCopy[i-1] = '2' and $MenCalCopy[i-2] = '2': $MenCalCopy[i-1] = ' bgcolor="#c0ff00"'
+		if $MenCalCopy[i-1] = '2' and $MenCalCopy[i-2] = '1': $MenCalCopy[i-1] = ' bgcolor="#80ff00"' & $MenCalCopy[i-2] = ' bgcolor="#90ff00"' & $MenCalCopy[i-3] = ' bgcolor="#a0ff00"' & $MenCalCopy[i-4] = ' bgcolor="#b0ff00"' & $MenCalCopy[i-5] = ' bgcolor="#c0ff00"'
+		if $MenCalCopy[i-1] = '1' and (daystart - firstmens - length_of_month_field + i) < 12: $MenCalCopy[i-1] =''
+		if $MenCalCopy[i-1] = '1' and (daystart - firstmens - length_of_month_field + i) = 12: $MenCalCopy[i-1] =' bgcolor="#b0ff00"'
+		if $MenCalCopy[i-1] = '1' and (daystart - firstmens - length_of_month_field + i) = 13: $MenCalCopy[i-1] =' bgcolor="#a0ff00"'
+		if $MenCalCopy[i-1] = '1' and (daystart - firstmens - length_of_month_field + i) = 14: $MenCalCopy[i-1] =' bgcolor="#90ff00"'
+		if $MenCalCopy[i-1] = '1' and (daystart - firstmens - length_of_month_field + i) = 15: $MenCalCopy[i-1] =' bgcolor="#80ff00"'
+		if $MenCalCopy[i-1] = '1' and (daystart - firstmens - length_of_month_field + i) > 15: $MenCalCopy[i-1] =''
+		if $MenCalCopy[i-1] = '0': $MenCalCopy[i-1] =' bgcolor="#df2020"'
+		if $MenCalCopy[i-1] = '3': $MenCalCopy[i-1] =''
+		if $MenCalCopy[i-1] = '4': $MenCalCopy[i-1] =''
+		if $MenCalCopy[i-1] = '5': $MenCalCopy[i-1] =''
+		i -= 1
+		jump 'tabmcc2'
+	end
+
+	cur_day_doy = func('shortgs','doy',year,month,day)
+	if month = 1:
+		dif_days = cur_day_doy + 30
+		prev_month = 12
+		prev_month_length = 31
+	else
+		prev_month = month - 1
+		dif_days = cur_day_doy - func('shortgs','doy',year,prev_month,1)
+		prev_month_length = func('shortgs','doy',year,month,1) - func('shortgs','doy',year,prev_month,1)
+	end
+	first_month_first_day_week = week - (dif_days mod 7)
+	first_month_first_day_index = length_of_month_field -1 - dif_days
+	r = first_month_first_day_index
+	if first_month_first_day_week < 1: first_month_first_day_week += 7
+	i = 42
+:tabmc21
+	$mk1_mdays[] = '&nbsp' & i -= 1 & if i > 0: jump 'tabmc21'
+	i = 0
+:tabmc21a
+	$mk1_mdays[i+first_month_first_day_week-1] = $str(i+1) 
+	i += 1 
+	if i < prev_month_length: jump 'tabmc21a'
+
+	$prev_month_name = $mid($monthName[prev_month],1,1) + '<br>' + $mid($monthName[prev_month],2,1) + '<br>' + $mid($monthName[prev_month],3,1)
+
+	k = 0
+	$tabmc ='<center><font face="courier" size=5>'
+	$tabmc +='<table border = 1 cellspacing="0" cellpadding="5">'
+	$tabmc +='<tr><th>Month</th><th>Mon</th><th>Tue</th><th>Wen</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th></tr>'
+	month_weeks = (first_month_first_day_week + prev_month_length + 5)/7 - 1
+	i = month_weeks
+:tabmc22
+	$tabmc +='<tr>'
+	j = 7
+	if i = month_weeks:$tabmc +='<td rowspan="<<month_weeks+1>>" align = "center"><<$prev_month_name>></td>'
+:tabmc23
+	if j > 0: 
+		j -=1 
+		if $mk1_mdays[k]='&nbsp':
+			$tabmc +='<td><<$mk1_mdays[k]>></td>'
+		else
+			$tabmc +='<td<<$MenCalCopy[r]>> ><<$mk1_mdays[k]>></td>'
+			r +=1
+		end
+		k +=1
+		jump 'tabmc23' & !<<$MenCalCopy[r]>> 
+	end
+	if i > 0: i -=1 & $tabmc +='</tr>' & jump 'tabmc22'
+	killvar '$mk1_mdays'
+	killvar '$mk1_mdays_color'
+
+!! current month
+	if month = 12:
+		dif_days = day - 1
+		cur_month = month
+		cur_month_length = 31
+	else
+		dif_days = day - 1
+		cur_month_length = func('shortgs','doy',year,month+1,1) - func('shortgs','doy',year,month,1)
+	end
+	second_month_first_day_week = week - (dif_days mod 7)
+	second_month_first_day_index = length_of_month_field -1 - dif_days
+	
+	if second_month_first_day_week < 1: second_month_first_day_week += 7
+	i = 42
+	:tabmc31
+	$mk1_mdays[] = '&nbsp' & i -= 1 & if i > 0: jump 'tabmc31'
+	i = 0
+:tabmc31a
+	$mk1_mdays[i+second_month_first_day_week-1] = $str(i+1) 
+	i += 1 
+	if i < cur_month_length: jump 'tabmc31a'
+
+	$cur_month_name = $mid($monthName[month],1,1) + '<br>' + $mid($monthName[month],2,1) + '<br>' + $mid($monthName[month],3,1)
+
+	k = 0
+	month_weeks = (second_month_first_day_week + cur_month_length + 5)/7 - 1
+	i = month_weeks
+:tabmc32
+	$tabmc +='<tr>'
+	j = 7
+	if i = month_weeks:$tabmc +='<td rowspan="<<month_weeks+1>>" align = "center"><<$cur_month_name>></td>'
+:tabmc33
+	if j > 0: 
+		j -=1
+		if $mk1_mdays[k]='&nbsp':
+			$tabmc +='<td><<$mk1_mdays[k]>></td>'
+		else
+			if day + second_month_first_day_week - 2 = k: $tabmc +='<td<<$MenCalCopy[r]>> ><u><b><<$mk1_mdays[k]>></b></u></td>' else $tabmc +='<td<<$MenCalCopy[r]>> ><<$mk1_mdays[k]>></td>'
+			r +=1
+		end
+		k +=1 
+		jump 'tabmc33'
+	end
+	if i > 0: i -=1 & $tabmc +='</tr>' & jump 'tabmc32'
+	killvar '$mk1_mdays'
+	killvar '$mk1_mdays_color'
+	
+!! next month
+	if month = 12:
+		dif_days = 31 - day + 1
+		next_month = 1
+		next_month_length = 31
+	elseif month = 11:
+		dif_days = 30 - day + 1
+		next_month = 12
+		next_month_length = 31
+	else
+		next_month = month + 1
+		dif_days = cur_month_length - day + 1
+		next_month_length = func('shortgs','doy',year,month+2,1) - func('shortgs','doy',year,month+1,1)
+	end
+	next_month_first_day_week = week + (dif_days mod 7)
+	next_month_first_day_index = length_of_month_field -1 - dif_days
+	
+	if next_month_first_day_week < 1: next_month_first_day_week += 7
+	i = 35
+:tabmc41
+	$mk1_mdays[] = '&nbsp' & i -= 1 & if i > 0: jump 'tabmc41'
+	i = 0
+:tabmc41a
+	$mk1_mdays[i+next_month_first_day_week-1] = $str(i+1) 
+!!	if next_month_first_day_index + i >= 0: $mk1_mdays[i+next_month_first_day_week-1] += $mk_subst[$MenCal[second_month_first_day_index + i]]
+	i += 1 
+	if i < next_month_length: jump 'tabmc41a'
+
+	$next_month_name = $mid($monthName[next_month],1,1) + '<br>' + $mid($monthName[next_month],2,1) + '<br>' + $mid($monthName[next_month],3,1)
+
+	k = 0
+	month_weeks = (next_month_first_day_week + next_month_length + 5)/7 - 1
+	i = month_weeks
+:tabmc42
+	$tabmc +='<tr>'
+	j = 7
+	if i = month_weeks:$tabmc +='<td rowspan="<<month_weeks+1>>" align = "center"><<$next_month_name>></td>'
+:tabmc43
+	if j > 0: 
+		j -=1
+		if $mk1_mdays[k]='&nbsp':
+			$tabmc +='<td><<$mk1_mdays[k]>></td>'
+		else
+			$tabmc +='<td<<$MenCalCopy[r]>> ><<$mk1_mdays[k]>></td>'
+			r +=1
+		end
+		k +=1
+		jump 'tabmc43'
+	end
+	if i > 0: i -=1 & $tabmc +='</tr>' & jump 'tabmc42'
+	killvar '$mk1_mdays'
+
+	
+	$tabmc += '</tr><table></font></center>'
+	$tabmc
+	act 'Back': gt 'restoreposition'
+end
+
+!! gs 'shortgs','fonts'
+if $ARGS[0] = 'fonts':
+	if $ARGS[1] = 'refresh': 
+		jump 'fontsloop'
+	else
+		$dynamicreturn = $ARGS[1]
+		$OpenPhraseSave = $ARGS[2]
+		$ClosePhraseSave = $ARGS[3]
+	end
+	gs 'saveposition'
+	$fontlist[] = 'Lucida' & $fontlist[] = 'Ariel' & $fontlist[] = 'Tahoma' & $fontlist[] = 'Verdana' & $fontlist[] = 'Courier New' & $fontlist[] = 'Courier' & $fontlist[] = 'Georgia' & $fontlist[] = 'Times New Roman' & $fontlist[] = 'Garamond' & $fontlist[] = 'Bookman' & $fontlist[] = 'Times New Roman' & $fontlist[] = 'Times' & $fontlist[] = 'Comic Sans MS' & $fontlist[] = 'Trebuchet MS' & $fontlist[] = 'Impact' & $fontlist[] = 'BankGothic'
+	$fontcolor[] = 'aqua' & $fontcolor[] = 'black' & $fontcolor[] = 'blue' & $fontcolor[] = 'fuchsia' & $fontcolor[] = 'green' & $fontcolor[] = 'gray' & $fontcolor[] = 'lime' & $fontcolor[] = 'maroon' & $fontcolor[] = 'navy' & $fontcolor[] = 'olive' & $fontcolor[] = 'purple' & $fontcolor[] = 'red' & $fontcolor[] = 'silver' & $fontcolor[] = 'teal' & $fontcolor[] = 'white' & $fontcolor[] = 'yellow' 
+	i = 15
+:fontsloop0
+	if $CurFont = $fontlist[i]: curfont = i
+	if $CurColor = $fontcolor[i]: curcolor = i
+	i -= 1
+	if i > 0: jump 'fontsloop0'
+	jump 'fontsloop1'
+:fontsloop
+	$OpenPhrase = '<font size="<<CurFontSize>>" color="<<$CurColor>>" face="<<$CurFont>>" >'+$CurBold+$CurItalic
+	$ClosePhrase = $CurItalicBack+$CurBoldBack+'</font>'
+:fontsloop1
+	*clr & cla
+	$OpenPhrase+'Current font is <<$CurFont>> Size <<CurFontSize>>, the color is <<$CurColor>>, the Bold is <<iif($CurBold = ''<b>'',''On'',''Off'')>> and Italic is <<iif($CurItalic = ''<i>'',''On'',''Off'')>>'+$ClosePhrase
+	'<a href="exec: curfont = (curfont + 1) mod 16 & $CurFont = $fontlist[curfont] & gs ''shortgs'',''fonts'',''refresh'' ">Change the Font</a>'
+	'<a href="exec: curcolor = (curcolor + 1) mod 16 & $CurColor = $fontcolor[curcolor] & gs ''shortgs'',''fonts'',''refresh'' ">Change the Color</a>'
+	'<a href="exec:$CurBold = iif($CurBold ! ''<b>'',''<b>'','' '') & $CurBoldBack = iif($CurBold = ''<b>'',''</b>'','' '') & gs ''shortgs'',''fonts'',''refresh'' ">Change the BoldState</a>'
+	'<a href="exec:$CurItalic = iif($CurItalic ! ''<i>'',''<i>'','' '') & $CurItalicBack = iif($CurItalic = ''<i>'',''</i>'','' '') & gs ''shortgs'',''fonts'',''refresh'' ">Change the ItalicState</a>'
+	'<a href="exec:CurfontSize -= 1 & gs ''shortgs'',''fonts'',''refresh'' ">Decrease the Font</a>&nbsp&nbsp&nbsp<a href="exec:CurfontSize += 1 & gs ''shortgs'',''fonts'',''refresh'' ">Increase the font</a>'
+
+	act 'Back': 
+		killvar '$fontlist'
+		killvar '$fontcolor'
+		dynamic '<<$OpenPhraseSave>> = $OpenPhrase'
+		dynamic '<<$ClosePhraseSave>> = $ClosePhrase'
+		if $dynamicreturn ! '': dynamic 'dynamic <<$dynamicreturn>>'
+		gt 'restoreposition'
+	end
+end
 
 --- shortgs ---------------------------------
 
