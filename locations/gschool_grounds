@@ -29,7 +29,7 @@ if $ARGS[0] = 'main':
 		end
 	end
 
-	if hour <= 8 and StoryLine > 0 and SchoolAtestat = 0 and kanikuli = 6:
+	if hour <= 8 and kanikuli = 6:
 		'Today is graduation day! The school prom is tonight as well.'
 
 		act 'Go to your graduation':
@@ -52,10 +52,10 @@ if $ARGS[0] = 'main':
 				cumspclnt = 2
 				gs 'cum_cleanup'
 				pcs_breath = 0
-				tanga = 0
+				gs 'underwear', 'remove'
 				gs 'stat'
 				gs 'clothing', 'strip'
-!gee gee, no normal outlet
+				!gee gee, no normal outlet
 				'After the official graduation, everyone gets hammered at the prom party. You don''t remember much of what happened, only recalling a few flashbacks of going skinny dipping in the town fountain with a group of friends. Your mouth is dry and you can taste beer and what might be a kebab, you are somewhere in the town center, all of your clothes are missing and you are completely naked.'
 				'You make your way back home, you think you are discrete and stick to poorly lit areas but you really don''t remember and somehow have bits of someone''s hedge in your hair.'
 
@@ -138,7 +138,15 @@ if $ARGS[0] = 'main':
 
 	if zverRageQW = 1:gt 'gschool_grounds', 'KristinaFight'
 
-	if week <= 5 and hour >= 14 and hour <= 15 and NikoVolkovQW = 5 and NikoDate = 1 and NikoDate_Day ! daystart or NikoEv = 11 and NikoDate_Day ! daystart:
+	if hour >= 14 and hour <= 15 and dimaRevenge = 3 and dimaRevChoice = 5 or dimaRevChoice = 3:
+		gt 'dimaRevenge', dimaRevenge
+	elseif hour >= 14 and hour <= 15 and dimaRevenge = 4 and dimaRevChoice = 4:
+		gt 'dimaRevenge', dimaRevenge, 'after'
+	elseif hour >= 14 and hour <= 15 and dimaRevenge = 5 and dimaRevChoice = 0:
+		gt 'dimaRevenge', dimaRevenge
+	elseif hour >= 14 and hour <= 15 and dimaRevenge = 5 and dimaRevChoice = 2:
+		gt 'dimaRevenge', dimaRevenge, 'after'
+	elseif week <= 5 and hour >= 14 and hour <= 15 and NikoVolkovQW = 5 and NikoDate = 1 and NikoDate_Day ! daystart or NikoEv = 11 and NikoDate_Day ! daystart:
 		'You can see <a href="exec:gt ''NikoEv'', ''Niko Dates''">Nikolai Volkov</a> smoking outside of the school.'
 	elseif week <= 5 and hour >= 14 and hour <= 15 and NikoVolkovQW = 10 and NikoEv >= 17 and NikoEv <= 20 and NikoDate_Day ! daystart:
 		'<a href="exec:gt ''NikoEv2'', ''Events''">Nikolai Volkov</a> is smoking outside of the school.'	
@@ -218,7 +226,7 @@ if $ARGS[0] = 'main':
 			if AlbFrend >= 1 and albrideday ! daystart:'<a href="exec:minut += 15 & gt ''albinaRide''">Albina Barlovskaya</a> is waiting behind the wheel of a large black SUV, parked near the school.'
 		end
 		! meynold`s events
-		if minut >= 0 and minut <= 15: gs 'mey_vika_events', 'near_school'
+		if minut >= 0 and minut <= 15 and vicky_afterschool ! daystart: gs 'mey_vika_events', 'near_school'
 		if mey_vika['mey_vika_qw'] = 35 or mey_vika['mey_vika_qw'] = 36 and minut < 30:
 			act 'go to class to Tamara Mikhailovna': 
 				if mey_vika['mey_vika_qw'] = 36: gt 'mey_tamara_events', 'rebuke'
@@ -315,6 +323,17 @@ if $ARGS[0] = 'bulding':
 	
 	act 'Return to town':gt 'pavResidential'
 
+	if dimaRevenge = 1:
+			'You''re in a good mood today as you enter the school. That changes when Dimka stops you in the hall on the way to class.
+			"I know what you did, bitch. Did you really thing I wouldn''t figure out it was you that wiped my harddrive." 
+			Before you can deny anything he continues: "I don''t even need that video to ruin your life. Just you wait. Soon the whole school will know what a whore you are."
+			His words fill you with dread as you make your way to class.'
+	elseif dimaRevenge = 4:
+		gt 'dimaRevenge', dimaRevenge, 'before'
+	elseif dimaRevenge = 5:
+		gt 'dimaRevenge', dimaRevenge, 'before'
+	end
+	
 	if zverSlutQW = 1 and week = 1 and lariskaQwestDay < daystart and lariskaQwestDay ! 0 and zverRageQW = 2:
 		zverSlutQW = 2
 		if KotovZverHelp ! 1:
@@ -549,13 +568,11 @@ if $ARGS[0] = 'SchoolRun2':
 end
 
 if $ARGS[0] = 'change_room':
-	$metkaM = 'change_room'
-	$locM = 'gschool_grounds'
 	$metka = 'change_room'
 	$loc = 'gschool_grounds'
-	$gt1 = 'gschool_grounds'
-	$gt2 = 'change_room'
-    $location_type = 'bathroom'
+	$location_type = 'bathroom'
+	$locM = 'gschool_grounds'
+	$metkaM = 'change_room'
 	cls
 	minut += 5
 	gs 'stat'
@@ -585,14 +602,8 @@ if $ARGS[0] = 'change_room':
 		exit
 	end
 
-	act 'Look in the mirror':
-		cla
-		gt 'portmirror', 'start'
-	end
-
-	if pcs_hairbsh = 0:
-		act 'Brush your hair': gt 'portmirror', 'brush'
-	end
+	act 'Look in the mirror': gt 'mirror', 'start'
+	if pcs_hairbsh = 0: act 'Brush your hair': gt 'mirror', 'brush'
 
 	if (cumloc[6] = 1 or cumloc[7] = 1):
 		act 'Wipe the cum off your clothes (0:10)':

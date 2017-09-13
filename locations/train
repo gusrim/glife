@@ -1,429 +1,460 @@
 # train
 
 !!destination 3
-if $ARGS[0] = 'old_platform':
-	cls
+if $ARGS[0] = 'communal':
+	*clr & cla
 	gs 'stat'
 	'<center><img <<$set_imgh>> src="images/locations/shared/train/oldplat.jpg" ></center>'
 	'An old railway platform, it looks like it was abandoned the sign no longer legible, but there''s a hand painted sign from the communal cottages not too far away.'
 
 	act 'Return to the road':minut += 15 & nroad = 5 & gt 'road'
+	*nl
+	if Trainpass_day > daystart:
+		'You have <<Trainpass_day - daystart>> days left on your train pass.'
+		act 'Go to platforms': gt 'train', 'communal_trains'
+	else
+		act 'Buy a ticket': gt 'train', 'communal_tickets'
+	end
+end
 
-	if money >= 75:
-		act 'Buy a ticket to St. Petersburg city center (75 <b>₽</b>)':
-			cls
-			train_event = 0
+if $ARGS[0] = 'communal_tickets':
+	act 'Buy a ticket to St. Petersburg city center (75 <b>₽</b>)':
+		if money >= 75:
 			money -= 75
-			train_dest = 1
-			minut += 15
-			if rand(1, 100) <= 10: gt 'train_incidental', 'events'
-			if rand(1, 100) <= 20 and train_event = 0: gt 'train', 'events'
-			$loc = 'cityTrain'
-			$metka = 'inside'
-			gs 'stat'
-			'<center><img <<$set_imgh>> src="images/locations/shared/train/cityplat.jpg" ></center>'
-			'After 15 minutes, the train stops at the St. Petersburg city center station. The large office blocks and shopping centers fill your view.'
-			act 'Get off the train':
-				if train_event = 0 and rand(1, 100) <= 5: gt 'train_incidental', 'end'
-				gt 'cityTrain', 'inside'
-			end
+			gt 'train', 'communal_centre'
+		else
+			'You don''t have enough money for this ticket.'
 		end
 	end
-	if money >= 50:
-		act 'Buy a ticket to St. Petersburg city industrial area (50 <b>₽</b>)':
-			cls
-			train_event = 0
+	act 'Buy a ticket to St. Petersburg city industrial area (50 <b>₽</b>)':
+		if money >= 50:
 			money -= 50
-			train_dest = 2
-			$loc = 'train'
-			$metka = 'industrialN'
-			minut += 10
-			gs 'stat'
-			if rand(1, 100) < 20: gt 'train', 'events'
-			'<center><img <<$set_imgh>> src="images/locations/shared/train/indusplat.jpg" ></center>'
-			'After 10 minutes, the train stops at the St. Petersburg city industrial area station.'
-			act 'Get off the train':
-				$loc = 'vokzalholle'
-				$metka = ''
-				if train_event = 0 and rand(1, 100) <= 5: gt 'train_incidental', 'end'
-				gt 'vokzalholle'
-			end
+			gt 'train', 'communal_ind'
+		else
+			'You don''t have enough money for this ticket.'
 		end
 	end
-	if money >= 50:
-		act 'Buy a ticket to the village of Gadyukino (50 <b>₽</b>)':
-			cls
-			train_event = 0
+	act 'Buy a ticket to the village of Gadyukino (50 <b>₽</b>)':
+		if money >= 50:
 			money -= 50
-			train_dest = 4
-			$loc = 'train'
-			$metka = 'villageS'
-			minut += 10
-			gs 'stat'
-			if rand(1, 100) < 20: gt 'train', 'events'
-			'<center><img <<$set_imgh>> src="images/locations/shared/train/gadplat.jpg" ></center>'
-			'After 10 minutes, the train stops at the small station near the village of Gadyukino.'
-			act 'Get off the train':
-				$metka = 'village'
-				if train_event = 0 and rand(1, 100) <= 5: gt 'train_incidental', 'end'
-				gt 'train', 'village'
-			end
+			gt 'train', 'communal_village'
+		else
+			'You don''t have enough money for this ticket.'
 		end
 	end
-	if money >= 75:
-		act 'Buy a ticket to the old platform by the old town (75 <b>₽</b>)':
-			cls
-			$loc = 'train'
-			$metka = 'oldtownS'
-			train_event = 0
+	act 'Buy a ticket to the old platform by the old town (75 <b>₽</b>)':
+		if money >= 75:
 			money -= 75
-			train_dest = 5
-			minut += 20
-			gs 'stat'
-			if rand(1, 100) <= 10: gt 'train_incidental', 'events'
-			if train_event = 0 and rand(1, 100) < 20: gt 'train', 'events'
-			'<center><img <<$set_imgh>> src="images/locations/shared/train/pushplat.jpg" ></center>'
-			'After 20 minutes, the train stops at old platform by the old town of Pushkin. Famous for its extensive park and old historic buildings, the locals are known to be eccentric but that adds to the charm.'
-			act 'Get off the train':
-				$metka = 'oldtown'
-				if train_event = 0 and rand(1, 100) <= 5: gt 'train_incidental', 'end'
-				gt 'train', 'oldtown'
-			end
+			gt 'train', 'communal_oldtown'
+		else
+			'You don''t have enough money for this ticket.'
 		end
 	end
-	if money >= 100:
-		act 'Buy a ticket to Pavlovsk (100 <b>₽</b>)':
-			cls
-			$loc = 'vokzalperG'
-			$metka = ''
-			train_event = 0
+	act 'Buy a ticket to Pavlovsk (100 <b>₽</b>)':
+		if money >= 100:
 			money -= 100
-			train_dest = 6
-			minut += 25
-			gs 'stat'
-			if rand(1, 100) <= 20: gt 'train_incidental', 'events'
-			if train_event = 0 and rand(1, 100) < 20: gt 'train', 'events'
-			'<center><img <<$set_imgh>> src="images/locations/shared/train/pavplat.jpg" ></center>'
-			'After 5 minutes, you see the town of Pavlovsk approaching. Pavlovsk Castle is an impressive sight, even from a long distance. The train stops at its final destination, a platform in Pavlovsk station.'
-			act 'Get off the train': gt 'vokzalperG'
+			gt 'train', 'communal_pavlovsk'
+		else
+			'You don''t have enough money for this ticket.'
 		end
 	end
+	act 'Return': gt 'train', 'communal'
 end
 
-!!destination 4
-if $ARGS[0] = 'village':
-	cls
-	gs 'stat'
-	'<center><img <<$set_imgh>> src="images/locations/shared/train/gadplat.jpg" ></center>'
-	'A fairly non-descript railway platform. The small village of Gadyukino where your grandparents reside is not far from here.'
+if $ARGS[0] = 'communal_trains':
+	act 'Take a train to St. Petersburg city center': gt 'train', 'communal_centre'
 
-	act 'Return to the road':minut += 15 & nroad = 10 & gt 'road'
+	act 'Take a train to St. Petersburg city industrial area': gt 'train', 'communal_ind'
 
-	if money >= 100:
-		act 'Buy a ticket to St. Petersburg city center (100 <b>₽</b>)':
-			$loc = 'train'
-			$metka = 'villageN'
-			train_event = 0
-			money -= 100
-			train_dir = 1
-			train_dest = 1
-			gt 'train', 'villageN'
-		end
-	end
-	if money >= 75:
-		act 'Buy a ticket to St. Petersburg city industrial area (75 <b>₽</b>)':
-			$loc = 'train'
-			$metka = 'villageN'
-			train_event = 0
-			money -= 75
-			train_dir = 1
-			train_dest = 2
-			gt 'train', 'villageN'
-		end
-	end
-	if money >= 50:
-		act 'Buy a ticket to the old platform by the communal village (50 <b>₽</b>)':
-			$loc = 'train'
-			$metka = 'villageN'
-			train_event = 0
-			money -= 50
-			train_dir = 1
-			train_dest = 3
-			gt 'train', 'villageN'
-		end
-	end
-	if money >= 50:
-		act 'Buy a ticket to the old town (50 <b>₽</b>)':
-			$loc = 'train'
-			$metka = 'villageS'
-			train_event = 0
-			money -= 50
-			train_dir = 1
-			train_dest = 5
-			gt 'train', 'villageS'
-		end
-	end
-	if money >= 75:
-		act 'Buy a ticket to Pavlovsk (75 <b>₽</b>)':
-			$loc = 'train'
-			$metka = 'villageS'
-			train_event = 0
-			money -= 75
-			train_dir = 1
-			train_dest = 6
-			gt 'train', 'villageS'
-		end
-	end
+	act 'Take a train to the village of Gadyukino': gt 'train', 'communal_village'
+
+	act 'Take a train to the old platform by the old town': gt 'train', 'communal_oldtown'
+
+	act 'Take a train to Pavlovsk': gt 'train', 'communal_pavlovsk'
+
+	act 'Return': gt 'train', 'communal'
 end
 
-!!destination 5
-if $ARGS[0] = 'oldtown':
-	$loc = 'train'
-	$metka = 'oldtownN'
-	cls
-	gs 'stat'
-	'<center><img <<$set_imgh>> src="images/locations/shared/train/pushplat.jpg" ></center>'
-	'A fairly modern railway platform. The old town of Pushkin is just a five minute walk away from here, on the other side of the road.'
-
-	act 'Return to the road':minut += 15 & nroad = 15 & gt 'road'
-
-	if money >= 125:
-		act 'Buy a ticket to St. Petersburg city center (125 <b>₽</b>)':
-			train_event = 0
-			money -= 125
-			train_dir = 1
-			train_dest = 1
-			if rand(1, 100) < 15: gt 'train', 'private'
-			gt 'train', 'oldtownN'
-		end
-	end
-	if money >= 100:
-		act 'Buy a ticket to St. Petersburg city industrial area (100 <b>₽</b>)':
-			train_event = 0
-			money -= 100
-			train_dir = 1
-			train_dest = 2
-			gt 'train', 'oldtownN'
-		end
-	end
-	if money >= 75:
-		act 'Buy a ticket to the old platform by the communal village (75 <b>₽</b>)':
-			train_event = 0
-			money -= 75
-			train_dir = 1
-			train_dest = 3
-			gt 'train', 'oldtownN'
-		end
-	end
-	if money >= 50:
-		act 'Buy a ticket to the village of Gadyukino (50 <b>₽</b>)':
-			train_event = 0
-			money -= 50
-			train_dir = 1
-			train_dest = 4
-			gt 'train', 'oldtownN'
-		end
-	end
-	if money >= 50:
-		act 'Buy a ticket to Pavlovsk (50 <b>₽</b>)':
-			$loc = 'vokzalGin'
-			$metka = ''
-			train_event = 0
-			cls
-			money -= 50
-			minut += 5
-			gs 'stat'
-!!image needs to be random 1-3
-			'<center><img <<$set_imgh>> src="images/locations/shared/train/ride.jpg" ></center>'
-			'You pay for the ticket and board the next train going to Pavlovsk.'
-			'After 5 minutes, you see the town of Pavlovsk approaching. Pavlovsk Castle is an impressive sight, even from a long distance. The train stops at its final destination, a platform at Pavlovsk station.'
-
-			act 'Get off the train at this station':minut += 20 & nroad = 20 & gt 'vokzalperG'
-		end
-	end
-end
-
-!!For travel north from old town to village
-if $ARGS[0] = 'oldtownN':
-	cls
-	$loc = 'train'
-	$metka = 'villageN'
-	minut += 10
-	gs 'stat'
-	if train_dest = 4 and train_event = 0 and rand(1, 100) < 20: gt 'train', 'events'
-	if train_dest < 4 and train_event = 0 and rand(1, 100) <= 10: gt 'train_incidental', 'events'
-!!image needs to be random 1-3
-	'<center><img <<$set_imgh>> src="images/locations/shared/train/gadplat.jpg" ></center>'
-	'After 10 more minutes, the train stops at another station. The small village of Gadyukino where your grandparents reside is not far from here.'
-	act 'Get off the train at this station':
-		$metka = 'village'
-		if train_event = 0 and rand(1, 100) <= 5: gt 'train_incidental', 'end'
-		gt 'train', 'village'
-	end
-	if train_dest < 4:
-		act 'Continue your journey':
-			gt 'train', 'villageN'
-		end
-	end
-end
-
-!!For travel north from village the communal cottages
-if $ARGS[0] = 'villageN':
-	cls
-	$loc = 'train'
-	$metka = 'communalN'
-	minut += 10
-	gs 'stat'
-	if train_dest = 3 and train_event = 0 and rand(1, 100) < 20: gt 'train', 'events'
-	if train_dest < 3 and train_event = 0 and rand(1, 100) <= 10: gt 'train_incidental', 'events'
-!!image needs to be random 1-3
-	'<center><img <<$set_imgh>> src="images/locations/shared/train/oldplat.jpg" ></center>'
-	'After 10 more minutes, the train stops at an old platform. The communal cottages are in this area along with some wide open fields streching as long as your eyes can see.'
-	act 'Get off the train at this station':
-		$metka = 'old_platform'
-		if train_event = 0 and rand(1, 100) <= 5: gt 'train_incidental', 'end'
-		gt 'train', 'old_platform'
-	end
-	if train_dest < 3:
-		act 'Continue your journey':
-			gt 'train', 'communalN'
-		end
-	end
-end
-
-!!For travel north from communal cottages to city industrial
-if $ARGS[0] = 'communalN':
-	cls
-	$loc = 'train'
-	$metka = 'industrialN'
-	minut += 10
-	gs 'stat'
-	if train_dest = 2 and train_event = 0 and rand(1, 100) < 20: gt 'train', 'events'
-	if train_dest < 2 and train_event = 0 and rand(1, 100) <= 10: gt 'train_incidental', 'events'
-!!image needs to be random 1-3
-	'<center><img <<$set_imgh>> src="images/locations/shared/train/indusplat.jpg" ></center>'
-	'After 10 more minutes, the train stops at another station. This is the industrial area of the city.'
-	act 'Get off the train at this station':
-		train_dir = 0
-		$loc = 'vokzalholle'
-		$metka = ''
-		if train_event = 0 and rand(1, 100) <= 5: gt 'train_incidental', 'end'
-		gt 'vokzalholle'
-	end
-	if train_dest < 2:
-		act 'Continue your journey':
-			gt 'train', 'industrialN'
-		end
-	end
-end
-
-!!For travel north from city industrial to city center
-if $ARGS[0] = 'industrialN':
-	cls
+if $ARGS[0] = 'communal_centre':
+	minut += 15
 	$loc = 'cityTrain'
 	$metka = 'inside'
-	minut += 5
+	if rand(1, 100) <= 10: gt 'train_incidental', 'events'
+	if rand(1, 100) <= 20: gt 'train', 'events'
 	gs 'stat'
-	if train_dest = 1 and train_event = 0 and rand(1, 100) < 20: gt 'train', 'events'
-!!image needs to be random 1-3
 	'<center><img <<$set_imgh>> src="images/locations/shared/train/cityplat.jpg" ></center>'
-	'After 5 more minutes, the train stops at the large city center station. The large office blocks and shopping centers fill your view.'
-	act 'Get off the train at this station':
-		train_dir = 0
-		$loc = 'cityTrain'
-		$metka = 'inside'
+	'After 15 minutes, the train stops at the St. Petersburg city center station. The large office blocks and shopping centers fill your view.'
+	act 'Get off the train':
 		if train_event = 0 and rand(1, 100) <= 5: gt 'train_incidental', 'end'
 		gt 'cityTrain', 'inside'
 	end
 end
 
-!!For travel south from city industrial to communal cottages
-if $ARGS[0] = 'industrialS':
-	cls
-	$loc = 'train'
-	$metka = 'communalS'
+if $ARGS[0] = 'communal_ind':
+	$loc = 'vokzalholle'
+	$metka = ''
 	minut += 10
+	if rand(1, 100) < 20: gt 'train', 'events'
 	gs 'stat'
-	if train_dest = 3 and train_event = 0 and rand(1, 100) < 20: gt 'train', 'events'
-	if train_dest > 3 and train_event = 0 and rand(1, 100) <= 10: gt 'train_incidental', 'events'
-!!image needs to be random 1-3
-	'<center><img <<$set_imgh>> src="images/locations/shared/train/oldplat.jpg" ></center>'
-	'After 10 more minutes, the train stops at an old platform. The communal cottages are in this area along with some wide open fields streching as long as your eyes can see.'
-	act 'Get off the train at this station':
-		train_dir = 0
-		$metka = 'old_platform'
+	'<center><img <<$set_imgh>> src="images/locations/shared/train/indusplat.jpg" ></center>'
+	'After 10 minutes, the train stops at the St. Petersburg city industrial area station.'
+	act 'Get off the train':
 		if train_event = 0 and rand(1, 100) <= 5: gt 'train_incidental', 'end'
-		gt 'train', 'old_platform'
-	end
-	if train_dest > 3:
-		act 'Continue your journey':
-			gt 'train', 'communalS'
-		end
+		gt 'vokzalholle'
 	end
 end
 
-!!For travel south from communal cottages to village
-if $ARGS[0] = 'communalS':
-	cls
+if $ARGS[0] = 'communal_village':
 	$loc = 'train'
-	$metka = 'villageS'
+	$metka = 'village'
 	minut += 10
+	if rand(1, 100) < 20: gt 'train', 'events'
 	gs 'stat'
-	if train_dest = 4 and train_event = 0 and rand(1, 100) < 20: gt 'train', 'events'
-	if train_dest > 4 and train_event = 0 and rand(1, 100) <= 10: gt 'train_incidental', 'events'
-!!image needs to be random 1-3
 	'<center><img <<$set_imgh>> src="images/locations/shared/train/gadplat.jpg" ></center>'
-	'After 10 more minutes, the train stops at another station. The village of Gadyukino where you grandparents reside is not far from here.'
-	act 'Get off the train at this station':
-		$metka = 'village'
+	'After 10 minutes, the train stops at the small station near the village of Gadyukino.'
+	act 'Get off the train':
 		if train_event = 0 and rand(1, 100) <= 5: gt 'train_incidental', 'end'
 		gt 'train', 'village'
 	end
-	if train_dest > 4:
-		act 'Continue your journey':
-			gt 'train', 'villageS'
-		end
-	end
 end
 
-!!For travel south from village to oldtown
-if $ARGS[0] = 'villageS':
-	cls
+if $ARGS[0] = 'communal_oldtown':
 	$loc = 'train'
-	$metka = 'oldtownS'
-	minut += 10
+	$metka = 'oldtown'
+	minut += 20
+	if rand(1, 100) <= 10: gt 'train_incidental', 'events'
+	if rand(1, 100) < 20: gt 'train', 'events'
 	gs 'stat'
-	if train_dest = 5 and train_event = 0 and rand(1, 100) < 20: gt 'train', 'events'
-	if train_dest > 5 and train_event = 0 and rand(1, 100) <= 10: gt 'train_incidental', 'events'
-!!image needs to be random 1-3
 	'<center><img <<$set_imgh>> src="images/locations/shared/train/pushplat.jpg" ></center>'
-	'After 10 more minutes, the train stops at another station. The old town of Pushkin famous for its extensive park and old historic buildings, the locals are known to be eccentric but that adds to the charm.'
-	act 'Get off the train at this station':
-		$metka = 'oldtown'
+	'After 20 minutes, the train stops at old platform by the old town of Pushkin. Famous for its extensive park and old historic buildings, the locals are known to be eccentric but that adds to the charm.'
+	act 'Get off the train':
 		if train_event = 0 and rand(1, 100) <= 5: gt 'train_incidental', 'end'
 		gt 'train', 'oldtown'
 	end
-	if train_dest > 5:
-		act 'Continue your journey':
-			gt 'train', 'oldtownS'
+end
+
+if $ARGS[0] = 'communal_pavlovsk':
+	$loc = 'vokzalperG'
+	$metka = ''
+	minut += 25
+	if rand(1, 100) <= 20: gt 'train_incidental', 'events'
+	if rand(1, 100) < 20: gt 'train', 'events'
+	gs 'stat'
+	'<center><img <<$set_imgh>> src="images/locations/shared/train/pavplat.jpg" ></center>'
+	'After 5 minutes, you see the town of Pavlovsk approaching. Pavlovsk Castle is an impressive sight, even from a long distance. The train stops at its final destination, a platform in Pavlovsk station.'
+	act 'Get off the train': gt 'vokzalperG'
+end
+
+!!destination 4
+if $ARGS[0] = 'village':
+	*clr & cla
+	gs 'stat'
+	'<center><img <<$set_imgh>> src="images/locations/shared/train/gadplat.jpg" ></center>'
+	if storyline = 1:
+		'A fairly non-descript railway platform. The small village of Gadyukino where your grandparents reside is not far from here.'
+	else
+		'A fairly non-descript railway platform. The small village of Gadyukino where some farmers reside is not far from here.'
+	end
+
+	act 'Return to the road':minut += 15 & nroad = 10 & gt 'road'
+	*nl
+	if Trainpass_day > daystart:
+		'You have <<Trainpass_day - daystart>> days left on your train pass.'
+		act 'Go to platforms': gt 'train', 'village_trains'
+	else
+		act 'Buy a ticket': gt 'train', 'village_tickets'
+	end
+end
+
+if $ARGS[0] = 'village_tickets':
+	act 'Buy a ticket to St. Petersburg city center (100 <b>₽</b>)':
+		if money >= 100:
+			money -= 100
+			gt 'train', 'village_centre'
+		else
+			'You don''t have enough money for this ticket.'
+		end
+	end
+	act 'Buy a ticket to St. Petersburg city industrial area (75 <b>₽</b>)':
+		if money >= 75:
+			money -= 75
+			gt 'train', 'village_ind'
+		else
+			'You don''t have enough money for this ticket.'	
+		end
+	end
+	act 'Buy a ticket to the old platform by the communal village (50 <b>₽</b>)':
+		if money >= 50:
+			money -= 50
+			gt 'train', 'village_communal'
+		else
+			'You don''t have enough money for this ticket.'	
+		end
+	end	
+	act 'Buy a ticket to the old town (50 <b>₽</b>)':
+		if money >= 50:
+			money -= 50
+			gt 'train', 'village_oldtown'
+		else
+			'You don''t have enough money for this ticket.'	
+		end
+	end
+	act 'Buy a ticket to Pavlovsk (75 <b>₽</b>)':
+		if money >= 75:
+			money -= 75
+			gt 'train', 'village_pavlovsk'
+		else
+			'You don''t have enough money for this ticket.'	
+		end
+	end
+	act 'Return': gt 'train', 'village'
+end
+
+if $ARGS[0] = 'village_trains':
+	act 'Take a train to St. Petersburg city center': gt 'train', 'village_centre'
+
+	act 'Take a train to St. Petersburg city industrial area': gt 'train', 'village_ind'
+
+	act 'Take a train to the communal village': gt 'train', 'village_communal'
+
+	act 'Take a train to the old town': gt 'train', 'village_oldtown'
+
+	act 'Take a train to Pavlovsk': gt 'train', 'village_pavlovsk'
+
+	act 'Return': gt 'train', 'village'
+end
+
+
+if $ARGS[0] = 'village_centre':
+	$loc = 'cityTrain'
+	$metka = 'inside'
+	minut += 25
+	if rand(1, 100) <= 10: gt 'train_incidental', 'events'
+	if rand(1, 100) <= 20: gt 'train', 'events'
+	gs 'stat'
+	if rand(1, 100) <= 10: gt 'train_incidental', 'events'
+	if rand(1, 100) <= 20: gt 'train', 'events'
+	'<center><img <<$set_imgh>> src="images/locations/shared/train/cityplat.jpg" ></center>'
+	'After 25 minutes, the train stops at the St. Petersburg city center station. The large office blocks and shopping centers fill your view.'
+	act 'Get off the train':
+		if train_event = 0 and rand(1, 100) <= 5: gt 'train_incidental', 'end'
+		gt 'cityTrain', 'inside'
+	end
+end
+
+if $ARGS[0] = 'village_ind':
+	$loc = 'vokzalholle'
+	$metka = ''
+	minut += 20
+	if rand(1, 100) <= 10: gt 'train_incidental', 'events'
+	if rand(1, 100) <= 20: gt 'train', 'events'
+	gs 'stat'
+	if rand(1, 100) <= 10: gt 'train_incidental', 'events'
+	if rand(1, 100) <= 20: gt 'train', 'events'
+	'<center><img <<$set_imgh>> src="images/locations/shared/train/indusplat.jpg" ></center>'
+	'After 20 minutes, the train stops at the St. Petersburg city industrial area station.'
+	act 'Get off the train':
+		if train_event = 0 and rand(1, 100) <= 5: gt 'train_incidental', 'end'
+		gt 'vokzalholle'
+	end
+end
+
+if $ARGS[0] = 'village_communal':
+	$loc = 'train'
+	$metka = 'communal'
+	minut += 10
+	if rand(1, 100) < 20: gt 'train', 'events'
+	gs 'stat'
+	if rand(1, 100) < 20: gt 'train', 'events'
+	'<center><img <<$set_imgh>> src="images/locations/shared/train/oldplat.jpg" ></center>'
+	'After 10 minutes you arrive at an old railway platform near the communal village.'
+	act 'Get off the train':
+		if train_event = 0 and rand(1, 100) <= 5: gt 'train_incidental', 'end'
+		gt 'train', 'communal'
+	end
+end
+
+if $ARGS[0] = 'village_oldtown':
+	$loc = 'train'
+	$metka = 'oldtown'
+	minut += 10
+	if rand(1, 100) < 20: gt 'train', 'events'
+	gs 'stat'
+	if rand(1, 100) < 20: gt 'train', 'events'
+	'<center><img <<$set_imgh>> src="images/locations/shared/train/pushplat.jpg" ></center>'
+	'After 10 minutes, the train stops at old platform by the old town of Pushkin. Famous for its extensive park and old historic buildings, the locals are known to be eccentric but that adds to the charm.'
+	act 'Get off the train':
+		if train_event = 0 and rand(1, 100) <= 5: gt 'train_incidental', 'end'
+		gt 'train', 'oldtown'
+	end
+end
+
+if $ARGS[0] = 'village_pavlovsk':
+	$loc = 'vokzalperG'
+	$metka = ''
+	train_event = 0
+	money -= 75
+	train_dest = 6
+	minut += 15
+	if rand(1, 100) <= 20: gt 'train_incidental', 'events'
+	if rand(1, 100) < 20: gt 'train', 'events'
+	gs 'stat'
+	'<center><img <<$set_imgh>> src="images/locations/shared/train/pavplat.jpg" ></center>'
+	'After 15 minutes, you see the town of Pavlovsk approaching. Pavlovsk Castle is an impressive sight, even from a long distance. The train stops at its final destination, a platform in Pavlovsk station.'
+	act 'Get off the train':
+		if train_event = 0 and rand(1, 100) <= 5: gt 'train_incidental', 'end'
+		gt 'vokzalperG'
+	end
+end
+
+!!destination 5
+if $ARGS[0] = 'oldtown':
+	*clr & cla
+	gs 'stat'
+	'<center><img <<$set_imgh>> src="images/locations/shared/train/pushplat.jpg" ></center>'
+	'A fairly modern railway platform. The old town of Pushkin is just a five minute walk away from here, on the other side of the road.'
+
+	act 'Return to the road':minut += 15 & nroad = 15 & gt 'road'
+	*nl
+	if Trainpass_day > daystart:
+		'You have <<Trainpass_day - daystart>> days left on your train pass.'
+		act 'Go to platforms': gt 'train', 'oldtown_trains'
+	else
+		act 'Buy a ticket': gt 'train', 'oldtown_tickets'
+	end
+end
+
+if $ARGS[0] = 'oldtown_tickets':
+	
+	act 'Buy a ticket to St. Petersburg city center (125 <b>₽</b>)':
+		if money >= 125:
+			money -= 125
+			gt 'train', 'oldtown_centre'
+		else
+			'You don''t have enough money for this ticket.'
+		end
+	end
+	act 'Buy a ticket to St. Petersburg city industrial area (100 <b>₽</b>)':
+		if money >= 100:
+			money -= 100
+			gt 'train', 'oldtown_ind'
+		else
+			'You don''t have enough money for this ticket.'
+		end
+	end	
+	act 'Buy a ticket to the old platform by the communal village (75 <b>₽</b>)':
+		if money >= 75:
+			money -= 75
+			gt 'train', 'oldtown_communal'
+		else
+			'You don''t have enough money for this ticket.'
+		end
+	end
+	act 'Buy a ticket to the village of Gadyukino (50 <b>₽</b>)':
+		if money >= 50:
+			money -= 50
+			gt 'train', 'oldtown_village'
+		else
+			'You don''t have enough money for this ticket.'	
+		end
+	end
+	act 'Buy a ticket to Pavlovsk (50 <b>₽</b>)':
+		if money >= 50:
+			money -= 50
+			gt 'train', 'oldtown_pavlovsk'
+		else
+			'You don''t have enough money for this ticket.'	
 		end
 	end
 end
 
-!!Traveling south from old town to Pav, end of the line
-if $ARGS[0] = 'oldtownS':
-	cls
+if $ARGS[0] = 'oldtown_trains':
+	act 'Take a train to St. Petersburg city center': gt 'train', 'oldtown_centre'
+
+	act 'Take a train to St. Petersburg city industrial area': gt 'train', 'oldtown_ind'
+
+	act 'Take a train to the old platform by the communal village': gt 'train', 'oldtown_communal'
+
+	act 'Take a train to the village of Gadyukino': gt 'train', 'oldtown_village'
+
+	act 'Take a train to Pavlovsk': gt 'train', 'oldtown_pavlovsk'
+end
+
+if $ARGS[0] = 'oldtown_centre':
+	$loc = 'cityTrain'
+	$metka = 'inside'
+	minut += 35
+	if rand(1, 100) < 15: gt 'train', 'private'
+	if rand(1, 100) < 30: gt 'train', 'Gopnik'
+	if rand(1, 100) <= 10: gt 'train_incidental', 'events'
+	if rand(1, 100) <= 20: gt 'train', 'events'
+	gs 'stat'
+	'<center><img <<$set_imgh>> src="images/locations/shared/train/cityplat.jpg" ></center>'
+	'After 35 minutes, the train stops at the St. Petersburg city center station. The large office blocks and shopping centers fill your view.'
+	act 'Get off the train':
+		if train_event = 0 and rand(1, 100) <= 5: gt 'train_incidental', 'end'
+		gt 'cityTrain', 'inside'
+	end
+end
+
+if $ARGS[0] = 'oldtown_ind':
+	$loc = 'vokzalholle'
+	$metka = ''
+	minut += 30
+	if rand(1, 100) <= 10: gt 'train_incidental', 'events'
+	if rand(1, 100) <= 20: gt 'train', 'events'
+	gs 'stat'
+	'<center><img <<$set_imgh>> src="images/locations/shared/train/indusplat.jpg" ></center>'
+	'After 30 minutes, the train stops at the St. Petersburg city industrial area station.'
+	act 'Get off the train':
+		if train_event = 0 and rand(1, 100) <= 5: gt 'train_incidental', 'end'
+		gt 'vokzalholle'
+	end
+end
+
+if $ARGS[0] = 'oldtown_communal':
+	$loc = 'train'
+	$metka = 'communal'
+	minut += 20
+	if rand(1, 100) <= 10: gt 'train_incidental', 'events'
+	if rand(1, 100) <= 20: gt 'train', 'events'
+	gs 'stat'
+	'<center><img <<$set_imgh>> src="images/locations/shared/train/oldplat.jpg" ></center>'
+	'After 20 minutes you arrive at an old railway platform near the communal village.'
+	act 'Get off the train':
+		if train_event = 0 and rand(1, 100) <= 5: gt 'train_incidental', 'end'
+		gt 'train', 'communal'
+	end
+end
+
+if $ARGS[0] = 'oldtown_village':
+	$loc = 'train'
+	$metka = 'village'
+	minut += 10
+	if rand(1, 100) < 20: gt 'train', 'events'
+	gs 'stat'
+	'<center><img <<$set_imgh>> src="images/locations/shared/train/gadplat.jpg" ></center>'
+	'After 10 minutes, the train stops at the small station near the village of Gadyukino.'
+	act 'Get off the train':
+		if train_event = 0 and rand(1, 100) <= 5: gt 'train_incidental', 'end'
+		gt 'train', 'village'
+	end
+end
+
+if $ARGS[0] = 'oldtown_pavlovsk':
 	$loc = 'vokzalperG'
 	$metka = ''
 	minut += 5
+	if rand(1, 100) <= 20: gt 'train_incidental', 'events'
+	if rand(1, 100) < 20: gt 'train', 'events'
 	gs 'stat'
-	if train_dest = 6 and train_event = 0 and rand(1, 100) < 20: gt 'train', 'events'
-!!image needs to be random 1-3
 	'<center><img <<$set_imgh>> src="images/locations/shared/train/pavplat.jpg" ></center>'
 	'After 5 minutes, you see the town of Pavlovsk approaching. Pavlovsk Castle is an impressive sight, even from a long distance. The train stops at its final destination, a platform in Pavlovsk station.'
-	act 'Get off the train at this station': gt 'vokzalperG'
+	act 'Get off the train':
+		if train_event = 0 and rand(1, 100) <= 5: gt 'train_incidental', 'end'
+		gt 'vokzalperG'
+	end
 end
-
 
 !!new train and train station events.
 !!chances are for leaving Pavlovsk to the city. Private compartment 10%, oldman 10%, fit 15%, young 20%, weed 20%, gopnik 25%. 
@@ -437,14 +468,14 @@ if $ARGS[0] = 'events':
 	elseif event_random < 70:
 		gt 'train', 'young'
 	else
-		gt 'train', 'Gopnik'
+		gt $loc, $metka
 	end
 end
 
 !!event Weed
 if $ARGS[0] = 'weed':
 	train_event = 1
-	cls
+	*clr & cla
 	gs 'stat'
     '<center><h4>Pavlovsk Station</h4></center>'
     '<center><img <<$set_imgh>> src="images/locations/shared/train/pavplat.jpg" ></center>'
@@ -472,24 +503,19 @@ if $ARGS[0] = 'weed':
 			'It isn''t hard to guess what they were doing to kill time.'
 
             act 'Board the train to the city':
-                cls
-                minut += 5
+                *clr & cla
+                minut += 40
                 gs 'stat'
-                '<center><img <<$set_imgh>> src="images/locations/shared/train/ride.jpg"></center>'
-				'Once the train comes to a stop, you board it. The ride to the city is uneventful; you don''t see either of the two smokers either.' 
-				'After 5 minutes, you see the familiar old buildings and the train stops at the station near the old town.'
-
-				act 'Get off at this station':train_dir = 0 & minut += 5 & nroad = 15 & gt 'road'
-				if train_dest < 5:
-					act 'Continue your journey':
-						minut += 10
-						gt 'train', 'oldtownN'
-					end
+                '<center><img <<$set_imgh>> src="images/locations/shared/train/pavplat.jpg" ></center>'
+				'After 40 minutes, you see the town of Pavlovsk approaching. Pavlovsk Castle is an impressive sight, even from a long distance. The train stops at its final destination, a platform in Pavlovsk station.'
+				act 'Get off the train':
+					if rand(1, 100) <= 5: gt 'train_incidental', 'end'
+					gt 'vokzalperG'
 				end
             end
 		end
 		act 'Smoke with him':
-			cls
+			*clr & cla
 !!arousal maxes after smoking the laced weed.
 			pcs_horny = 100
 			gs 'stat'
@@ -513,25 +539,20 @@ if $ARGS[0] = 'weed':
 			    'You can see them talk a little and even from where you''re sitting you can tell that the woman is giving him wanton looks. Before long, the two of them sneak off across the tracks and disappear; just as the train arrives, they come rushing back, clothes out of place and hair disheveled.'
 			    'It isn''t hard to guess what they were doing to kill time. A part of you wishes you had taken him up on the offer.'
 				act 'Board the train to the city':
-					cls
-					minut += 5
+					*clr & cla
+					minut += 40
 					gs 'stat'
-					'<center><img <<$set_imgh>> src="images/locations/shared/train/ride.jpg"></center>'
-					'Once the train comes to a stop, you board it. The ride to the city is uneventful; you don''t see either of the two smokers either.' 
-					'After 5 minutes, you see the familiar old buildings and the train stops at the station near the old town.'
-
-					act 'Get off the train at this station':train_dir = 0 & minut += 5 & nroad = 15 & gt 'road'
-					if train_dest < 5:
-						act 'Continue your journey':
-							minut += 10
-							gt 'train', 'oldtownN'
-						end
+					'<center><img <<$set_imgh>> src="images/locations/shared/train/pavplat.jpg" ></center>'
+					'After 40 minutes, you see the town of Pavlovsk approaching. Pavlovsk Castle is an impressive sight, even from a long distance. The train stops at its final destination, a platform in Pavlovsk station.'
+					act 'Get off the train':
+						if rand(1, 100) <= 5: gt 'train_incidental', 'end'
+						gt 'vokzalperG'
 					end
 				end
 			end		
 
 			act 'Go with him':
-				cls
+				*clr & cla
 				'<center><h4>Pavlovsk Station</h4></center>'
 				'<center><img <<$set_imgh>> src="images/locations/shared/train/sex/weedhorny.jpg" ></center>'
 				'If you were simply horny, you might not have accompanied him, but the XTC had fully taken effect by now, your mind was in a rush and you felt like you could trust the guy who just drugged you, so you went with him, looking forward to some ''fun''. He leads you across the tracks to the less-used side of the platform and takes you behind one of the roofed waiting areas. Once there, he starts kissing you and pulling your top aside enough to bare your breasts, squeezing and caressing them as you make out, and you groan into his mouth in response.'
@@ -540,7 +561,7 @@ if $ARGS[0] = 'weed':
 				gs 'boyStat', 'A72'
 				gs 'arousal', 'foreplay', 5, 'unknown'
 				act 'Suck him':
-					cls
+					*clr & cla
 					'<center><h4>Pavlovsk Station</h4></center>'
 					'<center><img <<$set_imgh>> src="images/locations/shared/train/sex/weedbj.jpg" ></center>'
 					'He gently pushes down your shoulders and that is all the encouragement you need. You squat down in front of him at once, taking his <<dick>>cm <<$dick_girth>> cock into your mouth and start sucking him. Your tongue is giving every bit of his cock it can reach its attention and you bob your head back and forth, your <<$liptalk>> wrapped tightly around his shaft.' 
@@ -548,7 +569,7 @@ if $ARGS[0] = 'weed':
 					'Then you take him as deep into your mouth as you can, keeping him there until you start to gag and have to come up for air, but after two, three heavy breaths to recover, you take him inside again, now rapidly moving your head, sucking and deepthroating him for all your worth.'
 					gs 'arousal', 'bj', 5, 'deepthroat', 'unknown'
 					act 'Fuck him':
-						cls
+						*clr & cla
                         '<center><h4>Pavlovsk Station</h4></center>'
                         '<center><img <<$set_imgh>> src="images/locations/shared/train/sex/weedvag.jpg" ></center>'
 						'He is having the time of his life, but all your blowjob does is making you hornier, and you can''t take it any longer: You start removing your clothes bit for bit while you keep blowing him, until every item below your waist is removed. Once your pussy and ass are bare, you pull him down and get him to lay down on his back.'
@@ -556,7 +577,7 @@ if $ARGS[0] = 'weed':
 						'He has barely even touched the ground when you have already straddled him, facing his legs, and lowering yourself down until you feel his <<dick>>cm <<$dick_girth>> cock stretch out your wet cunt. You moan out loud as you impale yourself on his shaft, going all the way down on the first stroke. You lift yourself up again and, again, take his entire length, faster this time. Then again, and again, riding him harder and faster with every stroke, his cock feeling as big as that of a prized stallion.'
                         gs 'arousal', 'vaginal', 5, 'dom', 'unknown'
 						act 'Take his cum':
-							cls
+							*clr & cla
                             spafinloc = 12
                             gs 'cum_manage'
                             spafinloc = 11
@@ -573,19 +594,15 @@ if $ARGS[0] = 'weed':
                             gs 'arousal', 'end'
 							gs 'stat'
                             act 'Board the train to the city':
-                                cls
+                                *clr & cla
                                 minut += 5
                                 gs 'stat'
                                 '<center><img <<$set_imgh>> src="images/locations/shared/train/ride.jpg"></center>'
                                 'Once on the train, you look around but you don''t see the young man. Perhaps he got on a different car? You go looking for him, passing through a few different sections, hoping to continue what you started and deal with your overwhelming horniness, but after checking the entire train without seeing a hint of him, you give up and find a seat.'
-								'After 5 minutes, you see the familiar old buildings and the train stops at the station near the old town.'
-
-								act 'Get off the train at this station':train_dir = 0 & minut += 5 & nroad = 15 & gt 'road'
-								if train_dest < 5:
-									act 'Continue your journey':
-										minut += 10
-										gt 'train', 'oldtownN'
-									end
+								'After 40 minutes, you see the town of Pavlovsk approaching. Pavlovsk Castle is an impressive sight, even from a long distance. The train stops at its final destination, a platform in Pavlovsk station.'
+								act 'Get off the train':
+									if rand(1, 100) <= 5: gt 'train_incidental', 'end'
+									gt 'vokzalperG'
 								end
                             end
                         end
@@ -600,7 +617,9 @@ end
 if $ARGS[0] = 'private':
 	*clr
 	cla
+	minut -= 35
 	train_event = 1
+	gs 'stat'
     '<center><img <<$set_imgh>> src="images/locations/shared/train/ride.jpg" ></center>'
 	'You board the train and walk past several of the private compartments on your way to the general seating on the car you are on.'
 	act 'You walk past the private compartments':
@@ -614,6 +633,7 @@ if $ARGS[0] = 'private':
 		act 'Refuse him':
 			*clr
 			cla
+			minut += 35
 	        '<center><img <<$set_imgh>> src="images/locations/shared/train/ride2.jpg" ></center>'
 			'You shake your head indignantly. "Fuck you, I''m no whore! Who do you think you are?!" You don''t give him time to respond but simply walk away and take a seat in the general seating area.' 
 			*nl
@@ -622,23 +642,21 @@ if $ARGS[0] = 'private':
 			act 'Continue journey': gt $loc, $metka
 		end
 		act 'Accept his offer':
-			cls
+			*clr & cla
 			'<center><img <<$set_imgh>> src="images/locations/shared/train/sex/ridebj.jpg" ></center>'
 	        gs 'boyStat', 'A72'
-			if ($loc = 'cityTrain' and train_dest = 6) or ($loc = 'vokzalGin' and train_dest = 1):
-				minut += 5
-				'Another stop goes by as you wait for some passengers to pass.'
-				*nl
-			end
+			'Another stop goes by as you wait for some passengers to pass.'
+			*nl
 			'You bite your lower lip as you consider his offer. You could use the money... and the thought of having sex on the train is exciting in itself, too. With your mind made-up, you step inside, close the door behind you and pull the privacy blinds down. When you turn back to him, you see that he already has his cock out and is looking at you with a strange, self-satisfied smile.' 
 			*nl
 			'Unfazed by his boldness, you kneel down in front of him and lick up and down his length a few times before you take his <<dick>>cm <<$dick_girth>> cock into your mouth, noticing that even it smells of that nice cologne. Your tongue moves around the head as you suck his cock and you start bobbing your head up and down while your hands take turns playing with his shaved balls. It''s hard for you to decide whether you want to move slow and tease him or speed up to avoid getting caught, but what you are doing seems to be to his liking.'
 			*nl
 			'"Good girl", he whispers, "I knew you could suck cock as soon as I saw you." His praise causes you to smile a little around his cock and you take him a little deeper in response.'
 			gs 'arousal', 'bj', 10, 'prostitution', 'sub', 'unknown'
+			dynamic $venerasiakOral
 
 			act 'First stop':
-				cls
+				*clr & cla
 				'<center><img <<$set_imgh>> src="images/locations/shared/train/sex/ridevag.jpg" ></center>'
 				'He enjoys your blowing him until the train arrives at its first stop, even opening the window blinds a little to look outside while you continue sucking him off, expecting somebody to find you in this position at any moment.' 
 				*nl
@@ -650,47 +668,33 @@ if $ARGS[0] = 'private':
 				gs 'arousal', 'vaginal', 15, 'prostitution', 'sub', 'unknown'
 
 				act 'Second stop':
-					cls
+					*clr & cla
 				    '<center><img <<$set_imgh>> src="images/locations/shared/train/sex/rideanal.jpg" ></center>'
 					'Once he has you laying on your back, bedded on dusty seat cushions and your nether parts fully exposed to him and anybody who might enter, he moves up and slips his <<dick>>cm <<$dick_girth>> cock into your ass without warning. It enters surprisingly easily and even though you are unprepared, you manage to relax enough to avoid any pain. It certainly helps that he is taking it slow, giving your plenty of time to adjust to his cock while your mind is racing, running hot as it tries to comprehend how a simple train ride ended up with you having anal sex, on the train, with a complete stranger!' 
 					*nl
 					'Honestly, it makes relaxing difficult because your muscles are twitching around him in excitement and you can barely contain your moans. He goes a little deeper and a little faster, but your ass is too much for him and he can''t last much longer. You feel the first spurt of sperm deposited in your ass a second later and, as he continues to cum, he pulls out of you.'
 					gs 'arousal', 'anal', 5, 'prostitution', 'sub', 'unknown'
+					dynamic $venerasiak
 
 					act 'Finished':
-						cls
+						*clr & cla
 						money += 500
-						spafinloc = 3
-						gs 'cum_manage'
-						spafinloc = 4
-						gs 'cum_manage'
+						gs 'boyStat', 'A72'
+						gs 'cum_call','anus',$boy, 0,'','',20
+						gs 'cum_call','butt',$boy, 0,'','',20
 	                    '<center><img <<$set_imgh>> src="images/locations/shared/train/sex/ridecum.jpg" ></center>'
 						'As he does, several spurts shoot all over your ass and you can feel more of his spunk leaking out of your gaping anus. With a final grunt and spurt, he sits down opposite you, giving you and the state he left you in an appreciative look before he puts his cock away and hands you the 500<b>₽</b>... And then, he simply pulls out a newspaper and starts reading it. The switch from ravaging your asshole to perusal is so sudden that you are confused for a moment. You soon realize, however, that he is really no longer paying attention to you and you are laying around with cum dripping out of your backdoor, so you quickly get up and get yourself cleaned up.'
 						
 						act 'Your stop':
-							cls
-						    '<center><img <<$set_imgh>> src="images/locations/shared/train/pantyup.gif" ></center>'
+							*clr & cla
+						    '<center><video src="images/locations/shared/train/pantyup.mp4" ></center>'
 							'Once you are dressed again and have removed most off the sperm, you sit down and quietly study the man you had sex with who seems content to spend the rest of the ride in silence and feigned obliviousness to your presence. After a bit, you pull out your phone and amuse yourself with it until the train finally reaches your destination. "Well, this is my stop", you tell him.'
 						    *nl
 						    'He looks up from his newspaper for the first time since he came. "I wish you a safe trip. And thank you for making this ride a bit less dull." he adds with a wink before returning to the headlines. You leave the compartment, the strange and naughty events fresh on your mind, and make your way to the closest exit.'
 						    gs 'arousal', 'end'
 						    gs 'stat'
 
-							act 'Get off the train':
-								cls
-								gs'stat'
-								if train_dest = 6:
-									minut += 5
-									gt 'vokzalGin'
-								elseif train_dest = 5:
-									gt 'train', 'oldtown'
-								elseif train_dest = 2:
-									gt 'vokzalholle'
-								elseif train_dest = 1:
-									minut += 5
-									gt 'cityTrain', 'inside'
-								end
-							end
+							act 'Get off the train':gt $loc, $metka
 				        end
 					end
 				end
@@ -702,17 +706,6 @@ end
 if $ARGS[0] = 'oldman':
 	*clr
 	cla
-	train_event = 1
-	if $metka = 'oldtownS':
-		$metka = 'oldtown'
-	elseif $metka = 'villageS' or $metka = 'villageN':
-		$metka = 'village'
-	elseif $metka = 'communalS' or $metka = 'communalN':
-		$metka = 'old_platform'
-	elseif $metka = 'industrialN':
-		$loc = 'vokzalholle'
-		$metka = ''
-	end
 	'<center><img <<$set_imgh>> src="images/locations/shared/train/ride2.jpg" ></center>'
 	'You choose an empty seat by the window and look outside, lost in thought, as others board the train. Shortly after the departure, an old man sits down next to you. He offers you some nuts from a bag he is carrying, and you politely take a few; you would have been content with spending the rest of the ride in silence but the man then starts talking to you about how he has not been back to this area since his wife died a few years ago. Curious and feeling somewhat obligated to keep the conversation going, as awkward as it may be, you ask him about his wife and learn that, until recently, they had had a happy, wonderful life together; alas, what they thought was just a bad cough that wouldn''t go away turned out to be lung cancer and she died a very slow and agonizing death while he could do nothing but watch and care for her.'
 	*nl		
@@ -728,7 +721,7 @@ if $ARGS[0] = 'oldman':
 		act 'Continue': gt $loc, $metka
 	end
 	act 'Accept his request':
-		cls
+		*clr & cla
 		'<center><img <<$set_imgh>> src="images/locations/shared/train/sex/old.jpg" ></center>'
 		'Your heart goes out to the guy; after spending the entire train ride listening to him, you feel sorry for him and his loss. You decide that you can make time for him and you agree to go with him and keep him company. He livens up and seems happier than you have seen him since he sat down next to you. Once off the train, he leads you down the tracks a bit, to a small bridge, over a gully, then down and along the end alongside the bridge. He points out a small old building, informing you that he and his wife used to come down here all the time, especially when they were younger.'
 		*nl
@@ -743,7 +736,7 @@ if $ARGS[0] = 'oldman':
 			act 'Return to the station': gt $loc, $metka
 		end
 		act 'Fulfill his wish':
-			cls
+			*clr & cla
 			gs 'boyStat', 'A72'
 			gs 'pain', 3, 'vaginal', 'ache'
 			'<center><img <<$set_imgh>> src="images/locations/shared/train/sex/oldvag.jpg" ></center>'
@@ -755,7 +748,7 @@ if $ARGS[0] = 'oldman':
 			gs 'arousal', 'vaginal', 15, 'rough', 'unknown'
 
 			act 'Surprise buttsex':
-				cls
+				*clr & cla
 				gs 'pain', 3, 'asshole', 'ache'
 				'<center><im  src="images/locations/shared/train/sex/oldanal.jpg" ></center>'
 				'He keeps this up for a while and it is almost starting to feel okay when he pulls out and pauses. Again, you briefly think that he is done and only have a second to realize that, actually, he is rubbing the tip of his cock against you anus. Before you can even protest, his <<dick>>cm <<$dick_girth>> cock has already painfully penetrated your ass. You instinctively want to flinch away but he grabs your hips with surprising strength and forces his cock as far into your ass as he can... before he starts hammering your ass. "My wife loved anal", he informs you between slaps of flesh against flesh, "I hope you don''t mind."'
@@ -764,7 +757,7 @@ if $ARGS[0] = 'oldman':
 				gs 'arousal', 'anal', 10, 'rough', 'unknown'
 
 				act 'Take his cum':
-					cls
+					*clr & cla
 					spafinloc = 4
 					gs 'cum_manage'
 					spafinloc = 1
@@ -789,17 +782,6 @@ end
 if $ARGS[0] = 'fit':
 	*clr
 	cla
-	train_event = 1
-	if $metka = 'oldtownS':
-		$metka = 'oldtown'
-	elseif $metka = 'villageS' or $metka = 'villageN':
-		$metka = 'village'
-	elseif $metka = 'communalS' or $metka = 'communalN':
-		$metka = 'old_platform'
-	elseif $metka = 'industrialN':
-		$loc = 'vokzalholle'
-		$metka = ''
-	end
 	'<center><img <<$set_imgh>> src="images/locations/shared/train/ride1.jpg" ></center>'
 	'You are sitting in an empty seat by the window and looking outside, lost in thought, as others board the train. Shortly after the departure, a man in his thirties - or perhaps early forties - sits down next to you. You don''t give him more than a short glance as he takes the seat but it doesn''t take more than that to notice that he is in <b>great</b> shape. You try not to stare but you just can''t help yourself - the world outside the window is just too boring to hold your attention. Of course, your gaze does not go unnoticed and the man, grinning, engages you in a conversation.'
 	*nl
@@ -815,7 +797,7 @@ if $ARGS[0] = 'fit':
 		act 'Leave the train': gt $loc, $metka
 	end
 	act 'Accept his offer':
-		cls
+		*clr & cla
 		'<center><img <<$set_imgh>> src="images/locations/shared/train/sex/fit.jpg" ></center>'
 		'You consider his offer; it doesn''t exactly sound like a smart idea to go on a walk along the train tracks with a complete stranger. But somewhere between his charming compliments and the hard abs he let you feel, you lose all sense for what is smart and now that he asks you to go with him, you throw caution to the wind because it could be fun.' 
 		*nl
@@ -829,7 +811,7 @@ if $ARGS[0] = 'fit':
 		gs 'arousal', 'vaginal_finger', 15, 'unknown'
 
 		act 'Give him a blowjob':
-			cls
+			*clr & cla
 			gs 'boyStat', 'A72'
 			'<center><img <<$set_imgh>> src="images/locations/shared/train/sex/fitbj.jpg" ></center>'
 			'As much as you would have liked to feel his heavenly fingers some more, you drop to your knees and waste no time in taking his <<dick>>cm <<$dick_girth>> cock deep into your mouth, immediately feeling his hand on back of your head. You wrap your lips tightly around the shaft of his cock and bob your head, sucking hard on him to give him an idea of the intense stimulation he gave you. Occasionally, he uses his hand to force you deeper down on him so you would gag a bit on his cock, but he seems mostly content with letting you pleasure him at your own pace.'
@@ -841,7 +823,7 @@ if $ARGS[0] = 'fit':
 			gs 'stat'
 
 			act 'Let him fuck you':
-				cls
+				*clr & cla
 				'<center><img <<$set_imgh>> src="images/locations/shared/train/sex/fitvag.jpg" ></center>'
 				'He pulls you up, back on your feet, and turns you around. You expect him to bend you over the next moment but instead, he lifts one of your legs off the ground and you feel him rubbing the head of his cock against your pussy lips, teasing you and himself and getting you all worked up again. Once he his tip is nice and wet, he slides his <<dick>>cm cock into you, filling your pussy with his <<$dick_girth>> cock.'
 				*nl
@@ -849,7 +831,7 @@ if $ARGS[0] = 'fit':
 				gs 'arousal', 'vaginal', 10, 'unknown'
 
 				act 'Take his cum':
-					cls
+					*clr & cla
 					minut += 5
 					spafinloc = 12
 					gs 'cum_manage'
@@ -872,17 +854,6 @@ end
 if $ARGS[0] = 'young':
 	*clr
 	cla
-	train_event = 1
-	if $metka = 'oldtownS':
-		$metka = 'oldtown'
-	elseif $metka = 'villageS' or $metka = 'villageN':
-		$metka = 'village'
-	elseif $metka = 'communalS' or $metka = 'communalN':
-		$metka = 'old_platform'
-	elseif $metka = 'industrialN':
-		$loc = 'vokzalholle'
-		$metka = ''
-	end
 	'<center><img <<$set_imgh>> src="images/locations/shared/train/ride1.jpg" ></center>'
 	'You are sitting in an empty seat by the window, looking outside, lost in thought, as others board the train and it eventually departs. Most of the train ride passes in you silently daydreaming with the scenery outside blurring together. It''s not until someone heavily sits down next to you that you snap out of it. You turn to see a good looking young guy in his early to mid-twenties, greeting you with a bright smile. "I''ve gotta say: I''ve walked from one end of this train to the other and you are by far the most beautiful girl on it."' 
 	*nl
@@ -912,7 +883,7 @@ if $ARGS[0] = 'young':
 		'When the train stops at the final station, he leads you off the car and the two of you wait as people leave the platform and new passengers get on. When the train has left and there''s nobody around anymore, he motions for you to follow him and takes you on a walk along the tracks.'
 
 		act 'Follow him':
-			cls
+			*clr & cla
 			gs 'boyStat', 'A72'
 			'<center><img <<$set_imgh>> src="images/locations/shared/train/sex/youngvag.jpg" ></center>'
 			'You keep looking back towards the station as you walk, making sure that nobody sees where you''re headed. Your male companion, on the other hand, seems to be a lot more interested in your anatomy than potential observers. He puts his arm around your waist as you walk together and somehow manages to worm his way into your panties, rubbing your clit as you move. You somewhat lose interest in looking back after that, focusing entirely on the fingers playing with your pussy and dipping inside you. As soon as he has you good and soaking wet - and has put enough distance between you and the station that you''re no longer in plain sight - he pulls down his pants and sits on the tracks, his erect cock an unmistakable invitation.' 
@@ -924,7 +895,7 @@ if $ARGS[0] = 'young':
 			gs 'stat'
 
 			act 'See what he has in mind':
-				cls
+				*clr & cla
 				'<center><img <<$set_imgh>> src="images/locations/shared/train/sex/youngbj.jpg" ></center>'
 				'He takes your hand and walks you down the tracks a bit more, his cock back in his pants but you''re completely exposed - he insisted on it and, really, you don''t mind; it is thrilling, even with nobody around. As you pass two electricity sub-stations for the trains, he stops and pulls you between them, a mischievous grin on his face. "I saw a track worker, just a few hundred meters away", he whispers with a chuckle and pulls down his pants. "I wonder how he''d react if he found you, sucking my cock."' 
 				*nl
@@ -936,7 +907,7 @@ if $ARGS[0] = 'young':
 				gs 'stat'
 
 				act 'Do as he says':
-					cls
+					*clr & cla
 					'<center><img <<$set_imgh>> src="images/locations/shared/train/sex/younganal.jpg" ></center>'
 					'You are too desperate for sex to say no, even if you''d wanted to. Without hesitation, you spread a little bit of your secretions around your puckered hole and you lower yourself on him. You can feel the head of his cock rubbing against your asshole; the pressure builds, your sphincter resisting the penetration... until the head pops inside. You gasp softly, pain and pleasure both vying for your attention, and you slowly lower yourself further, taking more and more of his <<dick>>cm <<$dick_girth>> cock into your ass.'
 					*nl
@@ -947,7 +918,7 @@ if $ARGS[0] = 'young':
 					gs 'stat'
 
 					act 'Take his cum':
-						cls
+						*clr & cla
 						spafinloc = 12
 						gs 'cum_manage'
 						'<center><img <<$set_imgh>> src="images/locations/shared/train/sex/youngcum.jpg" ></center>'
@@ -959,7 +930,14 @@ if $ARGS[0] = 'young':
 						gs 'arousal', 'end'
 						gs 'stat'
 
-						act 'Return to the station': gt $loc, $metka
+						act 'Return to the station and catch the next train':
+							*clr
+							cla
+							gs 'stat'
+							'<center><img <<$set_imgh>> src="images/locations/shared/train/electri.jpg"></center>'
+							'The journey is uneventful and you aren''t paying much attention to it, it doesn''t seem like long before you arrive at your destination.'
+							act 'Get off the train': gt $loc, $metka
+						end
 					end
 				end
 			end
@@ -968,19 +946,6 @@ if $ARGS[0] = 'young':
 end
 
 if $ARGS[0] = 'Gopnik':
-	*clr
-	cla
-	train_event = 1
-	if $metka = 'oldtownS':
-		$metka = 'oldtown'
-	elseif $metka = 'villageS' or $metka = 'villageN':
-		$metka = 'village'
-	elseif $metka = 'communalS' or $metka = 'communalN':
-		$metka = 'old_platform'
-	elseif $metka = 'industrialN':
-		$loc = 'vokzalholle'
-		$metka = ''
-	end
 	'<center><img <<$set_imgh>> src="images/locations/shared/train/ride3.jpg" ></center>'
 	'You are sitting in an empty seat by the window, looking outside, lost in thought, as others board the train. A gopnik boy sits down next to you, but you try to ignore him and keep staring outside. Unfazed by that, he gives you once-over, a lewd grin you only see from the corner of your eyes, and leans in close, putting his arm around you. You turn your head to tell him off but your mouth is immediately covered by his! And, not content with just kissing you, the gopnik''s hand starts roaming across your breasts.'
 	act 'Stop him':
@@ -994,18 +959,28 @@ if $ARGS[0] = 'Gopnik':
 	act 'Go with it':
 		*clr
 		cla
+		minut -= 30
+		pav_sex += 5
 		'<center><img <<$set_imgh>> src="images/locations/shared/train/sex/gopnik.jpg" ></center>'
 		'He is pretty cute and you find yourself in the mood for a little tenderness, so you return his kiss and allow him to paw at your body. During the ride, you hear more than a few people comment on the two of you making out like this on the train; several seem to be of the opinion that this is not a proper place to show this level of affection. Instead of deterring you, however, all that does is tickle your rebellious streak and making you feel even more brazen.'
 		*nl
 		'Once the train stops at your destination, you get off the train with him but barely make it off onto the platform before he pulls you into another kiss. He is actually a pretty good kisser, and while his pawing hands might drive most innocent girls away, he seems to mostly know where he has to grope, too. Breaking the kiss and finding you breathing as heavily as him, he suggests: "Let''s go for a walk; you know, somewhere a little more private."'
-!!Comment by JulienJaden: Shouldn''t making out with a boy in public like this, on a train that other students and people from her town might be riding, get Sveta a reputation hit in Pavlovsk?
 		gs 'arousal', 'foreplay', 5, 'unknown', 'exhibitionism'
+		gs 'stat'
 		act 'Decline':
 			*clr
 			cla
 			'<center><img <<$set_imgh>> src="images/locations/shared/train/sex/gopnik.jpg" ></center>'
 			'You shake your head no - you don''t wanna take it this far with him. "Sorry, but I don''t have time. It was fun, though. The trip was a lot more exciting than I expected." He looks a little disappointed, so you comfortingly pat his cheek. "Maybe I will see you again sometime and we can pick up where we left off." You lean in and give him a long, slow kiss goodbye, then bounce away and head off the platform. You hear him mutter about not getting more action, but you don''t really care - all you care about right now is that the train ride just flew by.'
-			act 'Return to the station': gt $loc, $metka
+			act 'Return to the station and catch the next train':
+				*clr
+				cla
+				minut += 30	
+				gs 'stat'
+				'<center><img <<$set_imgh>> src="images/locations/shared/train/electri.jpg"></center>'
+				'The journey is uneventful and you aren''t paying much attention to it, it doesn''t seem like long before you arrive at your destination.'
+				act 'Get off the train': gt $loc, $metka
+			end
 		end
 		act 'Agree':
 			*clr
@@ -1023,7 +998,7 @@ if $ARGS[0] = 'Gopnik':
 				act 'Return to the station': gt $loc, $metka
 			end
 			act 'Blow him':
-				cls
+				*clr & cla
 				gs 'boyStat', 'A72'
 				'<center><img <<$set_imgh>> src="images/locations/shared/train/sex/gopnikbj.jpg" ></center>'
 				'The back and forth between him being nice and an ass was weird, the place is wide open, you barely know him - literally everything about this should discourage you from going near his crotch, and yet... yet, you find yourself squatting down in front of him and taking his <<dick>>cm <<$dick_girth>> cock into your mouth. Your hand strokes his hard shaft while you roll your tongue around the head of his cock; you jerk his cock in tune with the bobs of your head, back and forth along his length, your <$liptalk> lips wrapped tightly around him.' 
@@ -1031,35 +1006,37 @@ if $ARGS[0] = 'Gopnik':
 				'You know this is kind of slutty - a little more than just "kind of", actually - but the idea that you could get caught at any moment is making this a lot more arousing than it should be; so, here you are, sucking his cock right above the train platform. Plus, he is kinda cute and you like his cock, so who care''s if it is slutty? The things the people said on the train got you riled up, and this makes you feel like you''re getting back at their stuffy selves: You''re having fun and it''s your body to do with as you please, and that''s all that matters.'
 				'Well, that, and the hard cock you''re sucking with passion.'
 				gs 'arousal', 'bj', 10, 'exhibitionism', 'unknown'
+				gs 'stat'
 
 				act 'Let him fuck you':
-					cls
+					*clr & cla
 					gs 'boyStat', 'A72'
 					'<center><img <<$set_imgh>> src="images/locations/shared/train/sex/gopnikvag.jpg" ></center>'
 					'You don''t know how many minutes pass as you suck him; somewhere along the way, you worm your fingers into your panties, rubbing your clit, feeling a lot more turned on by sucking his cock than you expected. You don''t know if he always planned on more than just a blow job or if he sensed that you were getting horny and influence-able, but he eventually has you stop and stand up, pulls your clothes aside enough to bare you naked ass and expose your glistening wet pussy.'
 					*nl
 					'He meets no resistance when he turns you around and bends you over, up against the side of the walkway railings; by the time he has lined his cock up with your pussy, you are looking back at him with eager anticipation. Impatient as you expected him to be, he slips his <<dick>>cm <<$dick_girth>> cock into your sopping wet pussy. It slides in easily and he has no trouble at all bottoming out on the first thrust. Hearing your moan and feeling how wet and turned on you are, he starts fucking you hard right away. His hips slap against your butt cheeks with every thrust and he reaches up and grabs your shoulder with one hand to keep you from moving away, furiously fucking your pussy and putting you into a state of ecstatic bliss, right there on the skywalk.'
 					gs 'arousal', 'vaginal', 10, 'exhibitionism', 'rough', 'unknown'
+					gs 'stat'
 
 					act 'Have anal sex with him':
-						cls
+						*clr & cla
 						'<center><img <<$set_imgh>> src="images/locations/shared/train/sex/gopnikanal.jpg" ></center>'
 						'When another train rolls into the station, he curses, pulls out of you and hastily tucks his penis back into his pants. Without waiting until you could do anything similar, he grabs your hand and pulls you along with him; you manage to cover yourself to some extent but you know your ass is still partially showing.' 
 						*nl
 						'He rushes down one of the access ramps of the skywalk to an older platform of the station that now serves as a storage siding. As soon as you turn the corner and not longer visible from the skywalk or other platforms anymore - so basically as soon as you turn the corner - he pushes you up against the graffiti-covered wall, pulls your clothes aside again and shoves his cock back into your pussy, fucking you like you hadn''t been interrupted. While you try to stifle your moans so passersby on the walkway won''t hear you, he leans forward and seductively whispers into your ear: "I''m going to fuck that tight little ass of yours."' 
 						*nl
 						'Without waiting for a response from you, the boy pulls his cock out once more and slides his <<dick>>cm <<$dick_girth>> cock up your ass. You gasp in pain, but it turns into a moan of pleasure along the way. You don''t have to consciously relax your asshole to enjoy this at this point; you are so turned on at the moment that you don''t really care where he sticks his cock as long as he just keeps fucking you.'
-!!if Sveta has a orgasm then add below.
-						'Your ass is getting pounded almost as hard as your pussy; he is just rough enough to make it hurt a little, but in this strange state you''re in, it seems to hurt in a <i>good</i> way, adding more fuel to the mounting climax inside of you. And then, just like that, the pressure is released explosively, shaking you like a leaf in the wind as you have an anal orgasm, maybe five meters away from a skywalk. You cannot contain your moans at this point, and it doesn''t help that your lover redoubles his efforts and fucks your tight little asshole even harder when he realizes that you''re cumming.'
-						'Had anybody walked by and heard or seen you right now, you wouldn''t have even cared.'
-						$orgasm_or = 'yes'
 						gs 'arousal', 'vaginal', 10, 'exhibitionism', 'unknown', 'rough'
+!!if Sveta has a orgasm then add below.
+						$orgasm_txt = 'Your ass is getting pounded almost as hard as your pussy; he is just rough enough to make it hurt a little, but in this strange state you''re in, it seems to hurt in a <i>good</i> way, adding more fuel to the mounting climax inside of you. And then, just like that, the pressure is released explosively, shaking you like a leaf in the wind as you have an anal orgasm, maybe five meters away from a skywalk. You cannot contain your moans at this point, and it doesn''t help that your lover redoubles his efforts and fucks your tight little asshole even harder when he realizes that you''re cumming.'
+						$orgasm_or = 'yes'
 						gs 'arousal', 'anal', 10, 'exhibitionism', 'unkown', 'rough'
 						minut -= 10
+						'Had anybody walked by and heard or seen you right now, you wouldn''t have even cared.'
 						gs 'stat'
 
 						act 'Take his cum':
-							cls
+							*clr & cla
 							gs 'boy'
 							spafinloc = 3
 							gs 'cum_manage'
@@ -1085,7 +1062,15 @@ if $ARGS[0] = 'Gopnik':
 								end
 								'"I''d like that", you tell him and give him your phone number. He waits until you''re more or less presentable again, then walks you back up to the skywalk where you two part ways.'
 
-								act 'Return to the station': gt $loc, $metka
+								act 'Return to the station and catch the next train':
+									*clr
+									cla
+									minut += 30	
+									gs 'stat'
+									'<center><img <<$set_imgh>> src="images/locations/shared/train/electri.jpg"></center>'
+									'The journey is uneventful and you aren''t paying much attention to it, it doesn''t seem like long before you arrive at your destination.'
+									act 'Get off the train': gt $loc, $metka
+								end
 							end
 							act 'Don''t give him your number':
 								*clr
@@ -1093,7 +1078,15 @@ if $ARGS[0] = 'Gopnik':
 								'You shake your head. "Look, <<$boydesc>>, I had fun but I am not looking for anything more than a fuck right now. Maybe we will run into each other on the train again or something, sometime?"'
 								'He shrugs like he doesn''t care either way but the look he gives you tells you that he''s a little pissed. "Sure, whatever. See you around." With that, he turns and walks off, leaving you to finish getting your clothes back in order.'
 
-								act 'Return to the station': gt $loc, $metka
+								act 'Return to the station and catch the next train':
+									*clr
+									cla
+									minut += 30	
+									gs 'stat'
+									'<center><img <<$set_imgh>> src="images/locations/shared/train/electri.jpg"></center>'
+									'The journey is uneventful and you aren''t paying much attention to it, it doesn''t seem like long before you arrive at your destination.'
+									act 'Get off the train': gt $loc, $metka
+								end
 							end
 						end
 					end

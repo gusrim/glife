@@ -1,6 +1,59 @@
 # qwloc
 $location_type = 'event_outdoors'
-$qwnamedy = {
+if $ARGS[0] = '':
+	minut += 5
+	gs 'stat'
+	'<center><b><font color="maroon">Man</font></b></center>'
+	'<center><img <<$set_imgh>> src="images/characters/city/vladimir/001.jpg"></center>'
+	if pcs_makeup > 1 and pcs_hairbsh = 1:
+		'A man standing near the fence noticed your gaze and smiled.'
+
+		act 'Approach the man':
+			cla
+			'You approached the man and he left the fence to walk towards you.'
+			xgt 'qwloc', 'qwvladdy'
+		end
+
+		act 'Smile':
+			cla
+			'You smiled at the man and he left the fence to talk towards you.'
+			xgt 'qwloc', 'qwvladdy'
+		end
+
+		act 'Ignore':
+			cla
+			'You turned away from the man but hearing his footsteps approach you, you turn back towards him.'
+			xgt 'qwloc', 'qwvladdy'
+		end
+	else
+		'The man returned your gaze for a moment before turning away.'
+
+		act 'Leave':gt 'park', 'luna'
+	end
+end &! ---  ---
+
+if $ARGS[0] = 'qwvladdy':
+	'The man bowed to you. "Hello. My name is Vladimir and I think I love you, I would like the honour of your name.'
+	gs 'qwloc', 'qwnamedy'
+
+	act 'Sorry, I''m busy':
+		cla
+		vladimirQW = 1
+		'"Sorry, I''m busy," you excuse yourself.'
+		'Vladimir shakes his head to that. "Well, what are you busy with? I will not bite. I just want to know the name of a charming stranger.'
+		gs 'qwloc', 'qwnamedy'
+
+		act 'Leave anyway':
+			cla
+			vladimirQW = 2
+			'You simply turned on the man and walked away from him.'
+
+			act 'Leave':gt 'park', 'luna'
+		end
+	end
+end &! --- qwladdy ---
+
+if $ARGS[0] = 'qwnamedy':
 	act '<<$pcs_nickname>>':
 		cla
 		vladimirQW = 10
@@ -24,60 +77,89 @@ $qwnamedy = {
 			act 'Leave':gt 'park', 'luna'
 		end
 	end
-}
+end &! --- qwnamedy ---
 
-$qwvladdy = {
-	'The man bowed to you. "Hello. My name is Vladimir and I think I love you, I would like the honour of your name.'
-	dynamic $qwnamedy
+if $ARGS[0] = '2':
+	gs 'stat'
+	'You answer the phone to hear a male voice speaking, "Hello <<$pcs_nickname>>, is Vladimir, remember we met recently in the park?"'
 
-	act 'Sorry, I''m busy':
+	act 'Hello, of course I remember':
 		cla
-		vladimirQW = 1
-		'"Sorry, I''m busy," you excuse yourself.'
-		'Vladimir shakes his head to that. "Well, what are you busy with? I will not bite. I just want to know the name of a charming stranger.'
-		dynamic $qwnamedy
+		vladimirQW = 21
+		'"Hey, of course I remember," you respond'
+		'"The offer to visit the restaurant is still on the table. Would you like to go?" Vladimir asks.'
 
-		act 'Leave anyway':
+		act 'Oh, I have a lot to do today, I''m sorry.':
 			cla
-			vladimirQW = 2
-			'You simply turned on the man and walked away from him.'
+			vladimirQW = 20
+			vladimirday = daystart
+			'You explain that you simply can''t today, as busy as you are'
+			'"Okay. Then I''ll call you tomorrow at 4 pm," Vladimir promises.'
 
-			act 'Leave':gt 'park', 'luna'
+			act 'Hang up':gt $loc, $metka
+		end
+
+		act 'I wouldn''t mind':
+			cla
+			vladimirQW = 21
+			vladimirday = daystart
+			'"I don''t mind," you tell him.'
+			'"Wonderful," says Vladimir. "Then I''ll meet you in the restaurant in 20 hours."'
+			'"!!Twenty hours? Is that accurate? Seems... odd."'
+		
+			act 'Hang up':gt $loc, $metka
 		end
 	end
-}
-
-minut += 5
-gs 'stat'
-
-'<center><b><font color="maroon">Man</font></b></center>'
-'<center><img <<$set_imgh>> src="images/characters/city/vladimir/001.jpg"></center>'
-
-if pcs_makeup > 1 and pcs_hairbsh = 1:
-	'A man standing near the fence noticed your gaze and smiled.'
-
-	act 'Approach the man':
-		cla
-		'You approached the man and he left the fence to walk towards you.'
-		dynamic $qwvladdy
-	end
-
-	act 'Smile':
-		cla
-		'You smiled at the man and he left the fence to talk towards you.'
-		dynamic $qwvladdy
-	end
-
-	act 'Ignore':
-		cla
-		'You turned away from the man but hearing his footsteps approach you, you turn back towards him.'
-		dynamic $qwvladdy
-	end
-else
-	'The man returned your gaze for a moment before turning away.'
-
-	act 'Leave':gt 'park', 'luna'
 end
+
+if $ARGS[0] = '3':
+	gs 'stat'
+	'You answer the phone to hear a male voice on the other end, "Hello <<$pcs_nickname>>, this is Vladimir, Would you like a ride on a boat?"'
+
+	act 'Oh, I have a lot to do today, I''m sorry':
+		cla
+		vladimirday = daystart
+		'You explain that you simply can''t today, as busy as you are'
+		'"Okay. Then I''ll call you tomorrow at 4 pm," Vladimir promises.'
+
+		act 'Hang up':gt $loc, $metka
+	end
+
+	act 'I''d like that':
+		cla
+		vladimirQW = 30
+		vladimirday = daystart
+		'"I''d like that," you tell him.'
+		'You can hear Vladimir''s pleasure even over the phone. "Wonderful, my driver will come to pick you up."'
+
+		act 'Hang up':gt $loc, $metka
+	end
+end
+
+if $ARGS[0] = '4':
+	gs 'stat'
+	'You pick up the phone to hear a male voice speaking, "Hello <<$pcs_nickname>>, it''s Vladimir, would you like to meet up to do something?"'
+
+	act 'Oh, I have a lot to do today, I''m sorry':
+		cla
+		vladimirday = daystart
+		'You explain that you simply can''t today, as busy as you are'
+		'"Okay. Then I''ll call you tomorrow at 4 pm," Vladimir promises.'
+
+		act 'Hang up':gt $loc, $metka
+	end
+
+	act 'I''d like that':
+		cla
+		vladimirQW = 40
+		vladimirday = daystart
+		'"I''d like that," you tell him.'
+		'You can hear Vladimir''s pleasure even over the phone. "Wonderful, my driver will come to pick you up."'
+
+		act 'Hang up':gt $loc, $metka
+	end
+end
+
 
 --- qwloc ---------------------------------
 

@@ -4,9 +4,9 @@ if $args[0] = 'options':
 	cla
 	act 'Set Alarm Clock':gt 'budilnik', 'start'
 	if bedPanty = 0:
-		act 'You will wear panties in the morning, click to turn off':bedpanty = 1 & gt 'bed2', 'options'
+		act 'You will wear underwear in the morning, click to turn off':bedpanty = 1 & gt 'bed2', 'options'
 	else
-		act 'You will not wear panties in the morning, click to turn on':bedpanty = 0 & gt 'bed2', 'options'
+		act 'You will not wear underwear in the morning, click to turn on':bedpanty = 0 & gt 'bed2', 'options'
 	end
 	if analplug = 1:
 		if bedanal = 0:
@@ -97,7 +97,7 @@ if $args[0] = '':
 	end
 	
 
-	act 'Get out of bed':gt $locM, $metkaM
+	act 'Get out of bed':gt $loc, $metka
 end
 
 if $args[0] = 'sleep':
@@ -108,7 +108,7 @@ if $args[0] = 'sleep':
 	InSleep = 1
 	cloth_vid = 0
 	pain['killer'] = 0
-	if StoryLine = 1 and $locM ! 'bedrPar' and SchoolAtestat = 0:
+	if StoryLine = 1 and $loc ! 'bedrPar' and SchoolAtestat = 0:
 		notathomesleep += 1
 	else
 		notathomesleep = 0
@@ -130,7 +130,7 @@ if $args[0] = 'sleep':
 	:loopson
 	minut += 1
 	stime += 1
-	pcs_health += 5
+	if recuperation = 0:pcs_health += 5
 
 	if vibratorIn = 1:
 		vtime += 1
@@ -146,7 +146,7 @@ if $args[0] = 'sleep':
 			minut += 5
 			gs 'stat'
 			'<center><img <<$set_imgh>> src="images/shared/sex/oface/o_face.jpg"></center>'
-			'You abruptly wake up in the throes of an orgasm. As you recover, you check the time, <<hour>>:<<minut>>.'
+			'You abruptly wake up in the throes of an orgasm. As you recover, you check the time, <<$mid(100+hour,2,2)>>:<<$mid(100+minut,2,2)>>.'
 
 			act 'Go back to sleep':
 				*clr
@@ -161,6 +161,8 @@ if $args[0] = 'sleep':
 
 			exit
 		end
+	elseif pcs_horny > 80 and rand (1,300) = 300:
+		gt 'bed2', 'wake_horny'
 	end
 
 	if stime >= 60:
@@ -194,12 +196,49 @@ if $args[0] = 'sleep':
 	end
 end
 
+if $ARGS[0] = 'wake_horny':
+	InSleep = 0
+	gs 'stat'
+	'Your wet dream and overall horniness rouse you from your sleep. From one moment to the next, you are wide awake and very much aware that your pussy is hot and wet.'
+	'You glance at your alarm clock. It reads <<$mid(100+hour,2,2)>>:<<$mid(100+minut,2,2)>>.'
+	'You could try and go back to sleep, of course, but it''s doubtful that you would find this kind of sleep very restful; not to mention the frustration that comes with ignoring your needs.'
+	'But masturbating is an option, too, and not the worst one in this situation. It might take some time, but you''d be able to sleep like a baby after.'
+	'Of course, you could always just give up on trying to sleep and just get up.'
+	if $loc = 'bedrPar' and SisterLesb = 5 and hour < 6:
+		'Or... you could wake up Anya and see if your dearest sister would be willing to help you with that.'
+	elseif $loc = 'FedorEv4':
+		'Or... you could wake up Fedor and see if your boyfriend can''t help you with that.'
+	elseif $loc = 'bedr' and husband > 0:
+		'Or... you could wake up <<$husName>> and see if your husband can''t help you with that.'
+	end
+	
+	act 'Try and go back to sleep':
+		pcs_mood -= 10
+		pcs_sleep -= 5
+		gt 'bed2', 'sleep'
+	end
+	
+	act 'Masturbate': gt 'selfplay', 'start'
+	
+	act 'Get up': gt $loc, $metka
+		
+	if $loc = 'bedrPar' and SisterLesb = 5 and hour < 6:
+		act 'Wake Anya and see if she''s in the mood': gt 'sistersleep'
+	elseif $loc = 'FedorEv4':
+		act 'Wake Fedor and see if he''s in the mood': gt 'FedorEv4', 'Bedroom 1'
+		!!Intro text doesn''t quite fit event (but doesn''t quite fit 'try for baby' scenario either) - custom scene from VK?
+	elseif ($loc = 'bedr' or $loc = bedr2x) and husband > 0:
+		act 'Wake your husband and see if he''s in the mood': gt 'husbSex', 'variant'
+		!!Should be custom scene - maybe boyfriend/husband overhaul can cover this?
+	end
+end
+
 if $args[0] = 'wake':
 	'<<$waketext>>'
 	gs 'stat'
 	
-	if daystart < 10 and StoryLine = 0:'The first thing you think as you wake up is, "Damn! It''s is not a dream, I really am a woman now."'
-	if daystart >= 10 and daystart < 30 and StoryLine = 0:'Looking at your female body, you are still a little surprised it''s actually you.'
+	if daystart < 10 and StoryLine = 0 and ntstart = 0:'The first thing you think as you wake up is, "Damn! It''s is not a dream, I really am a woman now."'
+	if daystart >= 10 and daystart < 30 and StoryLine = 0 and ntstart = 0:'Looking at your female body, you are still a little surprised it''s actually you.'
 
 	if kanikuli = 0 and StoryLine = 1 and SchoolAtestat = 0 and SchoolBlock = 0 and week < 6 and hour >= 4 and hour < 9:
 		act 'Get up out of bed and get dressed for school (0:15)':
@@ -216,6 +255,24 @@ if $args[0] = 'wake':
 		minut += 15
 		gs 'bed2', 'end'
 	end
+	if enfullmorrout = 1 and hour >= 4 and hour < 12:
+		act 'Full morning routine (01:00)':
+			gs 'clothing', 'wear_last_worn'
+			minut += 15
+			fullmorrout = 1
+			gs 'bed2', 'end'
+		end
+		if kanikuli = 0 and StoryLine = 1 and SchoolAtestat = 0 and SchoolBlock = 0 and week < 6 and hour >= 4 and hour < 9:
+			act ' Full morning routine for School (01:00)':
+				fullmorrout = 1
+				if schtype = 0:schtype = 6
+				if schoolH[schtype] = 0:schtype = 6
+				gs 'clothing', 'wear', 'school', schtype
+				minut += 15
+				gs 'bed2', 'end'
+			end
+		end
+	end
 
 	act 'Get out of bed (0:10)':
 		minut += 10
@@ -225,21 +282,32 @@ end
 
 if $args[0] = 'end':
 	InSleep = 0
-	if tanga = 1:
+	if $pantyworntype ! 'none':
 		if bedpanty = 1:
-			tanga = 0
-			dirtbelo += 1
+			gs 'underwear', 'linen'
 		else
 			if clrbelo > 0:
 				clrbelo -= 1 & dirtbelo += 1
 			else
-				tanga = 0 & dirtbelo += 1
+				gs 'panties', 'linen'
+			end
+			if clrbra > 0:
+				clrbra -= 1 & dirtbra += 1
+			else
+				gs 'bras', 'linen'
 			end
 		end
 	else
-		if bedpanty = 0 and clrbelo > 0:tanga = 1 & clrbelo -= 1
+		if bedpanty = 0 and clrbelo > 0:gs 'panties', 'fresh'
+		if bedpanty = 0 and clrbra > 0:gs 'bras', 'fresh'
 	end
-	gt $locM, $metkaM
+	if fullmorrout = 1 and $loc = 'bedrPar':
+		gt 'vanrPar'
+	elseif fullmorrout = 1 and $loc = 'bedr':
+		gt 'vanr'
+	else
+		gt $loc, $metka
+	end
 end
 
 if $ARGS[0] = 'succhoice':
@@ -340,7 +408,7 @@ if $ARGS[0] = 'succubinit':
 	'<center><img <<$set_imgh>> src="images/pc/body/succubusself.jpg"></center>'
 	''
 	'<font color="red">You feel the power flowing around your body for several minutes, leaking through your skin and making changes all throughout you, before fading to a presence deep in your core leaving you looking the same as before... but feeling so different! </font>'
-	act 'Finish': gt $locM, $metkaM
+	act 'Finish': gt $loc, $metka
 end
 
 if $ARGS[0] = 'magbstchoice':

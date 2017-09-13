@@ -15,8 +15,6 @@ $location_type = 'indoors'
 if day <= 25 and mey_vika['mey_vika_qw'] > 40: mey_vika['mey_vika_qw'] = 40
 
 if $args[0] = 'door':
-	$metkaM = 'door'
-	$locM = 'mey_home'
 	$metka = 'door'
 	$loc = 'mey_home'
 	cls
@@ -64,8 +62,6 @@ end
 
 ! hall
 if $ARGS[0] = 'start':
-	$metkaM = 'start'
-	$locM = 'mey_home'
 	$metka = 'start'
 	$loc = 'mey_home'
 	cls
@@ -289,6 +285,7 @@ if $ARGS[0] = '2':
 	!bathroom
 	$locM = 'mey_home'
 	$metkaM = '2'
+	$metka = '2'
 	minut += 1
 	cls
 	gs'stat'
@@ -299,37 +296,34 @@ if $ARGS[0] = '2':
 	'Above the beautiful vanity and sink there is a huge <a href="exec:GT ''mirror'',''start''">mirror</a>.'
 	!acts copy from [shulgabath]
 	act 'Return to the hallway': gt 'mey_home', 'start'
-
 	gs 'din_van', 'private'
 end
 
 ! guestroom
 if $ARGS[0] = '3':
 	cls
+	$locM = 'mey_home'
+	$metkaM = '3'
 	$loc = 'mey_home'
 	$metka = '3'
 	minut += 1
 	gs 'stat'
 	'<center><h4><font color="maroon">Guest room</font></h4></center>'
 	'<center><img <<$set_imgh>> src="images/locations/pavlovsk/resident/meynolds/guestroom.jpg"></center>'
-	'It feels and looks like a standard room in a hotel. There is a bed, a small wardrobe, a desk, bedsides the table hangs a mirror on the wall.'
-
+	'It feels and looks like a standard room in a hotel. There is a <a href="exec:gt ''bed'', ''start''">bed</a> and an <a href="exec:gt ''budilnik'', ''start''">alarm clock</a>, a small wardrobe (where you can <a href="exec:gt ''clothing'', ''view_clothing_list'', ''wardrobe''">organize your clothes</a> or <a href="exec:gt ''clothing_QV'', ''list''">pick something to wear</a>) and a desk.'
+	'In the bottom of your wardrobe is room for <a href="exec:gt ''shoes'', ''select''">your shoes</a> and next to the wardrobe is a dresser you keep <a href="exec:gt ''underwear'', ''dresser''">your underwear</a> and <a href="exec:gt ''purses'', ''view_purse_list''">purses</a> in.'
 	'A <a href="exec:gt ''mirror'', ''start''">mirror</a> hangs on the wall near the front door, besides that are the <a href="exec:gt ''cloakroom'', ''view_coat_list''">coat hooks</a>.'
 	if komp = 1:'Your <a href="exec:GT ''Komp'',''start''">laptop</a> is on the desk.'
 
 	act 'Exit to hallway':
 		if ($clothingworntype = 'nude' or $clothingworntype = 'swimwear'):
 			*clr
-			'<center><img <<$set_imgh>> src="'+'images/pc/clothing/'+iif(tanga=0,'0','tanga')+'.jpg'+'"></center>'
+			'<center><img <<$set_imgh>> src="'+'images/pc/clothing/'+iif($pantyworntype = 'none','0','tanga')+'.jpg'+'"></center>'
 			'<center><font color=red><b>You can''t go out dressed like this!</b></font></center>'
 			exit
 		end
 		gt 'mey_home', 'start'
 	end
-
-	act 'Sleep': gs 'bed', 'start'		
-	
-	act 'Wardrobe': gt 'clothing', 'view_clothing_list', 'wardrobe'
 
 	gs 'exercise', 'start'
 
@@ -356,21 +350,19 @@ if $ARGS[0] = '3':
 			'<center><img <<$set_imgh>> src="images/shared/drugs/dur.jpg"></center>'
 			'You snort some White Lady, feeling dizzy for a moment. After that you feel fantastic, and incredibly horny.'
 
-			act 'Continue':gt 'mey_home', 3
+			act 'Continue':gt 'mey_home', '3'
 		end
 	end
 
-	if tanga = 0:
+	if $pantyworntype = 'none':
 		act 'Wear underwear':
-			cla
-			tanga = 1
-			gt 'mey_home', 3
+			gs 'underwear', 'wear'
+			gt 'mey_home', '3'
 		end
-	elseif tanga = 1:
+	elseif $pantyworntype ! 'none':
 		act 'Take off your underwear':
-			cla
-			tanga = 0
-			gt 'mey_home', 3
+			gs 'underwear', 'remove'
+			gt 'mey_home', '3'
 		end
 	end
 	
@@ -384,7 +376,7 @@ if $ARGS[0] = '3':
 			minut += waiting
 		end
 
-		act 'Take a look at the clock':gt 'mey_home', 3
+		act 'Take a look at the clock':gt 'mey_home', '3'
 	end
 
 	if rand (0,2) ! 0:gs 'din_bad' & dynamic $mobile_check	

@@ -5,46 +5,6 @@ $d_self_ass_fingering = {
 }
 
 
-! WD: Masturbating at night only has 10% chance to be discovered
-$d_van_vtor = {
-	if indorf = 0 and (hour >= 6 or Rand(1, 10) = 1):
-		cls
-		pcs_horny -= 50
-		pcs_mood -= 10
-		gs 'stat'
-		'You hear shouting from outside the bathroom: "<<$pcs_nickname>>! Are you drowning in there or something? What''s taking so long? Get out of there!"'
-
-		act 'Get out of the bath and dry yourself off':
-			analplay = 0
-			selfplaytime = 0
-			mastrOnce = 0
-			proverkasisterhere = 0
-
-			if vaginaTemp > pcs_vag * 2:pcs_vag += 1 & vaginaTemp = 0
-
-			gt $loc, $metka
-		end
-
-		exit
-	else
-		selfplaytime -= 15
-	end
-}
-
-!!if $loc = 'vanrPar' and selfplaytime> = 60:dynamic $d_van_vtor
-!!dynamic $d_sis_prov
-
-$d_sis_prov = {
-	if sister_indorf = 0:
-		if $loc = 'bedrPar':
-			gs 'family'
-
-			if sisterHere = 0 and proverkasisterhere = 0:proverkasisterhere = 1
-			if sisterHere > 0 and proverkasisterhere = 2:gt $loc, $metka
-		end
-	end
-}
-
 if $ARGS[0] = 'start':
 	if mastrOnce = 0:
 		stat['mast'] += 1
@@ -55,7 +15,12 @@ if $ARGS[0] = 'start':
 	gs 'stat'
 
 	if $loc = 'bedrPar' or $loc = 'Gadsarai':'<center><img <<$set_imgh>> src="images/shared/sex/mast/start.jpg"></center>'
-	if $loc = 'vanrPar':'<center><img <<$set_imgh>> src="images/shared/sex/mast/startvann.gif"></center>'
+	if $loc = 'vanrPar':'<center><video src="images/shared/sex/mast/startvann.mp4"></center>'
+
+	if sisboytrio > 0 and sis_watch = 0 and $loc = 'bedrPar':
+		sis_watch = 1
+		if sisterHere > 0:sis_watch = 2 & 'Anya smiles and lets you carry on.'
+	end
 
 	!!then the calculation invasion
 	if $loc = 'vanrPar':
@@ -63,36 +28,7 @@ if $ARGS[0] = 'start':
 		end
 	end
 
-	if $loc = 'bedrPar':
-		gs 'family'
-
-		if sister_indorf = 0:
-			if sisterHere = 0 and proverkasisterhere = 0:proverkasisterhere = 1
-
-			if sisterHere > 0:
-				cls
-				gs 'stat'
-
-				!!if $loc = 'bedrPar':'<center><img <<$set_imgh>> src="images/shared/sex/mast/start.jpg"></center>'
-
-				if $loc = 'vanrPar':
-					'<center><img <<$set_imgh>> src="images/shared/sex/mast/startvann.gif"></center>'
-				else
-					'<center><img <<$set_imgh>> src="images/shared/sex/mast/start.jpg"></center>'
-				end
-
-				if proverkasisterhere = 2:
-					SisterKnowMastr += 1
-					'<font color="red"><b>Anja saw you masturbate.</b></font>'
-				end
-
-				if proverkasisterhere = 1:
-					proverkasisterhere = 2
-					'<font color="red"><b>You hear footsteps approaching your room.</b></font>'
-				end
-			end
-		end
-	end
+	gs 'selfplay', 'sis_prov'
 
 	! WD: Fix Dildo choice Code
 	!{
@@ -172,12 +108,12 @@ if $ARGS[0] = 'start':
 			cls
 			selfplaytime += 5
 
-			!!if $loc = 'bedrPar':'<center><img <<$set_imgh>> src="images/shared/sex/mast/klit.gif"></center>'
+			!!if $loc = 'bedrPar':'<center><video src="images/shared/sex/mast/klit.mp4"></center>'
 
 			if $loc = 'vanrPar':
 				'<center><img <<$set_imgh>> src="images/shared/sex/mast/klitvann.jpg"></center>'
 			else
-				'<center><img <<$set_imgh>> src="images/shared/sex/mast/klit.gif"></center>'
+				'<center><video src="images/shared/sex/mast/klit.mp4"></center>'
 			end
 
 			if pcs_mood >= 20:
@@ -189,7 +125,8 @@ if $ARGS[0] = 'start':
 			end
 
 			$orgasm_txt = 'Suddenly, you rub your clit just right and your whole body starts to shiver in orgasm. The intensity of the orgasm nearly makes you scream, but you bite down on your lip and do your best to stifle down the moans so no one hears you.'
-			gs 'arousal', 'masturbate', 5
+			gs 'arousal', 'masturbate', 20
+			minut -= 15
 			gs 'stat'
 
 			act 'Stop touching yourself':gt $loc, $metka
@@ -203,26 +140,23 @@ if $ARGS[0] = 'start':
 			cls
 			selfplaytime += 5
 
-			!!if $loc = 'bedrPar':'<center><img <<$set_imgh>> src="images/shared/sex/mast/klit.gif"></center>'
+			!!if $loc = 'bedrPar':'<center><video src="images/shared/sex/mast/klit.mp4"></center>'
 			!!if $loc = 'vanrPar':'<center><img <<$set_imgh>> src="images/shared/sex/mast/klitvann.jpg"></center>'
 			'<center><img <<$set_imgh>> src="images/shared/sex/mast/1.jpg"></center>'
 
 			gs 'arousal', 'masturbate', 5
 			gs 'stat'
 				
-			if pcs_ass >= 3:
+			if pcs_ass >= 5:
 				'You press a finger against your asshole and push it in. It slides in quite easily.'
-			elseif pcs_ass >= 1 and pcs_ass < 3:
+			else
 				pcs_ass += 1
 				'You press a finger against your tight asshole and push it in. Your anus is squeezing your finger tightly.'
-			elseif pcs_ass = 0:
-				pcs_ass = 1
-				'You press a finger against your virgin asshole and gently push it in. Your anus is squeezing your finger tightly.'
 			end
 
-			if $loc = 'vanrPar' and selfplaytime >= 60:dynamic $d_van_vtor
+			if $loc = 'vanrPar' and selfplaytime >= 60:gs 'selfplay', 'van_vtor'
 
-			dynamic $d_sis_prov
+			gs 'selfplay', 'sis_prov'
 			gs 'stat'
 
 			act 'Stop touching yourself':gt $loc, $metka
@@ -235,7 +169,7 @@ if $ARGS[0] = 'start':
 				gs 'arousal', 'masturbate', 5
 				gs 'stat'
 				
-				if pcs_ass >= 5:
+				if pcs_ass >= 10:
 					'You relax and squeeze a second finger in, alongside the first. It slides in fairly easily.'
 
 					if agape > 0:
@@ -248,7 +182,7 @@ if $ARGS[0] = 'start':
 
 						'Pushing a second finger into your already sore asshole was a bad idea. It hurts a lot and you feel like you damaged it further.'
 					end
-				elseif pcs_ass >= 3 and pcs_ass < 5:
+				elseif pcs_ass >= 5 and pcs_ass < 10:
 					analplay += 1
 					'You slide a second finger into your asshole. You can feel your anus squeezing your fingers tightly.'
 
@@ -259,7 +193,7 @@ if $ARGS[0] = 'start':
 						pcs_ass += 1
 						'Pushing a second finger into your already sore asshole was a bad idea. It hurts a lot and you feel like you damaged it further.'
 					end
-				elseif pcs_ass >= 1 and pcs_ass < 3:
+				else
 					pcs_ass += 1
 
 					if agape = 2:agape = 3
@@ -270,11 +204,12 @@ if $ARGS[0] = 'start':
 					'When you slide in the second finger, you feel a sharp pain in your anus. You may have tried too much, too fast.'
 				end
 
+				gs 'selfplay', 'sis_prov'
+
 				act 'Stop touching yourself':gt $loc, $metka
 
-				if $loc = 'vanrPar' and selfplaytime >= 60:dynamic $d_van_vtor
+				if $loc = 'vanrPar' and selfplaytime >= 60:gs 'selfplay', 'van_vtor'
 
-				dynamic $d_sis_prov
 
 				if pcs_horny > 0 and agape < 3:
 					act 'Thrust three fingers in':
@@ -285,7 +220,7 @@ if $ARGS[0] = 'start':
 						gs 'arousal', 'masturbate', 5
 						gs 'stat'
 				
-						if pcs_ass >= 10:
+						if pcs_ass >= 15:
 							'Your asshole is fairly loose, and you manage to slide three fingers in without much effort.'
 
 							if agape > 0:
@@ -298,7 +233,7 @@ if $ARGS[0] = 'start':
 
 								'Pushing three fingers into your already sore asshole was a bad idea. It hurts a lot and you feel like you damaged it further.'
 							end
-						elseif pcs_ass >= 5 and pcs_ass < 10:
+						elseif pcs_ass >= 10 and pcs_ass < 15:
 							analplay += 1
 							'You slide three fingers into your asshole. You can feel your anus squeezing your fingers tightly.'
 
@@ -310,7 +245,7 @@ if $ARGS[0] = 'start':
 								pcs_ass += 1
 								'Pushing three fingers into your already sore asshole was a bad idea. It hurts a lot and you feel like you damaged it further.'
 							end
-						elseif pcs_ass < 5:
+						else
 							pcs_ass += 1
 
 							if agape = 2:agape = 3
@@ -321,11 +256,12 @@ if $ARGS[0] = 'start':
 							'When you slide in three fingers, you feel a sharp pain in your anus. You may have tried too much, too fast.'
 						end
 
+						gs 'selfplay', 'sis_prov'
+
 						act 'Stop touching yourself':gt $loc, $metka
 
-						if $loc = 'vanrPar' and selfplaytime >= 60:dynamic $d_van_vtor
+						if $loc = 'vanrPar' and selfplaytime >= 60:gs 'selfplay', 'van_vtor'
 
-						dynamic $d_sis_prov
 						gs 'stat'
 
 						if pcs_horny > 0 and agape < 3:
@@ -337,7 +273,7 @@ if $ARGS[0] = 'start':
 								gs 'arousal', 'masturbate', 5
 								gs 'stat'
 				
-								if pcs_ass >= 15:
+								if pcs_ass >= 20:
 									'Your asshole is very loose, and you manage to push four fingers into it.'
 
 									if agape > 0:
@@ -350,7 +286,7 @@ if $ARGS[0] = 'start':
 
 										'Pushing four fingers into your already sore asshole was a bad idea. It hurts a lot and you feel like you damaged it further.'
 									end
-								elseif pcs_ass >= 10 and pcs_ass < 15:
+								elseif pcs_ass >= 15 and pcs_ass < 20:
 									analplay += 1
 									'You manage to push four fingers into your asshole. You can feel your anus squeezing your fingers tightly.'
 
@@ -362,7 +298,7 @@ if $ARGS[0] = 'start':
 										pcs_ass += 1
 										'Pushing four fingers into your already sore asshole was a bad idea. It hurts a lot and you feel like you damaged it further.'
 									end
-								elseif pcs_ass < 10:
+								else
 									pcs_ass += 1
 
 									if agape = 2:agape = 3
@@ -373,11 +309,12 @@ if $ARGS[0] = 'start':
 									'When you slide in four fingers, you feel a sharp pain in your anus. You may have tried too much, too fast.'
 								end
 
+								gs 'selfplay', 'sis_prov'
+
 								act 'Stop touching yourself':gt $loc, $metka
 
-								if $loc = 'vanrPar' and selfplaytime >= 60:dynamic $d_van_vtor
+								if $loc = 'vanrPar' and selfplaytime >= 60:gs 'selfplay', 'van_vtor'
 
-								dynamic $d_sis_prov
 								gs 'stat'
 
 								if pcs_horny > 0 and agape < 3:
@@ -390,7 +327,7 @@ if $ARGS[0] = 'start':
 										gs 'arousal', 'masturbate', 5
 										gs 'stat'
 				
-										if pcs_ass >= 20:
+										if pcs_ass >= 25:
 											'Slowly but surely, you manage to get your entire hand into your ass.'
 
 											if agape > 0:
@@ -403,7 +340,7 @@ if $ARGS[0] = 'start':
 
 												'Pushing your whole hand into your already sore asshole was a bad idea. It hurts a lot and you feel like you damaged it further.'
 											end
-										elseif pcs_ass >= 15 and pcs_ass < 20:
+										elseif pcs_ass >= 20 and pcs_ass < 25:
 											analplay += 1
 											'It takes a lot of effort, but over the course of several minutes you manage to work your whole hand into your ass. You feel your anus squeeze your wrist tightly.'
 
@@ -415,7 +352,7 @@ if $ARGS[0] = 'start':
 												pcs_ass += 1
 												'Pushing your whole hand into your already sore asshole was a bad idea. It hurts a lot and you feel like you damaged it further.'
 											end
-										elseif pcs_ass < 15:
+										else
 											pcs_ass += 1
 
 											if agape = 2:agape = 3
@@ -426,11 +363,11 @@ if $ARGS[0] = 'start':
 											'When you push your hand into your asshole, you feel a sharp pain in your anus. You may have tried too much, too fast.'
 										end
 
+										gs 'selfplay', 'sis_prov'
+
 										act 'Stop touching yourself':gt $loc, $metka
 
-										if $loc = 'vanrPar' and selfplaytime >= 60:dynamic $d_van_vtor
-
-										dynamic $d_sis_prov
+										if $loc = 'vanrPar' and selfplaytime >= 60:gs 'selfplay', 'van_vtor'
 									end
 								end
 							end
@@ -451,7 +388,7 @@ if $ARGS[0] = 'start':
 					act 'Use the dildo on your pussy':
 						cls
 						selfplaytime += 15
-						if husband > 0 and housrA = 1 and husbandrink ! 10 and $locM = 'bedr': gt 'husbsex','husb_mastr_vtor'
+						if husband > 0 and housrA = 1 and husbandrink ! 10 and $loc = 'bedr': gt 'husbsex','husb_mastr_vtor'
 						
 						dick = dildohand
 
@@ -543,11 +480,69 @@ if $ARGS[0] = 'start':
 		gs 'stat'
 	end
 
-	if $loc = 'vanrPar' and selfplaytime >= 60:dynamic $d_van_vtor
+	if $loc = 'vanrPar' and selfplaytime >= 60:gs 'selfplay', 'van_vtor'
 
 	if $loc = 'Gadsarai':
 		npc_horny['A66'] += 1
 		'Bandit the dog is watching you curiously.'
+	end
+end
+
+if $ARGS[0] = 'sis_prov':
+	if $loc = 'bedrPar' and (hour >= 7 or hour < 23):
+		gs 'family'
+
+		if sister_indorf = 0:
+			if sisterHere = 0 and proverkasisterhere = 0:proverkasisterhere = 1
+
+			if sisterHere > 0:
+				cls
+				gs 'stat'
+
+				'<center><img <<$set_imgh>> src="images/shared/sex/mast/start.jpg"></center>'
+
+				if sisboytrio > 0 and sis_watch = 1:
+					sis_watch = 2
+					'Anya smiles as she enters the room and waves at you to carry on.'
+				else
+					if proverkasisterhere = 2:
+						SisterKnowMastr += 1
+						'<font color="red"><b>Anja saw you masturbate.</b></font>'
+					end
+
+					if proverkasisterhere = 1:
+						proverkasisterhere = 2
+						'<font color="red"><b>You hear footsteps approaching your room.</b></font>'
+					end
+				end
+			end
+		end
+	end
+end
+
+! WD: Masturbating at night only has 10% chance to be discovered
+if $ARGS[0] = 'van_vtor':
+	if indorf = 0 and (hour >= 6 or Rand(1, 10) = 1):
+		cls
+		pcs_horny -= 50
+		pcs_mood -= 10
+		gs 'stat'
+		'You hear shouting from outside the bathroom: "<<$pcs_nickname>>! Are you drowning in there or something? What''s taking so long? Get out of there!"'
+
+		act 'Get out of the bath and dry yourself off':
+			analplay = 0
+			selfplaytime = 0
+			mastrOnce = 0
+			proverkasisterhere = 0
+
+			if vaginaTemp > pcs_vag * 2:pcs_vag += 1 & vaginaTemp = 0
+
+			gt $loc, $metka
+		end
+
+		exit
+	else
+		selfplaytime -= 15
 	end
 end
 
@@ -595,7 +590,7 @@ if $ARGS[0] = 'fingering2':
 
 	act 'Fuck your fingers':
 		cls
-		selfplaytime += 5
+		selfplaytime += 10
 
 		'<center><img <<$set_imgh>> src="images/shared/sex/mast/finger.jpg"></center>'
 		if args[1] = 1:
@@ -609,7 +604,7 @@ if $ARGS[0] = 'fingering2':
 		if pcs_vag <= 12:'Your pussy walls are stretched nicely from the finger fucking, and you feel a pleasant warmth spread in your lower body.'
 		if pcs_vag > 12:'Your pussy is quite loose, and you have to work hard to get much enjoyment out of it.'
 
-		gs 'arousal', 'masturbate', 5
+		gs 'arousal', 'masturbate', 10
 		gs 'stat'
 
 		if pcs_vag < 12:vaginaTemp += 1
@@ -655,7 +650,7 @@ if $ARGS[0] = 'fingering3':
 
 		act 'Fuck yourself with your fingers':
 			cls
-			selfplaytime += 5
+			selfplaytime += 10
 
 			if pcs_vag < 10:
 				if vgape = 2:vgape = 3
@@ -669,7 +664,7 @@ if $ARGS[0] = 'fingering3':
 			'<center><img <<$set_imgh>> src="images/shared/sex/mast/hand.jpg"></center>'
 			'You start to slowly move your hand, thrusting your fingers into your pussy again and again.'
 
-			gs 'arousal', 'masturbate', 5
+			gs 'arousal', 'masturbate', 10
 			gs 'stat'
 		
 			if pcs_vag <= 15:pcs_horny -= 10 & pcs_mood -= 10 & 'You''re stretching your pussy to the point where it becomes rather painful, and don''t get any enjoyment out of it.'

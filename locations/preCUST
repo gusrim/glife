@@ -25,21 +25,20 @@ if $ARGS[0] = 'TGStart':
 !!	Just hair and eye color here for now; the dialog will be update as more options are added
 	'As you drift in unconsciousness, an impression of a woman forms in your mind. Many aspects of her appearance are indistinct, but there are some things you can make out.'
 	'She is fairly tall.'
-	''
+	*nl
 	if pcs_eyecol = 0: 'She has <a href="exec:pcs_eyecol = 1 & gt ''preCUST'', ''TGStart''">brown</a> eyes.'
 	if pcs_eyecol = 1: 'She has <a href="exec:pcs_eyecol = 2 & gt ''preCUST'', ''TGStart''">gray</a> eyes.'
 	if pcs_eyecol = 2: 'She has <a href="exec:pcs_eyecol = 3 & gt ''preCUST'', ''TGStart''">green</a> eyes.'
 	if pcs_eyecol = 3: 'She has <a href="exec:pcs_eyecol = 0 & gt ''preCUST'', ''TGStart''">blue</a> eyes.'
-	''
+	*nl
 	if pcs_haircol = 0: 'Her hair is <a href="exec:pcs_haircol = 1 & gt ''preCUST'', ''TGStart''">black</a>.'
 	if pcs_haircol = 1: 'Her hair is <a href="exec:pcs_haircol = 2 & gt ''preCUST'', ''TGStart''">brown</a>.'
 	if pcs_haircol = 2: 'Her hair is <a href="exec:pcs_haircol = 3 & gt ''preCUST'', ''TGStart''">red</a>.'
 	if pcs_haircol = 3: 'Her hair is <a href="exec:pcs_haircol = 0 & gt ''preCUST'', ''TGStart''">blonde</a>.'
-	if defcurly = 0:'And it''s naturally <a href="exec:defcurly = 1 & pcs_haircurl = 2147483647 & gt ''preCUST'', ''TGStart''">straight</a>.'
-	if defcurly = 1:'And it''s naturally <a href="exec:defcurly = 0 & pcs_haircurl = 0 & gt ''preCUST'', ''TGStart''">curly</a>.'
-	''
+	if defcurly = 0:'And it''s naturally <a href="exec:defcurly = 1 & curly = 2147483647 & gt ''preCUST'', ''TGStart''">straight</a>.'
+	if defcurly = 1:'And it''s naturally <a href="exec:defcurly = 0 & curly = 0 & gt ''preCUST'', ''TGStart''">curly</a>.'
+	*nl
 	'Everything else about her is fuzzy...'
-	''
 
 	act 'Done': gt 'preCUST', 'Done', 'TGS'
 end
@@ -56,24 +55,73 @@ if $ARGS[0] = 'SGStart':
 	if pcs_eyecol = 1: 'You have <a href="exec:pcs_eyecol = 2 & gt ''preCUST'', ''SGStart''">gray</a> eyes.'
 	if pcs_eyecol = 2: 'You have <a href="exec:pcs_eyecol = 3 & gt ''preCUST'', ''SGStart''">green</a> eyes.'
 	if pcs_eyecol = 3: 'You have <a href="exec:pcs_eyecol = 0 & gt ''preCUST'', ''SGStart''">blue</a> eyes.'
-	''
+	*nl
 	if pcs_haircol = 0: 'Your hair is <a href="exec:pcs_haircol = 1 & gt ''preCUST'', ''SGStart''">black</a>.'
 	if pcs_haircol = 1: 'Your hair is <a href="exec:pcs_haircol = 2 & gt ''preCUST'', ''SGStart''">brown</a>.'
 	if pcs_haircol = 2: 'Your hair is <a href="exec:pcs_haircol = 3 & gt ''preCUST'', ''SGStart''">red</a>.'
 	if pcs_haircol = 3: 'Your hair is <a href="exec:pcs_haircol = 0 & gt ''preCUST'', ''SGStart''">blonde</a>.'
-	if defcurly = 0:'And it''s naturally <a href="exec:defcurly = 1 & pcs_haircurl = 2147483647 & gt ''preCUST'', ''SGStart''">straight</a>.'
-	if defcurly = 1:'And it''s naturally <a href="exec:defcurly = 0 & pcs_haircurl = 0 & gt ''preCUST'', ''SGStart''">curly</a>.'
-	''
+	if defcurly = 0:'And it''s naturally <a href="exec:defcurly = 1 & curly = 2147483647 & gt ''preCUST'', ''SGStart''">straight</a>.'
+	if defcurly = 1:'And it''s naturally <a href="exec:defcurly = 0 & curly = 0 & gt ''preCUST'', ''SGStart''">curly</a>.'
+	*nl
 	'Personalize attributes related to your <a href="exec:gs ''begin'', ''eyes''">eyes</a></center>.'
 
 	act 'Done': gt 'preCUST', 'Done', 'SGS'
+end
+
+!!******************** NT Start Body Customization Options ******************************
+if $ARGS[0] = 'NTStart':
+!!	This is to bypass the next part if the avatar system was used
+!!	It will be changed to bypass the head options, once more body options are added
+!!  It is using the TG done to complete and the magikDostup to split at the end
+	NTstart = 1
+	if $pcs_firstname = '':
+		$pcs_firstname = input("What is your first name? (Leave blank for default)")
+
+		if $pcs_firstname = '':$pcs_firstname = 'Svetlana'
+
+		$pcs_lastname = input("What is your last name? (Leave blank for default)")
+
+		if $pcs_lastname = '':$pcs_lastname = 'Lebedev'
+
+		$pcs_nickname = input("What is your nick name? (Note: If you chose a custom name, you have to enter something here!)")
+
+		if $pcs_nickname = '':$pcs_nickname = 'Sveta'
+	end
+	if player_avatar = 1:
+		act 'Continue': gt 'preCUST', 'Done', 'NT'
+	exit
+	end
+	pcs_hairlng = 100
+
+!!	Just hair and eye color here for now; the dialog will be update as more options are added
+	'Set your basic appearance details here before you start your story'
+	*nl
+	'You are fairly tall.'
+	*nl
+	'<center>Current face image (based on hairstyle)</center>'
+	'<center><img <<$set_imgh>> src="<<FUNC(''$face_image'')>>"></center>'
+	if pcs_eyecol = 0: 'You have <a href="exec:pcs_eyecol = 1 & gt ''preCUST'', ''NTStart''">brown</a> eyes.'
+	if pcs_eyecol = 1: 'You have <a href="exec:pcs_eyecol = 2 & gt ''preCUST'', ''NTStart''">gray</a> eyes.'
+	if pcs_eyecol = 2: 'You have <a href="exec:pcs_eyecol = 3 & gt ''preCUST'', ''NTStart''">green</a> eyes.'
+	if pcs_eyecol = 3: 'You have <a href="exec:pcs_eyecol = 0 & gt ''preCUST'', ''NTStart''">blue</a> eyes.'
+	*nl
+	if pcs_haircol = 0: 'Your hair is <a href="exec:pcs_haircol = 1 & gt ''preCUST'', ''NTStart''">black</a>.'
+	if pcs_haircol = 1: 'Your hair is <a href="exec:pcs_haircol = 2 & gt ''preCUST'', ''NTStart''">brown</a>.'
+	if pcs_haircol = 2: 'Your hair is <a href="exec:pcs_haircol = 3 & gt ''preCUST'', ''NTStart''">red</a>.'
+	if pcs_haircol = 3: 'Your hair is <a href="exec:pcs_haircol = 0 & gt ''preCUST'', ''NTStart''">blonde</a>.'
+	if defcurly = 0:'And it''s naturally <a href="exec:defcurly = 1 & curly = 2147483647 & gt ''preCUST'', ''NTStart''">straight</a>.'
+	if defcurly = 1:'And it''s naturally <a href="exec:defcurly = 0 & curly = 0 & gt ''preCUST'', ''NTStart''">curly</a>.'
+	*nl
+	'Personalize attributes related to your <a href="exec:gs ''begin'', ''eyes''">eyes</a></center>.'
+	
+	act 'Done': gt 'preCUST', 'Done', 'NT'
 end
 
 !!******************** Final variable setting and initializations ***********************
 if $ARGS[0] = 'Done':
 !!	Top area for things that need to be done before setting the variables for either start
 	year = 2016
-	tanga = 1
+	gs 'underwear', 'wear'
 
 	BDSMfilm = 0
 	pornstudio = 0
@@ -83,6 +131,8 @@ if $ARGS[0] = 'Done':
 	denypreg = 0
 	pertemp = 1
 	pillcvrt = 1
+	
+	pcs_naturallashes = pcs_lashes
 	
 !!	Initializing elasticity
 	vshrink = 1
@@ -176,9 +226,76 @@ if $ARGS[0] = 'Done':
 		fairy = 10
 		eda = 5
 		clrbelo = 2
+		clrbra = 2
 		poroshok = 5
 		shampoo = 5
 		tampon = 2
+		pcs_energy = 100
+		water = 100
+		pcs_sleep = 100
+
+!!		Starting Option Adjustments
+!!		The TG Background options would be aplied here
+
+!!		***********
+
+	end
+
+!!	NT Start Specific Variable Setting
+	if $ARGS[1] = 'NT':
+		age = 18
+		month = 5
+		$month = 'May'
+		day = 4
+		week = 3
+		hour = 13
+		if player_avatar = 0:
+			birthyear = year - age
+			birthmonth = 4
+			birthday = 1
+			schoool_year = 1998
+		end
+
+!!		Body
+		pcs_hgt = 170
+		salo = 60
+		dick = 0
+!!		Stats
+		pcs_stren = 20
+		strenbuf = 20
+		pcs_agil = 15
+		agilbuf = 15
+		pcs_vital = 25
+		vitalbuf = 25
+		pcs_intel = 30
+		pcs_sprt = 25
+		pcs_react = 25
+		pcs_chrsm = 15
+		pcs_prcptn = 40
+		money = 13000
+		housrA = 1
+		pcs_pubes = 30
+		pcs_leghair = 12
+		pcs_makeup = 5
+		bag = 1
+		housr = 1
+
+		pcs_exhibition = 15
+		pcs_heels = 20
+		pcs_makupskl = 15
+		pcs_artskls = 15
+		pcs_compskl = 20
+		pcs_comphckng = 10
+		pcs_chess = 15
+		pcs_danc = 30
+		cltarelka = 1
+		fairy = 10
+		eda = 5
+		clrbelo = 15
+		clrbra = 15
+		poroshok = 5
+		shampoo = 20
+		tampon = 15
 		pcs_energy = 100
 		water = 100
 		pcs_sleep = 100
@@ -200,6 +317,7 @@ if $ARGS[0] = 'Done':
 		fairy = 0
 		eda = 0
 		clrbelo = 10
+		clrbra = 10
 		poroshok = 0
 		shampoo = 0
 		sanpad = 20
@@ -255,6 +373,13 @@ if $ARGS[0] = 'Done':
 
 	gs 'body_shape', 'initial'
 
+!! Adding underwear
+
+	$pantyworntype = 'cheap'
+	pantywornnumber = rand(1,37)
+	$braworntype = 'cheap'
+	brawornnumber = rand(1,19)
+
 !!adding default shoes and assigning them
 
 	sgandm[6] = 1
@@ -274,7 +399,20 @@ if $ARGS[0] = 'Done':
 	$alternativeshoetype = 'gandm' & alternativeshoenumber = 6
 
 !!	Starting clothing set
-	if pcs_exhibition = 0:
+	if NTstart = 1:
+		cheap[161] = 1
+		cheapH[161] = 100
+		cheapB[161] = pcs_hips
+		exercise[29] = 1
+		exerciseH[29] = 100
+		cheap[370] = 1
+		cheapH[370] = 100
+		cheapB[370] = pcs_hips
+		swimwear[3] = 1
+		swimwearH[3] = 60
+		swimwearB[3] = pcs_hips
+		gs 'clothing', 'wear', 'cheap', 370
+	elseif pcs_exhibition = 0:
 		cheap[15] = 1
 		cheapH[15] = 100
 		cheapB[15] = pcs_hips
@@ -406,13 +544,13 @@ if $ARGS[0] = 'Done':
 	if temprand = 1:
 		cycle = 1
 		EggRH = rand(1,149)
-		FocH = EggRH
+		FocH = EggRH + 4*24
 		mesec = 0
 		unfertegg = 0
 		ferteggage = 0
 		Ovulate = 0
 		LutH = 0
-		daylastperiod -= 4+(FocH/24)
+		daylastperiod -= FocH/24
 	elseif temprand = 2:
 		cycle = 2
 		unfertegg = 1
@@ -448,7 +586,9 @@ if $ARGS[0] = 'Done':
 	gs 'stat'
 	showstat 0
 	showobjs 0
-	if $ARGS[1] = 'TGS':
+	if $ARGS[1] = 'NT':
+		gt 'preNT'
+	elseif $ARGS[1] = 'TGS':
 		gt 'preTG', 'sleepPRE'
 	else
 		gt 'preALT', 'One'
