@@ -171,7 +171,93 @@ if $ARGS[0] = '':
 	end
 	act 'Go to the river':minut += 20 & gt 'gadriver', 'start'
 	act 'Go to outskirt':minut += 20 & gt'gadroad'
+!!Succubus active hunting, can only hunt successfully once a day, but can try until success
+	if (hour <= 7 or hour >= 21) and succubusQW = 5 and suchuntday ! daystart:
+		act 'Go Hunting (this can take a lot of time)': suchunt = 1 & gt 'gadukino', 'succubus_hunt'
+	end
+
 	act 'Exit the highway':minut += 30 & nroad = 10 & gt 'road'
+end
+
+if $ARGS[0] = 'succubus_hunt':
+	cla
+	minut += 30
+	*nl
+	'At this hour of the night, the village is only illuminated by the light of the moon. You know this will be to your advantage. No one will be able to see you coming... That is, if there were anyone out at night. You prowl the village looking for prey, but as the minutes pass, your frustration grows.'
+	if rand(1,100) < 70:
+		minut += 30
+		mood -= 5
+		*nl
+		'God, this place is dull! After searching for an hour, you find no one; not even a stray cat seems to be out and about tonight. You give up reluctantly, pondering how else you are going to feed tonight.'
+		act 'Continue': gt 'gadukino'
+	else
+		'You are getting really antsy to feed, and after finding absolutely no one outside, you decide that breaking into someone''s house, risky as it is, is still better than going hungry.' 
+		*nl
+		!Another rand_check here to choose the scene?
+		'You break the lock of the first house you see and go inside. You sneak around the house, looking for a meal, but there''s nobody there. This entire night is a bust... Well, since you''re here, you might as well try and see if there''s any regular food that helps with your hunger, even though you doubt it.' 
+		'You head to the kitchen for a midnight snack, and as you tear through the fridge, eating whatever looks appetizing, you hear a man curse.'
+		'"Shit, what the hell happened to my door?!"'
+		'You freeze on the spot. You didn''t think anybody would actually come home while you were still here, but now that they did, maybe you can still salvage this mess.'
+		
+		act 'Strip':
+			gs 'clothing', 'strip'
+			gs 'underwear', 'remove'
+			!Just took a guess at where this image might go - Adjust src accordingly
+			'<center><img <<$set_imgh>> src="images/locations/gadukino/succubus/kitchennude.jpg"></center>'
+			'Heavy footsteps echo through the corridor, approaching the kitchen, and with nowhere to hide, you decide to strip instead. You are here to feed, after all, and if he sees you nude, surely he will forget what he is angry about.'
+			'When the man enters the dark kitchen, his first reaction is about what you''d expect: "Who the hell are you!?"'
+			'You give him a good look at your body; according to your plan, that should be enough to calm him down. Unfortunately, he doesn''t seem to be aware of the plan, cause he is having none of it.'
+			'"Have you been eating my food?! Get the hell out of my house!"'
+			*nl
+			'He grabs you and starts dragging you towards the door. You protest and try in vain to seduce him, wondering how anyone could resist your charms like this. Then you remember that you are stronger than him - weird how easily superhuman strength can slip your mind.' 
+			'As soon as you resist his pull, he grinds to a halt, confused by the fact that he can''t move you further. With the tables turned, you grab him and half-drag, half-throw him into his own livingroom where he lands on his back, stunned by the fact that this woman so easily overpowered him.'
+			'You pull his pants off and, already nude yourself, lower your pussy to his cock. He may have played the angry man, but the fact that it stands at attention soothes your bruised ego - your seduction efforts didn''t go completely unnoticed - and you plunge yourself down on top of him.'
+			
+			act 'Feed on him':
+				!Taken directly from 'succubus'
+				scrand = rand(0,3)
+				scfeed = succublvl + rand(1,4)
+				if scfeed = 2:
+					$scxcum = 'twice'
+				else
+					$scxcum = 'multiple times'
+				end
+				stat['vaginal'] += 1
+				guy += 1
+				pcs_horny = 0
+				pcs_dom += scfeed
+				orgasm += 1 + scfeed
+				pcs_willpwr += 15 * (1 + scfeed)
+				succubxp += 6
+				sexnutrition += 30 * scfeed
+				sucabscum = 1
+				minut += 15 + (20 * scfeed) / succublvl
+				'<center><img <<$set_imgh>> src="images/pc/body/succubusself.jpg"></center>'
+				
+				'You ride him hard, desperate to get your hungry pussy the nourishment it requires.' 
+				if scrand < succublvl:
+					'Your seduction and succubus powers were strong enough to get your victim hard, but they weren''t enough to make him forget about his situation: He is giving you hateful looks, clearly pissed about his door and food and, oh yeah, the fact you are raping him, but you simply ignore that.' 
+					'All you need is his sperm. You could care less about his happiness, and if he wants to complain about a woman like you fucking his brains out, that''s his problem. Just as you''re thinking that, your powers surge and force him to come, unloading his jizz deep into your waiting cunt.' 
+					*nl
+					'You don''t know how long you go at it with him exactly, but after coming inside you <<$scxcum>>, and thus making you come too, he runs out of energy and falls unconscious. You lift yourself off of your passed-out plaything and head for the kitchen to collect your clothes as well as one last snack, feeling wonderfully relaxed after getting your fix.' 
+					'Then you head out the back door, making sure to break the handle on the way out - you''re nothing if not consistent.'
+				else
+					'He was resisting you initially, but after a while, your powers break any resistance he had in him. By the time his first orgasm hits and he shoots his sperm into your needy cunt, he would have betrayed his own mother, much less broken his front door and laid his fridge at your feet, just to be inside you a little longer.'
+					'However unsavory the first few minutes of your meeting, this state of bliss you share with him pushes that memory in the far back of your minds and lets both of you enjoy the hard ride you''re giving him.'
+					*nl
+					'You don''t know how long you go at it with him exactly, but after coming inside you <<$scxcum>>, and thus making you come too, he runs out of energy and falls unconscious. You lift yourself off of your passed-out plaything, patting his head affectionately, and head for the kitchen to collect your clothes as well as one last snack, feeling wonderfully relaxed after getting your fix. There''s nothing better than sex with a willing subject.'
+					'Then you head out the back door. For a split second, you consider breaking that door too... but why add insult to injury when he has pleased you so?'
+				end
+				killvar 'scfeed' & killvar 'scrand'
+				gs 'stat'
+				act 'Leave':
+					gs 'underwear', 'wear'
+					gs 'clothing', 'wear_last_worn'
+					gt 'gadukino'
+				end
+			end
+		end
+	end
 end
 
 if $ARGS[0] = '1':
