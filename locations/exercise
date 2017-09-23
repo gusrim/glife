@@ -1,70 +1,52 @@
 # exercise
 
 
-!{This will centralize calls for exercise. For calls where you wish to allow multiple types of exercises, such as a bedroom or yard, use gs 'exercise', 'start' 
+!{This will centralize calls for exercise. For calls where you wish to allow multiple types of exercises, such as a bedroom or yard, use gs 'exercise', 'start'
 For direct calls use this format: gs 'exercise', $ARGS[0], ARG[1], $ARGS[2], $ARGS[3], $ARGS[4]
 $ARGS[0] is the workout tier and the higher the tier, the greater the workout intensity.
 	Values: 'tier1' 'tier2' 'tier3' 'tier4'
 ARG[1] is the time override. By default the tiers are in 15 minute segments if being called from an event with predetermined time set this to 1
 	Values: 0 (default of 15 minutes) 1 (time set to 0)
-$ARGS[2] and on are the stats to be affected by the workout NOTE: use the _exp variant, not the pcs_!!!! 
-	Values: 'stren_exp' 'vital_exp' 'agil_exp' 'sprt_exp' 'react_exp' 
+$ARGS[2] and on are the stats to be affected by the workout NOTE: use the _exp variant, not the pcs_!!!!
+	Values: 'stren_exp' 'vital_exp' 'agil_exp' 'sprt_exp' 'react_exp'
 	Other stats can be added if desired - for a dance-a-thon you might use gs 'exercise', 'tier1', 0, 'agil_exp', 'danc_exp'
 
 }
 
 
 if $ARGS[0] = 'start':
-	if $loc = 'Meadow':
-		if sunWeather = 1:
-			if pcs_stam >=15 or pcs_stam >= 10 and bookYog + obruch > 0:
-				if $clothingworntype ! 'exercise' and pcs_exhibition < 35:
-					'<center>You could do some exercises here if you were wearing workout clothes.</center>'
-				elseif $clothingworntype ! 'exercise' and pcs_exhibition >= 35 and Miraloc ! 2 and temper >= 10:
-					'<center>Your meadow is a perfect place to do some exercises. There is no one around, so you could do it <a href="exec: gt ''exercise'', ''workout'', ''nude'', ''Meadow''"> in the nude</a>.</center>'
-				else
-					'<center>Your meadow is a perfect place to do some <a href="exec: gt ''exercise'', ''workout''">exercises</a>.</center>'
-				end
-			else
-				'<center>Your meadow is a perfect place to do some exercises, but you don''t have the energy right now.</center>'
-			end
-		end
-	elseif (pcs_stam >=15 or pcs_stam >= 10 and bookYog + obruch > 0) and $loc ! 'Meadow': 
-		'<center>There is enough space in the room to <a href="exec: gt ''exercise'', ''workout''">exercise</a>.</center>'
+	if (pcs_stam >=15 or pcs_stam >= 10 and bookYog + obruch > 0):
+		'There is enough space in the room to <a href="exec: gt ''exercise'', ''workout''">exercise</a>.'
 	else
-		'<center>There is enough space in the room for a variety of exercises, but you don''t have the energy to work out now.</center>'
+		'There is enough space in the room for a variety of exercises, but you don''t have the energy to work out now.'
 	end
 end
 
 if $ARGS[0] = 'workout':
 	cla
-	if $loc = 'Meadow' and $clothingworntype ! 'exercise':
-		$sportloc = 'Meadow'
-		gs 'clothing', 'strip', $sportloc
-	else
-		$sportloc = ''
-	end
-	gs 'stat'
-	if $ARGS[1] = 'nude': 
-		if $loc = 'Meadow':
+	$sportloc = $ARGS[2]
+	if $ARGS[1] = 'nude':
+		if $sportloc = 'Meadow':
 			if exhibitionQW < 3: 'Your cheeks feel hot with embarrassment as you strip off your clothes. You giggle nervously at the thought of getting caught in the nude - the thought terrifies you but it also excites you.'
 			clothesAtLocation = FUNC('lost_clothes_here',$sportloc)
 			gs 'arousal', 'foreplay', 15, 'exhibitionism'
 			gs 'arousal', 'end'
+			minut -= 15
 		end
-		minut -= 15
-		gs 'stat'
 	end
+	gs 'stat'
 	*nl
 	'<a href="exec:gt ''exercise'', ''setup''">Click here</a> to set up your automated exercise options.'
-	if clothesAtLocation = 1 and $loc = 'Meadow':
+	if clothesAtLocation = 1:
 		act 'End workout and get dressed':
 			cla
 			minut += 5
+			gs 'underwear', 'wear'
 			gs 'clothing', 'recover_lost_clothes', $sportloc, 1
 			gt $loc, $metka
 		end
-	else	
+	else
+		if $sportloc = 'Meadow': gs 'underwear', 'wear'
 		act 'Leave': gt $loc, $metka
 	end
 	act 'Manual': gt 'exercise', 'manual'
@@ -133,12 +115,14 @@ end
 
 if $ARGS[0] = 'auto_end':
 	exer_auto = 0
-	if clothesAtLocation = 1 and $loc = 'Meadow':
+	if clothesAtLocation = 1:
 		cla
 		minut += 5
+		gs 'underwear', 'wear'
 		gs 'clothing', 'recover_lost_clothes', $sportloc, 1
 		gt $loc, $metka
-	else	
+	else
+		if $sportloc = 'Meadow': gs 'underwear', 'wear'
 		gt $loc, $metka
 	end
 end
@@ -148,7 +132,7 @@ if $ARGS[0] = 'manual':
 	if pcs_stam >= 15:
 		Act 'Do pushups for 15 minutes': timemult = 1 & gs 'exercise', 'timestring' & gt 'exercise', 'push', 'manual'
 		Act 'Do crunches for 15 minutes': timemult = 1 & gs 'exercise', 'timestring' & gt 'exercise', 'press', 'manual'
-		if skak > 0 and $loc ! 'meadow':
+		if skak > 0 and $sportloc ! 'Meadow':
 			Act 'Jump rope for 15 minutes': timemult = 1 & gs 'exercise', 'timestring' & gt 'exercise', 'rope', 'manual'
 		end
 	end
@@ -156,14 +140,14 @@ if $ARGS[0] = 'manual':
 		if bookYog > 0:
 			Act 'Do yoga for 15 minutes': timemult = 1 & gs 'exercise', 'timestring' & gt 'exercise', 'yoga', 'manual'
 		end
-		if obruch > 0 and $loc ! 'meadow': 
+		if obruch > 0 and $sportloc ! 'Meadow':
 			Act 'Use your hula hoop for 15 minutes': timemult = 1 & gs 'exercise', 'timestring' & gt 'exercise', 'hula', 'manual'
 		end
 	end
 	if pcs_stam >= 30:
 		Act 'Do pushups for 30 minutes': timemult = 2 & gs 'exercise', 'timestring' & gt  'exercise', 'push', 'manual'
 		Act 'Do crunches for 30 minutes': timemult = 2 & gs 'exercise', 'timestring' & gt  'exercise', 'press', 'manual'
-		if skak > 0 and $loc ! 'meadow':
+		if skak > 0 and $sportloc ! 'Meadow':
 			Act 'Jump rope for 30 minutes': timemult = 2 & gs 'exercise', 'timestring' & gt  'exercise', 'rope', 'manual'
 		end
 	end
@@ -171,14 +155,14 @@ if $ARGS[0] = 'manual':
 		if bookYog > 0:
 			Act 'Do yoga for 30 minutes': timemult = 2 & gs 'exercise', 'timestring' & gt  'exercise', 'yoga', 'manual'
 		end
-		if obruch > 0 and $loc ! 'meadow': 
+		if obruch > 0 and $sportloc ! 'Meadow':
 			Act 'Use your hula hoop for 30 minutes': timemult = 2 & gs 'exercise', 'timestring' & gt  'exercise', 'hula', 'manual'
 		end
 	end
 	if pcs_stam >= 45:
 		Act 'Do pushups for 45 minutes': timemult = 3 & gs 'exercise', 'timestring' & gt  'exercise', 'push', 'manual'
 		Act 'Do crunches for 45 minutes': timemult = 3 & gs 'exercise', 'timestring' & gt  'exercise', 'press', 'manual'
-		if skak > 0 and $loc ! 'meadow':
+		if skak > 0 and $sportloc ! 'Meadow':
 			Act 'Jump rope for 45 minutes': timemult = 3 & gs 'exercise', 'timestring' & gt  'exercise', 'rope', 'manual'
 		end
 	end
@@ -186,14 +170,14 @@ if $ARGS[0] = 'manual':
 		if bookYog > 0:
 			Act 'Do yoga for 45 minutes': timemult = 3 & gs 'exercise', 'timestring' & gt  'exercise', 'yoga', 'manual'
 		end
-		if obruch > 0 and $loc ! 'meadow': 
+		if obruch > 0 and $sportloc ! 'Meadow':
 			Act 'Use your hula hoop for 45 minutes': timemult = 3 & gs 'exercise', 'timestring' & gt  'exercise', 'hula', 'manual'
 		end
 	end
 	if pcs_stam >= 60:
 		Act 'Do pushups for 60 minutes': timemult = 4 & gs 'exercise', 'timestring' & gt  'exercise', 'push', 'manual'
 		Act 'Do crunches for 60 minutes': timemult = 4 & gs 'exercise', 'timestring' & gt  'exercise', 'press', 'manual'
-		if skak > 0 and $loc ! 'meadow':
+		if skak > 0 and $sportloc ! 'Meadow':
 			Act 'Jump rope for 60 minutes': timemult = 4 & gs 'exercise', 'timestring' & gt  'exercise', 'rope', 'manual'
 		end
 	end
@@ -201,21 +185,23 @@ if $ARGS[0] = 'manual':
 		if bookYog > 0:
 			Act 'Do yoga for 60 minutes': timemult = 4 & gs 'exercise', 'timestring' & gt  'exercise', 'yoga', 'manual'
 		end
-		if obruch > 0 and $loc ! 'meadow': 
+		if obruch > 0 and $sportloc ! 'Meadow':
 			Act 'Use your hula hoop for 60 minutes': timemult = 4 & gs 'exercise', 'timestring' & gt  'exercise', 'hula', 'manual'
 		end
 	end
 	if pcs_stam < 10 or pcs_stam < 15 and bookYog + obruch = 0:
 		'You don''t have the energy to work out anymore now.'
 	end
-	if clothesAtLocation = 1 and $loc = 'Meadow':
+	if clothesAtLocation = 1:
 		act 'End workout and get dressed':
 			cla
 			minut += 5
+			gs 'underwear', 'wear'
 			gs 'clothing', 'recover_lost_clothes', $sportloc, 1
 			gt $loc, $metka
 		end
-	else	
+	else
+		if $sportloc = 'Meadow': gs 'underwear', 'wear'
 		act 'Leave': gt $loc, $metka
 	end
 end
@@ -261,9 +247,9 @@ if $ARGS[0] = 'matrix':
 	'<center><table border=0 cellspacing=0 cellpadding=10 width=1000><TH>Exercise</TH><TH>None</TH><TH>15 mins</TH><TH>30 mins</TH><TH>45 mins</TH><TH>60 mins</TH>'
 	gs 'exercise', 'matrixdata', 0, 'Push ups'
 	gs 'exercise', 'matrixdata', 1, 'Crunches'
-	if skak > 0 and $loc ! 'meadow': gs 'exercise', 'matrixdata', 2, 'Jump rope'
+	if skak > 0 and $sportloc ! 'Meadow': gs 'exercise', 'matrixdata', 2, 'Jump rope'
 	if bookYog > 0: gs 'exercise', 'matrixdata', 3, 'Yoga'
-	if obruch > 0 and $loc ! 'meadow': gs 'exercise', 'matrixdata', 4, 'Hula hoop'
+	if obruch > 0 and $sportloc ! 'Meadow': gs 'exercise', 'matrixdata', 4, 'Hula hoop'
 
 	'</center></table>'
 	*nl
@@ -401,7 +387,7 @@ if $ARGS[0] = 'rope':
 	if loopcount < timemult: loopcount += 1 & jump 'timelooprope'
 	loopcount = 0
 	timemult = 0
-	
+
 	if $clothingworntype ! 'nude':
 		'<center><video src="images/pc/activities/rope_dressed.mp4"></center>'
 	elseif $pantyworntype ! 'none':
@@ -428,7 +414,7 @@ if $ARGS[0] = 'press':
 	if loopcount < timemult: loopcount += 1 & jump 'timelooppress'
 	loopcount = 0
 	timemult = 0
-	
+
 	if $clothingworntype ! 'nude':
 		'<center><video src="images/pc/activities/abdominal_dressed.mp4"></center>'
 	elseif $pantyworntype ! 'none':
@@ -491,12 +477,12 @@ if $ARGS[0] = 'tier1':
 		dynamic '<<$ARGS[2]>> += 1'
 		if $ARGS[2] = 'vital_exp' or $ARGS[2] = 'stren_exp':
 			dynamic '<<$ARGS[2]>> += rand(0,steroid_dose)'
-			if steroid_dose > 0 and rand(1,5) <= steroid_dose:clit_size += rand(0,1) 
+			if steroid_dose > 0 and rand(1,5) <= steroid_dose:clit_size += rand(0,1)
 		end
 	else
 		i = 2
 		:exploop
-		if $ARGS[i] ! '': 
+		if $ARGS[i] ! '':
 			dynamic '<<$ARGS[i]>> += rand(0,1)'
 			if $ARGS[i] = 'vital_exp' or $ARGS[i] = 'stren_exp': dynamic '<<$ARGS[i]>> += rand(0,steroid_dose) & steroidcheck = 1'
 			i += 1
@@ -509,7 +495,7 @@ if $ARGS[0] = 'tier1':
 		end
 	end
 end
-	
+
 if $ARGS[0] = 'tier2':
 	if ARGS[1] = 0:
 		minut += 15
@@ -525,12 +511,12 @@ if $ARGS[0] = 'tier2':
 		dynamic '<<$ARGS[2]>> += rand(2,3)'
 		if $ARGS[2] = 'vital_exp' or $ARGS[2] = 'stren_exp':
 			dynamic '<<$ARGS[2]>> += rand(0,steroid_dose)'
-			if steroid_dose > 0 and rand(1,5) <= steroid_dose:clit_size += rand(0,1) 
+			if steroid_dose > 0 and rand(1,5) <= steroid_dose:clit_size += rand(0,1)
 		end
 	else
 		i = 2
 		:exploop2
-		if $ARGS[i] ! '': 
+		if $ARGS[i] ! '':
 			dynamic '<<$ARGS[i]>> += rand(1,2)'
 			if $ARGS[i] = 'vital_exp' or $ARGS[i] = 'stren_exp': dynamic '<<$ARGS[i]>> += rand(0,steroid_dose) & steroidcheck = 1'
 			i += 1
@@ -558,12 +544,12 @@ if $ARGS[0] = 'tier3':
 		dynamic '<<$ARGS[2]>> += rand(3,5)'
 		if $ARGS[2] = 'vital_exp' or $ARGS[2] = 'stren_exp':
 			dynamic '<<$ARGS[2]>> += rand(0,steroid_dose)'
-			if steroid_dose > 0 and rand(1,5) <= steroid_dose:clit_size += rand(0,1) 
+			if steroid_dose > 0 and rand(1,5) <= steroid_dose:clit_size += rand(0,1)
 		end
 	else
 		i = 2
 		:exploop3
-		if $ARGS[i] ! '': 
+		if $ARGS[i] ! '':
 			dynamic '<<$ARGS[i]>> += rand(2,3)'
 			if $ARGS[i] = 'vital_exp' or $ARGS[i] = 'stren_exp': dynamic '<<$ARGS[i]>> += rand(0,steroid_dose) & steroidcheck = 1'
 			i += 1
@@ -591,12 +577,12 @@ if $ARGS[0] = 'tier4':
 		dynamic '<<$ARGS[2]>> += rand(7,10)'
 		if $ARGS[2] = 'vital_exp' or $ARGS[2] = 'stren_exp':
 			dynamic '<<$ARGS[2]>> += rand(0,steroid_dose)'
-			if steroid_dose > 0 and rand(1,5) <= steroid_dose:clit_size += rand(0,1) 
+			if steroid_dose > 0 and rand(1,5) <= steroid_dose:clit_size += rand(0,1)
 		end
 	else
 		i = 2
 		:exploop4
-		if $ARGS[i] ! '': 
+		if $ARGS[i] ! '':
 			dynamic '<<$ARGS[i]>> += rand(3,5)'
 			if $ARGS[i] = 'vital_exp' or $ARGS[i] = 'stren_exp': dynamic '<<$ARGS[i]>> += rand(0,steroid_dose) & steroidcheck = 1'
 			i += 1
@@ -610,7 +596,7 @@ if $ARGS[0] = 'tier4':
 end
 
 if $ARGS[0] = 'timestring':
-	if timemult = 1: $timestring = 'fifteen' 
+	if timemult = 1: $timestring = 'fifteen'
 	if timemult = 2: $timestring = 'thirty'
 	if timemult = 3: $timestring = 'forty-five'
 	if timemult = 4: $timestring = 'sixty'
