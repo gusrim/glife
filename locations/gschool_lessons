@@ -28,27 +28,130 @@ if $ARGS[0] = 'morning':
 	end
 end
 
-if $ARGS[0] = 'short break':
-	if school_period < 8 and school_period ! 2:
-		'<center><b><font color="maroon">School Hallway</font></b></center>'
-		'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/building/gschool_hall0<<Rand(0,2)>>.jpg"></center>'
-		gs 'gschool_gossip', 'morning'
-
-		act 'Move to next class': gt 'gschool_lessons', 'schedule'
-
-		act 'Skip next class': school_period += 1 & gt 'gschool_lessons', 'skip'
-	elseif school_period = 2:
+if $ARGS[0] = 'short_break':
+	gs 'stat'
+	if school_period = 1:
+		if hour = 9 and minut < 45: 
+			minut += 45-minut
+		elseif hour = 9 and minut < 50: 
+			'Just in time to move to next class'
+		else
+			school_period = 2
+			gt 'gschool_lessons', 'short_break'
+		end
+	end
+	if school_period = 2:
+		if hour = 9: 
+			minut += 95-minut
+		elseif hour = 10 and minut < 35: 
+			minut += 35-minut
+		elseif hour = 10 and minut < 55:
+			'Just in time to move to next class'
+		else
+			school_period = 3
+			gt 'gschool_lessons', 'short_break'
+		end
+	end
+	if school_period = 3:
+		if hour = 10 and minut < 40: 
+			minut += 40-minut
+		elseif hour = 10 and minut < 45:
+			minut += 45-minut
+		elseif hour = 10 and minut < 50:
+			minut += 50-minut
+		elseif hour = 10 and minut < 55:
+			'Just in time to move to next class'
+		else
+			school_period = 4
+			gt 'gschool_lessons', 'short_break'
+		end
+	end
+	if school_period = 4:
+		if hour = 10: 
+			minut += 100-minut
+		elseif hour = 11 and minut < 40: 
+			minut += 40-minut
+		elseif hour = 11 and minut < 45:
+			'Just in time to move to next class'
+		else
+			school_period = 5
+			gt 'gschool_lessons', 'short_break'
+		end
+	end
+	if school_period = 5:
+		if hour = 11: 
+			minut += 80-minut
+		elseif hour = 11 and minut < 30: 
+			minut += 30-minut
+		elseif hour = 13 and minut > 45:
+			school_period = 6
+			gt 'gschool_lessons', 'short_break'
+		elseif hour > 13:
+			school_period = 6
+			gt 'gschool_lessons', 'short_break'
+		else
+			'Just in time to move to next class'
+		end
+		gt 'gschool_lessons', 'schedule'
+	end
+	if school_period = 6:
+		if hour = 12 and minut < 35: 
+			minut += 35-minut
+		elseif hour = 12 and minut < 45: 
+			minut += 45-minut
+		elseif hour = 12 and minut < 55:
+			minut += 55-minut
+		elseif hour = 12 and minut < 60:
+			minut += 60-minut
+		elseif hour = 13 and minut < 20:
+			minut += 20-minut
+		elseif hour = 13 and minut < 25:
+			'Just in time to move to next class'
+		else
+			school_period = 7
+			gt 'gschool_lessons', 'short_break'
+		end
+	end
+	if school_period = 7:
+		if hour = 12 and minut < 60:
+			minut += 130-minut
+		elseif hour = 13: 
+			minut += 70-minut
+		elseif hour = 14 and minut < 10: 
+			minut += 10-minut
+		elseif hour = 14 and minut < 15:
+			'Just in time to move to next class'
+		else
+			school_period = 8
+			gt 'gschool_lessons', 'short_break'
+		end
+	end
+	if school_period = 8:
+		if hour = 14: 
+			minut += 60-minut
+		end
+	end
+	gs 'stat'
+	if school_period = 2:
 		school_period = 3
 		gt 'gschool_lunch', 'break'
 	elseif school_period = 5:
 		school_period = 6
 		gt 'gschool_lunch', 'lunch'
+	elseif (school_period < 8):
+		'<center><b><font color="maroon">School Hallway</font></b></center>'
+		'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/building/gschool_hall0<<Rand(0,2)>>.jpg"></center>'
+		gs 'gschool_gossip', 'gossip'
+
+		act 'Move to next class': gt 'gschool_lessons', 'schedule'
+
+		act 'Skip next class': school_period += 1 & gt 'gschool_lessons', 'skip'
 	elseif Kuznecov_shop_punishment = 1:
 		Kuznecov_shop_punishment = 0
 		act 'Go to Kuznecov''s study': gt 'gschool_lessonsev2','shop punishment'
-		act 'Leave the school': gt 'gschool_grounds','main'
+		act 'Leave the school': gt 'gschool_lessons', 'schedule'
 	else
-		gt 'gschool_grounds','main'
+		gt 'gschool_lessons', 'schedule'
 	end
 end
 
@@ -66,13 +169,12 @@ if $ARGS[0] = 'skip':
 end
 
 if $ARGS[0] = 'schedule':
+	minut +=5
+	gs 'stat'
 	if school_period = 0:
 		school_period = 1
-		if hour = 8:
-			minut = 50 - minut
-		else
-			minut = 110 - minut
-		end
+		if hour = 8: minut += 60 - minut
+		if hour = 7: minut += 120 - minut
 		if week = 1: gt 'gschool_lessons', 'math'
 		if week = 2: gt 'gschool_lessons', 'english'
 		if week = 3: gt 'gschool_lessons', 'math'
@@ -80,7 +182,6 @@ if $ARGS[0] = 'schedule':
 		if week = 5: gt 'gschool_lessons', 'math'
 	elseif school_period = 1:
 		school_period = 2
-		minut += 50
 		if week = 1: gt 'gschool_lessons', 'russian'
 		if week = 2: gt 'gschool_lessons', 'geography'
 		if week = 3: gt 'gschool_lessons', 'russian'
@@ -91,7 +192,6 @@ if $ARGS[0] = 'schedule':
 		gt 'gschool_lunch', 'break'
 	elseif school_period = 3:
 		school_period = 4
-		minut += 50
 		if week = 1: gt 'gschool_lessons', 'literature'
 		if week = 2: gt 'gschool_lessons', 'science'
 		if week = 3: gt 'gschool_lessons', 'biology'
@@ -99,7 +199,6 @@ if $ARGS[0] = 'schedule':
 		if week = 5: gt 'gschool_lessons', 'literature'
 	elseif school_period = 4:
 		school_period = 5
-		minut += 50
 		if week = 1: gt 'gschool_lessons', 'art'
 		if week = 2: gt 'gschool_lessons', 'shop'
 		if week = 3: gt 'gschool_lessons', 'history'
@@ -110,7 +209,6 @@ if $ARGS[0] = 'schedule':
 		gt 'gschool_lunch', 'lunch'
 	elseif school_period = 6:
 		school_period = 7
-		minut += 50
 		if week = 1: gt 'gschool_lessons', 'biology'
 		if week = 2: gt 'gschool_lessons', 'computer'
 		if week = 3: gt 'gschool_lessons', 'computer'
@@ -118,7 +216,6 @@ if $ARGS[0] = 'schedule':
 		if week = 5: gt 'gschool_lessons', 'history'
 	elseif school_period = 7:
 		school_period = 8
-		minut += 50
 		if week = 1: gt 'gschool_lessons', 'pe'
 		if week = 2: gt 'gschool_lessons', 'music'
 		if week = 3: gt 'gschool_lessons', 'pe'
@@ -245,9 +342,9 @@ if $ARGS[0] = 'math':
 			'You take a second to ask a question about a part of the lesson that you don''t fully understand and Mr. Tsarev nods approvingly then says, "Sure thing, we can over the solution again and I will show you the many ways that you can find the solution to these problems." Anatoly happily spends some time explaining the topic in greater detail, and answers any questions you might have, teaching you some new ways of solving many problems, in the process.'
 			*nl
 			gs 'gschool_lessonsev2', 'math'
-			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 		end
-		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 	end
 
 	act'Daydream':
@@ -268,7 +365,7 @@ if $ARGS[0] = 'math':
 				gs'stat'
 				'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/boy/niko/nikomisc/nightmares/class/leave.jpg"></center>'
 				'You awaken to the bell ringing, signaling the end of the period. You immediately see your other classmates getting up to leave the class, as you collect your things to join them.'
-				act 'Leave class': gt 'gschool_lessons', 'schedule'
+				act 'Leave class': gt 'gschool_lessons', 'short_break'
 			end
 		elseif VK > 6:
 			VKrand = rand(1,3)
@@ -306,7 +403,7 @@ if $ARGS[0] = 'math':
 				*nl
 				gs 'gschool_lessonsev2', 'math'
 			end
-			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 		else
 			*clr & cla
 			pcs_grades -= 1
@@ -325,7 +422,7 @@ if $ARGS[0] = 'math':
 				'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/head/26.jpg"></center>'
 				*nl
 				gs 'gschool_lessonsev2', 'math'
-				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 			end
 			act 'Reluctantly pay attention':
 				*clr & cla
@@ -334,7 +431,7 @@ if $ARGS[0] = 'math':
 				'Mr. Tsarev says, "You don''t know do you? Then at least try to pay attention. Many things that we need in life require some effort from us all. It''s not always fun but some of the things we learn making life easier in the future, leading to even more pleasant times." Not knowing what to say, you simply nod as Anatoly turns around and continues his lesson. You sit through the rest of the lesson in silence, while your mind drifts elsewhere. You can''t focus on the lesson at all.'
 				*nl
 				gs 'gschool_lessonsev2', 'math'
-				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 			end
 			act 'Give him an attitude':
 				*clr & cla
@@ -378,7 +475,7 @@ if $ARGS[0] = 'math':
 			'As you are browsing the web, you receive a text message from Christina Zvereva, reading; "Hey there piggy, are you looking up discounts on Peremech, so that you can shove them down your throat? Why don''t you lose some weight before the teachers decide to add bovine etiquette to the curriculum? because they may feel it necessary to teach the students, how to talk to a cow like you." You can feel your face growing flushed in embarrassment while reading Christina''s hurtful comments. You quickly turn off your phone then try not to make eye contact with Christina for the rest of the lesson.'
 			'<center><b><font color=#0090FF><<"Christina Zvereva">></font></b></center>'
 			'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/head/18.jpg"></center>'
-			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 		elseif VK = 1 and npc_rel['A18'] >= 80 and zverRageQW = 0 or VK = 1 and grupTipe = 2 and zverRageQW = 0:
 			VKrand = rand(1,3)
 			if salocatnow >= 5:
@@ -400,24 +497,24 @@ if $ARGS[0] = 'math':
 			end
 			'<center><b><font color=#0090FF><<"Christina Zvereva">></font></b></center>'
 			'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/head/18.jpg"></center>'
-			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 		elseif VK = 2 and JuliaMiLoveQW >= 10:
 			'You continue browsing the web, when you suddenly receive a text message from Julia Milov; depicting your name, and her''s, inside of a heart together. You turn to Julia to see a big smile on her face as she gazes into your eyes. You return the smile before replying with, "You are so precious to me, Julia." Julia quickly replies, "I am so happy that I have you in my life." You reply to Julia, "Ohhh you are just so cute. Muah." Julia giggles before turning back to Mr. Tsarev while occasionally turning back toward you and smiling.'
 			'<center><b><h4><font color=#00EAFF><<"Julia Milov">></font></h4></b></center>'
 			'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/girl/julia/love/smile1.jpg"></center>'
-			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 		elseif VK = 3 and NikoVolkovQW >= 5 and grupTipe[61] = 4:
 			'While you are browsing the internet, you receive a text message from Niko, reading; "Who is this beautiful creature, I see? This precious gem, sitting in front of me? I gaze at her with eyes so amazed, will she not turn around, and return my gaze?" You giggle before turning around to face Niko to see him with a loving smile. You then type back, "You are so sweet Niko." Niko gives you a wink before laying back in his seat.'
 			'<center><b><h4><font color=#E400FF><<"Nikolai [Niko] Volkov">></font></h4></b></center>'
 			'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/boy/niko/nikoev/charmer1.jpg"></center>'
-			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 		elseif VK = 4 and npc_rel['A25'] >= 80:
 			'As you continue browsing the web, you suddenly receive a text message with an image attachment from Sonia Ivanko, reading; "Sooo pretty. What do you think?" The image is of a high quality pair of high heels. They look very expensive. You type back, "Those heels look very...You. ;)" Sonia replies, "I was thinking of wearing those with my blue skirt, do you think that they will look good together?" You reply, "They would look great together. The colors would compliment each other very well." Sonia giggles as she messages you back.'
 			*nl
 			'"Thanks <<$pcs_nickname>>, I was worried that they were a bit too much on the eyes." You give Sonia a smile as she returns it. Sonia then turns back toward the teacher while continuing to cruise the internet.'
 			'<center><b><h4><font color=#FF00FF><<"Sonia Ivanko">></font></h4></b></center>'
 			'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/boy/niko/nikomisc/soniahome/soniasmile.jpg"></center>'
-			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 		else
 			'As you are browsing the web, you notice Mr. Tsarev giving you a stern look. He seems to have noticed that you''re not paying attention to his lesson.'
 			'<center><b><font color=#00BFFF><<"Anatoly E. Tsarev">></font></b></center>'
@@ -430,7 +527,7 @@ if $ARGS[0] = 'math':
 				'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/head/26.jpg"></center>'
 				'You turn off your phone then put it away. Mr. Tsarev give you an approving nod before continuing with today''s lesson.'
 				gs 'gschool_lessonsev2', 'math'
-				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 			end
 			act 'Continue using your phone':
 				*clr & cla
@@ -452,7 +549,7 @@ if $ARGS[0] = 'math':
 					'Mr. Tsarev puts your phone in his pocket before returning to teaching his lesson. You occasionally see Anatoly turn the phone on and peek at the screen when he believes that no one is watching.'
 					'<center><b><font color=#00BFFF><<"Anatoly E. Tsarev">></font></b></center>'
 					'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/head/26.jpg"></center>'
-					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 				end
 				act 'Put the phone between your breasts':
 					*clr & cla
@@ -464,7 +561,7 @@ if $ARGS[0] = 'math':
 					'Mr. Tsarev seems flabbergasted by your actions, he remains silent for a few seconds before shaking his head then turning around and walking back to the front of the class. It seems that Anatoly realized that it''s not worth the effort to take your phone away from you, without causing all sorts of awkward situations, You pull your phone back out of your bra then continue browsing the web, as the lesson goes on.'
 					'<center><b><font color=#00BFFF><<"Anatoly E. Tsarev">></font></b></center>'
 					'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/head/26.jpg"></center>'
-					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 				end
 				act 'Hand over the phone':
 					*clr & cla
@@ -474,7 +571,7 @@ if $ARGS[0] = 'math':
 					'<center><b><font color=#00BFFF><<"Anatoly E. Tsarev">></font></b></center>'
 					'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/head/26.jpg"></center>'
 					'Anatoly extends his hand then says, "What is so important on there that you need to disrupt my lesson? Hand it over." You realize that Anatoly is not messing around and decide that it''s not worth the conflict, so you silently hand your phone to Mr. Tsarev. As Anatoly walks back to the front of the class, he says, "I''m holding onto your phone for now, Miss <<$pcs_lastname>>. You can have it back after class."'
-					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 				end
 			end
 		end
@@ -498,10 +595,10 @@ if $ARGS[0] = 'russian':
 			'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/classroom/class1.jpg"></center>'
 			'Mr. Yenotin nods approvingly, happy to see his students engaged in class, trying their best. He happily spends some extra time explaining the topic again, and answers any extra questions you might have. You feel smarter, thoroughly understanding today''s lessons now.'
 			gs 'gschool_lessonsev1', 'russian'
-			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 		end
 		gs 'gschool_lessonsev1', 'russian'
-		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 	end
 
 	act 'Don''t pay attention in class':
@@ -512,7 +609,7 @@ if $ARGS[0] = 'russian':
 		'Like a well trained unit, everyone in the room turns to look, only to see Lesco on the floor, his desk overturned; his cellphone sliding across the floor before clattering against the wall. Silence is soon replaced by laughter. The eyes of the entire class on him, Lesco struggles to act nonchalant as he works to quickly return his desk to an upright position and gather the items that had fallen to the floor.'
 		'Mr. Yenotin approaches Lesco, you''re for certain he''ll get a scolding, but to your dismay, Mr. Yenotin starts joking with Lesco instead. He shares an embarrassing story about how the same thing happened to him once except there were no phones at his time but notes instead. No one is buying his story and instead are focusing their attention to the gopnik clique. They''re laughing loudly, wondering what Lesco was doing when he fell.'
 		gs 'gschool_lessonsev1', 'russian'
-		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 	end
 	!!The actions from before lead to the teacher telling your mother about you mouthing off at the parents conference
 	act'Daydream':
@@ -538,14 +635,14 @@ if $ARGS[0] = 'russian':
 					'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/bitchflip.jpg"></center>'
 					'"I hardly think you can do any real damage. You''re too kind of a teacher... It''s not like I''m interrupting the class, I just... have a lot on my mind right now. If you like we can talk about that instead?" you answer brashly, feeling pretty confident.'
 					'Your teacher just smirks and shakes his head, and after a while just decides to continue his classes. Obviously, you don''t learn anything today. As he turns his back to you, you flip him off...'
-					act 'Continue': gt 'gschool_lessons', 'schedule'
+					act 'Continue': gt 'gschool_lessons', 'short_break'
 				end
 			end
 			act 'Reluctantly pay attention':
 				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/bathroom/angryteacher.jpg"></center>'
 				'The eyes of Mr. Yenotin grow narrower, and you''re a bit surprised he reacts this way, as he usually tries to suck up to the students. You pretend to pay attention throughout the class but you don''t learn anything today.'
 				gs 'gschool_lessonsev1', 'russian'
-				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 			end
 			act'Try to focus on the lesson':
 				cla
@@ -554,7 +651,7 @@ if $ARGS[0] = 'russian':
 				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/attention.jpg"></center>'
 				'You''re pretty sure you know what Mr. Yenotin has in mind and you don''t want to get in trouble so you straighten up in your chair. "Sorry." The teacher gives you one final look, knowing he has you beaten. You do your best to pay attention for the rest of class.'
 				gs 'gschool_lessonsev1', 'russian'
-				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 			end
 		elseif RAND(1,3) = 1:
 			if pcs_grades >= 80:
@@ -571,7 +668,7 @@ if $ARGS[0] = 'russian':
 				'It was an embarrassing experience, but the sudden adrenaline surge helps you to stay awake during the rest of the period.'
 			end
 			gs 'gschool_lessonsev1', 'russian'
-			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 		elseif RAND(1,2) = 1:
 			*clr
 			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/sleeping.jpg"></center>'
@@ -582,7 +679,7 @@ if $ARGS[0] = 'russian':
 			'You look at them with a pleading look trying to tell them that you don''t belong here but they grab you by the arms and forcefully drag you away while you scream. They carry you over to a pranger and strip you off all your clothes and they lock you in.'
 			'The same clergyman that first talked to you is now standing in front of you saying something. After he''s been talking for a while he whips out a whip under his garb and moves behind you.'
 			'Just as you''re about to be hit you wake up all shook up, you let out a relieving sigh, it was only a dream. Luckily no one seems to have noticed and soon thereafter the class is over.'
-			act 'Leave class': gt 'gschool_lessons', 'short break'
+			act 'Leave class': gt 'gschool_lessons', 'short_break'
 		else
 			*clr
 			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/sleeping.jpg"></center>'
@@ -591,12 +688,12 @@ if $ARGS[0] = 'russian':
 			'"I''m sorry Mr. Yenotin, I''ll be quiet." you try calming him but it''s too late Mr. Yenotin is insisting on that you walk up to the chalkboard and carry on with the lesson instead. You''re now standing in front of the class, blushing, you don''t want to be part of this hazing.'
 			'"Well, come on, we''re waiting here, tell us all about grammar." he pushes on. You take a deep breath and as you''re about to speak your voice cracks and the whole start laughing, pointing at you... You''re now completely in dismay wondering how you''re going to survive rest of the lesson.'
 			'All of a sudden, the class bell rings making you twitch, after all it was only a dream, making you calm again.'
-			act 'Leave class': gt 'gschool_lessons', 'short break'
+			act 'Leave class': gt 'gschool_lessons', 'short_break'
 		end
 	end
 	act'Play with your phone':
 		*clr & cla
-		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 		pcs_grades -= 1
 		'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/phone.jpg"></center>'
 		'The lesson is so boring that you have to do something to keep yourself entertained. You take out your phone and begin to play a phone game, hoping the lesson will be over soon.'
@@ -610,7 +707,7 @@ if $ARGS[0] = 'russian':
 				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/bored.jpg"></center>'
 				'You decide not to aggravate the situation and put your phone away. Mr. Yenotin looks at you gratefully as they continues the class.'
 				gs 'gschool_lessonsev1', 'russian'
-				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 			end
 			act 'Keep using your phone':
 				*clr & cla
@@ -628,7 +725,7 @@ if $ARGS[0] = 'russian':
 					'Mr. Yenotin looks at what''s on the screen and his face colors bright red as he fumbles around while trying turning the screen off, returning to the front of the class.'
 					'As he returns to his desk he says, "Miss <<$pcs_lastname>> you should be glad it was me and not the other teachers that saw that picture of yours. You would probably be suspended..."'
 					gs 'gschool_lessonsev1', 'russian'
-					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 				end
 				!!Will get mentioned at the parents conference
 				act 'Put the phone between your boobs':
@@ -639,7 +736,7 @@ if $ARGS[0] = 'russian':
 					'You pretend it''s a perfectly normal place to store your phone, and use your cute voice as you tell him, "Is there a problem, Mr. Yenotin? Go ahead, take my phone if you don''t think I should have it." You thrust your chest forward as you encourage him, giving him a nice view of your ample cleavage - the outline of your phone very visible through the fabric.'
 					'Your teacher is completely flabbergasted by your move, and admits defeat. Deciding it''s not worth the effort to take your phone away from you without causing all sorts of awkward situations, he simply returns to the front of the class and before continuing on with his lessons, he tells you, "You really want to play that game Miss <<$pcs_lastname>>? Remember I''m your homeschool teacher and guess who I''m going to have over for a meeting." You don''t pay much attention to him though, as you''re too busy browsing the internet after you pull your phone back out of your bra.'
 					gs 'gschool_lessonsev1', 'russian'
-					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 				end
 				act 'Hand over the phone':
 					*clr & cla
@@ -650,7 +747,7 @@ if $ARGS[0] = 'russian':
 					'As he walks back to the front of the class, Mr. Yenotin say, "Good call, Miss. <<$pcs_lastname>>. I''m going to be nice this time, you can have it back after class."'
 					'While his back is turned to you, you flip him off as that''s the only thing you can resort to.'
 					gs 'gschool_lessonsev1', 'russian'
-					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 				end
 			end
 		end
@@ -680,7 +777,7 @@ if $ARGS[0] = 'literature':
 			*nl
 			'You raise your hand, and with a nod, Ms. Braakman lets you speak. You read the passage clearly without any mistakes, which earns you some praise from your teacher. "Very nice, Miss <<$PCs_lastname>>." She compliments with a small smile before continuing on with the lesson.'
 			gs 'gschool_lessonsev3', 'reading'
-			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 		end
 
 		act 'Avoid being chosen':
@@ -712,7 +809,7 @@ if $ARGS[0] = 'literature':
 			elseif $boy = 'A145':
 				'You look over to see Ekaterina has her head down, presumably asleep. Again, Ms. Braakman asks her to read but the gopnik doesn''t respond. "We can always continue the lesson during detention." She threatens. After a moment, Ekaterina slowly sits up and lazily stretches before asking a nearby student for the page number and reading as instructed.'
 			end
-			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 		end
 	end
 
@@ -760,7 +857,7 @@ if $ARGS[0] = 'literature':
 				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/head/54.jpg"></center>'
 				*nl
 				'"Sorry, Ms. Braakman." You mumble quietly as you sit up straight and refocus on the lesson. Satisfied, Ms. Braakman returns to teaching with a small smile.'
-				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 
 			end
 		elseif RAND(1,3) = 1:
@@ -782,24 +879,24 @@ if $ARGS[0] = 'literature':
 				'"A perfect example of how to fail my class." She smirks as kids begin to laugh at you.'
 			end
 			gs 'gschool_lessonsev3', 'literature'
-			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 		elseif RAND(1,2) = 1:
 			*clr
 			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/sleeping.jpg"></center>'
 			*nl
 			'Fall asleep and have a dream, get woken up by dream. Have fun with it guys.'
-			act 'Leave class': gt 'gschool_lessons', 'schedule'
+			act 'Leave class': gt 'gschool_lessons', 'short_break'
 		else
 			*clr
 			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/sleeping.jpg"></center>'
 			*nl
 			'Fall asleep, end of class bell wakes Sveta up.'
-			act 'Leave class': gt 'gschool_lessons', 'schedule'
+			act 'Leave class': gt 'gschool_lessons', 'short_break'
 		end
 	end
 	act'Play with your phone':
 		*clr & cla
-		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 		pcs_grades -= 1
 		'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/phone.jpg"></center>'
 		*nl
@@ -817,7 +914,7 @@ if $ARGS[0] = 'literature':
 				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/bored.jpg"></center>'
 				'You decide not to aggravate the situation and put your phone away. You can see Ms. Braakman isn''t happy, but she''s willing to let it go for now and goes back to teaching the class without reprimanding you.'
 				gs 'gschool_lessonsev3', 'literature'
-				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 			end
 			act 'Keep using your phone':
 				*clr & cla
@@ -836,7 +933,7 @@ if $ARGS[0] = 'literature':
 					*nl
 					'You can barely keep a straight face as you watch Ms. Braakman''s expression change from smug to confusion and then anger in a matter of seconds. For a moment you expect her to go through with her threat and show the class what you were doing, but for whatever reason she doesn''t. "I don''t want to see you on your phone in my class again, young lady." Ms. Braakman says as she hands you back your phone, the screen now turned off.'
 					gs 'gschool_lessonsev3', 'literature'
-					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 
 					!!if PC is not wearing panties
 					pcs_horny += 10
@@ -850,7 +947,7 @@ if $ARGS[0] = 'literature':
 					*nl
 					'"Behave yourself, Miss <<$pcs_lastname>>." She says sharply, but the way she licks her lips afterwards speaks of something else. Without another word, she drops your phone into your lap and returns to the front of the class to resume the lesson.'
 					gs 'gschool_lessonsev3', 'literature'
-					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 				end
 !!hiding the phone in your bra may be changed when bras and panties are added/expanded and you have the option to go braless
 				act 'Hide the phone in your bra':
@@ -869,7 +966,7 @@ if $ARGS[0] = 'literature':
 					*nl
 					'Flustered and aroused, you regain your senses and remember that you''re sitting in class right now. You look around the room, but it seems like her groping went unnoticed and was seen as her fishing out your phone like you challenged her to do.'
 					gs 'gschool_lessonsev3', 'getphone'
-					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 				end
 				act 'Hand over the phone':
 					*clr & cla
@@ -878,7 +975,7 @@ if $ARGS[0] = 'literature':
 					'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/bored.jpg"></center>'
 					'Realizing that this isn''t worth the fight, you hand over your phone without argument. "You can have this back after class." Ms. Braakman says as she walks back to the blackboard.'
 					gs 'gschool_lessonsev3', 'getphone'
-					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 				end
 			end
 		end
@@ -904,7 +1001,7 @@ if $ARGS[0] = 'english':
 			*nl
 			'Unlike most of the students in your class, you stay focused on your work.'
 			gs 'gschool_lessonsev3', 'working'
-			act 'Finish class': gt 'gschool_lessons', 'schedule'
+			act 'Finish class': gt 'gschool_lessons', 'short_break'
 		end
 		act 'Talk to someone':
 			cla
@@ -1032,7 +1129,7 @@ if $ARGS[0] = 'english':
 				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/head/54.jpg"></center>'
 				*nl
 				'"Sorry, Ms. Braakman." You mumble quietly as you sit up straight and refocus on the lesson. Satisfied, Ms. Braakman returns to teaching with a small smile.'
-				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 			end
 		elseif RAND(1,3) = 1:
 			if pcs_grades >= 80:
@@ -1053,24 +1150,24 @@ if $ARGS[0] = 'english':
 				'"A perfect example of how to fail my class." She smirks as kids begin to laugh at you.'
 			end
 			gs 'gschool_lessonsev3', 'english'
-			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 		elseif RAND(1,2) = 1:
 			*clr
 			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/sleeping.jpg"></center>'
 			*nl
 			'Fall asleep and have a dream, get woken up by dream. Have fun with it guys.'
-			act 'Leave class': gt 'gschool_lessons', 'schedule'
+			act 'Leave class': gt 'gschool_lessons', 'short_break'
 		else
 			*clr
 			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/sleeping.jpg"></center>'
 			*nl
 			'Fall asleep, end of class bell wakes Sveta up.'
-			act 'Leave class': gt 'gschool_lessons', 'schedule'
+			act 'Leave class': gt 'gschool_lessons', 'short_break'
 		end
 	end
 	act'Play with your phone':
 		*clr & cla
-		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 		pcs_grades -= 1
 		'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/phone.jpg"></center>'
 		*nl
@@ -1088,7 +1185,7 @@ if $ARGS[0] = 'english':
 				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/bored.jpg"></center>'
 				'You decide not to aggravate the situation and put your phone away. You can see Ms. Braakman isn''t happy, but she''s willing to let it go for now and goes back to teaching the class without reprimanding you.'
 				gs 'gschool_lessonsev3', 'english'
-				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 			end
 			act 'Keep using your phone':
 				*clr & cla
@@ -1107,7 +1204,7 @@ if $ARGS[0] = 'english':
 					*nl
 					'You can barely keep a straight face as you watch Ms. Braakman''s expression change from smug to confusion and then anger in a matter of seconds. For a moment you expect her to go through with her threat and show the class what you were doing, but for whatever reason she doesn''t. "I don''t want to see you on your phone in my class again, young lady." Ms. Braakman says as she hands you back your phone, the screen now turned off.'
 					gs 'gschool_lessonsev3', 'english'
-					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 !!if PC is not wearing panties
 					pcs_horny += 10
 					'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/literature/nopanties_upskirt.png"></center>'
@@ -1120,7 +1217,7 @@ if $ARGS[0] = 'english':
 					*nl
 					'"Behave yourself, Miss <<$pcs_lastname>>." She says sharply, but the way she licks her lips afterwards speaks of something else. Without another word, she drops your phone into your lap and returns to the front of the class to resume the lesson.'
 					gs 'gschool_lessonsev3', 'english'
-					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 				end
 				!!hiding the phone in your bra may be changed when bras and panties are added/expanded and you have the option to go braless
 				act 'Hide the phone in your bra':
@@ -1139,7 +1236,7 @@ if $ARGS[0] = 'english':
 					*nl
 					'Flustered and aroused, you regain your senses and remember that you''re sitting in class right now. You look around the room, but it seems like her groping went unnoticed and was seen as her fishing out your phone like you challenged her to do.'
 					gs 'gschool_lessonsev3', 'getphone'
-					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 				end
 				act 'Hand over the phone':
 					*clr & cla
@@ -1148,12 +1245,12 @@ if $ARGS[0] = 'english':
 					'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/bored.jpg"></center>'
 					'Realizing that this isn''t worth the fight, you hand over your phone without argument. "You can have this back after class." Ms. Braakman says as she walks back to the blackboard.'
 					gs 'gschool_lessonsev3', 'getphone'
-					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 				end
 			end
 		end
 	end
-	act 'Finish class': gt 'gschool_lessons', 'schedule'
+	act 'Finish class': gt 'gschool_lessons', 'short_break'
 end
 
 if $ARGS[0] = 'geography':
@@ -1174,10 +1271,10 @@ if $ARGS[0] = 'geography':
 			'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/classroom/ask.jpg"></center>'
 			'Mrs. Sokoloff nods approvingly, always happy to see her students engaged in her class. He happily spends some extra time explaining the topic again, and answers any extra questions you might have. You feel smarter, thoroughly understanding today''s lessons now.'
 			gs 'gschool_lessonsev2', 'geography'
-			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 		end
 		gs 'gschool_lessonsev2', 'geography'
-		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 	end
 	act 'Don''t pay attention in class':
 		*clr & cla
@@ -1187,7 +1284,7 @@ if $ARGS[0] = 'geography':
 		'Without any hesitation, Mrs. Sokoloff starts shouting at Vitek that''s fast asleep. Her eyes sharpen as she approaches his desk. She slams her hand on his table while Vitek struggles to act nonchalant as he works to quickly return to his senses.'
 		'Mrs. Sokoloff scowls at him, and is about to offer a few stern words when the bell rings. He''ll likely get a talking to, but as class is over, you won''t get to listen in. One of the girls whispers that Vitek is in deep trouble now.'
 		gs 'gschool_lessonsev2', 'geography'
-		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 	end
 	act'Daydream':
 		*clr & cla
@@ -1212,7 +1309,7 @@ if $ARGS[0] = 'geography':
 					'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/bitchflip.jpg"></center>'
 					'"What good would that do? Are you trying to get me to start smoking to pass the time? I''m not interrupting your classes, just leave me alone. I''m having some... girl problems. Would you like me to talk about those instead?" you answer brashly, not having any intentions of getting up.'
 					'Your teacher just shakes her head, and after a while just decides to continue her classes. Obviously, you don''t learn anything today. You hear one of the boys behind you mutter you being a bitch, you turn around and flip him off.'
-					act 'Continue': gt 'gschool_lessons', 'schedule'
+					act 'Continue': gt 'gschool_lessons', 'short_break'
 				end
 				act 'Go to principal''s office': demerit += 10+school_bunk*5 & gt 'gschool_office', 'principal'
 			end
@@ -1220,7 +1317,7 @@ if $ARGS[0] = 'geography':
 				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/bathroom/angryteacher.jpg"></center>'
 				'The eyes of Mrs. Sokoloff grow narrower, and even though you roll your eyes at her, you sit through the rest of the lesson in silence, at least pretending to pay attention sometimes. You don''t learn anything today, though.'
 				gs 'gschool_lessonsev2', 'geography'
-				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 			end
 			act'Try to focus on the lesson':
 				cla
@@ -1229,7 +1326,7 @@ if $ARGS[0] = 'geography':
 				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/attention.jpg"></center>'
 				'You don''t want to get in trouble so you straighten up in your chair. "Sorry." Mrs. Sokoloff gives you one final stern look and then goes back teaching the class, you do your best to pay attention for the rest of class.'
 				gs 'gschool_lessonsev2', 'geography'
-				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 			end
 		elseif RAND(1,3) = 1:
 			if pcs_grades >= 80:
@@ -1246,7 +1343,7 @@ if $ARGS[0] = 'geography':
 				'It was an embarrassing experience, but the sudden adrenaline surge helps you to stay awake during the rest of the period.'
 			end
 			gs 'gschool_lessonsev2', 'geography'
-			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 		elseif RAND(1,2) = 1:
 			*clr
 			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/sleeping.jpg"></center>'
@@ -1254,7 +1351,7 @@ if $ARGS[0] = 'geography':
 			'All of a sudden you hear Mrs. Sokoloff loudly say, "There''s a surprise test in 10 minutes. Until then you''re free to do whatever you want."'
 			'You panic as you''ve not prepared anything and you begin to franticly flip through the pages as fast as possible trying to remember the content as the clock ticks down faster and faster.'
 			'You''re awoken by the sheer horror of that you''re even haunted by the geography lessons in your dreams.'
-			act 'Leave class': gt 'gschool_lessons', 'schedule'
+			act 'Leave class': gt 'gschool_lessons', 'short_break'
 		else
 			*clr
 			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/sleeping.jpg"></center>'
@@ -1262,12 +1359,12 @@ if $ARGS[0] = 'geography':
 			'Suddenly you stand in front of a group of people with a globe. They tell you that you''re free to spin it and where it stops you''ll get to travel there for free.'
 			'Full of enthusiasm you spin it having a hard time deciding when to stop it. When you finally decide stopping it, you notice a familiar name, Pavlovsk. To your dismay you''ve picked your hometown. You desperately look around seeking attention but get no response.'
 			'Just as you''re about to speak up and plead with the group of people, you hear the class bell ring waking you shooked up...'
-			act 'Leave class': gt 'gschool_lessons', 'schedule'
+			act 'Leave class': gt 'gschool_lessons', 'short_break'
 		end
 	end
 	act'Play with your phone':
 		*clr & cla
-		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 		pcs_grades -= 1
 		'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/phone.jpg"></center>'
 		'The lesson is so boring that you have to do something to keep yourself entertained. You take out your phone and begin to play a mobile game, hoping the lesson will be over soon.'
@@ -1281,7 +1378,7 @@ if $ARGS[0] = 'geography':
 				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/bored.jpg"></center>'
 				'You decide not to aggravate the situation and put your phone away. Mrs. Sokoloff looks at you angerly as she continues the class.'
 				gs 'gschool_lessonsev1', 'computer'
-				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 			end
 			act 'Keep using your phone':
 				*clr & cla
@@ -1300,7 +1397,7 @@ if $ARGS[0] = 'geography':
 					'She walks back to her desk muttering to herself, "I don''t know what''s wrong with the youth today, who in their right mind would take such photos."'
 					'By her desk she tells you, "Miss. <<$pcs_lastname>> you can have your phone back after we''ve had a talk after the lesson."'
 					gs 'gschool_lessonsev2', 'geography'
-					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 				end
 				act 'Put the phone between your boobs':
 					*clr & cla
@@ -1311,7 +1408,7 @@ if $ARGS[0] = 'geography':
 					'Mrs. Sokoloff is at first completely flabbergasted by your move, and just as you think she''ll admit defeat she reaches for it without any hesitation. She simply returns to the front of the class and continues the lesson.'
 					'You sit there in awe by her actions, she called your bluff without even blinking.'
 					gs 'gschool_lessonsev2', 'geography'
-					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 				end
 				act 'Hand over the phone':
 					*clr & cla
@@ -1321,7 +1418,7 @@ if $ARGS[0] = 'geography':
 					'Wow, Mrs. Sokoloff called your bluff. You decide it''s not worth the conflict, and silently hand your phone to Mrs. Sokoloff.'
 					'As she walk back to the front of the class, she say, "I''m holding onto your phone for now, Mrs. <<$pcs_lastname>>. You can have it back after class."'
 					gs 'gschool_lessonsev2', 'geography'
-					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 				end
 			end
 		end
@@ -1346,10 +1443,10 @@ if $ARGS[0] = 'history':
 			'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/classroom/ask.jpg"></center>'
 			'Mrs. Sokoloff nods approvingly, always happy to see her students engaged in her class. He happily spends some extra time explaining the topic again, and answers any extra questions you might have. You feel smarter, thoroughly understanding today''s lessons now.'
 			gs 'gschool_lessonsev2', 'history'
-			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 		end
 		gs 'gschool_lessonsev2', 'history'
-		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 		end
 	act 'Don''t pay attention in class':
 		*clr & cla
@@ -1359,7 +1456,7 @@ if $ARGS[0] = 'history':
 		'Without any hesitation, Mrs. Sokoloff starts shouting at Vitek that''s fast asleep. Her eyes sharpen as she approaches his desk. She slams her hand on his table while Vitek struggles to act nonchalant as he works to quickly return to his senses.'
 		'Mrs. Sokoloff scowls at him, and is about to offer a few stern words when the bell rings. He''ll likely get a talking to, but as class is over, you won''t get to listen in. One of the girls whipsers that Vitek is in deep trouble now.'
 		gs 'gschool_lessonsev2', 'history'
-		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 	end
 	act'Daydream':
 		*clr & cla
@@ -1384,7 +1481,7 @@ if $ARGS[0] = 'history':
 					'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/bitchflip.jpg"></center>'
 					'"What good would that do? Are you trying to get me to start smoking to pass the time? I''m not interrupting your classes, just leave me alone. I''m having some... girl problems. Would you like me to talk about those instead?" you answer brashly, not having any intentions of getting up.'
 					'Your teacher just shakes her head, and after a while just decides to continue her classes. Obviously, you don''t learn anything today. You hear one of the boys behind you mutter you being a bitch, you turn around and flip him off.'
-					act 'Continue': gt 'gschool_lessons', 'schedule'
+					act 'Continue': gt 'gschool_lessons', 'short_break'
 				end
 				act 'Go to principal''s office': demerit += 10+school_bunk*5 & gt 'gschool_office', 'principal'
 			end
@@ -1392,7 +1489,7 @@ if $ARGS[0] = 'history':
 				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/bathroom/angryteacher.jpg"></center>'
 				'The eyes of Mrs. Sokoloff grow narrower, and even though you roll your eyes at her, you sit through the rest of the lesson in silence, at least pretending to pay attention sometimes. You don''t learn anything today, though.'
 				gs 'gschool_lessonsev2', 'history'
-				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 			end
 			act'Try to focus on the lesson':
 				cla
@@ -1401,7 +1498,7 @@ if $ARGS[0] = 'history':
 				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/attention.jpg"></center>'
 				'You don''t want to get in trouble so you straighten up in your chair. "Sorry." Mrs. Sokoloff gives you one final stern look and then goes back teaching the class, you do your best to pay attention for the rest of class.'
 				gs 'gschool_lessonsev2', 'history'
-				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 			end
 		elseif RAND(1,3) = 1:
 			if pcs_grades >= 80:
@@ -1418,7 +1515,7 @@ if $ARGS[0] = 'history':
 				'It was an embarrassing experience, but the sudden adrenaline surge helps you to stay awake during the rest of the period.'
 			end
 			gs 'gschool_lessonsev2', 'history'
-			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 		elseif RAND(1,2) = 1:
 			*clr
 			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/sleeping.jpg"></center>'
@@ -1427,7 +1524,7 @@ if $ARGS[0] = 'history':
 			'You''re having a hard time picking out a specific dress as you really want to impress a certain duke. You turn to your head maiden with a dejected sigh, "So many choices, what should I pick out?"'
 			'"The lady will look fabulous in whatever she picks." the head maiden answers.'
 			'As you''re about to pick out a dress you are awoken speaking loudly about your pick. The person sitting closest to you looks at you confused but luckily no one else hears what was said.'
-			act 'Leave class': gt 'gschool_lessons', 'schedule'
+			act 'Leave class': gt 'gschool_lessons', 'short_break'
 		else
 			*clr
 			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/sleeping.jpg"></center>'
@@ -1435,13 +1532,13 @@ if $ARGS[0] = 'history':
 			'All of a sudden you find yourself on a battlefield riding a horse. You seem to be wearing a heavy armor and you''re riding up and down a flank as you''re trying to amass the troops for an attack.'
 			'You are just about to give a grandiose speech when everything goes quiet as you hear church bells ringing loudly in the distance.'
 			'In a moment you twitch in your seat hearing the class bell ringing...'
-			act 'Leave class': gt 'gschool_lessons', 'schedule'
+			act 'Leave class': gt 'gschool_lessons', 'short_break'
 
 		end
 	end
 	act'Play with your phone':
 		*clr & cla
-		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 		pcs_grades -= 1
 		'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/phone.jpg"></center>'
 		'The lesson is so boring that you have to do something to keep yourself entertained. You take out your phone and begin to play a mobile game, hoping the lesson will be over soon.'
@@ -1455,7 +1552,7 @@ if $ARGS[0] = 'history':
 				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/bored.jpg"></center>'
 				'You decide not to aggravate the situation and put your phone away. Mrs. Sokoloff looks at you angerly as she continues the class.'
 				gs 'gschool_lessonsev2', 'history'
-				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 			end
 			act 'Keep using your phone':
 				*clr & cla
@@ -1474,7 +1571,7 @@ if $ARGS[0] = 'history':
 					'She walks back to her desk muttering to herself, "I don''t know what''s wrong with the youth today, who in their right mind would take such photos."'
 					'By her desk she tells you, "Miss. <<$pcs_lastname>> you can have your phone back after we''ve had a talk after the lesson."'
 					gs 'gschool_lessonsev2', 'history'
-					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 				end
 				act 'Put the phone between your boobs':
 					*clr & cla
@@ -1485,7 +1582,7 @@ if $ARGS[0] = 'history':
 					'Mrs. Sokoloff is at first completely flabbergasted by your move, and just as you think she''ll admit defeat she reaches for it without any hesitation. She simply returns to the front of the class and continues the lesson.'
 					'You sit there in awe by her actions, she called your bluff without even blinking.'
 					gs 'gschool_lessonsev2', 'history'
-					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 				end
 				act 'Hand over the phone':
 					*clr & cla
@@ -1495,7 +1592,7 @@ if $ARGS[0] = 'history':
 					'Wow, Mrs. Sokoloff called your bluff. You decide it''s not worth the conflict, and silently hand your phone to Mrs. Sokoloff.'
 					'As she walk back to the front of the class, she say, "I''m holding onto your phone for now, Mrs. <<$pcs_lastname>>. You can have it back after class."'
 					gs 'gschool_lessonsev2', 'history'
-					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 				end
 			end
 		end
@@ -1519,17 +1616,17 @@ if $ARGS[0] = 'biology':
 			'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/classroom/ask.jpg"></center>'
 			'Miss Orlov nods approvingly. She happily spends some extra time explaining the topic again to you, and answers any extra questions you might have. She only moves on with the lesson once she is sure she has fully answered your question. You feel like you learned a lot, thoroughly understanding today''s lessons now.'
 			gs 'gschool_lessonsev1', 'biology'
-			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 		end
 		gs 'gschool_lessonsev1', 'biology'
-		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 	end
 	act 'Don''t pay attention in class':
 		*clr & cla
 		'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/bored.jpg"></center>'
 		'You quickly grow bored with the class and instead spend most of the time trying to see what your fellow students are up to. You can see several of them seem to have the same idea as you do. The only times you pay attention is when she calls on you to answer one of the questions.'
 		gs 'gschool_lessonsev1', 'biology'
-		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 	end
 	act'Daydream':
 		*clr & cla
@@ -1555,14 +1652,14 @@ if $ARGS[0] = 'biology':
 					'Your teacher doesn''t know what to say, and after a while just decides to continue her classes. Obviously, you don''t learn anything today. You hear one of the boys behind you mutter your being a bitch, you turn around and flip him off.'
 					act 'Go to principal''s office': demerit += 10+school_bunk*5 & gt 'gschool_office', 'principal'
 					gs 'gschool_lessonsev1', 'biology'
-					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 				end
 			end
 			act 'Reluctantly pay attention':
 				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/bored.jpg"></center>'
 				'Miss Orlov smiles as you seem to be paying attention and quickly goes back into her lesson. She doesn''t seem to notice when you roll your eyes at her, you sit through the rest of the lesson in silence, at least pretending to pay attention sometimes. You don''t learn anything today, though.'
 				gs 'gschool_lessonsev1', 'biology'
-				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 			end
 			act 'Try to focus on the lesson':
 				cla
@@ -1571,7 +1668,7 @@ if $ARGS[0] = 'biology':
 				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/attention.jpg"></center>'
 				'You don''t want to get in trouble so you straighten up in your chair. "Sorry." Miss Orlov gives a friend smile and nod at your apology and then goes back to teaching the class, you do your best to pay attention for the rest of class.'
 				gs 'gschool_lessonsev1', 'biology'
-				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 			end
 		elseif RAND(1,3) = 1:
 			if pcs_grades >= 80:
@@ -1589,24 +1686,24 @@ if $ARGS[0] = 'biology':
 				'It was an embarrassing experience having everyone staring at you, but the sudden adrenaline surge helps you to stay awake during the rest of the period.'
 			end
 			gs 'gschool_lessonsev1', 'biology'
-			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 		elseif RAND(1,2) = 1:
 			*clr
 			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/sleeping.jpg"></center>'
 			'You fall asleep and start dreaming.'
 !!can the code be used to pull up a lesbian sex dream here?
 			'You suddenly jerk away, you are feeling highly aroused after that dream and you suddenly realize the other girl in your dream was Miss Orlov. You look around and hope no one noticed, after a bit of looking no one seems to be watching you. You try to clear the sleep from your eyes just as the bell rings for end of class. You gather up your stuff and head to the next period.'
-			act 'Leave class': gt 'gschool_lessons', 'schedule'
+			act 'Leave class': gt 'gschool_lessons', 'short_break'
 		else
 			*clr
 			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/sleeping.jpg"></center>'
 			'You finally drift off to sleep, the bell that ends class startles you awake. You look around in a bit of a dazed confusion. Miss Orlov seems not to have noticed, same with most of your fellow students but a couple of them giving you a knowing smile. They obviously noticed you sleeping. You gather up your stuff and head to your next period.'
-			act 'Leave class': gt 'gschool_lessons', 'schedule'
+			act 'Leave class': gt 'gschool_lessons', 'short_break'
 		end
 	end
 	act'Play with your phone':
 		*clr & cla
-		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 		pcs_grades -= 1
 		'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/phone.jpg"></center>'
 		'The lesson is so boring that you have to do something to keep yourself entertained. You take out your phone and begin to play a mobile game, hoping the lesson will be over soon.'
@@ -1621,7 +1718,7 @@ if $ARGS[0] = 'biology':
 				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/bored.jpg"></center>'
 				'You decide not to aggravate the situation and put your phone away. Miss Orlov gives you appreciative smile before continue with the lesson.'
 				gs 'gschool_lessonsev1', 'biology'
-				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 			end
 			act 'Keep using your phone':
 				*clr & cla
@@ -1639,7 +1736,7 @@ if $ARGS[0] = 'biology':
 					*nl
 					'Miss Orlov looks at what''s on the screen and she blushes deep red, quickly turning your phone off. She walks back to the head of class and takes a moment to compose herself. She then continues the lesson telling you, "I''m holding onto your phone for now, <<pcs_nickname>>. You can have it back after class."'
 					gs 'gschool_lessonsev1', 'biology'
-					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 				end
 				act 'Put the phone between your boobs':
 					*clr & cla
@@ -1676,17 +1773,17 @@ if $ARGS[0] = 'computer':
 !!If Sveta is anything else other than a nerd then get this text.
 			'Mr. Ivanov audibly sighs. "Why are you unable to grasp this. I know you are not the smartest student, but this is very very simple. Even a small child should be able to grasp it." He goes on to explain the part you asked about again, but he does so in a completely belittling manner.'
 			gs 'gschool_lessonsev1', 'computer'
-			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 		end
 		gs 'gschool_lessonsev1', 'computer'
-		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 	end
 	act 'Don''t pay attention in class':
 		*clr & cla
 		'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/bored.jpg"></center>'
 		'You quickly grow bored with the class and instead spend most of the time trying to browse the internet while Mr. Ivanov is busy or pay attention to your fellow students and what they are up to. You can see several of them seem to have the same idea as you do. The only times you pay attention is when he calls on you to answer one of the questions.'
 		gs 'gschool_lessonsev1', 'computer'
-		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 	end
 	act'Daydream':
 		*clr & cla
@@ -1726,7 +1823,7 @@ if $ARGS[0] = 'computer':
 				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/bathroom/angryteacher.jpg"></center>'
 				'The eyes of Mr. Ivanov grow narrower, and even though you roll your eyes at him, you sit through the rest of the lesson in silence, at least pretending to pay attention sometimes. You don''t learn anything today, though.'
 				gs 'gschool_lessonsev1', 'computer'
-				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 			end
 			act'Try to focus on the lesson':
 				cla
@@ -1735,7 +1832,7 @@ if $ARGS[0] = 'computer':
 				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/attention.jpg"></center>'
 				'You don''t want to get in trouble so you straighten up in your chair. "Sorry." Mr. Ivanov gives you one final look and then goes back to teaching the class, you do your best to pay attention for the rest of class.'
 				gs 'gschool_lessonsev1', 'computer'
-				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 			end
 		elseif RAND(1,3) = 1:
 			if pcs_grades >= 80:
@@ -1753,24 +1850,24 @@ if $ARGS[0] = 'computer':
 				'It was an embarrassing experience, but the sudden adrenaline surge helps you to stay awake during the rest of the period.'
 			end
 			gs 'gschool_lessonsev1', 'computer'
-			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 		elseif RAND(1,2) = 1:
 			*clr
 			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/sleeping.jpg"></center>'
 			'You fall asleep and start dreaming.'
 !!can the code be used to pull up a sex dream here?
 			'You suddenly jerk away, you are feeling highly aroused after that dream. You look around and hope no one noticed, after a bit of looking no one seems to be watching you. You try to clear the sleep from your eyes just as the bell rings for end of class. You gather up your stuff and head to the next period.'
-			act 'Leave class': gt 'gschool_lessons', 'schedule'
+			act 'Leave class': gt 'gschool_lessons', 'short_break'
 		else
 			*clr
 			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/sleeping.jpg"></center>'
 			'You finally drift off to sleep, the bell that ends class startles you awake. You look around in a bit of a dazed confusion. Mr. Ivanov seems not to have noticed, same with most of your fellow students but a couple of them giving you a knowing smile. They obviously noticed you sleeping. You gather up your stuff and head to your next period.'
-			act 'Leave class': gt 'gschool_lessons', 'schedule'
+			act 'Leave class': gt 'gschool_lessons', 'short_break'
 		end
 	end
 	act'Play with your phone':
 		*clr & cla
-		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 		pcs_grades -= 1
 		'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/phone.jpg"></center>'
 		'The lesson is so boring that you have to do something to keep yourself entertained. You take out your phone and begin to play a mobile game, hoping the lesson will be over soon.'
@@ -1785,7 +1882,7 @@ if $ARGS[0] = 'computer':
 				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/bored.jpg"></center>'
 				'You decide not to aggravate the situation and put your phone away. Mr. Ivanov gives you one final hard look before continue with the lesson.'
 				gs 'gschool_lessonsev1', 'computer'
-				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 			end
 			act 'Keep using your phone':
 				*clr & cla
@@ -1808,7 +1905,7 @@ if $ARGS[0] = 'computer':
 !!this is added to the above if Sveta is not a nerd, but I am commenting it out for now because I need to write the afterschool scene first.
 					!!'He adds to you "Come see me after school if you want your phone back, or I can just return it to your parents."'
 					gs 'gschool_lessonsev1', 'computer'
-					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 				end
 				act 'Put the phone between your boobs':
 					*clr & cla
@@ -1841,17 +1938,17 @@ if $ARGS[0] = 'science':
 			'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/classroom/ask.jpg"></center>'
 			'Miss Orlov nods approvingly. She happily spends some extra time explaining the topic again to you, and answers any extra questions you might have. She only moves on with the lesson once she is sure she has fully answered your question. You feel like you learned a lot, thoroughly understanding today''s lessons now.'
 			gs 'gschool_lessonsev1', 'science'
-			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 		end
 		gs 'gschool_lessonsev1', 'science'
-		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 	end
 	act 'Don''t pay attention in class':
 		*clr & cla
 		'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/bored.jpg"></center>'
 		'You quickly grow bored with the class and instead spend most of the time trying to see what your fellow students are up to. You can see several of them seem to have the same idea as you do. The only times you pay attention is when she calls on you to answer one of the questions.'
 		gs 'gschool_lessonsev1', 'science'
-		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 	end
 	act'Daydream':
 		*clr & cla
@@ -1877,14 +1974,14 @@ if $ARGS[0] = 'science':
 					'Your teacher doesn''t know what to say, and after a while just decides to continue her classes. Obviously, you don''t learn anything today. You hear one of the boys behind you mutter your being a bitch, you turn around and flip him off.'
 					act 'Go to principal''s office': demerit += 10+school_bunk*5 & gt 'gschool_office', 'principal'
 					gs 'gschool_lessonsev1', 'science'
-					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 				end
 			end
 			act 'Reluctantly pay attention':
 				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/bored.jpg"></center>'
 				'Miss Orlov smiles as you seem to be paying attention and quickly goes back into her lesson. She doesn''t seem to notice when you roll your eyes at her, you sit through the rest of the lesson in silence, at least pretending to pay attention sometimes. You don''t learn anything today, though.'
 				gs 'gschool_lessonsev1', 'science'
-				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 			end
 			act 'Try to focus on the lesson':
 				cla
@@ -1893,7 +1990,7 @@ if $ARGS[0] = 'science':
 				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/attention.jpg"></center>'
 				'You don''t want to get in trouble so you straighten up in your chair. "Sorry." Miss Orlov gives a friend smile and nod at your apology and then goes back to teaching the class, you do your best to pay attention for the rest of class.'
 				gs 'gschool_lessonsev1', 'science'
-				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 			end
 		elseif RAND(1,3) = 1:
 			if pcs_grades >= 80:
@@ -1911,24 +2008,24 @@ if $ARGS[0] = 'science':
 				'It was an embarrassing experience having everyone staring at you, but the sudden adrenaline surge helps you to stay awake during the rest of the period.'
 			end
 			gs 'gschool_lessonsev1', 'science'
-			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 		elseif RAND(1,2) = 1:
 			*clr
 			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/sleeping.jpg"></center>'
 			'You fall asleep and start dreaming.'
 !!can the code be used to pull up a lesbian sex dream here?
 			'You suddenly jerk away, you are feeling highly aroused after that dream and you suddenly realize the other girl in your dream was Miss Orlov. You look around and hope no one noticed, after a bit of looking no one seems to be watching you. You try to clear the sleep from your eyes just as the bell rings for end of class. You gather up your stuff and head to the next period.'
-			act 'Leave class': gt 'gschool_lessons', 'schedule'
+			act 'Leave class': gt 'gschool_lessons', 'short_break'
 		else
 			*clr
 			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/sleeping.jpg"></center>'
 			'You finally drift off to sleep, the bell that ends class startles you awake. You look around in a bit of a dazed confusion. Miss Orlov seems not to have noticed, same with most of your fellow students but a couple of them giving you a knowing smile. They obviously noticed you sleeping. You gather up your stuff and head to your next period.'
-			act 'Leave class': gt 'gschool_lessons', 'schedule'
+			act 'Leave class': gt 'gschool_lessons', 'short_break'
 		end
 	end
 	act'Play with your phone':
 		*clr & cla
-		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 		pcs_grades -= 1
 		'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/phone.jpg"></center>'
 		'The lesson is so boring that you have to do something to keep yourself entertained. You take out your phone and begin to play a mobile game, hoping the lesson will be over soon.'
@@ -1943,7 +2040,7 @@ if $ARGS[0] = 'science':
 				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/bored.jpg"></center>'
 				'You decide not to aggravate the situation and put your phone away. Miss Orlov gives you appreciative smile before continue with the lesson.'
 				gs 'gschool_lessonsev1', 'science'
-				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 			end
 			act 'Keep using your phone':
 				*clr & cla
@@ -1961,7 +2058,7 @@ if $ARGS[0] = 'science':
 					*nl
 					'Miss Orlov looks at what''s on the screen and she blushes deep red, quickly turning your phone off. She walks back to the head of class and takes a moment to compose herself. She then continues the lesson telling you, "I''m holding onto your phone for now, <<pcs_nickname>>. You can have it back after class."'
 					gs 'gschool_lessonsev1', 'science'
-					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 				end
 				act 'Put the phone between your boobs':
 					*clr & cla
@@ -1993,10 +2090,10 @@ if $ARGS[0] = 'music':
 			'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/classroom/classmusic.jpg"></center>'
 			'Mr. Vasilyev smiles, always happy to see his students engaged in his class. He happily spends some extra time explaining the topic again, and answers any extra questions you might have. You feel smarter, thoroughly understanding today''s lessons now.'
 			gs 'gschool_lessonsev2', 'music'
-			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 		end
 		gs 'gschool_lessonsev3', 'music'
-		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 	end
 	act 'Don''t pay attention in class':
 		*clr & cla
@@ -2006,7 +2103,7 @@ if $ARGS[0] = 'music':
 		'That comes to an abrupt end when a loud crash in the room nearly startles you out of your chair.'
 		'As one, everyone in the room turns to look, only to see Radomir and Petia sitting by a over turned rack of music instruments. Radomir looks at Petia and says "Fuck I told you not to touch them, now look what you did, you loser." Petia starts to open his mouth and say something but apparently thinks better of it and closes his mouth instead. Mr. Vasilyev makes his way over and says to Radomir. "Language young man!" Radomir just rolls his eyes, Mr. Vasilyev gets them to help him pick up all the instruments and then gets the whole class to check them to see if any was damaged. Which gets finished just in time for the bell for school to be over.'
 		gs 'gschool_lessonsev3', 'music'
-		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 	end
 	act'Daydream':
 		*clr & cla
@@ -2031,7 +2128,7 @@ if $ARGS[0] = 'music':
 					'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/bitchflip.jpg"></center>'
 					'"What good would that do? Are you trying to get me to start smoking to pass the time? I''m not interrupting your classes, just leave me alone. I''m having some... girl problems. Would you like me to talk about those instead?" you answer brashly, not having any intentions of getting up.'
 					'Your teacher doesn''t know what to say, and after a while just decides to continue his classes. Obviously, you don''t learn anything today. You hear one of the boys behind you mutter your being a bitch, you turn around and flip him off.'
-					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 				end
 				act 'Go to principal''s office': demerit += 10+school_bunk*5 & gt 'gschool_office', 'principal'
 			end
@@ -2039,7 +2136,7 @@ if $ARGS[0] = 'music':
 				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/bathroom/angryteacher.jpg"></center>'
 				'The eyes of Mr. Vasilyev grow narrower, and even though you roll your eyes at him, you sit through the rest of the lesson in silence, at least pretending to pay attention sometimes. You don''t learn anything today, though.'
 				gs 'gschool_lessonsev3', 'music'
-				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 			end
 			act'Try to focus on the lesson':
 				cla
@@ -2048,7 +2145,7 @@ if $ARGS[0] = 'music':
 				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/attention.jpg"></center>'
 				'You don''t want to get in trouble so you straighten up in your chair. "Sorry." The teacher gives you one final look and then goes back to teacher the class, you do your best to pay attention for the rest of class.'
 				gs 'gschool_lessonsev3', 'music'
-				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 			end
 		elseif RAND(1,3) = 1:
 			if pcs_grades >= 80:
@@ -2065,24 +2162,24 @@ if $ARGS[0] = 'music':
 				'It was an embarrassing experience, but the sudden adrenaline surge helps you to stay awake during the rest of the period.'
 			end
 			gs 'gschool_lessonsev3', 'music'
-			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 		elseif RAND(1,2) = 1:
 			*clr
 			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/sleeping.jpg"></center>'
 			'You drift off to sleep during class, maybe it is the sound of your teachers voice or maybe something more. But you end up dreaming about having sex with Mr. Vasilyev.'
 !!can we insert one of the dream texts and images here? One of the dream/sex/ anal, bj, eros, or sex images?
 			pcs_horny += 30
-			act 'Leave class': gt 'gschool_lessons', 'schedule'
+			act 'Leave class': gt 'gschool_lessons', 'short_break'
 		else
 			*clr
 			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/sleeping.jpg"></center>'
 			'Fall asleep, end of class bell wakes Sveta up.'
-			act 'Leave class': gt 'gschool_lessons', 'schedule'
+			act 'Leave class': gt 'gschool_lessons', 'short_break'
 		end
 	end
 	act'Play with your phone':
 		*clr & cla
-		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 		pcs_grades -= 1
 		'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/phone.jpg"></center>'
 		'The lesson is so boring that you have to do something to keep yourself entertained. You take out your phone and begin to play a mobile game, hoping the lesson will be over soon.'
@@ -2096,7 +2193,7 @@ if $ARGS[0] = 'music':
 				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/bored.jpg"></center>'
 				'You decide not to aggravate the situation and put your phone away. Mr. Vasilyev looks at you gratefully as they continues the class.'
 				gs 'gschool_lessonsev3', 'music'
-				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 			end
 			act 'Keep using your phone':
 				*clr & cla
@@ -2113,7 +2210,7 @@ if $ARGS[0] = 'music':
 					'"Wouldn''t you like to know!" you tease. You hand over your phone, the screen still on, with the last picture you took still on the screen of the phone.'
 					'Mr. Vasilyev looks at what''s on the screen and their face colors bright red as they turn the screen off and returns to the front of the class.'
 					'As they gets ready to continue the lesson they say, "I''m holding onto your phone for now, Mrs. <<$pcs_lastname>>. You can have it back after class."'
-					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 				end
 				act 'Put the phone between your boobs':
 					*clr & cla
@@ -2122,7 +2219,7 @@ if $ARGS[0] = 'music':
 					'You deftly shove the phone in your bra, and smile fiendishly as you see the indecisiveness on your teacher''s face.'
 					'You pretend it''s a perfectly normal place to store your phone, and use your cute voice as you tell him, "Is there a problem, Mr. Vasilyev? Go ahead, take my phone if you don''t think I should have it." You thrust your chest forward as you encourage him, giving him a nice view of your ample cleavage - the outline of your phone very visible through the fabric.'
 					'Your teacher is completely flabbergasted by your move, and admits defeat. Deciding it''s not worth the effort to take your phone away from you without causing all sorts of awkward situations, he simply returns to the front of the class and continues his lessons. You don''t catch much of them though, you''re too busy browsing the internet after you pull your phone back out of your bra.'
-					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 				end
 				act 'Hand over the phone':
 					*clr & cla
@@ -2132,7 +2229,7 @@ if $ARGS[0] = 'music':
 					'Wow, they called your bluff. You decide it''s not worth the conflict, and silently hand your phone to Mr. Vasilyev.'
 					'As they walk back to the front of the class, they say, "I''m holding onto your phone for now, Mrs. <<$pcs_lastname>>. You can have it back after class."'
 					gs 'gschool_lessonsev3', 'music'
-					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 				end
 			end
 		end
@@ -2154,10 +2251,10 @@ if $ARGS[0] = 'art':
 			'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/classroom/ask.jpg"></center>'
 			'Mr. Vasilyev smiles, always happy to see his students engaged in his class. He happily spends some extra time explaining the topic again, and answers any extra questions you might have. You feel smarter, thoroughly understanding today''s lessons now.'
 			gs 'gschool_lessonsev3', 'art'
-			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 		end
 		gs 'gschool_lessonsev3', 'art'
-		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 	end
 	act 'Don''t pay attention in class':
 		*clr & cla
@@ -2185,7 +2282,7 @@ if $ARGS[0] = 'art':
 		*nl
 !!All options go to this one
 		'Once Erast has his phone back and Mr. Vasilyev has the class calmed down he calls both of them up to his desk, looks at the phone and talks quietly to both of them, obviously lecturing them. Erast about taking panty shots and Anushka about respecting people''s privacy. Erast looks slightly abashed, while Anushka just looks bored.'
-		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 	end
 	act'Daydream':
 		*clr & cla
@@ -2211,7 +2308,7 @@ if $ARGS[0] = 'art':
 					'"What good would that do? Are you trying to get me to start smoking to pass the time? I''m not interrupting your classes, just leave me alone. I''m having some... girl problems. Would you like me to talk about those instead?" you answer brashly, not having any intentions of getting up.'
 					'Your teacher doesn''t know what to say, and after a while just decides to continue his classes. Obviously, you don''t learn anything today. You hear one of the girls behind you mutter your being a bitch, you turn around and flip her off.'
 					gs 'gschool_lessonsev3', 'art'
-					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 				end
 				act 'Go to principal''s office': demerit += 10+school_bunk*5 & gt 'gschool_office', 'principal'
 			end
@@ -2219,7 +2316,7 @@ if $ARGS[0] = 'art':
 				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/bathroom/angryteacher.jpg"></center>'
 				'The eyes of Mr. Vasilyev grow narrower, and even though you roll your eyes at him, you sit through the rest of the lesson in silence, at least pretending to pay attention sometimes. You don''t learn anything today, though.'
 				gs 'gschool_lessonsev3', 'art'
-				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 			end
 			act'Try to focus on the lesson':
 				cla
@@ -2228,7 +2325,7 @@ if $ARGS[0] = 'art':
 				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/attention.jpg"></center>'
 				'You don''t want to get in trouble so you straighten up in your chair. "Sorry." The teacher gives you one final look and then goes back to teacher the class, you do your best to pay attention for the rest of class.'
 				gs 'gschool_lessonsev3', 'art'
-				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 			end
 		elseif RAND(1,3) = 1:
 			if pcs_grades >= 80:
@@ -2245,24 +2342,24 @@ if $ARGS[0] = 'art':
 				'It was an embarrassing experience, but the sudden adrenaline surge helps you to stay awake during the rest of the period.'
 			end
 			gs 'gschool_lessonsev3', 'art'
-			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 		elseif RAND(1,2) = 1:
 			*clr
 			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/sleeping.jpg"></center>'
 			'You drift off to sleep during class, maybe it is the sound of your teachers voice or maybe something more. But you end up dreaming about having sex with Mr. Vasilyev.'
 !!can we insert one of the dream texts and images here? One of the dream/sex/ anal, bj, eros, or sex images?
 			pcs_horny += 30
-			act 'Leave class': gt 'gschool_lessons', 'schedule'
+			act 'Leave class': gt 'gschool_lessons', 'short_break'
 		else
 			*clr
 			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/sleeping.jpg"></center>'
 			'Fall asleep, end of class bell wakes Sveta up.'
-			act 'Leave class': gt 'gschool_lessons', 'schedule'
+			act 'Leave class': gt 'gschool_lessons', 'short_break'
 		end
 	end
 	act'Play with your phone':
 		*clr & cla
-		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 		pcs_grades -= 1
 		'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/phone.jpg"></center>'
 		'The lesson is so boring that you have to do something to keep yourself entertained. You take out your phone and begin to play a mobile game, hoping the lesson will be over soon.'
@@ -2276,7 +2373,7 @@ if $ARGS[0] = 'art':
 				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/bored.jpg"></center>'
 				'You decide not to aggravate the situation and put your phone away. Mr. Vasilyev looks at you gratefully as they continues the class.'
 				gs 'gschool_lessonsev3', 'art'
-				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 			end
 			act 'Keep using your phone':
 				*clr & cla
@@ -2293,7 +2390,7 @@ if $ARGS[0] = 'art':
 					'"Wouldn''t you like to know!" you tease. You hand over your phone, the screen still on, with the last picture you took still on the screen of the phone.'
 					'Mr. Vasilyev looks at what''s on the screen and their face colors bright red as they turn the screen off and returns to the front of the class.'
 					'As they gets ready to continue the lesson they say, "I''m holding onto your phone for now, Mrs. <<$pcs_lastname>>. You can have it back after class."'
-					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 				end
 				act 'Put the phone between your boobs':
 					*clr & cla
@@ -2303,7 +2400,7 @@ if $ARGS[0] = 'art':
 					'You pretend it''s a perfectly normal place to store your phone, and use your cute voice as you tell him, "Is there a problem, Mr. Vasilyev? Go ahead, take my phone if you don''t think I should have it." You thrust your chest forward as you encourage him, giving him a nice view of your ample cleavage - the outline of your phone very visible through the fabric.'
 					*nl
 					'Your teacher is completely flabbergasted by your move, and admits defeat. Deciding it''s not worth the effort to take your phone away from you without causing all sorts of awkward situations, he simply returns to the front of the class and continues his lessons. You don''t catch much of them though, you''re too busy browsing the internet after you pull your phone back out of your bra.'
-					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 				end
 				act 'Hand over the phone':
 					*clr & cla
@@ -2313,7 +2410,7 @@ if $ARGS[0] = 'art':
 					'Wow, they called your bluff. You decide it''s not worth the conflict, and silently hand your phone to Mr. Vasilyev.'
 					'As they walk back to the front of the class, they say, "I''m holding onto your phone for now, Mrs. <<$pcs_lastname>>. You can have it back after class."'
 					gs 'gschool_lessonsev3', 'art'
-					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 				end
 			end
 		end
@@ -2335,17 +2432,17 @@ if $ARGS[0] = 'shop':
 			'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/classroom/class1.jpg"></center>'
 			'Mr. Kuznetsov nods approvingly, always happy to see his students engaged in his class. He happily spends some extra time explaining the topic again, and answers any extra questions you might have. You feel smarter, thoroughly understanding today''s lessons now.'
 			gs 'gschool_lessonsev2', 'shop'
-			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 		end
 		gs 'gschool_lessonsev2', 'shop'
-		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 	end
 	act 'Don''t pay attention in class':
 		*clr & cla
 		'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/bored.jpg"></center>'
 		'Mr. Kuznetsov''s lecture on safety which is keeps giving is more boring than normal, you look around for something to fill the time, desperate for any kid of distraction.'
 		gs 'gschool_lessonsev2', 'shop'
-		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 	end
 	act'Daydream':
 		*clr & cla
@@ -2368,7 +2465,7 @@ if $ARGS[0] = 'shop':
 					'You wait until the end of class. Then you walk up to Mr. Kuznetsov''s desk. "You wanted to see me?"'
 					'He looks up at you for a moment before saying. "Come to my office after school so we can talk about this. If not I will be calling your mother to school tomorrow." With that he dismisses you to go to you next class.'
 					Kuznecov_shop_punishment = 1
-					act 'Go to next class': gt 'gschool_lessons', 'schedule'
+					act 'Go to next class': gt 'gschool_lessons', 'short_break'
 				end
 			end
 !!not sure how to code it, but if the above event is triggered can we have a new option at the end of school to go see him in his office. gt 'gschool_lessonsev2', 'shop punishment':
@@ -2376,7 +2473,7 @@ if $ARGS[0] = 'shop':
 				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/bathroom/angryteacher.jpg"></center>'
 				'The eyes of Mr. Kuznetsov grow narrower, and even though you roll your eyes at him, you sit through the rest of the lesson in silence, at least pretending to pay attention sometimes. You don''t learn anything today, though.'
 				gs 'gschool_lessonsev2', 'shop'
-				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 			end
 			act'Try to focus on the lesson':
 				cla
@@ -2385,7 +2482,7 @@ if $ARGS[0] = 'shop':
 				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/attention.jpg"></center>'
 				'You don''t want to get in trouble so you straighten up in your chair. "Sorry." The teacher gives you one final look and then goes back to teacher the class, you do your best to pay attention for the rest of class.'
 				gs 'gschool_lessonsev2', 'shop'
-				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 			end
 		else
 			if pcs_grades >= 80:
@@ -2402,12 +2499,12 @@ if $ARGS[0] = 'shop':
 				'It was an embarrassing experience, but the sudden adrenaline surge helps you to stay awake during the rest of the period.'
 			end
 			gs 'gschool_lessonsev2', 'shop'
-			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 		end
 	end
 	act'Play with your phone':
 		*clr & cla
-		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 		pcs_grades -= 1
 		'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/phone.jpg"></center>'
 		'The lesson is so boring that you have to do something to keep yourself entertained. You take out your phone and begin to play a mobile game, hoping the lesson will be over soon.'
@@ -2421,7 +2518,7 @@ if $ARGS[0] = 'shop':
 				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/bored.jpg"></center>'
 				'You decide not to aggravate the situation and put your phone away. Mr. Kuznetsov looks at you gratefully as they continues the class.'
 				gs 'gschool_lessonsev2', 'shop'
-				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 			end
 			act 'Keep using your phone':
 				*clr & cla
@@ -2439,7 +2536,7 @@ if $ARGS[0] = 'shop':
 					'Mr. Kuznetsov looks at what''s on the screen and their face colors bright red as they turn the screen off and returns to the front of the class.'
 					'As they gets ready to continue the lesson they say, "I''m holding onto your phone for now, Mrs. <<$pcs_lastname>>. You can have it back after class."'
 					gs 'gschool_lessonsev2', 'shop'
-					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 				end
 				act 'Put the phone between your boobs':
 					*clr & cla
@@ -2449,11 +2546,11 @@ if $ARGS[0] = 'shop':
 					'You pretend it''s a perfectly normal place to store your phone, and use your cute voice as you tell him, "Is there a problem, Mr. Kuznetsov? Go ahead, take my phone if you don''t think I should have it." You thrust your chest forward as you encourage him, giving him a nice view of your ample cleavage - the outline of your phone very visible through the fabric.'
 					'He narrows his eyes. "Very well come see me after class, or we can just call your mother to come to school and pick you up for being expelled." He notes the change in your expression and smirks a bit, knowing you will see him after class now.'
 					gs 'gschool_lessonsev2', 'shop'
-					act 'Wait for the end of Class':
+					act 'Wait for the end of class': 
 						'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/teacher/ruslan/pshop1.jpg"></center>'
 						'You wait until the end of class. Then you walk up to Mr. Kuznetsov''s desk. "You wanted to see me?"'
 						'He looks up at you for a moment before saying. "Come to my office after school so we can talk about this. If not I will be calling your mother to school tomorrow." With that he dismisses you to go to you next class.'
-						act 'Go to next class': gt 'gschool_lessons', 'schedule'
+						act 'Go to next class': gt 'gschool_lessons', 'short_break'
 !!not sure how to code it, but if the above event is triggered can we have a new option at the end of school to go see him in his office. gt 'gschool_lessonsev2', 'shop punishment':
 					end
 				end
@@ -2465,7 +2562,7 @@ if $ARGS[0] = 'shop':
 					'Wow, they called your bluff. You decide it''s not worth the conflict, and silently hand your phone to Mr. Kuznetsov.'
 					'As they walk back to the front of the class, they say, "I''m holding onto your phone for now, Mrs. <<$pcs_lastname>>. You can have it back after class."'
 					gs 'gschool_lessonsev2', 'shop'
-					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short break'
+					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 				end
 			end
 		end
@@ -2900,7 +2997,7 @@ if $ARGS[0] = 'dress':
 			msg'<b><font color = red>You need to get dressed before you leave the changing rooms.</font></b>'
 			gt 'gschool_lessons', 'dress'
 		else
-			gt 'gschool_grounds', 'main'
+			gt 'gschool_lessons', 'short_break'
 		end
 	end
 end
