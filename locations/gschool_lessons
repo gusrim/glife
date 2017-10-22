@@ -32,10 +32,14 @@ end
 if $ARGS[0] = 'short_break':
 	gs 'stat'
 	if school_period = 1:
-		if hour = 9 and minut < 45: 
+		if hour = 7: 
+			minut += 165-minut
+		elseif hour = 8: 
+			minut += 105-minut
+		elseif hour = 9 and minut < 45: 
 			minut += 45-minut
 		elseif hour = 9 and minut < 50: 
-			'Just in time to move to next class'
+			'Time to move to next class'
 		else
 			school_period = 2
 			gt 'gschool_lessons', 'short_break'
@@ -47,21 +51,16 @@ if $ARGS[0] = 'short_break':
 		elseif hour = 10 and minut < 35: 
 			minut += 35-minut
 		elseif hour = 10 and minut < 55:
-			'Just in time to move to next class'
+			'Time to move to next class'
 		else
-			school_period = 3
+			school_period = 4
 			gt 'gschool_lessons', 'short_break'
 		end
 	end
 	if school_period = 3:
-		if hour = 10 and minut < 40: 
-			minut += 40-minut
-		elseif hour = 10 and minut < 45:
-			minut += 45-minut
-		elseif hour = 10 and minut < 50:
-			minut += 50-minut
-		elseif hour = 10 and minut < 55:
-			'Just in time to move to next class'
+		if hour = 10 and minut < 55:
+			minut += 55-minut
+			'Time to move to next class'
 		else
 			school_period = 4
 			gt 'gschool_lessons', 'short_break'
@@ -73,7 +72,7 @@ if $ARGS[0] = 'short_break':
 		elseif hour = 11 and minut < 40: 
 			minut += 40-minut
 		elseif hour = 11 and minut < 45:
-			'Just in time to move to next class'
+			'Time to move to next class'
 		else
 			school_period = 5
 			gt 'gschool_lessons', 'short_break'
@@ -81,47 +80,40 @@ if $ARGS[0] = 'short_break':
 	end
 	if school_period = 5:
 		if hour = 11: 
-			minut += 80-minut
-		elseif hour = 11 and minut < 30: 
+			minut += 90-minut
+		elseif hour = 12 and minut < 30:
 			minut += 30-minut
-		elseif hour = 13 and minut > 45:
+		elseif hour = 13 and minut < 25 and minut > 20:
 			school_period = 6
 			gt 'gschool_lessons', 'short_break'
-		elseif hour > 13:
+		elseif (hour = 13 and minut > 25 ) or hour > 13:
 			school_period = 6
 			gt 'gschool_lessons', 'short_break'
-		else
-			'Just in time to move to next class'
 		end
-		gt 'gschool_lessons', 'schedule'
 	end
 	if school_period = 6:
-		if hour = 12 and minut < 35: 
-			minut += 35-minut
-		elseif hour = 12 and minut < 45: 
-			minut += 45-minut
-		elseif hour = 12 and minut < 55:
-			minut += 55-minut
-		elseif hour = 12 and minut < 60:
-			minut += 60-minut
-		elseif hour = 13 and minut < 20:
-			minut += 20-minut
-		elseif hour = 13 and minut < 25:
-			'Just in time to move to next class'
-		else
-			school_period = 7
-			gt 'gschool_lessons', 'short_break'
+		if $ARGS[1] = '':
+			if hour = 11: 
+				minut += 145-minut
+			elseif hour = 12:
+				minut += 85-minut
+			elseif hour = 13 and minut < 25:
+				minut += 25-minut
+			else
+				school_period = 7
+				gt 'gschool_lessons', 'short_break'
+			end
 		end
 	end
 	if school_period = 7:
-		if hour = 12 and minut < 60:
+		if hour = 12: 
 			minut += 130-minut
 		elseif hour = 13: 
 			minut += 70-minut
 		elseif hour = 14 and minut < 10: 
 			minut += 10-minut
 		elseif hour = 14 and minut < 15:
-			'Just in time to move to next class'
+			'Time to move to next class'
 		else
 			school_period = 8
 			gt 'gschool_lessons', 'short_break'
@@ -134,11 +126,17 @@ if $ARGS[0] = 'short_break':
 	end
 	gs 'stat'
 	if school_period = 2:
-		school_period = 3
-		gt 'gschool_lunch', 'break'
+		if $ARGS[1] ! 'nopict':
+			'<center><b><font color="maroon">School Hallway</font></b></center>'
+			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/building/gschool_hall0<<Rand(0,2)>>.jpg"></center>'
+		end
+		act 'Long break now': gt 'gschool_lessons', 'schedule'
 	elseif school_period = 5:
-		school_period = 6
-		gt 'gschool_lunch', 'lunch'
+		if $ARGS[1] ! 'nopict':
+			'<center><b><font color="maroon">School Hallway</font></b></center>'
+			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/building/gschool_hall0<<Rand(0,2)>>.jpg"></center>'
+		end
+		act 'Time for lunch now': gt 'gschool_lessons', 'schedule'
 	elseif (school_period < 8):
 		if $ARGS[1] ! 'nopict':
 			'<center><b><font color="maroon">School Hallway</font></b></center>'
@@ -172,7 +170,6 @@ if $ARGS[0] = 'skip':
 end
 
 if $ARGS[0] = 'schedule':
-	minut +=5
 	gs 'stat'
 	if school_period = 0:
 		school_period = 1
@@ -185,6 +182,7 @@ if $ARGS[0] = 'schedule':
 		if week = 5: gt 'gschool_lessons', 'math'
 	elseif school_period = 1:
 		school_period = 2
+		if hour = 9 and minut < 50: minut += 50 - minut
 		if week = 1: gt 'gschool_lessons', 'russian'
 		if week = 2: gt 'gschool_lessons', 'geography'
 		if week = 3: gt 'gschool_lessons', 'russian'
@@ -195,6 +193,7 @@ if $ARGS[0] = 'schedule':
 		gt 'gschool_lunch', 'break'
 	elseif school_period = 3:
 		school_period = 4
+		if hour = 10 and minut < 55: minut += 55 - minut
 		if week = 1: gt 'gschool_lessons', 'literature'
 		if week = 2: gt 'gschool_lessons', 'science'
 		if week = 3: gt 'gschool_lessons', 'biology'
@@ -202,6 +201,7 @@ if $ARGS[0] = 'schedule':
 		if week = 5: gt 'gschool_lessons', 'literature'
 	elseif school_period = 4:
 		school_period = 5
+		if hour = 11 and minut < 45: minut += 45 - minut
 		if week = 1: gt 'gschool_lessons', 'art'
 		if week = 2: gt 'gschool_lessons', 'shop'
 		if week = 3: gt 'gschool_lessons', 'history'
@@ -212,6 +212,7 @@ if $ARGS[0] = 'schedule':
 		gt 'gschool_lunch', 'lunch'
 	elseif school_period = 6:
 		school_period = 7
+		if hour = 13 and minut < 25: minut += 25 - minut
 		if week = 1: gt 'gschool_lessons', 'biology'
 		if week = 2: gt 'gschool_lessons', 'computer'
 		if week = 3: gt 'gschool_lessons', 'computer'
@@ -219,6 +220,7 @@ if $ARGS[0] = 'schedule':
 		if week = 5: gt 'gschool_lessons', 'history'
 	elseif school_period = 7:
 		school_period = 8
+		if hour = 14 and minut < 15: minut += 15 - minut
 		if week = 1: gt 'gschool_lessons', 'pe'
 		if week = 2: gt 'gschool_lessons', 'music'
 		if week = 3: gt 'gschool_lessons', 'pe'
@@ -968,8 +970,8 @@ if $ARGS[0] = 'literature':
 					'"Don''t make me remind you of your place, little girl." Ms. Braakman''s warning is punctuated painfully as she gives a sharp pinch and tug to one of your nipples, eliciting a soft whimper from you. Having gotten her point across, she removes her hand and with it your phone. "You can get this back after class."'
 					*nl
 					'Flustered and aroused, you regain your senses and remember that you''re sitting in class right now. You look around the room, but it seems like her groping went unnoticed and was seen as her fishing out your phone like you challenged her to do.'
-					gs 'gschool_lessonsev3', 'getphone'
-					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
+
+					act '...': gt gschool_lessonsev3', 'getphone'
 				end
 				act 'Hand over the phone':
 					*clr & cla
@@ -977,8 +979,7 @@ if $ARGS[0] = 'literature':
 					grupvalue[3] += 3
 					'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/bored.jpg"></center>'
 					'Realizing that this isn''t worth the fight, you hand over your phone without argument. "You can have this back after class." Ms. Braakman says as she walks back to the blackboard.'
-					gs 'gschool_lessonsev3', 'getphone'
-					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
+					act '...': gt gschool_lessonsev3', 'getphone'
 				end
 			end
 		end
@@ -1238,8 +1239,7 @@ if $ARGS[0] = 'english':
 					'"Don''t make me remind you of your place, little girl." Ms. Braakman''s warning is punctuated painfully as she gives a sharp pinch and tug to one of your nipples, eliciting a soft whimper from you. Having gotten her point across, she removes her hand and with it your phone. "You can get this back after class."'
 					*nl
 					'Flustered and aroused, you regain your senses and remember that you''re sitting in class right now. You look around the room, but it seems like her groping went unnoticed and was seen as her fishing out your phone like you challenged her to do.'
-					gs 'gschool_lessonsev3', 'getphone'
-					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
+					act '...': gt gschool_lessonsev3', 'getphone'
 				end
 				act 'Hand over the phone':
 					*clr & cla
@@ -1247,8 +1247,7 @@ if $ARGS[0] = 'english':
 					grupvalue[3] += 3
 					'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/bored.jpg"></center>'
 					'Realizing that this isn''t worth the fight, you hand over your phone without argument. "You can have this back after class." Ms. Braakman says as she walks back to the blackboard.'
-					gs 'gschool_lessonsev3', 'getphone'
-					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
+					act '...': gt gschool_lessonsev3', 'getphone'
 				end
 			end
 		end
