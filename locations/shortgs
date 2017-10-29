@@ -137,22 +137,31 @@ if $ARGS[0] = 'sqrt':
 		sqrtn1 = (sqrtn + sqrtnum / sqrtn) / 2
 		jump 'sqrtloop'
 	end
-    result = sqrtn  
+	result = sqrtn  
 end
 
 !! this function calculates modul of given arguments as it was coordinates in cartezian systeme
 !! use func('shortgs','modul',n1,n2,..n8)
 if $ARGS[0] = 'modul':
 	modul_sum = ARGS[1]*ARGS[1]+ARGS[2]*ARGS[2]+ARGS[3]*ARGS[3]+ARGS[4]*ARGS[4]+ARGS[5]*ARGS[5]+ARGS[6]*ARGS[6]+ARGS[7]*ARGS[7]+ARGS[8]*ARGS[8]
-    result = func('shortgs','sqrt',modul_sum)
+	result = func('shortgs','sqrt',modul_sum)
 	killvar 'modul_sum'
 end
 !! day of week 1 - Monday .. 7 - Sunday
 if $ARGS[0] = 'dow':
-	dow_a = (14 - month) / 12
-	dow_Y = year - dow_a
-	dow_M = month + 12*dow_a - 2
-	dummy = (day + dow_y + dow_y/4 - dow_y/100 + dow_y/400 + (31*dow_m)/12) mod 7
+	if ARGS[1]=0:
+		D_dow = day
+		M_dow = month
+		Y_dow = year
+	else
+		D_dow = ARGS[3]
+		M_dow = ARGS[2]
+		Y_dow = ARGS[1]
+	end
+	dow_a = (14 - M_dow) / 12
+	dow_Y = Y_dow - dow_a
+	dow_M = M_dow + 12*dow_a - 2
+	dummy = (D_dow + dow_y + dow_y/4 - dow_y/100 + dow_y/400 + (31*dow_m)/12) mod 7
 	if dummy = 0: dummy = 7
 	result = dummy
 end
@@ -173,13 +182,17 @@ if $ARGS[0] = 'mk1':
 	'<tr><th>Mon</th><th>Tue</th><th>Wen</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th><th>Mon</th><th>Tue</th><th>Wen</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th>
 	<th>Mon</th><th>Tue</th><th>Wen</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th><th>Mon</th><th>Tue</th><th>Wen</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th></tr>'
 	i = ArrSize('$MenCal')
+
 	empty0 = week + 29 - i - 1
+
 	empty1 = min(28,empty0)
 	full1 = max(0,28 - empty0)
+
 	empty2 = max(0,empty0-28)
 	full2 = i - full1
 	empty3 = 28 - empty2 - full2
 	count=0
+
 	$tabmc = '<tr>'
 :tabmcl1
 	if empty1 > 0: empty1 -=1 & $tabmc +='<td>&nbsp</td>' & jump 'tabmcl1'
@@ -475,6 +488,191 @@ if $ARGS[0] = 'fonts':
 		if $dynamicreturn ! '': dynamic 'dynamic <<$dynamicreturn>>'
 		gt 'restoreposition'
 	end
+end
+
+!! use gs 'shortgs','ncp_update'
+if $ARGS[0] = 'ncp_update':
+	copyarr 'copy_npc_QW','npc_QW'
+	copyarr 'copy_npc_rel','npc_rel'
+	copyarr 'copy_npc_love','npc_love'
+	copyarr '$copy_npc_usedname','$npc_usedname'
+	gs 'npcstatic1'
+	gs 'npcstatic2'
+	gs 'npcstatic3'
+	gs 'npcstatic4'
+	gs 'npcstatic5'
+	i = arrsize('copy_npc_QW')
+	j = 1
+:loopnpcupdate
+	$boy = 'A<<j>>'
+	npc_QW[$boy] = copy_npc_QW[$boy]
+	npc_rel[$boy] = copy_npc_rel[$boy]
+	npc_love[$boy] = copy_npc_love[$boy]
+	$npc_usedname[$boy] = $copy_npc_usedname[$boy]
+	j += 1
+	if j <= i: jump 'loopnpcupdate'
+	killvar 'copy_npc_QW'
+	killvar 'copy_npc_rel'
+	killvar 'copy_npc_love'
+	killvar '$copy_npc_usedname'
+end
+
+!! this function returns the numeric index of the array element which is indexed by string value.
+!! call func('shortgs', 'get_me_index', 'name of array','string index')
+!! the array can be both numeric or string: Be aware, for the search is used the value 'SearchTag' for string arrays and -999 for numeric arrays.
+!! if the array consists such value, the fuction can mess the array content and return wrong value
+if $ARGS[0] = 'get_me_index':
+	$test = '<<$ARGS[1]>>[''<<$ARGS[2]>>'']'
+	testas0 = arrsize('<<$ARGS[1]>>')
+	if $mid($test,1,1)='$':
+		$temp=dyneval('$result=<<$test>>')
+		dynamic '<<$test>> = ''SearchTag'' '
+		testas1 = arrsize('<<$ARGS[1]>>')
+		if testas0 = testas1:
+			res = dyneval('result = arrpos(0,''<<$ARGS[1]>>'',''SearchTag'')')
+			dynamic '<<$test>> = ''<<$temp>>'' '
+		else
+			res = -1
+			killvar '<<$ARGS[1]>>',testas0
+		end
+	else
+		temp=dyneval('result=<<$test>>')
+		dynamic '<<$test>> = -999'
+		testas1 = arrsize('<<$ARGS[1]>>')
+		if testas0 = testas1:
+			res = dyneval('result = arrpos(0,''<<$ARGS[1]>>'',-999)')
+			dynamic '<<$test>> = <<temp>>'
+		else
+			res = -1
+			killvar '<<$ARGS[1]>>',testas0
+		end
+	end
+	result = res
+end
+
+
+!! call gs 'shortgs', 'remove_array_element', 'name of array','string index'
+if $ARGS[0] = 'remove_array_element':
+	i = func('shortgs', 'get_me_index', $ARGS[1],$ARGS[2])
+	killvar '<<$ARGS[1]>>',i
+end
+
+if $ARGS[0] = 'testsize':
+
+	arrsize('$npc_cur_rel')
+	arrsize('$npc_dad')
+	arrsize('$npc_dna')
+	arrsize('$npc_firstname')
+	arrsize('$npc_firstpart')
+	arrsize('$npc_kidpater')
+	arrsize('$npc_lastname')
+	arrsize('$npc_lastpart')
+	arrsize('$npc_mom')
+	arrsize('$npc_nickname')
+	arrsize('$npc_notes')
+	arrsize('$npc_orgasm_txt')
+	arrsize('$npc_PersType')
+	arrsize('$npc_pic')
+	arrsize('$npc_rel')
+	arrsize('$npc_thdick')
+	arrsize('$npc_usedname')
+	arrsize('npc_agil')
+	arrsize('npc_app')
+	arrsize('npc_apprnc')
+	arrsize('npc_ass')
+	arrsize('npc_bodyhair')
+	arrsize('npc_breath')
+	arrsize('npc_bust')
+	arrsize('npc_cloc')
+	arrsize('npc_clothpref')
+	arrsize('npc_cyc')
+	arrsize('npc_dance')
+	arrsize('npc_danceero')
+	arrsize('npc_def')
+	arrsize('npc_dick')
+	arrsize('npc_dnc')
+	arrsize('npc_dob')
+	arrsize('npc_dom')
+	arrsize('npc_drunk')
+	arrsize('npc_dye')
+	arrsize('npc_erodnc')
+	arrsize('npc_eyecol')
+	arrsize('npc_eyesize')
+	arrsize('npc_fat')
+	arrsize('npc_fert')
+	arrsize('npc_gender')
+	arrsize('npc_genwart')
+	arrsize('npc_glasses')
+	arrsize('npc_Godrep')
+	arrsize('npc_gon')
+	arrsize('npc_grades')
+	arrsize('npc_hair')
+	arrsize('npc_hairbsh')
+	arrsize('npc_haircol')
+	arrsize('npc_haircurl')
+	arrsize('npc_hairlng')
+	arrsize('npc_herpes')
+	arrsize('npc_hgt')
+	arrsize('npc_hipcurv')
+	arrsize('npc_Hiv')
+	arrsize('npc_horny')
+	arrsize('npc_hymen')
+	arrsize('npc_chem')
+	arrsize('npc_chess')
+	arrsize('npc_chlam')
+	arrsize('npc_int')
+	arrsize('npc_intel')
+	arrsize('npc_jab')
+	arrsize('npc_job')
+	arrsize('npc_kick')
+	arrsize('npc_lashes')
+	arrsize('npc_lip')
+	arrsize('npc_lipbalm')
+	arrsize('npc_lipstick')
+	arrsize('npc_love')
+	arrsize('npc_mag')
+	arrsize('npc_magik')
+	arrsize('npc_makeup')
+	arrsize('npc_malen')
+	arrsize('npc_nerd')
+	arrsize('npc_nips')
+	arrsize('npc_orgasm_txt')
+	arrsize('npc_pantys')
+	arrsize('npc_Pavrep')
+	arrsize('npc_pubes')
+	arrsize('npc_punch')
+	arrsize('npc_Qstlvl')
+	arrsize('npc_QW')
+	arrsize('npc_rel')
+	arrsize('npc_run')
+	arrsize('npc_serve')
+	arrsize('npc_serving')
+	arrsize('npc_sew')
+	arrsize('npc_sewing')
+	arrsize('npc_sex')
+	arrsize('npc_sexskill')
+	arrsize('npc_shoot')
+	arrsize('npc_sing')
+	arrsize('npc_skin')
+	arrsize('npc_spermpot')
+	arrsize('npc_spirit')
+	arrsize('npc_sprt')
+	arrsize('npc_str')
+	arrsize('npc_stren')
+	arrsize('npc_sub')
+	arrsize('npc_sweat')
+	arrsize('npc_syph')
+	arrsize('npc_syth')
+	arrsize('npc_tan')
+	arrsize('npc_teach')
+	arrsize('npc_thrush')
+	arrsize('npc_undies')
+	arrsize('npc_vag')
+	arrsize('npc_vball')
+	arrsize('npc_vit')
+	arrsize('npc_vital')
+	arrsize('npc_vokal')
+	arrsize('npcbrokehymen')
 end
 
 --- shortgs ---------------------------------
