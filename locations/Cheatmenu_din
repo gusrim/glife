@@ -1579,17 +1579,50 @@ $cheatmenu['DNA'] = {
 	clr
 	pl '<center><a href="exec:dynamic $cheatmenu"><b>Cheat menu</b></a><br>DNA string generation<br>If parents are not in game, leave the respective IDs empty</center>'
 	nl
-	if $cheatDNAC ! '':pl '<b>Selected Child: <<$npc_firstname[''<<$cheatDNAC>>'']>> <<$npc_lastname[''<<$cheatDNAC>>'']>></b> (<<$cheatDNAC>>)<br><<$npc_dna[$cheatDNAC]>>'
-	if $cheatDNAM ! '':pl '<b>Selected mother: <<$npc_firstname[''<<$cheatDNAM>>'']>> <<$npc_lastname[''<<$cheatDNAM>>'']>></b> (<<$cheatDNAM>>)<br><<$npc_dna[$cheatDNAM]>>'
-	if $cheatDNAF ! '':pl '<b>Selected father: <<$npc_firstname[''<<$cheatDNAF>>'']>> <<$npc_lastname[''<<$cheatDNAF>>'']>></b> (<<$cheatDNAF>>)<br><<$npc_dna[$cheatDNAF]>>'
-	nl
-	if $cheatDNAM ! '': pl '<a href="exec:killvar ''cheatDNAM'' & dynamic $cheatmenu[''DNA'']">Remove mother DNA</a>'
-	if $cheatDNAF ! '': pl '<a href="exec:killvar ''cheatDNAF'' & dynamic $cheatmenu[''DNA'']">Remove father DNA</a>'
-	if $cheatDNAC ! '': pl '<a href="exec:killvar ''cheatDNAC'' & dynamic $cheatmenu[''DNA'']">Remove Child DNA</a>'
-	nl
-	pl '<a href="exec:killvar ''tempDNAM'' & dynamic $cheatmenu[''DNAM'']"><b>ID of mother (if it is known)</b></a>'
-	pl '<a href="exec:killvar ''tempDNAF'' & dynamic $cheatmenu[''DNAF'']"><b>ID of father (if it is known)</b></a>'
-	pl '<a href="exec:killvar ''tempDNAC'' & dynamic $cheatmenu[''DNAC'']"><b>ID of Child (if it is known)</b></a>'
+	if $cheatDNAC ! '':
+		pl '<b>Child: <<$npc_firstname[''<<$cheatDNAC>>'']>> <<$npc_lastname[''<<$cheatDNAC>>'']>></b> (<<$cheatDNAC>>)<br><<$npc_dna[$cheatDNAC]>><br><a href="exec:killvar ''cheatDNAC'' & dynamic $cheatmenu[''DNA'']">Remove</a>'
+		npctemp = 0
+		killvar 'cheatDNAM'
+		killvar 'cheatDNAF'
+		:npcparentfind
+			if $npc_dna['A<<npctemp>>'] ! '':
+				if mid($npc_dna['A<<npctemp>>'],1,10) = mid($npc_dna[$cheatDNAC],12,10):
+					$cheatDNAM = 'A<<npctemp>>'
+				elseif mid($npc_dna['A<<npctemp>>'],1,10) = mid($npc_dna[$cheatDNAC],23,10):
+					$cheatDNAF = 'A<<npctemp>>'
+				end
+			end
+			if $npc_dna['B<<npctemp>>'] ! '':
+				if mid($npc_dna['B<<npctemp>>'],1,10) = mid($npc_dna[$cheatDNAC],12,10):
+					$cheatDNAM = 'B<<npctemp>>'
+				elseif mid($npc_dna['B<<npctemp>>'],1,10) = mid($npc_dna[$cheatDNAC],23,10):
+					$cheatDNAF = 'B<<npctemp>>'
+				end
+			end
+			if $npc_dna['C<<npctemp>>'] ! '':
+				if mid($npc_dna['C<<npctemp>>'],1,10) = mid($npc_dna[$cheatDNAC],12,10):
+					$cheatDNAM = 'C<<npctemp>>'
+				elseif mid($npc_dna['C<<npctemp>>'],1,10) = mid($npc_dna[$cheatDNAC],23,10):
+					$cheatDNAF = 'C<<npctemp>>'
+				end
+			end
+		if ($npc_dna['A<<npctemp>>'] ! '' or $npc_dna['B<<npctemp>>'] ! '' or $npc_dna['C<<npctemp>>'] ! '') and ($cheatDNAM = '' or $cheatDNAF = ''):npctemp += 1 & jump 'npcparentfind'
+		killvar 'npctemp'
+	else
+		pl '<a href="exec:killvar ''tempDNAC'' & dynamic $cheatmenu[''DNAC'']"><b>ID of child (if it is known)</b></a>'
+	end
+	
+	if $cheatDNAM ! '':
+		pl '<br><b>Mother: <<$npc_firstname[''<<$cheatDNAM>>'']>> <<$npc_lastname[''<<$cheatDNAM>>'']>></b> (<<$cheatDNAM>>)<br><<$npc_dna[$cheatDNAM]>><br><a href="exec:killvar ''cheatDNAM'' & dynamic $cheatmenu[''DNA'']">Remove</a>'
+	else
+		pl '<br><a href="exec:killvar ''tempDNAM'' & dynamic $cheatmenu[''DNAM'']"><b>ID of mother (if it is known)</b></a>'
+	end
+	
+	if $cheatDNAF ! '':
+		pl '<br><b>Father: <<$npc_firstname[''<<$cheatDNAF>>'']>> <<$npc_lastname[''<<$cheatDNAF>>'']>></b> (<<$cheatDNAF>>)<br><<$npc_dna[$cheatDNAF]>><br><a href="exec:killvar ''cheatDNAF'' & dynamic $cheatmenu[''DNA'']">Remove</a>'
+	else
+		pl '<br><a href="exec:killvar ''tempDNAF'' & dynamic $cheatmenu[''DNAF'']"><b>ID of father (if it is known)</b></a>'
+	end
 	nl
 	if $cheatDNAM ! '' and $cheatDNAF ! '':
 		$cheatDNAgenerated = func('DNA','generate',$npc_dna[$cheatDNAM],$npc_dna[$cheatDNAF])
@@ -1619,12 +1652,99 @@ $cheatmenu['DNA'] = {
 		
 		
 	end
-	if $cheatDNAM = '':pl '<b>Random mother DNA:</b> <<$tempDNAM>>'
-	if $cheatDNAF = '':pl '<b>Random father DNA:</b> <<$tempDNAF>>'
-	nl
-	pl '<b>Generated DNA strand (please copy it, not preserved):</b> <<$cheatDNAgenerated>>'
-	nl
-	pl '<a href="exec:dynamic $cheatmenu[''DNA'']">Generate again</a>'
+	if $cheatDNAM = '':pl '<br><b>Random mother DNA:</b> <<$tempDNAM>>'
+	if $cheatDNAF = '':pl '<br><b>Random father DNA:</b> <<$tempDNAF>>'
+	if $cheatDNAC = '':pl '<br><b>Random child DNA:</b> <<$cheatDNAgenerated>>'
+	pl '<br><a href="exec:dynamic $cheatmenu[''DNA'']">Generate again</a>'
+	if $cheatDNAC ! '':
+		npctemp = 0
+		:npcgparfind
+			if $npc_dna['A<<npctemp>>'] ! '':
+				if mid($npc_dna[$cheatDNAC],34,10) = mid($npc_dna['A<<npctemp>>'],1,10) or mid($npc_dna[$cheatDNAC],56,10) = mid($npc_dna['A<<npctemp>>'],1,10):
+					pl '<br><b>Grandmother: <<$npc_firstname[''A<<npctemp>>'']>> <<$npc_lastname[''A<<npctemp>>'']>></b> (A<<npctemp>>)<br><<$npc_dna[''A<<npctemp>>'']>>'
+				elseif mid($npc_dna[$cheatDNAC],45,10) = mid($npc_dna['A<<npctemp>>'],1,10) or mid($npc_dna[$cheatDNAC],67,10) = mid($npc_dna['A<<npctemp>>'],1,10):
+					pl '<br><b>Grandfather: <<$npc_firstname[''A<<npctemp>>'']>> <<$npc_lastname[''A<<npctemp>>'']>></b> (A<<npctemp>>)<br><<$npc_dna[''A<<npctemp>>'']>>'
+				end
+			end
+			if $npc_dna['B<<npctemp>>'] ! '':
+				if mid($npc_dna[$cheatDNAC],34,10) = mid($npc_dna['B<<npctemp>>'],1,10) or mid($npc_dna[$cheatDNAC],56,10) = mid($npc_dna['B<<npctemp>>'],1,10):
+					pl '<br><b>Grandmother: <<$npc_firstname[''B<<npctemp>>'']>> <<$npc_lastname[''B<<npctemp>>'']>></b> (B<<npctemp>>)<br><<$npc_dna[''B<<npctemp>>'']>>'
+				elseif mid($npc_dna[$cheatDNAC],45,10) = mid($npc_dna['A<<npctemp>>'],1,10) or mid($npc_dna[$cheatDNAC],67,10) = mid($npc_dna['B<<npctemp>>'],1,10):
+					pl '<br><b>Grandfather: <<$npc_firstname[''B<<npctemp>>'']>> <<$npc_lastname[''B<<npctemp>>'']>></b> (B<<npctemp>>)<br><<$npc_dna[''B<<npctemp>>'']>>'
+				end
+			end
+			if $npc_dna['C<<npctemp>>'] ! '':
+				if mid($npc_dna[$cheatDNAC],34,10) = mid($npc_dna['C<<npctemp>>'],1,10) or mid($npc_dna[$cheatDNAC],56,10) = mid($npc_dna['C<<npctemp>>'],1,10):
+					pl '<br><b>Grandmother: <<$npc_firstname[''C<<npctemp>>'']>> <<$npc_lastname[''C<<npctemp>>'']>></b> (C<<npctemp>>)<br><<$npc_dna[''C<<npctemp>>'']>>'
+				elseif mid($npc_dna[$cheatDNAC],45,10) = mid($npc_dna['C<<npctemp>>'],1,10) or mid($npc_dna[$cheatDNAC],67,10) = mid($npc_dna['A<<npctemp>>'],1,10):
+					pl '<br><b>Grandfather: <<$npc_firstname[''C<<npctemp>>'']>> <<$npc_lastname[''C<<npctemp>>'']>></b> (C<<npctemp>>)<br><<$npc_dna[''C<<npctemp>>'']>>'
+				end
+			end
+		if $npc_dna['A<<npctemp>>'] ! '' or $npc_dna['B<<npctemp>>'] ! '' or $npc_dna['C<<npctemp>>'] ! '':npctemp += 1 & jump 'npcgparfind'
+	end
+	if $cheatDNAM ! '' or $cheatDNAF ! '':
+		npctemp = 0
+		:npcchildfind
+			if $npc_dna['A<<npctemp>>'] ! '':
+				if $cheatDNAM ! '' and $cheatDNAF = '' and mid($npc_dna['A<<npctemp>>'],12,10) = mid($npc_dna[$cheatDNAM],1,10):
+					pl '<br><b>Existing child: <<$npc_firstname[''A<<npctemp>>'']>> <<$npc_lastname[''A<<npctemp>>'']>></b> (A<<npctemp>>)<br><<$npc_dna[''A<<npctemp>>'']>>'
+				elseif $cheatDNAM = '' and $cheatDNAF ! '' and mid($npc_dna['A<<npctemp>>'],23,10) = mid($npc_dna[$cheatDNAF],1,10):
+					pl '<br><b>Existing child: <<$npc_firstname[''A<<npctemp>>'']>> <<$npc_lastname[''A<<npctemp>>'']>></b> (A<<npctemp>>)<br><<$npc_dna[''A<<npctemp>>'']>>'
+				elseif mid($npc_dna['A<<npctemp>>'],12,10) = mid($npc_dna[$cheatDNAM],1,10) and mid($npc_dna['A<<npctemp>>'],23,10) = mid($npc_dna[$cheatDNAF],1,10):
+					pl '<br><b>Existing child: <<$npc_firstname[''A<<npctemp>>'']>> <<$npc_lastname[''A<<npctemp>>'']>></b> (A<<npctemp>>)<br><<$npc_dna[''A<<npctemp>>'']>>'
+				end
+			end
+			if $npc_dna['B<<npctemp>>'] ! '':
+				if $cheatDNAM ! '' and $cheatDNAF = '' and mid($npc_dna['B<<npctemp>>'],12,10) = mid($npc_dna[$cheatDNAM],1,10):
+					pl '<br><b>Existing child: <<$npc_firstname[''B<<npctemp>>'']>> <<$npc_lastname[''B<<npctemp>>'']>></b> (B<<npctemp>>)<br><<$npc_dna[''B<<npctemp>>'']>>'
+				elseif $cheatDNAM = '' and $cheatDNAF ! '' and mid($npc_dna['B<<npctemp>>'],23,10) = mid($npc_dna[$cheatDNAF],1,10):
+					pl '<br><b>Existing child: <<$npc_firstname[''B<<npctemp>>'']>> <<$npc_lastname[''B<<npctemp>>'']>></b> (B<<npctemp>>)<br><<$npc_dna[''B<<npctemp>>'']>>'
+				elseif mid($npc_dna['B<<npctemp>>'],12,10) = mid($npc_dna[$cheatDNAM],1,10) and mid($npc_dna['B<<npctemp>>'],23,10) = mid($npc_dna[$cheatDNAF],1,10):
+					pl '<br><b>Existing child: <<$npc_firstname[''B<<npctemp>>'']>> <<$npc_lastname[''B<<npctemp>>'']>></b> (B<<npctemp>>)<br><<$npc_dna[''B<<npctemp>>'']>>'
+				end
+			end
+			if $npc_dna['C<<npctemp>>'] ! '':
+				if $cheatDNAM ! '' and $cheatDNAF = '' and mid($npc_dna['C<<npctemp>>'],12,10) = mid($npc_dna[$cheatDNAM],1,10):
+					pl '<br><b>Existing child: <<$npc_firstname[''C<<npctemp>>'']>> <<$npc_lastname[''C<<npctemp>>'']>></b> (C<<npctemp>>)<br><<$npc_dna[''C<<npctemp>>'']>>'
+				elseif $cheatDNAM = '' and $cheatDNAF ! '' and mid($npc_dna['C<<npctemp>>'],23,10) = mid($npc_dna[$cheatDNAF],1,10):
+					pl '<br><b>Existing child: <<$npc_firstname[''C<<npctemp>>'']>> <<$npc_lastname[''C<<npctemp>>'']>></b> (C<<npctemp>>)<br><<$npc_dna[''C<<npctemp>>'']>>'
+				elseif mid($npc_dna['C<<npctemp>>'],12,10) = mid($npc_dna[$cheatDNAM],1,10) and mid($npc_dna['C<<npctemp>>'],23,10) = mid($npc_dna[$cheatDNAF],1,10):
+					pl '<br><b>Existing child: <<$npc_firstname[''C<<npctemp>>'']>> <<$npc_lastname[''C<<npctemp>>'']>></b> (C<<npctemp>>)<br><<$npc_dna[''C<<npctemp>>'']>>'
+				end
+			end
+		if $npc_dna['A<<npctemp>>'] ! '' or $npc_dna['B<<npctemp>>'] ! '' or $npc_dna['C<<npctemp>>'] ! '':npctemp += 1 & jump 'npcchildfind'
+		npctemp = 0
+		:npcgchildfind
+			if $npc_dna['A<<npctemp>>'] ! '':
+				if $cheatDNAM ! '' and $cheatDNAF = '' and (mid($npc_dna['A<<npctemp>>'],34,10) = mid($npc_dna[$cheatDNAM],1,10) or mid($npc_dna['A<<npctemp>>'],56,10) = mid($npc_dna[$cheatDNAM],1,10)):
+					pl '<br><b>Existing grandchild: <<$npc_firstname[''A<<npctemp>>'']>> <<$npc_lastname[''A<<npctemp>>'']>></b> (A<<npctemp>>)<br><<$npc_dna[''A<<npctemp>>'']>>'
+				elseif $cheatDNAM = '' and $cheatDNAF ! '' and (mid($npc_dna['A<<npctemp>>'],45,10) = mid($npc_dna[$cheatDNAF],1,10) or mid($npc_dna['A<<npctemp>>'],67,10) = mid($npc_dna[$cheatDNAF],1,10)):
+					pl '<br><b>Existing grandchild: <<$npc_firstname[''A<<npctemp>>'']>> <<$npc_lastname[''A<<npctemp>>'']>></b> (A<<npctemp>>)<br><<$npc_dna[''A<<npctemp>>'']>>'
+				elseif ((mid($npc_dna['A<<npctemp>>'],34,10) = mid($npc_dna[$cheatDNAM],1,10) or mid($npc_dna['A<<npctemp>>'],56,10) = mid($npc_dna[$cheatDNAM],1,10)) and (mid($npc_dna['A<<npctemp>>'],45,10) = mid($npc_dna[$cheatDNAF],1,10) or mid($npc_dna['A<<npctemp>>'],67,10) = mid($npc_dna[$cheatDNAF],1,10))) or (mid($npc_dna['A<<npctemp>>'],12,10) = mid($npc_dna[$cheatDNAM],1,10) and (mid($npc_dna['A<<npctemp>>'],45,10) = mid($npc_dna[$cheatDNAF],1,10) or mid($npc_dna['A<<npctemp>>'],67,10) = mid($npc_dna[$cheatDNAF],1,10))) or ((mid($npc_dna['A<<npctemp>>'],34,10) = mid($npc_dna[$cheatDNAM],1,10) or mid($npc_dna['A<<npctemp>>'],56,10) = mid($npc_dna[$cheatDNAM],1,10)) and mid($npc_dna['A<<npctemp>>'],23,10) = mid($npc_dna[$cheatDNAF],1,10)):
+					pl '<br><b>Existing grandchild: <<$npc_firstname[''A<<npctemp>>'']>> <<$npc_lastname[''A<<npctemp>>'']>></b> (A<<npctemp>>)<br><<$npc_dna[''A<<npctemp>>'']>>'
+				end
+			end
+			if $npc_dna['B<<npctemp>>'] ! '':
+				if $cheatDNAM ! '' and $cheatDNAF = '' and (mid($npc_dna['B<<npctemp>>'],34,10) = mid($npc_dna[$cheatDNAM],1,10) or mid($npc_dna['B<<npctemp>>'],56,10) = mid($npc_dna[$cheatDNAM],1,10)):
+					pl '<br><b>Existing grandchild: <<$npc_firstname[''B<<npctemp>>'']>> <<$npc_lastname[''B<<npctemp>>'']>></b> (B<<npctemp>>)<br><<$npc_dna[''B<<npctemp>>'']>>'
+				elseif $cheatDNAM = '' and $cheatDNAF ! '' and (mid($npc_dna['B<<npctemp>>'],45,10) = mid($npc_dna[$cheatDNAF],1,10) or mid($npc_dna['B<<npctemp>>'],67,10) = mid($npc_dna[$cheatDNAF],1,10)):
+					pl '<br><b>Existing grandchild: <<$npc_firstname[''B<<npctemp>>'']>> <<$npc_lastname[''B<<npctemp>>'']>></b> (B<<npctemp>>)<br><<$npc_dna[''B<<npctemp>>'']>>'
+				elseif ((mid($npc_dna['B<<npctemp>>'],34,10) = mid($npc_dna[$cheatDNAM],1,10) or mid($npc_dna['B<<npctemp>>'],56,10) = mid($npc_dna[$cheatDNAM],1,10)) and (mid($npc_dna['B<<npctemp>>'],45,10) = mid($npc_dna[$cheatDNAF],1,10) or mid($npc_dna['B<<npctemp>>'],67,10) = mid($npc_dna[$cheatDNAF],1,10))) or (mid($npc_dna['B<<npctemp>>'],12,10) = mid($npc_dna[$cheatDNAM],1,10) and (mid($npc_dna['B<<npctemp>>'],45,10) = mid($npc_dna[$cheatDNAF],1,10) or mid($npc_dna['B<<npctemp>>'],67,10) = mid($npc_dna[$cheatDNAF],1,10))) or ((mid($npc_dna['B<<npctemp>>'],34,10) = mid($npc_dna[$cheatDNAM],1,10) or mid($npc_dna['B<<npctemp>>'],56,10) = mid($npc_dna[$cheatDNAM],1,10)) and mid($npc_dna['B<<npctemp>>'],23,10) = mid($npc_dna[$cheatDNAF],1,10)):
+					pl '<br><b>Existing grandchild: <<$npc_firstname[''B<<npctemp>>'']>> <<$npc_lastname[''B<<npctemp>>'']>></b> (B<<npctemp>>)<br><<$npc_dna[''B<<npctemp>>'']>>'
+				end
+			end
+			if $npc_dna['C<<npctemp>>'] ! '':
+				if $cheatDNAM ! '' and $cheatDNAF = '' and (mid($npc_dna['C<<npctemp>>'],34,10) = mid($npc_dna[$cheatDNAM],1,10) or mid($npc_dna['C<<npctemp>>'],56,10) = mid($npc_dna[$cheatDNAM],1,10)):
+					pl '<br><b>Existing grandchild: <<$npc_firstname[''C<<npctemp>>'']>> <<$npc_lastname[''C<<npctemp>>'']>></b> (C<<npctemp>>)<br><<$npc_dna[''C<<npctemp>>'']>>'
+				elseif $cheatDNAM = '' and $cheatDNAF ! '' and (mid($npc_dna['C<<npctemp>>'],45,10) = mid($npc_dna[$cheatDNAF],1,10) or mid($npc_dna['C<<npctemp>>'],67,10) = mid($npc_dna[$cheatDNAF],1,10)):
+					pl '<br><b>Existing grandchild: <<$npc_firstname[''C<<npctemp>>'']>> <<$npc_lastname[''C<<npctemp>>'']>></b> (C<<npctemp>>)<br><<$npc_dna[''C<<npctemp>>'']>>'
+				elseif ((mid($npc_dna['C<<npctemp>>'],34,10) = mid($npc_dna[$cheatDNAM],1,10) or mid($npc_dna['C<<npctemp>>'],56,10) = mid($npc_dna[$cheatDNAM],1,10)) and (mid($npc_dna['C<<npctemp>>'],45,10) = mid($npc_dna[$cheatDNAF],1,10) or mid($npc_dna['C<<npctemp>>'],67,10) = mid($npc_dna[$cheatDNAF],1,10))) or (mid($npc_dna['C<<npctemp>>'],12,10) = mid($npc_dna[$cheatDNAM],1,10) and (mid($npc_dna['C<<npctemp>>'],45,10) = mid($npc_dna[$cheatDNAF],1,10) or mid($npc_dna['C<<npctemp>>'],67,10) = mid($npc_dna[$cheatDNAF],1,10))) or ((mid($npc_dna['C<<npctemp>>'],34,10) = mid($npc_dna[$cheatDNAM],1,10) or mid($npc_dna['C<<npctemp>>'],56,10) = mid($npc_dna[$cheatDNAM],1,10)) and mid($npc_dna['C<<npctemp>>'],23,10) = mid($npc_dna[$cheatDNAF],1,10)):
+					pl '<br><b>Existing grandchild: <<$npc_firstname[''C<<npctemp>>'']>> <<$npc_lastname[''C<<npctemp>>'']>></b> (C<<npctemp>>)<br><<$npc_dna[''C<<npctemp>>'']>>'
+				end
+			end
+		if $npc_dna['A<<npctemp>>'] ! '' or $npc_dna['B<<npctemp>>'] ! '' or $npc_dna['C<<npctemp>>'] ! '':npctemp += 1 & jump 'npcgchildfind'
+		killvar 'npctemp'
+	end
 	killvar '$tempDNAF'
 	killvar '$tempDNAM'
 	killvar '$tempDNAC'
