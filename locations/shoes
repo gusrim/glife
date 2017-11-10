@@ -84,10 +84,11 @@ if $ARGS[0] = 'view_shoe_list':
 	!! ARGS 2 - brothel flag (brothel)
 
 
-	act 'Leave':gt 'shoes', 'select'
+	act 'Return':gt 'wardrobe'
 
 	if $ARGS[1] ! 'sell' :
-		'<center><b>Selecting shoes to wear with <<$cloType>> outfit</b></center>'
+		'<center><b>Select shoes to wear</b></center>'
+		act 'Remove shoes': gt 'shoes', 'strip'
 	end
 
 	$bgcolor='#f3f4ee'
@@ -98,37 +99,35 @@ if $ARGS[0] = 'view_shoe_list':
 		'<table border=0 cellspacing=0 cellpadding=5><TH></TH><TH>Shoe</TH><TH>Description</TH><TH>Bimbo</TH><TH>Stripper</TH><TH>Actions</TH>'
 	end
 
-	if $cloType ! 'exercise':
-		i = 1
-		:loopsboutique
-			if sboutique[i] = 1:*P dyneval($shoe_list_line, $ARGS[1], 'boutique', i)
-			i += 1
-		if i <= 37:jump 'loopsboutique'
+	i = 1
+	:loopsboutique
+		if sboutique[i] = 1:*P dyneval($shoe_list_line, $ARGS[1], 'boutique', i)
+		i += 1
+	if i <= 37:jump 'loopsboutique'
 
-		i = 1
-		:loopspussy
-			if spussy[i] = 1:*P dyneval($shoe_list_line, $ARGS[1], 'pussy', i)
-			i += 1
-		if i <= 38:jump 'loopspussy'
+	i = 1
+	:loopspussy
+		if spussy[i] = 1:*P dyneval($shoe_list_line, $ARGS[1], 'pussy', i)
+		i += 1
+	if i <= 38:jump 'loopspussy'
 
-		i = 1
-		:loopsdolls
-			if sdolls[i] = 1:*P dyneval($shoe_list_line, $ARGS[1], 'dolls', i)
-			i += 1
-		if i <= 27:jump 'loopsdolls'
+	i = 1
+	:loopsdolls
+		if sdolls[i] = 1:*P dyneval($shoe_list_line, $ARGS[1], 'dolls', i)
+		i += 1
+	if i <= 27:jump 'loopsdolls'
 
-		i = 1
-		:loopsfetish
-			if sfetish[i] = 1:*P dyneval($shoe_list_line, $ARGS[1], 'fetish', i)
-			i += 1
-		if i <= 27:jump 'loopsfetish'
+	i = 1
+	:loopsfetish
+		if sfetish[i] = 1:*P dyneval($shoe_list_line, $ARGS[1], 'fetish', i)
+		i += 1
+	if i <= 27:jump 'loopsfetish'
 
-		i = 1
-		:loopsgandm
-			if sgandm[i] = 1:*P dyneval($shoe_list_line, $ARGS[1], 'gandm', i)
-			i += 1
-		if i <= 51:jump 'loopsgandm'
-	end
+	i = 1
+	:loopsgandm
+		if sgandm[i] = 1:*P dyneval($shoe_list_line, $ARGS[1], 'gandm', i)
+		i += 1
+	if i <= 51:jump 'loopsgandm'
 
 	i = 1
 	:loopstrainers
@@ -185,34 +184,21 @@ if $ARGS[0] = 'view_shoe_item':
 	elseif $ARGS[1] = 'wardrobe':
 		act 'Leave in closet':gt 'shoes', 'view_shoe_list', $ARGS[1]
 
-		act 'Set as default for <<$cloType>> outfit':
-			if $cloType = 'cheap':
-				$cheapshoetype = $ARGS[2]
-			elseif $cloType = 'average':
-				$averageshoetype = $ARGS[2]
-			elseif $cloType = 'expensive':
-				$expensiveshoetype = $ARGS[2]
-			elseif $cloType = 'formal':
-				$formalshoetype = $ARGS[2]
-			elseif $cloType = 'office':
-				$officeshoetype = $ARGS[2]
-			elseif $cloType = 'school':
-				$schoolshoetype = $ARGS[2]
-			elseif $cloType = 'exercise':
-				$exerciseshoetype = $ARGS[2]
-			elseif $cloType = 'fetish':
-				$fetishshoetype = $ARGS[2]
-			elseif $cloType = 'exhibit':
-				$exhibitshoetype = $ARGS[2]
-			elseif $cloType = 'uniform':
-				$uniformshoetype = $ARGS[2]
-			elseif $cloType = 'burlesque':
-				$burlesqueshoetype = $ARGS[2]
-			elseif $cloType = 'alternative':
-				$alternativeshoetype = $ARGS[2]
-			end
-			dynamic '<<$cloType>>shoenumber = <<ARGS[3]>>'
-			gt 'shoes', 'view_shoe_list', $ARGS[1]
+		act 'Wear':
+			gs 'shoes', 'wear', $ARGS[2], ARGS[3]
+			killvar '$cheapshoetype'
+			killvar '$averageshoetype'
+			killvar '$expensiveshoetype'
+			killvar '$formalshoetype'
+			killvar '$officeshoetype'
+			killvar '$schoolshoetype'
+			killvar '$exerciseshoetype'
+			killvar '$fetishshoetype'
+			killvar '$exhibitshoetype'
+			killvar '$uniformshoetype'
+			killvar '$burlesqueshoetype'
+			killvar '$alternativeshoetype'
+			gt 'wardrobe'
 		end
 	end
 end
