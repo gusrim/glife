@@ -187,18 +187,6 @@ if $ARGS[0] = 'view_shoe_item':
 
 		act 'Wear':
 			gs 'shoes', 'wear', $ARGS[2], ARGS[3]
-			killvar '$cheapshoetype'
-			killvar '$averageshoetype'
-			killvar '$expensiveshoetype'
-			killvar '$formalshoetype'
-			killvar '$officeshoetype'
-			killvar '$schoolshoetype'
-			killvar '$exerciseshoetype'
-			killvar '$fetishshoetype'
-			killvar '$exhibitshoetype'
-			killvar '$uniformshoetype'
-			killvar '$burlesqueshoetype'
-			killvar '$alternativeshoetype'
 			gt 'wardrobe'
 		end
 	end
@@ -207,6 +195,8 @@ end
 if $ARGS[0] = 'strip':
 	if $shoesworntype = 'none': exit
 
+	$shoelastworntype = $shoeworntype
+	shoelastwornnumber = shoewornnumber
 	$shoeworntype = 'none'
 	shoewornnumber = 0
 	ShoQuality = 0
@@ -220,35 +210,6 @@ if $ARGS[0] = 'strip':
 end
 
 if $ARGS[0] = 'setup':
-	if $cloType = 'cheap':
-		$shoeworntype = $cheapshoetype
-	elseif $cloType = 'average':
-		$shoeworntype = $averageshoetype
-	elseif $cloType = 'expensive':
-		$shoeworntype = $expensiveshoetype
-	elseif $cloType = 'formal':
-		$shoeworntype = $formalshoetype
-	elseif $cloType = 'office':
-		$shoeworntype = $officeshoetype
-	elseif $cloType = 'school':
-		$shoeworntype = $schoolshoetype
-	elseif $cloType = 'exercise':
-		$shoeworntype = $exerciseshoetype
-	elseif $cloType = 'fetish':
-		$shoeworntype = $fetishshoetype
-	elseif $cloType = 'exhibit':
-		$shoeworntype = $exhibitshoetype
-	elseif $cloType = 'uniform':
-		$shoeworntype = $uniformshoetype
-	elseif $cloType = 'burlesque':
-		$shoeworntype = $burlesqueshoetype
-	elseif $cloType = 'alternative':
-		$shoeworntype = $alternativeshoetype
-	else
-		$shoeworntype = 'none'
-	end
-		
-	dynamic 'shoewornnumber = <<$cloType>>shoenumber'
 end
 	
 if $ARGS[0] = 'wear':
@@ -256,8 +217,13 @@ if $ARGS[0] = 'wear':
 	!! ARGS 1 - shoe type name
 	!! ARGS 2 - shoe index
 
-	$shoeworntype = $ARGS[1]
-	shoewornnumber = ARGS[2]
+	if $ARGS[0] = 'last_worn':
+		$shoeworntype = $shoelastworntype
+		shoewornnumber = shoelastwornnumber
+	else
+		$shoeworntype = $ARGS[1]
+		shoewornnumber = ARGS[2]
+	end
 
 	if $shoeworntype = 'none':
 		PShoQuaility = 0
