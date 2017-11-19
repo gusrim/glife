@@ -1,4 +1,5 @@
 # cloakroom
+
 $coat_list_line = {
 	!! a single line in a clothing list (wardrobe, etc)
 	!! ARGS 0 - clothing index
@@ -74,7 +75,9 @@ if $ARGS[0] = 'view_coat_list':
 
 	'</table>'
 
-	act 'Return':gt 'wardrobe'
+	act 'Return to overview':gt 'wardrobe'
+	
+	act 'Leave': gt $loc, $metka
 
 end
 
@@ -94,8 +97,6 @@ if $ARGS[0] = 'view_coat_item':
 	$RESULT += ')'
 	'<<$RESULT>>'
 
-
-	act 'Return':gt 'cloakroom', 'view_coat_list'
 	!! if the clothing is worn out
 	if dyneval('RESULT = coatH[<<ARGS[1]>>]') <= 0:
 		'This item is worn and is not suitable for further wear.'
@@ -105,11 +106,17 @@ if $ARGS[0] = 'view_coat_item':
 		end
 	end
 	if defaultcoat ! '<<ARGS[1]>>':
-		act 'Set as default':
+		act 'Wear this coat when outdoors in the cold':
 			defaultcoat = '<<ARGS[1]>>'
 			gt 'wardrobe'
 		end
 	end
+
+	act 'Return to coats':gt 'cloakroom', 'view_coat_list'
+
+	act 'Return to overview':gt 'wardrobe'
+
+	act 'Leave': gt $loc, $metka
 end
 
 --- cloakroom ---------------------------------
