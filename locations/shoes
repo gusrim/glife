@@ -4,7 +4,7 @@
 
 $shoe_list_line = {
 	!! a single line in a shoe list (shoe rack, etc)
-	!! ARGS 0 - action type (shoe rack, sell, resize, store, forsale)
+	!! ARGS 0 - action type (shoe rack, sell, store, forsale)
 	!! ARGS 1 - shoe type
 	!! ARGS 2 - shoe index
 
@@ -21,7 +21,7 @@ $shoe_list_line = {
 	else
 		shoe_temp = 75 & !shoe widdefault to 75
 	end
-	$RESULT +='<TD><a href="exec:gt ''shoes'', ''view_shoe_item'', ''<<$ARGS[0]>>'', ''<<$ARGS[1]>>'', <<ARGS[2]>>"><img src="<<FUNC(''$shoe_image'', $ARGS[1], ARGS[2])>>" width="<<shoe_temp>>"></a></TD>'
+	$RESULT +='<center><TD><a href="exec:gt ''shoes'', ''view_shoe_item'', ''<<$ARGS[0]>>'', ''<<$ARGS[1]>>'', <<ARGS[2]>>"><img src="<<FUNC(''$shoe_image'', $ARGS[1], ARGS[2])>>" width="<<shoe_temp>>"></a></TD>'
 	killvar 'shoe_temp'
 	gs 'shoe_attributes', $ARGS[1], ARGS[2]
 
@@ -42,15 +42,42 @@ $shoe_list_line = {
 	
 	$RESULT += '<TD><a href="exec:gt ''shoes'', ''view_shoe_item'', ''<<$ARGS[0]>>'', ''<<$ARGS[1]>>'', <<ARGS[2]>>">View</a></TD>'
 
+	$RESULT += '<TD></center>'
+	if sloc ! 1:$RESULT += ' <a href="exec:gt ''shoes'', ''dest1'', ''<<$ARGS[0]>>'', ''<<$ARGS[1]>>'', <<ARGS[2]>>">Storage</a><BR>'
+	if sloc ! 0:$RESULT += ' <a href="exec:gt ''shoes'', ''dest0'', ''<<$ARGS[0]>>'', ''<<$ARGS[1]>>'', <<ARGS[2]>>">Wardrobe</a><BR>'
+	if $ARGS[1] ! 'school' or ARGS[2] ! 6:
+		if sloc ! 2:$RESULT += ' <a href="exec:gt ''shoes'', ''dest2'', ''<<$ARGS[0]>>'', ''<<$ARGS[1]>>'', <<ARGS[2]>>">Unwanted</a>'
+	end
+	$RESULT += '</TD>'
 }
+
+if $ARGS[0] = 'dest0':
+	*clr
+	dynamic 's<<$ARGS[2]>>S[<<ARGS[3]>>] = 0'
+	gt 'shoes', 'view_shoe_list', $ARGS[1]
+end
+
+if $ARGS[0] = 'dest1':
+	*clr
+	dynamic 's<<$ARGS[2]>>S[<<ARGS[3]>>] = 1'
+	gt 'shoes', 'view_shoe_list', $ARGS[1]
+end
+
+if $ARGS[0] = 'dest2':
+	*clr
+	dynamic 's<<$ARGS[2]>>S[<<ARGS[3]>>] = 2'
+	gt 'shoes', 'view_shoe_list', $ARGS[1]
+end
 
 if $ARGS[0] = 'view_shoe_list':
 	!! ARGS 0 - view_shoe_list
-	!! ARGS 1 - action type (wardrobe, sell)
+	!! ARGS 1 - action type (wardrobe, storage, unwanted, sell)
 	!! ARGS 2 - brothel flag (brothel)
 
 
 	act 'Return':gt 'wardrobe'
+
+	if $ARGS[1] ! 'sell' :'<center><table border=1><TH><a href="exec:gt ''shoes'', ''view_shoe_list'', ''wardrobe''">Wardrobe </a></TH><TH><a href="exec:gt ''shoes'', ''view_shoe_list'', ''store''">Storage</a></TH><TH><a href="exec:gt ''shoes'', ''view_shoe_list'', ''unwanted''">Unwanted</a></TH></table></center>'
 
 	if $ARGS[1] ! 'sell' :
 		'<center><b>Select shoes to wear</b></center>'
@@ -61,6 +88,18 @@ if $ARGS[0] = 'view_shoe_list':
 			end
 		end
 	end
+	
+	if $ARGS[1] = 'wardrobe':
+		sloc = 0
+	end
+	
+	if $ARGS[1] = 'store':
+		sloc = 1
+	end
+	
+	if $ARGS[1] = 'unwanted':
+		sloc = 2
+	end
 
 	$bgcolor='#f3f4ee'
 
@@ -68,37 +107,37 @@ if $ARGS[0] = 'view_shoe_list':
 
 	i = 1
 	:loopsboutique
-		if sboutique[i] = 1:*P dyneval($shoe_list_line, $ARGS[1], 'boutique', i)
+		if sboutique[i] = 1 and sboutiqueS[i] = sloc:*P dyneval($shoe_list_line, $ARGS[1], 'boutique', i)
 		i += 1
 	if i <= 37:jump 'loopsboutique'
 
 	i = 1
 	:loopspussy
-		if spussy[i] = 1:*P dyneval($shoe_list_line, $ARGS[1], 'pussy', i)
+		if spussy[i] = 1 and spussyS[i] = sloc:*P dyneval($shoe_list_line, $ARGS[1], 'pussy', i)
 		i += 1
 	if i <= 38:jump 'loopspussy'
 
 	i = 1
 	:loopsdolls
-		if sdolls[i] = 1:*P dyneval($shoe_list_line, $ARGS[1], 'dolls', i)
+		if sdolls[i] = 1 and sdollsS[i] = sloc:*P dyneval($shoe_list_line, $ARGS[1], 'dolls', i)
 		i += 1
 	if i <= 27:jump 'loopsdolls'
 
 	i = 1
 	:loopsfetish
-		if sfetish[i] = 1:*P dyneval($shoe_list_line, $ARGS[1], 'fetish', i)
+		if sfetish[i] = 1 and sfetishS[i] = sloc:*P dyneval($shoe_list_line, $ARGS[1], 'fetish', i)
 		i += 1
 	if i <= 27:jump 'loopsfetish'
 
 	i = 1
 	:loopsgandm
-		if sgandm[i] = 1:*P dyneval($shoe_list_line, $ARGS[1], 'gandm', i)
+		if sgandm[i] = 1 and sgandmS[i] = sloc:*P dyneval($shoe_list_line, $ARGS[1], 'gandm', i)
 		i += 1
 	if i <= 51:jump 'loopsgandm'
 
 	i = 1
 	:loopstrainers
-		if strainers[i] = 1:*P dyneval($shoe_list_line, $ARGS[1], 'trainers', i)
+		if strainers[i] = 1 and strainersS[i] = sloc:*P dyneval($shoe_list_line, $ARGS[1], 'trainers', i)
 		i += 1
 	if i <= 29:jump 'loopstrainers'
 
