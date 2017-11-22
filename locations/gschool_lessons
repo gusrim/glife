@@ -37,16 +37,6 @@ if $ARGS[0] = 'morning':
 	end
 end
 
-    if dimaRevenge = 1:
-		gt 'dimaRevenge', 1
-	elseif dimaRevenge = 4 and dimaRevChoice = 2:
-		!!in class!!
-		'You sit in class, trying not to fall asleep. Dimka is nowhere to be seen. A few other seats are empty as well. You smile thinking about what that means.'
-	else
-		'You sit in the classroom and listen to the monotonous droning of your teacher, doing your best not to fall asleep.'
-	end
-
-
 if $ARGS[0] = 'short_break':
 	gs 'stat'
 	if school_period = 1:
@@ -87,7 +77,7 @@ if $ARGS[0] = 'short_break':
 		else
 			if hour = 9 and minut < 46:
 				minut += 46-minut
-			end		
+			end
 		end
 	end
 	if school_period = 4:
@@ -341,251 +331,255 @@ if $ARGS[0] = 'math':
 			gs 'shortgs', 'replace header', 2000, 2 ,'<center><b><font color=#FFC600><<"Igor Kruglov">></font></b></center>', '<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/head/4.jpg"></center>'
 		end
 	end
-
-	act 'Focus on your school work':
-		*clr & cla
-		gs'stat'
-		'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/attention.jpg"></center>'
-		'You carefully follow today''s lesson trying to take in as much as possible.'
-		gs 'gschool_lessonsev2', 'math'
-		act 'Ask a question about the lesson':
+	if dimaRevenge = 1: 
+		wait(5000)
+		gt 'dimaRevenge', 1
+	else
+		act 'Focus on your school work':
 			*clr & cla
-			pcs_grades += 1
-			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/class1.jpg"></center>'
-			'You take a second to ask a question about a part of the lesson that you don''t fully understand and Mr. Tsarev nods approvingly then says, "Sure thing, we can over the solution again and I will show you the many ways that you can find the solution to these problems." Anatoly happily spends some time explaining the topic in greater detail, and answers any questions you might have, teaching you some new ways of solving many problems, in the process.'
-			*nl
+			gs'stat'
+			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/attention.jpg"></center>'
+			'You carefully follow today''s lesson trying to take in as much as possible.'
 			gs 'gschool_lessonsev2', 'math'
+			act 'Ask a question about the lesson':
+				*clr & cla
+				pcs_grades += 1
+				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/class1.jpg"></center>'
+				'You take a second to ask a question about a part of the lesson that you don''t fully understand and Mr. Tsarev nods approvingly then says, "Sure thing, we can over the solution again and I will show you the many ways that you can find the solution to these problems." Anatoly happily spends some time explaining the topic in greater detail, and answers any questions you might have, teaching you some new ways of solving many problems, in the process.'
+				*nl
+				gs 'gschool_lessonsev2', 'math'
+				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
+			end
 			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 		end
-		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
-	end
-
-	act'Daydream':
-		*clr & cla
-		VK = rand(1,20)
-		if VK > 18 and VKHappyHome < 2 and VKPuppetDream = 0:
-			gt 'NikoDreams', 'Puppeteer'
-		elseif VK > 16:
-			gt 'NikoDreams', 'Night Out'
-		elseif VK > 14:
-			gt 'NikoDreams', 'Toilet Time'
-		elseif VK > 12:
+	
+		act'Daydream':
 			*clr & cla
-			gs'stat'
-			'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/boy/niko/nikomisc/nightmares/class/rest.jpg"></center>'
-			'You can feel the day dragging on so slowly, so you rest your head on the desk, trying your best to focus on anything but today''s lesson, the light occasionally creeps in between your arms so you keep re-adjusting until you can no longer feel any light creeping in, causing you to feel at peace, as you slumber through the lesson.'
-			act 'Wake up':
+			VK = rand(1,20)
+			if VK > 18 and VKHappyHome < 2 and VKPuppetDream = 0:
+				gt 'NikoDreams', 'Puppeteer'
+			elseif VK > 16:
+				gt 'NikoDreams', 'Night Out'
+			elseif VK > 14:
+				gt 'NikoDreams', 'Toilet Time'
+			elseif VK > 12:
 				*clr & cla
 				gs'stat'
-				'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/boy/niko/nikomisc/nightmares/class/leave.jpg"></center>'
-				'You awaken to the bell ringing, signaling the end of the period. You immediately see your other classmates getting up to leave the class, as you collect your things to join them.'
-				act 'Leave class': gt 'gschool_lessons', 'short_break'
-			end
-		elseif VK > 6:
-			VKrand = rand(1,3)
-			*clr & cla
-			gs'stat'
-			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/sleeping.jpg"></center>'
-			'You are far too tired to pay attention in class today. You don''t even know what the lesson is about, as you continuously doze off. After what feels like a few seconds, you suddenly hear Mr. Tsarev call your name. Everyone''s eyes are on you, you nervously ask, "What?" Mr. Tsarev replies, "I asked you for the answer my question."'
-			*nl
-			if VKrand = 1 and npc_rel['A2'] >= 80 or VKrand = 1 and grupTipe = 3:
-				'You nervously look around the room, not knowing what the question was when you faintly hear, "Psst!" You look toward Artem to see him holding up a paper scrap behind his seat which has the answer written out. You confidently look toward Mr. Anatoly before telling him the correct answer, resulting in a surprised look on his face before he says, "Hmm, very good, but do try to keep your head up during class, okay?" You give him a nod before he continues his lesson.'
-				'<center><b><font color=#0080FF><<"Artyom [Artem] Chebotarev">></font></b></center>'
-				'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/head/2.jpg"></center>'
-			elseif VKrand = 2 and npc_rel['A12'] >= 80 or VKrand = 2 and grupTipe = 3:
-				'You nervously look around the room, not knowing what the question was when you hear Julia ask Mr. Tsarev, "Why was the problem structured like that? I thought that finding X came after finding Y" Mr. Tsarev turns to Julia then says, "There is no order in which one we find first. I just used the one earlier in the equation. You can always choose the one that you solve as long as you end up solving both before reaching the second half of the problem."'
-				*nl
-				'Julia nods with a smile, as Anatoly turns around and continues his lesson, completely forgetting about you. Julia turns to you with a warm smile then turns back toward Mr. Tsarev for the rest of the period.'
-				'<center><b><h4><font color=#00EAFF><<"Julia Milov">></font></h4></b></center>'
-				'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/girl/julia/love/smile1.jpg"></center>'
-			elseif VKrand = 3 and NikoLuv >= 2 and grupTipe[61] = 4:
-				'You nervously look around the room, not knowing what the question was when you suddenly hear Evgeny let out a yelp as his chair is pulled out from under him, causing him to fall to the ground. Mr. Tsarev recoils in shock before suddenly shouting, "NIKOLAI! WHAT HAS GOTTEN INTO YOU!?" Niko and most of the class are laughing loudly, as Anatoly shouts out, "NIKOLAI GO TO THE PRINCIPAL''S OFFICE NOW!" Niko packs his stuff in his bag then heads toward the door, giving you a wink as he passes by.'
-				'<center><video autoplay loop src="images/locations/pavlovsk/school/classroom/crash.mp4"></video></center>'
-			elseif pcs_grades >= 80:
-				'You nervously look around the room, not knowing what the question was. You pretend to clear your throat while you quickly study the equation on the board then quickly solve the problem in your head before answering the question correctly. Mr. Tsarev gives you a satisfied nod before responding, "Very good, but try and keep your head up during class, if you don''t mind."'
-				'<center><b><font color=#00BFFF><<"Anatoly E. Tsarev">></font></b></center>'
-				'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/head/26.jpg"></center>'
-			else
+				'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/boy/niko/nikomisc/nightmares/class/rest.jpg"></center>'
+				'You can feel the day dragging on so slowly, so you rest your head on the desk, trying your best to focus on anything but today''s lesson, the light occasionally creeps in between your arms so you keep re-adjusting until you can no longer feel any light creeping in, causing you to feel at peace, as you slumber through the lesson.'
+				act 'Wake up':
+					*clr & cla
+					gs'stat'
+					'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/boy/niko/nikomisc/nightmares/class/leave.jpg"></center>'
+					'You awaken to the bell ringing, signaling the end of the period. You immediately see your other classmates getting up to leave the class, as you collect your things to join them.'
+					act 'Leave class': gt 'gschool_lessons', 'short_break'
+				end
+			elseif VK > 6:
+				VKrand = rand(1,3)
 				*clr & cla
 				gs'stat'
 				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/sleeping.jpg"></center>'
-				'You are feeling far too tired to pay attention in class today. Not even know what the lesson is about, as you continuously doze off. After what feels like a few minutes, you suddenly hear Mr. Tsarev call your name. Everyone''s eyes are on you, and you realize that you were just asked a question about the topic.'
+				'You are far too tired to pay attention in class today. You don''t even know what the lesson is about, as you continuously doze off. After what feels like a few seconds, you suddenly hear Mr. Tsarev call your name. Everyone''s eyes are on you, you nervously ask, "What?" Mr. Tsarev replies, "I asked you for the answer my question."'
 				*nl
-				'You take your best guess at what Mr. Tsarev asking. Some of your classmates snicker at your obviously wrong answer. Anatoly says, "Sleeping in class huh? You are never going to get anywhere in life that way, unless you end up working as a politician."'
-				*nl
-				'He then cluckles to himself before saying, "Just try to stay awake this time." Before continuing his lesson. and asks for someone else to inform you of the correct answer. You still feel embarrassed, but the sudden adrenaline surge helps you to stay awake during the rest of the lesson.'
-				*nl
-				gs 'gschool_lessonsev2', 'math'
-			end
-			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
-		else
-			*clr & cla
-			pcs_grades -= 1
-			gs'stat'
-			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/sleeping.jpg"></center>'
-			'Today''s lessons doesn''t particularly interest you, and you find yourself drifting off constantly. After a while you notice that Mr. Tsarev pauses his lesson then gives you a stern look. "Miss <<$pcs_lastname>>, maybe you would like to explain what I have just went over." You give Anatoly a puzzled look while trying to figure out what to say; feeling embarrassed, not knowing what to say and having the class stare at you.'
-			act'Try to focus on the lesson':
-				*clr & cla
-				grupvalue[4] -=5
-				grupvalue[3] +=5
-				gs'stat'
-				'<center><b><h4><font color=#FF00CC><<"<<$pcs_firstname>> [<<$pcs_nickname>>] <<$pcs_lastname>>">></font></h4></b></center>'
-				*pl '<center><img src="<<FUNC(''$face_image'')>>"></center>'
-				'You straighten up in your chair then say, "I wasn''t paying attention, I''m sorry." Anatoly shrugs as he says, "Could you at least try to pay attention. Many things that we need in life require some effort from us all. It''s not always fun but some of the things we learn making life easier in the future, leading to even more pleasant times." You nod as Anatoly turns around to continue his lesson. You sit through the rest of the lesson in silence, trying your best to take in as much as you can.'
-				'<center><b><font color=#00BFFF><<"Anatoly E. Tsarev">></font></b></center>'
-				'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/head/26.jpg"></center>'
-				*nl
-				gs 'gschool_lessonsev2', 'math'
+				if VKrand = 1 and npc_rel['A2'] >= 80 or VKrand = 1 and grupTipe = 3:
+					'You nervously look around the room, not knowing what the question was when you faintly hear, "Psst!" You look toward Artem to see him holding up a paper scrap behind his seat which has the answer written out. You confidently look toward Mr. Anatoly before telling him the correct answer, resulting in a surprised look on his face before he says, "Hmm, very good, but do try to keep your head up during class, okay?" You give him a nod before he continues his lesson.'
+					'<center><b><font color=#0080FF><<"Artyom [Artem] Chebotarev">></font></b></center>'
+					'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/head/2.jpg"></center>'
+				elseif VKrand = 2 and npc_rel['A12'] >= 80 or VKrand = 2 and grupTipe = 3:
+					'You nervously look around the room, not knowing what the question was when you hear Julia ask Mr. Tsarev, "Why was the problem structured like that? I thought that finding X came after finding Y" Mr. Tsarev turns to Julia then says, "There is no order in which one we find first. I just used the one earlier in the equation. You can always choose the one that you solve as long as you end up solving both before reaching the second half of the problem."'
+					*nl
+					'Julia nods with a smile, as Anatoly turns around and continues his lesson, completely forgetting about you. Julia turns to you with a warm smile then turns back toward Mr. Tsarev for the rest of the period.'
+					'<center><b><h4><font color=#00EAFF><<"Julia Milov">></font></h4></b></center>'
+					'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/girl/julia/love/smile1.jpg"></center>'
+				elseif VKrand = 3 and NikoLuv >= 2 and grupTipe[61] = 4:
+					'You nervously look around the room, not knowing what the question was when you suddenly hear Evgeny let out a yelp as his chair is pulled out from under him, causing him to fall to the ground. Mr. Tsarev recoils in shock before suddenly shouting, "NIKOLAI! WHAT HAS GOTTEN INTO YOU!?" Niko and most of the class are laughing loudly, as Anatoly shouts out, "NIKOLAI GO TO THE PRINCIPAL''S OFFICE NOW!" Niko packs his stuff in his bag then heads toward the door, giving you a wink as he passes by.'
+					'<center><video autoplay loop src="images/locations/pavlovsk/school/classroom/crash.mp4"></video></center>'
+				elseif pcs_grades >= 80:
+					'You nervously look around the room, not knowing what the question was. You pretend to clear your throat while you quickly study the equation on the board then quickly solve the problem in your head before answering the question correctly. Mr. Tsarev gives you a satisfied nod before responding, "Very good, but try and keep your head up during class, if you don''t mind."'
+					'<center><b><font color=#00BFFF><<"Anatoly E. Tsarev">></font></b></center>'
+					'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/head/26.jpg"></center>'
+				else
+					*clr & cla
+					gs'stat'
+					'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/sleeping.jpg"></center>'
+					'You are feeling far too tired to pay attention in class today. Not even know what the lesson is about, as you continuously doze off. After what feels like a few minutes, you suddenly hear Mr. Tsarev call your name. Everyone''s eyes are on you, and you realize that you were just asked a question about the topic.'
+					*nl
+					'You take your best guess at what Mr. Tsarev asking. Some of your classmates snicker at your obviously wrong answer. Anatoly says, "Sleeping in class huh? You are never going to get anywhere in life that way, unless you end up working as a politician."'
+					*nl
+					'He then cluckles to himself before saying, "Just try to stay awake this time." Before continuing his lesson. and asks for someone else to inform you of the correct answer. You still feel embarrassed, but the sudden adrenaline surge helps you to stay awake during the rest of the lesson.'
+					*nl
+					gs 'gschool_lessonsev2', 'math'
+				end
 				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
-			end
-			act 'Reluctantly pay attention':
+			else
 				*clr & cla
+				pcs_grades -= 1
 				gs'stat'
-				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/bathroom/angryteacher.jpg"></center>'
-				'Mr. Tsarev says, "You don''t know do you? Then at least try to pay attention. Many things that we need in life require some effort from us all. It''s not always fun but some of the things we learn making life easier in the future, leading to even more pleasant times." Not knowing what to say, you simply nod as Anatoly turns around and continues his lesson. You sit through the rest of the lesson in silence, while your mind drifts elsewhere. You can''t focus on the lesson at all.'
-				*nl
-				gs 'gschool_lessonsev2', 'math'
-				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
-			end
-			act 'Give him an attitude':
-				*clr & cla
-				demerits +=5
-				grupvalue[1] +=3
-				grupvalue[4] +=3
-				grupvalue[3] -=3
-				gs'stat'
-				'<center><b><h4><font color=#FF00CC><<"<<$pcs_firstname>> [<<$pcs_nickname>>] <<$pcs_lastname>>">></font></h4></b></center>'
-				*pl '<center><img src="<<FUNC(''$face_image'')>>"></center>'
-				'"Of course. Please continue your super-fascinating lesson. Just keep it a bit up-beat please. If you talk any slower, I might fall asleep!" You answer boldly. The whole class bursts into laughter, and Anatoly has a rough time getting everyone to quiet down. "Miss <<$pcs_lastname>>, do you find this kind of behavior amusing? or are you just seeking attention? Try to answer this question for yourself while to head off to the principal''s office." Anatoly then points to the door.'
-				act 'Don''t leave the classroom':
+				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/sleeping.jpg"></center>'
+				'Today''s lessons doesn''t particularly interest you, and you find yourself drifting off constantly. After a while you notice that Mr. Tsarev pauses his lesson then gives you a stern look. "Miss <<$pcs_lastname>>, maybe you would like to explain what I have just went over." You give Anatoly a puzzled look while trying to figure out what to say; feeling embarrassed, not knowing what to say and having the class stare at you.'
+				act'Try to focus on the lesson':
+					*clr & cla
+					grupvalue[4] -=5
+					grupvalue[3] +=5
+					gs'stat'
+					'<center><b><h4><font color=#FF00CC><<"<<$pcs_firstname>> [<<$pcs_nickname>>] <<$pcs_lastname>>">></font></h4></b></center>'
+					*pl '<center><img src="<<FUNC(''$face_image'')>>"></center>'
+					'You straighten up in your chair then say, "I wasn''t paying attention, I''m sorry." Anatoly shrugs as he says, "Could you at least try to pay attention. Many things that we need in life require some effort from us all. It''s not always fun but some of the things we learn making life easier in the future, leading to even more pleasant times." You nod as Anatoly turns around to continue his lesson. You sit through the rest of the lesson in silence, trying your best to take in as much as you can.'
+					'<center><b><font color=#00BFFF><<"Anatoly E. Tsarev">></font></b></center>'
+					'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/head/26.jpg"></center>'
+					*nl
+					gs 'gschool_lessonsev2', 'math'
+					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
+				end
+				act 'Reluctantly pay attention':
+					*clr & cla
+					gs'stat'
+					'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/bathroom/angryteacher.jpg"></center>'
+					'Mr. Tsarev says, "You don''t know do you? Then at least try to pay attention. Many things that we need in life require some effort from us all. It''s not always fun but some of the things we learn making life easier in the future, leading to even more pleasant times." Not knowing what to say, you simply nod as Anatoly turns around and continues his lesson. You sit through the rest of the lesson in silence, while your mind drifts elsewhere. You can''t focus on the lesson at all.'
+					*nl
+					gs 'gschool_lessonsev2', 'math'
+					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
+				end
+				act 'Give him an attitude':
 					*clr & cla
 					demerits +=5
-					grupvalue[4] +=5
-					grupvalue[3] -=5
+					grupvalue[1] +=3
+					grupvalue[4] +=3
+					grupvalue[3] -=3
 					gs'stat'
-					'<center><b><font color=#00BFFF><<"Anatoly E. Tsarev">></font></b></center>'
-					'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/head/26.jpg"></center>'
-					'"What good would that do? Would you rather I begin smoking to pass the time? I''m not interrupting your classes, just leave me alone. I''m having some... girl problems." You answer brashly, not having any intentions of getting up. Anatoly sighs then shakes his head, "If you are having some personal issues then I won''t punish you for that, but do try to pay attention if you can. I am only trying to prepare you all for the future."'
-					*nl
-					'You remain silent as Anatoly turns around and continues his lesson. You obviously have no interest in learning anything today. You can hear one of the boys behind you mutter, "It must be that time of the month." Then giggle to each other as you turn around to flip him off.'
-					*nl
-					'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/bitchflip.jpg"></center>'
-					act 'Continue': gt '', ''
+					'<center><b><h4><font color=#FF00CC><<"<<$pcs_firstname>> [<<$pcs_nickname>>] <<$pcs_lastname>>">></font></h4></b></center>'
+					*pl '<center><img src="<<FUNC(''$face_image'')>>"></center>'
+					'"Of course. Please continue your super-fascinating lesson. Just keep it a bit up-beat please. If you talk any slower, I might fall asleep!" You answer boldly. The whole class bursts into laughter, and Anatoly has a rough time getting everyone to quiet down. "Miss <<$pcs_lastname>>, do you find this kind of behavior amusing? or are you just seeking attention? Try to answer this question for yourself while to head off to the principal''s office." Anatoly then points to the door.'
+					act 'Don''t leave the classroom':
+						*clr & cla
+						demerits +=5
+						grupvalue[4] +=5
+						grupvalue[3] -=5
+						gs'stat'
+						'<center><b><font color=#00BFFF><<"Anatoly E. Tsarev">></font></b></center>'
+						'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/head/26.jpg"></center>'
+						'"What good would that do? Would you rather I begin smoking to pass the time? I''m not interrupting your classes, just leave me alone. I''m having some... girl problems." You answer brashly, not having any intentions of getting up. Anatoly sighs then shakes his head, "If you are having some personal issues then I won''t punish you for that, but do try to pay attention if you can. I am only trying to prepare you all for the future."'
+						*nl
+						'You remain silent as Anatoly turns around and continues his lesson. You obviously have no interest in learning anything today. You can hear one of the boys behind you mutter, "It must be that time of the month." Then giggle to each other as you turn around to flip him off.'
+						*nl
+						'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/bitchflip.jpg"></center>'
+						act 'Continue': gt '', ''
+					end
+					act 'Go to principal''s office': demerit += 10+school_bunk*5 & gt 'gschool_office', 'principal'
 				end
-				act 'Go to principal''s office': demerit += 10+school_bunk*5 & gt 'gschool_office', 'principal'
 			end
 		end
-	end
-	act 'Play with your phone':
-		*clr & cla
-		VK = rand(1,5)
-		pcs_grades -= 1
-		gs'stat'
-		'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/phone.jpg"></center>'
-		'The day seems to be going on for so long, you find yourself constantly staring at the clock, waiting for the time to pass and the period to be over. You decide to take out your phone then cruise the internet, looking up the latest trends.'
-		*nl
-		if VK = 1 and npc_rel['A18'] <= 60 and zverSlutQW < 2 and salocatnow >= 5 or VK = 1 and zverRageQW > 0 and zverSlutQW < 2 and salocatnow >= 5:
-			if npc_rel['A18'] > 30:npc_rel['A18'] = 30
-			'As you are browsing the web, you receive a text message from Christina Zvereva, reading; "Hey there piggy, are you looking up discounts on Peremech, so that you can shove them down your throat? Why don''t you lose some weight before the teachers decide to add bovine etiquette to the curriculum? because they may feel it necessary to teach the students, how to talk to a cow like you." You can feel your face growing flushed in embarrassment while reading Christina''s hurtful comments. You quickly turn off your phone then try not to make eye contact with Christina for the rest of the lesson.'
-			'<center><b><font color=#0090FF><<"Christina Zvereva">></font></b></center>'
-			'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/head/18.jpg"></center>'
-			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
-		elseif VK = 1 and npc_rel['A18'] >= 80 and zverRageQW = 0 or VK = 1 and grupTipe = 2 and zverRageQW = 0:
-			VKrand = rand(1,3)
-			if salocatnow >= 5:
-				'As you are browsing the web, you receive a text message from Christina Zvereva, reading; "Hey <<$pcs_nickname>>, I can''t help but notice that you have been putting on some weight. Would you like to run with Lina and I, after school to maybe burn some of those calories?" Feeling embarrassed, you reply, "Um maybe another time." Christina replies, "<<$pcs_nickname>>, the other girls are starting to talk about you. You don''t want to be known as the fat girl of the school, do you?" You look toward Christina and see a mildly concerned look on her face before she texts one last message; "A few workouts a day and a proper diet can do wonders for your future. Think about it <<$pcs_firstname>>." She gives you a assuring nod before turning back, toward the teacher.'
-			elseif VKrand = 1:
-				'As you are browsing the web, you receive a text message from Christina Zvereva, reading; "Hey <<$pcs_nickname>>, when are you getting those track shoes that I told you about? I still see you wearing those raggedy ones at PE." You giggle then reply, "I keep forgetting to check them out when stop by the shop." Christina replies, "I know what you mean. I always get side distracted by the other clothes then forget why I went in their in the first place lol."'
-				*nl
-				'You both look to each other with a smile when you hear Mr Tsarev say, "Hey, eyes up here you two." You both look back toward the teacher until he turns around to write on the board. You and Christina continue chatting; via text message, as Anatoly continues his lesson.'
-			elseif VKrand = 2:
-				'As you are browsing the web, you receive a text message from Christina Zvereva, reading; "Have you heard what that bitch Bella said the other day? I am so sick of her lording over everyone, as if she is too good to have a simple conversation with someone without rudely scuffing. She has nothing going for her. She isn''t good at anything except making enemies. That fucking, brainless, uptight bitch!" You reply, "What did she say exactly?"'
-				*nl
-				'Christina replies, "Lizaveta told me about how Bella said that running track is only for fat girls, wanting to lose weight. If she ever says that to my face then I will show her how inferior to me, she truly is." You try to calm Christina. "Maybe she didn''t say that. It could just be a rumor."'
-				*nl
-				'Christina replies back, "Bella better hope that you are right. I will find out one way or another." Christina quickly turns off her phone then slams her hand on the table, causing Anatoly to jump up in surprise before quickly looking around the room for the source of the noise before shrugging and continuing with his lesson.'
-			else
-				'As you are browsing the web, you receive a text message from Christina Zvereva, reading; "Have you seen what Zinaida was wearing this morning? Another burlap sack. Doesn''t she realize how bad she looks, and would it kill her to comb her hair? She looks like a fucking scarecrow." You reply, "Yeah she doesn''t really seem to care about her appearance at all." Christina replies, "Exactly! She is such an eyesore, anyway have you been watching my races? I have been undefeated since I have started." You text back, "I have seen a few and I am always impressed at how fast you can move." Christina gives you a wink before replying, "Keep training and maybe you and I will keep the first two spots reserved for us. You can be the one in second of course."'
-				*nl
-				'You giggle as you reply, "Sure sounds like fun." While sticking your tongue out at her, causing you both to giggle before turning back to your phones.'
-			end
-			'<center><b><font color=#0090FF><<"Christina Zvereva">></font></b></center>'
-			'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/head/18.jpg"></center>'
-			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
-		elseif VK = 2 and JuliaMiLoveQW >= 10:
-			'You continue browsing the web, when you suddenly receive a text message from Julia Milov; depicting your name, and her''s, inside of a heart together. You turn to Julia to see a big smile on her face as she gazes into your eyes. You return the smile before replying with, "You are so precious to me, Julia." Julia quickly replies, "I am so happy that I have you in my life." You reply to Julia, "Ohhh you are just so cute. Muah." Julia giggles before turning back to Mr. Tsarev while occasionally turning back toward you and smiling.'
-			'<center><b><h4><font color=#00EAFF><<"Julia Milov">></font></h4></b></center>'
-			'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/girl/julia/love/smile1.jpg"></center>'
-			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
-		elseif VK = 3 and NikoVolkovQW >= 5 and grupTipe[61] = 4:
-			'While you are browsing the internet, you receive a text message from Niko, reading; "Who is this beautiful creature, I see? This precious gem, sitting in front of me? I gaze at her with eyes so amazed, will she not turn around, and return my gaze?" You giggle before turning around to face Niko to see him with a loving smile. You then type back, "You are so sweet Niko." Niko gives you a wink before laying back in his seat.'
-			'<center><b><h4><font color=#E400FF><<"Nikolai [Niko] Volkov">></font></h4></b></center>'
-			'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/boy/niko/nikoev/charmer1.jpg"></center>'
-			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
-		elseif VK = 4 and npc_rel['A25'] >= 80:
-			'As you continue browsing the web, you suddenly receive a text message with an image attachment from Sonia Ivanko, reading; "Sooo pretty. What do you think?" The image is of a high quality pair of high heels. They look very expensive. You type back, "Those heels look very...You. ;)" Sonia replies, "I was thinking of wearing those with my blue skirt, do you think that they will look good together?" You reply, "They would look great together. The colors would compliment each other very well." Sonia giggles as she messages you back.'
+		act 'Play with your phone':
+			*clr & cla
+			VK = rand(1,5)
+			pcs_grades -= 1
+			gs'stat'
+			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/phone.jpg"></center>'
+			'The day seems to be going on for so long, you find yourself constantly staring at the clock, waiting for the time to pass and the period to be over. You decide to take out your phone then cruise the internet, looking up the latest trends.'
 			*nl
-			'"Thanks <<$pcs_nickname>>, I was worried that they were a bit too much on the eyes." You give Sonia a smile as she returns it. Sonia then turns back toward the teacher while continuing to cruise the internet.'
-			'<center><b><h4><font color=#FF00FF><<"Sonia Ivanko">></font></h4></b></center>'
-			'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/boy/niko/nikomisc/soniahome/soniasmile.jpg"></center>'
-			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
-		else
-			'As you are browsing the web, you notice Mr. Tsarev giving you a stern look. He seems to have noticed that you''re not paying attention to his lesson.'
-			'<center><b><font color=#00BFFF><<"Anatoly E. Tsarev">></font></b></center>'
-			'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/head/26.jpg"></center>'
-			act 'Put your phone away':
-				*clr & cla
-				grupvalue[3] += 5
-				gs'stat'
-				'<center><b><font color=#00BFFF><<"Anatoly E. Tsarev">></font></b></center>'
-				'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/head/26.jpg"></center>'
-				'You turn off your phone then put it away. Mr. Tsarev give you an approving nod before continuing with today''s lesson.'
-				gs 'gschool_lessonsev2', 'math'
+			if VK = 1 and npc_rel['A18'] <= 60 and zverSlutQW < 2 and salocatnow >= 5 or VK = 1 and zverRageQW > 0 and zverSlutQW < 2 and salocatnow >= 5:
+				if npc_rel['A18'] > 30:npc_rel['A18'] = 30
+				'As you are browsing the web, you receive a text message from Christina Zvereva, reading; "Hey there piggy, are you looking up discounts on Peremech, so that you can shove them down your throat? Why don''t you lose some weight before the teachers decide to add bovine etiquette to the curriculum? because they may feel it necessary to teach the students, how to talk to a cow like you." You can feel your face growing flushed in embarrassment while reading Christina''s hurtful comments. You quickly turn off your phone then try not to make eye contact with Christina for the rest of the lesson.'
+				'<center><b><font color=#0090FF><<"Christina Zvereva">></font></b></center>'
+				'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/head/18.jpg"></center>'
 				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
-			end
-			act 'Continue using your phone':
-				*clr & cla
-				grupvalue[4] +=3
-				demerit += 5
-				gs'stat'
+			elseif VK = 1 and npc_rel['A18'] >= 80 and zverRageQW = 0 or VK = 1 and grupTipe = 2 and zverRageQW = 0:
+				VKrand = rand(1,3)
+				if salocatnow >= 5:
+					'As you are browsing the web, you receive a text message from Christina Zvereva, reading; "Hey <<$pcs_nickname>>, I can''t help but notice that you have been putting on some weight. Would you like to run with Lina and I, after school to maybe burn some of those calories?" Feeling embarrassed, you reply, "Um maybe another time." Christina replies, "<<$pcs_nickname>>, the other girls are starting to talk about you. You don''t want to be known as the fat girl of the school, do you?" You look toward Christina and see a mildly concerned look on her face before she texts one last message; "A few workouts a day and a proper diet can do wonders for your future. Think about it <<$pcs_firstname>>." She gives you a assuring nod before turning back, toward the teacher.'
+				elseif VKrand = 1:
+					'As you are browsing the web, you receive a text message from Christina Zvereva, reading; "Hey <<$pcs_nickname>>, when are you getting those track shoes that I told you about? I still see you wearing those raggedy ones at PE." You giggle then reply, "I keep forgetting to check them out when stop by the shop." Christina replies, "I know what you mean. I always get side distracted by the other clothes then forget why I went in their in the first place lol."'
+					*nl
+					'You both look to each other with a smile when you hear Mr Tsarev say, "Hey, eyes up here you two." You both look back toward the teacher until he turns around to write on the board. You and Christina continue chatting; via text message, as Anatoly continues his lesson.'
+				elseif VKrand = 2:
+					'As you are browsing the web, you receive a text message from Christina Zvereva, reading; "Have you heard what that bitch Bella said the other day? I am so sick of her lording over everyone, as if she is too good to have a simple conversation with someone without rudely scuffing. She has nothing going for her. She isn''t good at anything except making enemies. That fucking, brainless, uptight bitch!" You reply, "What did she say exactly?"'
+					*nl
+					'Christina replies, "Lizaveta told me about how Bella said that running track is only for fat girls, wanting to lose weight. If she ever says that to my face then I will show her how inferior to me, she truly is." You try to calm Christina. "Maybe she didn''t say that. It could just be a rumor."'
+					*nl
+					'Christina replies back, "Bella better hope that you are right. I will find out one way or another." Christina quickly turns off her phone then slams her hand on the table, causing Anatoly to jump up in surprise before quickly looking around the room for the source of the noise before shrugging and continuing with his lesson.'
+				else
+					'As you are browsing the web, you receive a text message from Christina Zvereva, reading; "Have you seen what Zinaida was wearing this morning? Another burlap sack. Doesn''t she realize how bad she looks, and would it kill her to comb her hair? She looks like a fucking scarecrow." You reply, "Yeah she doesn''t really seem to care about her appearance at all." Christina replies, "Exactly! She is such an eyesore, anyway have you been watching my races? I have been undefeated since I have started." You text back, "I have seen a few and I am always impressed at how fast you can move." Christina gives you a wink before replying, "Keep training and maybe you and I will keep the first two spots reserved for us. You can be the one in second of course."'
+					*nl
+					'You giggle as you reply, "Sure sounds like fun." While sticking your tongue out at her, causing you both to giggle before turning back to your phones.'
+				end
+				'<center><b><font color=#0090FF><<"Christina Zvereva">></font></b></center>'
+				'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/head/18.jpg"></center>'
+				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
+			elseif VK = 2 and JuliaMiLoveQW >= 10:
+				'You continue browsing the web, when you suddenly receive a text message from Julia Milov; depicting your name, and her''s, inside of a heart together. You turn to Julia to see a big smile on her face as she gazes into your eyes. You return the smile before replying with, "You are so precious to me, Julia." Julia quickly replies, "I am so happy that I have you in my life." You reply to Julia, "Ohhh you are just so cute. Muah." Julia giggles before turning back to Mr. Tsarev while occasionally turning back toward you and smiling.'
+				'<center><b><h4><font color=#00EAFF><<"Julia Milov">></font></h4></b></center>'
+				'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/girl/julia/love/smile1.jpg"></center>'
+				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
+			elseif VK = 3 and NikoVolkovQW >= 5 and grupTipe[61] = 4:
+				'While you are browsing the internet, you receive a text message from Niko, reading; "Who is this beautiful creature, I see? This precious gem, sitting in front of me? I gaze at her with eyes so amazed, will she not turn around, and return my gaze?" You giggle before turning around to face Niko to see him with a loving smile. You then type back, "You are so sweet Niko." Niko gives you a wink before laying back in his seat.'
+				'<center><b><h4><font color=#E400FF><<"Nikolai [Niko] Volkov">></font></h4></b></center>'
+				'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/boy/niko/nikoev/charmer1.jpg"></center>'
+				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
+			elseif VK = 4 and npc_rel['A25'] >= 80:
+				'As you continue browsing the web, you suddenly receive a text message with an image attachment from Sonia Ivanko, reading; "Sooo pretty. What do you think?" The image is of a high quality pair of high heels. They look very expensive. You type back, "Those heels look very...You. ;)" Sonia replies, "I was thinking of wearing those with my blue skirt, do you think that they will look good together?" You reply, "They would look great together. The colors would compliment each other very well." Sonia giggles as she messages you back.'
+				*nl
+				'"Thanks <<$pcs_nickname>>, I was worried that they were a bit too much on the eyes." You give Sonia a smile as she returns it. Sonia then turns back toward the teacher while continuing to cruise the internet.'
+				'<center><b><h4><font color=#FF00FF><<"Sonia Ivanko">></font></h4></b></center>'
+				'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/boy/niko/nikomisc/soniahome/soniasmile.jpg"></center>'
+				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
+			else
+				'As you are browsing the web, you notice Mr. Tsarev giving you a stern look. He seems to have noticed that you''re not paying attention to his lesson.'
 				'<center><b><font color=#00BFFF><<"Anatoly E. Tsarev">></font></b></center>'
 				'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/head/26.jpg"></center>'
-				'You decide to try your luck and continue browsing the internet despite Mr. Tsarev watching you. Mr. Tsarev pauses the lesson then begin walking toward your desk.'
-				act 'Take photos under your skirt':
+				act 'Put your phone away':
 					*clr & cla
-					pcs_horny += 10
+					grupvalue[3] += 5
 					gs'stat'
-					'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/upskirtselfie.jpg"></center>'
-					'You decide to have some fun with your teacher, and quickly move the phone between your legs and snap some photos under your skirt as you see Mr. Tsarev walking towards your desk. When the Anatoly arrives at your desk, he says to you, "What is so important that you need to use your phone during my lesson? If nothing then I will hold onto it until the end of class." He then extends his hand out. You reply in a seductive tone, "Would you like to see?"'
-					*nl
-					'You then hand Anatoly your phone with the picture you took still on the screen of the phone. Mr. Tsarev looks at what''s on the screen and he stares at it for a few seconds before turning the screen off and returning to the front of the class. After Mr. Tsarev reaches the front of the classroom, he turns to you then says, "Well...Uhhh, I''ll be holding onto your phone for now, You can have it back after today''s lesson."'
-					*nl
-					'Mr. Tsarev puts your phone in his pocket before returning to teaching his lesson. You occasionally see Anatoly turn the phone on and peek at the screen when he believes that no one is watching.'
 					'<center><b><font color=#00BFFF><<"Anatoly E. Tsarev">></font></b></center>'
 					'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/head/26.jpg"></center>'
+					'You turn off your phone then put it away. Mr. Tsarev give you an approving nod before continuing with today''s lesson.'
+					gs 'gschool_lessonsev2', 'math'
 					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
 				end
-				act 'Put the phone between your breasts':
+				act 'Continue using your phone':
 					*clr & cla
+					grupvalue[4] +=3
 					demerit += 5
 					gs'stat'
-					'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/nophone.jpg"></center>'
-					'You deftly shove the phone in your bra then smile fiendishly, as you see the indecisiveness on Anatoly''s face. Pretending that it''s a perfectly normal place to store your phone, you say in a innocent tone, "Is there a problem, Mr. Tsarev? Do you want my phone? You can take it, if you want." You slowly thrust your chest forward, raising your breast toward him, giving him a nice view of your ample cleavage; the outline of your phone very visible through the fabric.'
-					*nl
-					'Mr. Tsarev seems flabbergasted by your actions, he remains silent for a few seconds before shaking his head then turning around and walking back to the front of the class. It seems that Anatoly realized that it''s not worth the effort to take your phone away from you, without causing all sorts of awkward situations, You pull your phone back out of your bra then continue browsing the web, as the lesson goes on.'
 					'<center><b><font color=#00BFFF><<"Anatoly E. Tsarev">></font></b></center>'
 					'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/head/26.jpg"></center>'
-					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
-				end
-				act 'Hand over the phone':
-					*clr & cla
-					grupvalue[4] -=3
-					grupvalue[3] += 3
-					gs'stat'
-					'<center><b><font color=#00BFFF><<"Anatoly E. Tsarev">></font></b></center>'
-					'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/head/26.jpg"></center>'
-					'Anatoly extends his hand then says, "What is so important on there that you need to disrupt my lesson? Hand it over." You realize that Anatoly is not messing around and decide that it''s not worth the conflict, so you silently hand your phone to Mr. Tsarev. As Anatoly walks back to the front of the class, he says, "I''m holding onto your phone for now, Miss <<$pcs_lastname>>. You can have it back after class."'
-					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
+					'You decide to try your luck and continue browsing the internet despite Mr. Tsarev watching you. Mr. Tsarev pauses the lesson then begin walking toward your desk.'
+					act 'Take photos under your skirt':
+						*clr & cla
+						pcs_horny += 10
+						gs'stat'
+						'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/upskirtselfie.jpg"></center>'
+						'You decide to have some fun with your teacher, and quickly move the phone between your legs and snap some photos under your skirt as you see Mr. Tsarev walking towards your desk. When the Anatoly arrives at your desk, he says to you, "What is so important that you need to use your phone during my lesson? If nothing then I will hold onto it until the end of class." He then extends his hand out. You reply in a seductive tone, "Would you like to see?"'
+						*nl
+						'You then hand Anatoly your phone with the picture you took still on the screen of the phone. Mr. Tsarev looks at what''s on the screen and he stares at it for a few seconds before turning the screen off and returning to the front of the class. After Mr. Tsarev reaches the front of the classroom, he turns to you then says, "Well...Uhhh, I''ll be holding onto your phone for now, You can have it back after today''s lesson."'
+						*nl
+						'Mr. Tsarev puts your phone in his pocket before returning to teaching his lesson. You occasionally see Anatoly turn the phone on and peek at the screen when he believes that no one is watching.'
+						'<center><b><font color=#00BFFF><<"Anatoly E. Tsarev">></font></b></center>'
+						'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/head/26.jpg"></center>'
+						act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
+					end
+					act 'Put the phone between your breasts':
+						*clr & cla
+						demerit += 5
+						gs'stat'
+						'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/nophone.jpg"></center>'
+						'You deftly shove the phone in your bra then smile fiendishly, as you see the indecisiveness on Anatoly''s face. Pretending that it''s a perfectly normal place to store your phone, you say in a innocent tone, "Is there a problem, Mr. Tsarev? Do you want my phone? You can take it, if you want." You slowly thrust your chest forward, raising your breast toward him, giving him a nice view of your ample cleavage; the outline of your phone very visible through the fabric.'
+						*nl
+						'Mr. Tsarev seems flabbergasted by your actions, he remains silent for a few seconds before shaking his head then turning around and walking back to the front of the class. It seems that Anatoly realized that it''s not worth the effort to take your phone away from you, without causing all sorts of awkward situations, You pull your phone back out of your bra then continue browsing the web, as the lesson goes on.'
+						'<center><b><font color=#00BFFF><<"Anatoly E. Tsarev">></font></b></center>'
+						'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/head/26.jpg"></center>'
+						act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
+					end
+					act 'Hand over the phone':
+						*clr & cla
+						grupvalue[4] -=3
+						grupvalue[3] += 3
+						gs'stat'
+						'<center><b><font color=#00BFFF><<"Anatoly E. Tsarev">></font></b></center>'
+						'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/head/26.jpg"></center>'
+						'Anatoly extends his hand then says, "What is so important on there that you need to disrupt my lesson? Hand it over." You realize that Anatoly is not messing around and decide that it''s not worth the conflict, so you silently hand your phone to Mr. Tsarev. As Anatoly walks back to the front of the class, he says, "I''m holding onto your phone for now, Miss <<$pcs_lastname>>. You can have it back after class."'
+						act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
+					end
 				end
 			end
 		end
@@ -1007,277 +1001,282 @@ if $ARGS[0] = 'english':
 	'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/literature/classlit.jpg"></center>'
 	*nl
 	'"Everyone sit down, class is starting." Ms. Braakman says in English, her voice thick with a Russian accent. A few students take their seat, but most of the class continues on socializing with friends as if they didn''t hear her. "Class is starting, now take a seat!" she repeats loudly, this time speaking Russian. Reluctantly, the groups scatter and everyone settles into their seats.'
-	act 'Listen attentively':
-		*clr & cla
-		pcs_grades += 1
-		'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/literature/work2.jpg"></center>'
-		*nl
-		'You actively take part in the lesson, raising your hand to answer questions, following along in your textbook, and working quietly on the worksheets when given them.'
-		act 'Keep working':
+	if dimaRevenge = 1: 
+		wait(5000)
+		gt 'dimaRevenge', 1
+	else
+		act 'Listen attentively':
 			*clr & cla
-			grupvalue[3] +=1
-			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/ask.jpg"></center>'
+			pcs_grades += 1
+			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/literature/work2.jpg"></center>'
 			*nl
-			'Unlike most of the students in your class, you stay focused on your work.'
-			gs 'gschool_lessonsev3', 'working'
-			act 'Finish class': gt 'gschool_lessons', 'short_break'
-		end
-		act 'Talk to someone':
-			*clr & cla
-			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/talk.jpg"></center>'
-			pcs_grades -= 1
-			*nl
-			'You  tell yourself that you''ve worked long enough and deserve a break. Looking around the room, you decide to talk to...'
-			act 'Vicky':
-				cla
-				!!no image, just have it popup underneath the previous text on the same screen
-				pcs_mood += 10
-				npc_rel['A15'] += 1
-				'"I saw this video of an American girl dancing all sexy and stuff, and I''m thinking of learning the dance. Next time I go to the community center, I''ll show up all the girls and steal their boyfriends!" she jokes with a playful smile, but you notice a wicked twinkle in her eyes.'
+			'You actively take part in the lesson, raising your hand to answer questions, following along in your textbook, and working quietly on the worksheets when given them.'
+			act 'Keep working':
+				*clr & cla
+				grupvalue[3] +=1
+				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/ask.jpg"></center>'
 				*nl
-				'Vicky''s bubbly personality makes her easy and fun to talk to, and you end up spending the rest of class smiling and laughing with her.'
+				'Unlike most of the students in your class, you stay focused on your work.'
+				gs 'gschool_lessonsev3', 'working'
 				act 'Finish class': gt 'gschool_lessons', 'short_break'
 			end
-			act 'Lena':
-				cla
-				!!no image, just have it popup underneath the previous text on the same screen
-				npc_rel['A20'] += 1
-				'Lena sighs heavily, "Fuck, what''s taking her so long?"'
+			act 'Talk to someone':
+				*clr & cla
+				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/talk.jpg"></center>'
+				pcs_grades -= 1
 				*nl
-				'"Who are you waiting for?" you ask.'
-				*nl
-				'"Lera! She had to go take a piss but she''s taking forever," she snaps back. "Her tongue probably needed a break anyways..." she mumbles quietly after a moment, a small smile spreading across her face.'
-				act 'Finish class': gt 'gschool_lessons', 'short_break'
-			end
-			act 'Lera':
-				cla
-				!!no image, just have it popup underneath the previous text on the same screen
-				npc_rel['A21'] += 1
-				'"It''s hard enough having my dad as a teacher at school, but now that freak Lesco is living with us." Lera spends the rest of class talking about all the awkward run-ins she''s had with her dad in school, and how she and Lena had to beat the shit out of anyone that tried spreading weird rumors about her being "close" to her cousin Lesco.'
-				act 'Finish class': gt 'gschool_lessons', 'short_break'
-			end
-			act 'Radomir':
-				cla
-				!!no image, just have it popup underneath the previous text on the same screen
-				npc_rel['A154'] += 1
-				'You try talking to Radomir, but it''s hard to get a word in with how hard he''s stroking his own ego. "You should have heard me last night, I killed it. You should come hear us play. Everyone thinks we''re amazing, especially the girls. I know you''ll love it, too," he says with a wink. He keeps saying "we" a lot to refer to the rest of the band, but something tells you he''s still talking about himself.'
-				act 'Finish class': gt 'gschool_lessons', 'short_break'
-			end
-			act 'Ivan':
-				cla
-				!!no image, just have it popup underneath the previous text on the same screen
-				npc_rel['A3'] += 1
-				'With a confident smile, Ivan starts to tell you about a recent match he had at the community center. "This kid I''ve never seen before comes up to me and starts talking shit, saying my form is bad and that I couldn''t hit someone even if they were standing still right in front of me," he says with a scoff. "I told him to put his money where his mouth is and get in the ring, and guess what happened?"'
-				*nl
-				'"You beat the crap out of him?" You say with a smile.'
-				*nl
-				'Ivan laughs and you can see his chest puff out slightly. "Of course! The best part is that his girlfriend was there to see it happen, and while he was lying on the mat knocked out, she gave me her number."'
-				act 'Finish class': gt 'gschool_lessons', 'short_break'
-			end
-			act 'Bella':
-				cla
-				!!no image, just have it popup underneath the previous text on the same screen
-				npc_rel['A22'] += 1
-				'"God, this place is more like a daycare than a high school." Bella says, scoffing in disgust. A moment later, a group of kids start talking and laughing loud enough to disrupt the class. "See what I mean?" she adds as she rolls her eyes. "They''re practically adults but they act so childish. I hate it. They need to act their age, like I do."'
-				act 'Finish class': gt 'gschool_lessons', 'short_break'
-			end
-			act 'Veronika':
-				cla
-				!!no image, just have it popup underneath the previous text on the same screen
-				npc_rel['A141'] += 1
-				'You try talking to Veronika, but she has little to say, which is no surprise; she''s always been standoffish. Still, she doesn''t outright tell you to leave you alone, so you take it as a sign that she''s okay with listening to you talk.'
-				act 'Finish class': gt 'gschool_lessons', 'short_break'
-			end
-			if grupTipe[61] = 4:
-				act 'Niko':
-					*clr & cla
-					gs 'stat'
-					'<center><b><h4><font color=#E400FF><<"Nikolai [Niko] Volkov">></font></h4></b></center>'
-					if NikoPayback > 0:
-						'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/boy/niko/nikomisc/avatars/<<week>>.jpg"></center>'
-						'As you approach Niko, he sneers at you before saying, "What do you want?" You carefully reply with, "Hey I just want to talk." Scoffs then says, "Fine, why not?" You and Niko spend the next few minutes having a strained conversation until the end of the period.'
-					elseif NikoVolkovQW >= 5:
-						npc_rel['A189'] += 2
-						'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/boy/niko/nikoev/avatars/<<week>>.jpg"></center>'
-						'As you approach Niko, he gives you a warm smile before saying, "My princess graces with me with her presence. How can be of assistance?" You giggle before replying, "I have spare time and I can''t think of a better use of my time then spending it with you." Niko chuckles then grabs onto your hand, lifting it toward his face and giving it a soft kiss before saying, "Your wish is my command." You both the next few minutes chatting while exchanging loving glares until the end of the period.'
-					else
-						npc_rel['A189'] += 1
-						'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/boy/niko/nikoev/avatars/<<week>>.jpg"></center>'
-						'As you approach Niko, he gives you a warm smile before saying, "Ahh a lovely princess decides to grace me with her presence. How can I be of assistance?" You giggle before replying, "You''re so weird, I just want to chat for a bit okay?"  Niko chuckles then grabs onto your hand, lifting it toward his face and giving it a soft kiss before saying, "Your wish is my command." You both begin chatting until the end of the period.'
-					end
+				'You  tell yourself that you''ve worked long enough and deserve a break. Looking around the room, you decide to talk to...'
+				act 'Vicky':
+					cla
+					!!no image, just have it popup underneath the previous text on the same screen
+					pcs_mood += 10
+					npc_rel['A15'] += 1
+					'"I saw this video of an American girl dancing all sexy and stuff, and I''m thinking of learning the dance. Next time I go to the community center, I''ll show up all the girls and steal their boyfriends!" she jokes with a playful smile, but you notice a wicked twinkle in her eyes.'
+					*nl
+					'Vicky''s bubbly personality makes her easy and fun to talk to, and you end up spending the rest of class smiling and laughing with her.'
 					act 'Finish class': gt 'gschool_lessons', 'short_break'
 				end
-			end
-			act 'Finish class': gt 'gschool_lessons', 'short_break'
-		end
-	end
-!!the coding is left unfinished here and should be looked at carefully as I do not know the proper way to code it.
-	act'Daydream':
-		*clr & cla
-		pcs_grades -= 1
-		if RAND(1,4) = 1:
-			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/sleeping.jpg"></center>'
-			*nl
-			'Unable to pay attention, you retreat into your own thoughts. You distract yourself with a number of things, from doodling in your notebook to just staring blankly out the window.'
-			*nl
-			'"<<$PCs_nickname>>!"'
-			*nl
-			'Hearing your name called, you snap back to reality just in time to see Ms. Braakman staring daggers at you from the front of the class. The scattered laughter from students causes you to squirm slightly in your seat.'
-			*nl
-			'"I''ve called your name three times now, if you want to sleep you can do it during detention." She points to the door.'
-			act 'Be a smart ass':
-				demerits +=5
-				grupvalue[1] +=3
-				grupvalue[4] +=3
-				grupvalue[3] -=3
-				'<center><video autoplay loop src="images/pc/eyeroll.mp4"></video></center>'
-				*nl
-				'You roll your eyes and sigh heavily, "I can''t help it, you just keep talking and talking." Your unexpected response causes the room to go quiet. "Everything you say is just so pointless. When am I ever going to need to know this stuff?" You ask rhetorically. "Never. Never is the answer."'
-				*nl
-				'The whole class starts to ''ooh'' in disbelief at your bold response. Arkadi, Roman and Anushka''s laughter can probably be heard all the way down the hall.'
-				*nl
-				'Ms. Braakman''s face turns red and her expression darkens, a mixture of rage and embarrassment. "Get out and report to Headmistress Aleksandrina''s office right now!" She barks.'
-				act 'Go to the principal''s office':
-					demerits +=5
-					grupvalue[1] +=5
-					grupvalue[4] +=5
-					grupvalue[3] -=5
-					'<center><video autoplay loop src="images/pc/smirk.mp4"></video></center>'
+				act 'Lena':
+					cla
+					!!no image, just have it popup underneath the previous text on the same screen
+					npc_rel['A20'] += 1
+					'Lena sighs heavily, "Fuck, what''s taking her so long?"'
 					*nl
-					'"Fine by me." You say with a smirk as you get up from your seat. You saunter past your fellow students and to the front of the class where you flash Ms. Braakman a mockingly sweet smile before exiting the classroom.'
-					act 'Continue': gt 'gschool_office', 'principal'
+					'"Who are you waiting for?" you ask.'
+					*nl
+					'"Lera! She had to go take a piss but she''s taking forever," she snaps back. "Her tongue probably needed a break anyways..." she mumbles quietly after a moment, a small smile spreading across her face.'
+					act 'Finish class': gt 'gschool_lessons', 'short_break'
 				end
+				act 'Lera':
+					cla
+					!!no image, just have it popup underneath the previous text on the same screen
+					npc_rel['A21'] += 1
+					'"It''s hard enough having my dad as a teacher at school, but now that freak Lesco is living with us." Lera spends the rest of class talking about all the awkward run-ins she''s had with her dad in school, and how she and Lena had to beat the shit out of anyone that tried spreading weird rumors about her being "close" to her cousin Lesco.'
+					act 'Finish class': gt 'gschool_lessons', 'short_break'
+				end
+				act 'Radomir':
+					cla
+					!!no image, just have it popup underneath the previous text on the same screen
+					npc_rel['A154'] += 1
+					'You try talking to Radomir, but it''s hard to get a word in with how hard he''s stroking his own ego. "You should have heard me last night, I killed it. You should come hear us play. Everyone thinks we''re amazing, especially the girls. I know you''ll love it, too," he says with a wink. He keeps saying "we" a lot to refer to the rest of the band, but something tells you he''s still talking about himself.'
+					act 'Finish class': gt 'gschool_lessons', 'short_break'
+				end
+				act 'Ivan':
+					cla
+					!!no image, just have it popup underneath the previous text on the same screen
+					npc_rel['A3'] += 1
+					'With a confident smile, Ivan starts to tell you about a recent match he had at the community center. "This kid I''ve never seen before comes up to me and starts talking shit, saying my form is bad and that I couldn''t hit someone even if they were standing still right in front of me," he says with a scoff. "I told him to put his money where his mouth is and get in the ring, and guess what happened?"'
+					*nl
+					'"You beat the crap out of him?" You say with a smile.'
+					*nl
+					'Ivan laughs and you can see his chest puff out slightly. "Of course! The best part is that his girlfriend was there to see it happen, and while he was lying on the mat knocked out, she gave me her number."'
+					act 'Finish class': gt 'gschool_lessons', 'short_break'
+				end
+				act 'Bella':
+					cla
+					!!no image, just have it popup underneath the previous text on the same screen
+					npc_rel['A22'] += 1
+					'"God, this place is more like a daycare than a high school." Bella says, scoffing in disgust. A moment later, a group of kids start talking and laughing loud enough to disrupt the class. "See what I mean?" she adds as she rolls her eyes. "They''re practically adults but they act so childish. I hate it. They need to act their age, like I do."'
+					act 'Finish class': gt 'gschool_lessons', 'short_break'
+				end
+				act 'Veronika':
+					cla
+					!!no image, just have it popup underneath the previous text on the same screen
+					npc_rel['A141'] += 1
+					'You try talking to Veronika, but she has little to say, which is no surprise; she''s always been standoffish. Still, she doesn''t outright tell you to leave you alone, so you take it as a sign that she''s okay with listening to you talk.'
+					act 'Finish class': gt 'gschool_lessons', 'short_break'
+				end
+				if grupTipe[61] = 4:
+					act 'Niko':
+						*clr & cla
+						gs 'stat'
+						'<center><b><h4><font color=#E400FF><<"Nikolai [Niko] Volkov">></font></h4></b></center>'
+						if NikoPayback > 0:
+							'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/boy/niko/nikomisc/avatars/<<week>>.jpg"></center>'
+							'As you approach Niko, he sneers at you before saying, "What do you want?" You carefully reply with, "Hey I just want to talk." Scoffs then says, "Fine, why not?" You and Niko spend the next few minutes having a strained conversation until the end of the period.'
+						elseif NikoVolkovQW >= 5:
+							npc_rel['A189'] += 2
+							'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/boy/niko/nikoev/avatars/<<week>>.jpg"></center>'
+							'As you approach Niko, he gives you a warm smile before saying, "My princess graces with me with her presence. How can be of assistance?" You giggle before replying, "I have spare time and I can''t think of a better use of my time then spending it with you." Niko chuckles then grabs onto your hand, lifting it toward his face and giving it a soft kiss before saying, "Your wish is my command." You both the next few minutes chatting while exchanging loving glares until the end of the period.'
+						else
+							npc_rel['A189'] += 1
+							'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/boy/niko/nikoev/avatars/<<week>>.jpg"></center>'
+							'As you approach Niko, he gives you a warm smile before saying, "Ahh a lovely princess decides to grace me with her presence. How can I be of assistance?" You giggle before replying, "You''re so weird, I just want to chat for a bit okay?"  Niko chuckles then grabs onto your hand, lifting it toward his face and giving it a soft kiss before saying, "Your wish is my command." You both begin chatting until the end of the period.'
+						end
+						act 'Finish class': gt 'gschool_lessons', 'short_break'
+					end
+				end
+				act 'Finish class': gt 'gschool_lessons', 'short_break'
 			end
-			act 'Apologize':
-				grupvalue[1] -=5
-				grupvalue[4] -=5
-				grupvalue[3] +=5
-				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/head/54.jpg"></center>'
+		end
+	!!the coding is left unfinished here and should be looked at carefully as I do not know the proper way to code it.
+		act'Daydream':
+			*clr & cla
+			pcs_grades -= 1
+			if RAND(1,4) = 1:
+				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/sleeping.jpg"></center>'
 				*nl
-				'"Sorry, Ms. Braakman." You mumble quietly as you sit up straight and refocus on the lesson. Satisfied, Ms. Braakman returns to teaching with a small smile.'
+				'Unable to pay attention, you retreat into your own thoughts. You distract yourself with a number of things, from doodling in your notebook to just staring blankly out the window.'
+				*nl
+				'"<<$PCs_nickname>>!"'
+				*nl
+				'Hearing your name called, you snap back to reality just in time to see Ms. Braakman staring daggers at you from the front of the class. The scattered laughter from students causes you to squirm slightly in your seat.'
+				*nl
+				'"I''ve called your name three times now, if you want to sleep you can do it during detention." She points to the door.'
+				act 'Be a smart ass':
+					demerits +=5
+					grupvalue[1] +=3
+					grupvalue[4] +=3
+					grupvalue[3] -=3
+					'<center><video autoplay loop src="images/pc/eyeroll.mp4"></video></center>'
+					*nl
+					'You roll your eyes and sigh heavily, "I can''t help it, you just keep talking and talking." Your unexpected response causes the room to go quiet. "Everything you say is just so pointless. When am I ever going to need to know this stuff?" You ask rhetorically. "Never. Never is the answer."'
+					*nl
+					'The whole class starts to ''ooh'' in disbelief at your bold response. Arkadi, Roman and Anushka''s laughter can probably be heard all the way down the hall.'
+					*nl
+					'Ms. Braakman''s face turns red and her expression darkens, a mixture of rage and embarrassment. "Get out and report to Headmistress Aleksandrina''s office right now!" She barks.'
+					act 'Go to the principal''s office':
+						demerits +=5
+						grupvalue[1] +=5
+						grupvalue[4] +=5
+						grupvalue[3] -=5
+						'<center><video autoplay loop src="images/pc/smirk.mp4"></video></center>'
+						*nl
+						'"Fine by me." You say with a smirk as you get up from your seat. You saunter past your fellow students and to the front of the class where you flash Ms. Braakman a mockingly sweet smile before exiting the classroom.'
+						act 'Continue': gt 'gschool_office', 'principal'
+					end
+				end
+				act 'Apologize':
+					grupvalue[1] -=5
+					grupvalue[4] -=5
+					grupvalue[3] +=5
+					'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/head/54.jpg"></center>'
+					*nl
+					'"Sorry, Ms. Braakman." You mumble quietly as you sit up straight and refocus on the lesson. Satisfied, Ms. Braakman returns to teaching with a small smile.'
+					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
+				end
+			elseif RAND(1,3) = 1:
+				if pcs_grades >= 80:
+					*clr
+					'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/sleeping.jpg"></center>'
+					*nl
+					'As Ms. Braakman continues talking, you find yourself unable to stay awake. You''re just on the edge of falling completely asleep when you''re snapped back to reality by the teacher calling your name. "Well? What''s the answer?" She asks with a smug smile.'
+					*nl
+					'You didn''t catch what the question was, so you take a quick look around the room and piece together an answer you hope is right. Ms. Braakman can barely hide her annoyance as she reluctantly admits that you''re right.'
+				else
+				pcs_mood -= 10
+					'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/sleeping.jpg"></center>'
+					*nl
+					'As Ms. Braakman continues talking, you find yourself unable to stay awake. You''re just on the edge of falling completely asleep when you''re snapped back to reality by the teacher calling your name. "Well? What''s the answer?" She asks, smiling smugly.'
+					*nl
+					'You didn''t catch what the question was, so you take a quick look around the room and piece together an answer you hope is right. Unfortunately, you answer incorrectly, which Ms. Braakman is happy to point out to the entire class.'
+					*nl
+					'"A perfect example of how to fail my class." She smirks as kids begin to laugh at you.'
+				end
+				gs 'gschool_lessonsev3', 'english'
 				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
-			end
-		elseif RAND(1,3) = 1:
-			if pcs_grades >= 80:
+			elseif RAND(1,2) = 1:
 				*clr
 				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/sleeping.jpg"></center>'
 				*nl
-				'As Ms. Braakman continues talking, you find yourself unable to stay awake. You''re just on the edge of falling completely asleep when you''re snapped back to reality by the teacher calling your name. "Well? What''s the answer?" She asks with a smug smile.'
-				*nl
-				'You didn''t catch what the question was, so you take a quick look around the room and piece together an answer you hope is right. Ms. Braakman can barely hide her annoyance as she reluctantly admits that you''re right.'
+				'Fall asleep and have a dream, get woken up by dream. Have fun with it guys.'
+				act 'Leave class': gt 'gschool_lessons', 'short_break'
 			else
-			pcs_mood -= 10
+				*clr
 				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/sleeping.jpg"></center>'
 				*nl
-				'As Ms. Braakman continues talking, you find yourself unable to stay awake. You''re just on the edge of falling completely asleep when you''re snapped back to reality by the teacher calling your name. "Well? What''s the answer?" She asks, smiling smugly.'
-				*nl
-				'You didn''t catch what the question was, so you take a quick look around the room and piece together an answer you hope is right. Unfortunately, you answer incorrectly, which Ms. Braakman is happy to point out to the entire class.'
-				*nl
-				'"A perfect example of how to fail my class." She smirks as kids begin to laugh at you.'
+				'Fall asleep, end of class bell wakes <<$pcs_firstname>> up.'
+				act 'Leave class': gt 'gschool_lessons', 'short_break'
 			end
-			gs 'gschool_lessonsev3', 'english'
-			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
-		elseif RAND(1,2) = 1:
-			*clr
-			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/sleeping.jpg"></center>'
-			*nl
-			'Fall asleep and have a dream, get woken up by dream. Have fun with it guys.'
-			act 'Leave class': gt 'gschool_lessons', 'short_break'
-		else
-			*clr
-			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/sleeping.jpg"></center>'
-			*nl
-			'Fall asleep, end of class bell wakes <<$pcs_firstname>> up.'
-			act 'Leave class': gt 'gschool_lessons', 'short_break'
 		end
-	end
-	act'Play with your phone':
-		*clr & cla
-		act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
-		pcs_grades -= 1
-		'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/phone.jpg"></center>'
-		*nl
-		'The lesson is so boring that you have to do something to keep yourself entertained, so you take out your phone and begin to play a mobile game, hoping the lesson will be over soon.'
-		if RAND(1,4) = 1:
+		act'Play with your phone':
 			*clr & cla
+			act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
+			pcs_grades -= 1
 			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/phone.jpg"></center>'
 			*nl
-			'"Miss <<$pcs_lastname>>, are you playing on your phone during class?" Ms. Braakman asks as she makes her way towards you.'
-			act 'Put your phone away':
+			'The lesson is so boring that you have to do something to keep yourself entertained, so you take out your phone and begin to play a mobile game, hoping the lesson will be over soon.'
+			if RAND(1,4) = 1:
 				*clr & cla
-				grupvalue[1] -= 5
-				grupvalue[4] -= 5
-				grupvalue[3] += 5
-				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/bored.jpg"></center>'
-				'You decide not to aggravate the situation and put your phone away. You can see Ms. Braakman isn''t happy, but she''s willing to let it go for now and goes back to teaching the class without reprimanding you.'
-				gs 'gschool_lessonsev3', 'english'
-				act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
-			end
-			act 'Keep using your phone':
-				*clr & cla
-				grupvalue[4] +=3
-				demerit += 5
-				'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/teacher/raven/angry.jpg"></center>'
-				'You shrug your shoulders dismissively, which only serves to anger her more. "So, that''s how it''s going to be." She laughs dryly.'
-				act 'Take an upskirt selfie':
+				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/phone.jpg"></center>'
+				*nl
+				'"Miss <<$pcs_lastname>>, are you playing on your phone during class?" Ms. Braakman asks as she makes her way towards you.'
+				act 'Put your phone away':
 					*clr & cla
-					if $pantyworntype ! 'none':
-						!!if PC is wearing panties
-						'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/upskirtselfie.jpg"></center>'
-						*nl
-						'With a mischievous smile, you tap the camera app and deftly slide your phone under your skirt and spread your legs to take a picture of your panties. Just as you press the shutter button, Ms. Braakman stops in front of your desk, her hands on her hips as she stares daggers at you.'
-						*nl
-						'"Hand it over." She orders, one of her hands now held out in front of you. Obediently, you hand over your phone to her without argument. When she sees the screen is still on, she smiles smugly. "You were texting, weren''t you? Of course you were, that''s all you kids do these days. Well, I''m sure you wouldn''t mind if I shared with the class what you were--"'
-						*nl
-						'You can barely keep a straight face as you watch Ms. Braakman''s expression change from smug to confusion and then anger in a matter of seconds. For a moment you expect her to go through with her threat and show the class what you were doing, but for whatever reason she doesn''t. "I don''t want to see you on your phone in my class again, young lady." Ms. Braakman says as she hands you back your phone, the screen now turned off.'
-						gs 'gschool_lessonsev3', 'english'
-						act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
-					else
-						!!if PC is not wearing panties
-						pcs_horny += 10
-						'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/literature/nopanties_upskirt.png"></center>'
-						*nl
-						'With a mischievous smile, you tap the camera app and deftly slide your phone under your skirt and spread your legs to take a picture of your bare pussy. Just as you press the shutter button, Ms. Braakman stops in front of your desk, her hands on her hips as she stares daggers at you.'
-						*nl
-						'"Hand it over." She orders, one of her hands now held out in front of you. Obediently, you hand over your phone to her without argument. When she sees the screen is still on, she smiles smugly. "You were texting, weren''t you? Of course you were, that''s all you kids do these days. Well, I''m sure you wouldn''t mind if I shared with the class what you were--"'
-						*nl
-						'You can barely keep a straight face as you watch Ms. Braakman''s expression change from smug to confusion and then anger in a matter of seconds. You silently wait for her to order you out the class and to the principal''s office, but she looks lost in her own thoughts as she continues to stare at the screen for a long moment. When she finally snaps back to reality, you could have sworn you saw a twinkle of excitement and longing in her eyes.'
-						*nl
-						'"Behave yourself, Miss <<$pcs_lastname>>." She says sharply, but the way she licks her lips afterwards speaks of something else. Without another word, she drops your phone into your lap and returns to the front of the class to resume the lesson.'
-						gs 'gschool_lessonsev3', 'english'
-						act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
-					end
-				end
-				!!hiding the phone in your bra may be changed when bras and panties are added/expanded and you have the option to go braless
-				act 'Hide the phone in your bra':
-					*clr & cla
-					demerit += 5
-					pcs_horny += 15
-					'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/nophone.jpg"></center>'
-					*nl
-					'You deftly shove the phone in your bra, and smile fiendishly as you see the momentary hesitation from your teacher as they stop at your desk. "You think this is a joke, Miss <<$pcs_lastname>>?" Ms. Braakman asks, her eyes narrowing.'
-					*nl
-					'"If you want my phone, go ahead and take it." You reply in a mockingly sweet voice as you jut out your chest. Your teacher''s eyes darken dangerously, and you start to think you''ve won this fight, but your bluff is called as one of Ms. Braakman''s hands disappears down your blouse. "Ms. Braakman, I didn''t know today''s lesson would be so hands on!" You tease as you feel her hand slip inside your bra. Your smile widens as you hear the class erupt with cheering and laughter.'
-					*nl
-					'"You think you''re clever, don''t you?" She breathes, her voice low so only you can hear. You try to respond, but your words get caught in your throat as she starts to tease one of your nipples between her fingertips. Suddenly, she''s no longer searching but groping, her skillful fingers carefully moving between each breast until both of your sensitive buds are hard and straining almost uncomfortably against your bra. You can''t help but shift slightly in your seat as you feel a tightening in your lower belly and aching throb between your legs.'
-					*nl
-					'"Don''t make me remind you of your place, little girl." Ms. Braakman''s warning is punctuated painfully as she gives a sharp pinch and tug to one of your nipples, eliciting a soft whimper from you. Having gotten her point across, she removes her hand and with it your phone. "You can get this back after class."'
-					*nl
-					'Flustered and aroused, you regain your senses and remember that you''re sitting in class right now. You look around the room, but it seems like her groping went unnoticed and was seen as her fishing out your phone like you challenged her to do.'
-					act '...': gt 'gschool_lessonsev3', 'getphone'
-				end
-				act 'Hand over the phone':
-					*clr & cla
-					grupvalue[4] -=3
-					grupvalue[3] += 3
+					grupvalue[1] -= 5
+					grupvalue[4] -= 5
+					grupvalue[3] += 5
 					'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/bored.jpg"></center>'
-					'Realizing that this isn''t worth the fight, you hand over your phone without argument. "You can have this back after class." Ms. Braakman says as she walks back to the blackboard.'
-					act '...': gt 'gschool_lessonsev3', 'getphone'
+					'You decide not to aggravate the situation and put your phone away. You can see Ms. Braakman isn''t happy, but she''s willing to let it go for now and goes back to teaching the class without reprimanding you.'
+					gs 'gschool_lessonsev3', 'english'
+					act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
+				end
+				act 'Keep using your phone':
+					*clr & cla
+					grupvalue[4] +=3
+					demerit += 5
+					'<center><img <<$set_imgh>> src="images/characters/pavlovsk/school/teacher/raven/angry.jpg"></center>'
+					'You shrug your shoulders dismissively, which only serves to anger her more. "So, that''s how it''s going to be." She laughs dryly.'
+					act 'Take an upskirt selfie':
+						*clr & cla
+						if $pantyworntype ! 'none':
+							!!if PC is wearing panties
+							'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/upskirtselfie.jpg"></center>'
+							*nl
+							'With a mischievous smile, you tap the camera app and deftly slide your phone under your skirt and spread your legs to take a picture of your panties. Just as you press the shutter button, Ms. Braakman stops in front of your desk, her hands on her hips as she stares daggers at you.'
+							*nl
+							'"Hand it over." She orders, one of her hands now held out in front of you. Obediently, you hand over your phone to her without argument. When she sees the screen is still on, she smiles smugly. "You were texting, weren''t you? Of course you were, that''s all you kids do these days. Well, I''m sure you wouldn''t mind if I shared with the class what you were--"'
+							*nl
+							'You can barely keep a straight face as you watch Ms. Braakman''s expression change from smug to confusion and then anger in a matter of seconds. For a moment you expect her to go through with her threat and show the class what you were doing, but for whatever reason she doesn''t. "I don''t want to see you on your phone in my class again, young lady." Ms. Braakman says as she hands you back your phone, the screen now turned off.'
+							gs 'gschool_lessonsev3', 'english'
+							act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
+						else
+							!!if PC is not wearing panties
+							pcs_horny += 10
+							'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/literature/nopanties_upskirt.png"></center>'
+							*nl
+							'With a mischievous smile, you tap the camera app and deftly slide your phone under your skirt and spread your legs to take a picture of your bare pussy. Just as you press the shutter button, Ms. Braakman stops in front of your desk, her hands on her hips as she stares daggers at you.'
+							*nl
+							'"Hand it over." She orders, one of her hands now held out in front of you. Obediently, you hand over your phone to her without argument. When she sees the screen is still on, she smiles smugly. "You were texting, weren''t you? Of course you were, that''s all you kids do these days. Well, I''m sure you wouldn''t mind if I shared with the class what you were--"'
+							*nl
+							'You can barely keep a straight face as you watch Ms. Braakman''s expression change from smug to confusion and then anger in a matter of seconds. You silently wait for her to order you out the class and to the principal''s office, but she looks lost in her own thoughts as she continues to stare at the screen for a long moment. When she finally snaps back to reality, you could have sworn you saw a twinkle of excitement and longing in her eyes.'
+							*nl
+							'"Behave yourself, Miss <<$pcs_lastname>>." She says sharply, but the way she licks her lips afterwards speaks of something else. Without another word, she drops your phone into your lap and returns to the front of the class to resume the lesson.'
+							gs 'gschool_lessonsev3', 'english'
+							act 'Wait for the end of the lesson': gt 'gschool_lessons', 'short_break'
+						end
+					end
+					!!hiding the phone in your bra may be changed when bras and panties are added/expanded and you have the option to go braless
+					act 'Hide the phone in your bra':
+						*clr & cla
+						demerit += 5
+						pcs_horny += 15
+						'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/nophone.jpg"></center>'
+						*nl
+						'You deftly shove the phone in your bra, and smile fiendishly as you see the momentary hesitation from your teacher as they stop at your desk. "You think this is a joke, Miss <<$pcs_lastname>>?" Ms. Braakman asks, her eyes narrowing.'
+						*nl
+						'"If you want my phone, go ahead and take it." You reply in a mockingly sweet voice as you jut out your chest. Your teacher''s eyes darken dangerously, and you start to think you''ve won this fight, but your bluff is called as one of Ms. Braakman''s hands disappears down your blouse. "Ms. Braakman, I didn''t know today''s lesson would be so hands on!" You tease as you feel her hand slip inside your bra. Your smile widens as you hear the class erupt with cheering and laughter.'
+						*nl
+						'"You think you''re clever, don''t you?" She breathes, her voice low so only you can hear. You try to respond, but your words get caught in your throat as she starts to tease one of your nipples between her fingertips. Suddenly, she''s no longer searching but groping, her skillful fingers carefully moving between each breast until both of your sensitive buds are hard and straining almost uncomfortably against your bra. You can''t help but shift slightly in your seat as you feel a tightening in your lower belly and aching throb between your legs.'
+						*nl
+						'"Don''t make me remind you of your place, little girl." Ms. Braakman''s warning is punctuated painfully as she gives a sharp pinch and tug to one of your nipples, eliciting a soft whimper from you. Having gotten her point across, she removes her hand and with it your phone. "You can get this back after class."'
+						*nl
+						'Flustered and aroused, you regain your senses and remember that you''re sitting in class right now. You look around the room, but it seems like her groping went unnoticed and was seen as her fishing out your phone like you challenged her to do.'
+						act '...': gt 'gschool_lessonsev3', 'getphone'
+					end
+					act 'Hand over the phone':
+						*clr & cla
+						grupvalue[4] -=3
+						grupvalue[3] += 3
+						'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/classroom/bored.jpg"></center>'
+						'Realizing that this isn''t worth the fight, you hand over your phone without argument. "You can have this back after class." Ms. Braakman says as she walks back to the blackboard.'
+						act '...': gt 'gschool_lessonsev3', 'getphone'
+					end
 				end
 			end
 		end
+		act 'Finish class': gt 'gschool_lessons', 'short_break'
 	end
-	act 'Finish class': gt 'gschool_lessons', 'short_break'
 end
 
 if $ARGS[0] = 'geography':
