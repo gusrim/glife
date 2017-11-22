@@ -7,7 +7,7 @@
 !!gs 'panties', 'fresh'
 
 if $ARGS[0] = 'dispose':
-	dynamic $pantyworntype + '_panties[<<lastwornpantynumber>>] = 0'
+	dynamic $pantyworntype + '_panties[<<pantywornnumber>>] = 0'
 	$lastwornpantytype = 'none'
 	lastwornpantynumber = 0
 	$pantyworntype = 'none'
@@ -47,9 +47,13 @@ end
 
 if $ARGS[0] = 'view_panty_list':
 	!! ARGS 0 - view_panty_list
-	!! ARGS 1 - action type (clean, dirty, store)
+	!! ARGS 1 - action type (clean, dirty, store, bathroom)
 
-	act 'Return': gt 'wardrobe'
+	if $ARGS[1] ! 'bathroom':
+		act 'Return': gt 'wardrobe'
+	else
+		act 'Return': gt $loc, $metka
+	end
 
 	if $ARGS[1] = 'wardrobe':
 		metka_panties = 0
@@ -63,7 +67,7 @@ if $ARGS[0] = 'view_panty_list':
 		metka_panties = 2
 	end
 
-	'<center><table border=1><TH><a href="exec:gt ''panties'', ''view_panty_list'', ''clean''">Draw</a></TH><TH><a href="exec:gt ''panties'', ''view_panty_list'', ''store''">Storage</a></TH><TH><a href="exec:gt ''panties'', ''view_panty_list'', ''unwanted''">Unwanted</a></TH></center>'
+	'<center><table border=1><TH><a href="exec:gt ''panties'', ''view_panty_list'', ''wardrobe''">Draw</a></TH><TH><a href="exec:gt ''panties'', ''view_panty_list'', ''store''">Storage</a></TH><TH><a href="exec:gt ''panties'', ''view_panty_list'', ''unwanted''">Unwanted</a></TH></center>'
 
 	if $pantyworntype ! 'none':act 'Remove panties':gs 'panties', 'linen' & gt 'panties', 'view_panty_list', $ARGS[1]
 	
@@ -73,7 +77,7 @@ if $ARGS[0] = 'view_panty_list':
 
 	i = 1
 	:loopcheappanties 
-	if cheap_pantiesS[i] = metka_panties and cheap_panties[i] = 1:*p '<a href="exec:gt ''panties'', ''view_panty_item'', ''draw'', ''cheap'', <<i>>"><img src="images/pc/panties/cheap/<<i>>.jpg" 	height="300" /></a>'
+	if cheap_pantiesS[i] = metka_panties and cheap_panties[i] = 1:*p '<a href="exec:gt ''panties'', ''view_panty_item'', ''<<$ARGS[1]>>'', ''cheap'', <<i>>"><img src="images/pc/panties/cheap/<<i>>.jpg" 	height="300" /></a>'
 	i += 1
 	if i <= ARRSIZE('cheap_panties'):jump 'loopcheappanties'
 
@@ -81,7 +85,7 @@ if $ARGS[0] = 'view_panty_list':
 
 	i = 1
 	:loopboutiquepanties 
-	if boutique_pantiesS[i] = metka_panties and boutique_panties[i] = 1:*p '<a href="exec:gt ''panties'', ''view_panty_item'', ''draw'', ''boutique'', <<i>>"><img src="images/pc/panties/boutique/<<i>>.jpg" 	height="300" /></a>'
+	if boutique_pantiesS[i] = metka_panties and boutique_panties[i] = 1:*p '<a href="exec:gt ''panties'', ''view_panty_item'', ''<<$ARGS[1]>>'', ''boutique'', <<i>>"><img src="images/pc/panties/boutique/<<i>>.jpg" 	height="300" /></a>'
 	i += 1
 	if i <= ARRSIZE('boutique_panties'):jump 'loopboutiquepanties'
 
@@ -89,7 +93,7 @@ if $ARGS[0] = 'view_panty_list':
 
 	i = 1
 	:loopexhibitionistpanties 
-	if exhibitionist_pantiesS[i] = metka_panties and exhibitionist_panties[i] = 1:*p '<a href="exec:gt ''panties'', ''view_panty_item'', ''draw'', ''exhibitionist'', <<i>>"><img src="images/pc/panties/exhibitionist/<<i>>.jpg" 	height="300" /></a>'
+	if exhibitionist_pantiesS[i] = metka_panties and exhibitionist_panties[i] = 1:*p '<a href="exec:gt ''panties'', ''view_panty_item'', ''<<$ARGS[1]>>'', ''exhibitionist'', <<i>>"><img src="images/pc/panties/exhibitionist/<<i>>.jpg" 	height="300" /></a>'
 	i += 1
 	if i <= ARRSIZE('exhibitionist_panties'):jump 'loopexhibitionistpanties'
 
@@ -97,7 +101,7 @@ if $ARGS[0] = 'view_panty_list':
 
 	i = 1
 	:loopfashionistapanties 
-	if fashionista_pantiesS[i] = metka_panties and fashionista_panties[i] = 1:*p '<a href="exec:gt ''panties'', ''view_panty_item'', ''draw'', ''fashionista'', <<i>>"><img src="images/pc/panties/fashionista/<<i>>.jpg" 	height="300" /></a>'
+	if fashionista_pantiesS[i] = metka_panties and fashionista_panties[i] = 1:*p '<a href="exec:gt ''panties'', ''view_panty_item'', ''<<$ARGS[1]>>'', ''fashionista'', <<i>>"><img src="images/pc/panties/fashionista/<<i>>.jpg" 	height="300" /></a>'
 	i += 1
 	if i <= ARRSIZE('fashionista_panties'):jump 'loopfashionistapanties'
 
@@ -105,7 +109,7 @@ if $ARGS[0] = 'view_panty_list':
 
 	i = 1
 	:loopkatspanties 
-	if kats_pantiesS[i] = metka_panties and kats_panties[i] = 1:*p '<a href="exec:gt ''panties'', ''view_panty_item'', ''draw'', ''kats'', <<i>>"><img src="images/pc/panties/kats/<<i>>.jpg" 	height="300" /></a>'
+	if kats_pantiesS[i] = metka_panties and kats_panties[i] = 1:*p '<a href="exec:gt ''panties'', ''view_panty_item'', ''<<$ARGS[1]>>'', ''kats'', <<i>>"><img src="images/pc/panties/kats/<<i>>.jpg" 	height="300" /></a>'
 	i += 1
 	if i <= ARRSIZE('kats_panties'):jump 'loopkatspanties'
 
@@ -113,7 +117,7 @@ if $ARGS[0] = 'view_panty_list':
 
 	i = 1
 	:loopsexshoppanties 
-	if sexshop_pantiesS[i] = metka_panties and sexshop_panties[i] = 1:*p '<a href="exec:gt ''panties'', ''view_panty_item'', ''draw'', ''sexshop'', <<i>>"><img src="images/pc/panties/sexshop/<<i>>.jpg" 	height="300" /></a>'
+	if sexshop_pantiesS[i] = metka_panties and sexshop_panties[i] = 1:*p '<a href="exec:gt ''panties'', ''view_panty_item'', ''<<$ARGS[1]>>'', ''sexshop'', <<i>>"><img src="images/pc/panties/sexshop/<<i>>.jpg" 	height="300" /></a>'
 	i += 1
 	if i <= ARRSIZE('sexshop_panties'):jump 'loopsexshoppanties'
 end
@@ -155,29 +159,37 @@ if $ARGS[0] = 'view_panty_item':
 				'You cannot afford these panties.'
 			end
 		end
-	elseif $ARGS[1] = 'draw':
-		act 'Return':gt 'panties', 'view_panty_list', $ARGS[1]
-		
-		if $pantyworntype = $ARGS[2] and pantywornnumber = ARGS[3]:
-			'You are wearing these panties.'
-		else
-			if PanExhibit > pcs_exhibition:
-				'You don''t feel confident enough to wear these panties.'
-			elseif metka_panties = 0:
-				act 'Wear':
-					gs 'panties', 'fresh', $ARGS[2], ARGS[3]
-
-					gt 'wardrobe'
-				end
-			elseif metka_panties = 1:
-				'These panties are in storage.'
-			elseif metka_panties = 2:
-				'These panties are is unwanted.'
-			end
-			
+	else
+		if $ARGS[1] ! 'bathroom':
 			if metka_panties ! 1:$RESULT += 'Move these panties to <a href="exec:gt ''panties'', ''dest1'', ''<<$ARGS[1]>>'', ''<<$ARGS[2]>>'', <<ARGS[3]>>">Storage</a><BR>'
 			if metka_panties ! 0:$RESULT += 'Move these panties to  <a href="exec:gt ''panties'', ''dest0'', ''<<$ARGS[1]>>'', ''<<$ARGS[2]>>'', <<ARGS[3]>>">Wardrobe</a><BR>'
 			if metka_panties ! 2:$RESULT += 'Move these panties to  <a href="exec:gt ''panties'', ''dest2'', ''<<$ARGS[1]>>'', ''<<$ARGS[2]>>'', <<ARGS[3]>>">Unwanted</a>'
+		end
+
+		if $ARGS[1] = 'store':
+			'These panties are in storage.'
+		else $ARGS[1] = 'unwanted':
+			'These panties are unwanted.'
+		else	
+			act 'Return':gt 'panties', 'view_panty_list', $ARGS[1]
+			
+			if $pantyworntype = $ARGS[2] and pantywornnumber = ARGS[3]:
+				'You are wearing these panties.'
+			else
+				if PanExhibit > pcs_exhibition:
+					'You don''t feel confident enough to wear these panties.'
+				elseif metka_panties = 0:
+					act 'Wear':
+						gs 'panties', 'fresh', $ARGS[2], ARGS[3]
+
+						if $ARGS[1] = 'wardrobe':
+							gt 'wardrobe'
+						else
+							gt $loc, $metka
+						end
+					end
+				end
+			end
 		end
 	end
 end
