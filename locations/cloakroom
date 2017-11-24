@@ -52,7 +52,7 @@ if $ARGS[0] = 'view_coat_list':
 	'<center><table border=1><TH>Cloakroom</TH></table></center>'
 
 	if defaultcoat = 0:
-		'<center>You have not chosen a coat to wear.</center>'
+		'<center>You will not wear a coat when outside in the cold.</center>'
 	else
 		'<center>You will wear Coat<<defaultcoat>> when a coat is required.</center>'
 	end
@@ -71,7 +71,7 @@ if $ARGS[0] = 'view_coat_list':
 		i += 1
 	if i <= ARRSIZE('coat'):jump 'loopcoat'
 	
-	act 'Don''t wear a coat':defaultcoat = 0
+	act 'Don''t wear a coat':defaultcoat_warmth = 0 & defaultcoat = 0
 
 	'</table>'
 
@@ -108,6 +108,13 @@ if $ARGS[0] = 'view_coat_item':
 	if defaultcoat ! '<<ARGS[1]>>':
 		act 'Wear this coat when outdoors in the cold':
 			defaultcoat = '<<ARGS[1]>>'
+			if defaultcoat < 4:
+				defaultcoat_warmth = 1
+			elseif defaultcoat = 4 or defaultcoat = 5 or defaultcoat = 8 or defaultcoat = 10 or defaultcoat = 12 or defaultcoat = 13 or defaultcoat = 14 or defaultcoat = 16 or defaultcoat = 17 or defaultcoat = 18 or defaultcoat = 19:
+				defaultcoat_warmth = 2
+			elseif defaultcoat = 6 or defaultcoat = 7 or defaultcoat = 9 or defaultcoat = 11 or defaultcoat = 15:
+				defaultcoat_warmth = 3
+			end
 			gt 'wardrobe'
 		end
 	end
