@@ -1493,21 +1493,28 @@ $cheatmenu['display'] = {
 	pl
 	pl $OpenInnerThough+'Oh my god, what will the neighbours think of us?'+$CloseInnerThough
     nl
-    pl '<center><B>Phone Theme</B></center>'
-    if phonethemeowned = 0:
-        pl $OpenPhoneTheme+'You can buy another phone theme at the kiosk.'+$ClosePhoneTheme
-	else
-	    pl $OpenPhoneTheme+'Set the style for Phone Theme'+$ClosePhoneTheme
-	    if pcs_phonetheme >= 0 and pcs_phonetheme < 13:
-	        pl'<center><a href="exec:pcs_phonetheme += 1"> Next Phone Theme </a></center>'
-            pl'<center><a href="exec:pcs_phonetheme -= 1"> Previous Phone Theme </a></center>'
-            pl'<center><a href="exec:pcs_phonetheme = 0"> Reset Phone Theme </a></center>'
-        else
-            pl'<center><a href="exec:pcs_phonetheme = 0"> Reset Phone Theme </a></center>'
-		end
-	end
+	pl'<center> <a href="exec:dynamic $cheatmenu[''theme'']"><b>Phone Theme Menu</b></a></center>'
 
 !<a href="exec:gs ''Cheatmenu_din'' & Enable_settingmode = 1 & dynamic $cheatmenu[''display'']"><img src="<<FUNC(''$phone_theme'')>>icon_settings.png"></a>
+}
+
+$cheatmenu['theme'] = {
+	clr
+    pl '<center><B>Phone Theme Menu</B></center>'
+	nl
+	pl '<center><a href="exec:dynamic $cheatmenu[''display'']"><b>Settings Menu</b></a></center>'
+	nl
+	pl 'Current theme: <<$phonetheme_name[pcs_phonetheme]>>'
+	nl
+	pl 'Choose from the available themes'
+	nl
+
+	i = 0
+	:phonethemeloop
+	if phonetheme[i] = 1:pl'<a href="exec: pcs_phonetheme = <<i>> & dynamic $cheatmenu[''theme'']"><img src="images/system/phone/theme/' + $phonetheme_name[i] + '/icon_call.png"></a>'
+	i += 1
+	if i <= ARRSIZE('phonetheme'):jump 'phonethemeloop'
+
 }
 
 $cheatmenu['pain'] = {
