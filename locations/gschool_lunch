@@ -1,37 +1,16 @@
 # gschool_lunch
 
-
-if $ARGS[0] = 'lesson_end':
+if $ARGS[0] = 'lunch':
 	cla
-
-
-	if school_event_hour = 0:
-
-		gt 'gschool_events', 'rand_class'
-
-	else
-		if school_lunch = 1:
-			school_event_hour = 0 & gt 'gschool_lessons', 'short_break'
-		elseif NikoVolkovQW = 5 and NikoEv = 5 and NikoDate = 0 and NikoDate_Day ! daystart:
-			school_lunch = 1 & gt 'NikoDates', 'Hallway Strip'
-		elseif NikoVolkovQW = 10 and NikoEv = 12:
+	if school_lunch = 0:
+		if NikoVolkovQW = 10 and NikoEv = 12:
 			school_lunch = 1 & gt 'NikoDreams', 'Classroom Dream'
-		elseif NikoVolkovQW = 10 and NikoEv = 13 and NikoDate_Day ! daystart:
-			school_lunch = 1 & gt 'NikoEv2', 'Lunch Chat'
-		elseif NikoVolkovQW = 10 and NikoEv = 15 and NikoDate_Day ! daystart:
-			school_lunch = 1 & gt 'NikoEv2', 'Lunch Chat 2'
 		elseif NikoVolkovQW = 10 and NikoEv = 21 and NikoDate_Day ! daystart:
 			school_lunch = 1 & gt 'NikoEv2', 'Julia Talk 2'
 		elseif VKLenaBully = 1 and VKLena_Day ! daystart and VKWip = 100:
 			school_lunch = 1 & gt 'NikoBully', 'Lena Bully'
-		else
-			school_lunch = 1 & gt 'gschool_lunch', 'lunch'
 		end
 	end
-end
-
-if $ARGS[0] = 'lunch':
-	cla
 
 	if dimaRevenge = 3:
 		gt 'dimaRevenge', 3
@@ -55,45 +34,60 @@ if $ARGS[0] = 'lunch':
 
 	gs 'stat'
 	'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/lunch/lunch.jpg"></center>'
-	act 'Go to the cafeteria':
-		*clr & cla
-		$loc = 'gschool_lunch'
-		$metka = 'break'
-		minut += 10
-		gs 'stat'
-		if dimaRevenge = 5 and dimaRevChoice = 5:
-			!!during lunch!!
-			'<center><b><font color="maroon">Cafeteria</font></b></center>'
-			'<center><img src="images/locations/pavlovsk/school/lunch/lunch.jpg"></center>'
-			'As you wait in line for your meal, you hear the other students talking about a girl you don''t know. None of them are talking about you anymore. Dimka works quick. You enjoy the rest of your lunch break.'
-		else
-			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/lunch/lunch.jpg"></center>'
-			'During the break, students and some of the <a href="exec:gt ''Sgrup''">teachers</a> are standing in line near the kitchen, waiting for their food.'
+	act 'Go to the cafeteria': gt 'gschool_lunch', 'cafeteria'
+end
+
+if $ARGS[0] = 'cafeteria':
+	if school_lunch = 0:
+		if NikoVolkovQW = 5 and NikoEv = 5 and NikoDate = 0 and NikoDate_Day ! daystart:
+			school_lunch = 1
+			gt 'NikoDates', 'Hallway Strip'
+		elseif NikoVolkovQW = 10 and NikoEv = 13 and NikoDate_Day ! daystart:
+			school_lunch = 1
+			gt 'NikoEv2', 'Lunch Chat'
+		elseif NikoVolkovQW = 10 and NikoEv = 15 and NikoDate_Day ! daystart:
+			school_lunch = 1
+			gt 'NikoEv2', 'Lunch Chat 2'
 		end
-		if money >= 50:
-			act 'Buy food (50 <b>₽</b>)':
-				cla
-				money -= 50
-				gs 'food', 'm_meal'
-				delact 'Finish'
-				gs 'gschool_gossip', 'buying'
-				act 'Continue': gt 'gschool_lunch', 'break'
-			end
-		end
-		act 'Eat bagged lunch':
+	end
+	*clr & cla
+	$loc = 'gschool_lunch'
+	$metka = 'cafeteria'
+	minut += 10
+	gs 'stat'
+	if dimaRevenge = 5 and dimaRevChoice = 5:
+		!!during lunch!!
+		'<center><b><font color="maroon">Cafeteria</font></b></center>'
+		'<center><img src="images/locations/pavlovsk/school/lunch/lunch.jpg"></center>'
+		'As you wait in line for your meal, you hear the other students talking about a girl you don''t know. None of them are talking about you anymore. Dimka works quick. You enjoy the rest of your lunch break.'
+	else
+		'<center><img <<$set_imgh>> src="images/locations/pavlovsk/school/lunch/lunch.jpg"></center>'
+		'During the break, students and some of the <a href="exec:gt ''Sgrup''">teachers</a> are standing in line near the kitchen, waiting for their food.'
+	end
+	if money >= 50:
+		act 'Buy food (50 <b>₽</b>)':
 			cla
-			gs 'food', 'bag_lunch'
+			money -= 50
+			gs 'food', 'm_meal'
 			delact 'Finish'
-			gs 'gschool_gossip', 'bagged'
-			act 'Continue': gt 'gschool_lunch', 'break'
-		end
-		act 'Skip lunch':
-			cla
-			gs 'gschool_gossip', 'skipping'
+			gs 'gschool_gossip', 'buying'
 			act 'Continue': gt 'gschool_lunch', 'break'
 		end
 	end
+	act 'Eat bagged lunch':
+		cla
+		gs 'food', 'bag_lunch'
+		delact 'Finish'
+		gs 'gschool_gossip', 'bagged'
+		act 'Continue': gt 'gschool_lunch', 'break'
+	end
+	act 'Skip lunch':
+		cla
+		gs 'gschool_gossip', 'skipping'
+		act 'Continue': gt 'gschool_lunch', 'break'
+	end
 end
+
 
 if $ARGS[0] = 'break':
 	urand = rand(0, 12)
