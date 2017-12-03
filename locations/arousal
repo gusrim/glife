@@ -4,10 +4,10 @@
 $ARGS[0] the action causing arousal can be when receiving any of the following:
 'masturbate' 'porn' 'voyeur' 'kiss' 'breasts' 'massage' 'foreplay' 'cuni' 'rimming' 'trib' 'anal' 'anal_finger' 'anal_fist' 'anal_dildo' 'anal_strap' 'anal_vibe' 'vaginal' 'vaginal_finger' 'vaginal_fist' 'vaginal_dildo' 'vaginal_strap' 'vaginal_vibe'
 also when giving any of the following:
-'flash' 'flashlite' (for lesser events) 'kiss_give' 'breasts_give' 'massage_give' 'foreplay_give' 'cuni_give' 'rimming_give' 'anal_finger_give' 'anal_fist_give' 'anal_dildo_give' 'anal_vibe_give' 'anal_strap_give'
+'flash_breasts' 'flash_pussy' 'flash_ass' 'kiss_give' 'breasts_give' 'massage_give' 'foreplay_give' 'cuni_give' 'rimming_give' 'anal_finger_give' 'anal_fist_give' 'anal_dildo_give' 'anal_vibe_give' 'anal_strap_give'
 'vaginal_finger_give' 'vaginal_fist_give' 'vaginal_dildo_give' 'vaginal_strap_give' 'vaginal_vibe_give' 'hj' 'bj' 'footjob'
 All acts are from Sveta''s perspective and in cases of both giving and receiving, receiving should be used.
-ARGS[1] for time taken in minutes
+ARGS[1] for time taken in minutes - it is use partly for arousal calculation and partly for moving time ahead. If you want to calculate just the arousal and do not move time (simultaneous stimulation), use negative value.
 $ARGS[2] can be used for passing the name of boys dick variable .. 'dick' is default, which belong to $boy, else can be passed 'dick1' .. 'dick4' or 'dick[i]' along the boys parameters activation 
 $ARGS[2] - [8] Are optional but can be upto 7 fetishes involved in the act and can be any of the following:
 'maso' 'bound' 'beast' 'exhibitionism' 'rough' 'prostitution' 'dom' 'sub' 'incest' 'feet' 'lesbian' 'group' 'gangbang' 'humiliation' 'deepthroat' 'unknown'
@@ -259,22 +259,15 @@ if $ARGS[0] ! 'end' and $ARGS[0] ! 'checks' and $ARGS[0] ! 'count' and $ARGS[0] 
 		count['vaginal_vibe'] = 1
 		stim['mag'] += 2
 		stim['act'] = 90
-	elseif $ARGS[0] = 'flash':
-		count['flash'] = 1
+	elseif $ARGS[0] = 'flash_breasts':
+		count['flash_breasts'] = 1
 		stim['act'] = 30
-		stim['kink'] += exhibitionism['exp']
-		stim['pref'] += exhibitionism['pref']
-		exhibition_exp += rand(3,9)
-		stim['kinkno'] += 1
-		stim['exhibitionism'] = 1
-	elseif $ARGS[0] = 'flashlite':
-		count['flashlite'] = 1
+	elseif $ARGS[0] = 'flash_pussy':
+		count['flash_pussy'] = 1
 		stim['act'] = 10
-		stim['kink'] += exhibitionism['exp']
-		stim['pref'] += exhibitionism['pref']
-		exhibition_exp += rand(1,3)
-		stim['kinkno'] += 1
-		stim['exhibitionism'] = 1
+	elseif $ARGS[0] = 'flash_ass':
+		count['flash_ass'] = 1
+		stim['act'] = 10
 	elseif $ARGS[0] = 'kiss_give':
 		stim['act'] = 20
 	elseif $ARGS[0] = 'breasts_give':
@@ -340,8 +333,8 @@ if $ARGS[0] ! 'end' and $ARGS[0] ! 'checks' and $ARGS[0] ! 'count' and $ARGS[0] 
 
 	if stim['mag'] > 9: stim['mag'] = 9
 
-	minut += ARGS[1]
-	stim['time'] = ARGS[1]
+	if ARGS[1] > 0: minut += ARGS[1]
+	stim['time'] = iif(ARGS[1]>0,ARGS[1],-ARGS[1])
 
 
 !!Adds effects due to sexual perversions
@@ -590,8 +583,9 @@ if $ARGS[0] = 'end':
 	gs 'arousal', 'count', 'hj'
 	gs 'arousal', 'count', 'bj'
 	gs 'arousal', 'count', 'footjob'
-	gs 'arousal', 'count2', 'flash'
-	gs 'arousal', 'count2', 'flashlite'
+	gs 'arousal', 'count2', 'flash_breasts'
+	gs 'arousal', 'count2', 'flash_pussy'
+	gs 'arousal', 'count2', 'flash_ass'
 	gs 'arousal', 'count2', 'voyeur'
 end
 
@@ -599,8 +593,9 @@ if $ARGS[0] = 'count':
 	if dyneval('RESULT = count[''<<$ARGS[1]>>'']') = 1:
 		dynamic 'count[''<<$ARGS[1]>>''] = 0'
 		dynamic 'stat[''<<$ARGS[1]>>''] += 1'
-		count['flash'] = 0
-		count['flashlite'] = 0
+		count['flash_breasts'] = 0
+		count['flash_pussy'] = 0
+		count['flash_ass'] = 0
 	end
 end
 
