@@ -51,61 +51,33 @@ $mobile_check = {
 		pl'<center><a href="exec:gt ''qwlocdog''"><img src="images/system/phone/call_accept.png"></a>              <a href="exec:qwdogiventday = daystart & gt $loc, $metka"><img src="images/system/phone/decline.png"></a></center>'
 	end
 
-	if pcs_lovers[0] = 1 and loverday[0] ! daystart and hour > 5 and hour < 20 and ringA = 0 and rand(1,7) > 5:
-		if pcs_apprnc < vneshlover[0]:
-			loverrelation[0] -= 1
-			if loverrelation[0] = 0:
+	!! iterating all lovers
+	:loverloop
+	lover_number = 0
+	if pcs_lovers[lover_number] = 1 and loverday[lover_number] ! daystart and hour > 5 and hour < 20 and ringA = 0 and rand(1,7) > 5:
+		lover_number = arrsize('pcs_lovers')
+		if pcs_apprnc < vneshlover[lover_number]:
+			loverrelation[lover_number] -= 1
+			if loverrelation[lover_number] = 0:
 				'<b><font color="red">Your guy does not call you, he probably dumped you.</font></b>'
 			else
-				'Your boyfriend <<$loverdesc[0]>> has not called you.'
+				'Your boyfriend <<$loverdesc[lover_number]>> has not called you.'
 			end
 		else
 			ring = 1
 			ringA = 1
 			'<b><font color="red">Your phone is ringing</font></b>'
 			PLAY 'sound/old_phone.mp3',30
-			$caller = '<<$loverdesc[0]>>'
-			$callerid = 'images/characters/shared/'+boypic[0]+'.jpg'
+			$caller = '<<$loverdesc[lover_number]>>'
+			$callerid = 'images/characters/shared/'+boypic[lover_number]+'.jpg'
 			gs 'telefon','phone_ring'
-			pl'<center><a href="exec:gt ''telefon'', ''boyA''"><img src="images/system/phone/call_accept.png"></a>              <a href="exec:gt $loc, $metka"><img src="images/system/phone/decline.png"></a></center>'
-		end
-	elseif pcs_lovers[1] = 1 and loverday[1] ! daystart and hour > 5 and hour < 20 and ringB = 0 and rand(1,7) > 5:
-		if pcs_apprnc < vneshlover[1]:
-			loverrelation[1] -= 1
-			if loverrelation[1] = 0:
-				'<b><font color="red">Your guy does not call you, he probably dumped you.</font></b>'
-			else
-				'Your boyfriend <<$loverdesc[1]>> has not called you.'
-			end
-		else
-			ring = 1
-			ringB = 1
-			'<b><font color="red">Your phone is ringing</font></b>'
-			PLAY 'sound/old_phone.mp3',30
-			$caller = '<<$loverdesc[1]>>'
-			$callerid = 'images/characters/shared/'+boypic[1]+'.jpg'
-			gs 'telefon','phone_ring'
-			pl'<center><a href="exec:gt ''telefon'', ''boyB''"><img src="images/system/phone/call_accept.png"></a>              <a href="exec:gt $loc, $metka"><img src="images/system/phone/decline.png"></a></center>'
-		end
-	elseif pcs_lovers[2] = 1 and loverday[2] ! daystart and hour > 5 and hour < 20 and ringC = 0 and rand(1,7) > 5:
-		if pcs_apprnc < vneshlover[2]:
-			loverrelation[2] -= 1
-			if loverrelation[2] = 0:
-				'<b><font color="red">Your guy does not call you, he probably dumped you.</font></b>'
-			else
-				'Your boyfriend <<$loverdesc[2]>> has not called you.'
-			end
-		else
-			ring = 1
-			ringC = 1
-			'<b><font color="red">Your phone is ringing</font></b>'
-			PLAY 'sound/old_phone.mp3',30
-			$caller = '<<$loverdesc[2]>>'
-			$callerid = 'images/characters/shared/'+boypic[2]+'.jpg'
-			gs 'telefon','phone_ring'
-			pl'<center><a href="exec:gt ''telefon'', ''boyC''"><img src="images/system/phone/call_accept.png"></a>              <a href="exec: gt $loc, $metka"><img src="images/system/phone/decline.png"></a></center>'
+			pl'<center><a href="exec:gt ''telefon'', ''lover'', <<lover_number>>"><img src="images/system/phone/call_accept.png"></a>              <a href="exec:gt $loc, $metka"><img src="images/system/phone/decline.png"></a></center>'
 		end
 	end
+	lover_number += 1
+	if lover_number < arrsize('pcs_lovers'): jump 'loverloop'
+	
+	killvar 'lover_number'
 }
 
 
