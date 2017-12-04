@@ -1,84 +1,89 @@
-# boy
+# girl
 
-!!'<<$boydesc>> <<$boybody>> <<$boybod>> <<$boyface>>. <<$boydesc>> <<$boyClo>>'
+!!'<<$girldesc>> <<$girlbody>> <<$girlbod>> <<$girlface>>. <<$girldesc>> <<$girlClo>>'
 if $ARGS[0] = '':
 	!randomly age
-	boyage = rand(18,35)
+	girlage = rand(18,35)
 
 	!! {The NPC generator is now the primary system of creating new characters.}
-	gs 'npcgeneratec', 0, 'A Male', boyage
+	if girlage <= 25:
+		gs 'npcgeneratec', 1, 'A Girl', girlage
+	else
+		gs 'npcgeneratec', 1, 'A Woman', girlage
 	gs 'boyStat', $npclastgenerated
-	gs 'boy', 'details'
+	gs 'girl', 'details'
 end
 
 if $ARGS[0] = 'details':
 	!Select Photos
 
-:boydetailsloop
-	picrand =  RAND(1,30)
-	if picrand = lover_picture[0] or picrand = lover_picture[1] or picrand = lover_picture[2]: jump 'boydetailsloop'
+:girldetailsloop
+	!! girls 1-30, girlfriends 31-60
+	picrand =  RAND(1,30) + 30
+	if picrand = lover_picture[0] or picrand = lover_picture[1] or picrand = lover_picture[2]: jump 'girldetailsloop'
 
 	silaVag = npc_sexskill[$npclastgenerated]
 	$npc_usedname[$npclastgenerated] = $npc_firstname[$npclastgenerated]
-	$boydesc = $npc_usedname[$npclastgenerated]
+	$girldesc = $npc_usedname[$npclastgenerated]
 
 	!!appearance
-	boybodyrand = rand(1, 3)
+	girlbodyrand = rand(1, 3)
 
-	if boybodyrand = 1: $boybody = 'tall'
-	if boybodyrand = 2: $boybody = 'average'
-	if boybodyrand = 3: $boybody = 'short'
+	if girlbodyrand = 1: $girlbody = 'short'
+	if girlbodyrand = 2: $girlbody = 'average'
+	if girlbodyrand = 3: $girlbody = 'tall'
 
-	boybodrand = rand(1, 4)
+	girlbodrand = rand(1, 4)
 
-	if boybodrand = 1: $boybod = 'thin'
-	if boybodrand = 2: $boybod = 'athletic'
-	if boybodrand = 3: $boybod = 'chunky'
-	if boybodrand = 4: $boybod = 'fat'
+	if girlbodrand = 1 and girlbodyrand = 1: $girlbod = 'petite'
+	if girlbodrand = 1 and girlbodyrand > 1: $girlbod = 'slender'
+	if girlbodrand = 2: $girlbod = 'toned'
+	if girlbodrand = 3: $girlbod = 'chubby'
+	if girlbodrand = 4: $girlbod = 'fat'
 
-	boyfacerand = rand(1, 3)
+	girlfacerand = rand(1, 3)
 
-	if boyfacerand = 1: $boyface = 'black'
-	if boyfacerand = 2: $boyface = 'brunet'
-	if boyfacerand = 3: $boyface = 'blond'
+	if girlfacerand = 1: $girlface = 'black'
+	if girlfacerand = 2: $girlface = 'brunette'
+	if girlfacerand = 3: $girlface = 'blond'
 
 	!!variable is responsible for guy
-	boyonce = 0
+	girlonce = 0
 
 	!!Variables responsible for any features like
 	!!security, is responsible for the money and requirements
-	harakBoy = rand(0, 2)
+	harakgirl = rand(0, 2)
 	finance = rand(0, 2)
 
 	if finance = 0:
 		!!Gopnik beggar or a hard worker
 		!!check in appearance Primary
-		if harakBoy = 0: npc_app[$npclastgenerated] = rand(0, 8)
-		if harakBoy = 1: npc_app[$npclastgenerated] = rand(0, 16)
-		if harakBoy = 2: npc_app[$npclastgenerated] = rand(0, 32)
+		if harakgirl = 0: npc_app[$npclastgenerated] = rand(0, 8)
+		if harakgirl = 1: npc_app[$npclastgenerated] = rand(0, 16)
+		if harakgirl = 2: npc_app[$npclastgenerated] = rand(0, 32)
 
-		$boyClo = 'wearing a tracksuit.'
+		$girlClo = 'wearing a tracksuit.'
 	elseif finance = 1:
 		!!middle_peasant
 		!!check in appearance
-		if harakBoy = 0: npc_app[$npclastgenerated] = rand(0, 16)
-		if harakBoy = 1: npc_app[$npclastgenerated] = rand(0, 24)
-		if harakBoy = 2: npc_app[$npclastgenerated] = rand(0, 32)
+		if harakgirl = 0: npc_app[$npclastgenerated] = rand(0, 16)
+		if harakgirl = 1: npc_app[$npclastgenerated] = rand(0, 24)
+		if harakgirl = 2: npc_app[$npclastgenerated] = rand(0, 32)
 
-		$boyClo = 'wearing jeans and a sweater.'
+		$girlClo = 'wearing jeans and a blouse.'
 	elseif finance = 2:
 		!!middle_peasant
 		!!check in appearance
-		if harakBoy = 0: npc_app[$npclastgenerated] = rand(16, 32)
-		if harakBoy = 1: npc_app[$npclastgenerated] = rand(24, 32)
-		if harakBoy = 2: npc_app[$npclastgenerated] = rand(32, 40)
+		if harakgirl = 0: npc_app[$npclastgenerated] = rand(16, 32)
+		if harakgirl = 1: npc_app[$npclastgenerated] = rand(24, 32)
+		if harakgirl = 2: npc_app[$npclastgenerated] = rand(32, 40)
 
-		$boyClo = 'wearing an expensive suit.'
+		$girlClo = 'wearing an expensive dress.'
 	end
 
 	!!requirements of the figure, chest size, hair color.
 	!!0 - ass less 80, 1 back from 80 prior_to 100, 2 ass over 100
-	figurBoy = rand(0, 2)
+	figurgirl = rand(0, 2)
 	!!0 - chest less 3, 1 breast 3-4, 2 breasts bigger 4
 	npc_bust[$npclastgenerated] = rand(0, 2)
 	!!0 - black, 1 - brown, 2 - Redhead, 3 - blonde
@@ -86,14 +91,14 @@ if $ARGS[0] = 'details':
 	!!character 0 - soft, 1 -norm 2 - aggressor
 	randizvrat = rand(0, 100)
 
-	if randizvrat < 80:izvrat = 0
-	if randizvrat >= 80:izvrat = 1
+	if randizvrat < 90:izvrat = 0
+	if randizvrat >= 90:izvrat = 1
 
 
 
-	hairBoy = npc_haircol[$npclastgenerated]
-	titBoy = npc_bust[$npclastgenerated]
-	vneshBoy = npc_app[$npclastgenerated]
+	hairgirl = npc_haircol[$npclastgenerated]
+	titgirl = npc_bust[$npclastgenerated]
+	vneshgirl = npc_app[$npclastgenerated]
 
 
 	!! trying to make the preference section 
@@ -145,27 +150,27 @@ if $ARGS[0] = 'details':
 
 	!!Need to add modifiers based on breast size, where larger breasts end up forcing the player to show more cleavage than those with smaller breasts.
 	!! 0 - no preference, 1 - 1 to 2 or neckline to moderate, 2 - 3 to 4 or heavy to severe, 3 - 5 to 7 or buldging to outpouring 
-	!! The breast size must be adjusted either when the action is being calculeted or we can base it on their ideal breast size :titBoy + 0/3 depending on the players breast size
+	!! The breast size must be adjusted either when the action is being calculeted or we can base it on their ideal breast size :titgirl + 0/3 depending on the players breast size
 
 
 	!!0 - no preference, 1 - 1 neckline , 2 - 2 or moderate, 3 - 3 to 4 or heavy to severe
 	!! It doesn''t matter if your poor or rich, everyone loves tits.
 
 	slutConstant = 0
-	if rand(0, 1) = 1 and izvrat = 1:slutConstant = 1
+	if rand(0, 2) = 2 and izvrat = 1:slutConstant = 1
 
 
 	clotTopPrefTmp = 0
 	if rand(0, 2) = 2:
-		randchan = rand(0, 2)
-		if randchan = 0 and clotTypePrefTmp ! 4:
+		randchan = rand(0, 5)
+		if randchan < 3 and clotTypePrefTmp ! 4:
 			clotTopPrefTmp = 1 + slutConstant
-		elseif randchan = 1 and clotTypePrefTmp ! 4:
+		elseif randchan < 5 and clotTypePrefTmp ! 4:
 			clotTopPrefTmp = 2 + slutConstant
-		elseif randchan = 2 and clotTypePrefTmp ! 3:
+		elseif randchan = 5 and clotTypePrefTmp ! 3:
 			clotTopPrefTmp = 3
 		end
-		if clotTopPrefTmp ! 0 and titBoy = 2:
+		if clotTopPrefTmp ! 0 and titgirl = 2:
 			if clotPref ! 3:
 				clotTopPrefTmp += 1
 			end
@@ -177,12 +182,12 @@ if $ARGS[0] = 'details':
 
 	bottShorPrefTmp = 0
 	if rand(0, 2) = 2:
-		randchan = rand(0, 2)
-		if randchan = 0 and clotTypePrefTmp ! 4:
+		randchan = rand(0, 5)
+		if randchan < 3 and clotTypePrefTmp ! 4:
 			bottShorPrefTmp = 1 
-		elseif randchan = 1:
+		elseif randchan < 5:
 			bottShorPrefTmp = 2 
-		elseif randchan = 2:
+		elseif randchan = 5:
 			bottShorPrefTmp = 3
 		end
 		randchan = rand(0, 1)
@@ -197,12 +202,12 @@ if $ARGS[0] = 'details':
 
 	clotThinPrefTmp = 0
 	if rand(0, 2) = 2:
-		randchan = rand(0, 2)
-		if randchan = 0:
+		randchan = rand(0, 5)
+		if randchan < 3:
 			clotThinPrefTmp = 1 + slutConstant
-		elseif randchan = 1:
+		elseif randchan < 5:
 			clotThinPrefTmp = 2 + slutConstant
-		elseif randchan = 2 and clotTypePrefTmp ! 3:
+		elseif randchan = 5 and clotTypePrefTmp ! 3:
 			clotThinPrefTmp = 3
 		end
 	end
@@ -212,7 +217,7 @@ if $ARGS[0] = 'details':
 	!! 0 - no preference, 1 - Prefers bimbo clothing.
 
 	bimbPrefTmp = 0
-	if rand(0, 2) = 2 and clotTypePrefTmp ! 3:bimbPrefTmp = 1
+	if rand(0, 10) = 0 and clotTypePrefTmp ! 3:bimbPrefTmp = 1
 
 	!!This is to find out if they want you to wear piercings.
 	!! 0 - no preference, 1 - 0 to 2 piercings, 2 - 3 to 5 piercings, 3 - 6 or more piercings.
@@ -240,7 +245,7 @@ if $ARGS[0] = 'details':
 	!! 0 - no preference, 1 - 2 to 3 units (average) , 2 - 4 units (THIC lips)
 
 	lipsPrefTmp = 0
-	if rand(0, 2) = 2:
+	if rand(0, 3) = 3:
 		randchan = rand(0, 2)
 		if randchan = 0:
 			lipsPrefTmp = 1 + slutConstant
@@ -258,16 +263,16 @@ if $ARGS[0] = 'details':
 
 	!!This is to find out how much makeup they want you to wear.
 	!! 0 - no preference, 1 - 1 (light makeup) , 2 - 2 (moderate makeup), 3 - 3(heavy makeup)
-	!! Plan to make a way for you to set what you makeup you want to wear at your bedside and giving into his wishes would automatically change the automated setting.
+	!! Plan to make a way for you to set what you makeup you want to wear at your bedside and giving into their wishes would automatically change the automated setting.
 
 	makePrefTmp = 0
 	if rand(0, 1) = 1:
-		randchan = rand(0, 2)
-		if randchan = 0:
+		randchan = rand(0, 5)
+		if randchan < 3:
 			makePrefTmp = 1 + slutConstant 
-		elseif randchan = 1:
+		elseif randchan < 5:
 			makePrefTmp = 2 + slutConstant
-		elseif randchan = 2 and clotTypePrefTmp ! 3:
+		elseif randchan = 5 and clotTypePrefTmp ! 3:
 			makePrefTmp = 3 
 		end
 	end
@@ -277,9 +282,9 @@ if $ARGS[0] = 'details':
 	!!0 - no preference, 1 - 1 to 30 intelligence, 2 - 30 to 85 intelligence, 3 - 85 + intelligence. 
 
 	IQPrefTmp = 0
-	if rand(0, 4) = 4:IQPrefTmp = rand(1, 3) 
+	if rand(0, 4) = 4:IQPrefTmp = rand(1, 2) + rand(1, 2)
 
 end
 
---- boy ---------------------------------
+--- girl ---------------------------------
 
