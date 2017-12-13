@@ -3,8 +3,6 @@
 !!gs 'panties', 'dispose'
 !!gs 'panties', 'remove'
 !!gs 'panties', 'wear'
-!!gs 'panties', 'linen'
-!!gs 'panties', 'fresh'
 
 if $ARGS[0] = 'dispose':
 	dynamic $pantyworntype + '_panties[<<pantywornnumber>>] = 0'
@@ -25,24 +23,6 @@ if $ARGS[0] = 'wear':
 	panty_none = 0
 	$pantyworntype = $lastwornpantytype
 	pantywornnumber = lastwornpantynumber
-end
-
-if $ARGS[0] = 'linen':
-	$lastwornpantytype = $pantyworntype
-	lastwornpantynumber = pantywornnumber
-	$pantyworntype = 'none'
-	pantywornnumber = 0
-end
-
-if $ARGS[0] = 'fresh':
-	if $ARGS[1] = '':
-		panty_none = 0
-		$pantyworntype = $lastwornpantytype
-		pantywornnumber = lastwornpantynumber
-	else
-		$pantyworntype = $ARGS[1]
-		pantywornnumber = ARGS[2]
-	end
 end
 
 if $ARGS[0] = 'view_panty_list':
@@ -69,7 +49,7 @@ if $ARGS[0] = 'view_panty_list':
 
 	'<center><table border=1><TH><a href="exec:gt ''panties'', ''view_panty_list'', ''wardrobe''">Draw</a></TH><TH><a href="exec:gt ''panties'', ''view_panty_list'', ''store''">Storage</a></TH><TH><a href="exec:gt ''panties'', ''view_panty_list'', ''unwanted''">Unwanted</a></TH></center>'
 
-	if $pantyworntype ! 'none':act 'Remove panties':gs 'panties', 'linen' & gt 'panties', 'view_panty_list', $ARGS[1]
+	if $pantyworntype ! 'none':act 'Remove panties':gs 'panties', 'remove' & gt 'panties', 'view_panty_list', $ARGS[1]
 	
 	if $ARGS[1] = 'store':
 		cloc = 1
@@ -180,7 +160,7 @@ if $ARGS[0] = 'view_panty_item':
 					'You don''t feel confident enough to wear these panties.'
 				elseif metka_panties = 0:
 					act 'Wear':
-						gs 'panties', 'fresh', $ARGS[2], ARGS[3]
+						gs 'panties', 'wear', $ARGS[2], ARGS[3]
 
 						if $ARGS[1] = 'wardrobe':
 							gt 'wardrobe'
