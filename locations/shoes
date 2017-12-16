@@ -72,6 +72,7 @@ if $ARGS[0] = 'view_shoe_list':
 	!! ARGS 1 - action type (wardrobe, storage, unwanted, sell)
 	!! ARGS 2 - brothel flag (brothel)
 
+	$regularwornshoetype = ''
 
 	act 'Return':gt 'wardrobe'
 
@@ -142,6 +143,32 @@ if $ARGS[0] = 'view_shoe_list':
 	'</table></center>' 
 end
 
+if $ARGS[0] = 'gym':
+	$regularwornshoetype = $shoeworntype
+	regularwornshoenumber = shoewornnumber
+	gt 'clothing_QV', 'gym2'
+end
+
+if $ARGS[0] = 'gym2':
+	'<center><img src="images/locations/city/citycenter/mall/sports.png"></center>'
+
+	i = 1
+	:loopstrainers
+		if strainers[i] = 1 and strainersS[i] = 0:'<a href="exec:gt ''shoes'', ''view_shoe_item'', ''wardrobe'', ''trainers'', <<i>>"><img src="images/pc/shoes/trainers/<<i>>.jpg" 	height="250" /></a>'
+		i += 1
+	if i <= 29:jump 'loopstrainers'
+
+	act 'Return': gt $loc, $metka
+
+	if $shoeworntype ! $regularwornshoetype:
+		act 'Put your regular shoes back on':
+			$shoeworntype = $regularwornshoetype
+			shoewornnumber = regularwornshoenumber
+			gt 'shoes', 'gym2'
+		end
+	end
+end
+
 if $ARGS[0] = 'view_shoe_item':
 	!! ARGS 0 - view_shoe_item
 	!! ARGS 1 = action type (wardrobe, shop, sell)
@@ -190,7 +217,12 @@ if $ARGS[0] = 'view_shoe_item':
 
 		act 'Wear':
 			gs 'shoes', 'wear', $ARGS[2], ARGS[3]
-			gt 'wardrobe'
+
+			if $regularwornshoetype = '':
+				gt 'wardrobe'
+			else
+				gt 'shoes', 'gym2'
+			end
 		end
 	end
 end

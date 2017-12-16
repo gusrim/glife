@@ -1,6 +1,7 @@
 # clothing_QV
 
 if $ARGS[0] = 'list':
+	$regularwornclothingtype = ''
 
 	'<center><table border=1><TH><a href="exec:gt ''clothing'', ''view_clothing_list'', ''wardrobe''">Wardrobe </a></TH><TH><a href="exec:gt ''clothing'', ''view_clothing_list'', ''store''">Storage</a></TH><TH><a href="exec:gt ''clothing'', ''view_clothing_list'', ''unwanted''">Unwanted</a></TH><TH><a href="exec:gt ''clothing_QV'', ''list''">Pick something to wear</a></TH></center>'
 
@@ -231,6 +232,42 @@ if $ARGS[0] = 'sports':
 	act 'Return': gt 'clothing_QV', 'list'
 end
 
+if $ARGS[0] = 'gym':
+	$regularwornclothingtype = $clothingworntype
+	regularwornclothingnumber = clothingwornnumber
+	gt 'clothing_QV', 'gym2'
+end
+
+if $ARGS[0] = 'gym2':
+	'<center><img src="images/locations/city/citycenter/mall/sports.png"></center>'
+
+	i = 1
+	:loopexercise
+	if exercise[i] = 1:
+		gs 'clothing_attributes', 'exercise', i
+		if CloExhibit <= pcs_exhibition:
+			if exerciseS[i] = 0 and exerciseH[i] > 0:*p '<a href="exec:gt ''clothing_QV'', ''change'', ''exercise'', <<i>>"><img src="images/pc/clothing/7exercise/<<i>>.jpg" 	height="250" /></a>'
+		end
+	end
+	i += 1
+	if i <= ARRSIZE('exercise'):jump 'loopexercise'
+
+	act 'Return': gt $loc, $metka
+
+	if $clothingworntype ! $regularwornclothingtype:
+		act 'Change back into your regular clothes':
+			$clothingworntype = $regularwornclothingtype
+			clothingwornnumber = regularwornclothingnumber
+			gt 'clothing_QV', 'gym2'
+		end
+	end
+
+	if $clothingworntype ! 'nude':
+		act 'Strip':gt 'clothing_QV', 'strip'
+	end
+
+end
+
 if $ARGS[0] = 'cloak':
 	i = 1
 	:loopcoat
@@ -253,9 +290,17 @@ if $ARGS[0] = 'strip':
 	end
 
 	gs 'clothing', 'strip'
-	act 'Choose something to wear':gt 'clothing_QV', 'list'
+
+	act 'Choose something to wear':
+			if $regularwornclothingtype = '':
+				gt 'clothing_QV', 'list'
+			else
+				gt 'clothing_QV', 'gym2'
+			end
+		end
+	end
 	
-	act 'Leave':gt $loc, $metka
+	act 'Leave': gt $loc, $metka
 end
 
 if $ARGS[0] = 'change':
@@ -308,7 +353,11 @@ if $ARGS[0] = 'change':
 		act 'Wear this outfit':
 			gs 'clothing', 'wear', $ARGS[1], ARGS[2]
 
-			gt 'wardrobe'
+			if $regularwornclothingtype = '':
+				gt 'wardrobe'
+			else
+				gt 'clothing_QV', 'gym2'
+			end
 		end
 	end
 
