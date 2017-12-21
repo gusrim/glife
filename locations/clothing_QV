@@ -233,12 +233,11 @@ if $ARGS[0] = 'sports':
 end
 
 if $ARGS[0] = 'gym':
-	$regularwornclothingtype = $clothingworntype
-	regularwornclothingnumber = clothingwornnumber
-	gt 'clothing_QV', 'gym2'
-end
+	if $regularwornclothingtype = '':
+		$regularwornclothingtype = $clothingworntype
+		regularwornclothingnumber = clothingwornnumber
+	end
 
-if $ARGS[0] = 'gym2':
 	'<center><img src="images/locations/city/citycenter/mall/sports.png"></center>'
 
 	i = 1
@@ -254,18 +253,21 @@ if $ARGS[0] = 'gym2':
 
 	act 'Return': gt $loc, $metka
 
-	if $clothingworntype ! $regularwornclothingtype:
-		act 'Change back into your regular clothes':
-			$clothingworntype = $regularwornclothingtype
-			clothingwornnumber = regularwornclothingnumber
-			gt 'clothing_QV', 'gym2'
-		end
-	end
+	if $clothingworntype ! $regularwornclothingtype: gs 'clothing_QV', 'gym2'
 
 	if $clothingworntype ! 'nude':
 		act 'Strip':gt 'clothing_QV', 'strip'
 	end
+end
 
+if $ARGS[0] = 'gym2':
+	act 'Change back into your regular clothes':
+		$clothingworntype = $regularwornclothingtype
+		clothingwornnumber = regularwornclothingnumber
+		killvar '$regularwornclothingtype'
+		killvar 'regularwornclothingnumber'
+		gt 'clothing_QV', 'gym2'
+	end
 end
 
 if $ARGS[0] = 'cloak':

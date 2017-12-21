@@ -144,28 +144,31 @@ if $ARGS[0] = 'view_shoe_list':
 end
 
 if $ARGS[0] = 'gym':
-	$regularwornshoetype = $shoeworntype
-	regularwornshoenumber = shoewornnumber
-	gt 'shoes', 'gym2'
-end
+	if $regularwornshoetype = '':
+		$regularwornshoetype = $shoeworntype
+		regularwornshoenumber = shoewornnumber
+	end
 
-if $ARGS[0] = 'gym2':
 	'<center><img src="images/locations/city/citycenter/mall/sports.png"></center>'
 
 	i = 1
-	:loopstrainers
+	:loopstrainers2
 		if strainers[i] = 1 and strainersS[i] = 0:'<a href="exec:gt ''shoes'', ''view_shoe_item'', ''wardrobe'', ''trainers'', <<i>>"><img src="images/pc/shoes/trainers/<<i>>.jpg" 	height="250" /></a>'
 		i += 1
-	if i <= 29:jump 'loopstrainers'
+	if i <= 29:jump 'loopstrainers2'
 
 	act 'Return': gt $loc, $metka
 
-	if $shoeworntype ! $regularwornshoetype:
-		act 'Put your regular shoes back on':
-			$shoeworntype = $regularwornshoetype
-			shoewornnumber = regularwornshoenumber
-			gt 'shoes', 'gym2'
-		end
+	if $shoeworntype ! $regularwornshoetype: gs 'shoes', 'gym2'
+end
+
+if $ARGS[0] = 'gym2':
+	act 'Put your regular shoes back on':
+		$shoeworntype = $regularwornshoetype
+		shoewornnumber = regularwornshoenumber
+		killvar '$regularwornshoetype'
+		killvar 'regularwornshoenumber'
+		gt 'shoes', 'gym2'
 	end
 end
 
