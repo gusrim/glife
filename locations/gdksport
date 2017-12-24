@@ -737,7 +737,6 @@ if $ARGS[0] = 'vball5':
 	'<center><img <<$set_imgh>> src="images/locations/pavlovsk/community/gym/volley/gdksport.jpg"></center>'
 	'The tournament starts at 20:00. Your bus departs at 19:00. You gathered your things together with the rest of the team and got on a bus that took you to the out of town match.'
 	act 'Get on bus and go to play':
-		if poverkomand = 0:poverkomand = 600
 		volltime = 0
 		sorevday = daystart
 		if hour < 19: hour = 19 & minut = 0
@@ -766,20 +765,21 @@ if $ARGS[0] = 'volley':
 		!! reserve player or you were caught drinking by the coach and he forbid you from playing
 		if trener_Speak < 8 or seealko = 1:
 			volleysostav = 1
-			poverkomand = 500
+			poverkomand = 50
 			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/community/gym/volley/game3.jpg"></center>'
 			'You sit on the bench watching your team play.'
 
 		!! starter
 		else
 			volleysostav = 2
-			poverkomand = 500 + ((pcs_vball*2) + ((pcs_stren + pcs_vital + pcs_agil + pcs_react)/2))/2
+			!! between 0 and 200 dependent on player skills
+			poverkomand = ((pcs_vball*2) + ((pcs_stren + pcs_vital + pcs_agil + pcs_react)/2))/2
 			'<center><img <<$set_imgh>> src="images/locations/pavlovsk/community/gym/volley/game4.jpg"></center>'
 			'After warming up you run out on the court to join your teammates.'
 		end
 
-		!! opponent skill
-		poverkomandV = rand(300, 1300)
+		!! opponent skill - between 0 and 200. A perfect player should be able to win every match.
+		poverkomandV = rand(0, 200)
 
 		if poverkomand > poverkomandV:
 			volpoint = 1
@@ -823,7 +823,7 @@ if $ARGS[0] = 'volley':
 					if npc_rel['A69'] >= rand(0, 80):
 						volleysostav = 2
 						pcs_dom += 1
-						poverkomand += ((pcs_vball*2) + ((pcs_stren + pcs_vital + pcs_agil + pcs_react)/2))/2
+						poverkomand = ((pcs_vball*2) + ((pcs_stren + pcs_vital + pcs_agil + pcs_react)/2))/2
 						'The coach agrees to let you play the second half.'
 
 						act 'Continue':volltime = 2 & gt 'gdksport', 'volley'
@@ -847,6 +847,10 @@ if $ARGS[0] = 'volley':
 
 		if volleysostav = 1:'You sit on the bench watching your team play.'
 
+
+		!! change the opponent skill a bit so both halves are not an entirely static affair.
+		poverkomandV += rand(-50, 50)
+
 		if poverkomand > poverkomandV:
 			volpoint += 1
 			'Your team plays better than your opponents.'
@@ -854,7 +858,7 @@ if $ARGS[0] = 'volley':
 			!! you came in and your team scored when they would not have without you
 			if volleysostav = 2 and volpointv = 1:npc_rel['A69'] += 10
 		elseif poverkomand < poverkomandV:
-		volpointv += 1
+			volpointv += 1
 			'Your opponents play better than your team.'
 
 			!! you came in and your team gave up a point they would not have without you
