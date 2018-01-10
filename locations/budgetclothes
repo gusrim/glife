@@ -92,16 +92,21 @@ if $ARGS[0] = 'start':
 end
 
 if $ARGS[0] = 'clothes':
-	$metka = $ARGS[0]
+	$metka = 'clothes'
 	$loc = 'budgetclothes'
 	cls
 	gs'stat'
+	'<center><b><font color="maroon">Viewing all available cheap clothing</font></b></center>'
+	*nl
 
 	act 'Return':
 		cla
 		minut += 5
 		gt 'budgetclothes', 'start'
 	end
+
+	act 'View clothes you are comfortable wearing': gt 'budgetclothes', 'clothes_comf'
+	act 'View clothes you find daring': gt 'budgetclothes', 'clothes_dare'
 
 	i = Clothingstock + 1
 
@@ -115,6 +120,86 @@ if $ARGS[0] = 'clothes':
 
 	:loopcheap
 		if cheap[i] = 0:*p '<a href="exec: i = <<i>> & gt ''budgetclothes'', ''cheapclo''"><img src="images/pc/clothing/1cheap/<<i>>.jpg" 	height="250" /></a>'
+		i += 6
+		if i = 3: i = 9
+		if i = 10: i = 16
+		if i = 45: i = 57
+		if i = 80:i = 86
+	if i <= 413:jump 'loopcheap'
+end
+
+if $ARGS[0] = 'clothes_comf':
+	$metka = 'clothes_comf'
+	$loc = 'budgetclothes'
+	cls
+	gs'stat'
+	'<center><b><font color="maroon">Viewing available cheap clothing you are comfortable wearing</font></b></center>'
+	*nl
+
+	act 'Return':
+		cla
+		minut += 5
+		gt 'budgetclothes', 'start'
+	end
+
+	act 'View all clothes': gt 'budgetclothes', 'clothes'
+	act 'View clothes you find daring': gt 'budgetclothes', 'clothes_dare'
+
+	i = Clothingstock + 1
+
+	if Clothingstock - 18 > 0:
+		i -= 18
+	elseif Clothingstock - 12 > 0:
+		i -= 12
+	elseif Clothingstock - 6 > 0:
+		i -= 6
+	end
+
+	:loopcheap
+		if cheap[i] = 0:
+			gs 'clothing_attributes', $ARGS[2], ARGS[3]
+			if CloExhibit + 10 < pcs_exhibition: *p '<a href="exec: i = <<i>> & gt ''budgetclothes'', ''cheapclo''"><img src="images/pc/clothing/1cheap/<<i>>.jpg" 	height="250" /></a>'
+		end
+		i += 6
+		if i = 3: i = 9
+		if i = 10: i = 16
+		if i = 45: i = 57
+		if i = 80:i = 86
+	if i <= 413:jump 'loopcheap'
+end
+
+if $ARGS[0] = 'clothes_dare':
+	$metka = 'clothes_dare'
+	$loc = 'budgetclothes'
+	cls
+	gs'stat'
+	'<center><b><font color="maroon">Viewing available cheap clothing you find daring</font></b></center>'
+	*nl
+
+	act 'Return':
+		cla
+		minut += 5
+		gt 'budgetclothes', 'start'
+	end
+
+	act 'View all clothes': gt 'budgetclothes', 'clothes'
+	act 'View clothes you are comfortable wearing': gt 'budgetclothes', 'clothes_comf'
+
+	i = Clothingstock + 1
+
+	if Clothingstock - 18 > 0:
+		i -= 18
+	elseif Clothingstock - 12 > 0:
+		i -= 12
+	elseif Clothingstock - 6 > 0:
+		i -= 6
+	end
+
+	:loopcheap
+		if cheap[i] = 0:
+			gs 'clothing_attributes', $ARGS[2], ARGS[3]
+			if CloExhibit + 10 >= pcs_exhibition and CloExhibit < pcs_exhibition: *p '<a href="exec: i = <<i>> & gt ''budgetclothes'', ''cheapclo''"><img src="images/pc/clothing/1cheap/<<i>>.jpg" 	height="250" /></a>'
+		end
 		i += 6
 		if i = 3: i = 9
 		if i = 10: i = 16
