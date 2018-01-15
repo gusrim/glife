@@ -242,7 +242,6 @@ if $ARGS[0] = 'view_clothing_list':
 			if i <= ARRSIZE('fetish'):jump 'loopfetish'
 
 			act 'Choose a different store': gt 'clothing', 'view_clothing_list', $ARGS[1]
-		end
 
 			i = 1
 			:loopburlesque
@@ -766,6 +765,68 @@ if $ARGS[0] = 'wear_last_worn':
 	gs 'clothing', 'wear', $lastwornclothingtype, lastwornclothingnumber
 end
 
+if $ARGS[0] = 'default':
+	gs 'stat'
+	if ARRSIZE('defclothingnumber') = 0:
+		'You have no default outfits set.'
+	else
+		i = 0
+		:loopdefclothing
+		'<<$def_clothing_name[i]>> <a href="exec:gs ''clothing'', ''defaul_entry_wear'', <<i>>">Wear this default outfit</a>'
+		i += 1
+		if i < ARRSIZE('defclothingnumber'):jump 'loopdefclothing'
+	end
+	act 'Return': gt 'wardrobe'
+end
+
+if $ARGS[0] = 'defaul_entry_wear':
+	i = ARGS[1]
+	$clothingworntype[i] = $defclothingtype
+	clothingwornnumber[i] = defclothingnumber
+	$braworntype[i] = $defbratype
+	brawornnumber[i] = defbranumber
+	$pantyworntype[i] = $defpantytype
+	pantywornnumber[i] = defpantynumber
+	$shoeworntype[i] = $defshoetype
+	shoewornnumber[i] = defshoenumber
+	$currentpursetype[i] = $defpursetype
+	currentpursenumber[i] = defpursenumber
+	defaultcoat[i] = defcoat
+	gs 'stat'
+end
+
+if $ARGS[0] = 'default_set':
+	gs 'stat'
+	if ARRSIZE('defclothingnumber') ! 0:
+		i = 0
+		:loopdefclothing_set
+		'<<$def_clothing_name[i]>> <a href="exec:gt ''clothing'', ''defaul_entry_set'', <<i>>">Overwrite this</a>'
+		i += 1
+		if i < ARRSIZE('defclothingnumber'):jump 'loopdefclothing_set'
+	end
+	act 'Add as new default': gt 'clothing', 'defaul_entry_set', ARRSIZE('defclothingnumber')
+	act 'Return': gt 'wardrobe'
+end
+
+if $ARGS[0] = 'defaul_entry_set':
+	gs 'stat'
+	i = ARGS[1]
+	$defclothingtype[i] = $clothingworntype
+	defclothingnumber[i] = clothingwornnumber
+	$defbratype[i] = $braworntype
+	defbranumber[i] = brawornnumber
+	$defpantytype[i] = $pantyworntype
+	defpantynumber[i] = pantywornnumber
+	$defshoetype[i] = $shoeworntype
+	defshoenumber[i] = shoewornnumber
+	$defpursetype[i] = $currentpursetype
+	defpursenumber[i] = currentpursenumber
+	defcoat[i] = defaultcoat
+	
+	$def_clothing_name[i] = 'default <<i>>'
+	$def_clothing_name[i] = input ('Enter name for for this outfit (Leave blank for default)')
+	gt 'clothing', 'default_set'
+end
 
 --- clothing ---------------------------------
 
