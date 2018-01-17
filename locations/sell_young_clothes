@@ -5,6 +5,43 @@ if $ARGS[0] = 'start':
 	$loc = 'sell_young_clothes'
 	cls
 	gs'stat'
+	'<center><b><font color="maroon">Viewing Pussy Kats clothing</font></b></center>'
+	*nl
+
+	$Headerstring = '<TH>Prostitute clothing '
+	if clothingfilter_prost = 0:
+		$Headerstring += '<a href="exec:clothingfilter_prost = 1 & gt ''sell_young_clothes'', ''start''">Included</a></TH>'
+	else
+		$Headerstring += '<a href="exec:clothingfilter_prost = 0 & gt ''sell_young_clothes'', ''start''">Excluded</a></TH>'
+	end
+
+	$Headerstring += '<TH>Bimbo clothing '
+	if clothingfilter_bimbo = 0:
+		$Headerstring += '<a href="exec:clothingfilter_bimbo = 1 & gt ''sell_young_clothes'', ''start''">Included</a></TH>'
+	else
+		$Headerstring += '<a href="exec:clothingfilter_bimbo = 0 & gt ''sell_young_clothes'', ''start''">Excluded</a></TH>'
+	end
+
+	$Headerstring += '<TH>Clothing you are comfortable wearing '
+	if clothingfilter_comf = 0:
+		$Headerstring += '<a href="exec:clothingfilter_comf = 1 & gt ''sell_young_clothes'', ''start''">Included</a></TH>'
+	else
+		$Headerstring += '<a href="exec:clothingfilter_comf = 0 & gt ''sell_young_clothes'', ''start''">Excluded</a></TH>'
+	end
+
+	$Headerstring += '<TH>Daring clothing '
+	if clothingfilter_daring = 0:
+		$Headerstring += '<a href="exec:clothingfilter_daring = 1 & gt ''sell_young_clothes'', ''start''">Included</a></TH>'
+	else
+		$Headerstring += 'g<a href="exec:clothingfilter_daring = 0 & gt ''sell_young_clothes'', ''start''">Excluded</a></TH>'
+	end
+
+	$Headerstring += '<TH>Too daring for you clothing '
+	if clothingfilter_too_daring = 0:
+		$Headerstring += '<a href="exec:clothingfilter_too_daring = 1 & gt ''sell_young_clothes'', ''start''">Included</a></TH>'
+	else
+		$Headerstring += '<a href="exec:clothingfilter_too_daring = 0 & gt ''sell_young_clothes'', ''start''">Excluded</a></TH>'
+	end
 
 	act 'Return':
 		cla
@@ -17,16 +54,21 @@ if $ARGS[0] = 'start':
 		if Clothingstock - 12 >= 0:i -= 12
 
 	:loopaverage
-	if average[i] = 0:*p '<a href="exec: i = <<i>> & gt ''sell_young_clothes'', ''yshopclo''"><img <<$set_imgh>> src="images/pc/clothing/2average/<<i>>.jpg" 	height="250" /></a>'
-	i += 12
+		if average[i] = 0:
+			gs 'clothing_attributes', 'average', i
+			if clothingfilter_comf = 0 and CloExhibit + 10 < pcs_exhibition:
+				if (clothingfilter_prost = 0 or CloStyle ! 4) and (clothingfilter_bimbo = 0 or CloBimbo = 0): *p '<a href="exec: i = <<i>> & gt ''sell_young_clothes'', ''yshopclo''"><img <<$set_imgh>> src="images/pc/clothing/2average/<<i>>.jpg" 	height="250" /></a>'
+			elseif clothingfilter_daring = 0 and CloExhibit + 10 >= pcs_exhibition and CloExhibit <= pcs_exhibition:
+				if (clothingfilter_prost = 0 or CloStyle ! 4) and (clothingfilter_bimbo = 0 or CloBimbo = 0): *p '<a href="exec: i = <<i>> & gt ''sell_young_clothes'', ''yshopclo''"><img <<$set_imgh>> src="images/pc/clothing/2average/<<i>>.jpg" 	height="250" /></a>'
+			elseif clothingfilter_too_daring = 0 and CloExhibit > pcs_exhibition:
+				if (clothingfilter_prost = 0 or CloStyle ! 4) and (clothingfilter_bimbo = 0 or CloBimbo = 0): *p '<a href="exec: i = <<i>> & gt ''sell_young_clothes'', ''yshopclo''"><img <<$set_imgh>> src="images/pc/clothing/2average/<<i>>.jpg" 	height="250" /></a>'
+			end
+		end
+		i += 12
 	if i <= 522:jump 'loopaverage'
 end
 
-if $ARGS[0] = 'yshopclo':
-	cla
-
-	gt 'clothing', 'view_clothing_item', 'shop', 'average',i, 7500
-end
+if $ARGS[0] = 'yshopclo': gt 'clothing', 'view_clothing_item', 'shop', 'average',i, 7500
 
 if $ARGS[0] = 'shoes':
 	$metka = 'shoes'
