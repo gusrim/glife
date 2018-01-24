@@ -772,26 +772,23 @@ if $ARGS[0] = 'default':
 	else
 		i = 0
 		:loopdefclothing
-		'<<$def_clothing_name[i]>> <a href="exec:gs ''clothing'', ''defaul_entry_wear'', <<i>>">Wear this default outfit</a>'
+		'<<$def_clothing_name[i]>> <a href="exec:gs ''clothing'', ''default_entry_wear'', <<i>>">Wear this default outfit</a> <a href="exec:gs ''clothing'', ''default_entry_delete'', <<i>>">Delete this default outfit</a>'
 		i += 1
 		if i < ARRSIZE('defclothingnumber'):jump 'loopdefclothing'
 	end
 	act 'Return': gt 'wardrobe'
 end
 
-if $ARGS[0] = 'defaul_entry_wear':
-	i = ARGS[1]
-	$clothingworntype[i] = $defclothingtype
-	clothingwornnumber[i] = defclothingnumber
-	$braworntype[i] = $defbratype
-	brawornnumber[i] = defbranumber
-	$pantyworntype[i] = $defpantytype
-	pantywornnumber[i] = defpantynumber
-	$shoeworntype[i] = $defshoetype
-	shoewornnumber[i] = defshoenumber
-	$currentpursetype[i] = $defpursetype
-	currentpursenumber[i] = defpursenumber
-	defaultcoat[i] = defcoat
+if $ARGS[0] = 'default_entry_wear':
+	default_entry = ARGS[1]
+	gs 'clothing', 'wear', $defclothingtype[default_entry], defclothingnumber[default_entry]
+	gs 'bras', 'wear', $defbratype[default_entry], defbranumber[default_entry]
+	gs 'panties', 'wear', $defpantytype[default_entry], defpantynumber[default_entry]
+	gs 'shoes', 'wear', $defshoetype[default_entry], defshoenumber[default_entry]
+	$currentpursetype = $defpursetype[default_entry]
+	currentpursenumber = defpursenumber[default_entry]
+	defaultcoat = defcoat[default_entry]
+	killvar 'default_entry'
 	gs 'stat'
 end
 
@@ -800,15 +797,15 @@ if $ARGS[0] = 'default_set':
 	if ARRSIZE('defclothingnumber') ! 0:
 		i = 0
 		:loopdefclothing_set
-		'<<$def_clothing_name[i]>> <a href="exec:gt ''clothing'', ''defaul_entry_set'', <<i>>">Overwrite this</a>'
+		'<<$def_clothing_name[i]>> <a href="exec:gt ''clothing'', ''default_entry_set'', <<i>>">Overwrite this</a>'
 		i += 1
 		if i < ARRSIZE('defclothingnumber'):jump 'loopdefclothing_set'
 	end
-	act 'Add as new default': gt 'clothing', 'defaul_entry_set', ARRSIZE('defclothingnumber')
+	act 'Add as new default': gt 'clothing', 'default_entry_set', ARRSIZE('defclothingnumber')
 	act 'Return': gt 'wardrobe'
 end
 
-if $ARGS[0] = 'defaul_entry_set':
+if $ARGS[0] = 'default_entry_set':
 	gs 'stat'
 	i = ARGS[1]
 	$defclothingtype[i] = $clothingworntype
@@ -822,9 +819,27 @@ if $ARGS[0] = 'defaul_entry_set':
 	$defpursetype[i] = $currentpursetype
 	defpursenumber[i] = currentpursenumber
 	defcoat[i] = defaultcoat
-	
-	$def_clothing_name[i] = 'default <<i>>'
+
 	$def_clothing_name[i] = input ('Enter name for for this outfit (Leave blank for default)')
+	if $def_clothing_name[i] = '': $def_clothing_name[i] = 'default <<i>>'
+	gt 'clothing', 'default_set'
+end
+
+if $ARGS[0] = 'default_entry_delete':
+	gs 'stat'
+	i = ARGS[1]
+	killvar 'defclothingtype', i
+	killvar 'defclothingnumber', i
+	killvar 'defbratype', i
+	killvar 'defbranumber', i
+	killvar 'defpantytype', i
+	killvar 'defpantynumber', i
+	killvar 'defshoetype', i
+	killvar 'defshoenumber', i
+	killvar 'defpursetype', i
+	killvar 'defpursenumber', i
+	killvar 'defcoat', i
+	killvar 'def_clothing_name', i
 	gt 'clothing', 'default_set'
 end
 

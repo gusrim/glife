@@ -71,21 +71,48 @@ if $ARGS[0] = 'start':
 end
 
 if $ARGS[0] = 'clo':
-	$metka = $ARGS[0]
-	$loc = $CURLOC
+	$metka = 'clo'
+	$loc = 'sportShop'
 	cls
 	gs'stat'
-	if night_mode = 1:
-		fcolor = rgb(255, 255, 255)
-		bcolor = rgb(0, 0, 0)
-		lcolor = rgb(106, 90, 205)
+	'<center><b><font color="maroon">Sportswear - one size fits all</font></b></center>'
+	*nl
+
+	$Headerstring = '<TH>Prostitute clothing '
+	if clothingfilter_prost = 0:
+		$Headerstring += '<a href="exec:clothingfilter_prost = 1 & gt ''sportShop'', ''clo''">Included</a></TH>'
 	else
-		fcolor = rgb(0, 0, 0)
-		bcolor = rgb(255, 255, 255)
-		lcolor = rgb(106, 90, 205)
+		$Headerstring += '<a href="exec:clothingfilter_prost = 0 & gt ''sportShop'', ''clo''">Excluded</a></TH>'
 	end
-	'<center><b><font color="maroon">Sports clothing.</font></b></center>'
-	'Prices vary and stock is updated daily, sportswear is dimensionless.'
+
+	$Headerstring += '<TH>Bimbo clothing '
+	if clothingfilter_bimbo = 0:
+		$Headerstring += '<a href="exec:clothingfilter_bimbo = 1 & gt ''sportShop'', ''clo''">Included</a></TH>'
+	else
+		$Headerstring += '<a href="exec:clothingfilter_bimbo = 0 & gt ''sportShop'', ''clo''">Excluded</a></TH>'
+	end
+
+	$Headerstring += '<TH>Clothing you are comfortable wearing '
+	if clothingfilter_comf = 0:
+		$Headerstring += '<a href="exec:clothingfilter_comf = 1 & gt ''sportShop'', ''clo''">Included</a></TH>'
+	else
+		$Headerstring += '<a href="exec:clothingfilter_comf = 0 & gt ''sportShop'', ''clo''">Excluded</a></TH>'
+	end
+
+	$Headerstring += '<TH>Daring clothing '
+	if clothingfilter_daring = 0:
+		$Headerstring += '<a href="exec:clothingfilter_daring = 1 & gt ''sportShop'', ''clo''">Included</a></TH>'
+	else
+		$Headerstring += 'g<a href="exec:clothingfilter_daring = 0 & gt ''sportShop'', ''clo''">Excluded</a></TH>'
+	end
+
+	$Headerstring += '<TH>Too daring for you clothing '
+	if clothingfilter_too_daring = 0:
+		$Headerstring += '<a href="exec:clothingfilter_too_daring = 1 & gt ''sportShop'', ''clo''">Included</a></TH>'
+	else
+		$Headerstring += '<a href="exec:clothingfilter_too_daring = 0 & gt ''sportShop'', ''clo''">Excluded</a></TH>'
+	end
+
 
 	act 'Return':
 		cla
@@ -102,27 +129,65 @@ if $ARGS[0] = 'clo':
 	end
 
 	:loopexercise
-		if exercise[i] = 0:*p '<a href="exec: i = <<i>> & gt ''sportshop'', ''exercise''"><img src="images/pc/clothing/7exercise/<<i>>.jpg" 	height="250" /></a>'
+		if exercise[i] = 0:
+			gs 'clothing_attributes', 'exercise', i
+			if clothingfilter_comf = 0 and CloExhibit + 10 < pcs_exhibition:
+				if (clothingfilter_prost = 0 or CloStyle ! 4) and (clothingfilter_bimbo = 0 or CloBimbo = 0): *p '<a href="exec: i = <<i>> & gt ''sportshop'', ''exercise''"><img src="images/pc/clothing/7exercise/<<i>>.jpg" 	height="250" /></a>'
+			elseif clothingfilter_daring = 0 and CloExhibit + 10 >= pcs_exhibition and CloExhibit <= pcs_exhibition:
+				if (clothingfilter_prost = 0 or CloStyle ! 4) and (clothingfilter_bimbo = 0 or CloBimbo = 0): *p '<a href="exec: i = <<i>> & gt ''sportshop'', ''exercise''"><img src="images/pc/clothing/7exercise/<<i>>.jpg" 	height="250" /></a>'
+			elseif clothingfilter_too_daring = 0 and CloExhibit > pcs_exhibition:
+				if (clothingfilter_prost = 0 or CloStyle ! 4) and (clothingfilter_bimbo = 0 or CloBimbo = 0): *p '<a href="exec: i = <<i>> & gt ''sportshop'', ''exercise''"><img src="images/pc/clothing/7exercise/<<i>>.jpg" 	height="250" /></a>'
+			end
+		end
 		i += 3
 	if i <= 113:jump 'loopexercise'
 end
 
+if $ARGS[0] = 'exercise': gt 'clothing', 'view_clothing_item', 'shop', 'exercise',i, 4000
+
 if $ARGS[0] = 'swim':
-	$metka = $ARGS[0]
-	$loc = $CURLOC
+	$metka = 'swim'
+	$loc = 'sportShop'
 	cls
 	gs'stat'
-	if night_mode = 1:
-		fcolor = rgb(255, 255, 255)
-		bcolor = rgb(0, 0, 0)
-		lcolor = rgb(106, 90, 205)
+	'<center><b><font color="maroon">Swimwear - one size fits all</font></b></center>'
+	*nl
+
+	$Headerstring = '<TH>Prostitute clothing '
+	if clothingfilter_prost = 0:
+		$Headerstring += '<a href="exec:clothingfilter_prost = 1 & gt ''sportShop'', ''swim''">Included</a></TH>'
 	else
-		fcolor = rgb(0, 0, 0)
-		bcolor = rgb(255, 255, 255)
-		lcolor = rgb(106, 90, 205)
+		$Headerstring += '<a href="exec:clothingfilter_prost = 0 & gt ''sportShop'', ''swim''">Excluded</a></TH>'
 	end
-	'<center><b><font color="maroon">Swimwear.</font></b></center>'
-	'Prices vary and stock is updated daily, swimwear is one size fits all.'
+
+	$Headerstring += '<TH>Bimbo clothing '
+	if clothingfilter_bimbo = 0:
+		$Headerstring += '<a href="exec:clothingfilter_bimbo = 1 & gt ''sportShop'', ''swim''">Included</a></TH>'
+	else
+		$Headerstring += '<a href="exec:clothingfilter_bimbo = 0 & gt ''sportShop'', ''swim''">Excluded</a></TH>'
+	end
+
+	$Headerstring += '<TH>Clothing you are comfortable wearing '
+	if clothingfilter_comf = 0:
+		$Headerstring += '<a href="exec:clothingfilter_comf = 1 & gt ''sportShop'', ''swim''">Included</a></TH>'
+	else
+		$Headerstring += '<a href="exec:clothingfilter_comf = 0 & gt ''sportShop'', ''swim''">Excluded</a></TH>'
+	end
+
+	$Headerstring += '<TH>Daring clothing '
+	if clothingfilter_daring = 0:
+		$Headerstring += '<a href="exec:clothingfilter_daring = 1 & gt ''sportShop'', ''swim''">Included</a></TH>'
+	else
+		$Headerstring += 'g<a href="exec:clothingfilter_daring = 0 & gt ''sportShop'', ''swim''">Excluded</a></TH>'
+	end
+
+	$Headerstring += '<TH>Too daring for you clothing '
+	if clothingfilter_too_daring = 0:
+		$Headerstring += '<a href="exec:clothingfilter_too_daring = 1 & gt ''sportShop'', ''swim''">Included</a></TH>'
+	else
+		$Headerstring += '<a href="exec:clothingfilter_too_daring = 0 & gt ''sportShop'', ''swim''">Excluded</a></TH>'
+	end
+
 
 	act 'Return':
 		cla
@@ -130,7 +195,7 @@ if $ARGS[0] = 'swim':
 		gt 'sportshop', 'start'
 	end
 
-!4 is in he supermarket, so skipped
+!!4 is in he supermarket, so skipped
 	if Clothingstock > 18:
 		i = 1
 	elseif Clothingstock > 12:
@@ -142,34 +207,21 @@ if $ARGS[0] = 'swim':
 	end
 
 	:loopswim
-		if swimwear[i] = 0:*p '<a href="exec: i = <<i>> & gt ''sportshop'', ''swim1''"><img src="images/pc/clothing/12swimwear/<<i>>.jpg" 	height="250" /></a>'
+		if swimwear[i] = 0:
+			gs 'clothing_attributes', 'swimwear', i
+			if clothingfilter_comf = 0 and CloExhibit + 10 < pcs_exhibition:
+				if (clothingfilter_prost = 0 or CloStyle ! 4) and (clothingfilter_bimbo = 0 or CloBimbo = 0): *p '<a href="exec: i = <<i>> & gt ''sportshop'', ''swim1''"><img src="images/pc/clothing/12swimwear/<<i>>.jpg" 	height="250" /></a>'
+			elseif clothingfilter_daring = 0 and CloExhibit + 10 >= pcs_exhibition and CloExhibit <= pcs_exhibition:
+				if (clothingfilter_prost = 0 or CloStyle ! 4) and (clothingfilter_bimbo = 0 or CloBimbo = 0): *p '<a href="exec: i = <<i>> & gt ''sportshop'', ''swim1''"><img src="images/pc/clothing/12swimwear/<<i>>.jpg" 	height="250" /></a>'
+			elseif clothingfilter_too_daring = 0 and CloExhibit > pcs_exhibition:
+				if (clothingfilter_prost = 0 or CloStyle ! 4) and (clothingfilter_bimbo = 0 or CloBimbo = 0): *p '<a href="exec: i = <<i>> & gt ''sportshop'', ''swim1''"><img src="images/pc/clothing/12swimwear/<<i>>.jpg" 	height="250" /></a>'
+			end
+		end
 		i += 4
 	if i <= 135:jump 'loopswim'
 end
 
-if $ARGS[0] = 'exercise':
-	cla
-	
-	if exercise[i] ! 0:
-		msg 'You already own these clothes.'
-		gt 'sportshop', 'clo'
-	end
-
-	gt 'clothing', 'view_clothing_item', 'shop', 'exercise',i, 4000
-
-end
-
-if $ARGS[0] = 'swim1':
-	cla
-	
-	if swimwear[i] ! 0:
-		msg 'You already own these clothes.'
-		gt 'sportshop', 'swim'
-	end
-
-	gt 'clothing', 'view_clothing_item', 'shop', 'swimwear',i, 4000
-
-end
+if $ARGS[0] = 'swim1': gt 'clothing', 'view_clothing_item', 'shop', 'swimwear',i, 4000
 
 --- sportShop ---------------------------------
 
