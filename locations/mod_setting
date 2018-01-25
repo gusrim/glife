@@ -1,0 +1,73 @@
+# mod_setting
+
+!'Mod system 1.0 by illume'
+*nl '<center><h1>MODs</h1></center>'
+
+'<center>'
+'WARNING: install too much mods, or some bad-structure mod, may cause seirous lag!'
+if mod_list > 0:
+
+	'<table border=1><tr><td>id</td><td>Name</td><td>Version</td><td>Author</td><td>Description</td></tr>'
+	mod_i=1
+	:mod_alllist
+	if $mod_name[mod_i] ! '':
+		gs 'mod_<<$mod_name[mod_i]>>_setup'
+		*p '<tr><td><<mod_i>></td><td><<$mod_info[0]>></td>'
+		!name
+		*p '<td><<val($mod_info[1])/10000>>.<<(val($mod_info[1]) mod 10000)/100>> <<iif(val($mod_info[1]) mod 100 > 0, ''fix <<val($mod_info[1]) mod 100>> '', '' '')>></td>'
+		!version
+		*p '<td><<$mod_info[2]>></td>'
+		!author
+		*p '<td><a href="exec:gs ''mod_<<$mod_info[0]>>_readme''"><img src="images/system/icon/anptekainfo.jpg"></a> <<$mod_info[3]>></td></tr>'
+		!description and readme		
+	else
+		'ERROR loading mod id <<mod_i>>, no mod name available'
+	end
+	
+	if mod_list > mod_i:
+		mod_i+=1
+		jump 'mod_alllist'
+	end	
+	killvar 'mod_info'	
+	'</table>'
+else
+	'<br>No Mod actived.'
+end
+'<img src="images/system/icon/mod_sample.jpg">'
+'</center>'
+act 'Install new mod':
+	killvar 'mod_info'
+	$mod_temp=input('input mod name (as for the example image above, input <B>isample</B>)')
+	if $mod_temp='':exit
+	ADDQST 'mod/<<$mod_temp>>.qsp'
+	gs 'mod_<<$mod_temp>>_setup'
+	if $mod_info[0] = '':
+		msg '<b><<$mod_temp>>.qsp</b> is not a Girl life ECV mod, please contract its author for help'
+		exit
+	end
+	mod_list += 1
+	$mod_name[mod_list] = $mod_info[0]
+	$mod_version[mod_list] = $mod_info[1]
+	$mod_author[mod_list] = $mod_info[2]
+	$mod_desc[mod_list] = $mod_info[3]
+	gt curloc
+end 
+act 'Disable all mods':
+	if input('Are you sure? ALL mod will be disabled!<br>please input <b>qqq</B> to confirm') = 'qqq':
+		KILLQST 
+		set mod_list=0
+		KILLVAR '$mod_name'
+		KILLVAR '$mod_version'
+		KILLVAR '$mod_author'
+		KILLVAR '$mod_desc'
+		'All mod disabled. You can re-install them later.'
+		cla
+		act 'Continue':goto curloc
+	end
+end
+act 'Return':
+	gt $loc,$metka
+end
+
+--- mod_setting ---------------------------------
+
