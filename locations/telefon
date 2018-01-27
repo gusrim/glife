@@ -99,7 +99,61 @@ if $ARGS[0] = 'mobilaraz':
 	act 'Hangup':gt 'telefon', 'fin'
 end
 
-if $ARGS[0] = 'callingTheLover':
+
+if $ARGS[0] = 'callingTheLover' and loverGender[ARGS[1]] = 1:
+	cls
+	cla
+	gs'din_bad'
+	lover_number = ARGS[1]
+	$caller = '<<$loverdesc[0]>>'
+	$callerid = 'images/characters/shared/'+lover_picture[lover_number]+'.jpg'
+	gs 'telefon','phone_balance'
+	gs 'telefon','phone_call_receive'
+	willAgree = (rand(0, 10) > 3)
+	'"Yes, I''m listening," says a voice from the speaker.'
+
+	if month > 5 and temper > 20 and sunWeather = 1:
+		act 'Invite to the park':
+			cla
+			'"Let''s go for a walk in the park."'
+
+			if willAgree:
+				'<<$loverdesc[lover_number]>>, "See you in the park in an hour."'
+
+				act 'Go':gt 'dateF', 'datepark'
+			else
+				gs 'telefon','telotkaz',$loverdesc[lover_number]
+			end
+		end
+	end
+
+	act 'Invite to the bar':
+		cla
+		'"Let''s go to the bar."'
+
+		if willAgree:
+			'<<$loverdesc[lover_number]>>, "See you at the cafe in an hour."'
+
+			act 'Go':gt 'dateF', 'bartalk'
+		else
+			gs 'telefon','telotkaz',$loverdesc[lover_number]
+		end
+	end
+	
+	act 'I think we should break up...':
+		cla 
+		'She sounds hurt, but you insist it is for the best. You both say goodbye and part ways.'
+		gs 'lover', 'remove', lover_number
+
+		act 'Hangup':gt 'telefon', 'fin'
+	end
+
+	act 'Hangup':gt 'telefon', 'fin'
+	
+	killvar 'lover_number'
+end
+
+if $ARGS[0] = 'callingTheLover' and loverGender[ARGS[1]] = 0:
 	cls
 	cla
 	gs'din_bad'
@@ -178,7 +232,7 @@ if $ARGS[0] = 'callingTheLover':
 	killvar 'lover_number'
 end
 
-if $ARGS[0] = 'lover':
+if $ARGS[0] = 'lover' and loverGender[ARGS[1]] = 0:
 	cla
 	clr
 	lover_number = ARGS[1]
@@ -311,6 +365,80 @@ if $ARGS[0] = 'lover':
 		act 'I think we should break up...':
 			cla 
 			'He sounds hurt, but you insist it is for the best. You both say goodbye and part ways.'
+			gs 'lover', 'remove', lover_number
+
+			act 'Hang up': gt 'telefon', 'fin'
+		end
+	end
+
+	act 'Leave':
+		cla
+		gs 'lover', 'remove', lover_number
+		gt 'telefon', 'fin'
+	end
+
+	killvar 'lover_number'
+end
+
+if $ARGS[0] = 'lover' and loverGender[ARGS[1]] = 1:
+	cla
+	clr
+	lover_number = ARGS[1]
+	ring = 0
+	lover_days = daystart - loverday[lover_number]
+	gs 'stat'
+	gs 'telefon','phone_call_receive'
+	svetrand = rand(0, 5)
+
+	if svetrand = 0:$sveta = 'cutie'
+	if svetrand = 1:$sveta = 'honey'
+	if svetrand = 2:$sveta = 'sweetie'
+	if svetrand = 3:$sveta = 'baby'
+	if svetrand = 4:$sveta = 'hot stuff'
+	if svetrand = 5:$sveta = '<<$pcs_nickname>>'
+
+	'Hey <<$sveta>>, it''s me, <<$loverdesc[lover_number]>>. How''s it going?'
+
+	act 'Normally':
+		cla
+		'"Pretty good, you?"'
+		'<<$loverdesc[lover_number]>>, "Great, but I kind of miss you, can we meet today?"'
+
+
+		act 'Tonight':
+			cla
+			loverrelation[lover_number] += 1
+			svidanie[lover_number] = 1
+			meetday[lover_number] = daystart
+			'"How about this evening?"'
+			'<<$loverdesc[lover_number]>>, "Sounds great! When can I come to pick you up?"'
+
+			act 'Pick a time':
+				cla
+				meethour[lover_number] = input ("When do you want to be picked up. It is now <<$mid(100+hour,2,2)>>:<<$mid(100+minut,2,2)>>. [Enter the hour only 0 - 20]")
+				if meethour[lover_number] <= hour or meethour[lover_number] > 23:meethour[lover_number] = 20
+
+				'"How about <<meethour[lover_number]>>:00?."'
+				'<<$loverdesc[lover_number]>>, "Okay <<$sveta>>, see you at <<meethour[lover_number]>>:00."'
+
+				act 'Hang up':gt 'telefon', 'fin'
+			end
+		end
+
+		act 'Maybe tomorrow':
+			cla
+			loverrelation[lover_number] -= 1
+			'"I''m busy today. Call tomorrow."'
+
+			if loverrelation[lover_number] <= 0:'<<$loverdesc[lover_number]>>, Are you fucking me, you know what. Fuck off.' & gs 'lover', 'remove', lover_number
+			if loverrelation[lover_number] > 0:'(<<$loverdesc[lover_number]>>) -  Okay, I''ll call tomorrow.'
+
+			act 'Hang up': gt 'telefon', 'fin'
+		end
+		
+		act 'I think we should break up...':
+			cla 
+			'She sounds hurt, but you insist it is for the best. You both say goodbye and part ways.'
 			gs 'lover', 'remove', lover_number
 
 			act 'Hang up': gt 'telefon', 'fin'
