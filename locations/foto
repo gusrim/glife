@@ -932,9 +932,9 @@ $metkaM = 'makeup'
 '<center><img <<$set_imgh>> src="images/locations/city/citycenter/photo/mirrors.jpg"></center>'
 'The backstage area where you and the other girls put on your makeup.'
 	act'Back to the studio':gt'foto','studio'
-	
+
 	if pcs_hairbsh = 0 and pcs_makeup = 1:
-		act'Do the works':
+		act'Brush your hair and do your makeup for modelling':
 			*clr & cla
 			if player_avatar = 1:
 				'<center><img <<$set_imgh>> src="images/avatar.jpg"></center>'
@@ -942,49 +942,54 @@ $metkaM = 'makeup'
 				'<center><img <<$set_imgh>> src="<<FUNC(''$face_image'')>>"></center>'
 			end
 			if pcs_mdlng < 20:
-				'	You pick up the brush on the table of your station and work it through your hair until it shines and apply the subtle makeup typical of models that covers any and all of your slight imperfections.'
-				'	You apply some lip gloss for that perfect finishing touch.'
 				minut += 2
-				act 'View results':gt'foto','makeup'
-			else
-			'	You do your hair and makeup swiftly and flawlessly. You''re basically a pro at this part of modelling now.'
-				minut += 1
+				mdlng_exp += 1
 				pcs_hairbsh = 1
 				pcs_makeup = 2
 				pcs_lipbalm += 8
+				'	You pick up the brush on the table of your station and work it through your hair until it shines and apply the subtle makeup typical of models that covers any and all of your slight imperfections.'
+				'	You apply some lip gloss for that perfect finishing touch.'
+				act 'View results':gt'foto','makeup'
+			else
+				minut += 1
+				mdlng_exp += 1
+				pcs_hairbsh = 1
+				pcs_makeup = 2
+				pcs_lipbalm += 8
+			'	You do your hair and makeup swiftly and flawlessly. You''re basically a pro at this part of modelling now.'
 				act 'View results':gt'foto','studio'
 			end
 		end
-	end
-	
-	if pcs_hairbsh = 0:
-		act'Brush your hair':
-			*clr & cla
-			if player_avatar = 1:
-				'<center><img <<$set_imgh>> src="images/avatar.jpg"></center>'
-			else
-				'<center><img <<$set_imgh>> src="<<FUNC(''$face_image'')>>"></center>'
+	else
+		if pcs_hairbsh = 0:
+			act'Brush your hair':
+				*clr & cla
+				if player_avatar = 1:
+					'<center><img <<$set_imgh>> src="images/avatar.jpg"></center>'
+				else
+					'<center><img <<$set_imgh>> src="<<FUNC(''$face_image'')>>"></center>'
+				end
+				'	You pick up the brush on the table of your station and work it through your hair until it shines.'
+				minut += 1
+				pcs_hairbsh = 1
+				act 'View results':gt'foto','makeup'
 			end
-			'	You pick up the brush on the table of your station and work it through your hair until it shines.'
-			minut += 1
-			pcs_hairbsh = 1
-			act 'View results':gt'foto','makeup'
+		end
+
+		if pcs_makeup = 1:
+			act'Apply makeup and lip gloss ready for modelling':
+				*clr & cla
+				'<center><img <<$set_imgh>> src="images/pc/mop.jpg"></center>'
+				'	You apply the subtle makeup typical of models that covers any and all of your slight imperfections. It''s important that you don''t look overdone. People need to think you''re still a real person at a glance.'
+				'	You apply some lip gloss for that perfect finishing touch.'
+				minut += 1
+				pcs_makeup = 2
+				pcs_lipbalm += 8
+				act 'View results':gt'foto','makeup'
+			end
 		end
 	end
-	
-	if pcs_makeup = 1:
-		act'Apply makeup and lip gloss':
-			*clr & cla
-			'<center><img <<$set_imgh>> src="images/pc/mop.jpg"></center>'
-			'	You apply the subtle makeup typical of models that covers any and all of your slight imperfections. It''s important that you don''t look overdone. People need to think you''re still a real person at a glance.'
-			'	You apply some lip gloss for that perfect finishing touch.'
-			minut += 1
-			pcs_makeup = 2
-			pcs_lipbalm += 8
-			act 'View results':gt'foto','makeup'
-		end
-	end
-	
+
 	act 'Go to the showers':gt'foto','showers'
 end
 

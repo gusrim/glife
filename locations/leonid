@@ -18,7 +18,18 @@ end
 
 
 if $ARGS[0] = 'firstTime':
-	minut += 30
+	minut += 15
+	leonidSlave = 1
+	leonidSlaveDay = (daystart + 1)
+	leonidInFavour = 0
+
+	painkiller = painkiller_bak
+	prezik = prezik_bak
+	vitamin = vitamin_bak
+	kosmetica = kosmetica_bak
+	lipbalm = lipbalm_bak
+
+	gs 'stat'
 	'<center><img <<$set_imgh>> src="images/characters/pavlovsk/resident/leonid/office.jpg"></center>'
 	'You are in the office with label <<$bName>> <<$bSurname>>, lawyer.'
 	'<<$bName>> orders you to kneel in front of his desk.'
@@ -38,25 +49,26 @@ if $ARGS[0] = 'firstTime':
 	'"Do you think I am stupid? The authorities are under my grasp. I own them. Do it and nobody will see you ever again."'
 	'You get up back to your knees.'
 	'"All right mister <<$bSurname>>, I''ve got the idea. I promise to keep quiet and be your...slave."'
-	'"Very well. I will call you if I require your presence. Until then you are free to leave."'
+	'"Very well. I will call you if I require your presence. Until then you are free to go."'
 	if SchoolAtestat = 0:
 		'"But mister <<$bSurname>>, what do I tell to my mom? How do I explain my absence from the school and everything?"'
 		'"Do not care about the school. I will take care of it. As for your mom, if she asks, tell her you ran from home to a friend but reconsidered and went back."'
 		'"Yes mister <<$bSurname>>."'
 		schoolprogul = 0
 	end
-	leonidSlave = 1
-	leonidSlaveDay = (daystart + 1)
-	leonidInFavour = 0
-
-	painkiller = painkiller_bak
-	prezik = prezik_bak
-	vitamin = vitamin_bak
-	kosmetica = kosmetica_bak
-	lipbalm = lipbalm_bak
-
-	gs 'stat'
-	act 'Leave':gt 'pavCommercialOffices'
+	*nl
+	'He throws you your clothes which he must have got when he bought you, "Get dressed and leave."'
+	act 'Do as he says':
+		minut += 5
+		cla
+		*clr
+		gs 'stat'
+		gs 'clothing', 'wear_last_worn'
+		gs 'underwear', 'wear'
+		'<center><img <<$set_imgh>> src="images/characters/pavlovsk/resident/leonid/office.jpg"></center>'
+		'You quickly put your clothes on, surprised to find they are clean and fresh.'
+		act 'Leave':gt 'pavCommercialOffices'
+	end	
 end
 
 if $ARGS[0] = 'hall':
@@ -407,12 +419,13 @@ if $ARGS[0] = 'secretRoom':
 		act 'Continue':gt 'leonid', 'bdsmGate'
 	elseif slaveEventCount > 0 and leonidVisit = 1 and leonidVisitMissed <= 3:
 		leoHorny = rand (30, 100)
-		'<center><img <<$set_imgh>> src="images/characters/pavlovsk/resident/leonid/sex/kneeling1.jpg"></center>'
-		'You go in the secret room, strip down and equip your collar. You kneel down expecting <<$bName>> to come, ready to serve him.'
 		slaveEventCount += 1
 		leonidVisit = 0
 		if leonidVisitMissed > 0:leonidVisitMissed -= 1
 		leonidSlaveDay = (daystart + rand(1, 5))
+		gs 'stat'
+		'<center><img <<$set_imgh>> src="images/characters/pavlovsk/resident/leonid/sex/kneeling1.jpg"></center>'
+		'You go in the secret room, strip down and equip your collar. You kneel down expecting <<$bName>> to come, ready to serve him.'
 		act 'Continue':gt 'leonid', 'bdsmGate'
 	elseif leonidVisitMissed > 3:
 		gs 'leonid', 'sold'
