@@ -1,4 +1,5 @@
 # cloakroom
+
 $coat_list_line = {
 	!! a single line in a clothing list (wardrobe, etc)
 	!! ARGS 0 - clothing index
@@ -11,7 +12,7 @@ $coat_list_line = {
 
 	$RESULT = '<TR bgcolor='+$bgcolor+'>'
 
-	$RESULT +='<TD><a href="exec:gt ''clothing'', ''view_clothing_item'', ''wardrobe'', ''coat'', <<ARGS[0]>>"><img <<$set_imgh>> src="<<FUNC(''$clothing_image'', ''coat'', ARGS[0])>>" width="75"></a></TD>'
+	$RESULT +='<TD><a href="exec:gt ''cloakroom'', ''view_coat_item'', <<ARGS[0]>>"><img <<$set_imgh>> src="<<FUNC(''$clothing_image'', ''coat'', ARGS[0])>>" width="75"></a></TD>'
 
 	$RESULT += '<TD>coat no.<<ARGS[0]>> (strength ' + dyneval '$RESULT += coatH[<<ARGS[0]>>]'+')</TD>'
 
@@ -51,7 +52,7 @@ if $ARGS[0] = 'view_coat_list':
 	'<center><table border=1><TH>Cloakroom</TH></table></center>'
 
 	if defaultcoat = 0:
-		'<center>You have not chosen a coat to wear.</center>'
+		'<center>You will not wear a coat when outside in the cold.</center>'
 	else
 		'<center>You will wear Coat<<defaultcoat>> when a coat is required.</center>'
 	end
@@ -70,11 +71,13 @@ if $ARGS[0] = 'view_coat_list':
 		i += 1
 	if i <= ARRSIZE('coat'):jump 'loopcoat'
 	
-	act 'Don''t wear a coat':defaultcoat = 0
+	act 'Don''t wear a coat':defaultcoat_warmth = 0 & defaultcoat = 0
 
 	'</table>'
 
-	act 'Leave':gt $loc, $metka
+	act 'Return to overview':gt 'wardrobe'
+	
+	act 'Leave': gt $loc, $metka
 
 end
 
@@ -94,8 +97,6 @@ if $ARGS[0] = 'view_coat_item':
 	$RESULT += ')'
 	'<<$RESULT>>'
 
-
-	act 'Return':gt 'cloakroom', 'view_coat_list'
 	!! if the clothing is worn out
 	if dyneval('RESULT = coatH[<<ARGS[1]>>]') <= 0:
 		'This item is worn and is not suitable for further wear.'
@@ -105,10 +106,24 @@ if $ARGS[0] = 'view_coat_item':
 		end
 	end
 	if defaultcoat ! '<<ARGS[1]>>':
-		act 'Set as default':
+		act 'Wear this coat when outdoors in the cold':
 			defaultcoat = '<<ARGS[1]>>'
+			if defaultcoat < 4:
+				defaultcoat_warmth = 1
+			elseif defaultcoat = 4 or defaultcoat = 5 or defaultcoat = 8 or defaultcoat = 10 or defaultcoat = 12 or defaultcoat = 13 or defaultcoat = 14 or defaultcoat = 16 or defaultcoat = 17 or defaultcoat = 18 or defaultcoat = 19:
+				defaultcoat_warmth = 2
+			elseif defaultcoat = 6 or defaultcoat = 7 or defaultcoat = 9 or defaultcoat = 11 or defaultcoat = 15:
+				defaultcoat_warmth = 3
+			end
+			gt 'wardrobe'
 		end
 	end
+
+	act 'Return to coats':gt 'cloakroom', 'view_coat_list'
+
+	act 'Return to overview':gt 'wardrobe'
+
+	act 'Leave': gt $loc, $metka
 end
 
 --- cloakroom ---------------------------------

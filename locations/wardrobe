@@ -1,0 +1,104 @@
+# wardrobe
+
+if ward_img_hgt = 0:ward_img_hgt = 250
+'<center><B><U>Outfit overview - Click on an item to change it</U></B></center>'
+
+'<center><table border=0 cellspacing=<<ward_img_hgt/25>> cellpadding=5>'
+*p '<TH>Bra worn</TH><TH>Outfit worn</TH><TH>Coat (only worn outside when cold)</TH>'
+*P '<TR><TD><center><a href="exec:gt ''bras'', ''view_bra_list'', ''wardrobe''"><img Height = <<ward_img_hgt>> src="<<FUNC(''$body_image'',''bra'')>>"></a></center></TD><TD><center><a href="exec:gt ''clothing_QV'', ''list''"><img Height = <<ward_img_hgt * 2>> src="<<FUNC(''$body_image'',''clothes'')>>"></a></center></TD><TD><center>'
+if defaultcoat = 0:
+	'<a href="exec:gt ''cloakroom'', ''view_coat_list''"><img Height = <<ward_img_hgt * 2>> src="images/pc/noitemdh.png"></a>'
+else
+	'<a href="exec:gt ''cloakroom'', ''view_coat_list''"><img Height = <<ward_img_hgt * 2>> src="<<FUNC(''$body_image'', ''coat'')>>"></a>'
+end
+'</center></TD>'
+
+'<TR><TD><center>'
+if $braworntype ! 'none':
+	'<a href="exec:gs ''bras'', ''remove'' & gt ''wardrobe''">Remove</a>'
+else
+	'Remove'
+end
+'</center></TD><TD><center>'
+if $clothingworntype ! 'nude':
+	'<a href="exec:gs ''clothing'', ''strip'' & gt ''wardrobe''">Remove</a>'
+else
+	'Remove'
+end
+'</center></TD><TD><center>'
+if defaultcoat ! 0:
+	'<a href="exec:defaultcoat_warmth = 0 & defaultcoat = 0 & gt ''wardrobe''">Remove</a>'
+else
+	'Remove'
+end
+'</center></TD>'
+
+*p '<TR><TH>Panties worn</TH><TH>Shoes (Only worn outside)</TH><TH>Purse worn</TH>'
+*P '<TR><TD><center><a href="exec:gt ''panties'', ''view_panty_list'', ''wardrobe''"><img Height = <<ward_img_hgt>> src="<<FUNC(''$body_image'',''panties'')>>"></a></center></TD><TD><center><a href="exec:gt ''shoes'', ''view_shoe_list'', ''wardrobe''"><img Height = <<ward_img_hgt>> src="<<FUNC(''$body_image'', ''shoes'')>>"></a></center></TD><TD><center>'
+if bag = 1:
+	'<a href="exec:gt ''purses'', ''view_purse_list''"><img Height = <<ward_img_hgt>> src="<<FUNC(''$purse_image'',  $currentpursetype, currentpursenumber)>>"></a>'
+else
+	'<a href="exec:gt ''purses'', ''view_purse_list''"><img Height = <<ward_img_hgt>> src="images/pc/noitem.png"></a>'
+end
+'</center></TD>'
+
+'<TR><TD><center>'
+if $pantyworntype ! 'none':
+	'<a href="exec:gs ''panties'', ''remove'' & gt ''wardrobe''">Remove</a>'
+else
+	'Remove'
+end
+'</center></TD><TD><center>'
+if $shoeworntype ! 'none':
+	'<a href="exec:gs ''shoes'', ''strip'' & gt ''wardrobe''">Remove</a>'
+else
+	'Remove'
+end
+'</center></TD><TD><center>'
+if bag = 1:
+	'<a href="exec:gs ''purses'', ''remove'' & gt ''wardrobe''">Remove</a>'
+else
+	'Remove'
+end
+'</center></TD>'
+
+'</table></center>'
+act 'Leave': gt $Loc, $Metka
+
+act 'Strip all clothes/shoes':
+	gs 'bras', 'remove'
+	gs 'clothing', 'strip'
+	gs 'panties', 'remove'
+	gs 'shoes', 'strip'
+	gt 'wardrobe'
+end
+	
+act 'Remove everything':
+	gs 'bras', 'remove'
+	gs 'clothing', 'strip'
+	defaultcoat = 0
+	gs 'panties', 'remove'
+	gs 'shoes', 'strip'
+	gs 'purses', 'remove'
+	gt 'wardrobe'
+end
+
+act 'Set outfit as a default': gt 'clothing', 'default_set'
+
+act 'Choose a default outfit': gt 'clothing', 'default'
+
+act 'Set image height for this view':
+	cla
+	*clr
+	'The default is 250px'
+	ward_img_hgt = input("Enter height in pixels you want for images on this page (min 100, max 500)")
+	if ward_img_hgt < 100:
+		ward_img_hgt = 100
+	elseif ward_img_hgt > 500:
+		ward_img_hgt = 500
+	end
+	act 'Return': gt 'wardrobe'
+end
+
+--- wardrobe ---------------------------------
+

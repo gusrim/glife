@@ -1,6 +1,5 @@
 # telefon
 
-
 if $ARGS[0] = 'start':
 	gs 'stat'
 	gs 'telefon','phone_call_receive'
@@ -28,7 +27,7 @@ if $ARGS[0] = 'mobilaraz':
 	$caller = '<<$telsob>>'
 	gs 'telefon','phone_balance'
 	gs 'telefon','phone_call_receive'
-	telotvet = rand(0, 10)
+	willAgree = (rand(0, 10) > 3)
 	'"Yes, I''m listening," says a voice from the speaker.'
 
 	if month > 5 and temper > 20 and sunWeather = 1:
@@ -36,11 +35,11 @@ if $ARGS[0] = 'mobilaraz':
 			cla
 			'"Let''s go for a walk in the park."'
 
-			if telotvet > 3:
+			if willAgree:
 				'<<$telsob>>, "See you in the park in an hour."'
 
 				act 'Go':gt 'parksvid'
-			elseif telotvet <= 3:
+			else
 				gs 'telefon','telotkaz',$telsob
 			end
 		end
@@ -50,10 +49,10 @@ if $ARGS[0] = 'mobilaraz':
 		cla
 		'"Want to go see a movie?"'
 
-		if telotvet > 3:
+		if willAgree:
 			'<<$telsob>>, "See you at the movie theater in an hour."'
 			act 'Go':gt 'kinosvid'
-		elseif telotvet <= 3:
+		else
 			gs 'telefon','telotkaz',$telsob
 		end
 	end
@@ -62,11 +61,11 @@ if $ARGS[0] = 'mobilaraz':
 		cla
 		'"Let''s play pool."'
 
-		if telotvet > 3:
+		if willAgree:
 			'<<$telsob>>, "See you at the pool hall in an hour."'
 
 			act 'Go':gt 'billsvid'
-		elseif telotvet <= 3:
+		else
 			gs 'telefon','telotkaz',$telsob
 		end
 	end
@@ -75,11 +74,11 @@ if $ARGS[0] = 'mobilaraz':
 		cla
 		'"Let''s go to the cafe."'
 
-		if telotvet > 3:
+		if willAgree:
 			'<<$telsob>>, "See you at the cafe in an hour."'
 
 			act 'Go':gt 'kafesvid'
-		elseif telotvet <= 3:
+		else
 			gs 'telefon','telotkaz',$telsob
 		end
 	end
@@ -88,11 +87,11 @@ if $ARGS[0] = 'mobilaraz':
 		cla
 		'"Let''s go to the casino."'
 
-		if telotvet > 3:
+		if willAgree:
 			'<<$telsob>>, "See you in the casino in an hour."'
 
 			act 'Go':gt 'kazinosvid'
-		elseif telotvet <= 3:
+		else
 			gs 'telefon','telotkaz',$telsob
 		end
 	end
@@ -100,15 +99,17 @@ if $ARGS[0] = 'mobilaraz':
 	act 'Hangup':gt 'telefon', 'fin'
 end
 
-if $ARGS[0] = 'mobilarazboyA':
+
+if $ARGS[0] = 'callingTheLover' and loverGender[ARGS[1]] = 1:
 	cls
 	cla
 	gs'din_bad'
-	$caller = '<<$loverdesc[0]>>'
-	$callerid = 'images/characters/shared/'+boypic[0]+'.jpg'
+	lover_number = ARGS[1]
+	$caller = '<<$loverdesc[lover_number]>>'
+	$callerid = 'images/characters/shared/'+lover_picture[lover_number]+'.jpg'
 	gs 'telefon','phone_balance'
 	gs 'telefon','phone_call_receive'
-	telotvet = rand(0, 10)
+	willAgree = (rand(0, 10) > 3)
 	'"Yes, I''m listening," says a voice from the speaker.'
 
 	if month > 5 and temper > 20 and sunWeather = 1:
@@ -116,147 +117,52 @@ if $ARGS[0] = 'mobilarazboyA':
 			cla
 			'"Let''s go for a walk in the park."'
 
-			if telotvet > 3:
-				'<<$loverdesc[0]>>, "See you in the park in an hour."'
+			if willAgree:
+				'<<$loverdesc[lover_number]>>, "See you in the park in an hour."'
 
-				act 'Go':gt 'svidboy', 'parksvid'
-			elseif telotvet <= 3:
-				gs 'telefon','telotkaz',$loverdesc[0]
+				act 'Go':gt 'dateF', 'datepark'
+			else
+				gs 'telefon','telotkaz',$loverdesc[lover_number]
 			end
 		end
 	end
 
-	act 'Invite to a movie':
+	act 'Invite to the bar':
 		cla
-		'"Want to go see a movie?"'
+		'"Let''s go to the bar."'
 
-		if telotvet > 3:
-			'<<$loverdesc[0]>>, "See you at the movie theater in an hour."'
+		if willAgree:
+			'<<$loverdesc[lover_number]>>, "See you at the cafe in an hour."'
 
-			act 'Go':gt 'svidboy', 'kinosvid'
-		elseif telotvet <= 3:
-			gs 'telefon','telotkaz',$loverdesc[0]
-		end
-	end
-
-	act 'Invite to the pool hall':
-		cla
-		'"Let''s play pool."'
-
-		if telotvet > 3:
-			'<<$loverdesc[0]>>, "See you at the pool hall in an hour."'
-
-			act 'Go':gt 'svidboy', 'billsvid'
-		elseif telotvet <= 3:
-			gs 'telefon','telotkaz',$loverdesc[0]
-		end
-	end
-
-	act 'Invite to the cafe':
-		cla
-		'"Let''s go to the cafe."'
-
-		if telotvet > 3:
-			'<<$loverdesc[0]>>, "See you at the cafe in an hour."'
-
-			act 'Go':gt 'svidboy', 'kafesvid'
-		elseif telotvet <= 3:
-			gs 'telefon','telotkaz',$loverdesc[0]
+			act 'Go':gt 'dateF', 'bartalk'
+		else
+			gs 'telefon','telotkaz',$loverdesc[lover_number]
 		end
 	end
 	
 	act 'I think we should break up...':
 		cla 
-		'He sounds hurt, but you insist it is for the best. You both say goodbye and part ways.'
-		gs 'boyfrend','remove',0
-	end
-
-	act 'Hangup':gt 'telefon', 'fin'
-end
-if $ARGS[0] = 'mobilarazboyB':
-	cls
-	cla
-	gs'din_bad'
-	$caller = '<<$loverdesc[1]>>'
-	$callerid = 'images/characters/shared/'+boypic[1]+'.jpg'
-	gs 'telefon','phone_balance'
-	gs 'telefon','phone_call_receive'
-	telotvet = rand(0, 10)
-	'"Yes, I''m listening," says a voice from the speaker.'
-
-	if month > 5 and temper > 20 and sunWeather = 1:
-		act 'Invite to the park':
-			cla
-			'"Let''s go for a walk in the park."'
-
-			if telotvet > 3:
-				'<<$loverdesc[1]>>, "See you in the park in an hour."'
-
-				act 'Go':gt 'svidboy', 'parksvid'
-			elseif telotvet <= 3:
-				gs 'telefon','telotkaz',$loverdesc[1]
-			end
-		end
-	end
-
-	act 'Invite to a movie':
-		cla
-		'"Want to go see a movie?"'
-
-		if telotvet > 3:
-			'<<$loverdesc[1]>>, "See you at the movie theater in an hour."'
-
-			act 'Go':gt 'svidboy', 'kinosvid'
-		elseif telotvet <= 3:
-			gs 'telefon','telotkaz',$loverdesc[1]
-		end
-	end
-
-	act 'Invite to the pool hall':
-		cla
-		'"Let''s play pool."'
-
-		if telotvet > 3:
-			'<<$loverdesc[1]>>, "See you at the pool hall in an hour."'
-
-			act 'Go':gt 'svidboy', 'billsvid'
-		elseif telotvet <= 3:
-			gs 'telefon','telotkaz',$loverdesc[1]
-		end
-	end
-
-	act 'Invite to the cafe':
-		cla
-		'"Let''s go to the cafe."'
-
-		if telotvet > 3:
-			'<<$loverdesc[1]>>, "See you at the cafe in an hour."'
-
-			act 'Go':gt 'svidboy', 'kafesvid'
-		elseif telotvet <= 3:
-			gs 'telefon','telotkaz',$loverdesc[1]
-		end
-	end
-	
-	act 'I think we should break up...':
-		cla 
-		'He sounds hurt, but you insist it is for the best. You both say goodbye and part ways.'
-		gs 'boyfrend','remove',1
+		'She sounds hurt, but you insist it is for the best. You both say goodbye and part ways.'
+		gs 'lover', 'remove', lover_number
 
 		act 'Hangup':gt 'telefon', 'fin'
 	end
 
 	act 'Hangup':gt 'telefon', 'fin'
+	
+	killvar 'lover_number'
 end
-if $ARGS[0] = 'mobilarazboyC':
+
+if $ARGS[0] = 'callingTheLover' and loverGender[ARGS[1]] = 0:
 	cls
 	cla
 	gs'din_bad'
-	$caller = '<<$loverdesc[2]>>'
-	$callerid = 'images/characters/shared/'+boypic[2]+'.jpg'
+	lover_number = ARGS[1]
+	$caller = '<<$loverdesc[lover_number]>>'
+	$callerid = 'images/characters/shared/'+lover_picture[lover_number]+'.jpg'
 	gs 'telefon','phone_balance'
 	gs 'telefon','phone_call_receive'
-	telotvet = rand(0, 10)
+	willAgree = (rand(0, 10) > 3)
 	'"Yes, I''m listening," says a voice from the speaker.'
 
 	if month > 5 and temper > 20 and sunWeather = 1:
@@ -264,12 +170,12 @@ if $ARGS[0] = 'mobilarazboyC':
 			cla
 			'"Let''s go for a walk in the park."'
 
-			if telotvet > 3:
-				'<<$loverdesc[2]>>, "See you in the park in an hour."'
+			if willAgree:
+				'<<$loverdesc[lover_number]>>, "See you in the park in an hour."'
 
 				act 'Go':gt 'svidboy', 'parksvid'
-			elseif telotvet <= 3:
-				gs 'telefon','telotkaz',$loverdesc[2]
+			else
+				gs 'telefon','telotkaz',$loverdesc[lover_number]
 			end
 		end
 	end
@@ -278,12 +184,12 @@ if $ARGS[0] = 'mobilarazboyC':
 		cla
 		'"Want to go see a movie?"'
 
-		if telotvet > 3:
-			'<<$loverdesc[2]>>, "See you at the movie theater in an hour."'
+		if willAgree:
+			'<<$loverdesc[lover_number]>>, "See you at the movie theater in an hour."'
 
 			act 'Go':gt 'svidboy', 'kinosvid'
-		elseif telotvet <= 3:
-			gs 'telefon','telotkaz',$loverdesc[2]
+		else
+			gs 'telefon','telotkaz',$loverdesc[lover_number]
 		end
 	end
 
@@ -291,12 +197,12 @@ if $ARGS[0] = 'mobilarazboyC':
 		cla
 		'"Let''s play pool."'
 
-		if telotvet > 3:
-			'<<$loverdesc[2]>>, "See you at the pool hall in an hour."'
+		if willAgree:
+			'<<$loverdesc[lover_number]>>, "See you at the pool hall in an hour."'
 
 			act 'Go':gt 'svidboy', 'billsvid'
-		elseif telotvet <= 3:
-			gs 'telefon','telotkaz',$loverdesc[2]
+		else
+			gs 'telefon','telotkaz',$loverdesc[lover_number]
 		end
 	end
 
@@ -304,29 +210,34 @@ if $ARGS[0] = 'mobilarazboyC':
 		cla
 		'"Let''s go to the cafe."'
 
-		if telotvet > 3:
-			'<<$loverdesc[2]>>, "See you at the cafe in an hour."'
+		if willAgree:
+			'<<$loverdesc[lover_number]>>, "See you at the cafe in an hour."'
 
 			act 'Go':gt 'svidboy', 'kafesvid'
-		elseif telotvet <= 3:
-			gs 'telefon','telotkaz',$loverdesc[2]
+		else
+			gs 'telefon','telotkaz',$loverdesc[lover_number]
 		end
 	end
 	
 	act 'I think we should break up...':
 		cla 
 		'He sounds hurt, but you insist it is for the best. You both say goodbye and part ways.'
-		gs 'boyfrend','remove',2
+		gs 'lover', 'remove', lover_number
+
+		act 'Hangup':gt 'telefon', 'fin'
 	end
 
 	act 'Hangup':gt 'telefon', 'fin'
+	
+	killvar 'lover_number'
 end
 
-if $ARGS[0] = 'boyA':
+if $ARGS[0] = 'lover' and loverGender[ARGS[1]] = 0:
 	cla
 	clr
+	lover_number = ARGS[1]
 	ring = 0
-	lover_days = daystart - loverday[0]
+	lover_days = daystart - loverday[lover_number]
 	gs 'stat'
 	gs 'telefon','phone_call_receive'
 	svetrand = rand(0, 5)
@@ -338,12 +249,12 @@ if $ARGS[0] = 'boyA':
 	if svetrand = 4:$sveta = 'hot stuff'
 	if svetrand = 5:$sveta = '<<$pcs_nickname>>'
 
-	'Hey <<$sveta>>, it''s me, <<$loverdesc[0]>>. How''s it going?'
+	'Hey <<$sveta>>, it''s me, <<$loverdesc[lover_number]>>. How''s it going?'
 
 	act 'Normally':
 		cla
 		'"Pretty good, you?"'
-		'<<$loverdesc[0]>>, "Great, but I kind of miss you, can we meet today?"'
+		'<<$loverdesc[lover_number]>>, "Great, but I kind of miss you, can we meet today?"'
 
 		if pregtime <= lover_days and knowpreg = 1 and pregtalk = 0:
 			act 'Tell him he''s going to be a dad':
@@ -351,52 +262,52 @@ if $ARGS[0] = 'boyA':
 				pregtalk = 1
 				'"Honey, I''m pregnant with your child."'
 
-				if haraklover[0] = 0:
+				if haraklover[lover_number] = 0:
 
-					if loverrelation[0] >= 90:
-						loverlove[0] = 1
+					if loverrelation[lover_number] >= 90:
+						loverlove[lover_number] = 1
 
-						'<<$loverdesc[0]>>, "This is wonderful! We have to celebrate!"'
-						'You start talking about living together. <<$loverdesc[0]>> tells you that he is not against it in principle, but first he wants you to meet his parents.'
-						'He warns you that his mother is very demanding and rigorous. <<$loverdesc[0]>> says that he loves his mother and does not want to upset her. Therefore, you must look gorgeous, wear a dress from a boutique, have well-groomed and curled hair and makeup in moderation.'
-						'When you are totally ready <<$loverdesc[0]>> will take you to their parents.'
+						'<<$loverdesc[lover_number]>>, "This is wonderful! We have to celebrate!"'
+						'You start talking about living together. <<$loverdesc[lover_number]>> tells you that he is not against it in principle, but first he wants you to meet his parents.'
+						'He warns you that his mother is very demanding and rigorous. <<$loverdesc[lover_number]>> says that he loves his mother and does not want to upset her. Therefore, you must look gorgeous, wear a dress from a boutique, have well-groomed and curled hair and makeup in moderation.'
+						'When you are totally ready <<$loverdesc[lover_number]>> will take you to their parents.'
 
 						act 'Hang up':gt 'telefon', 'fin'
 
 						act 'Meet tonight':
 							cla
-							svidanie[0] = 1
+							svidanie[lover_number] = 1
 							'"How about this evening?"'
-							'<<$loverdesc[0]>>, "Sounds great! When can I come to pick you up?"'
+							'<<$loverdesc[lover_number]>>, "Sounds great! When can I come to pick you up?"'
 
 							act 'Pick a time':
 								cla
-								meetday[0] = daystart
-								meethour[0] = input ("When do you want to be picked up? It is now <<$mid(100+hour,2,2)>>:<<$mid(100+minut,2,2)>>.")
-								if meethour[0] <= hour or meethour[0] > 23:meethour[0] = 20
-								'"How about <<meethour[0]>>:00?"'
-								'<<$loverdesc[0]>>, "Okay <<$sveta>>, see you at <<meethour[0]>>:00."'
+								meetday[lover_number] = daystart
+								meethour[lover_number] = input ("When do you want to be picked up? It is now <<$mid(100+hour,2,2)>>:<<$mid(100+minut,2,2)>>. [Enter the hour only 0 - 20]")
+								if meethour[lover_number] <= hour or meethour[lover_number] > 23:meethour[lover_number] = 20
+								'"How about <<meethour[lover_number]>>:00?"'
+								'<<$loverdesc[lover_number]>>, "Okay <<$sveta>>, see you at <<meethour[lover_number]>>:00."'
 
 								act 'Hang up':gt 'telefon', 'fin'
 							end
 						end
-					elseif loverrelation[0] < 90:
+					elseif loverrelation[lover_number] < 90:
 						money += 20000
-						'<<$loverdesc[0]>> "I''m not yet ready to become a dad. I''ll give you the money for an abortion. Get rid of the child.'
+						'<<$loverdesc[lover_number]>> "I''m not yet ready to become a dad. I''ll give you the money for an abortion. Get rid of the child.'
 
 						act 'Hang up':gt 'telefon', 'fin'
 					end
-				elseif haraklover[0] = 1:
+				elseif haraklover[lover_number] = 1:
 
 					money += 20000
-					'<<$loverdesc[0]>> "I''m not yet ready to become a dad. I''ll give you the money get an abortion.'
+					'<<$loverdesc[lover_number]>> "I''m not yet ready to become a dad. I''ll give you the money get an abortion.'
 
 					act 'Hang up':gt 'telefon', 'fin'
-				elseif haraklover[0] = 2:
+				elseif haraklover[lover_number] = 2:
 
 					pregtalk = 0
-					'<<$loverdesc[0]>>, "What? You whore! Someone fucked your pussy and now you drop it on me. You''re dumped.'
-					gs 'boyfrend','remove',0
+					'<<$loverdesc[lover_number]>>, "What? You whore! Someone fucked your pussy and now you drop it on me. You''re dumped.'
+					gs 'lover', 'remove', lover_number
 
 					act 'Hang up':gt 'telefon', 'fin'
 				end
@@ -404,9 +315,9 @@ if $ARGS[0] = 'boyA':
 		elseif pregtime > lover_days and knowpreg = 1 and pregtalk = 0:
 			act 'Honey, you will soon become a dad':
 				cla
-				loverrelation[0] = 0
+				loverrelation[lover_number] = 0
 				'"Honey, I''m pregnant with your child."'
-				'<<$loverdesc[0]>>, "How the fuck did I manage that? Unless I own a time-machine and went back to before we met and fucked you, it''s someone elses, go and tell him. I don''t want to see you again, goodbye."'
+				'<<$loverdesc[lover_number]>>, "How the fuck did I manage that? Unless I own a time-machine and went back to before we met and fucked you, it''s someone elses, go and tell him. I don''t want to see you again, goodbye."'
 
 				act 'Hang up.':gt 'telefon', 'fin'
 			end
@@ -414,7 +325,7 @@ if $ARGS[0] = 'boyA':
 			act 'Sorry, I''m working today':
 				cla
 				'"Sorry, I''m working today."'
-				'<<$loverdesc[0]>>, "Okay, I''ll call tomorrow."'
+				'<<$loverdesc[lover_number]>>, "Okay, I''ll call tomorrow."'
 
 				act 'Hang up':gt 'telefon', 'fin'
 			end
@@ -422,19 +333,19 @@ if $ARGS[0] = 'boyA':
 
 		act 'Tonight':
 			cla
-			loverrelation[0] += 1
-			svidanie[0] = 1
-			meetday[0] = daystart
+			loverrelation[lover_number] += 1
+			svidanie[lover_number] = 1
+			meetday[lover_number] = daystart
 			'"How about this evening?"'
-			'<<$loverdesc[0]>>, "Sounds great! When can I come to pick you up?"'
+			'<<$loverdesc[lover_number]>>, "Sounds great! When can I come to pick you up?"'
 
 			act 'Pick a time':
 				cla
-				meethour[0] = input ("When do you want to be picked up. It is now <<$mid(100+hour,2,2)>>:<<$mid(100+minut,2,2)>>.")
-				if meethour[0] <= hour or meethour[0] > 23:meethour[0] = 20
+				meethour[lover_number] = input ("When do you want to be picked up. It is now <<$mid(100+hour,2,2)>>:<<$mid(100+minut,2,2)>>. [Enter the hour only 0 - 20]")
+				if meethour[lover_number] <= hour or meethour[lover_number] > 23:meethour[lover_number] = 20
 
-				'"How about <<meethour[0]>>:00?."'
-				'<<$loverdesc[0]>>, "Okay <<$sveta>>, see you at <<meethour[0]>>:00."'
+				'"How about <<meethour[lover_number]>>:00?."'
+				'<<$loverdesc[lover_number]>>, "Okay <<$sveta>>, see you at <<meethour[lover_number]>>:00."'
 
 				act 'Hang up':gt 'telefon', 'fin'
 			end
@@ -442,36 +353,39 @@ if $ARGS[0] = 'boyA':
 
 		act 'Maybe tomorrow':
 			cla
-			loverrelation[0] -= 1
+			loverrelation[lover_number] -= 1
 			'"I''m busy today. Call tomorrow."'
 
-			if loverrelation[0] <= 0:'<<$loverdesc[0]>>, Are you fucking me, you know what. Suck my dick.' & gs 'boyfrend','remove',0
-			if loverrelation[0] > 0:'(<<$loverdesc[0]>>) -  Okay, I''ll call tomorrow.'
+			if loverrelation[lover_number] <= 0:'<<$loverdesc[lover_number]>>, Are you fucking me, you know what. Suck my dick.' & gs 'lover', 'remove', lover_number
+			if loverrelation[lover_number] > 0:'(<<$loverdesc[lover_number]>>) -  Okay, I''ll call tomorrow.'
 
-			act 'Hang up':gt 'telefon', 'fin'
+			act 'Hang up': gt 'telefon', 'fin'
 		end
 		
 		act 'I think we should break up...':
 			cla 
 			'He sounds hurt, but you insist it is for the best. You both say goodbye and part ways.'
-			gs 'boyfrend','remove',0
+			gs 'lover', 'remove', lover_number
 
-			act 'Hang up':gt 'telefon', 'fin'
+			act 'Hang up': gt 'telefon', 'fin'
 		end
 	end
 
 	act 'Leave':
 		cla
-		gs 'boyfrend','remove',0
+		gs 'lover', 'remove', lover_number
 		gt 'telefon', 'fin'
 	end
+
+	killvar 'lover_number'
 end
 
-if $ARGS[0] = 'boyB':
+if $ARGS[0] = 'lover' and loverGender[ARGS[1]] = 1:
 	cla
 	clr
+	lover_number = ARGS[1]
 	ring = 0
-	lover_days = daystart - loverday[1]
+	lover_days = daystart - loverday[lover_number]
 	gs 'stat'
 	gs 'telefon','phone_call_receive'
 	svetrand = rand(0, 5)
@@ -483,102 +397,29 @@ if $ARGS[0] = 'boyB':
 	if svetrand = 4:$sveta = 'hot stuff'
 	if svetrand = 5:$sveta = '<<$pcs_nickname>>'
 
-	'Hey <<$sveta>>, it''s me, <<$loverdesc[1]>>. How''s it going?'
-
+	'Hey <<$sveta>>, it''s me, <<$loverdesc[lover_number]>>. How''s it going?'
 
 	act 'Normally':
 		cla
 		'"Pretty good, you?"'
-		'<<$loverdesc[1]>>, "Great, but I kind of miss you, can we meet today?"'
+		'<<$loverdesc[lover_number]>>, "Great, but I kind of miss you, can we meet today?"'
 
-		if pregtime <= lover_days and knowpreg = 1 and pregtalk = 0:
-			act 'Tell him he''s going to be a dad':
-				cla
-				pregtalk = 1
-				'"Honey, I''m pregnant with your child."'
-
-				if haraklover[1] = 0:
-					if loverrelation[1] >= 90:
-						loverlove[1] = 1
-						'<<$loverdesc[1]>>, "This is wonderful! We have to celebrate!"'
-						'You start talking about living together. <<$loverdesc[1]>> tells you that he is not against it in principle, but first he wants you to meet his parents.'
-						'He warns you that his mother is very demanding and rigorous. <<$loverdesc[1]>> says that he loves his mother and does not want to upset her. Therefore, you must look gorgeous, wear a dress from a boutique, have well-groomed and curled hair and makeup in moderation.'
-						'When you are totally ready <<$loverdesc[1]>> will take you to their parents.'
-
-						act 'Hang up':gt 'telefon', 'fin'
-
-						act 'Meet tonight':
-							cla
-							svidanie[1] = 1
-							'"How about this evening?"'
-							'<<$loverdesc[1]>>, "Sounds great! When can I come to pick you up?"'
-
-							act 'Pick a time':
-								cla
-								meetday[1] = daystart
-								meethour[1] = input ("When do you want to be picked up? It is now <<$mid(100+hour,2,2)>>:<<$mid(100+minut,2,2)>>.")
-
-								if meethour[1] <= hour or meethour[1] > 23:meethour[1] = 20
-
-								'"How about <<meethour[1]>>:00?"'
-								'<<$loverdesc[1]>>, "Okay <<$sveta>>, see you at <<meethour[1]>>:00."'
-
-								act 'Hang up':gt 'telefon', 'fin'
-							end
-						end
-					elseif loverrelation[1] < 90:
-						money += 20000
-						'<<$loverdesc[1]>> "I''m not yet ready to become a dad. I''ll give you the money for an abortion. Get rid of the child.'
-
-						act 'Hang up':gt 'telefon', 'fin'
-					end
-				elseif haraklover[1] = 1:
-					money += 20000
-					'<<$loverdesc[1]>> "I''m not yet ready to become a dad. I''ll give you the money get an abortion.'
-
-					act 'Hang up':gt 'telefon', 'fin'
-				elseif haraklover[1] = 2:
-					pregtalk = 0
-					'<<$loverdesc[1]>>, "What? You whore! Someone fucked your pussy and now you drop it on me. You''re dumped.'
-					gs 'boyfrend','remove',1
-
-					act 'Hang up':gt 'telefon', 'fin'
-				end
-			end
-		elseif pregtime > lover_days and knowpreg = 1 and pregtalk = 0:
-			act 'Honey, you will soon become a dad':
-				cla
-				loverrelation[1] = 0
-				'"Honey, I''m pregnant with your child."'
-				'<<$loverdesc[1]>>, "How the fuck did I manage that? Unless I own a time-machine and went back to before we met and fucked you, it''s someone elses, go and tell him. I don''t want to see you again, goodbye."'
-
-				act 'Hang up.':gt 'telefon', 'fin'
-			end
-		elseif week > 1 and week < 5 and workKafe = 1:
-			act 'Sorry, I''m working today':
-				cla
-				'"Sorry, I''m working today."'
-				'<<$loverdesc[1]>>, "Okay, I''ll call tomorrow."'
-
-				act 'Hang up':gt 'telefon', 'fin'
-			end
-		end
 
 		act 'Tonight':
 			cla
-			loverrelation[1] += 1
-			svidanie[1] = 1
-			meetday[1] = daystart
+			loverrelation[lover_number] += 1
+			svidanie[lover_number] = 1
+			meetday[lover_number] = daystart
 			'"How about this evening?"'
-			'<<$loverdesc[1]>>, "Sounds great! When can I come to pick you up?"'
+			'<<$loverdesc[lover_number]>>, "Sounds great! When can I come to pick you up?"'
 
 			act 'Pick a time':
 				cla
-				meethour[1] = input ("When do you want to be picked up. It is now <<$mid(100+hour,2,2)>>:<<$mid(100+minut,2,2)>>.")
-				if meethour[1] <= hour or meethour[1] > 23:meethour[1] = 20
+				meethour[lover_number] = input ("When do you want to be picked up. It is now <<$mid(100+hour,2,2)>>:<<$mid(100+minut,2,2)>>. [Enter the hour only 0 - 20]")
+				if meethour[lover_number] <= hour or meethour[lover_number] > 23:meethour[lover_number] = 20
 
-				'"How about <<meethour[1]>>:00?."'
-				'<<$loverdesc[1]>>, "Okay <<$sveta>>, see you at <<meethour[1]>>:00."'
+				'"How about <<meethour[lover_number]>>:00?."'
+				'<<$loverdesc[lover_number]>>, "Okay <<$sveta>>, see you at <<meethour[lover_number]>>:00."'
 
 				act 'Hang up':gt 'telefon', 'fin'
 			end
@@ -586,174 +427,33 @@ if $ARGS[0] = 'boyB':
 
 		act 'Maybe tomorrow':
 			cla
-			loverrelation[1] -= 1
+			loverrelation[lover_number] -= 1
 			'"I''m busy today. Call tomorrow."'
 
-			if loverrelation[1] <= 0:'<<$loverdesc[1]>>, Are you fucking me, you know what. Suck my dick.' & gs 'boyfrend','remove',1
-			if loverrelation[1] > 0:'(<<$loverdesc[1]>>) -  Okay, I''ll call tomorrow.'
+			if loverrelation[lover_number] <= 0:'<<$loverdesc[lover_number]>>, Are you fucking me, you know what. Fuck off.' & gs 'lover', 'remove', lover_number
+			if loverrelation[lover_number] > 0:'(<<$loverdesc[lover_number]>>) -  Okay, I''ll call tomorrow.'
 
-			act 'Hang up':gt 'telefon', 'fin'
+			act 'Hang up': gt 'telefon', 'fin'
 		end
 		
 		act 'I think we should break up...':
 			cla 
-			'He sounds hurt, but you insist it is for the best. You both say goodbye and part ways.'
-			gs 'boyfrend','remove',1
-			
-			act 'Hang up':gt 'telefon', 'fin'
+			'She sounds hurt, but you insist it is for the best. You both say goodbye and part ways.'
+			gs 'lover', 'remove', lover_number
+
+			act 'Hang up': gt 'telefon', 'fin'
 		end
 	end
 
 	act 'Leave':
 		cla
-		gs 'boyfrend','remove',1
+		gs 'lover', 'remove', lover_number
 		gt 'telefon', 'fin'
 	end
+
+	killvar 'lover_number'
 end
 
-if $ARGS[0] = 'boyC':
-	cla
-	clr
-	ring = 0
-	lover_days = daystart - loverday[2]
-	gs 'stat'
-	gs 'telefon','phone_call_receive'
-	svetrand = rand(0, 5)
-
-	if svetrand = 0:$sveta = 'cutie'
-	if svetrand = 1:$sveta = 'honey'
-	if svetrand = 2:$sveta = 'sweetie'
-	if svetrand = 3:$sveta = 'baby'
-	if svetrand = 4:$sveta = 'hot stuff'
-	if svetrand = 5:$sveta = '<<$pcs_nickname>>'
-
-	'Hey <<$sveta>>, it''s me, <<$loverdesc[2]>>. How''s it going?'
-
-
-	act 'Normally':
-		cla
-		'"Pretty good, you?"'
-		'<<$loverdesc[2]>>, "Great, but I kind of miss you, can we meet today?"'
-
-		if pregtime <= lover_days and knowpreg = 1 and pregtalk = 0:
-			act 'Tell him he''s going to be a dad':
-				cla
-				pregtalk = 1
-				'"Honey, I''m pregnant with your child."'
-
-				if haraklover[2] = 0:
-					if loverrelation[2] >= 90:
-						loverlove[2] = 1
-						'<<$loverdesc[2]>>, "This is wonderful! We have to celebrate!"'
-						'You start talking about living together. <<$loverdesc[2]>> tells you that he is not against it in principle, but first he wants you to meet his parents.'
-						'He warns you that his mother is very demanding and rigorous. <<$loverdesc[2]>> says that he loves his mother and does not want to upset her. Therefore, you must look gorgeous, wear a dress from a boutique, have well-groomed and curled hair and makeup in moderation.'
-						'When you are totally ready <<$loverdesc[2]>> will take you to their parents.'
-
-						act 'Hang up':gt 'telefon', 'fin'
-
-						act 'Meet tonight':
-							cla
-							svidanie[2] = 1
-							'"How about this evening?"'
-							'<<$loverdesc[2]>>, "Sounds great! When can I come to pick you up?"'
-
-							act 'Pick a time':
-								cla
-								meetday[2] = daystart
-								meethour[2] = input ("When do you want to be picked up? It is now <<$mid(100+hour,2,2)>>:<<$mid(100+minut,2,2)>>.")
-
-								if meethour[2] <= hour or meethour[2] > 23:meethour[2] = 20
-
-								'"How about <<meethour[2]>>:00?"'
-								'<<$loverdesc[2]>>, "Okay <<$sveta>>, see you at <<meethour[2]>>:00."'
-
-								act 'Hang up':gt 'telefon', 'fin'
-							end
-						end
-					elseif loverrelation[2] < 90:
-						money += 20000
-						'<<$loverdesc[2]>> "I''m not yet ready to become a dad. I''ll give you the money for an abortion. Get rid of the child.'
-
-						act 'Hang up':gt 'telefon', 'fin'
-					end
-				elseif haraklover[2] = 1:
-					money += 20000
-					'<<$loverdesc[2]>> "I''m not yet ready to become a dad. I''ll give you the money get an abortion.'
-
-					act 'Hang up':gt 'telefon', 'fin'
-				elseif haraklover[2] = 2:
-					pregtalk = 0
-					'<<$loverdesc[2]>>, "What? You whore! Someone fucked your pussy and now you drop it on me. You''re dumped.'
-					gs 'boyfrend','remove',2
-
-					act 'Hang up':gt 'telefon', 'fin'
-				end
-			end
-		elseif pregtime > lover_days and knowpreg = 1 and pregtalk = 0:
-			act 'Honey, you will soon become a dad':
-				cla
-				'"Honey, I''m pregnant with your child."'
-				'<<$loverdesc[2]>>, "How the fuck did I manage that? Unless I own a time-machine and went back to before we met and fucked you, it''s someone elses, go and tell him. I don''t want to see you again, goodbye."'
-				gs 'boyfrend','remove',2
-
-				act 'Hang up.':gt 'telefon', 'fin'
-			end
-		elseif week > 1 and week < 5 and workKafe = 1:
-			act 'Sorry, I''m working today':
-				cla
-				'"Sorry, I''m working today."'
-				'<<$loverdesc[2]>>, "Okay, I''ll call tomorrow."'
-
-				act 'Hang up':gt 'telefon', 'fin'
-			end
-		end
-
-		act 'Tonight':
-			cla
-			loverrelation[2] += 1
-			svidanie[2] = 1
-			meetday[2] = daystart
-			'"How about this evening?"'
-			'<<$loverdesc[2]>>, "Sounds great! When can I come to pick you up?"'
-
-			act 'Pick a time':
-				cla
-				meethour[2] = input ("When do you want to be picked up. It is now <<$mid(100+hour,2,2)>>:<<$mid(100+minut,2,2)>>.")
-				if meethour[2] <= hour or meethour[2] > 23:meethour[2] = 20
-
-				'"How about <<meethour[2]>>:00."'
-				'<<$loverdesc[2]>>, "Okay <<$sveta>>, see you at <<meethour[2]>>:00."'
-
-				act 'Hang up':gt 'telefon', 'fin'
-			end
-		end
-
-		act 'Maybe tomorrow':
-			cla
-			loverrelation[2] -= 1
-			'"I''m busy today. Call tomorrow."'
-
-			if loverrelation[2] <= 0:'<<$loverdesc[2]>>, Are you fucking me, you know what. Suck my dick.' & gs 'boyfrend','remove',2
-			if loverrelation[2] > 0:'(<<$loverdesc[2]>>) -  Okay, I''ll call tomorrow.'
-
-			act 'Hang up':gt 'telefon', 'fin'
-		end
-		
-		act 'I think we should break up...':
-			cla 
-			'He sounds hurt, but you insist it is for the best. You both say goodbye and part ways.'
-			gs 'boyfrend','remove',2
-
-			act 'Hang up':gt 'telefon', 'fin'
-		end
-	end
-
-	act 'Leave':
-		cla
-		gs 'boyfrend','remove',2
-		gt 'telefon', 'fin'
-	end
-end
 
 
 if $ARGS[0] = 'phone_ring':
@@ -822,7 +522,7 @@ if $ARGS[0] = 'Phone_megafon':
 	pl '<center><b><<$mid(100+hour,2,2)>>:<<$mid(100+minut,2,2)>></b></center>'
 	pl '<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="images/system/icon/icon_statusbar_left.png"></TD><TD></TD><TD align="right"><img src="images/system/icon/icon_statusbar_right.png"></TD></TR></TABLE></center>'
 	pl'<center><font size=6>Bullhorn</font></center>'
-	pl'<center><img src="images/system/icon/icon_megafon.png"><br></center>'
+	pl'<center><img src="<<FUNC(''$phone_theme'')>>icon_megafon.png"><br></center>'
 	pl'<center><b>The balance in the account: </b><font size=5><i><font size=6><<balans>></font></i> <b>₽</b>.</center>.'
 	pl'<center><a href="exec:gs ''telefon'', ''Phone_menu'' "><img src="images/system/icon/back.png"></a></center>'
 end &! --- Phone_megafon ---
@@ -833,7 +533,7 @@ if $ARGS[0] = 'Phone_contactlist':
 	pl '<center><b><<$mid(100+hour,2,2)>>:<<$mid(100+minut,2,2)>></b></center>'
 	pl '<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="images/system/icon/icon_statusbar_left.png"></TD><TD></TD><TD align="right"><img src="images/system/icon/icon_statusbar_right.png"></TD></TR></TABLE></center>'
 	pl '<center><font size=6>Contacts</font></center>'
-	pl '<center><img src="images/system/icon/icon_call.png"><br></center>'
+	pl '<center><img src="<<FUNC(''$phone_theme'')>>icon_call.png"><br></center>'
 	if StoryLine = 1:pl'<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="images/system/phone/icons/icon_npc1.png"></TD><TD>Mum</TD><TD align="right"><a href="exec:gs ''telefon'', ''Phone_call'' "><b>Call</b></a></TD></TR></TABLE></center>'
 	if hour >= 8 and hour <= 19:
 		if telalla > 0:
@@ -848,15 +548,17 @@ if $ARGS[0] = 'Phone_contactlist':
 			pl'<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="images/system/phone/icons/icon_kat.png"></TD><TD></TD><TD align="right"><a href="exec:$callerid = ''images/system/phone/icons/icon_kat.png'' & $telsob = ''Kate'' & gt ''telefon'', ''mobilaraz''"><b>Call</b></a></TD></TR></TABLE></center>'
 		end
 
-		if pcs_lovers[0] = 1 and svidanie[0] = 0 and rand(1,7) > 3:
-			pl'<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="images/system/phone/icons/icon_bf'+boypic[0]+'.png"></TD><TD></TD><TD align="right"><a href="exec:lover_number = 0 & gt ''telefon'', ''mobilarazboyA''"><b>Call</b></a></TD></TR></TABLE></center>'
+		!! iterating all lovers
+		lover_number = 0
+		:loverloop
+		if pcs_lovers[lover_number] = 1 and svidanie[lover_number] = 0 and rand(1,7) > 3:
+			pl'<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="images/system/phone/icons/icon_bf'+lover_picture[lover_number]+'.png"></TD><TD></TD><TD align="right"><a href="exec:lover_number = <<lover_number>> & gt ''telefon'', ''callingTheLover'', <<lover_number>>"><b>Call</b></a></TD></TR></TABLE></center>'
 		end
-		if pcs_lovers[1] = 1 and svidanie[1] = 0 and rand(1,7) > 3:
-			pl'<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="images/system/phone/icons/icon_bf'+boypic[1]+'.png"></TD><TD></TD><TD align="right"><a href="exec:lover_number = 1 & gt ''telefon'', ''mobilarazboyB''"><b>Call</b></a></TD></TR></TABLE></center>'
-		end
-		if pcs_lovers[2] = 1 and svidanie[2] = 0 and rand(1,7) > 3:
-			pl'<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="images/system/phone/icons/icon_bf'+boypic[2]+'.png"></TD><TD></TD><TD align="right"><a href="exec:lover_number = 2 & gt ''telefon'', ''mobilarazboyC''"><b>Call</b></a></TD></TR></TABLE></center>'
-		end
+		lover_number += 1
+		if lover_number < arrsize('pcs_lovers'): jump 'loverloop'
+
+		killvar 'lover_number'
+
 	else
 		if telalla > 0:
 			pl'<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="images/system/phone/icons/icon_ira1.png"></TD><TD></TD><TD align="right"><a href="exec:$callerid = ''icon_ira1'' & gs ''telefon'', ''phone_call_reject'' "><b>Call</b></a></TD></TR></TABLE></center>'
@@ -869,16 +571,17 @@ if $ARGS[0] = 'Phone_contactlist':
 		if telkat > 0:
 			pl'<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="images/system/phone/icons/icon_kat.png"></TD><TD></TD><TD align="right"><a href="exec:$callerid = ''icon_kat'' & gs ''telefon'', ''phone_call_reject'' "><b>Call</b></a></TD></TR></TABLE></center>'
 		end
+		
+		!! iterating all lovers
+		lover_number = 0
+		:loverunavailableloop
+		if pcs_lovers[lover_number] = 1 and svidanie[lover_number] = 0:
+			pl'<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="images/system/phone/icons/icon_bf'+lover_picture[lover_number]+'.png"></TD><TD></TD><TD align="right"><a href="exec:$callerid = ''icon_bf''+lover_picture[lover_number] & gs ''telefon'', ''phone_call_reject'' "><b>Call</b></a></TD></TR></TABLE></center>'
+		end
+		lover_number += 1
+		if lover_number < arrsize('pcs_lovers'): jump 'loverunavailableloop'
 
-		if pcs_lovers[0] = 1 and svidanie[0] = 0:
-			pl'<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="images/system/phone/icons/icon_bf'+boypic[0]+'.png"></TD><TD></TD><TD align="right"><a href="exec:$callerid = ''icon_bf''+boypic[0] & gs ''telefon'', ''phone_call_reject'' "><b>Call</b></a></TD></TR></TABLE></center>'
-		end
-		if pcs_lovers[1] = 1 and svidanie[1] = 0:
-			pl'<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="images/system/phone/icons/icon_bf'+boypic[1]+'.png"></TD><TD></TD><TD align="right"><a href="exec:$callerid = ''icon_bf''+boypic[1] & gs ''telefon'', ''phone_call_reject'' "><b>Call</b></a></TD></TR></TABLE></center>'
-		end
-		if pcs_lovers[2] = 1 and svidanie[2] = 0:
-			pl'<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="images/system/phone/icons/icon_bf'+boypic[2]+'.png"></TD><TD></TD><TD align="right"><a href="exec:$callerid = ''icon_bf''+boypic[2] & gs ''telefon'', ''phone_call_reject'' "><b>Call</b></a></TD></TR></TABLE></center>'
-		end
+		killvar 'lover_number'
 	end
 	if npc_QW['A192'] > 0:
 		pl'<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="images/system/phone/icons/icon_nastja.png"></TD><TD align="right"><a href="exec:gs ''telefon'', ''start''"><b>Call</b></a></TD></TR></TABLE></center>'
@@ -976,7 +679,7 @@ if $ARGS[0] = 'Phone_notebook':
 !!		if maidqw > 0:$calendarday += '<br>&emsp;<b>•</b> Working as maid. <i>(16:00 - 19:00)</i>'
 		if pfilmday[i] > 0:$calendarday += $list + 'Porn shoot: <i><<$porndesc[pfilmday[i]]>></i>'
 		if d1 = 25 and (PersSecWork = 1 or workKafe = 1 or workhosp = 1 or worksalon = 1 or tanwork = 1 or workSec = 1 or workFabrika = 1):$calendarday += $list + '<i>Pay day!</i>'
-		if d1 = 31 and m1 = 12 and (year - year_start) < 2 and StoryLine = 1:$calendarday += $list + 'New Year''s party at 14:00!'
+		if d1 = nyp_day and m1 = 12 and SchoolAtestat = 0 and StoryLine = 1:$calendarday += $list + 'New Year''s party at 14:00!'
 		if (npc_QW['A33']-2) mod 2 = 1 and sisboyday+1 = daynum:
 			if sisboytrioQW = 1:
 				$calendarday += $list + '<font color="orange">Threesome with Anja and Roma at 18:00</font>'
@@ -1027,7 +730,7 @@ if $ARGS[0] = 'Phone_pictures':
 	pl '<center><b><<$mid(100+hour,2,2)>>:<<$mid(100+minut,2,2)>></b></center>'
 	pl '<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="images/system/icon/icon_statusbar_left.png"></TD><TD></TD><TD align="right"><img src="images/system/icon/icon_statusbar_right.png"></TD></TR></TABLE></center>'
 	pl'<center><font size=6>Gallery</font></center>'
-	pl'<center><img src="images/system/icon/icon_pictures.png"><br></center>'
+	pl'<center><img src="<<FUNC(''$phone_theme'')>>icon_pictures.png"><br></center>'
 	if phone_selfie[1] = 1:pl'<a href="exec:view''images/system/phone/selfie/phone_selfie1.jpg''"><b>Selfie number1</b></a>'
 	if phone_selfie[2] = 1:pl'<a href="exec:view''images/system/phone/selfie/phone_selfie2.jpg''"><b>Selfie number2</b></a>'
 	if vanr_selfie[0] = 1:pl'<a href="exec:view''images/system/phone/selfie/bathroom/s (0).jpg''"><b>After shower selfie number1</b></a>'
@@ -1077,16 +780,18 @@ if $ARGS[0] = 'Phone_pictures':
 end &! --- Phone_pictures ---
 
 if $ARGS[0] = 'Phone_camera_selfie':
-	if $loc = 'vanrPar' and mirror_steam = hour or $loc = 'vanr' and mirror_steam = hour or $loc = 'yvan' and mirror_steam = hour:
-		minut += RAND (5,7)
-		phone_rand = RAND (0,38)
+	if ($loc = 'vanrPar' or $loc = 'vanr' or $loc = 'yvan') and mirror_steam = hour:
+		minut += RAND(5,7)
+		phone_rand = RAND(0,38)
 		vanr_selfie[phone_rand] = 1
+		gs 'stat'
 		gs 'telefon', 'Phone_pictures'
 		view 'images/system/phone/selfie/bathroom/s (<<phone_rand>>).jpg'
 	else
-		minut += RAND (5,7)
-		phone_rand = RAND (1,2)
+		minut += RAND(5,7)
+		phone_rand = RAND(1,2)
 		phone_selfie[phone_rand] = 1
+		gs 'stat'
 		gs 'telefon', 'Phone_pictures'
 		view 'images/system/phone/selfie/phone_selfie<<phone_rand>>.jpg'
 	end
@@ -1100,17 +805,19 @@ if $ARGS[0] = 'Phone_camera':
 	pl '<center><b><<$mid(100+hour,2,2)>>:<<$mid(100+minut,2,2)>></b></center>'
 	pl '<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="images/system/icon/icon_statusbar_left.png"></TD><TD></TD><TD align="right"><img src="images/system/icon/icon_statusbar_right.png"></TD></TR></TABLE></center>'
 	pl'<center><font size=6>Camera</font></center>'
-	pl'<center><img src="images/system/icon/icon_camera.png"><br></center>'
-	pl'<a href="exec:gs ''telefon'', ''Phone_camera_selfie'' "><b>Take a selfie</b></a>'
+	pl'<center><img src="<<FUNC(''$phone_theme'')>>icon_camera.png"><br></center>'
+	pl'<a href="exec:photoskl_exp += 1 & gs ''telefon'', ''Phone_camera_selfie'' "><b>Take a selfie</b></a>' 
 	pl'<center><a href="exec:gs ''telefon'', ''Phone_menu'' "><img src="images/system/icon/back.png"></a></center>'
 end &! --- Phone_camera ---
+ 	 
 
+   
 if $ARGS[0] = 'Phone_wheather':
 	clr
 	pl '<center><b><<$mid(100+hour,2,2)>>:<<$mid(100+minut,2,2)>></b></center>'
 	pl '<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="images/system/icon/icon_statusbar_left.png"></TD><TD></TD><TD align="right"><img src="images/system/icon/icon_statusbar_right.png"></TD></TR></TABLE></center>'
 	pl'<center><font size=6>Weather</font></center>'
-	pl'<center><img src="images/system/icon/icon_weather.png"><br></center>'
+	pl'<center><img src="<<FUNC(''$phone_theme'')>>icon_weather.png"><br></center>'
 	pl'<center><font size=6><b>Temperature: <<$temperature>>. <i><<$osadki>></i></b></font></center>'
 	pl'<center><a href="exec:gs ''telefon'', ''Phone_menu'' "><img src="images/system/icon/back.png"></a></center>'
 end &! --- Phone_wheather ---
@@ -1120,7 +827,7 @@ if $ARGS[0] = 'Phone_calendar':
 	pl '<center><b><<$mid(100+hour,2,2)>>:<<$mid(100+minut,2,2)>></b></center>'
 	pl '<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="images/system/icon/icon_statusbar_left.png"></TD><TD></TD><TD align="right"><img src="images/system/icon/icon_statusbar_right.png"></TD></TR></TABLE></center>'
 	pl'<center><font size=6>Calendar</font></center>'
-	pl'<center><img src="images/system/icon/icon_calendar.png"><br></center>'
+	pl'<center><img src="<<FUNC(''$phone_theme'')>>icon_calendar.png"><br></center>'
 	pl'<center><B>Today: </B><font size=5><<$week[week]>>, <i><font size=6><<day>></font></i> <<$month>> <i><font size=6><<year>></font></i> year.</font></center>'
 	pl'<center><a href="exec:gs ''telefon'', ''Phone_menu'' "><img src="images/system/icon/back.png"></a></center>'
 end &! --- Phone_calendar ---
@@ -1137,10 +844,10 @@ if $ARGS[0] = 'Phone_menu':
 	clr
 	pl'<center><b><<$mid(100+hour,2,2)>>:<<$mid(100+minut,2,2)>></b></center>'
 	pl'<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="images/system/icon/icon_statusbar_left.png"></TD><TD></TD><TD align="right"><img src="images/system/icon/icon_statusbar_right.png"></TD></TR></TABLE></center>'
-	pl'<center><a href="exec:gs ''telefon'', ''Phone_camera'' "><img src="images/system/icon/icon_camera.png"></a><a href="exec:gs ''telefon'', ''Phone_calendar'' "><img src="images/system/icon/icon_calendar.png"></a><a href="exec:gs ''telefon'', ''Phone_pictures'' "><img src="images/system/icon/icon_pictures.png"></a></center>'
-	pl'<center><a href="exec:gs ''telefon'', ''Phone_noactive'' "><img src="images/system/icon/icon_music.png"></a><a href="exec:gs ''Cheatmenu_din'' & Enable_settingmode = 1 & dynamic $cheatmenu[''display'']"><img src="images/system/icon/icon_settings.png"></a><a href="exec:gs ''telefon'', ''Phone_wheather'' "><img src="images/system/icon/icon_weather.png"></a></center>'
-	pl'<center><a href="exec:gs ''telefon'', ''Phone_contactlist'' "><img src="images/system/icon/icon_call.png"></a><a href="exec:gs ''telefon'', ''Phone_noactive'' "><img src="images/system/icon/icon_sms.png"></a><a href="exec:gs ''telefon'', ''Phone_megafon'' "><img src="images/system/icon/icon_megafon.png"></a></center>'
-	pl'<center><a href="exec:gs ''telefon'', ''Phone_notebook'' "><img src="images/system/icon/icon_notebook.png"></a></center>'
+	pl'<center><a href="exec:gs ''telefon'', ''Phone_camera'' "><img src="<<FUNC(''$phone_theme'')>>icon_camera.png"></a><a href="exec:gs ''telefon'', ''Phone_calendar'' "><img src="<<FUNC(''$phone_theme'')>>icon_calendar.png"></a><a href="exec:gs ''telefon'', ''Phone_pictures'' "><img src="<<FUNC(''$phone_theme'')>>icon_pictures.png"></a></center>'
+	pl'<center><a href="exec:gs ''telefon'', ''Phone_noactive'' "><img src="<<FUNC(''$phone_theme'')>>icon_music.png"></a><a href="exec:gs ''Cheatmenu_din'' & Enable_settingmode = 1 & dynamic $cheatmenu[''display'']"><img src="<<FUNC(''$phone_theme'')>>icon_settings.png"></a><a href="exec:gs ''telefon'', ''Phone_wheather'' "><img src="<<FUNC(''$phone_theme'')>>icon_weather.png"></a></center>'
+	pl'<center><a href="exec:gs ''telefon'', ''Phone_contactlist'' "><img src="<<FUNC(''$phone_theme'')>>icon_call.png"></a><a href="exec:gs ''telefon'', ''Phone_noactive'' "><img src="<<FUNC(''$phone_theme'')>>icon_sms.png"></a><a href="exec:gs ''telefon'', ''Phone_megafon'' "><img src="<<FUNC(''$phone_theme'')>>icon_megafon.png"></a></center>'
+	pl'<center><a href="exec:gs ''telefon'', ''Phone_notebook'' "><img src="<<FUNC(''$phone_theme'')>>icon_notebook.png"></a></center>'
 	pl'<center><a href="exec:gs''stat''"><img src="images/system/icon/back.png"></a></center>'
 end &! --- Phone_menu ---
 
@@ -1163,5 +870,28 @@ if $ARGS[0] = 'fin':
 	cla
 	gt $loc, $metka
 end
+
+if $ARGS[0] = 'setup':
+	! array $$phonetheme_name is built.
+	! might need a tweak to have it rebuilt when new themes are available.
+
+	$phonetheme_name[0] = 'Custom_Standard'
+	$phonetheme_name[1] = 'Bimbo'
+	$phonetheme_name[2] = 'Custom_Aluminus'
+	$phonetheme_name[3] = 'Custom_Bottlecapped'
+	$phonetheme_name[4] = 'Custom_Galactic'
+	$phonetheme_name[5] = 'Custom_Vectored'
+	$phonetheme_name[6] = 'Custom_Veneer'
+	$phonetheme_name[7] = 'Custom_Voidwalker'
+	$phonetheme_name[8] = 'Custom_Voidwalker Red'
+	$phonetheme_name[9] = 'Custom_Voidwalker Toxic'
+	$phonetheme_name[10] = 'Gopnik'
+	$phonetheme_name[11] = 'Sports'
+	$phonetheme_name[12] = 'Succubus'
+	$phonetheme_name[13] = 'Woodshop'
+	
+	phonetheme[0] = 1
+end
+
 --- telefon ---------------------------------
 

@@ -107,119 +107,186 @@ end
 if $ARGS[0] = 'view_clothing_list':
 	!! ARGS 0 - view_clothing_list
 	!! ARGS 1 - action type (wardrobe, sell, resize, store, unwanted)
-	!! ARGS 2 - brothel flag (brothel)
+	!! ARGS 2 - Shop name (kats, moncheri, gm, fashionista, sexshop, exhibitshop, dolls, sports)
 
-	!access locker means you are out of swamp and find road now, disable effect, and get all cloth back
-	dirtyclothes = 0	
-	swamp_clothes = 0
-	
-	act 'Leave':gt $loc, $metka
+	if $ARGS[1] ! 'sell' :'<center><table border=1><TH><a href="exec:gt ''clothing'', ''view_clothing_list'', ''wardrobe'', ''<<$ARGS[2]>>''">Organise available clothing</a></TH><TH><a href="exec:gt ''clothing'', ''view_clothing_list'', ''store'', ''<<$ARGS[2]>>''">View stored clothing list</a></TH><TH><a href="exec:gt ''clothing'', ''view_clothing_list'', ''unwanted'', ''<<$ARGS[2]>>''">View unwanted clothing list</a></TH><TH><a href="exec:gt ''clothing_QV'', ''list''">Pick something to wear</a></TH></center>'
 
-	if $ARGS[1] ! 'sell' :'<center><table border=1><TH><a href="exec:gt ''clothing'', ''view_clothing_list'', ''wardrobe''">Wardrobe </a></TH><TH><a href="exec:gt ''clothing'', ''view_clothing_list'', ''store''">Storage</a></TH><TH><a href="exec:gt ''clothing'', ''view_clothing_list'', ''unwanted''">Unwanted</a></TH><TH><a href="exec:gt ''clothing_QV'', ''list''">Pick something to wear</a></TH></center>'
-
-	$bgcolor='#f3f4ee'
-
-	if $ARGS[1] = 'sell':
-		'<table border=0 cellspacing=0 cellpadding=5><TH></TH><TH>Strength</TH><TH>Hip size</TH><TH>Description</TH><TH>Bimbo</TH><TH>Prostitute</TH><TH>Actions</TH>'
-	else
-		'<table border=0 cellspacing=0 cellpadding=5><TH></TH><TH>Strength</TH><TH>Hip size</TH><TH>Description</TH><TH>Bimbo</TH><TH>Prostitute</TH><TH>Actions</TH><TH>Move to</TH>'
-	end
-	
 	if $ARGS[1] = 'wardrobe':
 		cloc = 0
 		if $clothingworntype ! 'nude':act 'Strip':gs 'clothing', 'strip' & gt $loc, $metka
 	end
-	
-	if $ARGS[1] = 'store':
-		cloc = 1
+
+	act 'Leave':gt $loc, $metka
+
+	if $ARGS[2] = '':
+		'<center><a href="exec:gt ''clothing'', ''view_clothing_list'', ''<<$ARGS[1]>>'', ''gm''"><img src="images/locations/city/citycenter/mall/GM.png"></a></center>'
+
+		if ARRSIZE('average') > 0:'<center><a href="exec:gt ''clothing'', ''view_clothing_list'', ''<<$ARGS[1]>>'', ''kats''"><img src="images/locations/city/citycenter/mall/pussycat.png"></a></center>'
+
+		if ARRSIZE('expensive') > 0:'<center><a href="exec:gt ''clothing'', ''view_clothing_list'', ''<<$ARGS[1]>>'', ''fashionista''"><img src="images/locations/city/citycenter/mall/fashionistat.png"></a></center>'
+
+		if ARRSIZE('formal') > 0:'<center><a href="exec:gt ''clothing'', ''view_clothing_list'', ''<<$ARGS[1]>>'', ''moncheri''"><img src="images/locations/city/citycenter/mall/moncheri.png"></a></center>'
+
+		if ARRSIZE('fetish') > 0 or ARRSIZE('burlesque') > 0:'<center><a href="exec:gt ''clothing'', ''view_clothing_list'', ''<<$ARGS[1]>>'', ''sexshop''"><img src="images/locations/city/citycenter/sexshop/shop_name.png"></a></center>'
+
+		if ARRSIZE('exhibit') > 0:'<center><a href="exec:gt ''clothing'', ''view_clothing_list'', ''<<$ARGS[1]>>'', ''exhibitshop''"><img src="images/locations/oldtown/exhibitshop/shop_name.png"></a></center>'
+
+		if ARRSIZE('alternative') > 0:'<center><a href="exec:gt ''clothing'', ''view_clothing_list'', ''<<$ARGS[1]>>'', ''dolls''"><img src="images/locations/city/island/dolls.png"></a></center>'
+
+		if ARRSIZE('exercise') > 0:'<center><a href="exec:gt ''clothing'', ''view_clothing_list'', ''<<$ARGS[1]>>'', ''sports''"><img src="images/locations/city/citycenter/mall/sports.png"></a></center>'
+
+	else
+		if $ARGS[2] = 'gm': '<center><img src="images/locations/city/citycenter/mall/GM.png"></center>'
+		if $ARGS[2] = 'kats': '<center><img src="images/locations/city/citycenter/mall/pussycat.png"></center>'
+		if $ARGS[2] = 'fashionista': '<center><img src="images/locations/city/citycenter/mall/fashionistat.png"></center>'
+		if $ARGS[2] = 'moncheri': '<center><img src="images/locations/city/citycenter/mall/moncheri.png"></center>'
+		if $ARGS[2] = 'sexshop': '<center><img src="images/locations/city/citycenter/sexshop/shop_name.png"></center>'
+		if $ARGS[2] = 'exhibitshop': '<center><img src="images/locations/oldtown/exhibitshop/shop_name.png"></center>'
+		if $ARGS[2] = 'dolls': '<center><img src="images/locations/city/island/dolls.png"></center>'
+		if $ARGS[2] = 'sports': '<center><img src="images/locations/city/citycenter/mall/sports.png"></center>'
+
+
+		$bgcolor='#f3f4ee'
+
+		if $ARGS[1] = 'sell':
+			'<table border=0 cellspacing=0 cellpadding=5><TH></TH><TH>Strength</TH><TH>Hip size</TH><TH>Description</TH><TH>Bimbo</TH><TH>Prostitute</TH><TH>Actions</TH>'
+		else
+			'<table border=0 cellspacing=0 cellpadding=5><TH></TH><TH>Strength</TH><TH>Hip size</TH><TH>Description</TH><TH>Bimbo</TH><TH>Prostitute</TH><TH>Actions</TH><TH>Move to</TH>'
+		end
+		
+		if $ARGS[1] = 'store':
+			cloc = 1
+		end
+		
+		if $ARGS[1] = 'unwanted':
+			cloc = 2
+		end
+
+		if $ARGS[2] = 'gm':
+
+			if StoryLine = 1 and SchoolAtestat = 0 and SchoolBlock = 0 and schoolS[6] = cloc and ($clothingworntype ! 'school' or clothingwornnumber ! 6):*P dyneval($clothing_list_line, $ARGS[1], 'school', 6)
+
+			i = 1
+			:loopcheap
+				if cheap[i] = 1 and cheapS[i] = cloc and ($clothingworntype ! 'cheap' or clothingwornnumber ! i):*P dyneval($clothing_list_line, $ARGS[1], 'cheap', i)
+				i += 1
+			if i <= ARRSIZE('cheap'):jump 'loopcheap'
+
+			i = 1
+			:loopoffice
+				if office[i] = 1 and officeS[i] = cloc and ($clothingworntype ! 'office' or clothingwornnumber ! i):*P dyneval($clothing_list_line, $ARGS[1], 'office', i)
+				i += 1
+			if i <= ARRSIZE('office'):jump 'loopoffice'
+
+			i = 1
+			:loopschool
+				if school[i] = 1 and schoolS[i] = cloc and ($clothingworntype ! 'school' or clothingwornnumber ! i):*P dyneval($clothing_list_line, $ARGS[1], 'school', i)
+				i += 1
+				if i = 6: i = 7
+			if i <= ARRSIZE('school'):jump 'loopschool'
+
+			i = 1
+			:loopuniform
+				if uniform[i] = 1 and uniformS[i] = cloc and ($clothingworntype ! 'uniform' or clothingwornnumber ! i):*P dyneval($clothing_list_line, $ARGS[1], 'uniform', i)
+				i += 1
+			if i <= ARRSIZE('uniform'):jump 'loopuniform'
+
+			i = 1
+			:loopswimwear
+				if swimwear[i] = 1 and swimwearS[i] = cloc :*P dyneval($clothing_list_line, $ARGS[1], 'swimwear', i)
+				i += 1
+			if i <= ARRSIZE('swimwear'):jump 'loopswimwear'
+
+			act 'Choose a different store': gt 'clothing', 'view_clothing_list', $ARGS[1]
+		end
+
+		if $ARGS[2] = 'kats':
+
+			i = 1
+			:loopaverage
+				if average[i] = 1 and averageS[i] = cloc and ($clothingworntype ! 'average' or clothingwornnumber ! i):*P dyneval($clothing_list_line, $ARGS[1], 'average', i)
+				i += 1
+			if i <= ARRSIZE('average'):jump 'loopaverage'
+
+			act 'Choose a different store': gt 'clothing', 'view_clothing_list', $ARGS[1]
+		end
+
+		if $ARGS[2] = 'fashionista':
+
+			i = 1
+			:loopexpensive
+				if expensive[i] = 1 and expensiveS[i] = cloc and ($clothingworntype ! 'expensive' or clothingwornnumber ! i):*P dyneval($clothing_list_line, $ARGS[1], 'expensive', i)
+				i += 1
+			if i <= ARRSIZE('expensive'):jump 'loopexpensive'
+
+			act 'Choose a different store': gt 'clothing', 'view_clothing_list', $ARGS[1]
+		end
+
+		if $ARGS[2] = 'moncheri':
+
+			i = 1
+			:loopformal
+				if formal[i] = 1 and formalS[i] = cloc and ($clothingworntype ! 'formal' or clothingwornnumber ! i):*P dyneval($clothing_list_line, $ARGS[1], 'formal', i)
+				i += 1
+			if i <= ARRSIZE('formal'):jump 'loopformal'
+
+			act 'Choose a different store': gt 'clothing', 'view_clothing_list', $ARGS[1]
+		end
+
+		if $ARGS[2] = 'sexshop':
+
+			i = 1
+			:loopfetish
+				if fetish[i] = 1 and fetishS[i] = cloc and ($clothingworntype ! 'fetish' or clothingwornnumber ! i):*P dyneval($clothing_list_line, $ARGS[1], 'fetish', i)
+				i += 1
+			if i <= ARRSIZE('fetish'):jump 'loopfetish'
+
+			act 'Choose a different store': gt 'clothing', 'view_clothing_list', $ARGS[1]
+
+			i = 1
+			:loopburlesque
+				if burlesque[i] = 1 and burlesqueS[i] = cloc and ($clothingworntype ! 'burlesque' or clothingwornnumber ! i):*P dyneval($clothing_list_line, $ARGS[1], 'burlesque', i)
+				i += 1
+			if i <= ARRSIZE('burlesque'):jump 'loopburlesque'
+
+			act 'Choose a different store': gt 'clothing', 'view_clothing_list', $ARGS[1]
+		end
+
+		if $ARGS[2] = 'exhibitshop':
+
+			i = 1
+			:loopexhibit
+				if exhibit[i] = 1 and exhibitS[i] = cloc and ($clothingworntype ! 'exhibit' or clothingwornnumber ! i):*P dyneval($clothing_list_line, $ARGS[1], 'exhibit', i)
+				i += 1
+			if i <= ARRSIZE('exhibit'):jump 'loopexhibit'
+
+			act 'Choose a different store': gt 'clothing', 'view_clothing_list', $ARGS[1]
+		end
+
+		if $ARGS[2] = 'dolls':
+
+			i = 1
+			:loopalternative
+				if alternative[i] = 1 and alternativeS[i] = cloc and ($clothingworntype ! 'alternative' or clothingwornnumber ! i):*P dyneval($clothing_list_line, $ARGS[1], 'alternative', i)
+				i += 1
+			if i <= ARRSIZE('alternative'):jump 'loopalternative'
+
+			act 'Choose a different store': gt 'clothing', 'view_clothing_list', $ARGS[1]
+		end
+
+		if $ARGS[2] = 'sports':
+
+			i = 1
+			:loopexercise
+				if exercise[i] = 1 and exerciseS[i] = cloc and ($clothingworntype ! 'exercise' or clothingwornnumber ! i):*P dyneval($clothing_list_line, $ARGS[1], 'exercise', i)
+				i += 1
+			if i <= ARRSIZE('exercise'):jump 'loopexercise'
+
+			act 'Choose a different store': gt 'clothing', 'view_clothing_list', $ARGS[1]
+		end
+
+		'</table>'
 	end
-	
-	if $ARGS[1] = 'unwanted':
-		cloc = 2
-	end
-
-	if StoryLine = 1 and SchoolAtestat = 0 and SchoolBlock = 0 and schoolS[6] = cloc and ($clothingworntype ! 'school' or clothingwornnumber ! 6):*P dyneval($clothing_list_line, $ARGS[1], 'school', 6)
-
-	i = 1
-	:loopcheap
-		if cheap[i] = 1 and cheapS[i] = cloc and ($clothingworntype ! 'cheap' or clothingwornnumber ! i):*P dyneval($clothing_list_line, $ARGS[1], 'cheap', i)
-		i += 1
-	if i <= ARRSIZE('cheap'):jump 'loopcheap'
-
-	i = 1
-	:loopaverage
-		if average[i] = 1 and averageS[i] = cloc and ($clothingworntype ! 'average' or clothingwornnumber ! i):*P dyneval($clothing_list_line, $ARGS[1], 'average', i)
-		i += 1
-	if i <= ARRSIZE('average'):jump 'loopaverage'
-
-	i = 1
-	:loopexpensive
-		if expensive[i] = 1 and expensiveS[i] = cloc and ($clothingworntype ! 'expensive' or clothingwornnumber ! i):*P dyneval($clothing_list_line, $ARGS[1], 'expensive', i)
-		i += 1
-	if i <= ARRSIZE('expensive'):jump 'loopexpensive'
-
-	i = 1
-	:loopformal
-		if formal[i] = 1 and formalS[i] = cloc and ($clothingworntype ! 'formal' or clothingwornnumber ! i):*P dyneval($clothing_list_line, $ARGS[1], 'formal', i)
-		i += 1
-	if i <= ARRSIZE('formal'):jump 'loopformal'
-
-	i = 1
-	:loopoffice
-		if office[i] = 1 and officeS[i] = cloc and ($clothingworntype ! 'office' or clothingwornnumber ! i):*P dyneval($clothing_list_line, $ARGS[1], 'office', i)
-		i += 1
-	if i <= ARRSIZE('office'):jump 'loopoffice'
-
-	i = 1
-	:loopschool
-		if school[i] = 1 and schoolS[i] = cloc and ($clothingworntype ! 'school' or clothingwornnumber ! i):*P dyneval($clothing_list_line, $ARGS[1], 'school', i)
-		i += 1
-		if i = 6: i = 7
-	if i <= ARRSIZE('school'):jump 'loopschool'
-
-	i = 1
-	:loopexercise
-		if exercise[i] = 1 and exerciseS[i] = cloc and ($clothingworntype ! 'exercise' or clothingwornnumber ! i):*P dyneval($clothing_list_line, $ARGS[1], 'exercise', i)
-		i += 1
-	if i <= ARRSIZE('exercise'):jump 'loopexercise'
-
-	i = 1
-	:loopfetish
-		if fetish[i] = 1 and fetishS[i] = cloc and ($clothingworntype ! 'fetish' or clothingwornnumber ! i):*P dyneval($clothing_list_line, $ARGS[1], 'fetish', i)
-		i += 1
-	if i <= ARRSIZE('fetish'):jump 'loopfetish'
-
-	i = 1
-	:loopexhibit
-		if exhibit[i] = 1 and exhibitS[i] = cloc and ($clothingworntype ! 'exhibit' or clothingwornnumber ! i):*P dyneval($clothing_list_line, $ARGS[1], 'exhibit', i)
-		i += 1
-	if i <= ARRSIZE('exhibit'):jump 'loopexhibit'
-
-	i = 1
-	:loopuniform
-		if uniform[i] = 1 and uniformS[i] = cloc and ($clothingworntype ! 'uniform' or clothingwornnumber ! i):*P dyneval($clothing_list_line, $ARGS[1], 'uniform', i)
-		i += 1
-	if i <= ARRSIZE('uniform'):jump 'loopuniform'
-
-	i = 1
-	:loopburlesque
-		if burlesque[i] = 1 and burlesqueS[i] = cloc and ($clothingworntype ! 'burlesque' or clothingwornnumber ! i):*P dyneval($clothing_list_line, $ARGS[1], 'burlesque', i)
-		i += 1
-	if i <= ARRSIZE('burlesque'):jump 'loopburlesque'
-
-	i = 1
-	:loopswimwear
-		if swimwear[i] = 1 and swimwearS[i] = cloc :*P dyneval($clothing_list_line, $ARGS[1], 'swimwear', i)
-		i += 1
-	if i <= ARRSIZE('swimwear'):jump 'loopswimwear'
-
-	i = 1
-	:loopalternative
-		if alternative[i] = 1 and alternativeS[i] = cloc and ($clothingworntype ! 'alternative' or clothingwornnumber ! i):*P dyneval($clothing_list_line, $ARGS[1], 'alternative', i)
-		i += 1
-	if i <= ARRSIZE('alternative'):jump 'loopalternative'
-
-	'</table>' 
 end
 
 if $ARGS[0] = 'view_clothing_item':
@@ -400,12 +467,6 @@ if $ARGS[0] = 'view_clothing_item':
 			else
 				act 'Wear':
 					gs 'clothing', 'wear', $ARGS[2], ARGS[3]
-					dynamic $ARGS[2] + 'W[<<ARGS[3]>>] = 1'
-					
-					$clotype = $ARGS[2]
-
-					gs 'shoes', 'setup'
-					gs 'shoes', 'wear', $shoeworntype, shoewornnumber
 
 					gt 'clothing', 'view_clothing_list', $ARGS[1]
 				end
@@ -483,10 +544,10 @@ if $ARGS[0] = 'strip':
 	
 	if $clothingworntype = 'school':schtype = clothingwornnumber
 		
-	if $ARGS[1] ! '' :	
+	if $ARGS[1] ! '' :
 		DYNAMIC '$CloLos<<$clothingworntype>>[<<clothingwornnumber>>]=<<$ARGS[1]>>'		
-		$CloLosLoc[] = $ARGS[1]			
-		$CloLosTyp[$ARGS[1]] = $clothingworntype		
+		$CloLosLoc[] = $ARGS[1]
+		$CloLosTyp[$ARGS[1]] = $clothingworntype
 		CloLosNum[$ARGS[1]] = clothingwornnumber
 		CloLosDay[$ARGS[1]] = daystart
 		KILLVAR '$lastwornclothingtype'
@@ -499,8 +560,6 @@ if $ARGS[0] = 'strip':
 
 	$clothingworntype = 'nude'
 	clothingwornnumber = 0
-	$shoeworntype = 'none'
-	shoewornnumber = 0
 	CloQuality = 0
 	CloThinness = 0
 	CloTopCut = 0
@@ -546,7 +605,7 @@ if $ARGS[0] = 'recover_lost_clothes':
 	$cloLoc = $ARGS[1]
 	cloAction = ARGS[2]
 	
-	$clothType = $CloLosTyp[$cloLoc]		
+	$clothType = $CloLosTyp[$cloLoc]
 	clothNumber = CloLosNum[$cloLoc]
 	dayLost = CloLosDay[$cloLoc]
 		
@@ -554,7 +613,7 @@ if $ARGS[0] = 'recover_lost_clothes':
 	findLocInd = ARRPOS('$CloLosTyp', $clothType)
 	KILLVAR '$CloLosTyp', findLocInd
 	findLocInd = ARRPOS('CloLosNum', clothNumber)
-	KILLVAR 'CloLosNum', findLocInd		
+	KILLVAR 'CloLosNum', findLocInd
 	findLocInd = ARRPOS('CloLosDay', CloLosDay[$cloLoc])
 	KILLVAR 'CloLosDay', findLocInd
 	findLocInd = ARRPOS('$CloLosLoc', $cloLoc)
@@ -563,7 +622,6 @@ if $ARGS[0] = 'recover_lost_clothes':
 	
 	if cloAction = 1:
 		gs 'clothing', 'wear', $clothType, clothNumber
-		if dayLost < daystart and  $cloLoc ! 'swamphouse' : dirtyclothes = 1
 	elseif cloAction = 2 :
 		dynamic $clothType + 'S[<<clothNumber>>] = 1'
 	end
@@ -584,11 +642,8 @@ if $ARGS[0] = 'wear':
 	$clothingworntype = $ARGS[1]
 	clothingwornnumber = ARGS[2]
 
-	$clotype = $ARGS[1]
+	dynamic $ARGS[1] + 'W[<<ARGS[2]>>] = 1'
 
-	gs 'shoes', 'setup'
-	gs 'shoes', 'wear', $shoeworntype, shoewornnumber
-	
 	if $ARGS[1] ! 'coat' and $ARGS[1] ! 'swimwear':
 		gs 'clothing_descriptions'
 	else
@@ -609,8 +664,13 @@ if $ARGS[0] = 'wear':
 	PCloStyle = CloStyle
 	PCloStyle2 = CloStyle2
 	PCloExhibit = CloExhibit
-	PCloBimbo = CloBimbo
-	if CloBimbo = 1:bimbocl = 1
+	if $cheatBimbo ! '<b>ON</b>':
+		PCloBimbo = CloBimbo
+		if CloBimbo = 1:bimbocl = 1
+	else
+		PCloBimbo = 0
+		bimbocl = 0
+	end
 
 	if PCloTopCut > 1:
 		if tits = 2 or tits = 3:PCloTopCut += 1
@@ -705,6 +765,83 @@ if $ARGS[0] = 'wear_last_worn':
 	gs 'clothing', 'wear', $lastwornclothingtype, lastwornclothingnumber
 end
 
+if $ARGS[0] = 'default':
+	gs 'stat'
+	if ARRSIZE('defclothingnumber') = 0:
+		'You have no default outfits set.'
+	else
+		i = 0
+		:loopdefclothing
+		'<<$def_clothing_name[i]>> <a href="exec:gs ''clothing'', ''default_entry_wear'', <<i>>">Wear this default outfit</a> <a href="exec:gs ''clothing'', ''default_entry_delete'', <<i>>">Delete this default outfit</a>'
+		i += 1
+		if i < ARRSIZE('defclothingnumber'):jump 'loopdefclothing'
+	end
+	act 'Return': gt 'wardrobe'
+end
+
+if $ARGS[0] = 'default_entry_wear':
+	default_entry = ARGS[1]
+	gs 'clothing', 'wear', $defclothingtype[default_entry], defclothingnumber[default_entry]
+	gs 'bras', 'wear', $defbratype[default_entry], defbranumber[default_entry]
+	gs 'panties', 'wear', $defpantytype[default_entry], defpantynumber[default_entry]
+	gs 'shoes', 'wear', $defshoetype[default_entry], defshoenumber[default_entry]
+	$currentpursetype = $defpursetype[default_entry]
+	currentpursenumber = defpursenumber[default_entry]
+	defaultcoat = defcoat[default_entry]
+	killvar 'default_entry'
+	gs 'stat'
+end
+
+if $ARGS[0] = 'default_set':
+	gs 'stat'
+	if ARRSIZE('defclothingnumber') ! 0:
+		i = 0
+		:loopdefclothing_set
+		'<<$def_clothing_name[i]>> <a href="exec:gt ''clothing'', ''default_entry_set'', <<i>>">Overwrite this</a>'
+		i += 1
+		if i < ARRSIZE('defclothingnumber'):jump 'loopdefclothing_set'
+	end
+	act 'Add as new default': gt 'clothing', 'default_entry_set', ARRSIZE('defclothingnumber')
+	act 'Return': gt 'wardrobe'
+end
+
+if $ARGS[0] = 'default_entry_set':
+	gs 'stat'
+	i = ARGS[1]
+	$defclothingtype[i] = $clothingworntype
+	defclothingnumber[i] = clothingwornnumber
+	$defbratype[i] = $braworntype
+	defbranumber[i] = brawornnumber
+	$defpantytype[i] = $pantyworntype
+	defpantynumber[i] = pantywornnumber
+	$defshoetype[i] = $shoeworntype
+	defshoenumber[i] = shoewornnumber
+	$defpursetype[i] = $currentpursetype
+	defpursenumber[i] = currentpursenumber
+	defcoat[i] = defaultcoat
+
+	$def_clothing_name[i] = input ('Enter name for for this outfit (Leave blank for default)')
+	if $def_clothing_name[i] = '': $def_clothing_name[i] = 'default <<i>>'
+	gt 'clothing', 'default_set'
+end
+
+if $ARGS[0] = 'default_entry_delete':
+	gs 'stat'
+	i = ARGS[1]
+	killvar 'defclothingtype', i
+	killvar 'defclothingnumber', i
+	killvar 'defbratype', i
+	killvar 'defbranumber', i
+	killvar 'defpantytype', i
+	killvar 'defpantynumber', i
+	killvar 'defshoetype', i
+	killvar 'defshoenumber', i
+	killvar 'defpursetype', i
+	killvar 'defpursenumber', i
+	killvar 'defcoat', i
+	killvar 'def_clothing_name', i
+	gt 'clothing', 'default_set'
+end
 
 --- clothing ---------------------------------
 

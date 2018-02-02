@@ -34,7 +34,7 @@ if $ARGS[0] = 'start':
 	'<center><b><font color="maroon">Park</font></b></center>'
 	'<center><img <<$set_imgh>> src="images/locations/city/centralpark/park.jpg"></center>'
 	'The central park is huge, sandy paths spread out in every direction and every so often you''ll find a bench to sit on. In the summer you''ll see a lot people playing ball, relaxing or have a picnic in the more open areas, while in the winter you''ll meet families with their children sledding down the grass banks.'
-	'Despite it''s almost paradise-like appearance, the park can be very dangerous once the sun goes down.'
+	'Despite its almost paradise-like appearance, the park can be very dangerous once the sun goes down.'
 	*nl
 	'There is a sign that points into general direction of the city center. You estimate the walk to the city center would take 45 minutes.'
 	'The second sign points into the direction of the residential area. If you have to guess, the walk to the residential are should take 20 minutes.'
@@ -55,14 +55,14 @@ if $ARGS[0] = 'start':
 		'Stands near the park <a href="exec:GS ''carF'', ''start''">your <<$car>></a>.'
 	end
 
-	if $pantyworntype = 'none' and PCloSkirt > 2 and hour > 6 and hour <= 20:
+	if $pantyworntype = 'none' and PCloSkirt > 2 and hour > 6 and hour <= 20 and pcs_exhibition < 50:
 		nurand = rand(0, 100)
 
 		if nurand >= 80:
 			pcs_mood -= 5
 			SUB += 1
 			pcs_horny += SUB
-			nudity += 1
+			exhibition_exp += 2
 			'A man walks past you and notices that you didn''t put on any panties. He whistles at you, "Did you forget to put on your underwear today, honey?"'
 			'You blush with shame and you try to walk out of his sight as fast as possible.'
 		end
@@ -187,7 +187,17 @@ if $ARGS[0] = 'start':
 	if hour <= 7 or hour >= 21:
 		!!Succubus active hunting, can only hunt successfully once a day, but can try until success
 		If succubusQW = 5 and suchuntday ! daystart:
-			act 'Go Hunting (this can take a lot of time)': suchunt = 1 & gt 'parkdin'
+			act 'Go Hunting (this can take a lot of time)':
+				if rand(1,100) < 70:
+					minut += 30
+					mood -= 5
+					*nl
+					'No luck! After searching for half an hour, you find no one. For such a large city you would have thought there would be suitable prey around, your needs remain so maybe another search will be required?'
+					act 'Continue': gt 'park'
+				else
+					suchunt = 1 & gt 'parkivent', '1'
+				end
+			end
 		end
 
 		if knowsfairy >= 1 and pcs_magik > 4:
@@ -202,7 +212,7 @@ if $ARGS[0] = 'start':
 			if pcs_exhibition >= 50 and exhibitionQW = 0: gt 'kseniyaQW', 'event1'
 			cls
 			minut += 5
-			gs 'arousal', 'flash_breasts', 5, 'exhibition'
+			gs 'arousal', 'flash', 5
 			gs 'arousal', 'end'
 			exhibition_exp += rand(5,8)
 			gs 'stat'
@@ -218,8 +228,7 @@ if $ARGS[0] = 'start':
 		act 'Flash your pussy':
 			if pcs_exhibition >= 50 and exhibitionQW = 0: gt 'kseniyaQW', 'event1'
 			cls
-			minut += 5
-			gs 'arousal', 'flash_pussy', 5, 'exhibition'
+			gs 'arousal', 'flash', 10
 			gs 'arousal', 'end'
 			exhibition_exp += rand(9,12)
 			gs 'stat'
@@ -325,7 +334,7 @@ if $ARGS[0] = 'luna':
 				'You paid 50 <b>₽</b> and sat in the carousel.'
 				'You have a great ride, already dazzled.'
 
-				act 'move_away':gt 'park','luna'
+				act 'Move away':gt 'park','luna'
 			end
 		end
 
@@ -378,7 +387,7 @@ if $ARGS[0] = 'luna':
 		end
 
 		if money >= 20:
-			act 'Hit the dynamoeter (20 <b>₽</b>)':
+			act 'Hit the dynamometer (20 <b>₽</b>)':
 				cla
 				*clr
 				'<center><img <<$set_imgh>> src="images/locations/city/centralpark/silomer.jpg"></center>'
@@ -394,9 +403,12 @@ if $ARGS[0] = 'luna':
 					if pcs_stren < 30: gs 'exercise', 'tier2', 1, 'stren_exp'
 					if pcs_stren >= 30: gs 'exercise', 'tier1', 1, 'stren_exp'
 
-					'You swung the hammer as hard as you could, but it wasn''t enough for a new record. A LED screen lights up and shows you your score:<<damage>>'
-
-					if damage > maxdamage:maxdamage = damage & 'Congratulations! A new personal best!'
+					'A LED screen lights up and shows you your score:<<damage>>'
+					if damage > maxdamage:
+						maxdamage = damage & 'Congratulations! A new personal best!'
+					else
+						'You swung the hammer as hard as you could, but it wasn''t enough for a new record.'
+					end
 
 					act 'Move away':gt 'park', 'luna'
 				end

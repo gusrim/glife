@@ -140,12 +140,12 @@ end
 !!----------------image Extra messages, end --------------------------
 
 if Enable_statimg_loc = 1:
-	$stat_msg = '<<$stat_imgtool_msg>><br><<$stat_imgextra_msg>><br><$stat_msg>'
+	$stat_msg = '<<$stat_imgtool_msg>><br><<$stat_imgextra_msg>><br><<$stat_msg>>'
 end
 
 $stat_android = '<b><<$mid(100+hour,2,2)>>:<<$mid(100+minut,2,2)>></b>'
 
-$stat_msg += '<table><tr><td><a href="exec:msg ''<<$weather>>''"><<$weatherImage>></a></td><td><<$temperature>></td></tr>'
+$stat_msg += '<table><tr><td><a href="exec:msg ''<<$weather>>''"><<$weatherImage>></a></td><td><<$temperature>></td></tr></table>'
 
 if Enable_statfsize>0:$stat_msg = '<font size=<<Enable_statfsize>>><<$stat_msg>>'
 
@@ -346,6 +346,7 @@ else
 		if pcs_chess > 0: gs 'show_table', '<<pcs_chess>> Chess', '2'
 		if pcs_icesktng > 0: gs 'show_table', '<<pcs_icesktng>> Ice Skating', '2'
 		if pcs_ttgmng > 0: gs 'show_table', '<<pcs_ttgmng>> Gaming', '2'
+		if pcs_pool > 0: gs 'show_table', '<<pcs_pool>> Pool', '2'
 	end
 
 	!!-----------------Beauty/Modelling skills---------------
@@ -525,7 +526,12 @@ if mesec > 0:
 		$stat_msg += 'You need to wear panties to use a sanitary pad.'
 	end
 	$stat_msg += '</font>'
+elseif placebopart > 0 and LutH > 0:
+	$stat_msg += '<BR><font color="red">Your period is due to start soon.'
+	$stat_msg += '</font>'
 end
+
+
 if $cycreport_txt ! null: $stat_msg += '<BR><a href="exec:dynamic $d_cycreport_choice"><<$cycreport_txt>></a><br>'
 
 !!if shame > 0:$stat_msg += '<BR><<$shame>>' & $stat_msg += '<BR>'
@@ -912,7 +918,7 @@ i = 0
 						$txtperson += ' and ' + $npc_usedname[$cumowner['<<i>>:<<j>>:<<k>>']] + ' '
 					end
 				elseif knownguy['<<i>>:<<j>>'] = 0:
-				!! noone is known (one or more)
+				!! no one is known (one or more)
 					if cumcount['<<i>>:<<j>>'] = 1:
 						$txtperson += 'some guy '
 					else
@@ -1038,7 +1044,7 @@ if $clothingworntype = 'nude':
 			end
 		end
 	end
-elseif $pantyworntype = 'none':
+elseif $pantyworntype = 'none' and $clothingworntype ! 'swimwear':
 	if CloStyle = 4:
 		$stat_msg += '<BR><b><font color="red">you are not wearing panties, but you are dressed as a hooker, so that''s hardly surprising.</font></b>'
 	elseif PCloBimbo = 1 or bimbolevel > 0 and PCloSkirt > 3:
@@ -1174,12 +1180,14 @@ else
 end
 
 if StoryLine = 1:
-	if day = 31 and month = 12 and SchoolAtestat = 0 and hour >= 5 and hour <= 14 and StoryLine = 1:$stat_msg += '<BR>At 14:00 your school''s New Year''s party will start.'
+	if day = nyp_day and month = 12 and SchoolAtestat = 0 and hour >= 5 and hour <= 14 and StoryLine = 1:$stat_msg += '<BR>At 14:00 your school''s New Year''s party will start.'
 
 	if sisboyday + 1 = daystart and hour < 19 and (npc_QW['A33'] = 3 or npc_QW['A33'] = 5 or npc_QW['A33'] = 7 or (npc_QW['A33'] = 9 and sisboytrioQW ! 1)):$stat_msg += '<BR>' & $stat_msg += '<BR>You promised your sister not to go into your room at 18:00.'
 	if sisboyday + 1 = daystart and hour < 19 and sisboytrioQW = 1:$stat_msg += '<BR>' & $stat_msg += '<BR>You promised your sister to meet her in your room at 18:00.'
 
 	if week = 6 and hour < 9 and detention_set = 1:$stat_msg += '<BR><b>You have a detention this morning and must be at school between 8 and 9.</b>'
+	if gopnik_initiation = 1 and gopnik_initiation_day = daystart and hour > 15 and hour < 21: $stat_msg += '<BR><b>Meet Lena and Lera at the apartment garages at eight</b>'
+	if nerd_night_game = 1 and nerd_night_game_day = daystart and hour > 15 and hour < 21: $stat_msg += '<BR><b>Join nerds at the community center at eight</b>'
 end
 
 if model > 0 and model_week = (daystart - week) / 7:
@@ -1217,7 +1225,7 @@ if hour < 20 and week => 1 and week <= 5 and age < 18 and workFabrika = 1:$stat_
 if hour < 16 and week => 1 and week <= 5 and age >= 18 and workFabrika = 1:$stat_msg += '<BR><b><font color = red>Today you have work in the garment factory in Pavlovsk. Shift starts at 8:00.</font></b>'
 if hour < 16 and week > 1 and week <= 5 and workhosp = 1:$stat_msg += '<BR><b><font color="red">You work as a nurse in the clinic. Your shift starts at 8:00.</font></b>'
 if hour < 10 and worksalon = 1 and (week = 1 or week = 3 or week = 5):$stat_msg += '<BR><b><font color = red>Today you have work as masseuse in beauty salon. Shift starts at 9:00.</font></b>'
-if leonidVisit = 1: $stat_msg += '<br><b>You have to serve Leonid at 20:00 in his Pavlovsk office!</b>'
+if leonidVisit = 1 and hour < 21 and hour > 6: $stat_msg += '<br><b>You have to serve Leonid at 20:00 in his Pavlovsk office!</b>'
 
 gs 'brother', 'brotherSexCount'
 

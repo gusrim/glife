@@ -56,7 +56,6 @@ if $ARGS[0] = 'dressing room':
 	$metka = 'dressing room'
     $location_type = 'private'
 	cls
-	minut += 5
 	gs 'stat'
 	'<center><b><font color="maroon">Dressing</font></b></center>'
 	'<center><img <<$set_imgh>> src="images/locations/city/citycenter/gym/razd.jpg"></center>'
@@ -94,7 +93,7 @@ if $ARGS[0] = 'dressing room':
 		pcs_hairbsh = 0
 		pcs_makeup = 1
 		dynamic $showerdin
-		'<center><video src="images/shared/home/bathroom/dush.mp4"></center>'
+		'<center><video autoplay loop src="images/shared/home/bathroom/dush.mp4"></video></center>'
 		'You go into the bathroom and turn on the shower. You lather your body and wash in the shower.'
 
 		act 'Get out of the shower':gt 'fit', 'dressing room'
@@ -108,10 +107,18 @@ if $ARGS[0] = 'dressing room':
 
 	act 'Change clothes':
 		cla
-		gt 'clothing_QV', 'list'
+		gt 'clothing_QV', 'gym'
 	end
 
-	if abonement > 0 and $clothingworntype = 'exercise' and pcs_stam >= 40:
+	act 'Change shoes':
+		cla
+		gt 'shoes', 'gym'
+	end
+
+	if $clothingworntype ! $regularwornclothingtype or $regularwornclothingtype ! '': gs 'clothing_QV', 'gym2'
+	if $shoeworntype ! $regularwornshoetype or $regularwornshoetype ! '': gs 'clothing_QV', 'gym2'
+
+	if abonement > 0 and $clothingworntype = 'exercise' and $shoeworntype = 'trainers' and pcs_stam >= 40:
 		act 'Go to the gym':
 			cla
 			gt 'fit', 'gym'
@@ -133,7 +140,7 @@ if $ARGS[0] = 'dressing room':
 
 			act 'Leave':gt 'fit', 'dressing room'
 		end
-	elseif $clothingworntype = 'exercise' and pcs_stam >= 40:
+	elseif $clothingworntype = 'exercise' and $shoeworntype = 'trainers' and pcs_stam >= 40:
 		act 'Go to team practice':gt 'beg', 'start'
 		if week = 6 and pcs_run >= 20 and run_comp_day ! daystart:
 			act '<b>Enter competition race</b>':run_comp_day = daystart & gt 'beg1', 'start'
@@ -163,7 +170,7 @@ if $ARGS[0] = 'fitgirl':
 		dynamic $showerdin
 		shovertania += 1
 		gs 'stat'
-		'<center><video src="images/shared/home/bathroom/dush.mp4"></center>'
+		'<center><video autoplay loop src="images/shared/home/bathroom/dush.mp4"></video></center>'
 		'There''s no one in the shower, except this girl. The girl looks around and seeing you smiles again then turns away.'
 		if pcs_dom > 10:
 			act 'Molest her':

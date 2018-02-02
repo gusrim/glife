@@ -17,6 +17,8 @@ if $ARGS[0] = 'descrip':
 	end
 	!!!
 
+	pl 'Your current home is <a href="exec:gs ''obj_din'', ''cur_home''"><<$home_name>></a>.'
+	
 	if succubusflag = 1 and sucpcinfo >= 4: pl 'You are a Succubus.'
 	if age = vidage:
 		pl 'You are <<age>> years old.'
@@ -124,6 +126,28 @@ if $ARGS[0] = 'descrip':
 	if hscrunch < 2:hpigtail = 0
 	!!!!!!!! Maruda Hair Mod
 end
+
+if $ARGS[0] = 'cur_home':
+	clr
+	pl'<center><img src="images/system/icon/description.png"><br></center>'
+	pl' <a href="exec:gs ''obj_din'', ''descrip''">Return to main description</a>'
+	nl
+!!This is correct it just looks wrong
+	if home_owned[1] = 1:pl 'Set current home as <a href="exec:home_cur = 1 & $home_name = ''City residential apartment'' & gs ''obj_din'', ''cur_home''">City residential apartment</a>'
+	if home_owned[2] = 1:pl 'Set current home as <a href="exec:home_cur = 2 & $home_name = ''Parent''''s home in Pavlovsk'' & gs ''obj_din'', ''cur_home''">Parent''s home in Pavlovsk</a>'
+	if home_owned[3] = 1:pl 'Set current home as <a href="exec:home_cur = 3 & $home_name = ''My cottage in the cooperative farm'' & gs ''obj_din'', ''cur_home''">My cottage in the cooperative farm</a>'
+	if home_owned[4] = 1:pl 'Set current home as <a href="exec:home_cur = 4 & $home_name = ''Old town apartment'' & gs ''obj_din'', ''cur_home''">Old town apartment</a>'
+	if home_owned[5] = 1:pl 'Set current home as <a href="exec:home_cur = 5 & $home_name = ''My mansion'' & gs ''obj_din'', ''cur_home''">My mansion</a>'
+	if home_owned[6] = 1:pl 'Set current home as <a href="exec:home_cur = 6 & $home_name = ''My hotel room in Pavlovsk'' & gs ''obj_din'', ''cur_home''">My hotel room in Pavlovsk</a>'
+	if home_owned[7] = 1:pl 'Set current home as <a href="exec:home_cur = 7 & $home_name = ''Tanya''''s house'' & gs ''obj_din'', ''cur_home''">Tanya''s house</a>'
+	if home_owned[8] = 1:pl 'Set current home as <a href="exec:home_cur = 8 & $home_name = ''Niko''''s apartment'' & gs ''obj_din'', ''cur_home''">Niko''s apartment</a>'
+	if home_owned[9] = 1:pl 'Set current home as <a href="exec:home_cur = 9 & $home_name = ''Uncle Sergi''''s apartment'' & gs ''obj_din'', ''cur_home''">Uncle Sergi''s apartment</a>'
+	if home_owned[10] = 1:pl 'Set current home as <a href="exec:home_cur = 10 & $home_name = ''Lyceum school'' & gs ''obj_din'', ''cur_home''">Lyceum school</a>'
+	if home_owned[11] = 1:pl 'Set current home as <a href="exec:home_cur = 11 & $home_name = ''University halls'' & gs ''obj_din'', ''cur_home''">University halls</a>'
+	if home_owned[12] = 1:pl 'Set current home as <a href="exec:home_cur = 12 & $home_name = ''Hunter''''s lodge in Gadukino'' & gs ''obj_din'', ''cur_home''">Hunter''s lodge in Gadukino</a>'
+	if home_owned[13] = 1:pl 'Set current home as <a href="exec:home_cur = 13 & $home_name = ''Shared apartment in Pavlovsk'' & gs ''obj_din'', ''cur_home''">Shared apartment in Pavlovsk</a>'
+!!Apostrophe colour correction - KS ''''
+end	
 
 if $ARGS[0] = 'skills':
 	clr
@@ -449,6 +473,7 @@ if $ARGS[0] = 'stats_achievements':
 	!!!
 	if modelfoto > 0:
 		pl'<<modelfoto>> - Number of times you have worked as a model'
+		pl'<<modelfotomoney>> - The amount of money you''ve made modelling'
 		if modelfoto_fashion > 0: pl'<<modelfoto_fashion>> - Number of times you have been a fashion model'
 		if modelfoto_ero_clo > 0: pl'<<modelfoto_ero_clo>> - Number of times you have been an erotic clothing model'
 		if modelfoto_bikini > 0: pl'<<modelfoto_bikini>> - Number of times you have been a bikini modelling'
@@ -504,24 +529,24 @@ if $ARGS[0] = 'stats_sex':
 
 	if mastr > 0 or stat['mast'] > 0:pl 'Times you have masturbated: <<stat[''mast'']>>'
 	if stat['porn'] > 0:pl 'Times you have watched porn: <<stat[''porn'']>>'
-	if stat['flash_breasts'] > 0 or stat['hidden_flash_breasts'] > 0:pl 'Times you have flashed your tits (known/unknown): <<stat[''flash_breasts'']>>/<<stat[''hidden_flash_breasts'']>>'
-	if stat['flash_ass'] > 0 or stat['hidden_flash_ass'] > 0:pl 'Times you have flashed your ass (known/unknown): <<stat[''flash_ass'']>>/<<stat[''hidden_flash_ass'']>>'
-	if stat['flash_pussy'] > 0 or stat['hidden_flash_pussy'] > 0:pl 'Times you have flashed your pussy (known/unknown): <<stat[''flash_pussy'']>>/<<stat[''hidden_flash_pussy'']>>'
+	if stat['flashlite'] > 0 or stat['flash'] > 0:pl 'Times you have flashed: <<stat[''flashlite''] + stat[''flash'']>>'
 	if stat['voyeur'] > 0:pl 'Times you have watched other people fuck: <<stat[''voyeur'']>>'
 	if spank > 0:pl 'You have had your ass spanked <<spank>> times'
-	if guy > 0 and hidden_guy = 0:
-		pl 'You had sex with <<guy>> guys.'
-	elseif guy = 0 and hidden_guy > 0:
+	temp = func('shortgs','guy') 
+	if guy+temp > 0 and hidden_guy = 0:
+		pl 'You had sex with <<guy+temp>> guys.'
+	elseif guy+temp = 0 and hidden_guy > 0:
 		pl 'You had sex with <<hidden_guy>> guys, but you do not have any recollection of it. You still think of yourself as a virgin.'
-	elseif guy > 0 and hidden_guy > 0:
-		pl 'You had sex with <<guy+hidden_guy>> guys, but you know only about <<guy>> of them.'
+	else
+		pl 'You had sex with <<guy+hidden_guy+temp>> guys, but you know only about <<guy+temp>> of them.'
 	end
-	if girl > 0 and hidden_girl = 0:
-		pl 'You had sex with <<girl>> girls.'
-	elseif girl = 0 and hidden_girl > 0:
+	temp = func('shortgs','girl') 
+	if girl+temp > 0 and hidden_girl = 0:
+		pl 'You had sex with <<girl+temp>> girls.'
+	elseif girl+temp = 0 and hidden_girl > 0:
 		pl 'You had sex with <<hidden_girl>> girls, but you do not have any recollection of any of it.'
-	elseif girl > 0 and hidden_girl > 0:
-		pl 'You had sex with <<girl>> girls.'
+	else
+		pl 'You had sex with <<girl+temp+hidden_girl>> girls, but you know only about <<girl+temp>> of them.'
 	end
 	if divorced > 0:pl 'You were married <<divorced>> times.'
 	if suprdolg > 0:pl 'You performed your conjugal duty for your husband <<suprdolg>> times'
@@ -726,34 +751,34 @@ if $ARGS[0] = 'reputation':
 	end
 	if Enable_glo_fame = 1:
 		pl '<a href="exec:Enable_glo_fame = 0 & gs ''obj_din'', ''reputation''">Hide details</a>'
-		pl 'Fame as a performer = <<fame_performer>>'
-		if fame_performer = 0:
+		pl 'Regional fame as a performer = <<global_performer>>'
+		if global_performer = 0:
 			pl 'You are not famous enough as a performer to be known outside of any local areas.'
 		end
 		nl
-		pl 'Fame in the sex industry = <<fame_sexind>>'
-		if fame_performer = 0:
+		pl 'Regional fame in the sex industry = <<global_sexind>>'
+		if global_sexind = 0:
 			pl 'You are not famous enough in the industry to be known outside of any local areas.'
 		end
 		nl
-		pl 'Fame as a slut = <<fame_slut>>'
-		if fame_performer = 0:
+		pl 'Regional fame as a slut = <<global_slut>>'
+		if global_slut = 0:
 			pl 'You are not famous enough as a slut to be known outside of any local areas.'
 		end
 		nl
-		pl 'Fame in sports = <<fame_sport>>'
-		if fame_performer = 0:
+		pl 'Regional fame in sports = <<global_sport>>'
+		if global_sport = 0:
 			pl 'You are not a famous enough athlete to be known outside of any local areas.'
 		end
 		nl
-		pl 'Fame as an intellectual = <<fame_int>>'
-		if fame_performer = 0:
+		pl 'Regional fame as an intellectual = <<global_int>>'
+		if global_int = 0:
 			pl 'You are not famous enough as a intellectual to be known outside of any local areas.'
 		end
 		nl
-		pl 'Fame through society = <<fame_social>>'
-		if fame_performer = 0:
-			pl 'You are not famous enough as a socialite to be known outside of any local areas.'
+		pl 'Regional fame through social media = <<global_social>>'
+		if global_social = 0:
+			pl 'You are not famous enough on social media to be known outside of any local areas.'
 		end
 	end
 	nl
@@ -911,6 +936,8 @@ if $ARGS[0] = 'rep2':
 		else
 			pl'Your brother has a good opinion of you.'
 		end
+		
+		
 		if sisterknowslut > 1 and sisboypartyQW = 2:
 			pl'Your sister thinks you are a slut'
 		elseif sisterknowslut > 0:
@@ -918,6 +945,10 @@ if $ARGS[0] = 'rep2':
 		else
 			pl'Your sister has a good opinion of you.'
 		end
+		
+		if brothershowertalk > 0:pl'<<brothershowertalk>> - Number of conversations you''ve had with your brother in the shower.'
+		if brothershowerlook = 1:pl'You let your brother look at you when you''re shower'
+		if brothershave > 0:pl'<<brothershave>> - Number of times you''ve let your brother watch while you shave your pussy'
 	end
 end
 
@@ -1629,6 +1660,10 @@ if $ARGS[0] = 'tattoowrist':
 	view 'images/pc/body/tattoos/wrists/tatwrst<<tatwrist>>.jpg'
 end
 
+if $ARGS[0] = 'tattoohand':
+	view 'images/pc/body/tattoos/hand/tathnd<<tathand>>.jpg'
+end
+
 if $ARGS[0] = 'tattoos':
 	clr
 	pl'<center><a href="exec:gs''$menu_obnovit''"><b>Tatoos</b></a></center>'
@@ -1650,6 +1685,7 @@ if $ARGS[0] = 'tattoos':
 	if tatupb > 0:tatcounter = 1 & pl'<a href="exec: gs ''obj_din'', ''tattootramp''">Your tramp stamp</a>'
 	if tatunder > 0:tatcounter = 1 & pl'<a href="exec: gs ''obj_din'', ''tattoounder''">Tattoo under your breasts</a>'
 	if tatwrist > 0:tatcounter = 1 & pl'<a href="exec: gs ''obj_din'', ''tattoowrist''">Tattoo on your wrist</a>'
+	if tathand > 0:tatcounter = 1 & pl'<a href="exec: gs ''obj_din'', ''tattoohand''">Tattoo on your hand</a>'
 	
 	if tatcounter = 0:
 		pl'You have a pristine body. Not in terms of debauchery, but in terms of tattoos.'

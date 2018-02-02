@@ -1,20 +1,12 @@
 # budgetclothes
 
-if $ARGS[0] = 'start' or $shoplocation = 'start':
+if $ARGS[0] = 'start':
 	$metka = $ARGS[0]
 	$loc = 'budgetclothes'
 	$location_type = 'event'
-	$shoplocation = 'start'
 	'<center><b><font color="maroon">Welcome to G & M - Clothes for all your needs</font></b></center>'
 	'<center><img <<$set_imgh>> src="images/locations/city/citycenter/mall/gandm/shop.jpg"</center>'
 	clr
-
-	*pl '<center><table align="center" width=80%>' 
-	*P FUNC ('$stock_item', 1, 'Panties', 300, 'clrbelo', 'budgetclothes')
-	*P FUNC ('$stock_item', 7, 'Pack of 7 pairs of panties', 2000, 'clrbelo', 'budgetclothes')
-	*P FUNC ('$stock_item', 1, 'Bra', 300, 'clrbra', 'budgetclothes')
-	*P FUNC ('$stock_item', 7, 'Pack of 7 bras', 2000, 'clrbra', 'budgetclothes')
-	*P '</table></center>'
 
 	gs 'stat'
 	if night_mode = 1:
@@ -30,26 +22,22 @@ if $ARGS[0] = 'start' or $shoplocation = 'start':
 	act 'Visit clothing department':
 		cla
 		act 'View cheap clothing':
-			$shoplocation = ''
-			minut += 5
+			minut += 2
 			gt 'budgetclothes', 'clothes'
 		end
 		
 		act 'View office wear':
-			$shoplocation = ''
-			minut += 5
+			minut += 2
 			gt 'budgetclothes', 'office'
 		end
 
 		act 'View uniforms':
-			$shoplocation = ''
-			minut += 5
+			minut += 2
 			gt 'budgetclothes', 'uniform'
 		end
 
 		act 'View school uniforms':
-			$shoplocation = ''
-			minut += 5
+			minut += 2
 			gt 'budgetclothes', 'school'
 		end
 
@@ -58,16 +46,13 @@ if $ARGS[0] = 'start' or $shoplocation = 'start':
 
 	act 'Visit shoe department':
 		cla
-		$shoplocation = ''
 		act 'Look at regular shoes':
-			$shoplocation = ''
-			minut += 5
+			minut += 2
 			gt 'budgetclothes', 'shoes'
 		end
 
 		act 'Look at exercise shoes':
-			$shoplocation = ''
-			minut += 5
+			minut += 2
 			gt 'budgetclothes', 'trainers'
 		end
 
@@ -75,17 +60,23 @@ if $ARGS[0] = 'start' or $shoplocation = 'start':
 	end
 
 	act 'View coats':
-		cla
-		$shoplocation = ''
-		minut += 5
+		minut += 2
 		gt 'budgetclothes', 'coats'
 	end
 
 	act 'View purses':
-		cla
-		$shoplocation = ''
-		minut += 5
+		minut += 2
 		gt 'budgetclothes', 'purses'
+	end
+
+	act 'View panties':
+		minut += 2
+		gt 'budgetclothes', 'panties'
+	end
+
+	act 'View bras':
+		minut += 2
+		gt 'budgetclothes', 'bras'
 	end
 
 	act 'Leave the store':
@@ -101,10 +92,48 @@ if $ARGS[0] = 'start' or $shoplocation = 'start':
 end
 
 if $ARGS[0] = 'clothes':
-	$metka = $ARGS[0]
+	$metka = 'clothes'
 	$loc = 'budgetclothes'
 	cls
 	gs'stat'
+	'<center><b><font color="maroon">Viewing G&M cheap clothing</font></b></center>'
+	*nl
+	$Headerstring = '<TH>Prostitute clothing '
+	if clothingfilter_prost = 0:
+		$Headerstring += '<a href="exec:clothingfilter_prost = 1 & gt ''budgetclothes'', ''clothes''">Included</a></TH>'
+	else
+		$Headerstring += '<a href="exec:clothingfilter_prost = 0 & gt ''budgetclothes'', ''clothes''">Excluded</a></TH>'
+	end
+
+	$Headerstring += '<TH>Bimbo clothing '
+	if clothingfilter_bimbo = 0:
+		$Headerstring += '<a href="exec:clothingfilter_bimbo = 1 & gt ''budgetclothes'', ''clothes''">Included</a></TH>'
+	else
+		$Headerstring += '<a href="exec:clothingfilter_bimbo = 0 & gt ''budgetclothes'', ''clothes''">Excluded</a></TH>'
+	end
+
+	$Headerstring += '<TH>Clothing you are comfortable wearing '
+	if clothingfilter_comf = 0:
+		$Headerstring += '<a href="exec:clothingfilter_comf = 1 & gt ''budgetclothes'', ''clothes''">Included</a></TH>'
+	else
+		$Headerstring += '<a href="exec:clothingfilter_comf = 0 & gt ''budgetclothes'', ''clothes''">Excluded</a></TH>'
+	end
+
+	$Headerstring += '<TH>Daring clothing '
+	if clothingfilter_daring = 0:
+		$Headerstring += '<a href="exec:clothingfilter_daring = 1 & gt ''budgetclothes'', ''clothes''">Included</a></TH>'
+	else
+		$Headerstring += 'g<a href="exec:clothingfilter_daring = 0 & gt ''budgetclothes'', ''clothes''">Excluded</a></TH>'
+	end
+
+	$Headerstring += '<TH>Too daring for you clothing '
+	if clothingfilter_too_daring = 0:
+		$Headerstring += '<a href="exec:clothingfilter_too_daring = 1 & gt ''budgetclothes'', ''clothes''">Included</a></TH>'
+	else
+		$Headerstring += '<a href="exec:clothingfilter_too_daring = 0 & gt ''budgetclothes'', ''clothes''">Excluded</a></TH>'
+	end
+
+	'<center><table border=1><<$Headerstring>></center>'
 
 	act 'Return':
 		cla
@@ -123,9 +152,21 @@ if $ARGS[0] = 'clothes':
 	end
 
 	:loopcheap
-		if cheap[i] = 0:*p '<a href="exec: i = <<i>> & gt ''budgetclothes'', ''cheapclo''"><img src="images/pc/clothing/1cheap/<<i>>.jpg" 	height="250" /></a>'
+		if cheap[i] = 0:
+			gs 'clothing_attributes', 'cheap', i
+			if clothingfilter_comf = 0 and CloExhibit + 10 < pcs_exhibition:
+				if (clothingfilter_prost = 0 or CloStyle ! 4) and (clothingfilter_bimbo = 0 or CloBimbo = 0): *p '<a href="exec: i = <<i>> & gt ''budgetclothes'', ''cheapclo''"><img src="images/pc/clothing/1cheap/<<i>>.jpg" 	height="250" /></a>'
+			elseif clothingfilter_daring = 0 and CloExhibit + 10 >= pcs_exhibition and CloExhibit <= pcs_exhibition:
+				if (clothingfilter_prost = 0 or CloStyle ! 4) and (clothingfilter_bimbo = 0 or CloBimbo = 0): *p '<a href="exec: i = <<i>> & gt ''budgetclothes'', ''cheapclo''"><img src="images/pc/clothing/1cheap/<<i>>.jpg" 	height="250" /></a>'
+			elseif clothingfilter_too_daring = 0 and CloExhibit > pcs_exhibition:
+				if (clothingfilter_prost = 0 or CloStyle ! 4) and (clothingfilter_bimbo = 0 or CloBimbo = 0): *p '<a href="exec: i = <<i>> & gt ''budgetclothes'', ''cheapclo''"><img src="images/pc/clothing/1cheap/<<i>>.jpg" 	height="250" /></a>'
+			end
+		end
 		i += 6
-		if i = 77:i = 83
+		if i = 3: i = 9
+		if i = 10: i = 16
+		if i = 45: i = 57
+		if i = 80:i = 86
 	if i <= 413:jump 'loopcheap'
 end
 
@@ -145,6 +186,45 @@ if $ARGS[0] = 'office':
 	$loc = 'budgetclothes'
 	cls
 	gs'stat'
+	'<center><b><font color="maroon">Viewing G&M office clothing</font></b></center>'
+	*nl
+
+	$Headerstring = '<TH>Prostitute clothing '
+	if clothingfilter_prost = 0:
+		$Headerstring += '<a href="exec:clothingfilter_prost = 1 & gt ''budgetclothes'', ''office''">Included</a></TH>'
+	else
+		$Headerstring += '<a href="exec:clothingfilter_prost = 0 & gt ''budgetclothes'', ''office''">Excluded</a></TH>'
+	end
+
+	$Headerstring += '<TH>Bimbo clothing '
+	if clothingfilter_bimbo = 0:
+		$Headerstring += '<a href="exec:clothingfilter_bimbo = 1 & gt ''budgetclothes'', ''office''">Included</a></TH>'
+	else
+		$Headerstring += '<a href="exec:clothingfilter_bimbo = 0 & gt ''budgetclothes'', ''office''">Excluded</a></TH>'
+	end
+
+	$Headerstring += '<TH>Clothing you are comfortable wearing '
+	if clothingfilter_comf = 0:
+		$Headerstring += '<a href="exec:clothingfilter_comf = 1 & gt ''budgetclothes'', ''office''">Included</a></TH>'
+	else
+		$Headerstring += '<a href="exec:clothingfilter_comf = 0 & gt ''budgetclothes'', ''office''">Excluded</a></TH>'
+	end
+
+	$Headerstring += '<TH>Daring clothing '
+	if clothingfilter_daring = 0:
+		$Headerstring += '<a href="exec:clothingfilter_daring = 1 & gt ''budgetclothes'', ''office''">Included</a></TH>'
+	else
+		$Headerstring += 'g<a href="exec:clothingfilter_daring = 0 & gt ''budgetclothes'', ''office''">Excluded</a></TH>'
+	end
+
+	$Headerstring += '<TH>Too daring for you clothing '
+	if clothingfilter_too_daring = 0:
+		$Headerstring += '<a href="exec:clothingfilter_too_daring = 1 & gt ''budgetclothes'', ''office''">Included</a></TH>'
+	else
+		$Headerstring += '<a href="exec:clothingfilter_too_daring = 0 & gt ''budgetclothes'', ''office''">Excluded</a></TH>'
+	end
+
+	'<center><table border=1><<$Headerstring>></center>'
 
 	act 'Return':
 		cla
@@ -153,15 +233,24 @@ if $ARGS[0] = 'office':
 	end
 
 	if Clothingstock > 15:
-		i = 1
+		i = 3
 	elseif Clothingstock > 7:
 		i = 2
 	else
-		i = 3
+		i = 1
 	end
 
 	:loopoffice
-		if office[i] = 0:*p '<a href="exec: i = <<i>> & gt ''budgetclothes'', ''officeclo''"><img src="images/pc/clothing/5office/<<i>>.jpg" 	height="250" /></a>'
+		if office[i] = 0:
+			gs 'clothing_attributes', 'office', i
+			if clothingfilter_comf = 0 and CloExhibit + 10 < pcs_exhibition:
+				if (clothingfilter_prost = 0 or CloStyle ! 4) and (clothingfilter_bimbo = 0 or CloBimbo = 0): *p '<a href="exec: i = <<i>> & gt ''budgetclothes'', ''officeclo''"><img src="images/pc/clothing/5office/<<i>>.jpg" 	height="250" /></a>'
+			elseif clothingfilter_daring = 0 and CloExhibit + 10 >= pcs_exhibition and CloExhibit <= pcs_exhibition:
+				if (clothingfilter_prost = 0 or CloStyle ! 4) and (clothingfilter_bimbo = 0 or CloBimbo = 0): *p '<a href="exec: i = <<i>> & gt ''budgetclothes'', ''officeclo''"><img src="images/pc/clothing/5office/<<i>>.jpg" 	height="250" /></a>'
+			elseif clothingfilter_too_daring = 0 and CloExhibit > pcs_exhibition:
+				if (clothingfilter_prost = 0 or CloStyle ! 4) and (clothingfilter_bimbo = 0 or CloBimbo = 0): *p '<a href="exec: i = <<i>> & gt ''budgetclothes'', ''officeclo''"><img src="images/pc/clothing/5office/<<i>>.jpg" 	height="250" /></a>'
+			end
+		end
 		i += 3
 	if i <= 101:jump 'loopoffice'
 end
@@ -182,6 +271,45 @@ if $ARGS[0] = 'uniform':
 	$loc = 'budgetclothes'
 	cls
 	gs'stat'
+	'<center><b><font color="maroon">Viewing G&M uniforms</font></b></center>'
+	*nl
+
+	$Headerstring = '<TH>Prostitute clothing '
+	if clothingfilter_prost = 0:
+		$Headerstring += '<a href="exec:clothingfilter_prost = 1 & gt ''budgetclothes'', ''uniform''">Included</a></TH>'
+	else
+		$Headerstring += '<a href="exec:clothingfilter_prost = 0 & gt ''budgetclothes'', ''uniform''">Excluded</a></TH>'
+	end
+
+	$Headerstring += '<TH>Bimbo clothing '
+	if clothingfilter_bimbo = 0:
+		$Headerstring += '<a href="exec:clothingfilter_bimbo = 1 & gt ''budgetclothes'', ''uniform''">Included</a></TH>'
+	else
+		$Headerstring += '<a href="exec:clothingfilter_bimbo = 0 & gt ''budgetclothes'', ''uniform''">Excluded</a></TH>'
+	end
+
+	$Headerstring += '<TH>Clothing you are comfortable wearing '
+	if clothingfilter_comf = 0:
+		$Headerstring += '<a href="exec:clothingfilter_comf = 1 & gt ''budgetclothes'', ''uniform''">Included</a></TH>'
+	else
+		$Headerstring += '<a href="exec:clothingfilter_comf = 0 & gt ''budgetclothes'', ''uniform''">Excluded</a></TH>'
+	end
+
+	$Headerstring += '<TH>Daring clothing '
+	if clothingfilter_daring = 0:
+		$Headerstring += '<a href="exec:clothingfilter_daring = 1 & gt ''budgetclothes'', ''uniform''">Included</a></TH>'
+	else
+		$Headerstring += 'g<a href="exec:clothingfilter_daring = 0 & gt ''budgetclothes'', ''uniform''">Excluded</a></TH>'
+	end
+
+	$Headerstring += '<TH>Too daring for you clothing '
+	if clothingfilter_too_daring = 0:
+		$Headerstring += '<a href="exec:clothingfilter_too_daring = 1 & gt ''budgetclothes'', ''uniform''">Included</a></TH>'
+	else
+		$Headerstring += '<a href="exec:clothingfilter_too_daring = 0 & gt ''budgetclothes'', ''uniform''">Excluded</a></TH>'
+	end
+
+	'<center><table border=1><<$Headerstring>></center>'
 
 	act 'Return':
 		cla
@@ -198,7 +326,16 @@ if $ARGS[0] = 'uniform':
 	end
 
 	:loopuniform
-		if uniform[i] = 0:*p '<a href="exec: i = <<i>> & gt ''budgetclothes'', ''uniformclo''"><img src="images/pc/clothing/10uniform/<<i>>.jpg" 	height="250" /></a>'
+		if uniform[i] = 0:
+			gs 'clothing_attributes', 'uniform', i
+			if clothingfilter_comf = 0 and CloExhibit + 10 < pcs_exhibition:
+				if (clothingfilter_prost = 0 or CloStyle ! 4) and (clothingfilter_bimbo = 0 or CloBimbo = 0): *p '<a href="exec: i = <<i>> & gt ''budgetclothes'', ''uniformclo''"><img src="images/pc/clothing/10uniform/<<i>>.jpg" 	height="250" /></a>'
+			elseif clothingfilter_daring = 0 and CloExhibit + 10 >= pcs_exhibition and CloExhibit <= pcs_exhibition:
+				if (clothingfilter_prost = 0 or CloStyle ! 4) and (clothingfilter_bimbo = 0 or CloBimbo = 0): *p '<a href="exec: i = <<i>> & gt ''budgetclothes'', ''uniformclo''"><img src="images/pc/clothing/10uniform/<<i>>.jpg" 	height="250" /></a>'
+			elseif clothingfilter_too_daring = 0 and CloExhibit > pcs_exhibition:
+				if (clothingfilter_prost = 0 or CloStyle ! 4) and (clothingfilter_bimbo = 0 or CloBimbo = 0): *p '<a href="exec: i = <<i>> & gt ''budgetclothes'', ''uniformclo''"><img src="images/pc/clothing/10uniform/<<i>>.jpg" 	height="250" /></a>'
+			end
+		end
 		i += 3
 	if i <= 49:jump 'loopuniform'
 end
@@ -219,6 +356,45 @@ if $ARGS[0] = 'school':
 	$loc = 'budgetclothes'
 	cls
 	gs'stat'
+	'<center><b><font color="maroon">Viewing G&M school uniforms</font></b></center>'
+	*nl
+
+	$Headerstring = '<TH>Prostitute clothing '
+	if clothingfilter_prost = 0:
+		$Headerstring += '<a href="exec:clothingfilter_prost = 1 & gt ''budgetclothes'', ''school''">Included</a></TH>'
+	else
+		$Headerstring += '<a href="exec:clothingfilter_prost = 0 & gt ''budgetclothes'', ''school''">Excluded</a></TH>'
+	end
+
+	$Headerstring += '<TH>Bimbo clothing '
+	if clothingfilter_bimbo = 0:
+		$Headerstring += '<a href="exec:clothingfilter_bimbo = 1 & gt ''budgetclothes'', ''school''">Included</a></TH>'
+	else
+		$Headerstring += '<a href="exec:clothingfilter_bimbo = 0 & gt ''budgetclothes'', ''school''">Excluded</a></TH>'
+	end
+
+	$Headerstring += '<TH>Clothing you are comfortable wearing '
+	if clothingfilter_comf = 0:
+		$Headerstring += '<a href="exec:clothingfilter_comf = 1 & gt ''budgetclothes'', ''school''">Included</a></TH>'
+	else
+		$Headerstring += '<a href="exec:clothingfilter_comf = 0 & gt ''budgetclothes'', ''school''">Excluded</a></TH>'
+	end
+
+	$Headerstring += '<TH>Daring clothing '
+	if clothingfilter_daring = 0:
+		$Headerstring += '<a href="exec:clothingfilter_daring = 1 & gt ''budgetclothes'', ''school''">Included</a></TH>'
+	else
+		$Headerstring += 'g<a href="exec:clothingfilter_daring = 0 & gt ''budgetclothes'', ''school''">Excluded</a></TH>'
+	end
+
+	$Headerstring += '<TH>Too daring for you clothing '
+	if clothingfilter_too_daring = 0:
+		$Headerstring += '<a href="exec:clothingfilter_too_daring = 1 & gt ''budgetclothes'', ''school''">Included</a></TH>'
+	else
+		$Headerstring += '<a href="exec:clothingfilter_too_daring = 0 & gt ''budgetclothes'', ''school''">Excluded</a></TH>'
+	end
+
+	'<center><table border=1><<$Headerstring>></center>'
 
 	act 'Return':
 		cla
@@ -235,7 +411,16 @@ if $ARGS[0] = 'school':
 	end
 
 	:loopschool
-		if school[i] = 0:*p '<a href="exec: i = <<i>> & gt ''budgetclothes'', ''schoolclo''"><img src="images/pc/clothing/6school/<<i>>.jpg" 	height="250" /></a>'
+		if school[i] = 0:
+			gs 'clothing_attributes', 'school', i
+			if clothingfilter_comf = 0 and CloExhibit + 10 < pcs_exhibition:
+				if (clothingfilter_prost = 0 or CloStyle ! 4) and (clothingfilter_bimbo = 0 or CloBimbo = 0): *p '<a href="exec: i = <<i>> & gt ''budgetclothes'', ''schoolclo''"><img src="images/pc/clothing/6school/<<i>>.jpg" 	height="250" /></a>'
+			elseif clothingfilter_daring = 0 and CloExhibit + 10 >= pcs_exhibition and CloExhibit <= pcs_exhibition:
+				if (clothingfilter_prost = 0 or CloStyle ! 4) and (clothingfilter_bimbo = 0 or CloBimbo = 0): *p '<a href="exec: i = <<i>> & gt ''budgetclothes'', ''schoolclo''"><img src="images/pc/clothing/6school/<<i>>.jpg" 	height="250" /></a>'
+			elseif clothingfilter_too_daring = 0 and CloExhibit > pcs_exhibition:
+				if (clothingfilter_prost = 0 or CloStyle ! 4) and (clothingfilter_bimbo = 0 or CloBimbo = 0): *p '<a href="exec: i = <<i>> & gt ''budgetclothes'', ''schoolclo''"><img src="images/pc/clothing/6school/<<i>>.jpg" 	height="250" /></a>'
+			end
+		end
 		i += 3
 		if i = 6:i = 9
 	if i <= 62:jump 'loopschool'
@@ -361,6 +546,52 @@ if $ARGS[0] = 'purses':
 end
 
 if $ARGS[0] = 'purses2': gt 'purses', 'view_purse_item', 'shop', 'cheap',i, 5000
+
+if $ARGS[0] = 'panties':
+	$metka = 'panties'
+	$loc = 'budgetclothes'
+	cls
+	gs'stat'
+
+	act 'Return':
+		cla
+		minut += 5
+		gt 'budgetclothes', 'start'
+	end
+
+	i = 1
+	:looppanties
+		if cheap_panties[i] = 0:*p '<a href="exec: gt ''panties'', ''view_panty_item'', ''shop'', ''cheap'', <<i>>, 300"><img src="images/pc/panties/basic/<<i>>.jpg" 	height="250" /></a>'
+		i += 1
+		if i = 7: i = 8
+		if i = 9: i = 10
+		if i = 21: i = 22
+		if i = 37: i = 38
+	if i <= 37:jump 'looppanties'
+end
+
+if $ARGS[0] = 'bras':
+	$metka = 'bras'
+	$loc = 'budgetclothes'
+	cls
+	gs'stat'
+
+	act 'Return':
+		cla
+		minut += 5
+		gt 'budgetclothes', 'start'
+	end
+
+	i = 1
+	:loopbras
+		if cheap_bras[i] = 0:*p '<a href="exec:gt ''bras'', ''view_bra_item'', ''shop'', ''cheap'', <<i>>, 300"><img src="images/pc/bras/basic/<<i>>.jpg" 	height="250" /></a>'
+		i += 1
+		if i = 11: i = 13
+		if i = 16: i = 17
+		if i = 18: i = 19
+	if i <= 19:jump 'loopbras'
+end
+
 
 --- budgetclothes ---------------------------------
 

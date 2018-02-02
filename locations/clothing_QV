@@ -1,20 +1,37 @@
 # clothing_QV
 
 if $ARGS[0] = 'list':
+	$regularwornclothingtype = ''
 
-	'<center><table border=1><TH><a href="exec:gt ''clothing'', ''view_clothing_list'', ''wardrobe''">Wardrobe </a></TH><TH><a href="exec:gt ''clothing'', ''view_clothing_list'', ''store''">Storage</a></TH><TH><a href="exec:gt ''clothing'', ''view_clothing_list'', ''unwanted''">Unwanted</a></TH><TH><a href="exec:gt ''clothing_QV'', ''list''">Pick something to wear</a></TH></center>'
-
-	dirtyclothes = 0	
-	swamp_clothes = 0
+	'<center><table border=1><TH><a href="exec:gt ''clothing'', ''view_clothing_list'', ''wardrobe''">Organize clothing</a></TH><TH><a href="exec:gt ''clothing'', ''view_clothing_list'', ''store''">View stored clothing list</a></TH><TH><a href="exec:gt ''clothing'', ''view_clothing_list'', ''unwanted''">View unwanted clothing list</a></TH></center>'
 
 	if $clothingworntype ! 'nude':
 		act 'Strip':gt 'clothing_QV', 'strip'
 	end
 
-	dynamic $wearpan
-	dynamic $removepan
+	act 'Return':gt 'wardrobe'
 
-	act 'Leave':gt $loc, $metka
+	
+	'<center><a href="exec:gt ''clothing_QV'', ''gm''"><img src="images/locations/city/citycenter/mall/GM.png"></a></center>'
+
+	if ARRSIZE('average') > 0:'<center><a href="exec:gt ''clothing_QV'', ''kats''"><img src="images/locations/city/citycenter/mall/pussycat.png"></a></center>'
+
+	if ARRSIZE('expensive') > 0:'<center><a href="exec:gt ''clothing_QV'', ''fashionista''"><img src="images/locations/city/citycenter/mall/fashionistat.png"></a></center>'
+
+	if ARRSIZE('formal') > 0:'<center><a href="exec:gt ''clothing_QV'', ''moncheri''"><img src="images/locations/city/citycenter/mall/moncheri.png"></a></center>'
+
+	if ARRSIZE('fetish') > 0 or ARRSIZE('burlesque') > 0:'<center><a href="exec:gt ''clothing_QV'', ''sexshop''"><img src="images/locations/city/citycenter/sexshop/shop_name.png"></a></center>'
+
+	if ARRSIZE('exhibit') > 0:'<center><a href="exec:gt ''clothing_QV'', ''exhibitshop''"><img src="images/locations/oldtown/exhibitshop/shop_name.png"></a></center>'
+	
+	if ARRSIZE('alternative') > 0:'<center><a href="exec:gt ''clothing_QV'', ''dolls''"><img src="images/locations/city/island/dolls.png"></a></center>'
+	
+	if ARRSIZE('exercise') > 0:'<center><a href="exec:gt ''clothing_QV'', ''sports''"><img src="images/locations/city/citycenter/mall/sports.png"></a></center>'
+end
+
+if $ARGS[0] = 'gm':
+
+	'<center><img src="images/locations/city/citycenter/mall/GM.png"></center>'
 
 	if StoryLine = 1 and SchoolAtestat = 0 and SchoolBlock = 0 and schoolS[6] = 0:*p '<a href="exec:gt ''clothing_QV'', ''change'', ''school'', 6"><img src="images/pc/clothing/6school/6.jpg" 	height="250" /></a>'
 
@@ -32,47 +49,6 @@ if $ARGS[0] = 'list':
 	end
 	i += 1
 	if i <= ARRSIZE('cheap'):jump 'loopcheap'
-
-	i = 1
-	:loopaverage
-	if average[i] = 1:
-		gs 'clothing_attributes', 'average', i
-		if CloExhibit <= pcs_exhibition:
-			if CloStyle ! 5:
-				if averageS[i] = 0 and averageH[i] > 0 and averageB[i] >= (pcs_hips - 8) and averageB[i] <= (pcs_hips + 8):*p '<a href="exec:gt ''clothing_QV'', ''change'', ''average'', <<i>>"><img src="images/pc/clothing/2average/<<i>>.jpg" 	height="250" /></a>'
-			else
-				if averageS[i] = 0 and averageH[i] > 0:*p '<a href="exec:gt ''clothing_QV'', ''change'', ''average'', <<i>>"><img src="images/pc/clothing/2average/<<i>>.jpg" 	height="250" /></a>'
-			end
-		end
-	end
-	i += 1
-	if i <= ARRSIZE('average'):jump 'loopaverage'
-
-	i = 1
-	:loopexpensive
-	if expensive[i] = 1:
-		gs 'clothing_attributes', 'expensive', i
-		if CloExhibit <= pcs_exhibition:
-			if CloStyle ! 5:
-				if expensiveS[i] = 0 and expensiveH[i] > 0 and expensiveB[i] >= (pcs_hips - 8) and expensiveB[i] <= (pcs_hips + 8):*p '<a href="exec:gt ''clothing_QV'', ''change'', ''expensive'', <<i>>"><img src="images/pc/clothing/3expensive/<<i>>.jpg" 	height="250" /></a>'
-			else
-				if expensiveS[i] = 0 and expensiveH[i] > 0:*p '<a href="exec:gt ''clothing_QV'', ''change'', ''expensive'', <<i>>"><img src="images/pc/clothing/3expensive/<<i>>.jpg" 	height="250" /></a>'
-			end
-		end
-	end
-	i += 1
-	if i <= ARRSIZE('expensive'):jump 'loopexpensive'
-
-	i = 1
-	:loopformal
-	if formal[i] = 1:
-		gs 'clothing_attributes', 'formal', i
-		if CloExhibit <= pcs_exhibition:
-			if formalS[i] = 0 and formalH[i] > 0 and formalB[i] >= (pcs_hips - 8) and formalB[i] <= (pcs_hips + 8):*p '<a href="exec:gt ''clothing_QV'', ''change'', ''formal'', <<i>>"><img src="images/pc/clothing/4formal/<<i>>.jpg" 	height="250" /></a>'
-		end
-	end
-	i += 1
-	if i <= ARRSIZE('formal'):jump 'loopformal'
 
 	i = 1
 	:loopoffice
@@ -98,15 +74,84 @@ if $ARGS[0] = 'list':
 	if i <= ARRSIZE('school'):jump 'loopschool'
 
 	i = 1
-	:loopexercise
-	if exercise[i] = 1:
-		gs 'clothing_attributes', 'exercise', i
+	:loopuniform
+	if uniform[i] = 1:
+		gs 'clothing_attributes', 'uniform', i
 		if CloExhibit <= pcs_exhibition:
-			if exerciseS[i] = 0 and exerciseH[i] > 0:*p '<a href="exec:gt ''clothing_QV'', ''change'', ''exercise'', <<i>>"><img src="images/pc/clothing/7exercise/<<i>>.jpg" 	height="250" /></a>'
+			if uniformS[i] = 0 and uniformH[i] > 0 and uniformB[i] >= (pcs_hips - 8) and uniformB[i] <= (pcs_hips + 8):*p '<a href="exec:gt ''clothing_QV'', ''change'', ''uniform'', <<i>>"><img src="images/pc/clothing/10uniform/<<i>>.jpg" 	height="250" /></a>'
 		end
 	end
 	i += 1
-	if i <= ARRSIZE('exercise'):jump 'loopexercise'
+	if i <= ARRSIZE('uniform'):jump 'loopuniform'
+
+	act 'Return': gt 'clothing_QV', 'list'
+end
+
+if $ARGS[0] = 'kats':
+
+	'<center><img src="images/locations/city/citycenter/mall/pussycat.png"></center>'
+
+	i = 1
+	:loopaverage
+	if average[i] = 1:
+		gs 'clothing_attributes', 'average', i
+		if CloExhibit <= pcs_exhibition:
+			if CloStyle ! 5:
+				if averageS[i] = 0 and averageH[i] > 0 and averageB[i] >= (pcs_hips - 8) and averageB[i] <= (pcs_hips + 8):*p '<a href="exec:gt ''clothing_QV'', ''change'', ''average'', <<i>>"><img src="images/pc/clothing/2average/<<i>>.jpg" 	height="250" /></a>'
+			else
+				if averageS[i] = 0 and averageH[i] > 0:*p '<a href="exec:gt ''clothing_QV'', ''change'', ''average'', <<i>>"><img src="images/pc/clothing/2average/<<i>>.jpg" 	height="250" /></a>'
+			end
+		end
+	end
+	i += 1
+	if i <= ARRSIZE('average'):jump 'loopaverage'
+
+	act 'Return': gt 'clothing_QV', 'list'
+end
+
+if $ARGS[0] = 'fashionista':
+
+	'<center><img src="images/locations/city/citycenter/mall/fashionistat.png"></center>'
+
+	i = 1
+	:loopexpensive
+	if expensive[i] = 1:
+		gs 'clothing_attributes', 'expensive', i
+		if CloExhibit <= pcs_exhibition:
+			if CloStyle ! 5:
+				if expensiveS[i] = 0 and expensiveH[i] > 0 and expensiveB[i] >= (pcs_hips - 8) and expensiveB[i] <= (pcs_hips + 8):*p '<a href="exec:gt ''clothing_QV'', ''change'', ''expensive'', <<i>>"><img src="images/pc/clothing/3expensive/<<i>>.jpg" 	height="250" /></a>'
+			else
+				if expensiveS[i] = 0 and expensiveH[i] > 0:*p '<a href="exec:gt ''clothing_QV'', ''change'', ''expensive'', <<i>>"><img src="images/pc/clothing/3expensive/<<i>>.jpg" 	height="250" /></a>'
+			end
+		end
+	end
+	i += 1
+	if i <= ARRSIZE('expensive'):jump 'loopexpensive'
+
+	act 'Return': gt 'clothing_QV', 'list'
+end
+
+if $ARGS[0] = 'moncheri':
+
+	'<center><img src="images/locations/city/citycenter/mall/moncheri.png"></center>'
+
+	i = 1
+	:loopformal
+	if formal[i] = 1:
+		gs 'clothing_attributes', 'formal', i
+		if CloExhibit <= pcs_exhibition:
+			if formalS[i] = 0 and formalH[i] > 0 and formalB[i] >= (pcs_hips - 8) and formalB[i] <= (pcs_hips + 8):*p '<a href="exec:gt ''clothing_QV'', ''change'', ''formal'', <<i>>"><img src="images/pc/clothing/4formal/<<i>>.jpg" 	height="250" /></a>'
+		end
+	end
+	i += 1
+	if i <= ARRSIZE('formal'):jump 'loopformal'
+
+	act 'Return': gt 'clothing_QV', 'list'
+end
+
+if $ARGS[0] = 'sexshop':
+
+	'<center><img src="images/locations/city/citycenter/sexshop/shop_name.png"></center>'
 
 	i = 1
 	:loopfetish
@@ -120,6 +165,24 @@ if $ARGS[0] = 'list':
 	if i <= ARRSIZE('fetish'):jump 'loopfetish'
 
 	i = 1
+	:loopburlesque
+	if burlesque[i] = 1:
+		gs 'clothing_attributes', 'burlesque', i
+		if CloExhibit <= pcs_exhibition:
+			if burlesqueS[i] = 0 and burlesqueH[i] > 0 and burlesqueB[i] >= (pcs_hips - 8) and burlesqueB[i] <= (pcs_hips + 8):*p '<a href="exec:gt ''clothing_QV'', ''change'', ''burlesque'', <<i>>"><img src="images/pc/clothing/13burlesque/<<i>>.jpg" 	height="250" /></a>'
+		end
+	end
+	i += 1
+	if i <= ARRSIZE('burlesque'):jump 'loopburlesque'
+
+	act 'Return': gt 'clothing_QV', 'list'
+end
+
+if $ARGS[0] = 'exhibitshop':
+
+	'<center><img src="images/locations/oldtown/exhibitshop/shop_name.png"></center>'
+
+	i = 1
 	:loopexhibit
 	if exhibit[i] = 1:
 		gs 'clothing_attributes', 'exhibit', i
@@ -130,27 +193,12 @@ if $ARGS[0] = 'list':
 	i += 1
 	if i <= ARRSIZE('exhibit'):jump 'loopexhibit'
 
-	i = 1
-	:loopuniform
-	if uniform[i] = 1:
-		gs 'clothing_attributes', 'uniform', i
-		if CloExhibit <= pcs_exhibition:
-			if uniformS[i] = 0 and uniformH[i] > 0 and uniformB[i] >= (pcs_hips - 8) and uniformB[i] <= (pcs_hips + 8):*p '<a href="exec:gt ''clothing_QV'', ''change'', ''uniform'', <<i>>"><img src="images/pc/clothing/10uniform/<<i>>.jpg" 	height="250" /></a>'
-		end
-	end
-	i += 1
-	if i <= ARRSIZE('uniform'):jump 'loopuniform'
+	act 'Return': gt 'clothing_QV', 'list'
+end
 
-	i = 1
-	:loopburlesque
-	if burlesque[i] = 1:
-		gs 'clothing_attributes', 'burlesque', i
-		if CloExhibit <= pcs_exhibition:
-			if burlesqueS[i] = 0 and burlesqueH[i] > 0 and burlesqueB[i] >= (pcs_hips - 8) and burlesqueB[i] <= (pcs_hips + 8):*p '<a href="exec:gt ''clothing_QV'', ''change'', ''burlesque'', <<i>>"><img src="images/pc/clothing/13burlesque/<<i>>.jpg" 	height="250" /></a>'
-		end
-	end
-	i += 1
-	if i <= ARRSIZE('burlesque'):jump 'loopburlesque'
+if $ARGS[0] = 'dolls':
+	
+	'<center><img src="images/locations/city/island/dolls.png"></center>'
 
 	i = 1
 	:loopalternative
@@ -162,6 +210,64 @@ if $ARGS[0] = 'list':
 	end
 	i += 1
 	if i <= ARRSIZE('alternative'):jump 'loopalternative'
+
+	act 'Return': gt 'clothing_QV', 'list'
+end
+
+if $ARGS[0] = 'sports':
+
+	'<center><img src="images/locations/city/citycenter/mall/sports.png"></center>'
+
+	i = 1
+	:loopexercise
+	if exercise[i] = 1:
+		gs 'clothing_attributes', 'exercise', i
+		if CloExhibit <= pcs_exhibition:
+			if exerciseS[i] = 0 and exerciseH[i] > 0:*p '<a href="exec:gt ''clothing_QV'', ''change'', ''exercise'', <<i>>"><img src="images/pc/clothing/7exercise/<<i>>.jpg" 	height="250" /></a>'
+		end
+	end
+	i += 1
+	if i <= ARRSIZE('exercise'):jump 'loopexercise'
+
+	act 'Return': gt 'clothing_QV', 'list'
+end
+
+if $ARGS[0] = 'gym':
+	if $regularwornclothingtype = '':
+		$regularwornclothingtype = $clothingworntype
+		regularwornclothingnumber = clothingwornnumber
+	end
+
+	'<center><img src="images/locations/city/citycenter/mall/sports.png"></center>'
+
+	i = 1
+	:loopexercise2
+	if exercise[i] = 1:
+		gs 'clothing_attributes', 'exercise', i
+		if CloExhibit <= pcs_exhibition:
+			if exerciseS[i] = 0 and exerciseH[i] > 0:*p '<a href="exec:gt ''clothing_QV'', ''change'', ''exercise'', <<i>>"><img src="images/pc/clothing/7exercise/<<i>>.jpg" 	height="250" /></a>'
+		end
+	end
+	i += 1
+	if i <= ARRSIZE('exercise'):jump 'loopexercise2'
+
+	act 'Return': gt $loc, $metka
+
+	if $clothingworntype ! $regularwornclothingtype: gs 'clothing_QV', 'gym2'
+
+	if $clothingworntype ! 'nude':
+		act 'Strip':gt 'clothing_QV', 'strip'
+	end
+end
+
+if $ARGS[0] = 'gym2':
+	act 'Change back into your regular clothes':
+		$clothingworntype = $regularwornclothingtype
+		clothingwornnumber = regularwornclothingnumber
+		killvar '$regularwornclothingtype'
+		killvar 'regularwornclothingnumber'
+		gt 'clothing_QV', 'gym'
+	end
 end
 
 if $ARGS[0] = 'cloak':
@@ -186,9 +292,16 @@ if $ARGS[0] = 'strip':
 	end
 
 	gs 'clothing', 'strip'
-	act 'Choose something to wear':gt 'clothing_QV', 'list'
+
+	act 'Choose something to wear':
+		if $regularwornclothingtype = '':
+			gt 'clothing_QV', 'list'
+		else
+			gt 'clothing_QV', 'gym'
+		end
+	end
 	
-	act 'Leave':gt $loc, $metka
+	act 'Leave': gt $loc, $metka
 end
 
 if $ARGS[0] = 'change':
@@ -240,18 +353,16 @@ if $ARGS[0] = 'change':
 		if CloExhibit + 10 > pcs_exhibition: 'You find this outfit more revealing than you are completely comfortable with but that makes it quite exciting too.'
 		act 'Wear this outfit':
 			gs 'clothing', 'wear', $ARGS[1], ARGS[2]
-			dynamic $ARGS[1] + 'W[<<ARGS[2]>>] = 1'
 
-			$clotype = $ARGS[1]
-
-			gs 'shoes', 'setup'
-			gs 'shoes', 'wear', $shoeworntype, shoewornnumber
-			gt $loc, $metka
+			if $regularwornclothingtype = '':
+				gt 'wardrobe'
+			else
+				gt 'clothing_QV', 'gym'
+			end
 		end
 	end
-	act 'Choose another outfit': gt 'clothing_QV', 'list'
-	
-	act 'Leave':gt $loc, $metka
+
+	act 'Return': gt 'clothing_QV', 'list'
 end
 
 

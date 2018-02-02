@@ -161,7 +161,8 @@ if $args[0] = 'sleep':
 
 			exit
 		end
-	elseif pcs_horny > 80 and rand (1,300) = 300:
+!! Exclusions for succubus dreams as they set horny to 100 and will always get overridden otherwise
+	elseif pcs_horny > 80 and rand (1,300) = 300 and succubusQW ! 1 and succubusQW ! 2:
 		gt 'bed2', 'wake_horny'
 	end
 
@@ -226,7 +227,7 @@ if $ARGS[0] = 'wake_horny':
 		act 'Wake Anya and see if she''s in the mood': gt 'sistersleep'
 	elseif $loc = 'FedorEv4':
 		act 'Wake Fedor and see if he''s in the mood': gt 'FedorEv4', 'Bedroom 1'
-		!!Intro text doesn''t quite fit event (but doesn''t quite fit 'try for baby' scenario either) - custom scene from VK?
+		!!Intro text doesn''t quite fit event (but doesn''t quite fit - try for baby - scenario either) - custom scene from VK?
 	elseif ($loc = 'bedr' or $loc = bedr2x) and husband > 0:
 		act 'Wake your husband and see if he''s in the mood': gt 'husbSex', 'variant'
 		!!Should be custom scene - maybe boyfriend/husband overhaul can cover this?
@@ -282,24 +283,10 @@ end
 
 if $args[0] = 'end':
 	InSleep = 0
-	if $pantyworntype ! 'none':
-		if bedpanty = 1:
-			gs 'underwear', 'linen'
-		else
-			if clrbelo > 0:
-				clrbelo -= 1 & dirtbelo += 1
-			else
-				gs 'panties', 'linen'
-			end
-			if clrbra > 0:
-				clrbra -= 1 & dirtbra += 1
-			else
-				gs 'bras', 'linen'
-			end
-		end
+	if bedpanty = 1: 
+		gs 'underwear', 'remove'
 	else
-		if bedpanty = 0 and clrbelo > 0:gs 'panties', 'fresh'
-		if bedpanty = 0 and clrbra > 0:gs 'bras', 'fresh'
+		gs 'underwear', 'wear'
 	end
 	if fullmorrout = 1 and $loc = 'bedrPar':
 		gt 'vanrPar'

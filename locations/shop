@@ -56,7 +56,7 @@ if $shoplocation = 'main':
 				'By the store entrance a man is looking at you appreciatively.'
 				act 'Return the look':gt 'event', 'dima'
 			elseif dimaQW = 1:
-				'In the lobby of the store you notice Dima and you are frozen with fear, you want to run, but your legs wont respond.'
+				'In the lobby of the store you notice Dima and you are frozen with fear, you want to run, but your legs won''t respond.'
 				'Your heart is thumping in your chest, your vision narrows, you feel faint.'
 				act 'Pass out':gt 'event', 'scoreslut1'
 			else
@@ -296,7 +296,6 @@ if $shoplocation= 'cosmetics':
 	*P FUNC ('$stock_item', 10, 'Portable makeup', 1000, 'kosmetitka', $CURLOC, '', iif(bag > 0, 0, 1), 'You need a handbag')
 	*P FUNC ('$stock_item', 20, 'Mouthwash', 400, 'mouthwash', $CURLOC, '', iif(bag > 0, 0, 1), 'You need a handbag')
 	*P FUNC ('$single_stock_item', 1, 'Comb', 150, 'greben', $CURLOC, '', iif(bag > 0, 0, 1), 'You need a handbag')
-	*P FUNC ('$single_stock_item', 1, 'Handbag', 5000, 'bag', $CURLOC, '', iif(bag > 0, 1, 0), '')
 	*P '</table></center>'
 	gs 'stat'
 	if night_mode = 1:
@@ -393,364 +392,154 @@ if $shoplocation = 'clothing':
 
 		act 'Leave the women''s clothing department':gt 'shop', 'start'
 		exit
-	end
-
-	if $message ! '':
-		'<center>'+$message+'</center>'
-		killvar '$message'
 	else
-		''
-	end	
-	*pl '<center><table align="center" width=80%>' 
-	*P FUNC ('$stock_item', 1, 'Panties', 300, 'clrbelo', $CURLOC)
-	*P FUNC ('$stock_item', 7, 'Pack of 7 pairs of panties', 2000, 'clrbelo', $CURLOC)
-	*P FUNC ('$stock_item', 1, 'Bra', 300, 'clrbra', $CURLOC)
-	*P FUNC ('$stock_item', 7, 'Pack of 7 bras', 2000, 'clrbra', $CURLOC)
-	*P '</table></center>'
-	'<br/>Women''s clothing cost 2,500 <b>₽</b> each.'
-	gs 'stat'
-	if night_mode = 1:
-		fcolor = rgb(255, 255, 255)
-		bcolor = rgb(0, 0, 0)
-		lcolor = rgb(106, 90, 205)
-	else
-		fcolor = rgb(0, 0, 0)
-		bcolor = rgb(255, 255, 255)
-		lcolor = rgb(106, 90, 205)
-	end
 
-	act 'Leave the women''s clothing department':gt 'shop', 'start'
+		if $message ! '':
+			'<center>'+$message+'</center>'
+			killvar '$message'
+		else
+			''
+		end	
+		'Women''s clothing at unbeatable prices, panties and bras 300<b>₽</b> each'
+		gs 'stat'
+		if night_mode = 1:
+			fcolor = rgb(255, 255, 255)
+			bcolor = rgb(0, 0, 0)
+			lcolor = rgb(106, 90, 205)
+		else
+			fcolor = rgb(0, 0, 0)
+			bcolor = rgb(255, 255, 255)
+			lcolor = rgb(106, 90, 205)
+		end
 
-	if konki!1:
-		'A pair of ice-skates are available for 500 <b>₽</b>.'
-		if money >= 500:
-			act 'Buy skates for 500 <b>₽</b>':
+		act 'Leave the women''s clothing department':gt 'shop', 'start'
+		
+		act 'View clothes': $shoplocation = 'clothing1' & gt 'shop'
+		
+		act 'View underwear': $shoplocation = 'underwear' & gt 'shop'
+
+		if konki!1:
+			'A pair of ice-skates are available for 500 <b>₽</b>.'
+			if money >= 500:
+				act 'Buy skates for 500 <b>₽</b>':
+					cla
+					*clr
+					money = money - 500
+					konki = 1
+
+					'<center><img <<$set_imgh>> src="images/locations/pavlovsk/lake/konki_shop.jpg"></center>'
+					'You buy a pair of skates.'
+
+					act 'Move away from the counter':gt'shop'
+				end
+			end
+		end
+
+		if coat[1] = 0:
+			act 'Inspect coat 1':
 				cla
 				*clr
-				money = money - 500
-				konki = 1
+				'<center><img <<$set_imgh>> src="images/pc/clothing/11coat/1.jpg"></center>'
+				gs 'clothing_attributes', 'coat', 1
+				'Coat 1'
+				FUNC('$clothing_name', 'coat', 1)
+				if CloExhibit > pcs_exhibition:'You don''t feel daring enough to buy an outfit this revealing.'
+				'Costs 5,000 <b>₽</b>.'
 
-				'<center><img <<$set_imgh>> src="images/locations/pavlovsk/lake/konki_shop.jpg"></center>'
-				'You buy a pair of skates.'
-
-				act 'Move away from the counter':gt'shop'
+				act 'Leave':gt 'shop'
+				if money => 5000 and CloExhibit <= pcs_exhibition:
+					act 'Buy':
+						cla
+						money -= 5000
+						coat[1] = 1
+						coatH[1] = 60
+						gt 'shop', '<font color="green">You bought <b>coat 1</b>.</font>'
+					end
+				end
 			end
 		end
-	end
 
-	
-	if office[1] = 0:
-		act 'Inspect Office clothes number 1':
-			cla
-			*clr
-			'<center><img <<$set_imgh>> src="images/pc/clothing/5office/1.jpg"></center>'
-			gs 'clothing_attributes', 'office', 1
-			'Office clothes 1'
-			gs 'clothing_descriptions'
-			'<<$description>>'
-			if CloExhibit > pcs_exhibition:'You don''t feel daring enough to buy an outfit this revealing.'
-			'Costs 2,500 <b>₽</b>.'
+		if swimwear[4] = 0:
+			act 'Inspect swimwear 4':
+				cla
+				*clr
+				'<center><img <<$set_imgh>> src="images/pc/clothing/12swimwear/4.jpg"></center>'
+				gs 'clothing_attributes', 'swimwear', 4
+				'Swimwear 4'
+				FUNC('$clothing_name', 'swimwear', 4)
+				if CloExhibit > pcs_exhibition:'You don''t feel daring enough to buy an outfit this revealing.'
+				'Costs 1,000 <b>₽</b>.'
 
-			act 'Leave':gt'shop'
-
-			if money => 2500 and CloExhibit <= pcs_exhibition:
-				act 'Buy':
-					cla
-					money -= 2500
-					office[1] = 1
-					officeH[1] = 60
-					officeB[1] = pcs_hips
-					gt'shop', '<font color="green">You bought <b>Office clothes number 1</b>.</font>'
+				act 'Leave':gt 'shop'
+				if money => 1000 and CloExhibit <= pcs_exhibition:
+					act 'Buy':
+						cla
+						money -= 1000
+						swimwear[4] = 1
+						swimwearH[4] = 60
+						swimwearB[4] = pcs_hips
+						gt 'shop', '<font color="green">You bought <b>swimwear 4</b>.</font>'
+					end
 				end
 			end
 		end
 	end
+end
 
-	if office[2] = 0:
-		act 'Inspect Office clothes number 2':
-			cla
-			*clr
-			'<center><img <<$set_imgh>> src="images/pc/clothing/5office/2.jpg"></center>'
-			gs 'clothing_attributes', 'office', 2
-			'Office clothes 2'
-			gs 'clothing_descriptions'
-			'<<$description>>'
-			if CloExhibit > pcs_exhibition:'You don''t feel daring enough to buy an outfit this revealing.'
-			'Costs 2,500 <b>₽</b>.'
+!! Women''s clothing outfit viewer
+if $shoplocation = 'clothing1':
+	*clr
+	cla
+	if $loc ! 'shop': $loc_bak = $loc
+	$loc = 'shop'
+	'<center><B>Click on an outfit to view details</B></center>'
 
-			act 'Leave':gt'shop'
-			
-			if money => 2500 and CloExhibit <= pcs_exhibition:
-				act 'Buy':
-					cla
-					money -= 2500
-					office[2] = 1
-					officeH[2] = 60
-					officeB[2] = pcs_hips
-					gt'shop', '<font color="green">You bought <b>Office clothes number 2</b>.</font>'
-				end
-			end
-		end
+	if office[1] = 0: *p '<a href="exec:gt ''clothing'', ''view_clothing_item'', ''shop'', ''office'', 1, 3000"><img src="images/pc/clothing/5office/1.jpg" 	height="250" /></a>'
+	if office[2] = 0: *p '<a href="exec:gt ''clothing'', ''view_clothing_item'', ''shop'', ''office'', 2, 3000"><img src="images/pc/clothing/5office/2.jpg" 	height="250" /></a>'
+	*nl
+	if cheap[68] = 0: *p '<a href="exec:gt ''clothing'', ''view_clothing_item'', ''shop'', ''cheap'', 68, 1500"><img src="images/pc/clothing/1cheap/68.jpg" 	height="250" /></a>'
+	if cheap[3] = 0: *p '<a href="exec:gt ''clothing'', ''view_clothing_item'', ''shop'', ''cheap'', 3, 1500"><img src="images/pc/clothing/1cheap/3.jpg" 	height="250" /></a>'
+	if cheap[80] = 0: *p '<a href="exec:gt ''clothing'', ''view_clothing_item'', ''shop'', ''cheap'', 80, 1500"><img src="images/pc/clothing/1cheap/80.jpg" 	height="250" /></a>'
+	if cheap[10] = 0: *p '<a href="exec:gt ''clothing'', ''view_clothing_item'', ''shop'', ''cheap'', 10, 1500"><img src="images/pc/clothing/1cheap/10.jpg" 	height="250" /></a>'
+	if cheap[45] = 0: *p '<a href="exec:gt ''clothing'', ''view_clothing_item'', ''shop'', ''cheap'', 45, 1500"><img src="images/pc/clothing/1cheap/45.jpg" 	height="250" /></a>'
+	if cheap[51] = 0: *p '<a href="exec:gt ''clothing'', ''view_clothing_item'', ''shop'', ''cheap'', 51, 1500"><img src="images/pc/clothing/1cheap/51.jpg" 	height="250" /></a>'
+	*nl
+	if exercise[4] = 0: *p '<a href="exec:gt ''clothing'', ''view_clothing_item'', ''shop'', ''exercise'', 4, 3000"><img src="images/pc/clothing/7exercise/4.jpg" 	height="250" /></a>'
+	if exercise[20] = 0: *p '<a href="exec:gt ''clothing'', ''view_clothing_item'', ''shop'', ''exercise'', 20, 3000"><img src="images/pc/clothing/7exercise/20.jpg" 	height="250" /></a>'
+
+	act 'Return':
+		$loc = $loc_bak
+		$shoplocation = 'clothing'
+		gt 'shop'
 	end
+end
 
-	if cheap[68] = 0:
-		act 'Inspect cheap clothes 68':
-			cla
-			*clr
-			'<center><img <<$set_imgh>> src="images/pc/clothing/1cheap/68.jpg"></center>'
-			gs 'clothing_attributes', 'cheap', 68
-			'Cheap clothes 68'
-			gs 'clothing_descriptions'
-			'<<$description>>'
-			if CloExhibit > pcs_exhibition:'You don''t feel daring enough to buy an outfit this revealing.'
-			'Costs 2,500 <b>₽</b>.'
+!! Women''s clothing underwear viewer
+if $shoplocation = 'underwear':
+	*clr
+	cla
+	if $loc ! 'shop': $loc_bak = $loc
+	$loc = 'shop'
+	'<center><B>Click on an item to view details</B></center>'
 
-			act 'Leave':gt 'shop'
-			if money => 2500 and CloExhibit <= pcs_exhibition:
-				act 'Buy':
-					cla
-					money -= 2500
-					cheap[68] = 1
-					cheapH[68] = 60
-					cheapB[68] = pcs_hips
-					gt 'shop', '<font color="green">You bought <b>cheap clothes 68</b>.</font>'
-				end
-			end
-		end
+
+	if basic_panties[7] = 0:*p '<a href="exec:gt ''panties'', ''view_panty_item'', ''shop'', ''cheap'', 7, 300"><img src="images/pc/panties/basic/7.jpg" 	height="250" /></a>'
+	if basic_panties[9] = 0:*p '<a href="exec:gt ''panties'', ''view_panty_item'', ''shop'', ''cheap'', 9, 300"><img src="images/pc/panties/basic/9.jpg" 	height="250" /></a>'
+	if basic_panties[12] = 0:*p '<a href="exec:gt ''panties'', ''view_panty_item'', ''shop'', ''cheap'', 12, 300"><img src="images/pc/panties/basic/12.jpg" 	height="250" /></a>'
+	if basic_panties[21] = 0:*p '<a href="exec:gt ''panties'', ''view_panty_item'', ''shop'', ''cheap'', 21, 300"><img src="images/pc/panties/basic/21.jpg" 	height="250" /></a>'
+	if basic_panties[37] = 0:*p '<a href="exec:gt ''panties'', ''view_panty_item'', ''shop'', ''cheap'', 37, 300"><img src="images/pc/panties/basic/37.jpg" 	height="250" /></a>'
+	*nl
+	if basic_bras[11] = 0:*p '<a href="exec:gt ''bras'', ''view_bra_item'', ''shop'', ''cheap'', 11, 300"><img src="images/pc/bras/basic/11.jpg" 	height="250" /></a>'
+	if basic_bras[12] = 0:*p '<a href="exec:gt ''bras'', ''view_bra_item'', ''shop'', ''cheap'', 12, 300"><img src="images/pc/bras/basic/12.jpg" 	height="250" /></a>'
+	if basic_bras[16] = 0:*p '<a href="exec:gt ''bras'', ''view_bra_item'', ''shop'', ''cheap'', 16, 300"><img src="images/pc/bras/basic/16.jpg" 	height="250" /></a>'
+	if basic_bras[18] = 0:*p '<a href="exec:gt ''bras'', ''view_bra_item'', ''shop'', ''cheap'', 18, 300"><img src="images/pc/bras/basic/18.jpg" 	height="250" /></a>'
+
+
+	act 'Return':
+		$loc = $loc_bak
+		$shoplocation = 'clothing'
+		gt 'shop'
 	end
-
-	if cheap[3] = 0:
-		act 'Inspect cheap clothes 3':
-			cla
-			*clr
-			'<center><img <<$set_imgh>> src="images/pc/clothing/1cheap/3.jpg"></center>'
-			gs 'clothing_attributes', 'cheap', 3
-			'Cheap clothes 3'
-			gs 'clothing_descriptions'
-			'<<$description>>'
-			if CloExhibit > pcs_exhibition:'You don''t feel daring enough to buy an outfit this revealing.'
-			'Costs 2,500 <b>₽</b>.'
-
-			act 'Leave':gt 'shop'
-			if money => 2500 and CloExhibit <= pcs_exhibition:
-				act 'Buy':
-					cla
-					money -= 2500
-					cheap[3] = 1
-					cheapH[3] = 60
-					cheapB[3] = pcs_hips
-					gt 'shop', '<font color="green">You bought <b>cheap clothes 3</b>.</font>'
-				end
-			end
-		end
-	end
-
-	if cheap[80] = 0:
-		act 'Inspect cheap clothes 80':
-			cla
-			*clr
-			'<center><img <<$set_imgh>> src="images/pc/clothing/1cheap/80.jpg"></center>'
-			gs 'clothing_attributes', 'cheap', 80
-			'Cheap clothes 80'
-			gs 'clothing_descriptions'
-			'<<$description>>'
-			if CloExhibit > pcs_exhibition:'You don''t feel daring enough to buy an outfit this revealing.'
-			'Costs 2,500 <b>₽</b>.'
-
-			act 'Leave':gt 'shop'
-			if money => 2500 and CloExhibit <= pcs_exhibition:
-				act 'Buy':
-					cla
-					money -= 2500
-					cheap[80] = 1
-					cheapH[80] = 60
-					cheapB[80] = pcs_hips
-					gt 'shop', '<font color="green">You bought <b>cheap clothes 80</b>.</font>'
-				end
-			end
-		end
-	end
-
-	if cheap[10] = 0:
-		act 'Inspect cheap clothes 10':
-			cla
-			*clr
-			'<center><img <<$set_imgh>> src="images/pc/clothing/1cheap/10.jpg"></center>'
-			gs 'clothing_attributes', 'cheap', 10
-			'Cheap clothes 10'
-			gs 'clothing_descriptions'
-			'<<$description>>'
-			if CloExhibit > pcs_exhibition:'You don''t feel daring enough to buy an outfit this revealing.'
-			'Costs 2,500 <b>₽</b>.'
-
-			act 'Leave':gt 'shop'
-			if money => 2500 and CloExhibit <= pcs_exhibition:
-				act 'Buy':
-					cla
-					money -= 2500
-					cheap[10] = 1
-					cheapH[10] = 60
-					cheapB[10] = pcs_hips
-					gt 'shop', '<font color="green">You bought <b>cheap clothes 10</b>.</font>'
-				end
-			end
-		end
-	end
-
-	if cheap[45] = 0:
-		act 'Inspect cheap clothes 45':
-			cla
-			*clr
-			'<center><img <<$set_imgh>> src="images/pc/clothing/1cheap/45.jpg"></center>'
-			gs 'clothing_attributes', 'cheap', 45
-			'Cheap clothes 45'
-			gs 'clothing_descriptions'
-			'<<$description>>'
-			if CloExhibit > pcs_exhibition:'You don''t feel daring enough to buy an outfit this revealing.'
-			'Costs 2,500 <b>₽</b>.'
-
-			act 'Leave':gt 'shop'
-			if money => 2500 and CloExhibit <= pcs_exhibition:
-				act 'Buy':
-					cla
-					money -= 2500
-					cheap[45] = 1
-					cheapH[45] = 60
-					cheapB[45] = pcs_hips
-					gt 'shop', '<font color="green">You bought <b>cheap clothes 45</b>.</font>'
-				end
-			end
-		end
-	end
-
-	if cheap[51] = 0:
-		act 'Inspect cheap clothes 51':
-			cla
-			*clr
-			'<center><img <<$set_imgh>> src="images/pc/clothing/1cheap/51.jpg"></center>'
-			gs 'clothing_attributes', 'cheap', 51
-			'Cheap clothes 51'
-			gs 'clothing_descriptions'
-			'<<$description>>'
-			if CloExhibit > pcs_exhibition:'You don''t feel daring enough to buy an outfit this revealing.'
-			'Costs 2,500 <b>₽</b>.'
-
-			act 'Leave':gt 'shop'
-			if money => 2500 and CloExhibit <= pcs_exhibition:
-				act 'Buy':
-					cla
-					money -= 2500
-					cheap[51] = 1
-					cheapH[51] = 60
-					cheapB[51] = pcs_hips
-					gt 'shop', '<font color="green">You bought <b>cheap clothes 51</b>.</font>'
-				end
-			end
-		end
-	end
-
-	if exercise[4] = 0:
-		act 'Inspect exercise clothes 4':
-			cla
-			*clr
-			'<center><img <<$set_imgh>> src="images/pc/clothing/7exercise/4.jpg"></center>'
-			gs 'clothing_attributes', 'exercise', 4
-			'Exercise clothes 4'
-			gs 'clothing_descriptions'
-			'<<$description>>'
-			if CloExhibit > pcs_exhibition:'You don''t feel daring enough to buy an outfit this revealing.'
-			'Costs 2,500 <b>₽</b>.'
-
-			act 'Leave':gt 'shop'
-			if money => 2500 and CloExhibit <= pcs_exhibition:
-				act 'Buy':
-					cla
-					money -= 2500
-					exercise[4] = 1
-					exerciseH[4] = 60
-					gt 'shop', '<font color="green">You bought <b>exercise clothes 4</b>.</font>'
-				end
-			end
-		end
-	end
-
-	if exercise[20] = 0:
-		act 'Inspect exercise clothes 20':
-			cla
-			*clr
-			'<center><img <<$set_imgh>> src="images/pc/clothing/7exercise/20.jpg"></center>'
-			gs 'clothing_attributes', 'exercise', 20
-			'Exercise clothes 20'
-			gs 'clothing_descriptions'
-			'<<$description>>'
-			if CloExhibit > pcs_exhibition:'You don''t feel daring enough to buy an outfit this revealing.'
-			'Costs 2,500 <b>₽</b>.'
-		
-			act 'Leave':gt 'shop'
-			if money => 2500 and CloExhibit <= pcs_exhibition:
-				act 'Buy':
-					cla
-					money -= 2500
-					exercise[20] = 1
-					exerciseH[20] = 60
-					gt 'shop', '<font color="green">You bought <b>exercise clothes 31</b>.</font>'
-				end
-			end
-		end
-	end
-
-	
-	if coat[1] = 0:
-		act 'Inspect coat 1':
-			cla
-			*clr
-			'<center><img <<$set_imgh>> src="images/pc/clothing/11coat/1.jpg"></center>'
-			gs 'clothing_attributes', 'coat', 1
-			'Coat 1'
-			FUNC('$clothing_name', 'coat', 1)
-			if CloExhibit > pcs_exhibition:'You don''t feel daring enough to buy an outfit this revealing.'
-			'Costs 5,000 <b>₽</b>.'
-
-			act 'Leave':gt 'shop'
-			if money => 5000 and CloExhibit <= pcs_exhibition:
-				act 'Buy':
-					cla
-					money -= 5000
-					coat[1] = 1
-					coatH[1] = 60
-					gt 'shop', '<font color="green">You bought <b>coat 1</b>.</font>'
-				end
-			end
-		end
-	end
-
-
-	
-	if swimwear[4] = 0:
-		act 'Inspect swimwear 4':
-			cla
-			*clr
-			'<center><img <<$set_imgh>> src="images/pc/clothing/12swimwear/4.jpg"></center>'
-			gs 'clothing_attributes', 'swimwear', 4
-			'Swimwear 4'
-			FUNC('$clothing_name', 'swimwear', 4)
-			if CloExhibit > pcs_exhibition:'You don''t feel daring enough to buy an outfit this revealing.'
-			'Costs 1,000 <b>₽</b>.'
-
-			act 'Leave':gt 'shop'
-			if money => 1000 and CloExhibit <= pcs_exhibition:
-				act 'Buy':
-					cla
-					money -= 1000
-					swimwear[4] = 1
-					swimwearH[4] = 60
-					swimwearB[4] = pcs_hips
-					gt 'shop', '<font color="green">You bought <b>swimwear 4</b>.</font>'
-				end
-			end
-		end
-	end
-	
 end
 
 !! Household appliances

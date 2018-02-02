@@ -46,11 +46,13 @@ $bteeth = {
 
 $dryOff = {
 	act 'Get out and dry off':
-		if indorf = 0 and vanr_lock = 0 and $loc = 'vanrPar':
-			gs 'vanrPar', 'peek'
-		else
-			mirror_steam = hour & gt $loc, $metka
-		end
+		mirror_steam = hour & gt $loc, $metka
+	end
+}
+
+$preshave = {
+	if indorf = 0 and vanr_lock = 0 and $loc = 'vanrPar':
+	gs 'vanrPar', 'peek'
 	end
 }
 
@@ -60,20 +62,6 @@ $shower = {
 		*clr
 		shampoo -= 1
 		minut += 15
-
-		if clrbelo > 0 and $pantyworntype ! 'none':
-			gs 'panties', 'linen'
-			gs 'panties', 'fresh'
-		elseif clrbelo = 0 and $pantyworntype ! 'none':
-			gs 'panties', 'linen'
-		end
-
-		if clrbra > 0 and $braworntype ! 'none':
-			gs 'bras', 'linen'
-			gs 'bras', 'fresh'
-		elseif clrbra = 0 and $braworntype ! 'none':
-			gs 'bras', 'linen'
-		end
 
 		if shampoo < 0:
 			shampoo = 0
@@ -150,7 +138,7 @@ $shower = {
 				dynamic $dryOff
 			end
 		end	
-
+		dynamic $preshave
 		dynamic $brit
 		dynamic $dryOff
 	end
@@ -164,20 +152,6 @@ $bath = {
 		minut += 30
 		pcs_sweat = 7 + rand(0,4)
 		pcs_mood += 20
-
-		if clrbelo > 0 and $pantyworntype ! 'none':
-			gs 'panties', 'linen'
-			gs 'panties', 'fresh'
-		elseif clrbelo = 0 and $pantyworntype ! 'none':
-			gs 'panties', 'linen'
-		end
-
-		if clrbra > 0 and $braworntype ! 'none':
-			gs 'bras', 'linen'
-			gs 'bras', 'fresh'
-		elseif clrbra = 0 and $braworntype ! 'none':
-			gs 'bras', 'linen'
-		end
 
 		if shampoo < 0:
 			shampoo = 0
@@ -289,7 +263,7 @@ $brit = {
 				'You lather up your legs and crotch and then start carefully shaving them. Once you''re finished you gently glide your hands over your smooth pussy and legs, enjoying the smooth feeling and getting slightly more aroused by the touch.'
 			end
 
-			act 'Put the razor away':cla & dynamic $brit
+			act 'Put the razor away':cla & dynamic $dryOff
 		end
 	end
 	
@@ -314,7 +288,7 @@ $brit = {
 				'You lather up your legs and then start carefully shaving them. Once you''re finished you gently glide your hands over your smooth legs, making sure you didn''t miss a spot.'
 			end
 
-			act 'Put the razor away':cla & dynamic $brit
+			act 'Put the razor away':cla & dynamic $dryOff
 		end
 	end
 
@@ -338,11 +312,10 @@ $brit = {
 			*nl
 			'You lather your crotch with some soapy water and carefully shave your pubic hair. After shaving you can''t help but run your fingers over your pussy, enjoying the smooth feeling and getting slightly more aroused by the touch.'
 
-			act 'Put the razor away':cla & dynamic $brit
+			act 'Put the razor away':cla & dynamic $dryOff
 		end
 	end
 
-	dynamic $dryOff
 }
 
 $tampon = {
@@ -382,13 +355,6 @@ $quickwash = {
 		act 'Quick wash (0:15)':
 			cla
 			*clr
-
-			if clrbelo > 0 and $pantyworntype ! 'none':
-				gs 'underwear', 'linen'
-				gs 'underwear', 'fresh'
-			elseif clrbelo = 0 and $pantyworntype ! 'none':
-				gs 'underwear', 'linen'
-			end
 			
 			cumspclnt = 4
 			gs 'cum_cleanup'
@@ -408,46 +374,33 @@ $quickwash = {
 }
 
 $wearpan = {
-	if $pantyworntype = 'none' and $braworntype = 'none' and clrbelo > 0 and clrbra > 0:
-		act 'Wear underwear':
-			gs 'underwear', 'fresh'
-			gt $loc, $metka
-		end
+	if $pantyworntype = 'none':
+		act 'Wear panties': gt 'panties', 'view_panty_list', 'bathroom'
 	end
 
-	if $pantyworntype = 'none' and clrbelo > 0:
-		act 'Wear panties':
-			gs 'panties', 'fresh'
-			gt $loc, $metka
-		end
-	end
-
-	if $braworntype = 'none' and clrbelo > 0:
-		act 'Wear bra':
-			gs 'bras', 'fresh'
-			gt $loc, $metka
-		end
+	if $braworntype = 'none':
+		act 'Wear a bra': gt 'bras', 'view_bra_list', 'bathroom'
 	end
 }
 
 $removepan = {
 	if $pantyworntype ! 'none' and $braworntype ! 'none':
 		act 'Remove underwear':
-			gs 'underwear', 'linen'
+			gs 'underwear', 'remove'
 			gt $loc, $metka
 		end
 	end
 
 	if $pantyworntype ! 'none':
 		act 'Remove panties':
-			gs 'panties', 'linen'
+			gs 'panties', 'remove'
 			gt $loc, $metka
 		end
 	end
 
 	if $braworntype ! 'none':
 		act 'Remove bra':
-			gs 'bras', 'linen'
+			gs 'bras', 'remove'
 			gt $loc, $metka
 		end
 	end
@@ -536,7 +489,7 @@ $pirTongue = {
 	:looptongue_pir
 		if dyneval('RESULT = PirsA<<i>>_owned') = 1:*p '<a href="exec:pirsA = <<i>> & pierWearCount += 1 & dynamic $pirManage"><img src="images/pc/body/piercings/a<<i>>.jpg" 	height="250" ></a>'
 		i += 1
-	if i <= 3:jump 'looptongue_pir'
+	if i <= 4:jump 'looptongue_pir'
 }
 
 $pirLip = {
@@ -547,7 +500,7 @@ $pirLip = {
 	:looplip_pir
 		if dyneval('RESULT = PirsB<<i>>_owned') = 1:*p '<a href="exec:pirsB = <<i>> & pierWearCount += 1 & dynamic $pirManage"><img src="images/pc/body/piercings/b<<i>>.jpg" 	height="250" ></a>'
 		i += 1
-	if i <= 1:jump 'looplip_pir'
+	if i <= 6:jump 'looplip_pir'
 }
 
 $pirEars = {
@@ -558,7 +511,7 @@ $pirEars = {
 	:loopears_pir
 		if dyneval('RESULT = PirsC<<i>>_owned') = 1:*p '<a href="exec:pirsC = <<i>> & pierWearCount += 1 & dynamic $pirManage"><img src="images/pc/body/piercings/c<<i>>.jpg" 	height="250" ></a>'
 		i += 1
-	if i <= 15:jump 'loopears_pir'
+	if i <= 24:jump 'loopears_pir'
 }
 
 $pirNose = {
@@ -591,7 +544,7 @@ $pirNips = {
 	:loopnipple_pir
 		if dyneval('RESULT = PirsF<<i>>_owned') = 1:*p '<a href="exec:pirsF = <<i>> & pierWearCount += 1 & dynamic $pirManage"><img src="images/pc/body/piercings/f<<i>>.jpg" 	height="250" ></a>'
 		i += 1
-	if i <= 2:jump 'loopnipple_pir'
+	if i <= 4:jump 'loopnipple_pir'
 }
 
 $pirNavel = {
@@ -602,7 +555,7 @@ $pirNavel = {
 	:loopnavel_pir
 		if dyneval('RESULT = PirsN<<i>>_owned') = 1:*p '<a href="exec:pirsN = <<i>> & pierWearCount += 1 & dynamic $pirManage"><img src="images/pc/body/piercings/n<<i>>.jpg" 	height="250" ></a>'
 		i += 1
-	if i <= 1:jump 'loopnavel_pir'
+	if i <= 4:jump 'loopnavel_pir'
 }
 
 $pirPubic = {
@@ -613,7 +566,7 @@ $pirPubic = {
 	:looppubic_pir
 		if dyneval('RESULT = PirsG<<i>>_owned') = 1:*p '<a href="exec:pirsG = <<i>> & pierWearCount += 1 & dynamic $pirManage"><img src="images/pc/body/piercings/g<<i>>.jpg" 	height="250" ></a>'
 		i += 1
-	if i <= 4:jump 'looppubic_pir'
+	if i <= 7:jump 'looppubic_pir'
 }
 
 $pirManage = {
@@ -698,22 +651,6 @@ if $ARGS[0] = 'private':
 	else
 		'You have <b><<sanpad>></b> pads.'
 	end
-	
-    if (washingbelo = 1 or washingbra = 1) and poroshok > 0 and $loc ! 'vanrPar' and $loc ! 'tanvanr':
-        act 'Wash clothes':
-            cla
-            *clr
-            minut += 30
-            poroshok -= 1
-            pcs_mood -= 10
-			gs 'underwear', 'cleaning'
-            '<center><img <<$set_imgh>> src="images/locations/city/residential/apartment/stir.jpg"></center>'
-            *nl
-            'You soak the clothes in the basin and pour in washing powder, then you wash your clothes until they are finally clean.'
-
-            act 'Finish':gt $loc, $metka
-        end
-    end
 
     if shampoo > 0 or $loc = 'vanrPar':
             if $loc = 'vanrPar':
@@ -762,22 +699,12 @@ if $ARGS[0] = 'private':
 
     dynamic $tampon
 
-    if clrbelo <= 4 and $loc = 'vanrPar': clrbelo = 5
-
-    if clrbra <= 4 and $loc = 'vanrPar': clrbra = 5
-
     dynamic $wearpan
     dynamic $basin
 
 	if bcream_have > 0:
 		pl'<a href="exec:dynamic $use_bcream & gt $loc, $metka"><b>Apply breast cream.</b></a> Uses left: <<bcream_have>>.'
 	end
-
-    if (washingbelo > 0 or washingbra > 0) and BuyHous = 0 and $loc = 'vanrPar':
-    	*nl
-        'In the bathroom you find the laundry Mom washed for you.'
-        gs 'underwear', 'cleaning'
-    end
 
     if (cumloc[6] = 1 or cumloc[7] = 1):
         act 'Wipe the cum off your clothes (0:10)':
@@ -1002,40 +929,10 @@ if $ARGS[0] = 'misery':
             poroshok -= 1
             husporday = daystart
             'The washing machine washed your husband''s dirty laundry.'
-        end
-
-        if (washingbelo = 1 or washingbra = 1) and poroshok >= 1:
-            poroshok -= 1
-			gs 'underwear', 'cleaning'
-            'The washing machine washed your laundry.'
         elseif poroshok < 1:
             'You ran out of washing powder for the washing machine.'
         end
     end
-
-	if washingbelo = 1 or washingbra = 1:
-		'There is dirty washing in the laundry basket.'
-		if poroshok > 0:
-			$stirka = '<a href="exec:gt ''din_van'', ''misery_washing''">You can wash your laundry.</a>'
-			'Under the sink you have detergent powder, there is enough for <b><<poroshok>></b> more washes.<<$stirka>>'
-		else
-			'<b><font color="red">You have no detergent powder to wash your clothes with.</font></b>'
-		end
-	end
-
-	if clrbelo > 0:
-		if clrbra > 0:
-			'A cupboard contains <font color="blue"><b><<clrbelo>></b></font> pairs of regular clean panties and <font color="blue"><b><<clrbra>></b></font> regular clean bras.'
-		else
-			'A cupboard contains <font color="blue"><b><<clrbelo>></b></font> pairs of regular clean panties and <b><font color="red">You do not have any regular clean bras.</font></b>'
-		end
-	else
-		if clrbra > 0:
-			'<b><font color="red">You do not have any clean regular panties</font></b> but a cupboard contains <font color="blue"><b><<clrbra>></b></font> regular clean bras.'
-		else
-			'<b><font color="red">You do not have any regular clean underwear.</font></b>'
-		end
-	end
 
     if husband > 0 and husbanday > 0 and husporday ! daystart and poroshok >= 2:
         act 'Wash your husbands clothes (2 units of washing powder) (1:00)':
@@ -1069,21 +966,6 @@ if $ARGS[0] = 'misery':
             act 'Finish':gt $loc, $metka
         end
     end
-end
-
-if $ARGS[0] = 'misery_washing':
-	cla
-	*clr
-	minut += 30
-	poroshok -= 1
-	gs 'underwear', 'cleaning'
-	pcs_mood -= 10
-
-	'<center><img <<$set_imgh>> src="images/locations/city/residential/apartment/stir.jpg"></center>'
-	*nl
-	'You soak your dirty clothes in a basin and then pour washing powder on them. You wash them until they are finally clean.'
-
-	act 'Continue':gt $loc, $metka
 end
 
 if $ARGS[0] = 'buffpick':
@@ -1177,7 +1059,7 @@ end
 
 if $ARGS[0] = 'WifeReact1':
 	cla
-	pregTalkPC = 1
+	pregTalkPC = 1 
 	minut += 10
 	*nl
 		'A wide smile spreads across your face as you look down at the pregnancy test. The two strips displayed exclaim that you’re finally starting a family. You begin to shake with excitement as you think about how you are going to tell your husband. Should you just tell him as soon as you see him, or do you want to make it an even more special occasion and tell him over a fancy dinner? Maybe you should just nonchalantly drop the test in front of him to see his reaction. Regardless of how you decide to do it, you can''t keep the excitement to yourself any longer. You take a brief moment to freshen up before leaving the room. '

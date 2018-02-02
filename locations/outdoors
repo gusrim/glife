@@ -293,6 +293,12 @@ if $ARGS[0] = 'main':
 		end
 	end
 
+!!Shoe variables - cleared here and then set if in outdoors location below
+	PShoQuality = 0
+	PShoHeels = 0
+	PShoCut = 0
+	PShoStyle = 0
+
 	if $location_type = 'public_outdoors' or $location_type = 'secluded' or $location_type = 'event_outdoors':
 		if sunWeather = 0 and umbrella = 0:
 			*NL 'It is raining and you do not have an umbrella.'
@@ -309,6 +315,14 @@ if $ARGS[0] = 'main':
 				*p ' Your hair is soaked.'
 			end
 			*nl
+		end
+
+		if shoeworntype ! 'none':
+			gs 'shoe_attributes', $shoeworntype, shoewornnumber
+			PShoQuality = ShoQuality
+			PShoHeels = ShoHeels
+			PShoCut = ShoCut
+			PShoStyle = ShoStyle
 		end
 
 		if temper <= 0:
@@ -333,7 +347,7 @@ if $ARGS[0] = 'main':
 					if pcs_energy < 20:frost += 1
 					if $pantyworntype = 'none':frost += 1
 					if pcs_sweat > 20:frost += 1
-				elseif temper < -10 and defaultcoat < 4:
+				elseif temper < -10 and defaultcoat_warmth = 1:
 					if temper < -30:
 						frost += 2
 					else
@@ -342,11 +356,11 @@ if $ARGS[0] = 'main':
 					if pcs_energy < 20:frost += 1
 					if $pantyworntype = 'none':frost += 1
 					if pcs_sweat > 20:frost += 1
-				elseif temper < -20 and (defaultcoat = 4 or defaultcoat = 5 or defaultcoat = 8 or defaultcoat = 10 or defaultcoat = 12 or defaultcoat = 13 or defaultcoat = 14 or defaultcoat = 16 or defaultcoat = 17 or defaultcoat = 18 or defaultcoat = 19):
+				elseif temper < -20 and defaultcoat_warmth = 2:
 					frost += 1
 					if pcs_energy < 20:frost += 1
 					if pcs_sweat > 20:frost += 1
-				elseif temper < -30 and (defaultcoat = 6 or defaultcoat = 7 or defaultcoat = 9 or defaultcoat = 11 or defaultcoat = 15):
+				elseif temper < -30 and defaultcoat_warmth = 3:
 					frost += 1
 				end
 
@@ -364,7 +378,7 @@ if $ARGS[0] = 'main':
 			if isprok = 0 and isprokp = 0 and mesec > 0 and preg = 0:
 				'<b><font color="red">You have the blood flowing down your legs and staining your clothes.</font></b>'
 
-				if clrbelo > 0 and $pantyworntype ! 'none':gs 'panties', 'dispose' & '<b><font color="red">Your panties have been ruined and you discreetly remove and dispose of them.</font></b>'
+				if $pantyworntype ! 'none':gs 'panties', 'dispose' & '<b><font color="red">Your panties have been ruined and you discreetly remove and dispose of them.</font></b>'
 
 				pcs_sweat += 10
 				pcs_mood -= 3

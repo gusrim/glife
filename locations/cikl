@@ -17,6 +17,17 @@ if day > monthsEnd[month]:
 	if month < 1: month = 1
 
 	$month = $monthName[month]
+
+	!! new years party calculation
+	temp = func('shortgs','dow',year,12,31)
+	if temp < 6:
+		nyp_day = 31
+	elseif temp = 6:
+		nyp_day = 30
+	else
+		nyp_day = 29
+	end
+	
 end
 
 !!MJ: Dont think that one is needed. But it was here already.
@@ -120,10 +131,6 @@ Clothingstock[i] = rand (0,500)
 i += 1
 if i <= 147:jump 'loopprice'
 
-!!underwear rng
-cheap_panty_number = rand(1,37)
-cheap_bra_number = rand(1,19)
-
 if coatH[defaultcoat] <= 0: defaultcoat = 0
 
 !!------------------------------------------------------------------------------------------------------------
@@ -161,7 +168,7 @@ end
 
 if bimbo >= 40: bimbo = 40
 
-!!Bimbo levels. They use custom variables so they wont permanently change character stats
+!!Bimbo levels. They use custom variables so they won''t permanently change character stats
 if bimbolevel = 0: supnatvnesh = 0 & bimbostupidity = 0
 if bimbolevel = 1: supnatvnesh = 2 & bimbostupidity = (pcs_intel / 6)
 if bimbolevel = 2: supnatvnesh = 4 & bimbostupidity = (pcs_intel / 4)
@@ -317,7 +324,7 @@ if prezikmsg = 2: prezikmsg = 3
 !!	pillcon			: The number for the current birth control chemical level.
 !!	pilldays		: The number of consecutive days (you believe) you have taken your pill
 
-if Luth > 225 and placebopart <= 0: placebopart = 8
+if Luth > (LutH_Max-75) and placebopart <= 0: placebopart = 8
 placebopart -= 1
 
 if tabletkishot <= 0: pillcon -= 1000 & pillcon2 -= 1000
@@ -462,7 +469,7 @@ if tabletkicheck = 1 and tabletkichday < daystart:
 	end		
 elseif tabletkicheck = 0:
 	if tabletkiday >= (daystart - 1) and tabletkipt = 0 and rand(0,7) = 0: tabletkipt = 1
-	if pillcon > 0 and tabletkipi = 0 and rand(0,3) and (tabletkiday + 15) > daystart = 0: tabletkipi = -1
+	if pillcon > 0 and tabletkipi = 0 and rand(0,3) = 0 and (tabletkiday + 15) > daystart = 0: tabletkipi = -1
 end
 
 if pilldaychk = 1:
@@ -476,7 +483,7 @@ if pilldays > 18: pilldays = 18
 if pilldays < 0: pilldays = 0
 !!
 $MenCal[] = $str(cycle)
-if ArrSize('$MenCal') = 30: killvar '$MenCal',0
+if ArrSize('$MenCal') = 60: killvar '$MenCal',0
 
 
 !!------------------------------------------------------------------------------------------------------------
@@ -732,9 +739,6 @@ end
 !! Clothing wear and tear
 gs 'starenie'
 
-!! Underwear cleaning at home
-if tanwork = 1 or (StoryLine = 1 and ParHomeBlock = 0): gs 'underwear', 'cleaning'
-
 if nark > 60:
 	nark = 60
 elseif nark > 30:
@@ -815,9 +819,9 @@ if pcs_lashes > 2:
 		if lashextensionduration <= 0:
 			'You waited too long to do maintenance on your lash extensions; there''s too little there to notice or work with at this point.'
 			pcs_lashes = pcs_naturallashes
-			killvar lashextensionstyle
-			killvar lashextensionduration
-			killvar lashextensionnew			
+			killvar 'lashextensionstyle'
+			killvar 'lashextensionduration'
+			killvar 'lashextensionnew'	
 		end
 	end
 	if false_lashes > 0:
@@ -942,7 +946,7 @@ killvar 'temprel'
 !!------------------------------------------------------------------------------------------------------------
 
 !!MJ: Add some (daily) interest to the bank account.
-!!Not very realistic but wont make anyone too rich.
+!!Not very realistic but won''t make anyone too rich.
 
 if bankAccount = 1:
 	kartatotal = karta
@@ -1124,7 +1128,7 @@ if storyline = 1:
 		end
 	end
 	
-	if sisboyparty = 2 and sisboyparty_day > daystart: sisboyparty = 3
+	if sisboyparty = 2 and sisboyparty_day + 1 < daystart: sisboyparty = 3
 
 !!missed graduation
 	if month = 5 and day = 26:

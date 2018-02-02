@@ -39,7 +39,7 @@ elseif $ARGS[0] = 'down':
 	streetev_hijack = 6
 	streetev_bf = 90
 	streetev_mistmeet = 20
-	if tanwork = 1 or student > 0:
+	if tanwork = 1:
 		streetev_home = 1
 		$streetev_home = 'near the entrance to your home'
 	end
@@ -73,6 +73,16 @@ elseif $ARGS[0] = 'pavCommercial':
 		streetev_home = 0
 		$streetev_home = 'on the high street'
 	end
+elseif $ARGS[0] = 'island':
+	$streetev_title = '<center><b>Island</b></center>'
+	streetev_rob = 1
+	streetev_hijack = 6
+	streetev_bf = 90
+	streetev_mistmeet = 20
+	if student > 0:
+		streetev_home = 1
+		$streetev_home = 'near the entrance to your dorm'
+	end
 else
 	$streetev_title = '<center><b>in dark</b></center>'
 	streetev_rape = 10
@@ -83,20 +93,15 @@ end
 
 if $ARGS[1] = 'extras':
 	
-	if streetrand < streetev_bf and pcs_lover < 3:
+	if streetrand < streetev_bf and pcs_lover < 3 and streetbfhour ! hour:
+		streetbfhour = hour
 		vnerand = rand(0, 1200)
-		if vnerand <= pcs_apprnc:
-			gs 'boy'
+		!! 5% chance to meet a girl if no previous lesbian experience, up to a max of 25% with lots of experience
+		lesbian_lover = (rand(1,100) <= 25 - (20/(lesbian + 1)))
+		if vnerand <= pcs_apprnc and lesbian_lover:
+			gt 'dateF', 'start'
+		elseif vnerand <= pcs_apprnc:
 			gt 'dateM', 'start'
-!!			'A <<$boybody>>, <<$boybod>> guy with <<$boyface>> hair walks up to you, he is <<$boyClo>>'
-!!			'The guy introduces himself as <<$boydesc>> and asks for your phone number.'
-!!			act 'Tell him your number':
-!!				cla
-!!				gs 'boyfrend', 'start'!
-!!				stopboy = 0
-!!				'<<$boydesc>> takes your number and leaves.'
-!!				act 'Continue':gt $loc
-!!			end
 		end
 	end
 
@@ -105,13 +110,13 @@ if $ARGS[1] = 'extras':
 		if vladimirday = daystart and vladimirQW = 40 and hour >= 16 and week = 6:'<a href="exec:gt ''qwmeet'',''3''">There''s an Audi parked in front of your building and standing beside it you notice Vladimir</a>.'
 
 		if hour = meethour[0]:
-			if svidanie[0] = 1:'<b><a href="exec:lover_number = 0 & gt ''meet'', ''start''"><<$loverdesc[0]>></a> waits <<$streetev_home>>.</b>'
+			if svidanie[0] = 1:'<b><a href="exec:lover_number = 0 & gt ''lover_meet'', ''start''"><<$loverdesc[0]>></a> waits <<$streetev_home>>.</b>'
 		end
 		if hour = meethour[1]:
-			if svidanie[1] = 1:'<b><a href="exec:lover_number = 1 & gt ''meet'', ''start''"><<$loverdesc[1]>></a> waits <<$streetev_home>>.</b>'
+			if svidanie[1] = 1:'<b><a href="exec:lover_number = 1 & gt ''lover_meet'', ''start''"><<$loverdesc[1]>></a> waits <<$streetev_home>>.</b>'
 		end
 		if hour = meethour[2]:
-			if svidanie[2] = 1:'<b><a href="exec:lover_number = 2 & gt ''meet'', ''start''"><<$loverdesc[2]>></a> waits <<$streetev_home>>.</b>'
+			if svidanie[2] = 1:'<b><a href="exec:lover_number = 2 & gt ''lover_meet'', ''start''"><<$loverdesc[2]>></a> waits <<$streetev_home>>.</b>'
 		end
 	end
 end
@@ -213,8 +218,7 @@ if $ARGS[1] = 'main':
 				'"Get ready, bitch." He says pushing you onto your knees. He moves behind you and takes you doggy-style. You can feel his hard cock entering your vagina.'
 
 				gs 'arousal', 'vaginal', 10, 'sub'
-				gs 'stat'
-				dynamic $vagend
+				gs 'cum_call','',$boy,1
 
 				gs 'arousal', 'end'
 				gs 'stat'
@@ -236,8 +240,7 @@ if $ARGS[1] = 'main':
 				'"Get ready, bitch." He says pushing you onto your knees. He moves behind you and takes you doggy-style. You can feel his hard cock entering your vagina.'
 
 				gs 'arousal', 'vaginal', 10, 'sub'
-				gs 'stat'
-				dynamic $vagend
+				gs 'cum_call','',$boy,1
 
 				gs 'arousal', 'end'
 				gs 'stat'
@@ -277,8 +280,7 @@ if $ARGS[1] = 'main':
 				'"Get ready, bitch." He says pushing you onto your knees. He moves behind you and takes you doggy-style. You can feel his hard cock entering your vagina.'
 
 				gs 'arousal', 'vaginal', 10, 'sub'
-				gs 'stat'
-				dynamic $vagend
+				gs 'cum_call','',$boy,1
 
 				gs 'arousal', 'end'
 				gs 'stat'
@@ -808,7 +810,7 @@ if $ARGS[1] = 'main':
 					minut += 5
 					exhibition_exp += 3
 					'<<$streetev_title>>'
-					'<center><video src="images/locations/shared/street/bottomed1.mp4"></center>'
+					'<center><video autoplay loop src="images/locations/shared/street/bottomed1.mp4"></video></center>'
 					'As you walk down the street you are suddenly pushed forward hard. You nearly lose your balance and only barely catch yourself. While you are half bent over and trying to recover you feel someone yank up your dress and yank down your panties, exposing your ass and pussy for everyone to see. You quickly regain your balance, as you do. You pull up your panties and smooth your dress back in place, by that time whoever did it is long gone.'
 					if exhibition < 35:
 						pcs_mood -= 10
@@ -817,7 +819,7 @@ if $ARGS[1] = 'main':
 						pcs_mood += 10
 						'You look around and notice several people staring at you, you are sure they''ve seen everything. You can''t help but smile, loving the attention even if it wasn''t your idea, you casually continue on your way, but with an extra bit of sway in your hips.'
 					end
-					act 'continue':gt $loc
+					act 'Continue':gt $loc
 			!!dress without panties
 				elseif PCloSkirt > 0 and $pantyworntype = 'none' and CloOnePiece = 1:
 					*clr
@@ -825,7 +827,7 @@ if $ARGS[1] = 'main':
 					minut += 5
 					exhibition_exp += 5
 					'<<$streetev_title>>'
-					'<center><video src="images/locations/shared/street/sharkdress.mp4"></center>'
+					'<center><video autoplay loop src="images/locations/shared/street/sharkdress.mp4"></video></center>'
 					'As you walk down the street someone comes up behind you and grabs the top of your dress and yanks it down around your ankles. Which leaves you standing stark naked with only your dress around your ankles. You quickly squat down and grab your dress, pulling it back up and into place, by that time who ever did it is long gone.'
 					if exhibition < 35:
 						pcs_mood -= 10
@@ -834,7 +836,7 @@ if $ARGS[1] = 'main':
 						pcs_mood += 10
 						'You look around and notice several people staring at you, you are sure they seen. You can''t help but smile, loving the attention even if it wasn''t your idea, you casually continue on your way, but with a extra bit of sway in your hips.'
 					end
-					act 'continue':gt $loc
+					act 'Continue':gt $loc
 			!!skirt with panties
 				elseif PCloSkirt > 0 and $pantyworntype ! 'none':
 					*clr
@@ -842,7 +844,7 @@ if $ARGS[1] = 'main':
 					minut += 5
 					exhibition_exp += 3
 					'<<$streetev_title>>'
-					'<center><video src="images/locations/shared/street/bottomeds'+ rand(1,2) +'.mp4"></center>'
+					'<center><video autoplay loop src="images/locations/shared/street/bottomeds'+ rand(1,2) +'.mp4"></video></center>'
 					'As you walk down the street someone comes up behind you and grabs your skirt and panties, yanking them down. Your skirt ends up around your ankles and your panties half way down your thighs. Which leaves your ass and pussy on fully display to everyone around. You quickly pull up your panties and then squat down and grab your skirt, pulling it back up and into place, by that time whoever did it is long gone.'
 					if exhibition < 35:
 						pcs_mood -= 10
@@ -851,7 +853,7 @@ if $ARGS[1] = 'main':
 						pcs_mood += 10
 						'You look around and notice several people staring at you, you are sure they''ve seen everything. You can''t help but smile, loving the attention even if it wasn''t your idea, you casually continue on your way, but with an extra bit of sway in your hips.'
 					end
-					act 'continue':gt $loc
+					act 'Continue':gt $loc
 			!!if one of the above isn''t true then this is what happens
 				else
 					*clr
@@ -859,7 +861,7 @@ if $ARGS[1] = 'main':
 					minut += 5
 					exhibition_exp += 3
 					'<<$streetev_title>>'
-					'<center><video src="images/locations/shared/street/topped'+ rand(1,2) +'.mp4"></center>'
+					'<center><video autoplay loop src="images/locations/shared/street/topped'+ rand(1,2) +'.mp4"></video></center>'
 					'As you walk down the street someone comes up behind you and grabs your top, yanking it down. Which leaves your tits on full display to everyone around. You quickly pull up your top backup, by that time whoever did it is long gone.'
 					if exhibition < 35:
 						pcs_mood -= 10
@@ -868,7 +870,7 @@ if $ARGS[1] = 'main':
 						pcs_mood += 10
 						'You look around and notice several people staring at you, you are sure they''ve seen everything. You can''t help but smile, loving the attention even if it wasn''t your idea, you casually continue on your way, but with an extra bit of sway in your hips.'
 					end
-					act 'continue':gt $loc
+					act 'Continue':gt $loc
 				end
 			else
 				gt $loc
@@ -881,7 +883,7 @@ if $ARGS[1] = 'main':
 				minut += 5
 				exhibition_exp += 1
 				'<<$streetev_title>>'
-				'<center><video src="images/locations/shared/street/breeze.mp4"></center>'
+				'<center><video autoplay loop src="images/locations/shared/street/breeze.mp4"></video></center>'
 				'As you walk down the street a strong breeze suddenly blows down the street, which causes your skirt to blow up. Which exposes your panty clad ass to everyone on the street. You quickly push it back down, but as soon as you let go the breeze blows it right back up, you fight against the breeze for almost a minute before it finally stops.'
 				if exhibition < 35:
 					pcs_mood -= 5
@@ -890,7 +892,7 @@ if $ARGS[1] = 'main':
 					pcs_mood += 5
 					'You look around and notice several people staring at you, you are sure they''ve seen everything. You can''t help but smile, loving the attention even if it wasn''t your idea, you casually continue on your way, but with an extra bit of sway in your hips.'
 				end
-				act 'continue':gt $loc
+				act 'Continue':gt $loc
 			else
 				gt $loc
 			end
@@ -900,11 +902,11 @@ if $ARGS[1] = 'main':
 				*clr
 				cla
 				'<<$streetev_title>>'
-				'<center><video src="images/locations/shared/street/couple1.mp4"></center>'
+				'<center><video autoplay loop src="images/locations/shared/street/couple1.mp4"></video></center>'
 				'As you walk down the street you see a couple making out passionately the guy reaches around and starts squeezing the girls ass. You can''t help but watch them as you walk by, feeling your own arousal growing.'
 				gs 'arousal', 'voyeur', 5
 				gs 'arousal', 'end'
-				act 'continue':gt $loc
+				act 'Continue':gt $loc
 			else
 				gt $loc
 			end
@@ -918,7 +920,7 @@ if $ARGS[1] = 'main':
 				'As you walk down the street you see a couple of girls making out passionately. You can''t help but watch them as you walk by, feeling your own arousal growing.'
 				gs 'arousal', 'voyeur', 5
 				gs 'arousal', 'end'
-				act 'continue':gt $loc
+				act 'Continue':gt $loc
 			else
 				gt $loc
 			end
@@ -931,7 +933,7 @@ if $ARGS[1] = 'main':
 				'<<$streetev_title>>'
 				'<center><img <<$set_imgh>> src="images/locations/shared/street/lostkey.jpg"></center>'
 				'As you pass by an alleyway you glance down and see a woman wearing a very nice dress with nice high heels trying to jimmy a window. A few moments later she slides the window open and then crawls through the window, giving a nice view of her ass as she does. Once inside she quickly shuts the window, as you continue on, you wonder if maybe she lost her keys. Or maybe she was just a very well dressed burglar.'
-				act 'continue':gt $loc
+				act 'Continue':gt $loc
 			else
 				gt $loc
 			end
@@ -996,7 +998,7 @@ if $ARGS[1] = 'main':
 				end
 				'As you walk down the street you pass a woman wearing a long coat. All of a sudden she flashes you with a huge grin on her face. She flashes several other people as well, she seems to be enjoying the attention she is getting.'
 				gs 'arousal', 'voyeur', 5
-				act 'continue':gt $loc
+				act 'Continue':gt $loc
 				if pcs_exhibition >= 35:
 					act 'Flash her back':
 						cla
@@ -1005,7 +1007,7 @@ if $ARGS[1] = 'main':
 						'<<$streetev_title>>'
 						'<center><img <<$set_imgh>> src="images/shared/sex/exhibitionism/flash_tits.jpg"></center>'
 						'You grin at her as she flashes you and you lift your shirt flashing your tits back at her, which makes her laugh.'
-						act 'continue':gt $loc
+						act 'Continue':gt $loc
 					end
 				end
 			else
@@ -1021,7 +1023,7 @@ if $ARGS[1] = 'main':
 				if hotcat > 5:
 					pcs_mood += 20
 					'As you walk down the street you pass a group of girls. You hear them start talking about you as you pass by. "I love her outfit, she really knows how to dress." "I know, look at her shoes, they are just perfect." "What about her makeup? I wish I could do mine that good." They keep talking about you until they are out of earshot. You can''t help but smile and feel great after that.'
-					act 'continue':gt $loc
+					act 'Continue':gt $loc
 				else
 					pcs_mood -= 20
 					'As you walk down the street you pass a group of girls. You hear them start talking about you as you pass by. "Oh my god, look at her outfit. Does she really think that she can pull that off with a body like that?" "I know and look at her hair, has she even heard of a brush?" You feel your cheeks burning as they continue to make fun of you.'

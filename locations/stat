@@ -87,8 +87,6 @@ cumSUM = cumsumbod/40
 
 if husbizvradd > 5:izvratH = 1
 if husbharmin > 10:harakHusb = 0
-if clrbelo < 0:clrbelo = 0 & gs 'underwear', 'remove'
-if clrbra < 0:clrbra = 0 & gs 'underwear', 'remove'
 
 if husband = 0:
 	husbizvradd = 0
@@ -161,8 +159,8 @@ else
 	killvar 'pcs_splcstng'
 end
 
-if pcs_dom < 0: SUB = SUB - pcs_dom
-if SUB < 0: pcs_dom = pcs_dom - SUB
+if pcs_dom < 0: SUB = SUB - pcs_dom & pcs_dom = 0
+if SUB < 0: pcs_dom = pcs_dom - SUB & SUB = 0
 
 if pcs_dom > 100: pcs_dom = 100
 if SUB > 100: SUB = 100
@@ -455,10 +453,23 @@ if minut >= 60:
 	if smokerNeed > 300:smokerNeed = 0 & smoker = 0
 	if StrongNarkota > 0:pcs_mood -= (40 / StrongNarkota) & StrongNarkota -= 1
 
-	if amphWithdrawl > 5: amphWithdrawl += 1 & pcs_mood -= (amphWithdrawl / 5)
-	if amphHigh > 0: amphWithdrawl = 2 & amphetamineBonus = 3 & amphHigh -= 1 & amphHigh -= 4 & pcs_mood += (2 * amphHigh)
-	if amphHigh = 0 and amphWithdrawl = 2: 
-		amphetamineBonus = 2 & amphWithdrawl += 1 & pcs_mood -= pcs_mood / 10
+	if amphWithdrawl >= 5: amphWithdrawl += 1 & pcs_mood -= (amphWithdrawl / 5)
+	if amphHigh > 0:
+		if amphWithdrawl < 2: amphWithdrawl = 2
+		amphetamineBonus = 3
+		amphHigh -= 4
+		pcs_mood += (2 * amphHigh)
+	elseif amphHigh <= 0 and amphWithdrawl = 2:
+		if amphIntake > 0:
+			amphIntake -= 1
+		else
+			amphWithdrawl = o
+		end
+		amphHigh = 0
+		amphetamineBonus = 2
+		pcs_mood -= pcs_mood / 10
+	elseif amphIntake > 0:
+		amphWithdrawl += 1
 	elseif amphHigh = 0 and amphWithdrawl = 0:
 		amphetamineBonus = 1
 	end
@@ -779,8 +790,8 @@ end
 
 if succubusflag = 1:
 	if pcs_energy < 0:
-		if fat >= 1:
-			fat -= 2
+		if salo >= 1:
+			salo -= 2
 			pcs_energy += 8 + succublvl
 		else
 			pcs_energy += 8 + succublvl
@@ -807,21 +818,21 @@ if pcs_energy < 0:
 	pcs_energy = 0
 	pcs_health -= 5
 
-	if fat = 0 and pcs_stren + pcs_vital > 0:
+	if salo = 0 and pcs_stren + pcs_vital > 0:
 		stren_deg -= 1
 		vital_deg -= 1
 		pcs_energy += 8
-	elseif fat = 0 and pcs_stren + pcs_vital <= 0:
+	elseif salo = 0 and pcs_stren + pcs_vital <= 0:
 		if Enable_nogameover = 0 :
 			over = 3
 			gt'gameover'
 			exit
 		else
 			$stat_msg += '<BR><font color=red><B>You starved to death, but Cheat Mode keeps you Alive.</B></font>'
-			fat = 1
+			salo = 1
 		end
-	elseif fat > 0:
-		fat -= 1
+	elseif salo > 0:
+		salo -= 1
 		pcs_energy += 8
 	end
 end
@@ -897,6 +908,15 @@ else
 	$pcs_willpwr = '<font color="red">You are on the verge of madness.</font>'
 end
 
+!!Mood
+maxmood = 100 - moodmodifier
+if pcs_mood > 100:
+	pcs_mood = 100
+elseif pcs_mood < 0:
+	pcs_mood = 0
+!!	Asylum: basically this means clinically insane, like court-ordered committed, saliva dripping, blubbering... Ordinarily irreversible at this stage meaning Game Over, but cheat can help
+end
+
 if pcs_mood >= 80:
 	$pcs_mood = '<font color="green">You are in a great mood.</font>'
 elseif pcs_mood >= 60:
@@ -931,18 +951,8 @@ else
 	$pcs_sleep = '<font color="red">You are very tired.</font>'
 end
 
-!!Mood
-maxmood = 100 - moodmodifier
-if pcs_mood > 100:
-	pcs_mood = 100
-	$pcs_mood = 'You feel buoyed.'
-elseif pcs_mood < 0:
-	pcs_mood = 0
-!!	Asylum: basically this means clinically insane, like court-ordered committed, saliva dripping, blubbering... Ordinarily irreversible at this stage meaning Game Over, but cheat can help
-end
-
 if workFabrika = 1 and week => 1 and week <= 5 and hour > 8 and age => 16 and age < 18 and FabrikaProgulDay ! day or workFabrika = 1 and week => 1 and week <= 5 and hour > 16 and age > 18 and FabrikaProgulDay ! day:
-	!absence from work in a factory in Pavlovsk
+	!!absence from work in a factory in Pavlovsk
 	FabrikaProgul += 1
 	FabrikaProgulDay = day
 end

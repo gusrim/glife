@@ -35,13 +35,13 @@ end
 if $ARGS[0] = '00':
 	gs 'TerminalOffice', 'TerminalOfficeScreen', 'Hall office space', 'terminal4'
 
-	'You in the lobby, office space.'
+	'You are standing in the lobby of the terminal office.'
 
 	cla
-	act 'Leaving the office': minut += 5 & gt 'Terminal'
-	act 'Go to the sales Department': minut += 1 & gt  'TerminalOffice', '11'
-	act 'Go to the accounting Department': minut += 1 & gt 'TerminalOffice', '21'
-	act 'Go to the Director': minut += 1 & gt 'TerminalOffice', '31'
+	act 'Leave the office': minut += 5 & gt 'Terminal'
+	act 'Go to the sales department': minut += 1 & gt  'TerminalOffice', '11'
+	act 'Go to the accounting department': minut += 1 & gt 'TerminalOffice', '21'
+	act 'Go and see the Manager': minut += 1 & gt 'TerminalOffice', '31'
 end
 
 !==================================================
@@ -56,9 +56,9 @@ if $ARGS[0] = '11':
 	
 	cla
 	gs 'TerminalOffice', 'TerminalOfficeScreen', 'Sales', 'terminal2'
-	*PL '- What can I do to help? - Smiling affably asks you Manager.'
+	'"What can I help you with?" the manager asks you.'
 
-	act 'To leave the office': minut += 1 & gt 'TerminalOffice', '00'
+	act 'Leave the office': minut += 1 & gt 'TerminalOffice', '00'
 
 	if verakassir > 0:
 		
@@ -78,15 +78,15 @@ if $ARGS[0] = '11':
 		TovarLimitRepository1 = 30
 		TovarLimitRepository2 = 100
 		
-		*NL 'You spoke with the Manager about buying small things...'
+		'You talk with the Manager about buying small trinkets...'
 		
 		!Get current balances
 		TovarRepository1 = tovarL
 		if TovarRepository1 => TovarLimitRepository1:
-			*P ' At home you are all full up.'
+			'There is no more free space at home.'
 		else
 			DoNotBuy -= 1
-			*P ' Now you have kept '+ TovarRepository1 +' PCs., at home you will be able to place only <<TovarLimitRepository1>> PCs.'
+			'You have '+ TovarRepository1 +' trinkets stored in your home. You''re only able to store <<TovarLimitRepository1>> trinkets.'
 			MaxQuantity1 = TovarLimitRepository1 - TovarRepository1
 		end
 		
@@ -94,46 +94,46 @@ if $ARGS[0] = '11':
 			!Get the current balances in the garage
 			TovarRepository2 = GarTorgItem
 			if TovarRepository2 => TovarLimitRepository2:
-				*P ' In the garage there is no space.'
+				'There is no space in the garage.'
 			else
 				DoNotBuy -= 1
-				*P ' And garage stored '+ TovarRepository2 +' PCs., high in the garage, you will be able to place <<TovarLimitRepository2>> PCs.'
+					'You have '+ TovarRepository2 +' trinkets stored in the garage. You''re only able to store <<TovarLimitRepository2>> trinkets.'
 				MaxQuantity2 = TovarLimitRepository2 - TovarRepository2
 			end
 		end
 		
 		if DoNotBuy = 2:
-			*P ' After some thought, you realized that you just have nowhere to store the goods and decided to abandon the purchase.'
+			'You think about it for a while, realizing that you just have nowhere to store the goods and decide to downturn the purchase.'
 		else
 			!Produce purchase
-			act 'Buy small goods on 100 rubles, putting a specific number':
+			act 'The small trinkets cost 100 <b>₽</b>, please put in how many trinkets you want to purchase':
 				minut += 13
-				MaxQuantityA = input("How much product you want to buy for the price 100 rubles apiece?")
+				MaxQuantityA = input("How many trinkets do you want to buy for 100 <b>₽</b> apiece?")
 				
 				if MaxQuantityA > (MaxQuantity1 + MaxQuantity2):
-					*NL '<b><font color=red>You have nowhere to store the surplus <<MaxQuantityA-(MaxQuantity1 + MaxQuantity2)>> PCs. !!!</front></b>'
+					'<b><font color=red>You have nowhere to store the surplus <<MaxQuantityA-(MaxQuantity1 + MaxQuantity2)>> of trinkets.</front></b>'
 					cla
-					act 'Clear': gt 'TerminalOffice', '11'
+					act 'Leave': gt 'TerminalOffice', '11'
 				end
 				
 				MaxCost = MaxQuantityA * 100
 				
 				if MaxCost > money:
 					!If not enough money
-					*NL 'You don`t have enough cash, you will have to withdraw from the purchase.'
+					'You don''t have enough money on you, you will have to withdraw money before proceeding with the purchase.'
 					if (money + karta >= MaxCost) or (karta >= MaxCost):
 						!The player can be plastic money
-						*P ' You have money on the card and you offer the Manager to pay by Bank card.'
-						' - We don`t have a terminal for card payments, says Manager. - Unfortunately, we can only accept cash.'
+						'You have enough money on your credit card and you offer them to pay with that.'
+						'"I''m sorry, we don''t own a card terminal." the Manager replies, "We accept only cash."'
 					end
 					cla
-					act 'Clear': gt 'TerminalOffice', '11'
+					act 'Leave': gt 'TerminalOffice', '11'
 				else
 					!If the money is written off money to fill warehouses
 						
 					money -= MaxCost
 					
-					'You purchased <<MaxQuantityA>> PCs. goods worth <<MaxCost>>'
+					'You''ve purchased <<MaxQuantityA>> trinkets, worth <<MaxCost>>.'
 					
 					!First populate channelise 1
 					if MaxQuantityA => MaxQuantity1:
@@ -152,15 +152,15 @@ if $ARGS[0] = '11':
 					end
 					
 					if YouCanGar = 0 and money > 100: 
-						*NL 'By purchasing, you thought that would buy more goods, but a place to store it? May try to talk to the stepfather about the allocation of space for items in his garage...'
+						'You''ve purchased plenty of trinkets, but you''ve been thinking about expanding your business, but where could you store it all? Maybe you should talk to the stepfather if you could use some free space in his garage...'
 					end
 					
 					cla
-					act 'To complete your purchase': gt 'TerminalOffice', '11'
+					act 'Complete your purchase': gt 'TerminalOffice', '11'
 				end	
 			end
 			
-			act 'Buy small goods on 100 rubles under "eyeballs" - it <<(MaxQuantity1 + MaxQuantity2)>> PCs.':
+			act 'Buy small trinkets for 100 <b>₽</b> called "Eyeballs".':
 				!Purchase spend time
 				minut += 13
 				
@@ -170,22 +170,22 @@ if $ARGS[0] = '11':
 				!Hammered warehouses
 				if MaxCost > money:
 					!If not enough money
-					*NL 'You don`t have enough cash, you will have to withdraw from the purchase.'
+					'You don''t have enough money on you, you will have to withdraw money before proceeding with the purchase.'
 					if (money + karta >= MaxCost) or (karta >= MaxCost):
 						!The player can be plastic money
-						*P ' You have money on the card and you offer the Manager to pay by Bank card.'
-						' - We don`t have a terminal for card payments, says Manager. - Unfortunately, we can only accept cash.'
+						'You have enough money on your credit card and you offer them to pay with that.'
+						'"I''m sorry, we don''t own a card terminal." the Manager replies, "We accept only cash."'
 					end
 					
 					cla
-					act 'Clear': gt 'TerminalOffice', '11'
+					act 'Leave': gt 'TerminalOffice', '11'
 				else
 				
 					!If the money is written off money to fill warehouses
 						
 					money -= MaxCost
 					
-					'You purchased <<MaxQuantityA>> PCs. goods worth <<MaxCost>>'
+					'You''ve purchased <<MaxQuantityA>> trinkets, worth <<MaxCost>>.'
 					
 					!First populate channelise 1
 					if MaxQuantityA => MaxQuantity1:
@@ -204,11 +204,11 @@ if $ARGS[0] = '11':
 					end
 					
 					if YouCanGar = 0 and money > 100: 
-						*NL 'By purchasing, you thought that would buy more goods, but a place to store it? May try to talk to the stepfather about the allocation of space for items in his garage...'
+						'You''ve purchased plenty of trinkets, but you''ve been thinking about expanding your business, but where could you store it all? Maybe you should talk to the stepfather if you could use some free space in his garage...'
 					end
 					
 					cla
-					act 'To complete your purchase': gt 'TerminalOffice', '11'
+					act 'Complete your purchase': gt 'TerminalOffice', '11'
 				end	
 			end			
 		end
@@ -217,36 +217,36 @@ if $ARGS[0] = '11':
 	if YouNotOpenDoorDir = 1:
 		!Where the Director, the Door was closed dir
 		act 'Ask about the Director':
-			'- Please tell me - you ask - how to see your supervisor?'
-			'The Manager barely noticeable grimace meets: Yuri himself is usually from Monday to Friday, 9-00 to 18-00. Well, still can go for lunch 13 to 14'
+			'"Excuse me, I wonder if I could meet your supervisor?" you ask.'
+			'The Manager grins, "Yuri is usually here every Monday through Friday, between 9:00 to 18:00 except lunch between 13:00 to 14:00."'
 			cla
-			act 'Clear': YouNotOpenDoorDir = 0 & gt 'TerminalOffice', '11'
+			act 'Leave': YouNotOpenDoorDir = 0 & gt 'TerminalOffice', '11'
 		end
 	end
 	
 	!Where is the accountant? Buch the door was closed
 	if YouNotOpenDoorBuh = 1:
 		act 'Ask about the accountant':
-			'- Please tell me - I ask you - and how to see your accountant?'
-			'The Manager responds with a smile: Elizabeth is usually in the office Monday through Friday, 9-00 to 20-00. Well, still can go for lunch 13 to 14'
+			'"Excuse me, I wonder if I could meet your accountant?" you ask.'
+			'The Manager grins, "Elizabeth is usually here Monday through Friday, between 9:00 to 20:00 except lunch between 13:00 to 14:00."'
 			cla
-			act 'Clear': YouNotOpenDoorBuh = 0 & gt 'TerminalOffice', '11'
+			act 'Leave': YouNotOpenDoorBuh = 0 & gt 'TerminalOffice', '11'
 		end
 	end
 	
 	!He Has papers, but a Manager should say to go to the accounting Department.
 	if AboutDocsManager=0 and TerminalPapper = 1 and DayTerminalPapper = daystart:
-		*NL '- I`m from Anatoly Chubais from the company "OOO Bystroushka limited", I am directed to request you the documents.'
-		act 'Give documents':
-			'- You better contact the accounts Department to Elizabeth, she needs to know. It is you the next door along the corridor.'
+		'"I''m Anatoly Chubais from the company "OOO Bystroushka limited", do you have the required documents with you?"'
+		act 'Give him the documents':
+			'"Looks good. Go and see Elizabeth in the account department, she needs to register you. You can find her next door."'
 			cla
-			act 'Clear': AboutDocsManager=1 & gt 'TerminalOffice', '11'
+			act 'Leave': AboutDocsManager=1 & gt 'TerminalOffice', '11'
 		end
 	end
 
 	!The GG yet topics of conversation.
 	if verakassir = 0 and YouNotOpenDoorDir = 0 and YouNotOpenDoorBuh = 0 and TerminalPapper = 0: 
-		*NL 'You have nothing to say and nothing left to do how to get out of the office.'
+		'You have nothing to say or left to do, you can leave the office.'
 	end
 end
 
@@ -261,28 +261,28 @@ if $ARGS[0] = '21':
 		!You can give the documents
 		
 		cla
-		gs 'TerminalOffice', 'TerminalOfficeScreen', 'The office of the accountant', 'terminal3'
-		act 'To leave the office': minut += 1 & gt 'TerminalOffice', '00'
+		gs 'TerminalOffice', 'TerminalOfficeScreen', 'The accountant''s office', 'terminal3'
+		act 'Leave the office': minut += 1 & gt 'TerminalOffice', '00'
 		
 		!GG not a complete idiot, so will limit communication with only Buch documents, then that thread again
-		*PL '- What you want? - Looking up from the monitor and turning to you on the couch asks cute girl.'
+		'A cute girl looks up from the monitor, turning to you and asks, "What can I help you with?"'
 		
 		if TerminalPapper = 1 and DayTerminalPapper = daystart:
-			'"I''m from Anatoly Chubais from the company ''OOO Bystroushka limited'', I was instructed to deliver these documents."'
-			'"Yes, I''ve been expecting these, may I?" She holds out a hand.'
-			act 'Give documents':
+			'"I was talking with Anatoly Chubais from the company ''OOO Bystroushka limited'', I was instructed to deliver these documents."'
+			'"Yes, I''ve been expecting these, may I?" she holds out her hand.'
+			act 'Give her the documents':
 				cla
 				minut += 1
 				TerminalPapper = 2
 				gs 'stat'
-				'You hand the girl the folder, she opens it and quickly checks the contents.'
-				'"Tell Anatoly Borisovich Elizabeth says thank you."'
-				'The girl smiles then returns her attention to her monitor and starts rapidly typing away on the number pad of her keyboard.'
+				'You hand the girl the folder, she opens it and quickly checks the content.'
+				'"Tell Anatoly Borisovich that Elizabeth said thank you."'
+				'The girl smiles and then turns her attention to her monitor and starts rapidly typing away on her keyboard.'
 				
-				act 'To leave the office': minut += 1 & gt 'TerminalOffice', '00'
+				act 'Leave the office': minut += 1 & gt 'TerminalOffice', '00'
 			end
 		else
-			*NL 'You have nothing to say and nothing left to do how to get out of the office.'
+			'You have nothing to say or left to do, you can leave the office.'
 		end
 		
 	else
@@ -290,7 +290,7 @@ if $ARGS[0] = '21':
 		cla
 		gs 'TerminalOffice', 'TerminalOfficeScreen', 'A door with a sign', 'terminal6'
 		act 'Move away from the door': minut += 1 & gt 'TerminalOffice', '00'
-		'You knocked, but silence. Pushing down on the handle of the door you realized that the door was locked. May try to come at a different time or somebody to ask how much of a better approach? - thought you.'
+		'You knock, but there is only silence. You try pushing down the handle, realizing that the door is locked. You''ll have to come back at a different time.'
 		
 		YouNotOpenDoorBuh = 1
 		
@@ -307,44 +307,44 @@ if $ARGS[0] = '31':
 		!You can try to talk
 		
 		cla
-		gs 'TerminalOffice', 'TerminalOfficeScreen', 'The Director`s office', 'terminal1'
-		act 'To leave the office': minut += 1 & gt 'TerminalOffice', '00'
+		gs 'TerminalOffice', 'TerminalOfficeScreen', 'The Director''s office', 'terminal1'
+		act 'Leave the office': minut += 1 & gt 'TerminalOffice', '00'
 		
 		!Before the development of the plot 'Talk' the Director will constantly be on the phone and send he tries out of the office
-		*PL 'You knocked and opened the door. Behind a massive Desk a man. The man was talking on the phone and apparently was not in the mood. You`re obviously not the person the man was expecting, so he dismissively waved his hand, clearly indicating that you need to leave the office.'
+		'You knocked and opened the door. Behind a massive desk you see a man. He''s talking on the phone and apparently not in the mood. He''s a bit surpised as you weren''t the person he was expecting, so he dismissively waves his hand, clearly indicating that you need to leave the office.'
 		
 		if AboutBussines = 0: 
 			act 'Talk':
-				gs 'TerminalOffice', 'TerminalOfficeScreen', 'The Director`s office', 'terminal1'
+				gs 'TerminalOffice', 'TerminalOfficeScreen', 'The Director''s office', 'terminal1'
 				
-				*PL '<center><b>Dear player, here`s an elegant place for your story.'
-				'Ideal if it will be the beginning of a good, legitimate and profitable trading business for HS'
-				*NL 'And yet close the door on the other side :)))</b></center>'
+				'"I was told to come and see you about a business proposal..." you start.'
+				'"I heard there was a possibility of a good, legitimate and profitable trade business going on..." you continue.'
+				'The man puts the phone to his side and irritably answers, "Can''t you see I''m in middle of a phone call? Leave!"'
 				AboutBussines = 1
 				delact 'Talk'
 			end
 		end
 	
 		if AboutDocs = 0 and TerminalPapper = 1 and DayTerminalPapper = daystart:
-			act 'Give documents':
+			act 'Give him the documents':
 				gs 'TerminalOffice', 'TerminalOfficeScreen', 'The Director`s office', 'terminal1'
 				
-				*PL 'However, you ignored the gestures of men, because you have an important assignment from BOS.'
-				'- I`m from Anatoly Chubais from the company "OOO Bystroushka limited", I am directed to request you the documents.'
-				'The man stopped talking on the phone, frowned, and putting you on the door said - Go accounting.'
+				'You walk up to the desk. However, you''re ignored by the man, but you refuse to turn back, you have an important assignment from the boss.'
+				'"I was told by Anatoly Chubais from the company "OOO Bystroushka limited", to hand over these documents to you."'
+				'The man stops talking on the phone, frowns, and pointing towards the door, "You need to head over to the accountant''s office."'
 				AboutDocs = 1
 				delact 'Give documents'
 			end
 		end
 		
-		if AboutBussines = 1 or AboutDocs = 1: *NL 'You have nothing left to do how to get out of the office.'
+		if AboutBussines = 1 or AboutDocs = 1: 'You have nothing to say or left to do, you can leave the office.'
 		
 	else
 		!The Director is not in place
 		cla
 		gs 'TerminalOffice', 'TerminalOfficeScreen', 'A door with a sign', 'terminal5'
 		act 'Move away from the door': minut += 1 & gt 'TerminalOffice', '00'
-		'You knocked, but silence. Pushing down on the handle of the door you realized that the door was locked. May try to come at a different time or somebody to ask how much of a better approach? - thought you.'
+		'You knock, but there is only silence. You try pushing down the handle, realizing that the door is locked. You''ll have to come back at a different time.'
 		
 		YouNotOpenDoorDir = 1
 		
