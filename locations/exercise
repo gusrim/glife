@@ -450,10 +450,14 @@ if $ARGS[0] = 'push':
 		'<center><video autoplay loop src="images/pc/activities/push_naked.mp4"></video></center>'
 	end
 	'You do push-ups for <<$timestring>> minutes, improving your strength.'
-	if pcs_energy < 40: energypushtemp = RAND(1,10)
-	pushnum = (pcs_stren * (pcs_sleep / 67) * (pcs_health / healthmax)) - energypushtemp + rand(-5,5)
+
+	randpushfact = rand(-5,5)
+	if pcs_energy < 40: randpushfact -= RAND(1,10)
+
+	pushnum = (pcs_stren * pcs_sleep * pcs_health)  / ( 1 * 67 *  healthmax) + randpushfact
+	
 	if pushnum < 1: pushnum = rand(1,5)
-	KILLVAR 'energypushtemp'
+	KILLVAR 'randpushfact'
 	'<br>You managed to do <<pushnum>> push-ups. Your previous record is <<pushrecord>>.'
 
 	if pushrecord < pushnum:pushrecord = pushnum & 'This is a new record!'
