@@ -61,11 +61,15 @@ namespace Analyser
             Dynamic,
             Exec,
             Exit,
-            FreeLib,
+			KillQST,
+			DelLib,
+			FreeLib,
             GoSub,
             GoTo,
-            IncLib,
-            Jump,
+            AddQST,
+			AddLib,
+			IncLib,
+			Jump,
             KillAll,
             KillObj,
             KillVar,
@@ -433,11 +437,15 @@ namespace Analyser
             qspAddStatement((int)QspStatementType.Dynamic, 0, 1, 10, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0);
             qspAddStatement((int)QspStatementType.Exec, 0, 1, 1, 1);
             qspAddStatement((int)QspStatementType.Exit, 0, 0, 0);
-            qspAddStatement((int)QspStatementType.FreeLib, 6, 0, 0);
+			qspAddStatement((int)QspStatementType.KillQST, 6, 0, 0);
+			qspAddStatement((int)QspStatementType.DelLib, 6, 0, 0);
+			qspAddStatement((int)QspStatementType.FreeLib, 6, 0, 0);
             qspAddStatement((int)QspStatementType.GoSub, 0, 1, 10, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0);
             qspAddStatement((int)QspStatementType.GoTo, 1, 1, 10, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-            qspAddStatement((int)QspStatementType.IncLib, 1, 1, 1, 1);
-            qspAddStatement((int)QspStatementType.Jump, 0, 1, 1, 1);
+            qspAddStatement((int)QspStatementType.AddQST, 1, 1, 1, 1);
+			qspAddStatement((int)QspStatementType.AddLib, 1, 1, 1, 1);
+			qspAddStatement((int)QspStatementType.IncLib, 1, 1, 1, 1);
+			qspAddStatement((int)QspStatementType.Jump, 0, 1, 1, 1);
             qspAddStatement((int)QspStatementType.KillAll, 5, 0, 0);
             qspAddStatement((int)QspStatementType.KillObj, 1, 0, 1, 2);
             qspAddStatement((int)QspStatementType.KillVar, 0, 0, 2, 1, 2);
@@ -491,12 +499,16 @@ namespace Analyser
             qspAddStatName((int)QspStatementType.Dynamic, "DYNAMIC", 2);
             qspAddStatName((int)QspStatementType.Exec, "EXEC", 2);
             qspAddStatName((int)QspStatementType.Exit, "EXIT", 2);
-            qspAddStatName((int)QspStatementType.FreeLib, "FREELIB", 2);
+			qspAddStatName((int)QspStatementType.KillQST, "KILLQST", 2);
+			qspAddStatName((int)QspStatementType.DelLib, "DELLIB", 2);
+			qspAddStatName((int)QspStatementType.FreeLib, "FREELIB", 2);
             qspAddStatName((int)QspStatementType.GoSub, "GOSUB", 2);
             qspAddStatName((int)QspStatementType.GoSub, "GS", 2);
             qspAddStatName((int)QspStatementType.GoTo, "GOTO", 2);
             qspAddStatName((int)QspStatementType.GoTo, "GT", 2);
-            qspAddStatName((int)QspStatementType.IncLib, "INCLIB", 2);
+			qspAddStatName((int)QspStatementType.AddQST, "ADDQST", 2);
+			qspAddStatName((int)QspStatementType.AddLib, "ADDLIB", 2);
+			qspAddStatName((int)QspStatementType.IncLib, "INCLIB", 2);
             qspAddStatName((int)QspStatementType.Jump, "JUMP", 2);
             qspAddStatName((int)QspStatementType.KillAll, "KILLALL", 2);
             qspAddStatName((int)QspStatementType.KillObj, "KILLOBJ", 2);
