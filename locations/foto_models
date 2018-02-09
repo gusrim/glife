@@ -137,7 +137,7 @@ if $ARGS[0] = 'mari_2':
 				act 'Shrug':
 					*clr & cla
 					'<center><img src="images/locations/city/citycenter/photo/portraits/mari_e/talking/reading5.jpg"></center>'
-					'	You shrug and say, "I have''t the faintest idea what you''re talking about Mari."'
+					'	You shrug and say, "I haven''t the faintest idea what you''re talking about Mari."'
 					act'...':
 						*clr & cla
 						'<center><img src="images/locations/city/citycenter/photo/portraits/mari_e/talking/reading6.jpg"></center>'
@@ -233,13 +233,49 @@ end
 
 if $ARGS[0] = 'mari_4':
 	*clr & cla
-	mari = rand(3,4)
-	'<center><img src="images/locations/city/citycenter/photo/portraits/mari_e/talking/busy.jpg"></center>'
-	'	You''re looking for Mari when you hear her voice come from a set.'
-	'	"Okayyyy! The shirt is coming off now!" Peeking around the corner, you see her enjoying her job as usual and is currently in the process of peeling off the last item of her clothing in a silly fashion.'
-	'	She''s clearly busy right now. You can find her again later.'
-	act 'Leave':gt'foto','studio'
-
+	mari_busy = rand(1,3)
+	if mari_busy = 1:
+		mari = rand(3,4)
+		'<center><img src="images/locations/city/citycenter/photo/portraits/mari_e/talking/busy.jpg"></center>'
+		'	You''re looking for Mari when you hear her name called out from a set.'
+		'	Peeking from the shadows, you see her holding up her hair with a smirk on her face while the camera flashes in front of her. The more you look at her, the more you feel like the smile is unconscious and just a byproduct of her genuinely enjoying her job.'
+		'	She''s clearly busy right now. You can find her again later.'
+		act 'Leave':gt'foto','studio'
+	elseif mari_busy = 2:
+		'<center><img src="images/locations/city/citycenter/photo/portraits/mari_e/talking/busy2.jpg"></center>'
+		'	Searching for Mari, you peer into the sets, hoping to find her relaxing in one of them. You peek into another set and find yourself simultaneously gratified and disappointed. Standing fully nude amidst hay and wooden props is Mari, as well as a full crew in the middle of a shoot.'
+		*nl
+		'	<i>*click* *click*</i>'
+		'	"Okay, just hold that pose Mari... Yeah, just like that. Try to keep on your toes and keep your back straight."'
+		'	<i>*click* *click*</i>'
+		'	She''s clearly being quite attentive and trying her best. But as you look closer you see her calves shaking, struggling to keep her on her toes.'
+		*nl
+		if mari_farm_shoot = 0:
+			mari_farm_shoot = 1
+			'	<i>Huh, I didn''t know we had a dedicated set just for shooting farm stuff. I thought they went out to Gadyukino every time. Oh well, looks Mari''s busy. I guess I''ll have to find her some other time.</i> Eyeing her quivering toes one last time you think, <i>Hang in there girl!</i>'
+			act 'Leave':gt'foto','studio'
+		elseif mari_farm_shoot = 1:
+			'	<i>Stuck playing the farm girl again, huh Mari? They really are slave drivers for this kind of thing aren''t they? I guess I''ll find you some other time.</i>'
+			act 'Leave':gt'foto','studio'
+		end
+		
+	elseif mari_busy = 3:
+		'<center><img src="images/locations/city/citycenter/photo/portraits/mari_e/talking/busy3.jpg"></center>'
+		'	You''re looking for Mari when you find her in the middle of a shoot.'
+		*nl
+		if mari_cloth_shoot = 0:
+			mari_cloth_shoot = 1
+			'	In more clothes than you''ve ever seen her wearing before (though admittedly, you''ve almost only ever seen her nude), she holds up her hair with an intense expression on her face and moving very intently. When the photographer gives commands she enacts them flawlessly. She seems to be in an incredible state of focus.'
+			*nl
+			'	<i>I guess even a cheerful girl like Mari gets serious sometimes... and someone as comfortable being naked does clothed shoots... I shouldn''t be a distraction to her. I''ll come find her again later.</i>'
+			act 'Leave':gt'foto','studio'
+		elseif mari_cloth_shoot = 1:
+			'	She looks focused and intent again.'
+			*nl
+			'	<i>Ahh, she''s being serious. I shouldn''t bother her right now. I''ll find her again later,</i> you think to yourself before slipping away.'
+			act 'Leave':gt'foto','studio'
+		end
+	end
 end
 
 if $ARGS[0] = 'mari_chat':
@@ -257,6 +293,8 @@ if $ARGS[0] = 'mari_chat':
 	act'Discuss random topics':
 		if mari_sex = 1:
 			mari_convo = rand(1,5)
+		!elseif mari_sex = 0 and mari_modelling_ask = 1:
+		!	mari_convo = rand(1,5)
 		else
 			mari_convo = rand(1,4)
 		end
@@ -335,7 +373,7 @@ if $ARGS[0] = 'mari_chat':
 			elseif sisterLesb >= 5 and brotherSex >= 1 and brotherSex < 6 and npc_rel['A34'] >= 80:
 				'	"Yeah, I''ve got two. My sister who''s about the same age as you are and my adorable little brother. I love them both so much!"'
 				'	Mari smiles at you. "You sound close."'
-				'	Your mind wanders back to your siblings and how you''ve fooled around with both of them seperately.'
+				'	Your mind wanders back to your siblings and how you''ve fooled around with both of them separately.'
 				'	"You could say that..."'
 				act 'Keep chatting':gt 'foto_models','mari_chat'
 
@@ -353,6 +391,30 @@ if $ARGS[0] = 'mari_chat':
 
 				act 'Keep chatting':gt 'foto_models','mari_chat'
 			end
+		end
+		!if mari_convo = 5:
+		!	*clr & cla
+		!	'<center><img src="images/locations/city/citycenter/photo/portraits/mari_e/talking/reading4.jpg"></center>'
+		!	'	"By the way <<$pcs_firstname>>, I just realized something," she says, giving you a suspicious look.'
+		!	'	You look back at her quizzically.'
+		!	'	"I told you about how I got started as a model here and why, but it''s not fair if only <i>I</i> share something like that. What about you? Why did you decide to become a model?"'
+		!	act'To make money to buy things':
+		!		cla & *clr
+		!		'<center><img src="images/locations/city/citycenter/photo/portraits/mari_e/talking/reading3.jpg"></center>'
+		!		'	"I just really wanted the extra cash so I could buy more stuff. Clothes, makeup, whatever. It''s not like I really <i>need</i> to be doing this. I''m just in it for the money."'
+		!		
+		!	act'To make money because I needed it':
+		!		cla & *clr
+		!		'<center><img src="images/locations/city/citycenter/photo/portraits/mari_e/talking/reading3.jpg"></center>'
+		!		'	"Oh, I just needed the money. Things to buy, bills to pay, you know."'
+		!	
+		!	act'To build confidence':
+		!		cla & *clr
+		!		'<center><img src="images/locations/city/citycenter/photo/portraits/mari_e/talking/reading3.jpg"></center>'
+		!		
+		!	act'Because it turns me on':
+		!		cla & *clr
+		!		'<center><img src="images/locations/city/citycenter/photo/portraits/mari_e/talking/reading3.jpg"></center>'
 		end
 		if mari_convo = 5:
 			*clr & cla
@@ -433,21 +495,21 @@ if $ARGS[0] = 'mari_chat':
 								'	"Oh, I want it to be <i>romantic!</i>" she says with a swoon and leans on some of the prop furniture before going into a ramble. "I want to be swept off my feet and fall in love and just slip head over heels with someone until one thing leads to the next and then they''re on top of me and our clothes are coming off and I feel them push inside me like a sword entering a scabbard... straight through my hymen with a slow and gentle thrust and..."'
 								'	Her voice begins to grow softer and her list of fantasies begins to slow down. Her eyes glaze over as she stares into her daydream. "... and I orgasm in their embrace... and they kiss me at the end... and they hold me all night..."'
 								'	Just before you speak up, you suddenly realize that she used gender neutral vocabulary the entire time. Is she bi?'
-								act '"That sounds very romantic Mari"':
+								act '". . ."':
 									*clr & cla
 									'<center><img src="images/locations/city/citycenter/photo/portraits/mari_e/talking/reading18.jpg"></center>'
-									'	"That sounds very romantic Mari," you say, breaking her from her stupor. "By the way Mari, are you bi?"'
-									'	She looks at you a little shocked. "What? No! I-... I like boys..." she says trailing off at the end.'
+									'	"Are you bi Mari?" you say, breaking her from her stupor.'
+									'	She looks at you a little shocked. "What? No! I-... I like boys! Why would you ask... that...?" she says trailing off at the end.'
 									'	"Oh, sorry. I didn''t mean to offend you. It''s just that I wasn''t sure and all, you never said ''he'' once while you were talking. I wasn''t sure if you went both ways."'
 									act '. . .':
 										*clr & cla
 										'<center><img src="images/locations/city/citycenter/photo/portraits/mari_e/talking/reading19.jpg"></center>'
 										'	She looks a little confused and picks up her book again.'
-										'	Mari blushes intensely and says,"No... I only like boys..." You see her mouth the words "I think..." silently to herself.'
+										'	Mari blushes intensely and says,"N-no... I like boys..." You see her whisper the words again quietly to herself, "I like boys..."'
 										act'. . .':
 											*clr & cla
 											'<center><img src="images/locations/city/citycenter/photo/portraits/mari_e/talking/reading10.jpg"></center>'
-											'	She sits back down and picks up her book again.'
+											'	She shakes her head and snaps out of it, sitting back down and picking up her book again.'
 											'	"Anyways, was there anything else you wanted to talk about?"'
 											act'"No, that was all"':
 												*clr & cla
@@ -538,6 +600,7 @@ if $ARGS[0] = 'mari_modelling_chat':
 	if mari_fakepassport = 1:
 		act 'Ask about her fake passport':
 			*clr & cla
+			mari_modelling_ask = 1
 			'<center><img src="images/locations/city/citycenter/photo/portraits/mari_e/talking/reading2.jpg"></center>'
 			'	"Wait, so how old were you when you started working here?"'
 			if year = 2016:'	"I was 17. I actually only just turned 18 this year."'
@@ -625,7 +688,7 @@ if $ARGS[0] = 'mari_modelling_chat':
 							*clr & cla
 							'<center><img src="images/locations/city/citycenter/photo/portraits/mari_e/talking/reading8.jpg"></center>'
 							'	Still, you decide the opportunity to tease her is too good to pass up. "You know Mari, for a girl who went out of her way to start nude modelling before she was legal, you''re kind of innocent."'
-							'	She grins back at you. "What can I say? I''m just a poor, naive, gullible farm girl who was promised fame and fortune if she got naked."'
+							'	She grins back at you. "What can I say? I''m just a poor, naive, gullible farm girl. They said they could make all my dreams come true if I took my clothes off for them..."'
 							'	You both burst into laughter and then try to quiet down a bit, remembering you should probably not spread it around that the studio uses underage models. Wouldn''t be very good for your careers...'
 							act'Keep chatting':gt 'foto_models','mari_modelling_chat'
 						end
