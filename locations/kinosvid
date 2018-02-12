@@ -43,6 +43,18 @@ act 'Watch the movie':
 		else
 			gt 'kinosvid', '3'
 		end
+	elseif telsobnr > 0:
+		!! date with girlfriend	
+		loverrelation[lover_number] += 1
+		
+		if loverrelation[lover_number] >= 20:
+			kisvrand = rand(0, 10)
+			if kisvrand > 0 and kisvrand < 3:gt 'kinosvid', '1'
+			if kisvrand > 2 and kisvrand < 5:gt 'kinosvid', '2'
+			if kisvrand = 0 or kisvrand > 4:gt 'kinosvid', '3'
+		else
+			gt 'kinosvid', '3'
+		end
 	end
 end
 
@@ -342,12 +354,16 @@ if $ARGS[0] = '3':
 	*clr
 	minut += 90
 	gs 'stat'
+	gs 'arousal', 'end'
 	'<center><img <<$set_imgh>> src="images/characters/city/boyfriend/sex/event/cinema/0.jpg"></center>'
-	'When the movie ends, <<$telsob>> says she has get home. She leaves you with a deep kiss, leaving you wanting more.'
 
-	act 'Leave':
-		gs 'arousal', 'end'
-		gt 'torgcentr'
+	if telsobnr > 0:
+		'When the movie ends, <<$telsob>> looks and you and waits for your next move.'
+		act 'Kiss her and say goodbye': gt 'torgcentr'
+		act 'Kiss her and invite her to your home': gt 'lezbsex', 'startloverhome'
+	else
+		'When the movie ends, <<$telsob>> says she has get home. She leaves you with a deep kiss, leaving you wanting more.'
+		act 'Leave': gt 'torgcentr'
 	end
 end
 

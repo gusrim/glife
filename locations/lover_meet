@@ -821,7 +821,7 @@ if $ARGS[0] = 'actions':
 						exit
 					end
 				end
-			elseif randchan = 1:
+			elseif randchan = 1 and loverGender[lover_number] = 0:
 				'<<$loverdesc[lover_number]>> suggest you and <<$tXem>> drink a beer in the stairwell.'
 				act 'Sorry, but I need to go':
 					cla
@@ -835,7 +835,7 @@ if $ARGS[0] = 'actions':
 
 				exit
 			
-			elseif randchan = 2:
+			elseif randchan = 2 or loverGender[lover_number] = 1:
 				'<<$loverdesc[lover_number]>> suggests that you take a walk in the park.'
 
 				act 'Sorry, but I need to go':
@@ -846,7 +846,14 @@ if $ARGS[0] = 'actions':
 					
 				end
 
-				act 'Go with <<$tXem>>':gt 'parkM', 'start'
+				act 'Go with <<$tXem>>':
+					if loverGender[lover_number] = 0: gt 'parkM', 'start'
+					if loverGender[lover_number] = 1: 
+						$telsob = $loverdesc[lover_number]
+						telsobnr = lover_number
+						gt 'parksvid'
+					end
+				end
 
 				exit
 			
@@ -1301,7 +1308,14 @@ if $ARGS[0] = 'actions':
 					
 				end
 
-				act 'Go with <<$tXem>>':gt 'kinoM', 'start'
+				act 'Go with <<$tXem>>':
+					if loverGender[lover_number] = 0: gt 'kinoM', 'start'
+					if loverGender[lover_number] = 1: 
+						$telsob = $loverdesc[lover_number]
+						telsobnr = lover_number
+						gt 'kinosvid'
+					end
+				end
 
 				exit
 			elseif randchan = 2:
@@ -1315,7 +1329,14 @@ if $ARGS[0] = 'actions':
 					
 				end
 
-				act 'Go with <<$tXem>>':gt 'parkM', 'start'
+				act 'Go with <<$tXem>>':
+					if loverGender[lover_number] = 0: gt 'parkM', 'start'
+					if loverGender[lover_number] = 1: 
+						$telsob = $loverdesc[lover_number]
+						telsobnr = lover_number
+						gt 'parksvid'
+					end
+				end
 
 				exit
 			elseif randchan = 3:
@@ -1327,7 +1348,15 @@ if $ARGS[0] = 'actions':
 					loverrelation[lover_number] -= (haraklover[lover_number] + 1)
 					dynamic $go_home	
 				end
-				act 'Go with <<$tXem>>':gt 'kafeM', 'start'
+
+				act 'Go with <<$tXem>>':
+					if loverGender[lover_number] = 0: gt 'kafeM', 'start'
+					if loverGender[lover_number] = 1: 
+						$telsob = $loverdesc[lover_number]
+						telsobnr = lover_number
+						gt 'kafesvid'
+					end
+				end
 
 				exit
 			end
@@ -1851,7 +1880,14 @@ if $ARGS[0] = 'actions':
 					
 				end
 
-				act 'Go with <<$tXem>>':gt 'kafeM', 'start'
+				act 'Go with <<$tXem>>':
+					if loverGender[lover_number] = 0: gt 'kafeM', 'start'
+					if loverGender[lover_number] = 1: 
+						$telsob = $loverdesc[lover_number]
+						telsobnr = lover_number
+						gt 'kafesvid'
+					end
+				end
 
 				exit
 			elseif randchan = 2:
@@ -1865,7 +1901,14 @@ if $ARGS[0] = 'actions':
 					
 				end
 
-				act 'Go with <<$tXem>>':gt 'restoranM', 'start'
+				act 'Go with <<$tXem>>':
+					if loverGender[lover_number] = 0: gt 'restoranM', 'start'
+					if loverGender[lover_number] = 1: 
+						$telsob = $loverdesc[lover_number]
+						telsobnr = lover_number
+						gt 'kafesvid'
+					end
+				end
 
 				exit
 			elseif randchan = 3:
@@ -1879,7 +1922,14 @@ if $ARGS[0] = 'actions':
 					
 				end
 
-				act 'Go with <<$tXem>>':gt 'kinoM', 'start'
+				act 'Go with <<$tXem>>':
+					if loverGender[lover_number] = 0: gt 'kinoM', 'start'
+					if loverGender[lover_number] = 1: 
+						$telsob = $loverdesc[lover_number]
+						telsobnr = lover_number
+						gt 'kinosvid'
+					end
+				end
 
 				exit
 			end
@@ -1894,19 +1944,49 @@ if $ARGS[0] = 'actions':
 			pcs_dom += 1
 		end
 		'"What do you want to do?", <<$tXe>> asks'
-		act '"Lets go just relax in the stairwell and drink some beer."':
-			act 'Go with <<$tXem>>':gt 'podezdM', 'start'
+		if loverGender[lover_number] = 0:
+			act '"Lets go just relax in the stairwell and drink some beer."':
+				act 'Go with <<$tXem>>':gt 'podezdM', 'start'
+			end
+			act '"Lets take a walk in the park"':
+				act 'Go with <<$tXem>>':gt 'parkM', 'start'
+			end
+			act '"Lets go see a movie"':
+				act 'Go with <<$tXem>>':gt 'kinoM', 'start'
+			end
+			act '"Lets go to the cafe."':
+				act 'Go with <<$tXem>>':gt 'kafeM', 'start'
+			end
+		elseif loverGender[lover_number] = 1
+			$telsob = $loverdesc[lover_number]
+			telsobnr = lover_number
+			if month > 5 and temper > 20 and sunWeather = 1:
+				act 'Invite to the park':
+					'"Let''s go for a walk in the park."'
+					act 'Go': gt 'parksvid'
+				end
+			end
+
+			act 'Invite to a movie':
+				'"Want to go see a movie?"'
+				act 'Go': gt 'kinosvid'
+			end
+
+			act 'Invite to the pool hall':
+				'"Let''s play pool."'
+				act 'Go': gt 'billsvid'
+			end
+
+			act 'Invite to the cafe':
+				'"Let''s go to the cafe."'
+				act 'Go': gt 'kafesvid'
+			end
+
+			act 'Invite to the casino':
+				'"Let''s go to the casino."'
+				act 'Go': gt 'kazinosvid'
+			end
 		end
-		act '"Lets take a walk in the park"':
-			act 'Go with <<$tXem>>':gt 'parkM', 'start'
-		end
-		act '"Lets go see a movie"':
-			act 'Go with <<$tXem>>':gt 'kinoM', 'start'
-		end
-		act '"Lets go to the cafe."':
-			act 'Go with <<$tXem>>':gt 'kafeM', 'start'
-		end
-		
 		act 'Never mind...':
 			gt 'lover_meet', 'actions'
 			exit

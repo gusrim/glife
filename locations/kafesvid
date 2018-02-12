@@ -52,6 +52,18 @@ act 'Chat':
 		else
 			gt 'kafesvid', '3'
 		end
+	elseif telsobnr > 0:
+		!! date with girlfriend	
+		loverrelation[lover_number] += 1
+		
+		if loverrelation[lover_number] >= 20:
+			kaferand = rand(0, 8)
+			if kaferand > 0 and kaferand < 3:gt 'kafesvid', '1'
+			if kaferand > 2 and kaferand < 5:gt 'kafesvid', '2'
+			if kaferand = 0 or kaferand > 4:gt 'kafesvid', '3'
+		else
+			gt 'kafesvid', '3'
+		end
 	end
 end
 
@@ -387,14 +399,18 @@ if $ARGS[0] = '3':
 	cls
 	kafesvidsex = 0
 	minut += 60
-	gs 'stat'
-	'<center><img <<$set_imgh>> src="images/characters/city/boyfriend/sex/event/0.jpg"></center>'
-	'After your fun, <<$telsob>> says she has to go. She leaves you with a little kiss on the cheek.'
-
 	gs 'arousal', 'end'
 	gs 'stat'
-	
-	act 'Leave':gt 'down'
+	'<center><img <<$set_imgh>> src="images/characters/city/boyfriend/sex/event/0.jpg"></center>'
+
+	if telsobnr > 0:
+		'After your fun, <<$telsob>> looks and you and waits for your next move.'
+		act 'Say goodbye': gt 'down'
+		act 'Invite her to your home': gt 'lezbsex', 'startloverhome'
+	else
+		'After your fun, <<$telsob>> says she has to go. She leaves you with a little kiss on the cheek.'
+		act 'Leave':gt 'down'
+	end
 end
 
 --- kafesvid ---------------------------------

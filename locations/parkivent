@@ -782,35 +782,49 @@ end
 if $ARGS[0] = '9':
 	gs 'stat'
 
-	if pcs_lover >= 1:
+	if arrsize('pcs_lovers') >= 1:
+		lover_number = rand(0, arrsize('pcs_lovers') - 1)
 		cls
-		'You walk through the park and you notice how the meeting goes your man <<$loverdesc[lover_number]>>'
+		'You walk through the park and you notice <<$loverdesc[lover_number]>> walking towards you'
 
-		act 'Leave':loverrelation[lover_number]-= 1 & gt 'park', 'start'
+		act 'Leave': loverrelation[lover_number]-= 1 & gt 'park', 'start'
 
 		if boyonce[lover_number] = 0 or SUB = 0 and pcs_dom = 0:
 			act 'Nice to talk':
 				cla
 				loverrelation[lover_number] += 2
 				minut += 15
-				'<<$loverdesc[lover_number]>> bradovalsya your chance meeting and hugged you. You nice talk and kiss goodbye to split each according to his deeds.'
+				'<<$loverdesc[lover_number]>> is happy about your random meeting and hugs you. You have a nice short talk and kiss goodbye to part ways again.'
 
 				act 'Complete walk':gt 'park', 'start'
 			end
 		elseif boyonce[lover_number] = 1 and SUB > 0:
-			'<<$loverdesc[lover_number]>> glad you and taking you by the hand led to a deeper into the park.'
+			'<<$loverdesc[lover_number]>> is happy to meet you and takes you by the hand leading to a deeper area into the park.'
 
-			act 'Go with the guy.':gt 'event', 'park'
+			act 'Go with <<$loverdesc[lover_number]>>.':
+				if loverGender[lover_number] = 0: gt 'event', 'park'
+				if loverGender[lover_number] = 1: 
+					$telsob = $loverdesc[lover_number]
+					telsobnr = lover_number
+					gt 'parksvid'
+				end	
+			end
 		elseif boyonce[lover_number] = 1 and pcs_dom > 0:
-			'<<$loverdesc[lover_number]>> glad you and taking you by the hand led to a deeper into the park.'
+			'<<$loverdesc[lover_number]>> is happy to meet you and takes you by the hand leading to a deeper area into the park.'
 
-			act 'Offer to sit on the bench. (You decide to have sex with a guy.)':gt 'event', 'park'
-
+			act 'Offer to sit on the bench.':			
+				if loverGender[lover_number] = 0: gt 'event', 'park'
+				if loverGender[lover_number] = 1: 
+					$telsob = $loverdesc[lover_number]
+					telsobnr = lover_number
+					gt 'parksvid'
+				end	
+			end
 			act 'Nice to talk':
 				cla
 				loverrelation[lover_number] += 5
 				minut += 15
-				'<<$loverdesc[lover_number]>> bradovalsya your chance meeting and hugged you. You nice talk and kiss goodbye to split each according to his deeds.'
+				'<<$loverdesc[lover_number]>> is happy about your random meeting and hugs you. You have a nice short talk and kiss goodbye to part ways again.'
 
 				act 'Complete walk':gt 'park', 'start'
 			end
