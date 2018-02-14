@@ -106,6 +106,7 @@ if $ARGS[0] = 'callingTheLover' and loverGender[ARGS[1]] = 1:
 	gs'din_bad'
 	lover_number = ARGS[1]
 	$caller = '<<$loverdesc[lover_number]>>'
+	$telsob = $caller
 	$callerid = 'images/characters/shared/'+lover_picture[lover_number]+'.jpg'
 	gs 'telefon','phone_balance'
 	gs 'telefon','phone_call_receive'
@@ -118,25 +119,63 @@ if $ARGS[0] = 'callingTheLover' and loverGender[ARGS[1]] = 1:
 			'"Let''s go for a walk in the park."'
 
 			if willAgree:
-				'<<$loverdesc[lover_number]>>, "See you in the park in an hour."'
+				'<<$telsob>>, "See you in the park in an hour."'
 
-				act 'Go':gt 'dateF', 'datepark'
+				act 'Go': gt 'parksvid'
 			else
-				gs 'telefon','telotkaz',$loverdesc[lover_number]
+				gs 'telefon','telotkaz',$telsob
 			end
 		end
 	end
 
-	act 'Invite to the bar':
+	act 'Invite to a movie':
 		cla
-		'"Let''s go to the bar."'
+		'"Want to go see a movie?"'
 
 		if willAgree:
-			'<<$loverdesc[lover_number]>>, "See you at the cafe in an hour."'
-
-			act 'Go':gt 'dateF', 'bartalk'
+			'<<$telsob>>, "See you at the movie theater in an hour."'
+			act 'Go': gt 'kinosvid'
 		else
-			gs 'telefon','telotkaz',$loverdesc[lover_number]
+			gs 'telefon','telotkaz',$telsob
+		end
+	end
+
+	act 'Invite to the pool hall':
+		cla
+		'"Let''s play pool."'
+
+		if willAgree:
+			'<<$telsob>>, "See you at the pool hall in an hour."'
+
+			act 'Go': gt 'billsvid'
+		else
+			gs 'telefon','telotkaz',$telsob
+		end
+	end
+
+	act 'Invite to the cafe':
+		cla
+		'"Let''s go to the cafe."'
+
+		if willAgree:
+			'<<$telsob>>, "See you at the cafe in an hour."'
+
+			act 'Go': gt 'kafesvid'
+		else
+			gs 'telefon','telotkaz',$telsob
+		end
+	end
+
+	act 'Invite to the casino':
+		cla
+		'"Let''s go to the casino."'
+
+		if willAgree:
+			'<<$telsob>>, "See you in the casino in an hour."'
+
+			act 'Go': gt 'kazinosvid'
+		else
+			gs 'telefon','telotkaz',$telsob
 		end
 	end
 	
@@ -149,8 +188,6 @@ if $ARGS[0] = 'callingTheLover' and loverGender[ARGS[1]] = 1:
 	end
 
 	act 'Hangup':gt 'telefon', 'fin'
-	
-	killvar 'lover_number'
 end
 
 if $ARGS[0] = 'callingTheLover' and loverGender[ARGS[1]] = 0:
@@ -228,8 +265,6 @@ if $ARGS[0] = 'callingTheLover' and loverGender[ARGS[1]] = 0:
 	end
 
 	act 'Hangup':gt 'telefon', 'fin'
-	
-	killvar 'lover_number'
 end
 
 if $ARGS[0] = 'lover' and loverGender[ARGS[1]] = 0:
@@ -376,8 +411,6 @@ if $ARGS[0] = 'lover' and loverGender[ARGS[1]] = 0:
 		gs 'lover', 'remove', lover_number
 		gt 'telefon', 'fin'
 	end
-
-	killvar 'lover_number'
 end
 
 if $ARGS[0] = 'lover' and loverGender[ARGS[1]] = 1:
@@ -432,7 +465,6 @@ if $ARGS[0] = 'lover' and loverGender[ARGS[1]] = 1:
 
 			if loverrelation[lover_number] <= 0:'<<$loverdesc[lover_number]>>, Are you fucking me, you know what. Fuck off.' & gs 'lover', 'remove', lover_number
 			if loverrelation[lover_number] > 0:'(<<$loverdesc[lover_number]>>) -  Okay, I''ll call tomorrow.'
-
 			act 'Hang up': gt 'telefon', 'fin'
 		end
 		
@@ -450,8 +482,6 @@ if $ARGS[0] = 'lover' and loverGender[ARGS[1]] = 1:
 		gs 'lover', 'remove', lover_number
 		gt 'telefon', 'fin'
 	end
-
-	killvar 'lover_number'
 end
 
 
@@ -551,7 +581,7 @@ if $ARGS[0] = 'Phone_contactlist':
 		!! iterating all lovers
 		lover_number = 0
 		:loverloop
-		if pcs_lovers[lover_number] = 1 and svidanie[lover_number] = 0 and rand(1,7) > 3:
+		if pcs_lovers[lover_number] = 1 and svidanie[lover_number] = 0:
 			pl'<center><TABLE cellspacing="0" width="80%"><TR><TD><img src="images/system/phone/icons/icon_bf'+lover_picture[lover_number]+'.png"></TD><TD></TD><TD align="right"><a href="exec:lover_number = <<lover_number>> & gt ''telefon'', ''callingTheLover'', <<lover_number>>"><b>Call</b></a></TD></TR></TABLE></center>'
 		end
 		lover_number += 1
@@ -867,6 +897,7 @@ end &! --- telotkaz ---
 
 
 if $ARGS[0] = 'fin':
+	killvar 'lover_number'
 	cla
 	gt $loc, $metka
 end
