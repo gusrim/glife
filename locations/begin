@@ -152,13 +152,19 @@ if $ARGS[0] = 'hair':
 	'<center>Adjust your hair to match your <a href="exec:view''images/avatar.jpg''">avatar</a>. Please note that, at present, hair choices are overridden by your starting personality choice (e.g. volleyball players will always have straight blond hair).</center>'
 	*nl
 	nathcol = pcs_haircol
-	if avatar_hair = 1:
-		'<center>Please note that this choice is given only once and you will not be able to change it without starting a new game!</center>'
-		'<center>You have <i><<$av_hair>>.</i> <a href="exec:avatar_hair = 0 & gs ''begin'', ''hair''">Revert to default</a>.</center>'
-	else
-		'<center><i><<$hair>></i> You may also <a href="exec:gs ''begin'', ''hair_input'' & gs ''begin'', ''hair''">manually enter a description</a></center>.'
+	if player_avatar = 1:
+		if avatar_hair = 1:
+			'<center>Please note that this choice is given only once and you will not be able to change it without starting a new game!</center>'
+			'<center>You have <i><<$av_hair>>.</i> <a href="exec:avatar_hair = 0 & gs ''begin'', ''hair''">Revert to default</a>.</center>'
+		else
+			'<center><i><<$hair>></i> You may also <a href="exec:gs ''begin'', ''hair_input'' & gs ''begin'', ''hair''">manually enter a description</a></center>.'
+		end
 	end
-	act'<center><b>Done</b></center>': gt'begin','description_real_character'
+	if $start_type = 'sgs':
+		act'<center><b>Done</b></center>': gt 'preCUST', 'SGStart'
+	else
+		act'<center><b>Done</b></center>': gt 'begin', 'description_real_character'
+	end
 end
 
 if $ARGS[0] = 'pcs_haircol':
@@ -228,10 +234,12 @@ if $ARGS[0] = 'eyes':
 
 	if player_avatar = 1:
 		act'<center><b>Done</b></center>': gt'begin','description_real_character'
-	elseif NTstart = 1:
-		act'<center><b>Done</b></center>': gt 'preCUST', 'NTStart'
-	else
+	elseif $start_type = 'nt':
+		act'<center><b>Done</b></center>': gt 'preCUST', 'NTStart2'
+	elseif $start_type = 'sgs':
 		act'<center><b>Done</b></center>': gt 'preCUST', 'SGStart'
+	else
+		act'<center><b>Done</b></center>': gt 'preCUST', 'TGStart'
 	end
 end
 
