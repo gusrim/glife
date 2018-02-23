@@ -355,27 +355,35 @@ if $shoplocation = 'hardware':
 
 	act 'Leave the hardware department':gt 'shop', 'start'
 	
-	 if pcs_sewng >= 40:
-	 'On the counter you can see that the fabric is suitable for teaching sewing. Bolt which is enough for one lesson stands 300 <b>₽</b>.'
-	 if tkan <= 0:'Now you do not have tissue'
-	 if tkan > 0:'Now you have enough tissue to <<tkan>> lessons'
-	     if money >= 300:
-	         act'Buy cloth':
-	         cls
-	         portion = input ("How much do you want to buy?")
-			 if portion <= 0:portion = 1
-			 if portion*300 > money:'You do not have enough money.'
-				 if portion*300 <= money:
-					tkan += portion
-					money = money - portion*300
-					'<center><img <<$set_imgh>> src="images/locations/shared/store/kassa.jpg"></center>'
-					'You paid the cashier and bought cloth.'
-				 end
-			 	gs'stat'
-			 act 'Move away from the counter':gt'shop'
-	         end
-	     end
-	 
+	 if sewing_kit = 0:
+		act'Buy sewing kit for 500 <b>₽</b>':
+		cla & *clr
+		sewing_kit = 1
+		money -= 500
+		'You buy a sewing kit'
+			act'Move away from the counter':gt'shop'
+		end
+	end
+		
+	
+ 'On the counter you can see that the fabric is suitable for sewing. It''s sold in large squares with each square costing 50 <b>₽</b>.'
+ if tkan <= 0:'You have <<tkan>> squares of fabric.'
+ if tkan > 0:'You have <<tkan>> squares of fabric.'
+	 if money >= 50:
+		 act'Buy fabric':
+		 cls
+		 portion = input ("How much do you want to buy?")
+		 if portion <= 0:portion = 1
+		 if portion*50 > money:'You do not have enough money.'
+			 if portion*50 <= money:
+				tkan += portion
+				money = money - portion*50
+				'<center><img <<$set_imgh>> src="images/locations/shared/store/kassa.jpg"></center>'
+				'You paid the cashier and bought cloth.'
+			 end
+			gs'stat'
+		 act 'Move away from the counter':gt'shop'
+		 end
 	 end	
 end
 
