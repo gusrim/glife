@@ -84,42 +84,7 @@ if $ARGS[0] = 'clothes':
 	'<center><b><font color="maroon">Viewing Mon Chéri outfits</font></b></center>'
 	*nl
 
-	$Headerstring = '<TH>Prostitute clothing '
-	if clothingfilter_prost = 0:
-		$Headerstring += '<a href="exec:clothingfilter_prost = 1 & gt ''butik'', ''clothes''">Included</a></TH>'
-	else
-		$Headerstring += '<a href="exec:clothingfilter_prost = 0 & gt ''butik'', ''clothes''">Excluded</a></TH>'
-	end
-
-	$Headerstring += '<TH>Bimbo clothing '
-	if clothingfilter_bimbo = 0:
-		$Headerstring += '<a href="exec:clothingfilter_bimbo = 1 & gt ''butik'', ''clothes''">Included</a></TH>'
-	else
-		$Headerstring += '<a href="exec:clothingfilter_bimbo = 0 & gt ''butik'', ''clothes''">Excluded</a></TH>'
-	end
-
-	$Headerstring += '<TH>Clothing you are comfortable wearing '
-	if clothingfilter_comf = 0:
-		$Headerstring += '<a href="exec:clothingfilter_comf = 1 & gt ''butik'', ''clothes''">Included</a></TH>'
-	else
-		$Headerstring += '<a href="exec:clothingfilter_comf = 0 & gt ''butik'', ''clothes''">Excluded</a></TH>'
-	end
-
-	$Headerstring += '<TH>Daring clothing '
-	if clothingfilter_daring = 0:
-		$Headerstring += '<a href="exec:clothingfilter_daring = 1 & gt ''butik'', ''clothes''">Included</a></TH>'
-	else
-		$Headerstring += 'g<a href="exec:clothingfilter_daring = 0 & gt ''butik'', ''clothes''">Excluded</a></TH>'
-	end
-
-	$Headerstring += '<TH>Too daring for you clothing '
-	if clothingfilter_too_daring = 0:
-		$Headerstring += '<a href="exec:clothingfilter_too_daring = 1 & gt ''butik'', ''clothes''">Included</a></TH>'
-	else
-		$Headerstring += '<a href="exec:clothingfilter_too_daring = 0 & gt ''butik'', ''clothes''">Excluded</a></TH>'
-	end
-
-	'<center><table border=1><<$Headerstring>></center>'
+	gs 'clothing_QV', 'shop_header'
 
 	act 'Return':
 		cla
@@ -136,13 +101,9 @@ if $ARGS[0] = 'clothes':
 	:loopformal
 		if formal[i] = 0:
 			gs 'clothing_attributes', 'formal', i
-			if clothingfilter_comf = 0 and CloExhibit + 10 < pcs_exhibition:
-				if (clothingfilter_prost = 0 or CloStyle ! 4) and (clothingfilter_bimbo = 0 or CloBimbo = 0): *p '<a href="exec: i = <<i>> & gt ''butik'', ''formal''"><img src="images/pc/clothing/4formal/<<i>>.jpg" 	height="250" /></a>'
-			elseif clothingfilter_daring = 0 and CloExhibit + 10 >= pcs_exhibition and CloExhibit <= pcs_exhibition:
-				if (clothingfilter_prost = 0 or CloStyle ! 4) and (clothingfilter_bimbo = 0 or CloBimbo = 0): *p '<a href="exec: i = <<i>> & gt ''butik'', ''formal''"><img src="images/pc/clothing/4formal/<<i>>.jpg" 	height="250" /></a>'
-			elseif clothingfilter_too_daring = 0 and CloExhibit > pcs_exhibition:
-				if (clothingfilter_prost = 0 or CloStyle ! 4) and (clothingfilter_bimbo = 0 or CloBimbo = 0): *p '<a href="exec: i = <<i>> & gt ''butik'', ''formal''"><img src="images/pc/clothing/4formal/<<i>>.jpg" 	height="250" /></a>'
-			end
+			gs 'clothing_QV', 'shop_filter'
+				
+			if clothingfilter_risk = 1 and clothingfilter_pandb = 1 and clothingfilter_norm2 = 1: *p '<a href="exec: i = <<i>> & gt ''butik'', ''formal''"><img src="images/pc/clothing/4formal/<<i>>.jpg" 	height="250" /></a>'
 		end
 		i += 2
 	if i <= 168:jump 'loopformal'
