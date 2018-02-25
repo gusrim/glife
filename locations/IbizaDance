@@ -1,7 +1,8 @@
 # IbizaDance
 
 if $ARGS[0] = 'start':
-  act 'Go to dancing floor': gt 'IbizaDance', 'initSequence'
+  gs 'saveposition'
+  act 'Dance': gt 'IbizaDance','initSequence'
 end
 
 if $ARGS[0] = 'initSequence':
@@ -11,7 +12,7 @@ if $ARGS[0] = 'initSequence':
     dancerun = 1
   elseif pcs_horny < 60:
     dancerun = 2
-  elseif pcshorny < 70:
+  elseif pcshorny < 90:
     dancerun = 3
   else
     dancerun = 4
@@ -43,37 +44,38 @@ if $ARGS[0] = 'initSequence':
 end
 
 if $ARGS[0] = 'nextStep':
+  gs 'stat'
+  gs 'npcgeneratec', 0, 'customer', rand(18,40)
+  gs 'boyStat', $npclastgenerated
+
+  $orgasm_or = 'no'
+
   if dancenum < danceParam[0]:
-    act 'Dance!!':
-      gt 'IbizaDance', 'stage1'
-    end
+    act 'Dance!!': gt 'IbizaDance', 'stage1'
   elseif dancenum < danceParam[1]:
-    act 'I feel my pussy too wet':
-      gt 'IbizaDance', 'stage2'
-    end
+    act 'I feel my pussy too wet': gt 'IbizaDance', 'stage2'
   elseif dancenum < danceParam[2]:
-    act 'I can´t anymore!!!':
-      gt 'IbizaDance', 'stage3'
-    end
+    act 'I can´t anymore!!!': gt 'IbizaDance', 'stage3'
   elseif dancenum < danceParam[3]:
-    act 'I have to fuck now!!!':
-      gt 'IbizaDance', 'stage4'
-    end
-  else
+    act 'I have to fuck now!!!': gt 'IbizaDance', 'stage4'
+  end
+
+  if dancenum >= danceParam[3]:
     act 'Take a break':
       killvar 'danceParam'
       dancerun += 1
       dancenum = 0
 
-      gt 'IbizaDance', 'start'
+      gt 'IbizaDance','start'
     end
+  else
+    act 'Stop dancing': gt 'IbizaDance','start'
   end
 end
 
 if $ARGS[0] = 'stage1':
   minut += 15
   pcs_horny += rand(1, 6)
-  gs 'stat'
 
   dancerand = rand(0, 39)
   dancenum += 1
@@ -203,13 +205,14 @@ if $ARGS[0] = 'stage1':
     'You are dancing next to another Purple Girl and she says you, "Wow, that shit you can get from the security guards is amazing! You have to try it! I''m on fire!"'
   end
 
+  gs 'arousal', 'end'
+
   xgt 'IbizaDance', 'nextStep'
 end
 
 if $ARGS[0] = 'stage2':
   minut += 15
   pcs_horny += rand(3, 8)
-  gs 'stat'
 
   dancerand = rand(1, 43)
   dancenum += 1
@@ -279,7 +282,7 @@ if $ARGS[0] = 'stage2':
     'You dance and have fun. You decide to continue to show your ass off more.  You present yourself on all fours on one of the couches and show the clients a view of heaven. You become distinctly aware of how horny you are, as you feel how your lips open for themselves.'
      '<font color=#FF00CC>Oh my God!! I''m feel so horny... Mmmmnn I want something more... </font> "Are you taking pictures of me? Come on! Take pictures of my filthy pussy!"'
   elseif dancerand = 18:
-  gs 'underwear', 'remove'
+    gs 'underwear', 'remove'
     '<center><video autoplay src="images/locations/city/citycenter/nightclub/trip01/idance/phase2/idpb18.mp4"></video></center><br>'
     'It seems you''re not the only one who''s dancing without panties. While showing off your most intimate bits, a customer decides to slap your ass. <font color=#FF00CC>  Mmmmnn Yes, slap my ass! I''m a girl very bad... </font>    - You think-'
   elseif dancerand = 19:
@@ -361,7 +364,7 @@ if $ARGS[0] = 'stage2':
     'You head to the bar to have a drink when you see a beautiful ass of a fellow Purple Girl. You can''t resist and slap her ass with a smile on your lips. She makes a heated moan which causes your smile to grow even wider.'
   end
 
-  gs 'stat'
+  gs 'arousal', 'end'
 
   xgt 'IbizaDance', 'nextStep'
 end
@@ -385,33 +388,26 @@ if $ARGS[0] = 'stage3':
     '<center><video autoplay src="images/locations/city/citycenter/nightclub/trip01/idance/phase3/idpc3.mp4"></video></center><br>'
     'You feel your sex completely soaked. You and another Purple Girl crouch down to get a better view of an erect dick in front of you. You look into the client''s eyes with a sensual smile and start to suck his dick.'
     '<font color=#FF00CC> Mmmmnn What a cock! It''s so nice and thick. </font>  While you suck him off, other customers decide to take a few pictures with their phones.'
-    guy += 1
-    stat['bj'] += 1
-    spafinloc = 12
-    gs 'cum_manage'
+    gs 'arousal','bj',0
+    gs 'cum_call','mouth',$boy,1
   elseif dancerand = 4:
     '<center><video autoplay src="images/locations/city/citycenter/nightclub/trip01/idance/phase3/idpc4.mp4"></video></center><br>'
     '"I''m close! I can''t anymore baby! You suck dick so well!" A client crossed-eyed with pleasure announces to you-'
   elseif dancerand = 5:
-    guy += 1
-    stat['bj'] += 1
-    spafinloc = 12
-    gs 'cum_manage'
+    gs 'arousal','bj',0
+    gs 'cum_call','mouth',$boy,1
     '<center><video autoplay src="images/locations/city/citycenter/nightclub/trip01/idance/phase3/idpc5.mp4"></video></center><br>'
     'You were dancing with another client. He can''t seem to take his hands off you. You are so horny that decide to squat in front of him; pulling his dick out of his pants and you start to suck him off. <font color=#FF00CC> I''m going to give him the time of his life and dry his balls! </font> You think while you close your eyes to fully enjoy the blowjob you''re giving him-.'
   elseif dancerand = 6:
-    guy += 1
-    stat['bj'] += 1
-    spafinloc = 12
-    gs 'cum_manage'
+    gs 'arousal','bj',0
+    gs 'cum_call','face',$boy,1
     '<center><video autoplay src="images/locations/city/citycenter/nightclub/trip01/idance/phase3/idpc6.mp4"></video></center><br>'
     'Oh my God!! I''m on fire! -You say while squatting and starting another blowjob on a different client.'
   elseif dancerand = 7:
     '<center><video autoplay src="images/locations/city/citycenter/nightclub/trip01/idance/phase3/idpc7.mp4"></video></center><br>'
     'The environment smells of sex. You see another Purple Girl sucking a client''s cock. The guy doesn''t take too long to come. He makes sure to leave thick and abundant waves of sperm on her face. All the while, she happily is trying to collect it into her mouth. Your clit throbs excitedly telling you that you might want to do the same.'
   elseif dancerand = 8:
-    spafinloc = 11
-    gs 'cum_manage'
+    gs 'cum_call','face',$boy,1
     '<center><video autoplay src="images/locations/city/citycenter/nightclub/trip01/idance/phase3/idpc8.mp4"></video></center><br>'
     'Your desire is too much! A guy firmly presses you down on your knees in front of him. He quickly starts to jerk off in your face.'
     'You lower your free hand towards your pussy and start rubbing it to reach an orgasm that sadly doesn''t arrive. Soon the guy begins to ejaculate on you. Leaving you to be the only one without an orgasm.'
@@ -459,20 +455,16 @@ if $ARGS[0] = 'stage3':
     'You decide to take a break from dancing and scout for the bar. As you are drinking, you give a exciting view of your breasts'' towards the bartender.'
     'He smiles and says to you, "You keep doing that and today they are going to fuck you so much that you''ll pass out!"'
   elseif dancerand = 22:
-    guy += 1
-    stat['bj'] += 1
-    spafinloc = 12
-    gs 'cum_manage'
+    gs 'arousal','bj',0
+    gs 'cum_call','mouth',$boy,1
     '<center><video autoplay src="images/locations/city/citycenter/nightclub/trip01/idance/phase3/idpc22.mp4"></video></center><br>'
     'You are so horny that you give a blowjob to the nearest client. "Oh fuck yes! Suck my cock you fucking slut!"'
   elseif dancerand = 23:
     '<center><video autoplay src="images/locations/city/citycenter/nightclub/trip01/idance/phase3/idpc23.mp4"></video></center><br>'
     'You and other Purple Girls gather around a guy to receive the cream of his balls. The blond girl was the lucky one in getting a decent amount of cum on her face.'
   elseif dancerand = 24:
-    guy += 1
-    stat['bj'] += 1
-    spafinloc = 12
-    gs 'cum_manage'
+    gs 'arousal','bj',0
+    gs 'cum_call','mouth',$boy,1
     '<center><video autoplay src="images/locations/city/citycenter/nightclub/trip01/idance/phase3/idpc24.mp4"></video></center><br>'
     '"I''m going to give you the best blowjob in your life!", you say to a customer before sucking his dick.'
   elseif dancerand = 25:
@@ -489,7 +481,7 @@ if $ARGS[0] = 'stage3':
     'You move towards the dimly lit seating area. You notice a client on one of the couches. You sit right next to him only to start kissing him. He plays with your tits as he kisses you, pinches and flicking your nipples.You can''t suppress a moan of pleasure. The feeling is too great so you soon finger yourself to get off.'
   end
 
-  gs 'stat'
+  gs 'arousal', 'end'
 
   xgt 'IbizaDance', 'nextStep'
 end
@@ -505,19 +497,16 @@ if $ARGS[0] = 'stage4':
   *clr
 
   if dancerand = 1:
-    guy += 1
-    stat['vaginal'] += 1
-    spafinloc = 0
-    pcs_vag += 1
-    gs 'cum_manage'
+    npc_sex[$boy] += 1
+    gs 'arousal','vaginal',0
+    gs 'cum_call','',$boy,1
     '<center><video autoplay src="images/locations/city/citycenter/nightclub/trip01/idance/phase4/idpd1.mp4"></video></center><br>'
     'All the Purple Girls around are naked and horny. And you, undoubtedly, are the horniest of them all. Soon you start riding the cock of a client. <font color=#FF00CC>I won''t stop until I get my prize...</font> –You think as you increase your pace.'
     '<center><video autoplay src="images/locations/city/citycenter/nightclub/trip01/idance/phase4/creamoverflow.mp4"></video></center><br>'
     'And the prize is yours...'
   elseif dancerand = 2:
-    guy += 1
-    stat['anal'] += 1
-    pcs_ass += 1
+    npc_sex[$boy] += 1
+    gs 'arousal','anal',0
     '<center><video autoplay src="images/locations/city/citycenter/nightclub/trip01/idance/phase4/idpd2.mp4"></video></center><br>'
     'In your state of excitement, a guy approaches you from behind and puts his cock in your ass... "Ah fuck! It hurts but I want more! More! Give it to me!'
   elseif dancerand = 3:
@@ -525,55 +514,47 @@ if $ARGS[0] = 'stage4':
     '<center><video autoplay src="images/locations/city/citycenter/nightclub/trip01/idance/phase4/idpd3.mp4"></video></center><br>'
     'You take in your surroundings. The sound of skin clapping against one another and lustful moans make it apparent that this party became a full blown orgy. And you feel like one of the main stars in it. You sit on a couch and raise your legs to make it easier for a guy to eat your whole pussy. The groans of the Purple Girl that you have next to you rival yours while another client pumps her from behind.'
   elseif dancerand = 4:
-    guy += 1
-    stat['vaginal'] += 1
-    pcs_vag += 1
+    npc_sex[$boy] += 1
+    gs 'arousal','vaginal',0
     '<center><video autoplay src="images/locations/city/citycenter/nightclub/trip01/idance/phase4/idpd4.mp4"></video></center><br>'
     'Your pussy loves the attention it''s getting. You lean on a bench, open your legs and offer your sex to the nearest guy.'
     'The guy doesn''t waste a second as he lifts your legs so that your knees are close to your mouth. He starts pumping his hips with such force that the sound of skin slapping skin measures against your loud moans.'
     'The sexual environment is amazing! The Purple Girl next to you rides the dick of other client with such enthusiasm. <font color=#FF00CC> Oh fuck! I''m a whore! I''m such a whore! </font> – You think while you feel how your pussy wrap tightly against his cock.'
   elseif dancerand = 5:
-    guy += 1
-    stat['vaginal'] += 1
-    pcs_vag += 1
+    npc_sex[$boy] += 1
+    gs 'arousal','vaginal',0
     '<center><video autoplay src="images/locations/city/citycenter/nightclub/trip01/idance/phase4/idpd5.mp4"></video></center><br>'
     'There are others Purple Girl who look like aren''t very horny and still are dressed but you, well, you are different.'
     'You lay on one of the couches and have a guy grab a hold of your legs and pounds your pussy into the missionary''s position. Some of the girls can''t help but feel your breasts as you get fucked.'
     'Next to you another Purple is pumped from behind by another customer. Looks like a competition!'
   elseif dancerand = 6:
-    guy += 1
-    stat['vaginal'] += 1
-    pcs_vag += 1
+    npc_sex[$boy] += 1
+    gs 'arousal','vaginal',0
     '<center><video autoplay src="images/locations/city/citycenter/nightclub/trip01/idance/phase4/idpd6.mp4"></video></center><br>'
     'You are so horny that you have offered your rump to the nearest guy who passed by. The thrusts of the guy are so hard that it raises you a few inches off the ground. "Oh my God! Give it to me harder!" –You shout him while touching your breasts-'
   elseif dancerand = 7:
-    guy += 1
-    stat['anal'] += 1
-    pcs_ass += 1
+    npc_sex[$boy] += 1
+    gs 'arousal','anal',0
     '<center><video autoplay src="images/locations/city/citycenter/nightclub/trip01/idance/phase4/idpd7.mp4"></video></center><br>'
     'Another guy fucks you ass leaving your moans to battle against the music of the disco.'
   elseif dancerand = 8:
-    guy += 1
-    stat['vaginal'] += 1
-    pcs_vag += 1
+    npc_sex[$boy] += 1
+    gs 'arousal','vaginal',0
     '<center><video autoplay src="images/locations/city/citycenter/nightclub/trip01/idance/phase4/idpd8.mp4"></video></center><br>'
     '"Fuck me!" You demand from the guy closest to you, "Fuck me hard! You look like a fucking fagot! Get it together and fuck me like the whore I am!"'
   elseif dancerand = 9:
-    guy += 1
-    stat['vaginal'] += 1
-    pcs_vag += 1
+    npc_sex[$boy] += 1
+    gs 'arousal','vaginal',0
     '<center><video autoplay src="images/locations/city/citycenter/nightclub/trip01/idance/phase4/idpd9.mp4"></video></center><br>'
     'You may felt as if you were resisting your desires now... But at this point you really can''t... Your pussy is soaked, hot, and throbbing. You open your legs as wide as you can and let a guy start fucking you. "Oh yes! Pumping harder! I''m yours! I want your cock!"'
   elseif dancerand = 10:
-    guy += 1
-    stat['vaginal'] += 1
-    pcs_vag += 1
+    npc_sex[$boy] += 1
+    gs 'arousal','vaginal',0
     '<center><video autoplay src="images/locations/city/citycenter/nightclub/trip01/idance/phase4/idpd10.mp4"></video></center><br>'
     'You pass by the bar again... Only to feel a customer grabbing your hips and putting his cock in your pussy. You are so drenched that he easily enters your slit. "Oh yes, at last! Fuck me harder please! Fuck me harder pleeeeeaaaase!"'
   elseif dancerand = 11:
-    guy += 1
-    stat['vaginal'] += 1
-    pcs_vag += 1
+    npc_sex[$boy] += 1
+    gs 'arousal','vaginal',0
     '<center><video autoplay src="images/locations/city/citycenter/nightclub/trip01/idance/phase4/idpd11.mp4"></video></center><br>'
     'The bartender from earlier approaches you as you''re getting fucked and says, "I told you all these guys were going to fuck you until you burst! That happens to you when you tease a little to much!"'
     'His practiced smile continues to show on his face as he asks,"Do you like to be fucked like a bitch?" You don''t reply quick enough only to hear his voice become rough and commanding,"Answer me bitch!"'
@@ -581,20 +562,18 @@ if $ARGS[0] = 'stage4':
     'He interrupts you again, "Tell me now... What are you girl? Huh? Tell me what you are. Answer me!'
     'You respond quicker this time, "Aaaahh I... I...aaaaaaam... I am a whore!" He soon replies,"Yeah...You are a filthy whore"'
   elseif dancerand = 12:
-    guy += 1
-    stat['vaginal'] += 1
-    pcs_vag += 1
+    npc_sex[$boy] += 1
+    gs 'arousal','vaginal',0
     '<center><video autoplay src="images/locations/city/citycenter/nightclub/trip01/idance/phase4/idpd12.mp4"></video></center><br>'
     'You''re at the bar when a black customer tells you he wants to taste your white pussy. He ask you if you''re ready for his big black cock of 28 centimeters. "28 centimeters?" –You reply to him with a surprised tone.-'
     ' He replies with an air of confidence, "Yeah baby 28 centimeters of black cock just for you. Come on, let me fuck you!"'
     'Your response is cut off as his dick invades your pussy,"Ok but... Aaaaaaahh Beast! You put it all the way in without warning! Ah fuck!" –He says to you- "You are a real slut! You''re soaked!"'
   elseif dancerand = 13:
-    guy += 1
-    stat['vaginal'] += 1
-    pcs_vag += 1
-    orgasm += 1
-    spafinloc = 0
-    gs 'cum_manage'
+    npc_sex[$boy] += 1
+    $orgasm_or = 'yes'
+    gs 'arousal','vaginal',0
+    gs 'cum_call','',$boy,1
+
     '<center><video autoplay src="images/locations/city/citycenter/nightclub/trip01/idance/phase4/idpd13.mp4"></video></center><br>'
     'You are sooooo horny. You are in the bar, breasts free and almost naked. As you enjoy the freedom you feel a client approaches you and tells you that he wants to fuck.'
     'You raise a leg and say: " I''m here to serve! My holes are yours!" As you get fucked, others customers take the opportunity to take photos and videos of you.'
@@ -602,60 +581,51 @@ if $ARGS[0] = 'stage4':
     '<center><video autoplay src="images/locations/city/citycenter/nightclub/trip01/idance/phase4/creamoverflow.mp4"></video></center><br>'
     'Soon you have an orgasm and the guy takes pleasure in filling your twat.'
   elseif dancerand = 14:
-    guy += 1
-    stat['anal'] += 1
-    pcs_ass += 1
+    npc_sex[$boy] += 1
+    gs 'arousal','anal',0
     '<center><video autoplay src="images/locations/city/citycenter/nightclub/trip01/idance/phase4/idpd14.mp4"></video></center><br>'
     'You''re at the bar and a customer is fucking hard from behind! He says with pleasure,"Your ass is tight, bitch!!"'
   elseif dancerand = 15:
-    guy += 1
-    stat['vaginal'] += 1
-    pcs_vag += 1
+    npc_sex[$boy] += 1
+    gs 'arousal','vaginal',0
     '<center><video autoplay src="images/locations/city/citycenter/nightclub/trip01/idance/phase4/idpd15.mp4"></video></center><br>'
     'You''re at the bar and a customer is fucking hard from behind! You lift one leg over the bar and facilitate his penetration.  <font color=#FF00CC> Oh god yes! I love being fucked! </font>'
   elseif dancerand = 16:
-    guy += 1
-    stat['vaginal'] += 1
-    pcs_vag += 1
+    npc_sex[$boy] += 1
+    gs 'arousal','vaginal',0
     '<center><video autoplay src="images/locations/city/citycenter/nightclub/trip01/idance/phase4/idpd16.mp4"></video></center><br>'
     'You''re in the middle of the dance floor, completely naked and being fucked by a customer. You don''t even know where your clothes are, you are only wearing your purple bracelet.'
     'Yes ... you''re a Purple Girl... you ... you''re Santorini´s whore.  <font color=#FF00CC> Yes I am a whore, and my pussy enjoys it! </font> – You think with a smile in your pretty face'
   elseif dancerand = 17:
-    guy += 1
-    stat['vaginal'] += 1
-    pcs_vag += 1
+    npc_sex[$boy] += 1
+    gs 'arousal','vaginal',0
     '<center><video autoplay src="images/locations/city/citycenter/nightclub/trip01/idance/phase4/idpd18.mp4"></video></center><br>'
     'You are fucking without rest. You are a slut, a series of fuck holes that are always ready to be used. You know it and you like it, so might as well enjoy it!'
   elseif dancerand = 18:
-    guy += 1
-    stat['vaginal'] += 1
-    pcs_vag += 1
-    orgasm += 1
+    npc_sex[$boy] += 1
+    $orgasm_or = 'yes'
+    gs 'arousal','vaginal',0
     '<center><video autoplay src="images/locations/city/citycenter/nightclub/trip01/idance/phase4/idpd19.mp4"></video></center><br>'
     '"Oh my God!! I´m coming! I´m coming again!" –You shout like a maniac-'
   elseif dancerand = 19:
-    guy += 1
-    stat['vaginal'] += 1
-    pcs_vag += 1
+    npc_sex[$boy] += 1
+    gs 'arousal','vaginal',0
     '<center><video autoplay src="images/locations/city/citycenter/nightclub/trip01/idance/phase4/idpd20.mp4"></video></center><br>'
     'The atmosphere is intoxicating. People drinking, dancing, fucking and you...  You are a Purple Girl, being fucked in the middle of the dance floor by a customer.'
     'You notice that there are others looking at you. <font color=#FF00CC> After this, they will come and fuck me too ... </font> – You think feeling your pussy a little sore-'
   elseif dancerand = 20:
-    guy += 1
-    stat['anal'] += 1
-    pcs_ass += 1
+    npc_sex[$boy] += 1
+    gs 'arousal','anal',0
     '<center><video autoplay src="images/locations/city/citycenter/nightclub/trip01/idance/phase4/idpd21.mp4"></video></center><br>'
     'You are in the middle of the dance floor when a client is pumping his dick as hard as he can into your ass. Your boobs bounce with every thrust. "Break me!" –You shout to him-'
   elseif dancerand = 21:
-    guy += 1
-    stat['vaginal'] += 1
-    pcs_vag += 1
+    npc_sex[$boy] += 1
+    gs 'arousal','vaginal',0
     '<center><video autoplay src="images/locations/city/citycenter/nightclub/trip01/idance/phase4/idpd23.mp4"></video></center><br>'
     'You get on all fours on one of the benches of the dance floor in order to give the costumer better position to get to your pussy. <font color=#FF00CC> Those yellow pills are doing wonders! </font>'
   elseif dancerand = 22:
-    guy += 1
-    stat['vaginal'] += 1
-    pcs_vag += 1
+    npc_sex[$boy] += 1
+    gs 'arousal','vaginal',0
     '<center><video autoplay src="images/locations/city/citycenter/nightclub/trip01/idance/phase4/idpd22.mp4"></video></center><br>'
     'You have reached a point of excitement where nothing else matters. All you want is to be fucked until your body says enough is enough. <font color=#FF00CC>How many guys fucked me today?</font>'
     '–You think while other customer approaches you with his cock out ready to penetrate your slit. <font color=#FF00CC>Oh fuck! Yes! Ooooh those damn yellow pills! </font>'
@@ -663,47 +633,39 @@ if $ARGS[0] = 'stage4':
     '<center><video autoplay src="images/locations/city/citycenter/nightclub/trip01/idance/phase4/idpd24.mp4"></video></center><br>'
     '"Come on! All of you fuck me! I''m the hottest bitch here!" –You shout-'
   elseif dancerand = 24:
-    guy += 1
-    stat['vaginal'] += 1
-    pcs_vag += 1
+    npc_sex[$boy] += 1
+    gs 'arousal','vaginal',0
     '<center><video autoplay src="images/locations/city/citycenter/nightclub/trip01/idance/phase4/idpd25.mp4"></video></center><br>'
     'You have already fucked more than half of customers here. But the ones who stand out the most... Are the black men here. They are special... You think as this black man''s cock hits your womb.'
   elseif dancerand = 25:
-    guy += 1
-    stat['anal'] += 1
-    pcs_ass += 1
+    npc_sex[$boy] += 1
+    gs 'arousal','anal',0
     '<center><video autoplay src="images/locations/city/citycenter/nightclub/trip01/idance/phase4/idpd26.mp4"></video></center><br>'
     'Oh my God! Oh my God! You say again and again. This time your ass is the object of attention ... and you love it!'
   elseif dancerand = 26:
-    guy += 1
-    stat['vaginal'] += 1
-    pcs_vag += 1
-    orgasm += 1
+    npc_sex[$boy] += 1
+    gs 'arousal','vaginal',0
     '<center><video autoplay src="images/locations/city/citycenter/nightclub/trip01/idance/phase4/idpd27.mp4"></video></center><br>'
     'They fuck you repeatedly but a certain customer does it in another way... A less conventional way. He tells you to ride him, but when you start to do it, he hooks his arms around your legs and grabs your neck for support.'
     'You feel your pussy completely distended and that his cock is reaching point in no ways that any other cock  has done before. "Oh fuck I... I''m cumming again!"'
   elseif dancerand = 27:
-    guy += 1
-    stat['vaginal'] += 1
-    pcs_vag += 1
+    npc_sex[$boy] += 1
+    gs 'arousal','vaginal',0
     '<center><video autoplay src="images/locations/city/citycenter/nightclub/trip01/idance/phase4/idpd28.mp4"></video></center><br>'
     'You''re on fire! A cautious client puts on a condom and tells you to ride him. Even though you agreed, you admit that you prefer the other option. To feel the touch of the cock without its latex raincoat, that''s the best feeling in the world.'
   elseif dancerand = 28:
-    guy += 1
-    stat['vaginal'] += 1
-    pcs_vag += 1
+    npc_sex[$boy] += 1
+    gs 'arousal','vaginal',0
     '<center><video autoplay src="images/locations/city/citycenter/nightclub/trip01/idance/phase4/idpd29.mp4"></video></center><br>'
     'One customer fucks you missionary style while another Purple Girl helps you keep your legs wide open to receive the stallion. "Fuck me harder!" -You say him-'
   elseif dancerand = 29:
-    guy += 1
-    stat['anal'] += 1
-    pcs_ass += 1
+    npc_sex[$boy] += 1
+    gs 'arousal','anal',0
     '<center><video autoplay src="images/locations/city/citycenter/nightclub/trip01/idance/phase4/idpd30.mp4"></video></center><br>'
     'Looks like your ass is winning followers. A customer begins to fuck from behind with rapid speed without care. You use small table you''re resting upon to serves as support. If you didn''t, you have a feeling you''d fall on your face.'
   elseif dancerand = 30:
-    guy += 1
-    stat['vaginal'] += 1
-    pcs_vag += 1
+    npc_sex[$boy] += 1
+    gs 'arousal','vaginal',0
     '<center><video autoplay src="images/locations/city/citycenter/nightclub/trip01/idance/phase4/idpd35.mp4"></video></center><br>'
     'You are been fucked by a client in the middle of the dance floor, legs spread open and with a devilish pace. You share eye contact with your three friends, all the while feeling the dick in your pussy.'
     'You start to feel worn down and your pussy feels a little sore. Luckily, the guy inside you injects a good amount of cum your pussy. <font color=#FF00CC>  At last he finished. </font> . You think it''s time to go to the toilet. Or maybe visit the security guard again so he can give you his more of his special merchandise.'
@@ -713,11 +675,9 @@ if $ARGS[0] = 'stage4':
     '<center><video autoplay src="images/locations/city/citycenter/nightclub/trip01/idance/phase4/idpb31.mp4"></video></center><br>'
     'You continue to get pumped with seed. Though you already want to finish. You feel so tired but you soldier on. Ok, the next...'
   elseif dancerand = 31:
-    guy += 1
-    stat['vaginal'] += 1
-    pcs_vag += 1
-    spafinloc = 0
-    gs 'cum_manage'
+    npc_sex[$boy] += 1
+    gs 'arousal','vaginal',0
+    gs 'cum_call','',$boy,1
     '<center><img <<$set_imgh>> src="images/locations/city/citycenter/nightclub/trip01/idance/phase4/idpd33.jpg"></center><br>'
     'The other guy lifts your leg and continues to fucking your pussy. Only to fill you with his jizz soon after.'
     '<center><img <<$set_imgh>> src="images/locations/city/citycenter/nightclub/trip01/idance/phase4/idpd32.jpg"></center><br>'
@@ -725,30 +685,25 @@ if $ARGS[0] = 'stage4':
     '<center><video autoplay src="images/locations/city/citycenter/nightclub/trip01/idance/phase4/creamoverflow.mp4"></video></center><br>'
     'You pussy is packed with so much cum... It''s a never ending stream of white goo leaking out. <font color=#FF00CC>I think I can finally rest now... With how things are going... Who knows if you''ll ever get the chance.</font>  '
   elseif dancerand = 32:
-    guy += 1
-    stat['vaginal'] += 1
-    pcs_vag += 1
+    npc_sex[$boy] += 1
+    gs 'arousal','vaginal',0
     '<center><video autoplay src="images/locations/city/citycenter/nightclub/trip01/idance/phase4/idpd37.mp4"></video></center><br>'
     'The orgy is at its highest point, or at least that''s what you think, as you ride a customer''s cock. As you ride him, you notice another Purple Girl with a customer doing the same thing.'
     'You look at her and you can''t help but think <font color=#FF00CC> I''m better than her </font> . Another guy approaches you taking his cock out ready to be serviced. You decided to up your performance and jerk him off as you ride the other costumer.'
   elseif dancerand = 33:
-    guy += 1
-    stat['vaginal'] += 1
-    pcs_vag += 1
+    npc_sex[$boy] += 1
+    gs 'arousal','vaginal',0
     '<center><video autoplay src="images/locations/city/citycenter/nightclub/trip01/idance/phase4/idpd38.mp4"></video></center><br>'
     'Your state of excitement leaves you in a dazed state. Only to have a client take advantage of that. He puts on a condom and lines up his dick to your pussy...  You can''t help but cry out as he fucks your pussy, "Oh fuck yes! Give it to me baby!"'
   elseif dancerand = 34:
-    guy += 1
-    stat['anal'] += 1
-    pcs_ass += 1
+    npc_sex[$boy] += 1
+    gs 'arousal','anal',0
     '<center><video autoplay src="images/locations/city/citycenter/nightclub/trip01/idance/phase4/idpd39.mp4"></video></center><br>'
     'You''re very horny and you tell a customer that you want your ass to get some treatment. The guy doesn''t think twice as he fucks your ass.'
   elseif dancerand = 35:
-    guy += 1
-    stat['vaginal'] += 1
-    pcs_vag += 1
-    spafinloc = 0
-    gs 'cum_manage'
+    npc_sex[$boy] += 1
+    gs 'arousal','vaginal',0
+    gs 'cum_call','',$boy,1
     '<center><video autoplay src="images/locations/city/citycenter/nightclub/trip01/idance/phase4/idpd40.mp4"></video></center><br>'
     'Your pussy is soaked and on fire. You need to get a good fuck and you tell a customer, "Do you want fill my pussy?"'
     'He grins widely, "Hell yeah! I have tons of cream for you!" He pushes you on all fours and starts fucking you with such vigor. You love the rough treatment he gives you and say out loud,"Mmmmm yes!"'
@@ -757,23 +712,19 @@ if $ARGS[0] = 'stage4':
     '<font color=#FF00CC>  Oh my God, I think I am a cum addict! </font>  '
     '<center><video autoplay src="images/locations/city/citycenter/nightclub/trip01/idance/phase4/creamoverflow.mp4"></video></center><br>'
   elseif dancerand = 36:
-    guy += 1
-    stat['anal'] += 1
-    pcs_ass += 1
+    npc_sex[$boy] += 1
+    gs 'arousal','anal',0
     '<center><video autoplay src="images/locations/city/citycenter/nightclub/trip01/idance/phase4/idpd41.mp4"></video></center><br>'
     'A guy is fucking you like the slut you are. You love feel how your ass is being pumped. Your nipples rubbing against the sofa provides another pleasurable feeling. It only intensifies your arousal.'
   elseif dancerand = 37:
-    guy += 1
-    stat['anal'] += 1
-    pcs_ass += 1
+    npc_sex[$boy] += 1
+    gs 'arousal','anal',0
     '<center><video autoplay src="images/locations/city/citycenter/nightclub/trip01/idance/phase4/idpd42.mp4"></video></center><br>'
     'The crowd doesn''t stop chanting at you and your partner! They love seeing you being fucked in the ass. Your cries of pain rival with those of the crowd. Soon after your cries become groans of pleasure... You are lost in your desire.'
   elseif dancerand = 38:
-    guy += 1
-    stat['vaginal'] += 1
-    pcs_vag += 1
-    spafinloc = 0
-    gs 'cum_manage'
+    npc_sex[$boy] += 1
+    gs 'arousal','vaginal',0
+    gs 'cum_call','',$boy,1
     '<center><video autoplay src="images/locations/city/citycenter/nightclub/trip01/idance/phase4/idpd43.mp4"></video></center><br>'
     ' You see a Purple Girl letting her breast sway free with no panties on as she dances. The client dancing with her decides to make her time more pleasurable and begins to finger her.'
     '<center><video autoplay src="images/locations/city/citycenter/nightclub/trip01/idance/phase4/idpd44.mp4"></video></center><br>'
@@ -781,11 +732,9 @@ if $ARGS[0] = 'stage4':
     '<center><video autoplay src="images/locations/city/citycenter/nightclub/trip01/idance/phase4/creamoverflow.mp4"></video></center><br>'
     'A few thrusts later you sense the pulsations of the cock inside you. He''s filling your pussy with cum.'
   elseif dancerand = 39:
-    guy += 1
-    stat['vaginal'] += 1
-    pcs_vag += 1
-    spafinloc = 0
-    gs 'cum_manage'
+    npc_sex[$boy] += 1
+    gs 'arousal','vaginal',0
+    gs 'cum_call','',$boy,1
     '<center><video autoplay src="images/locations/city/citycenter/nightclub/trip01/idance/phase4/idpd45.mp4"></video></center><br>'
     'You''re in a erotic frenzy! You see a client and decide to suck and lick his dick like a lollipop. Your cunt craves for more as you please your client. To feed the hunger, you use your fingers to play with your clit.'
     '<center><video autoplay src="images/locations/city/citycenter/nightclub/trip01/idance/phase4/idpd46.mp4"></video></center><br>'
@@ -794,7 +743,7 @@ if $ARGS[0] = 'stage4':
     '<font color=#FF00CC> Oh my God! More cream for my pussy! If I keep going like this, I''ll end up pregnant! </font>'
   end
 
-  gs 'stat'
+  gs 'arousal', 'end'
 
   xgt 'IbizaDance', 'nextStep'
 end
